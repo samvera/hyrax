@@ -14,16 +14,19 @@ class CollectionBrandingInfo < ApplicationRecord
     self.local_path = File.join(role, filename)
   end
 
-  def save(file_location, copy_file = true)
+  def save(file_location, upload_file = true)
     filename = File.split(local_path).last
     role_and_filename = File.join(role, filename)
 
-    storage.upload(resource: Hyrax::PcdmCollection.new(id: collection_id),
-                   file: File.open(file_location),
-                   original_filename: role_and_filename)
+    if upload_file
+      storage.upload(resource: Hyrax::PcdmCollection.new(id: collection_id),
+                     file: File.open(file_location),
+                     original_filename: role_and_filename)
+    end
+
     self.local_path = find_local_filename(collection_id, role, filename)
 
-    FileUtils.remove_file(file_location) if File.exist?(file_location) && copy_file
+    FileUtils.remove_file(file_location) if File.exist?(file_location) && upload_file
     super()
   end
 
@@ -35,7 +38,6 @@ class CollectionBrandingInfo < ApplicationRecord
          else
            local_path
          end
-
     storage.delete(id: id)
   end
 
