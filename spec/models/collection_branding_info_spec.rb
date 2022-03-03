@@ -42,9 +42,9 @@ RSpec.describe CollectionBrandingInfo, type: :model do
     end
 
     it "saves the logo info, but don't upload the log file" do
-      logo_info.save(file.path, false)
-
       expect(storage_adapter).not_to receive(:upload)
+
+      logo_info.save(file.path, false)
       expect(logo_info.local_path).to eq(logo_info.find_local_dir_name('123', 'logo') + "/logo.gif")
       expect(logo_info.alt_text).to eq("This is the logo")
       expect(logo_info.target_url).to eq("http://logo.com")
