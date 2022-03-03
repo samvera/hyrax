@@ -44,6 +44,10 @@ module Hyrax
     end
 
     def build_form
+      add_breadcrumb t('hyrax.controls.home'), root_path
+      add_breadcrumb t('hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t('hyrax.admin.sidebar.works'), hyrax.my_works_path
+      add_breadcrumb t('hyrax.batch_uploads.new.breadcrumb'), request.path
       super
       @form.payload_concern = params[:payload_concern]
     end

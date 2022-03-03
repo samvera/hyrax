@@ -704,6 +704,7 @@ zh:
         instructions: 上传的每份文件都会分别按新作品生成。
         upload_type_instructions: 创建一件包括所有文件的作品，请去
       new:
+        breadcrumb: 创建批量作品
         header: 批量建立新作品
         in_collections: 这些作品包括在收藏集中
         in_other_works: 这件作品包括在其它作品中

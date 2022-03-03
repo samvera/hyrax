@@ -706,6 +706,7 @@ es:
         instructions: Cada archivo será cargado en un nuevo trabajo separado, resultando en un trabajo por archivo cargado.
         upload_type_instructions: Para crear un único trabajo para todos los archivos, vaya a
       new:
+        breadcrumb: Crear un lote de trabajos
         header: Crear Nuevos Trabajos en Lote
         in_collections: Estos Trabajos en Colecciones
         in_other_works: Este Trabajo en otros Trabajos

@@ -707,6 +707,7 @@ fr:
         instructions: Chaque fichier sera téléchargé sur un nouveau travail séparé résultant en un travail par fichier téléchargé.
         upload_type_instructions: Pour créer un travail unique pour tous les fichiers, accédez à
       new:
+        breadcrumb: Créer un lot d'œuvres
         header: Batch Créer de nouveaux travaux
         in_collections: Ces œuvres dans les collections
         in_other_works: Ce travail dans d'autres ouvrages

@@ -706,6 +706,7 @@ it:
         instructions: Ogni file verrà caricato in un nuovo lavoro separato che crea un lavoro per file caricato.
         upload_type_instructions: Per creare un singolo lavoro per tutti i file, vai a
       new:
+        breadcrumb: Crea un gruppo di opere
         header: Creazione di batch di nuove opere
         in_collections: Queste opere in collezioni
         in_other_works: Questo lavoro in altre opere
