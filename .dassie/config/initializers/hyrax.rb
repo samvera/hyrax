@@ -43,9 +43,15 @@ Hyrax.config do |config|
   config.virus_scanner = Hyrax::VirusScanner
 
   ##
-  # To index to the Valkyrie core, uncomment the following two lines.
+  # To index to the Valkyrie core, uncomment the following lines.
   # config.query_index_from_valkyrie = true
   # config.index_adapter = :solr_index
+
+  ##
+  # NOTE: To Valkyrie works, use Monograph which is_a Hyrax::Work is_a Valkyrie::Resource
+  # To use Valkyrie models, uncomment the following lines.
+  # config.collection_model = 'Hyrax::PcdmCollection'
+  # config.admin_set_model = 'Hyrax::AdministrativeSet'
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"
