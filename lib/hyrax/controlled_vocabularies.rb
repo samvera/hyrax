@@ -5,6 +5,7 @@ module Hyrax
 
     eager_autoload do
       autoload :Location
+      autoload :ResourceLabelCaching
     end
   end
 end
