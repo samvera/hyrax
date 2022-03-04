@@ -5,7 +5,6 @@ gemspec
 
 # Force these versions for testing purposes
 gem 'active-fedora', github: 'samvera/active_fedora', branch: 'no_super'
-gem 'rdf', '=3.2.5'
 
 group :development, :test do
   gem 'benchmark-ips'
