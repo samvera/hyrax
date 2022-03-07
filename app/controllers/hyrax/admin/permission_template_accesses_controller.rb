@@ -10,10 +10,30 @@ module Hyrax
           @permission_template_access.destroy
           remove_access!
         end
-        after_destroy_success if @permission_template_access.destroyed?
+        if @permission_template_access.destroyed?
+          after_destroy_success
+        else
+          after_destroy_error
+        end
       end
 
       private
+
+      def after_destroy_error
+        if source.admin_set?
+          @permission_template_access.errors[:base] <<
+            t('hyrax.admin.admin_sets.form.permission_destroy_errors.participants')
+          redirect_to hyrax.edit_admin_admin_set_path(source_id,
+                                                      anchor: 'participants'),
+                      alert: @permission_template_access.errors.full_messages.to_sentence
+        else
+          @permission_template_access.errors[:base] <<
+            t('hyrax.dashboard.collections.form.permission_update_errors.sharing')
+          redirect_to hyrax.edit_dashboard_collection_path(source_id,
+                                                           anchor: 'sharing'),
+                      alert: @permission_template_access.errors.full_messages.to_sentence
+        end
+      end
 
       def after_destroy_success
         if source.admin_set?

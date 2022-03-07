@@ -91,6 +91,7 @@ en:
           note: Users granted a new role will only gain the role on works that are deposited after that role has been granted.
           permission_destroy_errors:
             admin_group: The repository administrators group cannot be removed
+            participants: The administrative set's participant rights failed to delete.
           permission_update_errors:
             error: Invalid update option for permission template.
             no_date: A date is required for the selected release option.
@@ -833,7 +834,6 @@ en:
         select_type_of_collection: Select type of collection
       collections:
         collection_title: Collection Title
-        title: Collections
         last_updated: Last updated
         works: Works
         files: Files
@@ -842,6 +842,7 @@ en:
         form:
           permission_update_errors:
             error: Invalid update option for permission template.
+            sharing: The collection's sharing options failed to update.
           permission_update_notices:
             participants: The collection's sharing options have been updated.
             sharing: The collection's sharing options have been updated.
