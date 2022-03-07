@@ -24,8 +24,11 @@ RSpec.describe ValkyrieIngestJob do
     it 'adds an original_file file to the file_set' do
       described_class.perform_now(upload)
 
-      expect(Hyrax.query_service.find_by(id: file_set.id))
+      reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
+      expect(reloaded_file_set)
         .to have_attached_files(be_original_file)
+      expect(reloaded_file_set.label)
+        .to eq "image.jp2"
     end
 
     it 'makes original_file queryable by use' do

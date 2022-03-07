@@ -54,7 +54,7 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
   # @param [RDF::URI] pcdm_use  the use/type to apply to the created FileMetadata
   #
   # @return [Hyrax::FileMetadata] the metadata representing the uploaded file
-  def upload_file(file:, file_set:, pcdm_use: Hyrax::FileMetadata::Use::ORIGINAL_FILE)
+  def upload_file(file:, file_set:, pcdm_use: Hyrax::FileMetadata::Use::ORIGINAL_FILE) # rubocop:disable Metrics/MethodLength
     carrier_wave_sanitized_file = file.uploader.file
     # Pull file, since carrierwave files don't respond to a proper IO #read. See
     # https://github.com/carrierwaveuploader/carrierwave/issues/1959
@@ -74,6 +74,13 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
     saved_metadata = Hyrax.persister.save(resource: file_metadata)
     Hyrax.publisher.publish("object.file.uploaded", metadata: saved_metadata)
     file_io.close
+
+    # Set file set label.
+    reset_title = file_set.title.first == file_set.label
+    # set title to label if that's how it was before this characterization
+    file_set.title = file_metadata.original_filename if reset_title
+    # always set the label to the original_name
+    file_set.label = file_metadata.original_filename
 
     saved_metadata
   end
