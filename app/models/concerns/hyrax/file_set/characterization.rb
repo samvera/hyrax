@@ -64,6 +64,12 @@ module Hyrax
       end
 
       ActiveFedora::WithMetadata::DefaultMetadataClassFactory.file_metadata_schemas << AlphaChannelsSchema
+
+      # Add file_set_id for Valkyrie support.
+      class FileSetIdSchema < ActiveTriples::Schema
+        property :file_set_id, predicate: ::RDF::URI.new('http://vocabulary.samvera.org/ns#fileSetId')
+      end
+      ActiveFedora::WithMetadata::DefaultMetadataClassFactory.file_metadata_schemas << FileSetIdSchema
     end
   end
 end

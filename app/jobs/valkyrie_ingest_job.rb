@@ -56,9 +56,12 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
   # @return [Hyrax::FileMetadata] the metadata representing the uploaded file
   def upload_file(file:, file_set:, pcdm_use: Hyrax::FileMetadata::Use::ORIGINAL_FILE)
     carrier_wave_sanitized_file = file.uploader.file
+    # Pull file, since carrierwave files don't respond to a proper IO #read. See
+    # https://github.com/carrierwaveuploader/carrierwave/issues/1959
+    file_io = carrier_wave_sanitized_file.to_file
     uploaded = Hyrax.storage_adapter
                     .upload(resource: file_set,
-                            file: carrier_wave_sanitized_file,
+                            file: file_io,
                             original_filename: carrier_wave_sanitized_file.original_filename)
 
     file_metadata = find_or_create_metadata(id: uploaded.id, file: carrier_wave_sanitized_file)
@@ -70,6 +73,7 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
 
     saved_metadata = Hyrax.persister.save(resource: file_metadata)
     Hyrax.publisher.publish("object.file.uploaded", metadata: saved_metadata)
+    file_io.close
 
     saved_metadata
   end
