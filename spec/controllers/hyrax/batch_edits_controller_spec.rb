@@ -230,4 +230,29 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       end
     end
   end
+
+  context "with valkyrie resources" do
+    describe "#edit" do
+      let(:one) { FactoryBot.valkyrie_create(:monograph, creator: ["Fred"], title: ["abc"], language: ['en']) }
+      let(:two) { FactoryBot.valkyrie_create(:monograph, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }
+      let(:three) { FactoryBot.valkyrie_create(:monograph, creator: ["Dino"], title: ["abc3"]) }
+
+      before do
+        controller.batch = [one.id, two.id, three.id]
+        expect(controller).to receive(:can?).with(:edit, one.id).and_return(true)
+        expect(controller).to receive(:can?).with(:edit, two.id).and_return(true)
+        expect(controller).to receive(:can?).with(:edit, three.id).and_return(false)
+      end
+
+      it "is successful" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
+        get :edit
+        expect(response).to be_successful
+        expect(response).to render_template('dashboard')
+        expect(assigns[:form].model.creator).to match_array ["Fred", "Wilma"]
+      end
+    end
+  end
 end
