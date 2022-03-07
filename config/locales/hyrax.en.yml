@@ -49,7 +49,7 @@ en:
       cancel: Cancel
       close: Close
       collection:
-        new: New Collection
+        new: Add new collection
       delete: Delete
       edit: Edit
       less: Less
@@ -193,7 +193,7 @@ en:
             report_header: Custom Collections Report
             report_generated_on: This report was generated on
             enable_analytics: Enable Analytics To View Reports
-          show: 
+          show:
             title: Collection Report
             summary: Summary
             monthly: Monthly
@@ -215,12 +215,12 @@ en:
             this_month: This month
             this_year: This year
             all_time: All time
-          monthly_summary: 
+          monthly_summary:
             monthly_subtitle: Month-by-month status for last 12 months through
             collection_views: Collection home page views
             work_views: Views of works
             work_downloads: Downloads of works
-          custom_range: 
+          custom_range:
             date_range_heading: Customize Date Range
             summary_heading: Summary of user activity
             collection_home_page_views: Collection home page views
@@ -239,7 +239,7 @@ en:
             title: Works Report
             subtitle: Summary of user activity
             repo_summary: in this repository which collectively have had
-            works: works 
+            works: works
             views: views
             and: and
             access_to: You have access to
@@ -248,8 +248,8 @@ en:
             custom_range:  Custom Range
             downloads: downloads
             enable_analytics: Enable Analytics To View Reports
-            report_generated_on: This report was generated on 
-          show: 
+            report_generated_on: This report was generated on
+          show:
             title: Work Report
             summary: Summary
             monthly: Monthly
@@ -264,7 +264,7 @@ en:
           work_files:
             title: Files
             total_downloads: Total Downloads
-          work_counts: 
+          work_counts:
              total_size: total size
              child_works: child works
              files: files
@@ -279,22 +279,22 @@ en:
             this_month: This month
             this_year: This year
             all_time: All time
-          monthly_summary: 
+          monthly_summary:
             monthly_subtitle: Month-by-month status for the last 12 months through
             page_views: Page Views
             file_downloads: File Downloads
-          top_works: 
+          top_works:
             top_works: Top Works
             work_title: Work Title
             work_views: Work Page Views
             file_downloads: File Downloads
             export: Export
-          top_file_set_downloads: 
+          top_file_set_downloads:
             top_downloads: Top File Downloads
             file_name: File Name
             file: File
             file_downloads: File Downloads
-          custom_range: 
+          custom_range:
             summary_heading: Summary of user activity
             unique_visitors: Unique Visitors
             page_views: Page Views
@@ -1128,7 +1128,7 @@ en:
       transfer_of_ownership: Transfers of Ownership
       transfer_works_link: Select works to transfer
       transfers_received: Transfers Received
-      transfers_sent: Transfers Sent        
+      transfers_sent: Transfers Sent
       user_activity:
         date: Date
         new_users: New Users
@@ -1137,7 +1137,7 @@ en:
         new_visitors: New Visitors
         subtitle: New user signups
         title: User Activity
-        total_visitors: Total Visitors   
+        total_visitors: Total Visitors
         user_summary: User Summary
       user_activity_graph:
         date: Date
@@ -1147,7 +1147,7 @@ en:
         total_visits: Total Visits
       user_notifications: User Notifications
       view_files: View Files
-      visibility_graph: 
+      visibility_graph:
         visibility: Visibility
     document_language: en
     edit_profile: Edit Profile
@@ -1521,12 +1521,12 @@ en:
         link_expired_not_found: Single Use Link Expired or Not Found
         link_not_found: Single use link Not Found
     sort_label: Sort the listing of items
-    stats: 
+    stats:
       work:
         header: Work Analytics
         pageviews: Pageviews
         downloads: Downloads
-      pageviews: 
+      pageviews:
         pageviews: Page Views
       downloads:
         downloads: Downloads
@@ -1820,6 +1820,6 @@ en:
   total_view:
     one: This work has 1 total view
     other: This work has %{count} total views
-  download: 
+  download:
     one: and 1 download
     other: and %{count} downloads
