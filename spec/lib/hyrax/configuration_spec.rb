@@ -101,4 +101,11 @@ RSpec.describe Hyrax::Configuration do
       expect(configuration.registered_ingest_dirs).to include(Rails.root.join('tmp').to_s)
     end
   end
+
+  describe "#use_valkyrie?" do
+    before { stub_const("ENV", "HYRAX_SKIP_WINGS" => "true") }
+    it "returns true if wings is disabled" do
+      expect(Hyrax.config.use_valkyrie?).to eq true
+    end
+  end
 end
