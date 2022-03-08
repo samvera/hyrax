@@ -58,6 +58,12 @@ RSpec.describe Hyrax::MembershipHelper do
   end
 
   describe '.work_members_json' do
+    before do
+      allow(helper).to receive(:contextual_path).with(anything, anything) do |x, y|
+        Hyrax::ContextualPath.new(x, y).show
+      end
+    end
+
     context 'with a ChangeSet form' do
       let(:resource) { Hyrax::Forms::ResourceForm.for(work) }
       let(:work) { build(:monograph) }
@@ -83,7 +89,7 @@ RSpec.describe Hyrax::MembershipHelper do
       end
     end
 
-    context 'with a Valkyrie work' do
+    context 'with a Valkyrie work', valkyrie_adapter: :postgres_adpater do
       let(:resource) { build(:monograph) }
 
       context 'when it has no members' do
