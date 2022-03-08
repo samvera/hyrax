@@ -5,7 +5,7 @@ RSpec.describe 'hyrax/batch_edits/edit.html.erb', type: :view do
   let(:form) { Hyrax::Forms::BatchEditForm.new(generic_work, nil, batch) }
 
   before do
-    allow(ActiveFedora::Base).to receive(:find).and_return(generic_work)
+    allow(Hyrax.query_service).to receive(:find_by).and_return(generic_work)
     # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
     allow(generic_work).to receive(:new_record?).and_return(false)
     # this prevents AF from hitting Fedora (permissions is a related object)
