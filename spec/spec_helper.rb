@@ -92,8 +92,10 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-query_registration_target =
-  Valkyrie::MetadataAdapter.find(:test_adapter).query_service.custom_queries
+query_registration_targets = [
+  Valkyrie::MetadataAdapter.find(:test_adapter).query_service.custom_queries,
+  Valkyrie::MetadataAdapter.find(:postgres_adapter).query_service.custom_queries
+]
 [Hyrax::CustomQueries::Navigators::CollectionMembers,
  Hyrax::CustomQueries::Navigators::ChildFileSetsNavigator,
  Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator, # deprecated, use ChildFileSetsNavigator
@@ -105,7 +107,9 @@ query_registration_target =
  Hyrax::CustomQueries::FindIdsByModel,
  Hyrax::CustomQueries::FindFileMetadata,
  Hyrax::CustomQueries::Navigators::FindFiles].each do |handler|
-  query_registration_target.register_query_handler(handler)
+  query_registration_targets.each do |adapter|
+    adapter.register_query_handler(handler)
+  end
 end
 
 ActiveJob::Base.queue_adapter = :test
