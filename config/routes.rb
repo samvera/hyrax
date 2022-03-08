@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 Hyrax::Engine.routes.draw do
-  # Downloads controller route
+
   resources :homepage, only: 'index'
 
   # Route the home page as the root
@@ -10,6 +10,7 @@ Hyrax::Engine.routes.draw do
   #   e.g. https://scholarsphere.psu.edu/files/gm80hv36p
   get '/files/:id', to: redirect('/concern/generic_works/%{id}')
 
+  # Downloads controller route
   resources :downloads, only: :show
 
   # ResourceSync routes
