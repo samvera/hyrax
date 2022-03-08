@@ -52,7 +52,7 @@ es:
       cancel: Cancelar
       close: Cerca
       collection:
-        new: Añadir nueva colección
+        new: Añadir Nueva Colección
       delete: Borrar
       edit: Editar
       less: Menos
@@ -60,7 +60,7 @@ es:
       refresh: Refrescar
       remove: retirar
       work:
-        new: Crear un nuevo trabajo
+        new: Añadir un Nuevo Trabajo
     submit:
       admin_set:
         create: Guardar
@@ -1009,25 +1009,25 @@ es:
           collections_confirmation_singular: esta colección
           delete_admin_set: Eliminar colección
           delete_admin_set_deny: Esta colección se define como Admin Set y no está vacía. Para eliminar este conjunto de administración, primero debe eliminar (eliminar o mover a otra colección del conjunto de administración) todos los elementos del conjunto de administración.
-          delete_collection: Borrar Colección
+          delete_collection: Borrar colección
           delete_collection_deny: No tiene suficientes privilegios para eliminar este documento.
           delete_collections: Eliminar colecciones
           delete_collections_deny: Debe seleccionar una o más colecciones para eliminar.
-          delete_work: Borrar Trabajo
+          delete_work: Borrar trabajo
           edit_admin_set: Editar colección
-          edit_collection: Editar Colección
+          edit_collection: Editar colección
           edit_collection_deny: No tienes suficientes privilegios para editar esta colección.
           edit_selected: Editar Seleccionado
-          edit_work: Editar Trabajo
-          highlight: Resalte Trabajo en Perfil
+          edit_work: Editar trabajo
+          highlight: Resalte trabajo en perfil
           members_no_access: No tiene suficientes privilegios para ninguno de los miembros seleccionados
           nesting_not_allowed: Las colecciones de este tipo no son compatibles con la anidación.
           nesting_permission_denied: No tiene suficientes privilegios para agregar esta colección a otra colección.
           select: Seleccionar
           select_all: Seleccionar la página actual
           select_none: Seleccionar ninguno
-          transfer: Cambiar el Propietario del Trabajo
-          unhighlight: Retire Resalte del Trabajo
+          transfer: Cambiar el propietario del trabajo
+          unhighlight: Retire resalte del trabajo
           view_admin_set: Ver colección
           view_collection: Ver colección
           work_confirmation: El borrado de un trabajo de %{application_name} es permanente. Presione OK para borrar este trabajo de %{application_name}, o Cancelar para cancelar esta operación

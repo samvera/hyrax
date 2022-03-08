@@ -1019,7 +1019,7 @@ it:
           edit_collection_deny: Non disponi di privilegi sufficienti per modificare questa raccolta.
           edit_selected: Modifica selezionato
           edit_work: Modifica lavoro
-          highlight: Evidenziare il Savoro sul Profilo
+          highlight: Evidenziare il savoro sul profilo
           members_no_access: Non hai privilegi sufficienti per nessuno dei membri selezionati
           nesting_not_allowed: Le raccolte di questo tipo non supportano il nesting.
           nesting_permission_denied: Non disponi di privilegi sufficienti per aggiungere questa raccolta a un'altra raccolta.
