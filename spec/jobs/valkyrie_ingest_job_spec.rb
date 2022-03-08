@@ -7,15 +7,15 @@ RSpec.describe ValkyrieIngestJob do
   let(:upload) { FactoryBot.create(:uploaded_file, file_set_uri: file_set.id) }
 
   let(:listener) { Hyrax::Specs::AppendingSpyListener.new }
+  let(:characterizer) { double(characterize: fits_response) }
+  let(:fits_response) { IO.read('spec/fixtures/png_fits.xml') }
 
   before do
     Hyrax.publisher.subscribe(listener)
 
-    # stub out characterization to avoid system calls
-    characterize = double(run: true)
-    allow(Hyrax.config)
-      .to receive(:characterization_service)
-      .and_return(characterize)
+    # stub out characterization to avoid system calls. It's important some
+    # amount of characterization happens so listeners fire.
+    allow(Hydra::FileCharacterization).to receive(:characterize).and_return(fits_response)
   end
 
   after { Hyrax.publisher.unsubscribe(listener) }
@@ -24,8 +24,11 @@ RSpec.describe ValkyrieIngestJob do
     it 'adds an original_file file to the file_set' do
       described_class.perform_now(upload)
 
-      expect(Hyrax.query_service.find_by(id: file_set.id))
+      reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
+      expect(reloaded_file_set)
         .to have_attached_files(be_original_file)
+      expect(reloaded_file_set.label)
+        .to eq "image.jp2"
     end
 
     it 'makes original_file queryable by use' do

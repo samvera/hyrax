@@ -28,6 +28,7 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_object_file_uploaded(event)
+        # Run characterization
         Hyrax.config
              .characterization_service
              .run(metadata: event[:metadata], file: event[:metadata].file)
