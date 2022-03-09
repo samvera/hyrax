@@ -34,7 +34,7 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
   describe '#form_definitions_for' do
     it 'provides form configuration' do
       expect(schema_loader.form_definitions_for(schema: :core_metadata))
-        .to eq(title: { required: true, primary: true, multiple: false })
+        .to eq(title: { required: true, primary: true, multiple: true })
     end
   end
 end
