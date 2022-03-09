@@ -134,4 +134,18 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
       expect(page).to have_css('ul li#required-files.incomplete', text: 'Add files')
     end
   end
+
+  context "with valkyrie resources", metadata_adapter: :postgres_adapter do
+    before do
+      sign_in user
+      click_link 'Works'
+      click_link "Add new work"
+      choose "payload_concern", option: "GenericWork"
+      click_button 'Create work'
+    end
+
+    it "allows user to set an embargo" do
+      expect(page).to have_field("generic_work_visibility_embargo", disabled: false)
+    end
+  end
 end

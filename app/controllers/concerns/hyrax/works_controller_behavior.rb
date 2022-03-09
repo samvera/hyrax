@@ -456,7 +456,7 @@ module Hyrax
     def available_admin_sets
       admin_set_results = Hyrax::AdminSetService.new(self).search_results(:deposit)
       # get all the templates at once, reducing query load
-      templates = PermissionTemplate.where(id: admin_set_results.map(&:id)).to_a
+      templates = PermissionTemplate.where(source_id: admin_set_results.map(&:id)).to_a
 
       admin_sets = admin_set_results.map do |admin_set_doc|
         template = templates.find { |temp| temp.source_id == admin_set_doc.id.to_s }
