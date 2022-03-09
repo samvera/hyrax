@@ -40,8 +40,8 @@ module Hyrax
     def destroy_collection
       batch.each do |doc_id|
         resource = Hyrax.query_service.find_by(id: Valkyrie::ID.new(doc_id))
-        transactions['work_resource.destroy']
-          .with_step_args('work_resource.delete' => { user: current_user })
+        transactions['collection_resource.destroy']
+          .with_step_args('collection_resource.delete' => { user: current_user })
           .call(resource)
           .value!
       end
