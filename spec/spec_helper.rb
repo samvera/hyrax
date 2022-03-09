@@ -303,6 +303,14 @@ RSpec.configure do |config|
     Valkyrie::IndexingAdapter.find(adapter_name).wipe!
   end
 
+  # Configure blacklight to use the valkyrie solr index
+  config.around(:example, index_adapter: :solr_index) do |example|
+    blacklight_connection_url = CatalogController.blacklight_config.connection_config[:url]
+    CatalogController.blacklight_config.connection_config[:url] = Valkyrie::IndexingAdapter.find(:solr_index).connection.options[:url]
+    example.run
+    CatalogController.blacklight_config.connection_config[:url] = blacklight_connection_url
+  end
+
   config.before(:example, :valkyrie_adapter) do |example|
     adapter_name = example.metadata[:valkyrie_adapter]
 

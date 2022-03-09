@@ -14,6 +14,8 @@ module Hyrax
       @plural             = 'collections'
       @route_key          = 'collections'
       @singular_route_key = 'collection'
+      @collection         = 'collections'
+      @element            = 'collection'
     end
   end
 end
