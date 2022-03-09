@@ -50,6 +50,8 @@ attributes:
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "description_tesim"
   identifier:
     type: string
     multiple: true
