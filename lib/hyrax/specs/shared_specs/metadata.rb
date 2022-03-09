@@ -96,28 +96,7 @@ end
 RSpec.shared_examples 'a model with collection basic metadata' do
   subject(:resource) { described_class.new }
   let(:date)         { Time.zone.today }
-
-  # from core metadata included in collection basic metadata
-  it 'has a date_modified' do
-    expect { resource.date_modified = date }
-      .to change { resource.date_modified }
-            .to eq date
-  end
-
-  # from core metadata included in collection basic metadata
-  it 'has a date_uploaded' do
-    expect { resource.date_uploaded = date }
-      .to change { resource.date_uploaded }
-            .to eq date
-  end
-
-  # from core metadata included in collection basic metadata
-  it 'has a depositor' do
-    expect { resource.depositor = 'userid' }
-      .to change { resource.depositor }
-            .to eq 'userid'
-  end
-
+  
   # from core metadata included in collection basic metadata
   # with multiple title override
   it 'has a title' do

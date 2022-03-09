@@ -134,7 +134,7 @@ RSpec.shared_examples 'a Hyrax::PcdmCollection' do
   it { is_expected.not_to be_work }
 
   it_behaves_like 'a Hyrax::Resource'
-  # it_behaves_like 'a model with core metadata'
+  it_behaves_like 'a model with core metadata'
   it_behaves_like 'a model with collection basic metadata'
   it_behaves_like 'has members'
 

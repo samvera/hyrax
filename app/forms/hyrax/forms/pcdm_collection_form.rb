@@ -6,6 +6,7 @@ module Hyrax
     # @api public
     # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
     class PcdmCollectionForm < Valkyrie::ChangeSet # rubocop:disable Metrics/ClassLength
+      include Hyrax::FormFields(:core_metadata)
       include Hyrax::FormFields(:collection_basic_metadata)
       include Hyrax::FormFields(:collection_metadata)
 
@@ -21,7 +22,6 @@ module Hyrax
 
       property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array
 
-      validates :title, presence: true
       validates :collection_type_gid, presence: true
 
       class << self

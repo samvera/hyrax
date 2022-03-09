@@ -40,6 +40,7 @@ module Hyrax
   # @see Hyrax::CustomQueries::Navigators::CollectionMembers#find_members_of
   #
   class PcdmCollection < Hyrax::Resource
+    include Hyrax::Schema(:core_metadata)
     include Hyrax::Schema(:collection_basic_metadata)
     include Hyrax::Schema(:collection_metadata)
 
