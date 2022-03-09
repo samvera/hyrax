@@ -35,6 +35,14 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
         expect(solr_document.to_model.to_partial_path).to eq 'hyrax/monographs/monograph'
       end
     end
+
+    context 'with Hyrax::PcdmCollection' do
+      let(:solr_hash) { { 'has_model_ssim' => 'Hyrax::PcdmCollection' } }
+
+      it 'resolves to collection path' do
+        expect(solr_document.to_model.to_partial_path).to eq 'hyrax/collections/collection'
+      end
+    end
   end
 
   describe '#hydra_model' do
