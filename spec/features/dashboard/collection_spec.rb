@@ -237,7 +237,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       it "makes a new collection", :js do
-        click_button "New Collection"
+        click_button "Add new collection"
         expect(page).to have_content 'Select type of collection'
 
         choose('User Collection')
@@ -273,7 +273,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       it 'makes a new collection' do
-        click_link "New Collection"
+        click_link "Add new collection"
         expect(page).to have_selector('h1', text: 'New User Collection')
         expect(page).to have_selector "input.collection_title.multi_value"
 
@@ -296,9 +296,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         visit '/dashboard/my/collections'
       end
 
-      it 'does show New Collection button' do
-        expect(page).not_to have_link "New Collection"
-        expect(page).not_to have_button "New Collection"
+      it 'does show _Add new collection_ button' do
+        expect(page).not_to have_link "Add new collection"
+        expect(page).not_to have_button "Add new collection"
       end
     end
   end
