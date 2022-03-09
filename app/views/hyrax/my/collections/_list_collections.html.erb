@@ -60,9 +60,9 @@
   <td class="collection_type">
     <%= collection_presenter.collection_type_badge %>
   </td>
-  <td><%= collection_presenter.permission_badge %></td>
-  <td><%= collection_presenter.total_viewable_items %></td>
   <td class="date"><%= collection_presenter.modified_date.try(:to_formatted_s, :standard) %> </td>
+  <td><%= collection_presenter.total_viewable_items %></td>
+  <td><%= collection_presenter.permission_badge %></td>
   <td>
     <% if collection_presenter.solr_document.admin_set? %>
       <%= render '/hyrax/my/admin_set_action_menu', admin_set_presenter: collection_presenter %>
