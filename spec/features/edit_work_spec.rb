@@ -78,4 +78,17 @@ RSpec.describe 'Editing a work', type: :feature do
       expect(page).to have_selector('#new_group_name_skel', text: 'librarians admin donor')
     end
   end
+
+  context 'with a parent Valkyrie resource' do
+    let(:monograph) { FactoryBot.valkyrie_create(:monograph, :with_member_works) }
+
+    before do
+      sign_in user_admin
+    end
+
+    it 'displays an edit page with a relationships tab' do
+      visit edit_hyrax_monograph_path(monograph)
+      expect(page).to have_link("Relationships")
+    end
+  end
 end
