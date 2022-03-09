@@ -376,7 +376,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         get :new
 
         expect(assigns['admin_set_options'].select_options)
-          .to contain_exactly(["Default Admin Set", admin_set_id, { "data-release-no-delay" => true, "data-sharing" => false }])
+          .to contain_exactly(["Default Admin Set", admin_set_id, { "data-sharing" => true }])
       end
     end
   end
