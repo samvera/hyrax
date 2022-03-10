@@ -52,7 +52,7 @@ pt-BR:
       cancel: Cancelar
       close: Fechar
       collection:
-        new: Adicionar nova coleção
+        new: Nova coleção
       delete: Excluir
       edit: Editar
       less: Menos
@@ -1014,7 +1014,7 @@ pt-BR:
           edit_collection_deny: Você não possui privilégios suficientes para editar esta coleção.
           edit_selected: Editar seleção
           edit_work: Editar obra
-          highlight: Destacar a obra no Perfil
+          highlight: Destacar a obra no perfil
           members_no_access: Você não tem privilégios suficientes para nenhum dos membros selecionados
           nesting_not_allowed: Coleções deste tipo não permitem sub-coleções.
           nesting_permission_denied: Você não possui privilégios suficientes para acrescentar esta coleção a outra coleção.
