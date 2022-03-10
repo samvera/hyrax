@@ -7,6 +7,8 @@ module Hyrax
       # collections on a given work.
       #
       # @since 3.0.0
+      # @deprecated This is part of the legacy AF set of transaction steps for works.
+      #   Transactions are not being used with AF works.  This will be removed in 4.0.
       class ApplyCollectionPermissionTemplate
         include Dry::Transaction::Operation
 

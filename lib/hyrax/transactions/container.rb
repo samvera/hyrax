@@ -10,9 +10,9 @@ module Hyrax
     #
     # In advanced use, the container could provide runtime dependency injection
     # for particular step code. For the basic case, users can consider it as
-    # providing namespaceing and resolution for steps (as used in
-    # `Hyrax::Transaction::CreateWork`; e.g.
-    # `step :save_work, with: 'work.save_work'`).
+    # providing namespacing and resolution for steps (as used in
+    # `Hyrax::Transaction::WorkCreate`; e.g.
+    # `step :save, with: 'work_resource.save'`).
     #
     # @since 2.4.0
     #
@@ -25,29 +25,21 @@ module Hyrax
       require 'hyrax/transactions/collection_create'
       require 'hyrax/transactions/collection_destroy'
       require 'hyrax/transactions/collection_update'
-      require 'hyrax/transactions/create_work'
-      require 'hyrax/transactions/destroy_work'
       require 'hyrax/transactions/file_set_destroy'
       require 'hyrax/transactions/work_create'
       require 'hyrax/transactions/work_destroy'
-      require 'hyrax/transactions/update_work'
+      require 'hyrax/transactions/work_update'
       require 'hyrax/transactions/steps/add_file_sets'
       require 'hyrax/transactions/steps/add_to_collections'
       require 'hyrax/transactions/steps/add_to_parent'
-      require 'hyrax/transactions/steps/apply_collection_permission_template'
       require 'hyrax/transactions/steps/apply_collection_type_permissions'
-      require 'hyrax/transactions/steps/apply_permission_template'
-      require 'hyrax/transactions/steps/apply_visibility'
       require 'hyrax/transactions/steps/check_for_empty_admin_set'
       require 'hyrax/transactions/steps/delete_access_control'
       require 'hyrax/transactions/steps/delete_resource'
-      require 'hyrax/transactions/steps/destroy_work'
       require 'hyrax/transactions/steps/ensure_admin_set'
       require 'hyrax/transactions/steps/set_collection_type_gid'
-      require 'hyrax/transactions/steps/ensure_permission_template'
       require 'hyrax/transactions/steps/remove_file_set_from_work'
       require 'hyrax/transactions/steps/save'
-      require 'hyrax/transactions/steps/save_work'
       require 'hyrax/transactions/steps/save_access_control'
       require 'hyrax/transactions/steps/set_default_admin_set'
       require 'hyrax/transactions/steps/set_modified_date'
@@ -56,11 +48,22 @@ module Hyrax
       require 'hyrax/transactions/steps/set_user_as_depositor'
       require 'hyrax/transactions/steps/validate'
 
+      # The following transactions and steps are deprecated.
+      require 'hyrax/transactions/create_work'
+      require 'hyrax/transactions/destroy_work'
+      require 'hyrax/transactions/update_work'
+      require 'hyrax/transactions/steps/apply_collection_permission_template'
+      require 'hyrax/transactions/steps/apply_permission_template'
+      require 'hyrax/transactions/steps/apply_visibility'
+      require 'hyrax/transactions/steps/destroy_work'
+      require 'hyrax/transactions/steps/ensure_permission_template'
+      require 'hyrax/transactions/steps/save_work'
+
       extend Dry::Container::Mixin
 
       # Disable BlockLength rule for DSL code
       # rubocop:disable Metrics/BlockLength
-      namespace 'change_set' do |ops|
+      namespace 'change_set' do |ops| # Hyrax::ChangeSet
         ops.register 'add_to_collections' do
           Steps::AddToCollections.new
         end
@@ -75,10 +78,6 @@ module Hyrax
 
         ops.register 'create_collection' do
           CollectionCreate.new
-        end
-
-        ops.register 'update_collection' do
-          CollectionUpdate.new
         end
 
         ops.register 'create_work' do
@@ -117,8 +116,12 @@ module Hyrax
           Steps::SetUserAsDepositor.new
         end
 
+        ops.register 'update_collection' do
+          CollectionUpdate.new
+        end
+
         ops.register 'update_work' do
-          UpdateWork.new
+          WorkUpdate.new
         end
 
         ops.register 'validate' do
@@ -126,7 +129,7 @@ module Hyrax
         end
       end
 
-      namespace 'file_set' do |ops| # Hyrax::FileSet
+      namespace 'file_set' do |ops| # Hyrax::FileSet resource
         ops.register 'delete' do
           Steps::DeleteResource.new
         end
@@ -140,7 +143,7 @@ module Hyrax
         end
       end
 
-      namespace 'admin_set_resource' do |ops| # valkyrie administrative set
+      namespace 'admin_set_resource' do |ops| # Hyrax::AdministrativeSet resource
         ops.register 'check_empty' do
           Steps::CheckForEmptyAdminSet.new
         end
@@ -170,7 +173,7 @@ module Hyrax
         end
       end
 
-      namespace 'collection_resource' do |ops| # valkyrie collection
+      namespace 'collection_resource' do |ops| # Hyrax::PcdmCollection resource
         ops.register 'apply_collection_type_permissions' do
           Steps::ApplyCollectionTypePermissions.new
         end
@@ -192,7 +195,7 @@ module Hyrax
         end
       end
 
-      namespace 'work_resource' do |ops| # valkyrie works
+      namespace 'work_resource' do |ops| # Hyrax::Work resource
         ops.register 'add_file_sets' do
           Steps::AddFileSets.new
         end
@@ -218,7 +221,8 @@ module Hyrax
         end
       end
 
-      namespace 'work' do |ops| # legacy AF works
+      # legacy AF works processing by transactions is deprecated
+      namespace 'work' do |ops|
         ops.register 'apply_collection_permission_template' do
           Steps::ApplyCollectionPermissionTemplate.new
         end

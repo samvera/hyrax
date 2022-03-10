@@ -46,8 +46,11 @@ module Hyrax
     # @deprecated Development on Dry::Transaction has been discontinued, we're
     #   removing existing transactions and replacing them with Dry::Monad-based
     #   valkyrie versions.
+    # @see Hyrax::Transactions::WorkCreate
     class CreateWork
       include Dry::Transaction(container: Hyrax::Transactions::Container)
+
+      # DO NOT USE - This class is deprecated.  See Hyrax::Transactions::WorkCreate for resource works.
 
       step :set_default_admin_set,     with: 'work.set_default_admin_set'
       step :ensure_admin_set,          with: 'work.ensure_admin_set'

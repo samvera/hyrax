@@ -7,6 +7,8 @@ module Hyrax
       # work's AdminSet.
       #
       # @since 2.4.0
+      # @deprecated This is part of the legacy AF set of transaction steps for works.
+      #   Transactions are not being used with AF works.  This will be removed in 4.0.
       class ApplyPermissionTemplate
         include Dry::Transaction::Operation
 
