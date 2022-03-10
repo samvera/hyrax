@@ -1,0 +1,17 @@
+Description:
+  This generator creates the necessary files for a Hyrax::PcdmCollection.
+
+Example:
+  rails generate hyrax:collection_resource MyCollection
+
+  This will create:
+    app/models/my_collection.rb
+    app/forms/my_collection_form.rb
+    app/indexers/my_collection_indexer.rb
+    config/metadata/my_collection.yaml
+    spec/models/my_collection_spec.rb
+    spec/forms/my_collection_form_spec.rb
+    spec/indexers/my_collection_indexer_spec.rb
+
+  This will also:
+    set Hyrax.config.collection_model = "MyCollection"

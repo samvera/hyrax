@@ -1,0 +1,8 @@
+# frozen_string_literal: true
+
+# Generated via
+#  `rails generate hyrax:collection_resource <%= class_name %>`
+class <%= class_name %>Indexer < Hyrax::PcdmCollectionIndexer
+  include Hyrax::Indexer(:basic_metadata)
+  include Hyrax::Indexer(:<%= file_name %>)
+end
