@@ -1,3 +1,24 @@
+# To change metadata used for Hyrax::PcdmCollections...
+#
+# add fields - see /config/metadata/collection_metadata.yaml
+#
+# remove or modify field
+# * copy this file to your app in the same location
+# * edit copied file
+# * remove the entire field definition to remove the field completely from collection resources
+# * modify any part of the field definition to change the characteristics of a field
+#
+# @note A definition in this file cannot be overridden by adding the same field to
+#   the collection_metadata.yaml.  This will cause an error.
+#
+# @note To remove all basic metadata, set this file to `attributes: {}`.
+#
+# @note ActiveFedora::Base Collections use a different process for metadata.
+#   In this case, a Collection class is generated when the Hyrax app generator
+#   is run.  In the generated class…
+# * includes `Hyrax::CollectionBehavior` which includes `Hyrax::CoreMetadata`
+# * includes `Hyrax::BasicMetadata`
+#
 attributes:
   description:
     type: string

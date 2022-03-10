@@ -1,1 +1,10 @@
+# To change metadata used for Hyrax::PcdmCollections...
+#
+# add fields
+# * copy this file to your app in the same location
+# * edit copied file
+# * add custom field definitions
+#
+# remove or modify field - see /config/metadata/collection_basic_metadata.yaml
+#
 attributes: {}
