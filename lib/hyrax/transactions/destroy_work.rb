@@ -16,8 +16,11 @@ module Hyrax
     # @deprecated Development on Dry::Transaction has been discontinued, we're
     #   removing existing transactions and replacing them with Dry::Monad-based
     #   valkyrie versions.
+    # @see Hyrax::Transactions::WorkDestroy
     class DestroyWork
       include Dry::Transaction(container: Hyrax::Transactions::Container)
+
+      # DO NOT USE - This class is deprecated.  See Hyrax::Transactions::WorkDestroy for resource works.
 
       step :destroy_work, with: 'work.destroy_work'
     end

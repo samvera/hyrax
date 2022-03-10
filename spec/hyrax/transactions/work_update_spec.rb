@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'hyrax/transactions'
 require 'dry/container/stub'
 
-RSpec.describe Hyrax::Transactions::UpdateWork, valkyrie_adapter: :test_adapter do
+RSpec.describe Hyrax::Transactions::WorkUpdate, valkyrie_adapter: :test_adapter do
   subject(:tx)     { described_class.new }
   let(:change_set) { Hyrax::ChangeSet.for(resource) }
   let(:xmas)       { DateTime.parse('2018-12-25 11:30').iso8601 }

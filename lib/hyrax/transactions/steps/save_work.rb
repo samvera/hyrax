@@ -18,6 +18,9 @@ module Hyrax
       #   step.call(work).or { |err| puts err.messages }
       #
       # @since 2.4.0
+      # @deprecated This is part of the legacy AF set of transaction steps for works.
+      #   Transactions are not being used with AF works.  This will be removed in 4.0.
+      # @see Hyrax::Transactions::Steps::Save
       class SaveWork
         include Dry::Transaction::Operation
 
