@@ -303,7 +303,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         get :edit, params: { id: work.id }
 
         expect(assigns[:form])
-          .to have_attributes(title: work.title.first, version: an_instance_of(String))
+          .to have_attributes(title: work.title, version: an_instance_of(String))
       end
 
       context 'and the work has member FileSets' do

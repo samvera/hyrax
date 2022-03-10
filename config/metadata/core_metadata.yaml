@@ -8,7 +8,7 @@ attributes:
     form:
       required: true
       primary: true
-      multiple: false
+      multiple: true
   date_modified:
     type: date_time
   date_uploaded:
