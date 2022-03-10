@@ -30,6 +30,7 @@
               t(:'helpers.action.work.new'),
               '#',
               data: { behavior: "select-work", target: "#worktypes-to-create", 'create-type' => 'single' },
+              id: 'add-new-work-button',
               class: 'btn btn-primary'
             ) %>
       <% else # simple link to the first work type %>
@@ -43,6 +44,7 @@
         <%= link_to(
               t(:'helpers.action.work.new'),
               new_polymorphic_path([main_app, @create_work_presenter.first_model]),
+              id: 'add-new-work-button',
               class: 'btn btn-primary'
             ) %>
       <% end %>
@@ -60,9 +62,9 @@
         <% elsif current_page?(hyrax.dashboard_works_path(locale: nil)) && !current_ability.admin? %>
           <span class="count-display"><%= I18n.t('hyrax.my.count.works.you_manage', total_count: @response.total_count).html_safe %></span>
         <% else %>
-          <span class="count-display"><%= I18n.t('hyrax.my.count.works.in_repo', total_count: @response.total_count).html_safe %></span>     
+          <span class="count-display"><%= I18n.t('hyrax.my.count.works.in_repo', total_count: @response.total_count).html_safe %></span>
         <% end %>
-      </div> 
+      </div>
       <div class="panel-body">
         <%= render 'search_header' %>
         <h2 class="sr-only"><%= t('hyrax.my.count.works.works_listing') %></h2>

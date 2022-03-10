@@ -15,7 +15,7 @@ module Hyrax
       args[:data]['remove-text'] = args[:remove_text]
 
       args[:data][:url] = hyrax.trophy_work_path(id)
-      link_to '#', class: args[:class], data: args[:data] do
+      link_to '#', id: 'action-highlight-work', class: args[:class], data: args[:data] do
         yield(text)
       end
     end

@@ -92,7 +92,7 @@ RSpec.describe 'Transferring work ownership:', type: :feature do
     visit '/dashboard/my/works'
 
     db_item_actions_toggle(work).click
-    click_link 'Transfer Ownership of Work'
+    find('#action-transfer-work').click
     expect(page).to have_content I18n.t(:'hyrax.transfers.new.sr_only_description', work_title: work.title.first)
     new_owner_dropdown.click
     new_owner_search_field.set new_owner.user_key

@@ -16,8 +16,8 @@ RSpec.describe 'hyrax/dashboard/collections/_show_document_list_menu.html.erb', 
       render('show_document_list_menu', document: document, current_user: user)
       expect(rendered).to have_content 'Select'
       expect(rendered).to have_content 'Edit'
-      expect(rendered).not_to have_content 'Download File'
-      expect(rendered).to have_content 'Highlight Work on Profile'
+      expect(rendered).not_to have_content 'Download file'
+      expect(rendered).to have_content 'Highlight work on profile'
     end
 
     it "displays the action list in a drop down for an individual work the user cannot edit" do
@@ -25,8 +25,8 @@ RSpec.describe 'hyrax/dashboard/collections/_show_document_list_menu.html.erb', 
       render('show_document_list_menu', document: document, current_user: user)
       expect(rendered).to have_content 'Select'
       expect(rendered).not_to have_content 'Edit'
-      expect(rendered).not_to have_content 'Download File'
-      expect(rendered).to have_content 'Highlight Work on Profile'
+      expect(rendered).not_to have_content 'Download file'
+      expect(rendered).to have_content 'Highlight work on profile'
     end
   end
 end

@@ -43,7 +43,7 @@ RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
       it 'the line item displays the work and its actions' do
         expect(rendered).to have_selector('h1', text: 'Works')
         expect(rendered).to have_link('Create batch of works')
-        expect(rendered).to have_link('Add new work')
+        expect(rendered).to have_css('#add-new-work-button')
       end
 
       context 'with batch_upload off' do
@@ -67,7 +67,7 @@ RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
       it 'the line item displays the work and its actions' do
         expect(rendered).to have_selector('h1', text: 'Works')
         expect(rendered).to have_link('Create batch of works')
-        expect(rendered).to have_link('Add new work')
+        expect(rendered).to have_css('#add-new-work-button')
       end
 
       context 'with batch_upload off' do

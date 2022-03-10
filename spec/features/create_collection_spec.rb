@@ -28,7 +28,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
         it 'user is not offered the option to create that type of collection' do
           # try and create the new admin set
-          click_button "Add new collection"
+          find('#add-new-collection-button').click
           expect(page).to have_xpath("//h4", text: "User Collection")
           expect(page).to have_xpath("//h4", text: "Other")
           expect(page).not_to have_xpath("//h4", text: "Managed Collection")
@@ -44,7 +44,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
         it 'user is not offered the option to create that type of collection' do
           # try and create the new admin set
-          click_button "Add new collection"
+          find('#add-new-collection-button').click
           expect(page).to have_xpath("//h4", text: "User Collection")
           expect(page).to have_xpath("//h4", text: "Other")
           expect(page).not_to have_xpath("//h4", text: "Managed Collection")
@@ -60,7 +60,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
       it 'creates the collection' do
         # create the new collection
-        click_button "Add new collection"
+        find('#add-new-collection-button').click
         expect(page).to have_xpath("//h4", text: "User Collection")
         expect(page).to have_xpath("//h4", text: "Other")
         expect(page).to have_xpath("//h4", text: "Managed Collection")
@@ -111,7 +111,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
       it 'creates the collection' do
         # create the new collection
-        click_button "Add new collection"
+        find('#add-new-collection-button').click
         expect(page).to have_xpath("//h4", text: "User Collection")
         expect(page).to have_xpath("//h4", text: "Other")
         expect(page).to have_xpath("//h4", text: "Managed Collection")
@@ -160,7 +160,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
     it 'creates the collection' do
       # create the new collection
-      click_button "Add new collection"
+      find('#add-new-collection-button').click
       expect(page).to have_xpath("//h4", text: "User Collection")
       expect(page).to have_xpath("//h4", text: "Other")
       expect(page).to have_xpath("//h4", text: "Managed Collection")
