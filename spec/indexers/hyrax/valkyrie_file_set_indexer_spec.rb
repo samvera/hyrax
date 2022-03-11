@@ -141,8 +141,12 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
       # from FileSet metadata
       expect(subject['file_ids_ssim']).to match_array [mock_file.id.to_s, mock_text.id.to_s]
       expect(subject['original_file_id_ssi']).to eq mock_file.id.to_s
-      expect(subject['thumbnail_id_ssi']).to eq ""
       expect(subject['extracted_text_id_ssi']).to eq mock_text.id.to_s
+      expect(subject['hasRelatedMediaFragment_ssim']).to eq fileset_id
+      expect(subject['hasRelatedImage_ssim']).to eq fileset_id
+
+      # from ThumbnailIndexer
+      expect(subject['thumbnail_path_ss']).to eq '/downloads/foo12345?file=thumbnail'
 
       # from FileMetadata
       expect(subject['original_file_alternate_ids_tesim']).to eq mock_file['alternate_ids']

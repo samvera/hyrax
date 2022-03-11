@@ -55,5 +55,11 @@ module Hyrax
     def file_set?
       true
     end
+
+    ##
+    # @return [Valkyrie::Types::ID]
+    def representative_id
+      id
+    end
   end
 end

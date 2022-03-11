@@ -85,6 +85,27 @@ RSpec.shared_examples 'a visibility indexer' do
   end
 end
 
+RSpec.shared_examples 'a thumbnail indexer' do
+  before do
+    raise 'indexer_class must be set with `let(:indexer_class)`' unless defined? indexer_class
+    raise 'resource must be set with `let(:resource)` and is expected to be a kind of Hyrax::Resource' unless defined?(resource) && resource.kind_of?(Hyrax::Resource)
+    # optionally can pass in default_visibility by setting it with a let statement if your application changes the default; Hyrax defines this as 'restricted'
+    # See samvera/hyrda-head hydra-access-controls/app/models/concerns/hydra/access_controls/access_rights.rb for possible VISIBILITY_TEXT_VALUE_...'
+  end
+  subject(:indexer)  { indexer_class.new(resource: resource) }
+  let(:thumbnail_path) { '/downloads/foo12345?file=thumbnail' }
+
+  before do
+    allow(indexer.thumbnail_path_service).to receive(:call).and_return(thumbnail_path)
+  end
+
+  describe '#to_solr' do
+    it 'indexes a thumbnail path' do
+      expect(indexer.to_solr).to include(thumbnail_path_ss: thumbnail_path)
+    end
+  end
+end
+
 RSpec.shared_examples 'a Core metadata indexer' do
   before do
     raise 'indexer_class must be set with `let(:indexer_class)`' unless defined? indexer_class
@@ -144,6 +165,53 @@ RSpec.shared_examples 'a Basic metadata indexer' do
   end
 end
 
+RSpec.shared_examples 'a File Set indexer' do
+  before do
+    raise 'indexer_class must be set with `let(:indexer_class)`' unless defined? indexer_class
+    # NOTE: resource must be persisted for permission tests to pass
+    raise 'resource must be set with `let(:resource)` and is expected to be a kind of Hyrax::FileSet' unless defined?(resource) && resource.kind_of?(Hyrax::FileSet)
+    # optionally can pass in default_visibility by setting it with a let statement if your application changes the default; Hyrax defines this as 'restricted'
+    # See samvera/hyrda-head hydra-access-controls/app/models/concerns/hydra/access_controls/access_rights.rb for possible VISIBILITY_TEXT_VALUE_...'
+  end
+  subject(:indexer) { indexer_class.new(resource: resource) }
+  let(:file_ids)          { ['fileid1', 'fileid2'] }
+
+  it_behaves_like 'a Hyrax::Resource indexer'
+  it_behaves_like 'a Core metadata indexer'
+  it_behaves_like 'a Basic metadata indexer'
+  it_behaves_like 'a permission indexer'
+  it_behaves_like 'a visibility indexer'
+  it_behaves_like 'a thumbnail indexer'
+
+  describe '#to_solr' do
+    it 'indexes generic type' do
+      expect(indexer.to_solr)
+        .to include(generic_type_sim: a_collection_containing_exactly('FileSet'))
+    end
+
+    it 'indexed file ids' do
+      expect(indexer.to_solr)
+        .to include(file_ids_ssim: a_collection_containing_exactly(*ids))
+    end
+
+    it 'indexes representative id' do
+      expect(indexer.to_solr)
+        .to include(hasRelatedMediaFragment_ssim: a_collection_containing_exactly(an_instance_of(String)))
+    end
+
+    it 'indexes thumbnail id' do
+      expect(indexer.to_solr)
+        .to include(hasRelatedImage_ssim: a_collection_containing_exactly(an_instance_of(String)))
+    end
+
+    it 'indexes depositor' do
+      expect(indexer.to_solr)
+        .to include(depositor_ssim: [resource.depositor],
+                    depositor_tesim: [resource.depositor])
+    end
+  end
+end
+
 RSpec.shared_examples 'a Work indexer' do
   before do
     raise 'indexer_class must be set with `let(:indexer_class)`' unless defined? indexer_class
@@ -158,6 +226,19 @@ RSpec.shared_examples 'a Work indexer' do
   it_behaves_like 'a Core metadata indexer'
   it_behaves_like 'a permission indexer'
   it_behaves_like 'a visibility indexer'
+  it_behaves_like 'a thumbnail indexer'
+
+  describe '#to_solr' do
+    it 'indexes representative id' do
+      expect(indexer.to_solr)
+        .to include('hasRelatedMediaFragment_ssim': a_collection_containing_exactly(an_instance_of(String)))
+    end
+
+    it 'indexes thumbnail id' do
+      expect(indexer.to_solr)
+        .to include('hasRelatedImage_ssim': a_collection_containing_exactly(an_instance_of(String)))
+    end
+  end
 end
 
 RSpec.shared_examples 'a Collection indexer' do
@@ -172,6 +253,7 @@ RSpec.shared_examples 'a Collection indexer' do
   it_behaves_like 'a Core metadata indexer'
   it_behaves_like 'a permission indexer'
   it_behaves_like 'a visibility indexer'
+  it_behaves_like 'a thumbnail indexer'
 
   describe '#to_solr' do
     it 'indexes collection type gid' do
@@ -182,11 +264,6 @@ RSpec.shared_examples 'a Collection indexer' do
     it 'indexes generic type' do
       expect(indexer.to_solr)
         .to include(generic_type_sim: a_collection_containing_exactly('Collection'))
-    end
-
-    it 'indexes thumbnail' do
-      expect(indexer.to_solr)
-        .to include(thumbnail_path_ss: include('assets/collection', '.png'))
     end
 
     it 'indexes depositor' do
