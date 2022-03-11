@@ -76,7 +76,11 @@ module Hyrax
       ##
       # @return [Dry::Types::Type]
       def type
-        collection_type = config['multiple'] ? Valkyrie::Types::Array : Identity
+        collection_type = if config['multiple']
+                            Valkyrie::Types::Array.constructor { |v| Array(v).select(&:present?) }
+                          else
+                            Identity
+                          end
         collection_type.of(type_for(config['type']))
       end
 
