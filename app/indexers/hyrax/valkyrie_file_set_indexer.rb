@@ -19,8 +19,8 @@ module Hyrax
         solr_doc['file_ids_ssim']                = resource.file_ids&.map(&:to_s)
         solr_doc['original_file_id_ssi']         = resource.original_file_id.to_s
         solr_doc['extracted_text_id_ssi']        = resource.extracted_text_id.to_s
-        solr_doc[:hasRelatedMediaFragment_ssim] = resource.representative_id.to_s
-        solr_doc[:hasRelatedImage_ssim]         = resource.thumbnail_id.to_s
+        solr_doc['hasRelatedMediaFragment_ssim'] = resource.representative_id.to_s
+        solr_doc['hasRelatedImage_ssim']         = resource.thumbnail_id.to_s
 
         # Add in metadata from the original file.
         file_metadata = original_file
