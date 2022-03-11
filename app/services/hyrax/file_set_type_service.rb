@@ -45,7 +45,7 @@ module Hyrax
     private
 
     def audio_types
-      return ::FileSet.audio_mime_types if defined?(::FileSet)
+      return ::FileSet.audio_mime_types if defined?(::FileSet) && ::FileSet.respond_to?(:audio_mime_types)
       DEFAULT_AUDIO_TYPES
     end
   end
