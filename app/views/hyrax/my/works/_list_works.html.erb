@@ -29,7 +29,11 @@
     </div>
   </td>
   <td class="date text-center">
-    <% unless document.date_modified.nil? %>
+    <% if document.date_modified.nil? %>
+      <% unless document.date_uploaded.nil? %>
+       <%= document.date_uploaded.strftime("%m/%d/%Y") %>
+      <% end %>
+    <% else %>
       <%= document.date_modified.strftime("%m/%d/%Y") %>
     <% end %>
   </td>
