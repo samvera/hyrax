@@ -268,7 +268,7 @@ nginx:
   #     subPath: public-assets
   # serverBlock: |-
   #   upstream rails_app {
-  #     server {{ .Values.global.hyraxName }};
+  #     server {{ .Values.global.hyraxHostName }};
   #   }
 
   #   map $status $loggable {
@@ -411,7 +411,8 @@ global:
   postgresql:
     postgresqlUsername: hyrax
     postgresqlPassword: hyrax_pass
-  hyraxName: hyrax
+  # This is th name of the running rails server pod
+  hyraxHostName: hyrax
 
 nodeSelector: {}
 
