@@ -1,5 +1,22 @@
 # frozen_string_literal: true
 module Hyrax
+  # TODO: call this service from the transaction pipeline, instead of from a
+  # background job invoked by a listener
+  #
+  # currently called from ContentDepositorChangeEventJob, app/jobs/content_depositor_change_event_job
+  #   which is called in:
+  #     app/models/proxy_deposit_request#transfer!,
+  #       which is called in:
+  # ***     app/controllers/hyrax/transfers_controller
+  #     app/actors/hyrax/actors/transfer_request_actor (basically a wrapper for this) -- old behavior,
+  #     app/services/hyrax/listeners/proxy_deposit_listener
+  #       which listens for object.deposited, which is published by:
+  # ***     lib/hyrax/transactions/steps/save.rb
+  #         app/services/hyrax/work_uploads_handler.rb -- doesn't look like this
+  #           will actually need the proxy depositor stuff so not worried about
+  #           moving it.
+  #         the after_create_concern callback, which is invoked by:
+  #           base_actor.rb -- old behavior
   class ChangeContentDepositorService
     # Set the given `user` as the depositor of the given `work`; If
     # `reset` is true, first remove all previous permissions.
