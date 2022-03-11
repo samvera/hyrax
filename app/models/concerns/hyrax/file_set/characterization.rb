@@ -29,7 +29,7 @@ module Hyrax
           :page_count, :file_title, :last_modified, :original_checksum,
           :duration, :sample_rate, :alpha_channels
         ]
-        self.characterization_proxy = :original_file
+        self.characterization_proxy = Hyrax.config.characterization_proxy
 
         delegate(*characterization_terms, to: :characterization_proxy)
 

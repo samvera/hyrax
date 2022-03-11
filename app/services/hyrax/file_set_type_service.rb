@@ -17,13 +17,10 @@ module Hyrax
     attr_reader :file_set
 
     ##
-    # @todo make `file_set_characterization_proxy` (or something better?)
-    #   application-level configuration.
-    #
     # @param [Hyrax::FileSet] file_set
     # @param [Symbol] characterization_proxy defaults to the setting provided by
     #   the application's ActiveFedora `FileSet` class.
-    def initialize(file_set:, characterization_proxy: ::FileSet.characterization_proxy, query_service: Hyrax.custom_queries)
+    def initialize(file_set:, characterization_proxy: Hyrax.config.characterization_proxy, query_service: Hyrax.custom_queries)
       @file_set = file_set
       @proxy_use = Hyrax::FileMetadata::Use.uri_for(use: characterization_proxy)
       @queries = query_service
