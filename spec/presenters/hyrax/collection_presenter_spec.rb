@@ -2,7 +2,7 @@
 RSpec.describe Hyrax::CollectionPresenter do
   subject(:presenter) { described_class.new(solr_doc, ability) }
   let(:collection) do
-    build(:hyrax_collection,
+    build(:collection_resource,
           id: 'adc12v',
           description: ['a nice collection'],
           based_near: ['Over there'],
@@ -114,7 +114,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     context "empty collection" do
       let(:ability) { double(::Ability, user_groups: ['public'], current_user: user) }
       let(:user) { create(:user) }
-      let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
+      let(:collection) { FactoryBot.valkyrie_create(:collection_resource) }
 
       before { allow(ability).to receive(:admin?).and_return(false) }
 
