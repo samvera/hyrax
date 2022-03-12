@@ -8,6 +8,7 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
       id: fileset_id,
       file_ids: [mock_file.id, mock_text.id],
       original_file_id: mock_file.id,
+      thumbnail_id: mock_thumbnail.id,
       extracted_text_id: mock_text.id,
       contributor: ['Rogers, Jacqueline'],
       creator: ['Cleary, Beverly'],
@@ -109,6 +110,11 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
     mock_file_factory(content: "abcxyz")
   end
 
+  let(:mock_thumbnail) do
+    Hyrax::FileMetadata.new(file_set_id: fileset_id,
+                            type: [Hyrax::FileMetadata::Use::THUMBNAIL])
+  end
+
   let(:indexer) { described_class.new(resource: file_set) }
 
   describe '#to_solr' do
@@ -143,7 +149,7 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
       expect(subject['original_file_id_ssi']).to eq mock_file.id.to_s
       expect(subject['extracted_text_id_ssi']).to eq mock_text.id.to_s
       expect(subject['hasRelatedMediaFragment_ssim']).to eq fileset_id
-      expect(subject['hasRelatedImage_ssim']).to eq fileset_id
+      expect(subject['hasRelatedImage_ssim']).to eq mock_thumbnail.id.to_s
 
       # from ThumbnailIndexer
       expect(subject['thumbnail_path_ss']).to eq '/downloads/foo12345?file=thumbnail'
