@@ -34,7 +34,7 @@ module Wings
       # Hyrax uses a shortened noid in place of an id, and this is what is
       # stored in ActiveFedora, which is still the storage backend for Hyrax.
       #
-      # If you do not heed this warning, then switch to Valyrie's Postgres
+      # If you do not heed this warning, then switch to Valkyrie's Postgres
       # MetadataAdapter, but continue passing noids to find_by, you will
       # start getting ObjectNotFoundErrors instead of the objects you wanted
       #
