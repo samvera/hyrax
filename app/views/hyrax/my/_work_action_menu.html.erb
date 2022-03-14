@@ -12,34 +12,33 @@
 
     <% if can? :edit, document.id %>
       <li role="menuitem" tabindex="-1">
-        <%= link_to [main_app, :edit, document] do %>
-          <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
-          <span> <%= t("hyrax.dashboard.my.action.edit_work") %> </span>
+        <%= link_to [main_app, :edit, document],
+                    id: 'action-edit-work' do %>
+          <%= t("hyrax.dashboard.my.action.edit_work") %>
         <% end %>
       </li>
 
       <li role="menuitem" tabindex="-1">
         <%= link_to [main_app, document],
                     method: :delete,
+                    id: 'action-delete-work',
                     data: {
                       confirm: t("hyrax.dashboard.my.action.work_confirmation", application_name: application_name) } do %>
-          <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
-          <span> <%= t("hyrax.dashboard.my.action.delete_work") %> </span>
+          <%= t("hyrax.dashboard.my.action.delete_work") %>
         <% end %>
       </li>
     <% end %>
 
     <li role="menuitem" tabindex="-1">
       <%= display_trophy_link(current_user, document.id) do |text| %>
-        <i class="glyphicon glyphicon-star" aria-hidden="true"></i> <%= text %>
+        <%= text %>
       <% end %>
     </li>
 
     <% if can? :transfer, document.id %>
       <li role="menuitem" tabindex="-1">
-        <%= link_to(hyrax.new_work_transfer_path(document.id), class: 'itemicon itemtransfer', title: t("hyrax.dashboard.my.action.transfer")) do %>
-          <i class="glyphicon glyphicon-transfer" aria-hidden="true"></i>
-          <span> <%= t("hyrax.dashboard.my.action.transfer") %> </span>
+        <%= link_to(hyrax.new_work_transfer_path(document.id), id: 'action-transfer-work', class: 'itemicon itemtransfer', title: t("hyrax.dashboard.my.action.transfer")) do %>
+          <%= t("hyrax.dashboard.my.action.transfer") %>
         <% end %>
       </li>
     <% end %>

@@ -23,7 +23,7 @@ RSpec.describe 'Creating a new Hyrax::Work Resource', :js, :workflow, :feature d
     before do
       sign_in user
       click_link 'Works'
-      click_link "Add new work"
+      find('#add-new-work-button').click
       # Monograph is a Valkyrie resource
       choose "payload_concern", option: "Monograph"
       click_button 'Create work'

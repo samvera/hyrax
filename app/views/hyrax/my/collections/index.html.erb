@@ -25,6 +25,7 @@
       <% if @collection_type_list_presenter.many? %>
         <% # modal to select type %>
         <button type="button"
+          id="add-new-collection-button"
           class="btn btn-primary"
           data-toggle="modal"
           data-target="#collectiontypes-to-create"
@@ -33,7 +34,7 @@
         </button>
       <% else @collection_type_list_presenter.any? %>
         <% # link directly to create collection form with type %>
-        <%= link_to(t('helpers.action.collection.new'), append_collection_type_url(new_dashboard_collection_path, @collection_type_list_presenter.first_collection_type.id), class: 'btn btn-primary') %>
+        <%= link_to(t('helpers.action.collection.new'), append_collection_type_url(new_dashboard_collection_path, @collection_type_list_presenter.first_collection_type.id), id: 'add-new-collection-button', class: 'btn btn-primary') %>
       <% end %>
     <% end %>
   </section>
@@ -46,7 +47,7 @@
       <% elsif current_page?(hyrax.dashboard_collections_path(locale: nil)) && !current_ability.admin? %>
         <span class="count-display"><%= I18n.t('hyrax.my.count.collections.you_manage', total_count: @response.total_count).html_safe %></span>
       <% else %>
-        <span class="count-display"><%= I18n.t('hyrax.my.count.collections.in_repo', total_count: @response.total_count).html_safe %></span>     
+        <span class="count-display"><%= I18n.t('hyrax.my.count.collections.in_repo', total_count: @response.total_count).html_safe %></span>
       <% end %>
     </div>
     <div class="panel-body">

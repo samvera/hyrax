@@ -6,7 +6,7 @@ RSpec.describe 'hyrax/my/_work_action_menu.html.erb' do
 
   before do
     allow(view).to receive(:current_user).and_return(user)
-    allow(view).to receive(:display_trophy_link).and_return("Highlight Work on Profile")
+    allow(view).to receive(:display_trophy_link).and_return("Highlight work on profile")
   end
 
   context "When the user can transfer and edit works" do
@@ -17,10 +17,10 @@ RSpec.describe 'hyrax/my/_work_action_menu.html.erb' do
     end
 
     it "draws the page" do
-      expect(rendered).to have_link "Transfer Ownership of Work"
-      expect(rendered).to have_link 'Edit Work', href: edit_hyrax_generic_work_path(id)
-      expect(rendered).to have_link 'Delete Work', href: hyrax_generic_work_path(id)
-      expect(rendered).to have_content 'Highlight Work on Profile'
+      expect(rendered).to have_css '#action-transfer-work'
+      expect(rendered).to have_link 'Edit work', href: edit_hyrax_generic_work_path(id)
+      expect(rendered).to have_link 'Delete work', href: hyrax_generic_work_path(id)
+      expect(rendered).to have_content 'Highlight work on profile'
     end
   end
 
@@ -32,10 +32,10 @@ RSpec.describe 'hyrax/my/_work_action_menu.html.erb' do
     end
 
     it "draws the page" do
-      expect(rendered).not_to have_link "Transfer Ownership of Work"
-      expect(rendered).not_to have_link 'Edit Work', href: edit_hyrax_generic_work_path(id)
-      expect(rendered).not_to have_link 'Delete Work', href: hyrax_generic_work_path(id)
-      expect(rendered).to have_content 'Highlight Work on Profile'
+      expect(rendered).not_to have_css '#action-transfer-work'
+      expect(rendered).not_to have_css '#action-edit-work'
+      expect(rendered).not_to have_css '#action-delete-work'
+      expect(rendered).to have_content 'Highlight work on profile'
     end
   end
 end

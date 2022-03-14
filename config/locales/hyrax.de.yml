@@ -52,7 +52,7 @@ de:
       cancel: Abbrechen
       close: Schließen
       collection:
-        new: Neue Sammlung hinzufügen
+        new: Neue Sammlung Hinzufügen
       delete: Löschen
       edit: Bearbeiten
       less: Weniger
@@ -60,7 +60,7 @@ de:
       refresh: Aktualisierung
       remove: Entfernen
       work:
-        new: Neue Arbeit hinzufügen
+        new: Neue Arbeit Hinzufügen
     submit:
       admin_set:
         create: Hinzufügen
@@ -1014,15 +1014,15 @@ de:
           edit_collection_deny: Sie verfügen nicht über ausreichende Berechtigungen zum Bearbeiten dieser Sammlung.
           edit_selected: Ausgewählte bearbeiten
           edit_work: Arbeit bearbeiten
-          highlight: Heben Sie die Arbeit in ihrem Profil hervor
+          highlight: Heben sie die arbeit in ihrem profil hervor
           members_no_access: Sie verfügen nicht über ausreichende Berechtigungen für eines der ausgewählten Mitglieder
           nesting_not_allowed: Sammlungen dieses Typs unterstützen keine Verschachtelung.
           nesting_permission_denied: Sie verfügen nicht über ausreichende Berechtigungen, um diese Sammlung einer anderen Sammlung hinzuzufügen.
           select: Auswählen
           select_all: Wählen Sie die aktuelle Seite aus
           select_none: Nichts ausgewählt
-          transfer: Besitz der Arbeit übertragen
-          unhighlight: Hervorhebung der Arbeit entfernen
+          transfer: Besitz der arbeit übertragen
+          unhighlight: Hervorhebung der arbeit entfernen
           view_admin_set: Sammlung anzeigen
           view_collection: Sammlung anzeigen
           work_confirmation: Das Löschen einer Arbeit aus %{application_name} ist dauerhaft. Klicken Sie auf OK, um diese Arbeit aus %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen

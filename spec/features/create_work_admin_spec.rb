@@ -31,7 +31,7 @@ RSpec.describe 'Creating a new Work as admin', :js, :workflow, perform_enqueued:
     it "allows default admin set to be the first item in the select menu" do
       visit '/dashboard'
       click_link 'Works'
-      click_link "Add new work"
+      find('#add-new-work-button').click
       choose "payload_concern", option: "GenericWork"
       click_button 'Create work'
       click_link "Relationship" # switch tab

@@ -43,7 +43,7 @@ RSpec.describe "Browse Dashboard", type: :feature do
 
     within("#document_#{dissertation.id}") do
       click_button("Select")
-      expect(page).to have_content("Edit Work")
+      expect(page).to have_css('#action-edit-work')
     end
   end
 

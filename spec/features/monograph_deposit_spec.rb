@@ -15,7 +15,7 @@ RSpec.describe 'Creating a new Monograph (Valkyrie work)', :js, :workflow, :clea
   it 'creates the work' do
     sign_in user
     click_link 'Works'
-    click_link "Add new work"
+    find('#add-new-work-button').click
 
     choose "payload_concern", option: "Monograph"
     click_button 'Create work'

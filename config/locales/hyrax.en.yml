@@ -49,7 +49,7 @@ en:
       cancel: Cancel
       close: Close
       collection:
-        new: Add new collection
+        new: Add New Collection
       delete: Delete
       edit: Edit
       less: Less
@@ -57,7 +57,7 @@ en:
       refresh: Refresh
       remove: Remove
       work:
-        new: Add new work
+        new: Add New Work
     submit:
       admin_set:
         create: Save
@@ -963,13 +963,13 @@ en:
           show_par_page_html: Show %{select} per page
           sort_by: 'Sort By:'
         work_action_menu:
-          delete_work: Delete Work
+          delete_work: Delete work
           deleting_from_work: Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation
-          edit_work: Edit Work
+          edit_work: Edit work
           press_to: Press to
           remove_from_collection: Remove from collection
           select_an_action: Select an action
-          transfer_ownership_of_work: Transfer Ownership of Work
+          transfer_ownership_of_work: Transfer ownership of work
       create_work: Create Work
       current_proxies: Current Proxies
       delete_notification: Delete Notification
@@ -1001,21 +1001,21 @@ en:
           delete_collection_deny: You do not have sufficient privileges to delete this collection.
           delete_collections: Delete collections
           delete_collections_deny: You do not have sufficient privileges to delete one or more collections.
-          delete_work: Delete Work
+          delete_work: Delete work
           edit_admin_set: Edit collection
           edit_collection: Edit collection
           edit_collection_deny: You do not have sufficient privileges to edit this collection.
           edit_selected: Edit Selected
-          edit_work: Edit Work
-          highlight: Highlight Work on Profile
+          edit_work: Edit work
+          highlight: Highlight work on profile
           members_no_access: You do not have sufficient privileges to any of the selected members
           nesting_not_allowed: Collections of this type do not support nesting.
           nesting_permission_denied: You do not have sufficient privileges to add this collection to another collection.
           select: Select
           select_all: Select Current Page
           select_none: Select None
-          transfer: Transfer Ownership of Work
-          unhighlight: Unhighlight Work
+          transfer: Transfer ownership of work
+          unhighlight: Unhighlight work
           view_admin_set: View collection
           view_collection: View collection
           work_confirmation: Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation
