@@ -78,10 +78,12 @@ RSpec.describe ProxyDepositRequest, type: :model do
   describe '#transfer!' do
     it 'will change the status, fulfillment_date, and perform later the ContentDepositorChangeEventJob' do
       allow(ContentDepositorChangeEventJob).to receive(:perform_later)
+      allow(Hyrax::ChangeContentDepositorService).to receive(:call).and_call_original
       subject.transfer!
       expect(subject.status).to eq(described_class::ACCEPTED)
       expect(subject.fulfillment_date).to be_a(Time)
       expect(subject).to be_accepted
+      expect(Hyrax::ChangeContentDepositorService).to have_received(:call)
     end
   end
 
