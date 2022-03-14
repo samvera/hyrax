@@ -139,7 +139,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
     before do
       sign_in user
       click_link 'Works'
-      click_link "Add new work"
+      click_link "Add New Work"
       choose "payload_concern", option: "GenericWork"
       click_button 'Create work'
     end
