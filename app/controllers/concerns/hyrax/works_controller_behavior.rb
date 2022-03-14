@@ -454,12 +454,16 @@ module Hyrax
     end
 
     def available_admin_sets
+      # only returns admin sets in which the user can deposit
       admin_set_results = Hyrax::AdminSetService.new(self).search_results(:deposit)
+
       # get all the templates at once, reducing query load
       templates = PermissionTemplate.where(source_id: admin_set_results.map(&:id)).to_a
 
       admin_sets = admin_set_results.map do |admin_set_doc|
         template = templates.find { |temp| temp.source_id == admin_set_doc.id.to_s }
+
+        # determine if sharing tab should be visible
         sharing = can?(:manage, template) || !!template&.active_workflow&.allows_access_grant?
 
         AdminSetSelectionPresenter::OptionsEntry
