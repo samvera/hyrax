@@ -8,7 +8,7 @@ class TrackingTags {
       return _paq;
     }
     else {
-      return _gaq
+      return _gaq;
     }
   }
 
@@ -42,6 +42,9 @@ function trackAnalyticsEvents() {
 
 function setupTracking() {
     var provider = $('meta[name="analytics-provider"]').prop('content')
+    if (provider === undefined) {
+      return;
+    }
     window.trackingTags = new TrackingTags(provider)
     trackPageView()
     trackAnalyticsEvents()
@@ -59,6 +62,9 @@ if (typeof Turbolinks !== 'undefined') {
 
 $(document).on('click', '#file_download', function(e) {
   var provider = $('meta[name="analytics-provider"]').prop('content')
+  if (provider === undefined) {
+    return;
+  }
   window.trackingTags = new TrackingTags(provider)
   window.trackingTags.analytics().push([trackingTags.trackEvent(), 'file-set', 'file-set-download', $(this).data('label')]);
   window.trackingTags.analytics().push([trackingTags.trackEvent(), 'file-set-in-work', 'file-set-in-work-download', $(this).data('work-id')]);
