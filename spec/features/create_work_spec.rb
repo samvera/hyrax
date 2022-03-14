@@ -19,7 +19,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
     before do
       sign_in user
       click_link 'Works'
-      find('#add-new-work-button').click
+      click_link "Add New Work"
       choose "payload_concern", option: "GenericWork"
       click_button 'Create work'
     end
@@ -61,7 +61,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
       ProxyDepositRights.create!(grantor: second_user, grantee: user)
       sign_in user
       click_link 'Works'
-      find('#add-new-work-button').click
+      click_link "Add New Work"
       choose "payload_concern", option: "GenericWork"
       click_button 'Create work'
     end
@@ -119,7 +119,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
     before do
       sign_in user
       click_link 'Works'
-      find('#add-new-work-button').click
+      click_link "Add New Work"
       choose "payload_concern", option: "GenericWork"
       click_button 'Create work'
     end
