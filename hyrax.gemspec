@@ -118,7 +118,4 @@ SUMMARY
   # Pin sass-rails to 5.x because rails 5.x apps have this same dependency in their generated Gemfiles
   # See https://github.com/samvera/hyrax/issues/3919
   spec.add_dependency 'sass-rails', '~> 5.0'
-  # Pin rdf until ActiveFedora works with 3.2.5
-  # See https://github.com/samvera/active_fedora/issues/1466
-  spec.add_dependency 'rdf', '< 3.2.5'
 end
