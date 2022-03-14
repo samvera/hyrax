@@ -29,13 +29,7 @@
     </div>
   </td>
   <td class="date text-center">
-    <% if document.date_modified.nil? %>
-      <% unless document.date_uploaded.nil? %>
-       <%= document.date_uploaded.strftime("%m/%d/%Y") %>
-      <% end %>
-    <% else %>
-      <%= document.date_modified.strftime("%m/%d/%Y") %>
-    <% end %>
+    <td class="date text-center"><%= document.date_modified %></td>
   </td>
   <td class='text-center'>
     <span class="fa <%= current_user.trophies.where(work_id: document.id).exists? ? 'fa-star highlighted-work' : 'fa-star-o trophy-off' %>" aria-hidden="true"></span></td>
