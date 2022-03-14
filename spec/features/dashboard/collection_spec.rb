@@ -574,7 +574,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
 
     it "has creation date for collections and shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
-      expect(page).to have_content(collection.create_date.to_date.to_formatted_s(:standard))
+      expect(page).to have_content(collection.create_date.to_date)
 
       expect(page).to have_content(collection.title.first)
       within('#document_' + collection.id) do
