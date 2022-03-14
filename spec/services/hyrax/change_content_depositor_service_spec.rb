@@ -62,6 +62,7 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
 
     context "by default, when permissions are not reset" do
       it "changes the depositor and records an original depositor" do
+        expect(ContentDepositorChangeEventJob).to receive(:perform_later)
         described_class.call(base_work, receiver, false)
         work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: base_work.id, use_valkyrie: true)
         expect(work.depositor).to eq receiver.user_key
@@ -83,6 +84,7 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
 
     context "when permissions are reset" do
       it "changes the depositor and records an original depositor" do
+        expect(ContentDepositorChangeEventJob).to receive(:perform_later)
         described_class.call(base_work, receiver, true)
         work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: base_work.id, use_valkyrie: true)
         expect(work.depositor).to eq receiver.user_key
@@ -99,6 +101,32 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
           expect(file_set.depositor).to eq receiver.user_key
           expect(file_set.edit_users.to_a).to contain_exactly(receiver.user_key)
         end
+      end
+    end
+
+    context "when no user is provided" do
+      it "does not update the work" do
+        expect(ContentDepositorChangeEventJob).not_to receive(:perform_later)
+        persister = double("Valkyrie Persister")
+        allow(Hyrax).to receive(:persister).and_return(persister)
+        allow(persister).to receive(:save)
+
+        described_class.call(base_work, nil, false)
+        expect(persister).not_to have_received(:save)
+      end
+    end
+
+    context "when transfer is requested to the existing owner" do
+      let!(:base_work) { valkyrie_create(:hyrax_work, :with_member_file_sets, title: ['AlreadyMine'], depositor: depositor.user_key, edit_users: [depositor]) }
+
+      it "does not update the work" do
+        expect(ContentDepositorChangeEventJob).not_to receive(:perform_later)
+        persister = double("Valkyrie Persister")
+        allow(Hyrax).to receive(:persister).and_return(persister)
+        allow(persister).to receive(:save)
+
+        described_class.call(base_work, depositor, false)
+        expect(persister).not_to have_received(:save)
       end
     end
   end
