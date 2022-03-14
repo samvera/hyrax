@@ -12,7 +12,9 @@ module Hyrax
     #              permissions for the given work and contained file
     #              sets; regardless of true/false make the given user
     #              the depositor of the given work
+    # @return work, updated if necessary
     def self.call(work, user, reset)
+      return work if work.try(:on_behalf_of).blank? || (work.on_behalf_of == work.depositor)
       case work
       when ActiveFedora::Base
         call_af(work, user, reset)

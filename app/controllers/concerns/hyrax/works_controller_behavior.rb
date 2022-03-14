@@ -181,9 +181,12 @@ module Hyrax
 
       result =
         transactions['change_set.create_work']
-        .with_step_args('work_resource.add_to_parent' => { parent_id: params[:parent_id], user: current_user },
-                        'work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: params[hash_key_for_curation_concern][:file_set] },
-                        'change_set.set_user_as_depositor' => { user: current_user })
+        .with_step_args(
+          'work_resource.add_to_parent' => { parent_id: params[:parent_id], user: current_user },
+          'work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: params[hash_key_for_curation_concern][:file_set] },
+          'change_set.set_user_as_depositor' => { user: current_user },
+          'work_resource.change_content_depositor' => { user: form.on_behalf_of }
+        )
         .call(form)
       @curation_concern = result.value_or { return after_create_error(transaction_err_msg(result)) }
       after_create_response

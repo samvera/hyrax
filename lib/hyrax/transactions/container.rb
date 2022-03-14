@@ -33,6 +33,7 @@ module Hyrax
       require 'hyrax/transactions/steps/add_to_collections'
       require 'hyrax/transactions/steps/add_to_parent'
       require 'hyrax/transactions/steps/apply_collection_type_permissions'
+      require 'hyrax/transactions/steps/change_content_depositor'
       require 'hyrax/transactions/steps/check_for_empty_admin_set'
       require 'hyrax/transactions/steps/delete_access_control'
       require 'hyrax/transactions/steps/delete_resource'
@@ -202,6 +203,10 @@ module Hyrax
 
         ops.register 'add_to_parent' do
           Steps::AddToParent.new
+        end
+
+        ops.register 'change_content_depositor' do
+          Steps::ChangeContentDepositor.new
         end
 
         ops.register 'delete' do
