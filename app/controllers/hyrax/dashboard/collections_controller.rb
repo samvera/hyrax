@@ -340,7 +340,10 @@ module Hyrax
       def process_logo_records(uploaded_file_ids)
         public_files = []
         uploaded_file_ids.each_with_index do |ufi, i|
-          if ufi.include?('public')
+          # If the user has chosen a new logo, the ufi will be an integer
+          # If the logo was previously chosen, the ufi will be a path
+          # If it is a path, update the rec, else create a new rec
+          if !ufi.match(/\D/).nil?
             update_logo_info(ufi, params["alttext"][i], verify_linkurl(params["linkurl"][i]))
             public_files << ufi
           else # brand new one, insert in the database
