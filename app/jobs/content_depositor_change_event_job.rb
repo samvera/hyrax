@@ -13,8 +13,6 @@ class ContentDepositorChangeEventJob < ContentEventJob
   # @param [TrueClass,FalseClass] reset (false) if true, reset the access controls. This revokes edit access from the depositor
   def perform(work, user, reset = false)
     @reset = reset
-    # Note that this is the work from the method below, not the work passed into
-    # this intializer
     super(work, user)
   end
 
@@ -35,13 +33,7 @@ class ContentDepositorChangeEventJob < ContentEventJob
   # For Valklyrie resources, the code that updates the object has been moved to
   # the transaction pipeline to avoid race conditions
   def work
-    @work ||=
-      case repo_object
-      when ActiveFedora::Base
-        Hyrax::ChangeContentDepositorService.call(repo_object, depositor, reset)
-      else
-        repo_object
-      end
+    @work ||= repo_object
   end
 
   # overriding default to log the event to the depositor instead of their profile

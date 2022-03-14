@@ -22,7 +22,9 @@ module Hyrax
         #
         # @return [Dry::Monads::Result]
         def call(obj, user: NullUser.new)
-          obj = Hyrax::ChangeContentDepositorService.call(obj, user, false)
+          reset = false
+          obj = Hyrax::ChangeContentDepositorService.call(obj, user, reset)
+          ContentDepositorChangeEventJob.perform_later(obj, user, reset)
 
           Success(obj)
         rescue NoMethodError => err
