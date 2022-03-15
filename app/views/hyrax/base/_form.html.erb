@@ -14,7 +14,7 @@
       <%= render 'form_visibility_error', f: f %>
     </div>
   <% end %>
-  <% if Flipflop.batch_upload? && f.object.new_record? %>
+  <% if Flipflop.batch_upload? && !f.object.persisted? %>
     <% provide :metadata_tab do %>
       <p class="switch-upload-type"><%= t('.batch_upload_hint') %> <%= link_to t('.batch_link'), hyrax.new_batch_upload_path(payload_concern: @form.model.class) %></p>
     <% end %>
