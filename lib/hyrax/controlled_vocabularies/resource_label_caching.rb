@@ -35,7 +35,7 @@ module Hyrax
       private
 
       def cache_key
-        "#{CACHE_KEY_PREFIX}#{to_uri.canonicalize!.pname}"
+        "#{CACHE_KEY_PREFIX}#{to_uri.canonicalize.pname}"
       end
     end
   end
