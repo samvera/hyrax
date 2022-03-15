@@ -43,6 +43,8 @@ RSpec.describe ValkyrieIngestJob do
 
       expect(ValkyrieCreateDerivativesJob).to have_received(:perform_later)
       expect(File.exist?(Hyrax::DerivativePath.new(file_set.id.to_s, "thumbnail").derivative_path)).to eq true
+      solr_doc = Hyrax.index_adapter.connection.get("select", params: { q: "id:#{file_set.id}" })["response"]["docs"].first
+      expect(solr_doc["thumbnail_path_ss"]).to eq "/downloads/#{file_set.id}?file=thumbnail"
     end
 
     it 'makes original_file queryable by use' do

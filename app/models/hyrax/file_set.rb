@@ -44,8 +44,19 @@ module Hyrax
 
     attribute :file_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID) # id for FileMetadata resources
     attribute :original_file_id, Valkyrie::Types::ID # id for FileMetadata resource
-    attribute :thumbnail_id, Valkyrie::Types::ID # id for FileMetadata resource
     attribute :extracted_text_id, Valkyrie::Types::ID # id for FileMetadata resource
+
+    ##
+    # @return [Valkyrie::ID]
+    def representative_id
+      id
+    end
+
+    ##
+    # @return [Valkyrie::ID]
+    def thumbnail_id
+      id
+    end
 
     ##
     # @return [Boolean] true
@@ -57,12 +68,6 @@ module Hyrax
     # @return [Boolean] true
     def file_set?
       true
-    end
-
-    ##
-    # @return [Valkyrie::Types::ID]
-    def representative_id
-      id
     end
   end
 end
