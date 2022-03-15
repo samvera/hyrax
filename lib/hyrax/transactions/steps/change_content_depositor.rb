@@ -21,13 +21,15 @@ module Hyrax
         #             the given work
         #
         # @return [Dry::Monads::Result]
-        def call(obj, user: NullUser.new)
-          reset = false
+        def call(obj, user: NullUser.new, reset: false)
           obj = Hyrax::ChangeContentDepositorService.call(obj, user, reset)
+          # TODO: The service should kick off the job. For example if the
+          # service hits a guard condition and returns without doing anything,
+          # the job should not run.
           ContentDepositorChangeEventJob.perform_later(obj)
 
           Success(obj)
-        rescue NoMethodError => err
+        rescue StandardError => err
           Failure([err.message, obj])
         end
 
