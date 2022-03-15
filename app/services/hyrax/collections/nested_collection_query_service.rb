@@ -12,11 +12,11 @@ module Hyrax
         attr_accessor :parents, :pathnames, :ancestors, :depth, :id
 
         def initialize(id:, scope:)
-          query_builder = Hyrax::CollectionSearchBuilder.new(scope).where(id: id)
+          query_builder = Hyrax::CollectionSearchBuilder.new(scope).where(id: id.to_s)
           query = Hyrax::Collections::NestedCollectionQueryService.clean_lucene_error(builder: query_builder)
           response = scope.repository.search(query)
           collection_doc = response.documents.first
-          @id = id
+          @id = id.to_s
           @parents = collection_doc[Samvera::NestingIndexer.configuration.solr_field_name_for_storing_parent_ids]
           @pathnames = collection_doc[Samvera::NestingIndexer.configuration.solr_field_name_for_storing_pathnames]
           @ancestors = collection_doc[Samvera::NestingIndexer.configuration.solr_field_name_for_storing_ancestors]
@@ -34,7 +34,7 @@ module Hyrax
       # @param limit_to_id [nil, String] Limit the query to just check if the given id is in the response. Useful for validation.
       # @return [Array<SolrDocument>]
       def self.available_child_collections(parent:, scope:, limit_to_id: nil)
-        return [] unless parent.try(:nestable?)
+        return [] unless nestable?(collection: parent)
         return [] unless scope.can?(:deposit, parent)
         query_solr(collection: parent, access: :read, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_child).documents
       end
@@ -52,7 +52,7 @@ module Hyrax
       #
       # @return [Array<SolrDocument>]
       def self.available_parent_collections(child:, scope:, limit_to_id: nil)
-        return [] unless child.try(:nestable?)
+        return [] unless nestable?(collection: child)
         return [] unless scope.can?(:read, child)
         query_solr(collection: child, access: :deposit, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_parent).documents
       end
@@ -69,7 +69,7 @@ module Hyrax
       #
       # @return [Blacklight::Solr::Response]
       def self.parent_collections(child:, scope:, page: 1)
-        return [] unless child.try(:nestable?)
+        return [] unless nestable?(collection: child)
         query_builder = Hyrax::NestedCollectionsParentSearchBuilder.new(scope: scope, child: child, page: page)
         query = clean_lucene_error(builder: query_builder)
         scope.repository.search(query)
@@ -86,7 +86,7 @@ module Hyrax
       #   id is in the response. Useful for validation.
       # @param nest_direction [Symbol] :as_child or :as_parent
       def self.query_solr(collection:, access:, scope:, limit_to_id:, nest_direction:)
-        nesting_attributes = NestingAttributes.new(id: collection.id, scope: scope)
+        nesting_attributes = NestingAttributes.new(id: collection.id.to_s, scope: scope)
         query_builder = Hyrax::Dashboard::NestedCollectionsSearchBuilder.new(
           access: access,
           collection: collection,
@@ -95,7 +95,7 @@ module Hyrax
           nest_direction: nest_direction
         )
 
-        query_builder.where(id: limit_to_id) if limit_to_id
+        query_builder.where(id: limit_to_id.to_s) if limit_to_id
         query = clean_lucene_error(builder: query_builder)
         scope.repository.search(query)
       end
@@ -139,8 +139,8 @@ module Hyrax
       def self.parent_and_child_can_nest?(parent:, child:, scope:)
         return false if parent == child # Short-circuit
         return false unless parent.collection_type_gid == child.collection_type_gid
-        return false if available_parent_collections(child: child, scope: scope, limit_to_id: parent.id).none?
-        return false if available_child_collections(parent: parent, scope: scope, limit_to_id: child.id).none?
+        return false if available_parent_collections(child: child, scope: scope, limit_to_id: parent.id.to_s).none?
+        return false if available_child_collections(parent: parent, scope: scope, limit_to_id: child.id.to_s).none?
         true
       end
 
@@ -190,7 +190,7 @@ module Hyrax
         descendant_depth = response[Samvera::NestingIndexer.configuration.solr_field_name_for_deepest_nested_depth]
 
         # => 2) Then we get the stored depth of the child collection itself to eliminate the collections above this one from our count, and add 1 to add back in this collection itself
-        child_depth = NestingAttributes.new(id: child.id, scope: scope).depth
+        child_depth = NestingAttributes.new(id: child.id.to_s, scope: scope).depth
         nesting_depth = descendant_depth - child_depth + 1
 
         # this should always be positive, but just being safe
@@ -207,9 +207,21 @@ module Hyrax
       #   this collection (includes this collection)
       def self.parent_nesting_depth(parent:, scope:)
         return 1 if parent.nil?
-        NestingAttributes.new(id: parent.id, scope: scope).depth
+        NestingAttributes.new(id: parent.id.to_s, scope: scope).depth
       end
       private_class_method :parent_nesting_depth
+
+      # @api private
+      #
+      # @param collection [Hyrax::PcdmCollection,::Collection]
+      # @return [Boolean] true if the collection is nestable; otherwise, false
+      def self.nestable?(collection:)
+        return false if collection.blank?
+        return collection.nestable? if collection.respond_to? :nestable?
+        collection_type = Hyrax::CollectionType.find_by_gid!(collection.collection_type_gid)
+        collection_type.nestable?
+      end
+      private_class_method :nestable?
     end
   end
 end
