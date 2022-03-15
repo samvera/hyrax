@@ -27,8 +27,8 @@ RSpec.describe ValkyrieIngestJob do
       reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
       expect(reloaded_file_set)
         .to have_attached_files(be_original_file)
-      expect(reloaded_file_set.title).to eq ["image.jp2"]
-      expect(reloaded_file_set.label).to eq "image.jp2"
+      expect(reloaded_file_set.title).to eq ["image.png"]
+      expect(reloaded_file_set.label).to eq "image.png"
       expect(reloaded_file_set.file_ids)
         .to contain_exactly(reloaded_file_set.original_file_id)
     end
@@ -84,8 +84,8 @@ RSpec.describe ValkyrieIngestJob do
         reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
         expect(reloaded_file_set)
           .to have_attached_files(be_original_file, be_thumbnail_file)
-        expect(reloaded_file_set.title).to eq ["image.jp2"]
-        expect(reloaded_file_set.label).to eq "image.jp2"
+        expect(reloaded_file_set.title).to eq ["image.png"]
+        expect(reloaded_file_set.label).to eq "image.png"
         expect(reloaded_file_set.file_ids)
           .to contain_exactly(reloaded_file_set.original_file_id, reloaded_file_set.thumbnail_id)
       end
