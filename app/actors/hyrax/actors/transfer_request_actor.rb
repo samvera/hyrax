@@ -18,7 +18,6 @@ module Hyrax
         work = env.curation_concern
         user = ::User.find_by_user_key(proxy)
         Hyrax::ChangeContentDepositorService.call(work, user, false)
-        ContentDepositorChangeEventJob.perform_later(work)
         true
       end
     end

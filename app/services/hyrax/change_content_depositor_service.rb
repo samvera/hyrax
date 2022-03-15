@@ -23,12 +23,14 @@ module Hyrax
       # Don't transfer to self
       return work if user.user_key == work.depositor
 
-      case work
-      when ActiveFedora::Base
-        call_af(work, user, reset)
-      when Valkyrie::Resource
-        call_valkyrie(work, user, reset)
-      end
+      work = case work
+             when ActiveFedora::Base
+               call_af(work, user, reset)
+             when Valkyrie::Resource
+               call_valkyrie(work, user, reset)
+             end
+      ContentDepositorChangeEventJob.perform_later(work)
+      work
     end
 
     def self.call_af(work, user, reset)
@@ -59,7 +61,6 @@ module Hyrax
       apply_valkyrie_changes_to_file_sets(work: work, user: user, reset: reset)
 
       Hyrax.persister.save(resource: work)
-      work
     end
     private_class_method :call_valkyrie
 
