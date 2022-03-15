@@ -24,7 +24,7 @@ module Hyrax
         def call(obj, user: NullUser.new)
           reset = false
           obj = Hyrax::ChangeContentDepositorService.call(obj, user, reset)
-          ContentDepositorChangeEventJob.perform_later(obj, user, reset)
+          ContentDepositorChangeEventJob.perform_later(obj)
 
           Success(obj)
         rescue NoMethodError => err

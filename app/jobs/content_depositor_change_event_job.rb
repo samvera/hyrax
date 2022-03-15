@@ -1,27 +1,24 @@
 # frozen_string_literal: true
 # Log work depositor change to activity streams
 #
-# @attr [Boolean] reset (false) should the access controls be reset. This means revoking edit access from the depositor
+# This class simply logs the transfer, pulling data from the object that was
+# just transferred. It does not perform the transfer.
 class ContentDepositorChangeEventJob < ContentEventJob
   include Rails.application.routes.url_helpers
   include ActionDispatch::Routing::PolymorphicRoutes
 
-  attr_accessor :reset
-
-  # @param [ActiveFedora::Base] work the work to be transfered
-  # @param [User] user the user the work is being transfered to.
-  # @param [TrueClass,FalseClass] reset (false) if true, reset the access controls. This revokes edit access from the depositor
-  def perform(work, user, reset = false)
-    @reset = reset
-    super(work, user)
+  # @param [ActiveFedora::Base] work the work that's been transfered
+  def perform(work)
+    # these get set to repo_object and depositor
+    super(work, new_owner(work))
   end
 
   def action
-    "User #{link_to_profile work.proxy_depositor} has transferred #{link_to_work work.title.first} to user #{link_to_profile depositor}"
+    "User #{link_to_profile repo_object.proxy_depositor} has transferred #{link_to_work repo_object.title.first} to user #{link_to_profile depositor}"
   end
 
   def link_to_work(text)
-    link_to text, polymorphic_path(work)
+    link_to text, polymorphic_path(repo_object)
   end
 
   # Log the event to the work's stream
@@ -30,18 +27,19 @@ class ContentDepositorChangeEventJob < ContentEventJob
   end
   alias log_file_set_event log_work_event
 
-  def work
-    @work ||= repo_object
-  end
-
   # overriding default to log the event to the depositor instead of their profile
+  # and to log the event for both users
   def log_user_event(depositor)
-    # log the event to the proxy depositor's profile
-    proxy_depositor.log_profile_event(event)
+    previous_owner.log_profile_event(event)
     depositor.log_event(event)
   end
 
-  def proxy_depositor
-    @proxy_depositor ||= ::User.find_by_user_key(work.proxy_depositor)
+  private def previous_owner
+    ::User.find_by_user_key(repo_object.proxy_depositor)
+  end
+
+  # used for @depositor
+  private def new_owner(work)
+    ::User.find_by_user_key(work.depositor)
   end
 end
