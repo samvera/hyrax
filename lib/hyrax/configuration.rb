@@ -434,15 +434,9 @@ module Hyrax
     end
 
     ##
-    # @param [#save or #to_sym] adapter_or_short_name
-    def index_adapter=(adapter_or_short_name)
-      @index_adapter = begin
-                         if adapter_or_short_name.respond_to?(:save)
-                           adapter_or_short_name
-                         else
-                           Valkyrie::IndexingAdapter.find(adapter_or_short_name)
-                         end
-                       end
+    # @param [#to_sym] adapter
+    def index_adapter=(adapter)
+      @index_adapter = Valkyrie::IndexingAdapter.find(adapter.to_sym)
     end
 
     ##

@@ -37,14 +37,7 @@ RSpec.describe ValkyrieIngestJob do
     # couldn't find a nice way to generate a FileSet with a real file attached
     # programatically for a spec.
     context "when in Valkyrie mode" do
-      around do |example|
-        index_adapter = Hyrax.config.index_adapter
-        Hyrax.config.index_adapter = :solr_index
-        example.run
-        Hyrax.config.index_adapter = index_adapter
-      end
-
-      it 'runs derivatives', :perform_enqueued do
+      it 'runs derivatives', index_adapter: :solr_index, perform_enqueued: true do
         allow(ValkyrieCreateDerivativesJob).to receive(:perform_later).and_call_original
 
         described_class.perform_now(upload)
