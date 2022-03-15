@@ -30,6 +30,7 @@ module Hyrax
         solr_doc['original_checksum_tesim'] = object.original_checksum
         solr_doc['alpha_channels_ssi']      = object.alpha_channels
         solr_doc['original_file_id_ssi']    = original_file_id
+        solr_doc['generic_type_si'] = 'FileSet'
       end
     end
 

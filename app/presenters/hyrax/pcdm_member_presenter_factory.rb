@@ -99,6 +99,8 @@ module Hyrax
       case document['has_model_ssim'].first
       when Hyrax::FileSet.name
         Hyrax::FileSetPresenter.new(document, ability)
+      when ::FileSet.name
+        Hyrax::FileSetPresenter.new(document, ability)
       else
         Hyrax::WorkShowPresenter.new(document, ability)
       end
@@ -111,7 +113,7 @@ module Hyrax
       query += "{!term f=generic_type_si}#{generic_type}" if generic_type
 
       Hyrax::SolrService
-        .post(query, rows: 10_000)
+        .post(q: query, rows: 10_000)
         .fetch('response')
         .fetch('docs')
     end
