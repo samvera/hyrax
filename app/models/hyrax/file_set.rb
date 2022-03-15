@@ -43,8 +43,9 @@ module Hyrax
     self.characterization_proxy = Hyrax.config.characterization_proxy
 
     attribute :file_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID) # id for FileMetadata resources
-    attribute :original_file_id, Valkyrie::Types::ID # id for FileMetadata resource
-    attribute :extracted_text_id, Valkyrie::Types::ID # id for FileMetadata resource
+    attribute :thumbnail_id, Valkyrie::Types::ID.optional # id for FileMetadata resource
+    attribute :original_file_id, Valkyrie::Types::ID.optional # id for FileMetadata resource
+    attribute :extracted_text_id, Valkyrie::Types::ID.optional # id for FileMetadata resource
 
     ##
     # @return [Valkyrie::ID]
@@ -54,8 +55,10 @@ module Hyrax
 
     ##
     # @return [Valkyrie::ID]
+    # If one is set then return it, otherwise use self as the ID to allow for
+    # derivative generators to find the on-disk path for the thumbnail.
     def thumbnail_id
-      id
+      self.[](:thumbnail_id) || id
     end
 
     ##

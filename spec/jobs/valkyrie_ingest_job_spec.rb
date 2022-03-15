@@ -36,15 +36,24 @@ RSpec.describe ValkyrieIngestJob do
     # Thumbnail assertion should be in ValkyrieCreateDerivativesJob spec, but I
     # couldn't find a nice way to generate a FileSet with a real file attached
     # programatically for a spec.
-    it 'runs derivatives', :perform_enqueued do
-      allow(ValkyrieCreateDerivativesJob).to receive(:perform_later).and_call_original
+    context "when in Valkyrie mode" do
+      around do |example|
+        index_adapter = Hyrax.config.index_adapter
+        Hyrax.config.index_adapter = :solr_index
+        example.run
+        Hyrax.config.index_adapter = index_adapter
+      end
 
-      described_class.perform_now(upload)
+      it 'runs derivatives', :perform_enqueued do
+        allow(ValkyrieCreateDerivativesJob).to receive(:perform_later).and_call_original
 
-      expect(ValkyrieCreateDerivativesJob).to have_received(:perform_later)
-      expect(File.exist?(Hyrax::DerivativePath.new(file_set.id.to_s, "thumbnail").derivative_path)).to eq true
-      solr_doc = Hyrax.index_adapter.connection.get("select", params: { q: "id:#{file_set.id}" })["response"]["docs"].first
-      expect(solr_doc["thumbnail_path_ss"]).to eq "/downloads/#{file_set.id}?file=thumbnail"
+        described_class.perform_now(upload)
+
+        expect(ValkyrieCreateDerivativesJob).to have_received(:perform_later)
+        expect(File.exist?(Hyrax::DerivativePath.new(file_set.id.to_s, "thumbnail").derivative_path)).to eq true
+        solr_doc = Hyrax.index_adapter.connection.get("select", params: { q: "id:#{file_set.id}" })["response"]["docs"].first
+        expect(solr_doc["thumbnail_path_ss"]).to eq "/downloads/#{file_set.id}?file=thumbnail"
+      end
     end
 
     it 'makes original_file queryable by use' do
