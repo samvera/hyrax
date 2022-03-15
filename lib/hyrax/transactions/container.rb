@@ -46,6 +46,7 @@ module Hyrax
       require 'hyrax/transactions/steps/set_uploaded_date_unless_present'
       require 'hyrax/transactions/steps/set_user_as_creator'
       require 'hyrax/transactions/steps/set_user_as_depositor'
+      require 'hyrax/transactions/steps/update_work_members'
       require 'hyrax/transactions/steps/validate'
 
       # The following transactions and steps are deprecated.
@@ -218,6 +219,10 @@ module Hyrax
 
         ops.register 'save_acl' do
           Steps::SaveAccessControl.new
+        end
+
+        ops.register 'update_work_members' do
+          Steps::UpdateWorkMembers.new
         end
       end
 
