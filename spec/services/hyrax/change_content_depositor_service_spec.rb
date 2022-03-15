@@ -101,5 +101,29 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
         end
       end
     end
+
+    context "when no user is provided" do
+      it "does not update the work" do
+        persister = double("Valkyrie Persister")
+        allow(Hyrax).to receive(:persister).and_return(persister)
+        allow(persister).to receive(:save)
+
+        described_class.call(base_work, nil, false)
+        expect(persister).not_to have_received(:save)
+      end
+    end
+
+    context "when transfer is requested to the existing owner" do
+      let!(:base_work) { valkyrie_create(:hyrax_work, :with_member_file_sets, title: ['AlreadyMine'], depositor: depositor.user_key, edit_users: [depositor]) }
+
+      it "does not update the work" do
+        persister = double("Valkyrie Persister")
+        allow(Hyrax).to receive(:persister).and_return(persister)
+        allow(persister).to receive(:save)
+
+        described_class.call(base_work, depositor, false)
+        expect(persister).not_to have_received(:save)
+      end
+    end
   end
 end

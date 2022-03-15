@@ -4,6 +4,10 @@ module Hyrax
     # Set the given `user` as the depositor of the given `work`; If
     # `reset` is true, first remove all previous permissions.
     #
+    # Used to transfer a an existing work, and to set
+    # depositor / proxy_depositor on a work newly deposited
+    # on_behalf_of another user
+    #
     # @param work [ActiveFedora::Base, Valkyrie::Resource] the work
     #             that is receiving a change of depositor
     # @param user [User] the user that will "become" the depositor of
@@ -14,11 +18,11 @@ module Hyrax
     #              the depositor of the given work
     # @return work, updated if necessary
     def self.call(work, user, reset)
-      # Use case: transfer a work that wasn't deposited on_behalf_of
-      # Use case: transfer a work that was deposited on_behalf_of
-      # return work if work.try(:on_behalf_of).blank? || (work.on_behalf_of == work.depositor)
-      return work if work.on_behalf_of == work.depositor
+      # user_key is nil when there was no `on_behalf_of` in the form
       return work unless user&.user_key
+      # Don't transfer to self
+      return work if user.user_key == work.depositor
+
       case work
       when ActiveFedora::Base
         call_af(work, user, reset)
