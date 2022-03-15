@@ -111,8 +111,11 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
   end
 
   let(:mock_thumbnail) do
-    Hyrax::FileMetadata.new(file_set_id: fileset_id,
-                            type: [Hyrax::FileMetadata::Use::THUMBNAIL])
+    Hyrax::FileMetadata.new(
+      id: SecureRandom.uuid,
+      file_set_id: fileset_id,
+      type: [Hyrax::FileMetadata::Use::THUMBNAIL]
+    )
   end
 
   let(:indexer) { described_class.new(resource: file_set) }
