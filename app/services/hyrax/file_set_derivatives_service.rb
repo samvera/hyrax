@@ -3,11 +3,20 @@ module Hyrax
   # Responsible for creating and cleaning up the derivatives of a file_set
   class FileSetDerivativesService
     attr_reader :file_set
-    delegate :uri, :mime_type, to: :file_set
+    delegate :mime_type, to: :file_set
 
     # @param file_set [Hyrax::FileSet] At least for this class, it must have #uri and #mime_type
     def initialize(file_set)
       @file_set = file_set
+    end
+
+    def uri
+      # If given a FileMetadata object, use its parent ID.
+      if file_set.respond_to?(:file_set_id)
+        file_set.file_set_id.to_s
+      else
+        file_set.uri
+      end
     end
 
     def cleanup_derivatives
@@ -33,11 +42,21 @@ module Hyrax
     # The destination_name parameter has to match up with the file parameter
     # passed to the DownloadsController
     def derivative_url(destination_name)
-      path = derivative_path_factory.derivative_path_for_reference(file_set, destination_name)
+      path = derivative_path_factory.derivative_path_for_reference(derivative_url_target, destination_name)
       URI("file://#{path}").to_s
     end
 
     private
+
+    # If given a FileMetadata object pass the file_set_id for derivative URL
+    # creation.
+    def derivative_url_target
+      if file_set.try(:file_set_id)
+        file_set.file_set_id.to_s
+      else
+        file_set
+      end
+    end
 
     def supported_mime_types
       file_set.class.pdf_mime_types +
