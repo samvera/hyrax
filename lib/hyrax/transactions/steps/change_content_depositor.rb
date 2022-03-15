@@ -28,7 +28,7 @@ module Hyrax
 
           Success(obj)
         rescue NoMethodError => err
-          Failure([err.message, change_set])
+          Failure([err.message, obj])
         end
 
         ##

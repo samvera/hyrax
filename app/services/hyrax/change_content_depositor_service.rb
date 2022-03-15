@@ -18,6 +18,7 @@ module Hyrax
       # Use case: transfer a work that was deposited on_behalf_of
       # return work if work.try(:on_behalf_of).blank? || (work.on_behalf_of == work.depositor)
       return work if work.on_behalf_of == work.depositor
+      return work unless user&.user_key
       case work
       when ActiveFedora::Base
         call_af(work, user, reset)
