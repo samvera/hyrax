@@ -59,6 +59,10 @@ RSpec.describe Hyrax::ValkyrieIndexer do
   describe "#to_solr" do
     let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }
 
+    it "provides indifferent access" do
+      expect(indexer.to_solr).to be_a HashWithIndifferentAccess
+    end
+
     it "provides id, date_uploaded_dtsi, and date_modified_dtsi" do
       expect(indexer.to_solr).to match a_hash_including(
         id: resource.id.to_s,

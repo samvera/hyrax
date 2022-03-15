@@ -64,14 +64,14 @@ module Hyrax
 
     ##
     # @api public
-    # @return [Hash<Symbol, Object>]
+    # @return [HashWithIndifferentAccess<Symbol, Object>]
     def to_solr
       {
         "id": resource.id.to_s,
         "date_uploaded_dtsi": resource.created_at,
         "date_modified_dtsi": resource.updated_at,
         "has_model_ssim": resource.internal_resource
-      }
+      }.with_indifferent_access
     end
 
     ##

@@ -39,6 +39,9 @@ module Hyrax
       end
     end
 
+    class_attribute :characterization_proxy
+    self.characterization_proxy = Hyrax.config.characterization_proxy
+
     attribute :file_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID) # id for FileMetadata resources
     attribute :original_file_id, Valkyrie::Types::ID # id for FileMetadata resource
     attribute :thumbnail_id, Valkyrie::Types::ID # id for FileMetadata resource
@@ -54,6 +57,12 @@ module Hyrax
     # @return [Boolean] true
     def file_set?
       true
+    end
+
+    ##
+    # @return [Valkyrie::Types::ID]
+    def representative_id
+      id
     end
   end
 end

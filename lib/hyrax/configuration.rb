@@ -496,6 +496,15 @@ module Hyrax
         Hyrax::Characterization::ValkyrieCharacterizationService
     end
 
+    ##
+    # @!attribute [w] characterization_proxy
+    #   Which FileSet file to use for mime type resolution
+    #   @ see Hyrax::FileSetTypeService
+    attr_writer :characterization_proxy
+    def characterization_proxy
+      @characterization_proxy ||= :original_file
+    end
+
     # Attributes for the lock manager which ensures a single process/thread is mutating a ore:Aggregation at once.
     # @!attribute [w] lock_retry_count
     #   How many times to retry to acquire the lock before raising UnableToAcquireLockError

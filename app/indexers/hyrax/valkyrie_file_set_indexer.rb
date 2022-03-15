@@ -7,20 +7,20 @@ module Hyrax
     include Hyrax::ResourceIndexer
     include Hyrax::PermissionIndexer
     include Hyrax::VisibilityIndexer
+    include Hyrax::ThumbnailIndexer
     include Hyrax::Indexer(:core_metadata)
     include Hyrax::Indexer(:basic_metadata)
-
-    # include Hyrax::IndexesThumbnails # TODO: Is there a Valkyrie version of a thumbnail indexer?
 
     def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
       super.tap do |solr_doc| # rubocop:disable Metrics/BlockLength
         solr_doc['generic_type_si'] = 'FileSet'
 
         # Metadata from the FileSet
-        solr_doc['file_ids_ssim']         = resource.file_ids&.map(&:to_s)
-        solr_doc['original_file_id_ssi']  = resource.original_file_id.to_s
-        solr_doc['thumbnail_id_ssi']      = resource.thumbnail_id.to_s
-        solr_doc['extracted_text_id_ssi'] = resource.extracted_text_id.to_s
+        solr_doc['file_ids_ssim']                = resource.file_ids&.map(&:to_s)
+        solr_doc['original_file_id_ssi']         = resource.original_file_id.to_s
+        solr_doc['extracted_text_id_ssi']        = resource.extracted_text_id.to_s
+        solr_doc['hasRelatedMediaFragment_ssim'] = resource.representative_id.to_s
+        solr_doc['hasRelatedImage_ssim']         = resource.thumbnail_id.to_s
 
         # Add in metadata from the original file.
         file_metadata = original_file

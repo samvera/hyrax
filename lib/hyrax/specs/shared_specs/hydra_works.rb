@@ -258,6 +258,7 @@ RSpec.shared_examples 'a Hyrax::FileSet' do
 
   it_behaves_like 'a Hyrax::Resource'
   it_behaves_like 'a model with core metadata'
+  it_behaves_like 'a model with basic metadata'
 
   it { is_expected.not_to be_collection }
   it { is_expected.not_to be_file }
@@ -287,6 +288,10 @@ RSpec.shared_examples 'a Hyrax::FileSet' do
 
       it 'has file_ids' do
         expect(fileset.file_ids).to eq file_ids
+      end
+
+      it 'has a representative_id' do
+        expect(fileset.representative_id).to eq fileset.id
       end
 
       it 'can query files' do

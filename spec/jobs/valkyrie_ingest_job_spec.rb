@@ -27,8 +27,10 @@ RSpec.describe ValkyrieIngestJob do
       reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
       expect(reloaded_file_set)
         .to have_attached_files(be_original_file)
-      expect(reloaded_file_set.label)
-        .to eq "image.jp2"
+      expect(reloaded_file_set.title).to eq ["image.jp2"]
+      expect(reloaded_file_set.label).to eq "image.jp2"
+      expect(reloaded_file_set.file_ids)
+        .to contain_exactly(reloaded_file_set.original_file_id)
     end
 
     it 'makes original_file queryable by use' do
@@ -54,6 +56,27 @@ RSpec.describe ValkyrieIngestJob do
         .from(be_empty)
         .to contain_exactly(match(object: have_attributes(id: file_set.id),
                                   user: upload.user))
+    end
+
+    context 'with a thumbnail added' do
+      let(:thumbnail_upload) do
+        FactoryBot.create(:uploaded_file,
+                          file: File.open('spec/fixtures/world.png'),
+                          file_set_uri: file_set.id)
+      end
+
+      it 'adds an original_file file to the file_set' do
+        described_class.perform_now(upload)
+        described_class.perform_now(thumbnail_upload, pcdm_use: Hyrax::FileMetadata::Use::THUMBNAIL)
+
+        reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
+        expect(reloaded_file_set)
+          .to have_attached_files(be_original_file, be_thumbnail_file)
+        expect(reloaded_file_set.title).to eq ["image.jp2"]
+        expect(reloaded_file_set.label).to eq "image.jp2"
+        expect(reloaded_file_set.file_ids)
+          .to contain_exactly(reloaded_file_set.original_file_id, reloaded_file_set.thumbnail_id)
+      end
     end
 
     context 'with no file_set_uri' do
