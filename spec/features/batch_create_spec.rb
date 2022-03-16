@@ -34,8 +34,6 @@ RSpec.describe 'Batch creation of works', type: :feature do
     end
 
     it "allows on-behalf-of batch deposit", :js do
-      pending('batch workflows arent working with valkyrie for still undiagnosed reasons.') if
-        Hyrax.config.use_valkyrie?
       click_link "Files" # switch tab
       expect(page).to have_content "Add files"
       within('div#add-files') do

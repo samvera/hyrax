@@ -9,7 +9,6 @@ Hyrax.publisher.subscribe(Hyrax::Listeners::FileSetLifecycleNotificationListener
 Hyrax.publisher.subscribe(Hyrax::Listeners::MemberCleanupListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::MetadataIndexListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::ObjectLifecycleListener.new)
-Hyrax.publisher.subscribe(Hyrax::Listeners::ProxyDepositListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::TrophyCleanupListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::WorkflowListener.new)
 

@@ -95,16 +95,6 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         expect(Sipity::Entity(assigns[:curation_concern]).workflow_state).to have_attributes(name: "deposited")
       end
 
-      context 'when depositing as a proxy for (on_behalf_of) another user' do
-        let(:create_params) { { title: 'comet in moominland', on_behalf_of: target_user.user_key } }
-        let(:target_user) { FactoryBot.create(:user) }
-
-        it 'transfers depositor status to proxy target' do
-          expect { post :create, params: { test_simple_work: create_params } }
-            .to have_enqueued_job(ContentDepositorChangeEventJob)
-        end
-      end
-
       context 'when setting visibility' do
         let(:create_params) { { title: 'comet in moominland', visibility: 'open' } }
 

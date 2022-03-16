@@ -142,20 +142,6 @@ RSpec.describe Hyrax::DefaultMiddlewareStack, :clean_repo do
         end
       end
     end
-
-    describe 'when doing a proxy deposit' do
-      let(:target_user) { FactoryBot.create(:user) }
-      let(:attributes) do
-        { title: ['comet in moominland'],
-          on_behalf_of: target_user.user_key }
-      end
-
-      it 'enqueues exactly one ContentDepositorChangeEventJob' do
-        expect { actor.create(env) }
-          .to have_enqueued_job(ContentDepositorChangeEventJob)
-          .exactly(:once)
-      end
-    end
   end
 
   describe '#update' do
