@@ -4,7 +4,7 @@ require 'hyrax/specs/spy_listener'
 
 RSpec.describe ValkyrieIngestJob do
   let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
-  let(:upload) { FactoryBot.create(:uploaded_file, file_set_uri: file_set.id) }
+  let(:upload) { FactoryBot.create(:uploaded_file, file_set_uri: file_set.id, file: File.open('spec/fixtures/image.png')) }
 
   let(:listener) { Hyrax::Specs::AppendingSpyListener.new }
   let(:characterizer) { double(characterize: fits_response) }
@@ -27,10 +27,26 @@ RSpec.describe ValkyrieIngestJob do
       reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
       expect(reloaded_file_set)
         .to have_attached_files(be_original_file)
-      expect(reloaded_file_set.title).to eq ["image.jp2"]
-      expect(reloaded_file_set.label).to eq "image.jp2"
+      expect(reloaded_file_set.title).to eq ["image.png"]
+      expect(reloaded_file_set.label).to eq "image.png"
       expect(reloaded_file_set.file_ids)
         .to contain_exactly(reloaded_file_set.original_file_id)
+    end
+
+    # Thumbnail assertion should be in ValkyrieCreateDerivativesJob spec, but I
+    # couldn't find a nice way to generate a FileSet with a real file attached
+    # programatically for a spec.
+    context "when in Valkyrie mode" do
+      it 'runs derivatives', index_adapter: :solr_index, perform_enqueued: true do
+        allow(ValkyrieCreateDerivativesJob).to receive(:perform_later).and_call_original
+
+        described_class.perform_now(upload)
+
+        expect(ValkyrieCreateDerivativesJob).to have_received(:perform_later)
+        expect(File.exist?(Hyrax::DerivativePath.new(file_set.id.to_s, "thumbnail").derivative_path)).to eq true
+        solr_doc = Hyrax.index_adapter.connection.get("select", params: { q: "id:#{file_set.id}" })["response"]["docs"].first
+        expect(solr_doc["thumbnail_path_ss"]).to eq "/downloads/#{file_set.id}?file=thumbnail"
+      end
     end
 
     it 'makes original_file queryable by use' do
@@ -72,8 +88,8 @@ RSpec.describe ValkyrieIngestJob do
         reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
         expect(reloaded_file_set)
           .to have_attached_files(be_original_file, be_thumbnail_file)
-        expect(reloaded_file_set.title).to eq ["image.jp2"]
-        expect(reloaded_file_set.label).to eq "image.jp2"
+        expect(reloaded_file_set.title).to eq ["image.png"]
+        expect(reloaded_file_set.label).to eq "image.png"
         expect(reloaded_file_set.file_ids)
           .to contain_exactly(reloaded_file_set.original_file_id, reloaded_file_set.thumbnail_id)
       end

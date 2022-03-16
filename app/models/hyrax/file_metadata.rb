@@ -2,6 +2,10 @@
 
 module Hyrax
   class FileMetadata < Valkyrie::Resource
+    # Include mime-types for Hydra Derivatives mime-type checking. We may want
+    # to move this logic someday.
+    include Hydra::Works::MimeTypes
+
     GENERIC_MIME_TYPE = 'application/octet-stream'
 
     ##
