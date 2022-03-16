@@ -15,6 +15,7 @@ Hyrax.config do |config|
   config.register_curation_concern :monograph
 
   config.iiif_image_server = true
+  config.work_requires_files = false
 
   # Returns a URL that resolves to an image provided by a IIIF image server
   config.iiif_image_url_builder = lambda do |file_id, base_url, size, format|
