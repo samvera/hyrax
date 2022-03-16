@@ -41,7 +41,7 @@ module Hyrax
       Hyrax.custom_queries.find_child_works(resource: resource).map do |member|
         { id: member.id.to_s,
           label: member.title.first,
-          path: url_for(member) }
+          path: main_app.url_for([member, { only_path: true }]) }
       end.to_json
     end
   end
