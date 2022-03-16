@@ -67,7 +67,9 @@ RSpec.describe Hyrax::ValkyrieIndexer do
       expect(indexer.to_solr).to match a_hash_including(
         id: resource.id.to_s,
         date_uploaded_dtsi: resource.created_at,
-        date_modified_dtsi: resource.updated_at
+        date_modified_dtsi: resource.updated_at,
+        system_create_dtsi: resource.created_at,
+        system_modified_dtsi: resource.updated_at
       )
     end
   end
