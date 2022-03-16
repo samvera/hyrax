@@ -136,8 +136,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
   def creator_create_collection(page)
     find('#add-new-collection-button').click
     create_managed_collection(page)
-
-    goto_new_collection_show_page(page)
+    goto_new_collection_show_page
     confirm_user_can_view_edit(page)
     test_manager(page)
   end
@@ -145,7 +144,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
   def manager_create_collection(page)
     find('#add-new-collection-button').click
     create_managed_collection(page)
-    goto_new_collection_show_page(page)
+    goto_new_collection_show_page
     confirm_user_can_view_edit(page)
     test_admin(page)
     test_creator(page)
@@ -154,7 +153,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
   def admin_create_collection(page)
     find('#add-new-collection-button').click
     create_managed_collection(page)
-    goto_new_collection_show_page(page)
+    goto_new_collection_show_page
     confirm_user_can_view_edit(page)
     test_manager(page)
     test_creator(page)
@@ -194,7 +193,7 @@ def test_admin(page)
   expect(page).to have_link("Edit collection")
 end
 
-def goto_new_collection_show_page(page)
+def goto_new_collection_show_page
   # navigate to show page for the new collection
   visit '/dashboard'
   click_link('Collections', match: :first)
