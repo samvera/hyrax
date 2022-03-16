@@ -99,8 +99,6 @@ module Hyrax
       case document['has_model_ssim'].first
       when Hyrax::FileSet.name, ::FileSet.name # ActiveFedora FileSet within a Valkyrie Resource
         Hyrax::FileSetPresenter.new(document, ability)
-      when ::FileSet.name
-        Hyrax::FileSetPresenter.new(document, ability)
       else
         Hyrax::WorkShowPresenter.new(document, ability)
       end
