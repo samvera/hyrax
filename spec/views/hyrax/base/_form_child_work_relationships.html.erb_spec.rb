@@ -31,6 +31,7 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
 
         # input with add button
         expect(rendered).to have_selector('input[data-autocomplete-url="/authorities/search/find_works"]')
+        expect(rendered).to have_selector("[data-exclude-work='#{work.id}']")
         expect(rendered).to have_selector("[data-behavior='add-relationship']")
       end
     end
@@ -44,6 +45,7 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
       it "draws the page" do
         # input with add button
         expect(rendered).to have_selector('input[data-autocomplete-url="/authorities/search/find_works"]')
+        expect(rendered).to have_selector("[data-exclude-work='#{work.id}']")
         expect(rendered).to have_selector("[data-behavior='add-relationship']")
 
         # generate the json to drive the script

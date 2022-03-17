@@ -18,7 +18,7 @@ HTML Properties:
                         data: {
                           autocomplete: 'work',
                           'autocomplete-url' => Rails.application.routes.url_helpers.qa_path + '/search/find_works',
-                          'exclude-work': f.object.model.id # exclude this item from the result set.
+                          'exclude-work': f.object.model.id.to_s # exclude this item from the result set.
                         } %>
       <a href="#" onclick="return false;" class="btn btn-primary" data-behavior="add-relationship"><%= t('.add') %></a>
   </div>
