@@ -3,7 +3,6 @@ module Hyrax
   class CitationsController < ApplicationController
     include WorksControllerBehavior
     include Breadcrumbs
-    include SingularSubresourceController
 
     # Overrides decide_layout from WorksControllerBehavior
     with_themed_layout '1_column'
