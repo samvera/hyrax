@@ -62,8 +62,7 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
 
     context "by default, when permissions are not reset" do
       it "changes the depositor and records an original depositor" do
-        described_class.call(base_work, receiver, false)
-        work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: base_work.id, use_valkyrie: true)
+        work = described_class.call(base_work, receiver, false)
         expect(work.depositor).to eq receiver.user_key
         expect(work.proxy_depositor).to eq depositor.user_key
         expect(work.edit_users.to_a).to include(receiver.user_key, depositor.user_key)
@@ -83,8 +82,7 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
 
     context "when permissions are reset" do
       it "changes the depositor and records an original depositor" do
-        described_class.call(base_work, receiver, true)
-        work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: base_work.id, use_valkyrie: true)
+        work = described_class.call(base_work, receiver, true)
         expect(work.depositor).to eq receiver.user_key
         expect(work.proxy_depositor).to eq depositor.user_key
         expect(work.edit_users.to_a).to contain_exactly(receiver.user_key)

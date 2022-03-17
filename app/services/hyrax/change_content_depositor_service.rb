@@ -49,7 +49,6 @@ module Hyrax
       apply_valkyrie_changes_to_file_sets(work: work, user: user, reset: reset)
 
       Hyrax.persister.save(resource: work)
-      work
     end
     private_class_method :call_valkyrie
 
