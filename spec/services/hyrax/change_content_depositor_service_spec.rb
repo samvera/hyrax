@@ -3,6 +3,12 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
   let!(:depositor) { create(:user) }
   let!(:receiver) { create(:user) }
 
+  it "is deprecated" do
+    work = build(:work)
+    expect(Deprecation).to receive(:warn)
+    described_class.call(work, receiver, false)
+  end
+
   context "for Active Fedora objects" do
     let!(:file) do
       create(:file_set, user: depositor)

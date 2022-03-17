@@ -17,7 +17,8 @@ RSpec.describe ContentDepositorChangeEventJob do
   context "when passing an ActiveFedora work" do
     let(:generic_work) { create(:generic_work, title: ['BethsMac'], user: user) }
 
-    it "logs the event to the proxy depositor's profile, the depositor's dashboard, and the FileSet" do
+    it "gives a deprecation warning then logs the event to the proxy depositor's profile, the depositor's dashboard, and the FileSet" do
+      expect(Deprecation).to receive(:warn)
       expect { described_class.perform_now(generic_work, another_user) }
         .to change { user.profile_events.length }
         .by(1)
@@ -41,7 +42,8 @@ RSpec.describe ContentDepositorChangeEventJob do
         timestamp: '1' }
     end
 
-    it "logs the event to the proxy depositor's profile, the depositor's dashboard, and the FileSet" do
+    it "gives a deprecation warning then logs the event to the proxy depositor's profile, the depositor's dashboard, and the FileSet" do
+      expect(Deprecation).to receive(:warn)
       expect { subject.perform(monograph, another_user) }
         .to change { user.profile_events.length }
         .by(1)

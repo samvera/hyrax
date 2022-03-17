@@ -13,6 +13,7 @@ module Hyrax
     #              sets; regardless of true/false make the given user
     #              the depositor of the given work
     def self.call(work, user, reset)
+      Deprecation.warn("This class will be removed in the next major release. Use Hyrax::ChangeDepositorService.call instead.")
       case work
       when ActiveFedora::Base
         call_af(work, user, reset)

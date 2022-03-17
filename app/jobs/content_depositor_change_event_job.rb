@@ -12,6 +12,7 @@ class ContentDepositorChangeEventJob < ContentEventJob
   # @param [User] user the user the work is being transfered to.
   # @param [TrueClass,FalseClass] reset (false) if true, reset the access controls. This revokes edit access from the depositor
   def perform(work, user, reset = false)
+    Deprecation.warn("This class will be removed in the next major release. Use Hyrax::ChangeDepositorService.call instead.")
     @reset = reset
     super(work, user)
   end
