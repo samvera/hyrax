@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'hyrax/transactions'
 
-RSpec.describe Hyrax::Transactions::Steps::ChangeContentDepositor, valkyrie_adapter: :test_adapter do
+RSpec.describe Hyrax::Transactions::Steps::ChangeDepositor, valkyrie_adapter: :test_adapter do
   subject(:step) { described_class.new }
   let(:work)     { FactoryBot.valkyrie_create(:hyrax_work) }
 
@@ -12,16 +12,16 @@ RSpec.describe Hyrax::Transactions::Steps::ChangeContentDepositor, valkyrie_adap
 
   context "when the depositor update is successful" do
     it "calls the service" do
-      allow(Hyrax::ChangeContentDepositorService).to receive(:call)
+      allow(Hyrax::ChangeDepositorService).to receive(:call)
       step.call(work)
 
-      expect(Hyrax::ChangeContentDepositorService).to have_received(:call)
+      expect(Hyrax::ChangeDepositorService).to have_received(:call)
     end
   end
 
   context "when there's an error" do
     it 'returns a Failure' do
-      allow(Hyrax::ChangeContentDepositorService).to receive(:call).and_raise
+      allow(Hyrax::ChangeDepositorService).to receive(:call).and_raise
       result = step.call(work)
 
       expect(result).to be_failure

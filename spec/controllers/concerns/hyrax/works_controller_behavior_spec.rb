@@ -100,7 +100,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         let(:target_user) { FactoryBot.create(:user) }
         it 'transfers depositor status to proxy target' do
           expect { post :create, params: { test_simple_work: create_params } }
-            .to have_enqueued_job(ContentDepositorChangeEventJob)
+            .to have_enqueued_job(ChangeDepositorEventJob)
           expect(assigns[:curation_concern]).to have_attributes(depositor: target_user.user_key)
           expect(assigns[:curation_concern]).to have_attributes(proxy_depositor: user.user_key)
         end

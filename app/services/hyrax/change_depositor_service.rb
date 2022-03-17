@@ -29,7 +29,7 @@ module Hyrax
              when Valkyrie::Resource
                call_valkyrie(work, user, reset)
              end
-      ContentDepositorChangeEventJob.perform_later(work)
+      ChangeDepositorEventJob.perform_later(work)
       work
     end
 

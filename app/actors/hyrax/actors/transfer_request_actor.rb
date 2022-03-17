@@ -17,7 +17,7 @@ module Hyrax
         return true if proxy.blank?
         work = env.curation_concern
         user = ::User.find_by_user_key(proxy)
-        Hyrax::ChangeContentDepositorService.call(work, user, false)
+        Hyrax::ChangeDepositorService.call(work, user, false)
         true
       end
     end

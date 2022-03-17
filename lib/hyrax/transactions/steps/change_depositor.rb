@@ -12,7 +12,7 @@ module Hyrax
       # If no user is given, simply passes as a `Success`.
       #
       # @since 3.4.0
-      class ChangeContentDepositor
+      class ChangeDepositor
         include Dry::Monads[:result]
 
         ##
@@ -22,7 +22,7 @@ module Hyrax
         #
         # @return [Dry::Monads::Result]
         def call(obj, user: NullUser.new, reset: false)
-          obj = Hyrax::ChangeContentDepositorService.call(obj, user, reset)
+          obj = Hyrax::ChangeDepositorService.call(obj, user, reset)
 
           Success(obj)
         rescue StandardError => err
