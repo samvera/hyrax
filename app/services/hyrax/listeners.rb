@@ -25,6 +25,7 @@ module Hyrax
     autoload :MemberCleanupListener
     autoload :MetadataIndexListener
     autoload :ObjectLifecycleListener
+    autoload :ProxyDepositListener
     autoload :TrophyCleanupListener
     autoload :WorkflowListener
   end
