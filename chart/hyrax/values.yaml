@@ -252,7 +252,7 @@ nginx:
   # extraVolumes:
   #   - name: "uploads"
   #     persistentVolumeClaim:
-  #       claimName: dev-nnp-uploads
+  #       claimName: {{ .Values.global.hyraxHostName }}-uploads
   # extraVolumeMounts:
   #   - name: uploads
   #     mountPath: /app/samvera/hyrax-webapp/public/system
