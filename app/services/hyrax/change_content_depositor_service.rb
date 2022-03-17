@@ -4,10 +4,6 @@ module Hyrax
     # Set the given `user` as the depositor of the given `work`; If
     # `reset` is true, first remove all previous permissions.
     #
-    # Used to transfer a an existing work, and to set
-    # depositor / proxy_depositor on a work newly deposited
-    # on_behalf_of another user
-    #
     # @param work [ActiveFedora::Base, Valkyrie::Resource] the work
     #             that is receiving a change of depositor
     # @param user [User] the user that will "become" the depositor of
@@ -16,21 +12,13 @@ module Hyrax
     #              permissions for the given work and contained file
     #              sets; regardless of true/false make the given user
     #              the depositor of the given work
-    # @return work, updated if necessary
     def self.call(work, user, reset)
-      # user_key is nil when there was no `on_behalf_of` in the form
-      return work unless user&.user_key
-      # Don't transfer to self
-      return work if user.user_key == work.depositor
-
-      work = case work
-             when ActiveFedora::Base
-               call_af(work, user, reset)
-             when Valkyrie::Resource
-               call_valkyrie(work, user, reset)
-             end
-      ContentDepositorChangeEventJob.perform_later(work)
-      work
+      case work
+      when ActiveFedora::Base
+        call_af(work, user, reset)
+      when Valkyrie::Resource
+        call_valkyrie(work, user, reset)
+      end
     end
 
     def self.call_af(work, user, reset)
@@ -61,6 +49,7 @@ module Hyrax
       apply_valkyrie_changes_to_file_sets(work: work, user: user, reset: reset)
 
       Hyrax.persister.save(resource: work)
+      work
     end
     private_class_method :call_valkyrie
 
