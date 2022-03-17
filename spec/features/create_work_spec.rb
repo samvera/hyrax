@@ -53,7 +53,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
     end
   end
 
-  context 'when the user is a proxy', perform_enqueued: [ContentDepositorChangeEventJob, AttachFilesToWorkJob, IngestJob] do
+  context 'when the user is a proxy', perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
     let(:second_user) { create(:user) }
 
     before do

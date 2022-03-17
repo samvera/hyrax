@@ -14,11 +14,17 @@ RSpec.describe ContentDepositorChangeEventJob do
     allow(Time).to receive(:now).at_least(:once).and_return(mock_time)
   end
 
+  it "is deprecated" do
+    generic_work = build(:generic_work)
+    # one deprecation from the class itself and one from when it calls the service
+    expect(Deprecation).to receive(:warn).twice
+    described_class.perform_now(generic_work, another_user)
+  end
+
   context "when passing an ActiveFedora work" do
     let(:generic_work) { create(:generic_work, title: ['BethsMac'], user: user) }
 
-    it "gives a deprecation warning then logs the event to the proxy depositor's profile, the depositor's dashboard, and the FileSet" do
-      expect(Deprecation).to receive(:warn)
+    it "logs the event to the proxy depositor's profile, the depositor's dashboard, and the FileSet" do
       expect { described_class.perform_now(generic_work, another_user) }
         .to change { user.profile_events.length }
         .by(1)
@@ -42,8 +48,7 @@ RSpec.describe ContentDepositorChangeEventJob do
         timestamp: '1' }
     end
 
-    it "gives a deprecation warning then logs the event to the proxy depositor's profile, the depositor's dashboard, and the FileSet" do
-      expect(Deprecation).to receive(:warn)
+    it "logs the event to the proxy depositor's profile, the depositor's dashboard, and the FileSet" do
       expect { subject.perform(monograph, another_user) }
         .to change { user.profile_events.length }
         .by(1)
