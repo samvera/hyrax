@@ -22,6 +22,8 @@ module Hyrax
         #
         # @return [Dry::Monads::Result]
         def call(obj, user: NullUser.new, reset: false)
+          return Success(obj) unless user&.user_key
+
           obj = Hyrax::ChangeDepositorService.call(obj, user, reset)
 
           Success(obj)
