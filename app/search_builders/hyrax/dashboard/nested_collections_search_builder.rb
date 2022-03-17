@@ -37,7 +37,7 @@ module Hyrax
 
       def limit_ids
         # exclude current collection from returned list
-        limit_ids = [@collection.id]
+        limit_ids = [@collection.id.to_s]
         # cannot add a parent that is already a parent
         limit_ids += @nesting_attributes.parents if @nesting_attributes.parents && @nest_direction == :as_parent
         limit_ids
@@ -91,7 +91,7 @@ module Hyrax
 
       def exclude_if_already_parent
         # 2) Exclude any of Collection F's direct children
-        "-" + ActiveFedora::SolrQueryBuilder.construct_query(Samvera::NestingIndexer.configuration.solr_field_name_for_storing_parent_ids => @collection.id)
+        "-" + ActiveFedora::SolrQueryBuilder.construct_query(Samvera::NestingIndexer.configuration.solr_field_name_for_storing_parent_ids => @collection.id.to_s)
       end
     end
   end

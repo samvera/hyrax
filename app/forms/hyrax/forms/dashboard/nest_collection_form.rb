@@ -26,11 +26,11 @@ module Hyrax
                        context:,
                        query_service: default_query_service,
                        persistence_service: default_persistence_service)
-          self.parent = parent || (parent_id.present? && Hyrax.config.collection_class.find(parent_id))
-          self.child = child || (child_id.present? && Hyrax.config.collection_class.find(child_id))
           self.context = context
           self.query_service = query_service
           self.persistence_service = persistence_service
+          self.parent = parent || (parent_id.present? && find_parent(parent_id))
+          self.child = child || (child_id.present? && find_child(child_id))
         end # rubocop:enable Metrics/ParameterLists
 
         attr_accessor :parent, :child
@@ -83,7 +83,7 @@ module Hyrax
         # rerouting to new_dashboard_collection_path to add the new collection as
         # a child. Since we don't yet have a child collection, the valid? option can't be used here.
         def validate_add
-          if parent.try(:nestable?)
+          if nestable?(parent)
             nesting_within_maximum_depth
           else
             errors.add(:parent, :cannot_have_child_nested)
@@ -116,14 +116,29 @@ module Hyrax
         end
 
         def parent_and_child_can_be_nested
-          if parent.try(:nestable?) && child.try(:nestable?)
+          if nestable?(parent) && nestable?(child)
             return true if query_service.parent_and_child_can_nest?(parent: parent, child: child, scope: context)
             errors.add(:parent, :cannot_have_child_nested)
             errors.add(:child, :cannot_nest_in_parent)
           else
-            errors.add(:parent, :is_not_nestable) unless parent.try(:nestable?)
-            errors.add(:child, :is_not_nestable) unless child.try(:nestable?)
+            errors.add(:parent, :is_not_nestable) unless nestable?(parent)
+            errors.add(:child, :is_not_nestable) unless nestable?(child)
           end
+        end
+
+        def find_parent(parent_id)
+          Hyrax.query_service.find_by(id: parent_id)
+        end
+
+        def find_child(child_id)
+          Hyrax.query_service.find_by(id: child_id)
+        end
+
+        def nestable?(collection)
+          return false if collection.blank?
+          return collection.nestable? if collection.respond_to? :nestable?
+          collection_type = Hyrax::CollectionType.find_by_gid!(collection.collection_type_gid)
+          collection_type.nestable?
         end
       end
     end
