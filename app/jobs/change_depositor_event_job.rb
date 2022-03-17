@@ -7,7 +7,7 @@ class ChangeDepositorEventJob < ContentEventJob
   include Rails.application.routes.url_helpers
   include ActionDispatch::Routing::PolymorphicRoutes
 
-  # @param [ActiveFedora::Base] work the work that's been transfered
+  # @param [ActiveFedora::Base, Hyrax::Work] work the work that's been transfered
   def perform(work)
     # these get set to repo_object and depositor
     super(work, new_owner(work))
@@ -34,12 +34,14 @@ class ChangeDepositorEventJob < ContentEventJob
     depositor.log_event(event)
   end
 
-  private def previous_owner
+  private
+
+  def previous_owner
     ::User.find_by_user_key(repo_object.proxy_depositor)
   end
 
   # used for @depositor
-  private def new_owner(work)
+  def new_owner(work)
     ::User.find_by_user_key(work.depositor)
   end
 end
