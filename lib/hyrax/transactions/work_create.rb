@@ -13,8 +13,8 @@ module Hyrax
                        'change_set.set_user_as_depositor',
                        'change_set.apply',
                        'work_resource.save_acl',
-                       'work_resource.change_depositor',
                        'work_resource.add_file_sets',
+                       'work_resource.change_depositor',
                        'work_resource.add_to_parent'].freeze
 
       ##
