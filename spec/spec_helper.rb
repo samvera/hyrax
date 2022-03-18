@@ -214,7 +214,10 @@ RSpec.configure do |config|
 
   config.before(:each, type: :feature) do |example|
     clean_active_fedora_repository unless
-      example.metadata[:clean_repo] # trust clean_repo if present
+      # trust clean_repo if present
+      example.metadata[:clean_repo] ||
+      # only run if using wings or ActiveFedora
+      (example.metadata[:valkyrie_adapter].present? && example.metadata[:valkyrie_adapter] != :wings_adapter)
   end
 
   config.after(:each, type: :feature) do
@@ -249,9 +252,9 @@ RSpec.configure do |config|
   config.profile_examples = 10
 
   config.before(:example, :clean_repo) do
-    clean_active_fedora_repository
-    Hyrax::RedisEventStore.instance.redis.flushdb
+    clean_active_fedora_repository unless Hyrax.config.disable_wings
 
+    Hyrax::RedisEventStore.instance.redis.flushdb
     # Not needed to clean the Solr core used by ActiveFedora since
     # clean_active_fedora_repository will wipe that core
     Hyrax::SolrService.wipe! if Hyrax.config.query_index_from_valkyrie
