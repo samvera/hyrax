@@ -22,7 +22,21 @@ RSpec.describe Hyrax::CitationsController do
     end
 
     context "with an unauthenticated user" do
-      it "is not successful" do
+      let(:second_user) { FactoryBot.create(:user) }
+
+      before do
+        sign_in second_user
+      end
+
+      it "redirects to the home page" do
+        get :work, params: { id: work }
+        expect(response).to redirect_to main_app.root_path(locale: 'en')
+        expect(flash[:alert]).to eq "You are not authorized to access this page."
+      end
+    end
+
+    context "when a user is not logged in" do
+      it "redirects to the user login page" do
         get :work, params: { id: work }
         expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
         expect(flash[:alert]).to eq "You are not authorized to access this page."

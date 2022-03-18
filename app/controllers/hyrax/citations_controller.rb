@@ -2,6 +2,7 @@
 module Hyrax
   class CitationsController < ApplicationController
     include WorksControllerBehavior
+    include DenyAccessOverrideBehavior
     include Breadcrumbs
 
     # Overrides decide_layout from WorksControllerBehavior
