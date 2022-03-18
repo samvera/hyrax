@@ -38,11 +38,7 @@ module Hyrax
       work.permissions = [] if reset
       work.apply_depositor_metadata(user)
       work.save!
-      work.file_sets.each do |f|
-        f.permissions = [] if reset
-        f.apply_depositor_metadata(user)
-        f.save!
-      end
+      Hyrax::PropagateChangeDepositorJob.perform_later(work, user, reset) if work.file_sets.present?
       work
     end
     private_class_method :call_af
@@ -59,7 +55,8 @@ module Hyrax
       apply_depositor_metadata(work, user)
 
       work = Hyrax.persister.save(resource: work)
-      apply_valkyrie_changes_to_file_sets(work: work, user: user, reset: reset)
+      file_sets = Hyrax.custom_queries.find_child_file_sets(resource: work)
+      Hyrax::PropagateChangeDepositorJob.perform_later(work, user, reset) if file_sets.present?
       work
     end
     private_class_method :call_valkyrie
@@ -70,17 +67,5 @@ module Hyrax
       Hyrax::AccessControlList.new(resource: resource).grant(:edit).to(::User.find_by_user_key(depositor_id)).save
     end
     private_class_method :apply_depositor_metadata
-
-    def self.apply_valkyrie_changes_to_file_sets(work:, user:, reset:)
-      Hyrax.custom_queries.find_child_file_sets(resource: work).each do |f|
-        if reset
-          f.permission_manager.acl.permissions = []
-          f.permission_manager.acl.save
-        end
-        apply_depositor_metadata(f, user)
-        Hyrax.persister.save(resource: f)
-      end
-    end
-    private_class_method :apply_valkyrie_changes_to_file_sets
   end
 end
