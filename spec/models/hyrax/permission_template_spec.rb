@@ -53,7 +53,7 @@ RSpec.describe Hyrax::PermissionTemplate, valkyrie_adapter: :test_adapter do
     end
   end
 
-  describe "#source_model" do
+  describe "#source_model", valkyrie_adapter: :wings_adapter do
     context 'when source is an AdminSet' do
       let(:admin_set) { FactoryBot.create(:admin_set) }
       let(:attributes) { { source_id: admin_set.id } }
