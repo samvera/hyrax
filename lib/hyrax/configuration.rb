@@ -409,7 +409,7 @@ module Hyrax
     ##
     # @return [Object] the default model mapper
     def default_model_mapper
-      @default_model_mapper ||= ActiveFedora.model_mapper unless disable_wings
+      disable_wings ? nil : ActiveFedora.model_mapper
     end
 
     attr_writer :display_media_download_link
