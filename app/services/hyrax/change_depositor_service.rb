@@ -37,12 +37,12 @@ module Hyrax
       work.proxy_depositor = work.depositor
       work.permissions = [] if reset
       work.apply_depositor_metadata(user)
+      work.save!
       work.file_sets.each do |f|
         f.permissions = [] if reset
         f.apply_depositor_metadata(user)
         f.save!
       end
-      work.save!
       work
     end
     private_class_method :call_af
@@ -58,9 +58,9 @@ module Hyrax
       work.proxy_depositor = work.depositor
       apply_depositor_metadata(work, user)
 
+      work = Hyrax.persister.save(resource: work)
       apply_valkyrie_changes_to_file_sets(work: work, user: user, reset: reset)
-
-      Hyrax.persister.save(resource: work)
+      work
     end
     private_class_method :call_valkyrie
 
