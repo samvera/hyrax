@@ -53,5 +53,21 @@ RSpec.describe Hyrax::Transactions::WorkCreate, :clean_repo do
           .to have_file_set_members(be_persisted, be_persisted, be_persisted, be_persisted)
       end
     end
+
+    context 'when providing a proxy_depositor' do
+      let(:user) { FactoryBot.create(:user) }
+      let(:on_behalf_of) { FactoryBot.create(:user) }
+      let(:resource) { build(:hyrax_work, depositor: user.user_key) }
+
+      it 'sets the given user as depositor, old depositor as proxy_depositor' do
+        tx.with_step_args('work_resource.change_depositor' => { user: on_behalf_of })
+
+        expect(tx.call(change_set).value!)
+          .to have_attributes(
+            proxy_depositor: user.user_key,
+            depositor: on_behalf_of.user_key
+          )
+      end
+    end
   end
 end

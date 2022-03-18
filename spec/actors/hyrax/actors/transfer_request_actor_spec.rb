@@ -36,7 +36,7 @@ RSpec.describe Hyrax::Actors::TransferRequestActor do
       end
 
       it "adds the template users to the work" do
-        expect(ContentDepositorChangeEventJob).to receive(:perform_later).with(work, User)
+        expect(ChangeDepositorEventJob).to receive(:perform_later).with(work)
         expect(middleware.create(env)).to be true
       end
     end

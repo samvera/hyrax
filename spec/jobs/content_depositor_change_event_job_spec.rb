@@ -14,6 +14,13 @@ RSpec.describe ContentDepositorChangeEventJob do
     allow(Time).to receive(:now).at_least(:once).and_return(mock_time)
   end
 
+  it "is deprecated" do
+    generic_work = build(:generic_work)
+    # one deprecation from the class itself and one from when it calls the service
+    expect(Deprecation).to receive(:warn).twice
+    described_class.perform_now(generic_work, another_user)
+  end
+
   context "when passing an ActiveFedora work" do
     let(:generic_work) { create(:generic_work, title: ['BethsMac'], user: user) }
 
