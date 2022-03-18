@@ -317,6 +317,11 @@ RSpec.configure do |config|
     allow(Hyrax)
       .to receive(:metadata_adapter)
       .and_return(Valkyrie::MetadataAdapter.find(adapter_name))
+
+    if adapter_name != :wings_adapter
+      allow(Hyrax.config).to receive(:disable_wings).and_return(true)
+      hide_const("Wings") # disable_wings=true removes the Wings constant
+    end
   end
 
   # turn on the default nested reindexer; we use a null implementation for most
