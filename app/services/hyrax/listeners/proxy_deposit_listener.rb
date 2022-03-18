@@ -19,9 +19,8 @@ module Hyrax
           response to a difficult-to-diagnose race condition bug. This listener \
           is now a no-op. To retain functionality ensure that \
           DefaultMiddlewareStack is configured to use \
-          Hyrax::Actors::TransferRequestActor and unregister this listener \
-          in config/initializers/listeners.rb by adding the line: \n
-          Hyrax.publisher.unsubscribe(Hyrax::Listeners::ProxyDepositListener.new)"
+          Hyrax::Actors::TransferRequestActor. To quiet this deprecation remove any \
+          local initializer configuration that subscribes this listener."
         )
       end
     end
