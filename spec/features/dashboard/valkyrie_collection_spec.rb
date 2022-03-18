@@ -918,10 +918,10 @@ RSpec.describe 'collection', type: :feature, index_adapter: :solr_index, valkyri
       end
 
       context 'with brandable set' do
-        let(:brandable_collection_type) { FactoryBot.create(:collection_type, :brandable) }
-        let(:not_brandable_collection_type) { FactoryBot.create(:collection_type, :not_brandable) }
-        let(:brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: brandable_collection_type.gid.to_s, with_permission_template: true).id }
-        let(:not_brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: not_brandable_collection_type.gid.to_s, with_permission_template: true).id }
+        let(:brandable_ct) { FactoryBot.create(:collection_type, :brandable) }
+        let(:not_brandable_ct) { FactoryBot.create(:collection_type, :not_brandable) }
+        let(:brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: brandable_ct.gid.to_s, with_permission_template: true).id }
+        let(:not_brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: not_brandable_ct.gid.to_s, with_permission_template: true).id }
 
         it 'to true, it shows Branding tab' do
           visit "/dashboard/collections/#{brandable_collection_id}/edit"
@@ -935,10 +935,10 @@ RSpec.describe 'collection', type: :feature, index_adapter: :solr_index, valkyri
       end
 
       context 'with discoverable set' do
-        let(:discoverable_collection_type) { FactoryBot.create(:collection_type, :discoverable) }
-        let(:not_discoverable_collection_type) { FactoryBot.create(:collection_type, :not_discoverable) }
-        let(:discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: discoverable_collection_type.gid.to_s, with_permission_template: true).id }
-        let(:not_discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: not_discoverable_collection_type.gid.to_s, with_permission_template: true).id }
+        let(:discoverable_ct) { FactoryBot.create(:collection_type, :discoverable) }
+        let(:not_discoverable_ct) { FactoryBot.create(:collection_type, :not_discoverable) }
+        let(:discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: discoverable_ct.gid.to_s, with_permission_template: true).id }
+        let(:not_discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: not_discoverable_ct.gid.to_s, with_permission_template: true).id }
 
         it 'to true, it shows Discovery tab' do
           visit "/dashboard/collections/#{discoverable_collection_id}/edit"
@@ -952,10 +952,10 @@ RSpec.describe 'collection', type: :feature, index_adapter: :solr_index, valkyri
       end
 
       context 'with sharable set' do
-        let(:sharable_collection_type) { FactoryBot.create(:collection_type, :sharable) }
-        let(:not_sharable_collection_type) { FactoryBot.create(:collection_type, :not_sharable) }
-        let(:sharable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: sharable_collection_type.gid.to_s, with_permission_template: true).id }
-        let(:not_sharable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: not_sharable_collection_type.gid.to_s, with_permission_template: true).id }
+        let(:sharable_ct) { FactoryBot.create(:collection_type, :sharable) }
+        let(:not_sharable_ct) { FactoryBot.create(:collection_type, :not_sharable) }
+        let(:sharable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: sharable_ct.gid.to_s, with_permission_template: true).id }
+        let(:not_sharable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: not_sharable_ct.gid.to_s, with_permission_template: true).id }
 
         it 'to true, it shows Sharable tab' do
           visit "/dashboard/collections/#{sharable_collection_id}/edit"
