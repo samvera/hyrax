@@ -19,6 +19,7 @@ FactoryBot.define do
       members            { nil }
       visibility_setting { nil }
       with_index         { true }
+      apply_depositor_permissions { true }
     end
 
     after(:build) do |work, evaluator|
@@ -28,7 +29,7 @@ FactoryBot.define do
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
 
-      evaluator.edit_users << work.depositor if work.depositor.present?
+      evaluator.edit_users << work.depositor if evaluator.apply_depositor_permissions && work.depositor.present?
       work.permission_manager.edit_groups = evaluator.edit_groups
       work.permission_manager.edit_users  = evaluator.edit_users
       work.permission_manager.read_users  = evaluator.read_users
@@ -43,7 +44,7 @@ FactoryBot.define do
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
 
-      evaluator.edit_users << work.depositor if work.depositor.present?
+      evaluator.edit_users << work.depositor if evaluator.apply_depositor_permissions && work.depositor.present?
       work.permission_manager.edit_groups = evaluator.edit_groups
       work.permission_manager.edit_users  = evaluator.edit_users
       work.permission_manager.read_users  = evaluator.read_users

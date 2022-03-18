@@ -26,7 +26,7 @@ RSpec.describe 'The default Hyrax workflow', type: :feature do
     end
 
     context 'with a depositor' do
-      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :with_default_admin_set, depositor: depositor.user_key) }
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :with_default_admin_set, depositor: depositor.user_key, apply_depositor_permissions: false) }
 
       it 'grants edit to the depositor' do
         expect { workflow_factory.create(work, attributes, depositor) }
