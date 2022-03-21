@@ -16,7 +16,6 @@ RSpec.describe Hyrax::ChangeDepositorService do
         expect(work.depositor).to eq receiver.user_key
         expect(work.proxy_depositor).to eq depositor.user_key
         expect(work.edit_users).to include(receiver.user_key, depositor.user_key)
-        expect(Hyrax::PropagateChangeDepositorJob).not_to have_been_enqueued
       end
     end
 
@@ -29,7 +28,6 @@ RSpec.describe Hyrax::ChangeDepositorService do
         expect(work.depositor).to eq receiver.user_key
         expect(work.proxy_depositor).to eq depositor.user_key
         expect(work.edit_users).to contain_exactly(receiver.user_key)
-        expect(Hyrax::PropagateChangeDepositorJob).not_to have_been_enqueued
       end
     end
 
@@ -61,7 +59,6 @@ RSpec.describe Hyrax::ChangeDepositorService do
         expect(work.depositor).to eq receiver.user_key
         expect(work.proxy_depositor).to eq depositor.user_key
         expect(work.edit_users.to_a).to include(receiver.user_key, depositor.user_key)
-        expect(Hyrax::PropagateChangeDepositorJob).not_to have_been_enqueued
         expect(ChangeDepositorEventJob).to have_been_enqueued
       end
     end
@@ -73,7 +70,6 @@ RSpec.describe Hyrax::ChangeDepositorService do
         expect(work.depositor).to eq receiver.user_key
         expect(work.proxy_depositor).to eq depositor.user_key
         expect(work.edit_users.to_a).to contain_exactly(receiver.user_key)
-        expect(Hyrax::PropagateChangeDepositorJob).not_to have_been_enqueued
         expect(ChangeDepositorEventJob).to have_been_enqueued
       end
     end

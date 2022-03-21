@@ -38,7 +38,7 @@ module Hyrax
       work.permissions = [] if reset
       work.apply_depositor_metadata(user)
       work.save!
-      Hyrax::PropagateChangeDepositorJob.perform_later(work, user, reset) if work.file_sets.present?
+      Hyrax::PropagateChangeDepositorJob.perform_later(work, user, reset)
       work
     end
     private_class_method :call_af
@@ -55,8 +55,7 @@ module Hyrax
       apply_depositor_metadata(work, user)
 
       work = Hyrax.persister.save(resource: work)
-      file_sets = Hyrax.custom_queries.find_child_file_sets(resource: work)
-      Hyrax::PropagateChangeDepositorJob.perform_later(work, user, reset) if file_sets.present?
+      Hyrax::PropagateChangeDepositorJob.perform_later(work, user, reset)
       work
     end
     private_class_method :call_valkyrie
