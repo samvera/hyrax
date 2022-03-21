@@ -15,7 +15,7 @@ RSpec.describe Hyrax::PropagateChangeDepositorJob do
     end
 
     it "changes the depositor of the child file sets" do
-      described_class.perform_now(work, receiver, false)
+      described_class.perform_now(work.id, receiver, false)
       file.reload
       expect(file.depositor).to eq receiver.user_key
       expect(file.edit_users).to include(receiver.user_key, depositor.user_key)
@@ -23,7 +23,7 @@ RSpec.describe Hyrax::PropagateChangeDepositorJob do
 
     context "when permissions are reset" do
       it "changes the depositor of the child file sets and clears edit users" do
-        described_class.perform_now(work, receiver, true)
+        described_class.perform_now(work.id, receiver, true)
         file.reload
         expect(file.depositor).to eq receiver.user_key
         expect(file.edit_users).to contain_exactly(receiver.user_key)
@@ -42,7 +42,7 @@ RSpec.describe Hyrax::PropagateChangeDepositorJob do
     end
 
     it "changes the depositor of the child file sets" do
-      described_class.perform_now(work, receiver, false)
+      described_class.perform_now(work.id, receiver, false)
       file_sets = Hyrax.custom_queries.find_child_file_sets(resource: work)
       expect(file_sets.size).not_to eq 0 # A quick check to make sure our each block works
 
@@ -54,7 +54,7 @@ RSpec.describe Hyrax::PropagateChangeDepositorJob do
 
     context "when permissions are reset" do
       it "changes the depositor of the child file sets and clears edit users" do
-        described_class.perform_now(work, receiver, true)
+        described_class.perform_now(work.id, receiver, true)
         file_sets = Hyrax.custom_queries.find_child_file_sets(resource: work)
         expect(file_sets.size).not_to eq 0 # A quick check to make sure our each block works
 

@@ -38,7 +38,7 @@ module Hyrax
       work.permissions = [] if reset
       work.apply_depositor_metadata(user)
       work.save!
-      Hyrax::PropagateChangeDepositorJob.perform_later(work, user, reset)
+      Hyrax::PropagateChangeDepositorJob.perform_later(work.id.to_s, user, reset)
       work
     end
     private_class_method :call_af
@@ -55,7 +55,7 @@ module Hyrax
       apply_depositor_metadata(work, user)
 
       work = Hyrax.persister.save(resource: work)
-      Hyrax::PropagateChangeDepositorJob.perform_later(work, user, reset)
+      Hyrax::PropagateChangeDepositorJob.perform_later(work.id.to_s, user, reset)
       work
     end
     private_class_method :call_valkyrie

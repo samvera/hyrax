@@ -43,7 +43,7 @@ RSpec.describe Hyrax::ChangeDepositorService do
 
       it "changes the depositor of the child file sets" do
         described_class.call(work, receiver, reset)
-        expect(Hyrax::PropagateChangeDepositorJob).to have_been_enqueued
+        expect(Hyrax::PropagateChangeDepositorJob).to have_been_enqueued.with(work.id.to_s, receiver, reset)
       end
     end
   end
@@ -84,7 +84,7 @@ RSpec.describe Hyrax::ChangeDepositorService do
 
       it "changes the depositor of the child file sets" do
         described_class.call(base_work, receiver, false)
-        expect(Hyrax::PropagateChangeDepositorJob).to have_been_enqueued
+        expect(Hyrax::PropagateChangeDepositorJob).to have_been_enqueued.with(base_work.id.to_s, receiver, false)
       end
     end
 
