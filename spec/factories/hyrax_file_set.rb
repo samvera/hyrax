@@ -14,6 +14,7 @@ FactoryBot.define do
       edit_groups        { [] }
       read_users         { [] }
       read_groups        { [] }
+      with_index         { true }
     end
 
     after(:build) do |file_set, evaluator|
@@ -46,6 +47,8 @@ FactoryBot.define do
       file_set.permission_manager.read_users  = evaluator.read_groups
 
       file_set.permission_manager.acl.save
+
+      Hyrax.index_adapter.save(resource: file_set) if evaluator.with_index
     end
 
     trait :public do

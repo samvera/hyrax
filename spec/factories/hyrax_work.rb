@@ -18,6 +18,7 @@ FactoryBot.define do
       read_users         { [] }
       members            { nil }
       visibility_setting { nil }
+      with_index         { true }
     end
 
     after(:build) do |work, evaluator|
@@ -46,6 +47,8 @@ FactoryBot.define do
       work.permission_manager.read_users  = evaluator.read_users
 
       work.permission_manager.acl.save
+
+      Hyrax.index_adapter.save(resource: work) if evaluator.with_index
     end
 
     trait :public do

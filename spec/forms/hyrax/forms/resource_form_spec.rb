@@ -438,7 +438,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
     context 'when using a generic valkyrie adapter', valkyrie_adapter: :test_adapter do
       before do
-        allow(Hyrax).to receive_message_chain(:config, :disable_wings).and_return(true) # rubocop:disable RSpec/MessageChain
+        allow(Hyrax.config).to receive(:disable_wings).and_return(true)
         hide_const("Wings") # disable_wings=true removes the Wings constant
       end
       it 'prepopulates as empty before save' do
