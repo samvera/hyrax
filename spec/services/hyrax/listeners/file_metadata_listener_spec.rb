@@ -5,7 +5,7 @@ RSpec.describe Hyrax::Listeners::FileMetadataListener, valkyrie_adapter: :test_a
   let(:data)         { { metadata: metadata, user: user } }
   let(:event)        { Dry::Events::Event.new(event_type, data) }
   let(:fake_adapter) { FakeIndexingAdapter.new }
-  let(:file_set)     { FactoryBot.valkyrie_create(:hyrax_file_set) }
+  let(:file_set)     { FactoryBot.valkyrie_create(:hyrax_file_set, with_index: false) }
   let(:metadata)     { FactoryBot.valkyrie_create(:hyrax_file_metadata, file_set_id: file_set.id) }
   let(:user)         { FactoryBot.create(:user) }
 

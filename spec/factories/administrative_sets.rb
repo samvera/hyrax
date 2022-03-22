@@ -7,6 +7,7 @@ FactoryBot.define do
       with_permission_template { false }
       user { create(:user) }
       access_grants { [] }
+      with_index { true }
     end
 
     after(:build) do |adminset, evaluator|
@@ -28,6 +29,7 @@ FactoryBot.define do
                                                           access: Hyrax::PermissionTemplateAccess::MANAGE)
         template.reset_access_controls_for(collection: admin_set)
       end
+      Hyrax.index_adapter.save(resource: admin_set) if evaluator.with_index
     end
   end
 
