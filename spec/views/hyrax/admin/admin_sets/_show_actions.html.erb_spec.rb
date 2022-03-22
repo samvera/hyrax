@@ -67,7 +67,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_show_actions.html.erb', type: :view do
     end
 
     it "displays the admin_set title" do
-      expect(rendered).to have_selector(:css, "h2.panel-title")
+      expect(rendered).to have_selector(:css, "h2.card-title")
     end
   end
 end

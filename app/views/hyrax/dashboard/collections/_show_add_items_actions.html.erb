@@ -6,7 +6,7 @@
         <%= link_to t('hyrax.collection.actions.add_new_work.label'),
                     '#',
                     title: t('hyrax.collection.actions.add_new_work.desc'),
-                    data: { behavior: "select-work", target: "#worktypes-to-create", 'create-type' => 'single', add_works_to_collection: presenter.id },
+                    data: { behavior: "select-work", toggle: 'modal', target: "#worktypes-to-create", 'create-type' => 'single', add_works_to_collection: presenter.id },
                     class: 'btn btn-primary deposit-new-work-through-collection' %>
       <% else # simple link to the first work type %>
         <%= link_to t('hyrax.collection.actions.add_new_work.label'),
