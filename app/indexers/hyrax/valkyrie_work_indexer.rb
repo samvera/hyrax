@@ -18,7 +18,7 @@ module Hyrax
         admin_set_label = admin_set_label(resource)
         solr_doc['admin_set_sim']   = admin_set_label
         solr_doc['admin_set_tesim'] = admin_set_label
-        solr_doc['isPartOf_ssim'] = [resource.admin_set_id.to_s]
+        solr_doc["#{Hyrax.config.admin_set_predicate.qname.last}_ssim"] = [resource.admin_set_id.to_s]
         solr_doc['member_of_collection_ids_ssim'] = resource.member_of_collection_ids.map(&:to_s)
         solr_doc['member_ids_ssim'] = resource.member_ids.map(&:to_s)
         solr_doc['depositor_ssim'] = [resource.depositor]

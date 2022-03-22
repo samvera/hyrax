@@ -8,11 +8,11 @@ module Hyrax
     end
 
     def total_items
-      Hyrax::SolrService.count("{!field f=isPartOf_ssim}#{id}")
+      Hyrax::SolrService.count("{!field f=#{Hyrax.config.admin_set_predicate.qname.last}_ssim}#{id}")
     end
 
     def total_viewable_items
-      field_pairs = { "isPartOf_ssim" => id.to_s }
+      field_pairs = { "#{Hyrax.config.admin_set_predicate.qname.last}_ssim" => id.to_s }
       SolrQueryService.new
                       .with_field_pairs(field_pairs: field_pairs)
                       .accessible_by(ability: current_ability)
