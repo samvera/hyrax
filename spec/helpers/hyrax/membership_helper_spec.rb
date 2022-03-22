@@ -16,11 +16,12 @@ RSpec.describe Hyrax::MembershipHelper do
 
       context 'when it is a member of a collection' do
         let(:work) { build(:monograph, :as_collection_member) }
+        let(:collection) { Hyrax.custom_queries.find_parent_collections(resource: work).first }
 
         it 'gives collection details' do
           expect(JSON.parse(helper.member_of_collections_json(resource)))
             .to contain_exactly(include('id' => an_instance_of(String),
-                                        'label' => 'The Tove Jansson Collection',
+                                        'label' => collection.title.first,
                                         'path' => an_instance_of(String)))
         end
       end
@@ -37,11 +38,12 @@ RSpec.describe Hyrax::MembershipHelper do
 
       context 'when it is a member of a collection' do
         let(:resource) { build(:hyrax_work, :as_collection_member) }
+        let(:collection) { Hyrax.custom_queries.find_parent_collections(resource: resource).first }
 
         it 'gives collection details' do
           expect(JSON.parse(helper.member_of_collections_json(resource)))
             .to contain_exactly(include('id' => an_instance_of(String),
-                                        'label' => 'The Tove Jansson Collection',
+                                        'label' => collection.title.first,
                                         'path' => an_instance_of(String)))
         end
       end
