@@ -22,14 +22,14 @@
           <%= link_to(
                 t(:'helpers.action.batch.new'),
                 '#',
-                data: { behavior: "select-work", target: "#worktypes-to-create", 'create-type' => 'batch' },
+                data: { behavior: "select-work", toggle: 'modal', target: "#worktypes-to-create", 'create-type' => 'batch' },
                 class: 'btn btn-primary'
               ) %>
         <% end %>
         <%= link_to(
               t(:'helpers.action.work.new'),
               '#',
-              data: { behavior: "select-work", target: "#worktypes-to-create", 'create-type' => 'single' },
+              data: { behavior: "select-work", toggle: 'modal', target: "#worktypes-to-create", 'create-type' => 'single' },
               id: 'add-new-work-button',
               class: 'btn btn-primary'
             ) %>
