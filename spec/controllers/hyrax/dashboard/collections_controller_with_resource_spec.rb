@@ -12,13 +12,6 @@ require 'hyrax/specs/spy_listener'
 RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean_repo: true do
   routes { Hyrax::Engine.routes }
 
-  controller described_class do
-    load_and_authorize_resource except: [:index],
-                                instance_name: :collection,
-                                prepend: true,
-                                class: Hyrax::PcdmCollection
-  end
-
   before { allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection') }
   let(:collection_type_gid) { FactoryBot.create(:user_collection_type).to_global_id.to_s }
   let(:queries) { Hyrax.custom_queries }
@@ -221,7 +214,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       end
 
       it "adds members to the collection from edit form" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         parameters = { id: collection,
                        collection: { members: 'add' },
                        batch_document_ids: [asset3.id],
@@ -235,7 +227,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       end
 
       it "adds members to the collection from other than the edit form" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         parameters = { id: collection,
                        collection: { members: 'add' },
                        batch_document_ids: [asset3.id] }
