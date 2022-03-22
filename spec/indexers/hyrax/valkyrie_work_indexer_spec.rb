@@ -70,6 +70,7 @@ RSpec.describe Hyrax::ValkyrieWorkIndexer do
       expect(solr_document.fetch('admin_set_sim')).to match_array [admin_set_title]
       expect(solr_document.fetch('admin_set_tesim')).to match_array [admin_set_title]
       expect(solr_document.fetch('admin_set_id_ssim')).to match_array [admin_set.id]
+      expect(solr_document.fetch('isPartOf_ssim')).to match_array [admin_set.id]
       expect(solr_document.fetch('member_ids_ssim')).to match_array work.member_ids
       expect(solr_document.fetch('member_of_collection_ids_ssim')).to match_array [col1.id]
       expect(solr_document.fetch('depositor_ssim')).to match_array [user.email]
