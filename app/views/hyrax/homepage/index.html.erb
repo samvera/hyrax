@@ -6,7 +6,7 @@
     <% if @presenter.create_many_work_types? %>
       <%= link_to '#',
         class: "btn btn-primary btn-lg",
-        data: { behavior: 'select-work', target: '#worktypes-to-create', 'create-type' => 'single' } do %>
+        data: { behavior: 'select-work', toggle: 'modal', target: '#worktypes-to-create', 'create-type' => 'single' } do %>
         <i class="fa fa-upload" aria-hidden="true"></i> <%= t('hyrax.share_button') %>
       <% end %>
     <% else # simple link to the first work type %>
