@@ -216,7 +216,7 @@ RSpec.configure do |config|
     clean_active_fedora_repository unless
       # trust that clean_repo performed the clean if present
       example.metadata[:clean_repo] ||
-      # only run if using wings or ActiveFedora
+      # don't run for adapters other than wings
       (example.metadata[:valkyrie_adapter].present? && example.metadata[:valkyrie_adapter] != :wings_adapter)
   end
 
