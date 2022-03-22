@@ -75,9 +75,9 @@ module Hyrax
     end
 
     # Method to return the model
-    def hydra_model(classifier: ActiveFedora.model_mapper)
+    def hydra_model(classifier: nil)
       first('has_model_ssim')&.safe_constantize ||
-        classifier.classifier(self).best_model
+        model_classifier(classifier).classifier(self).best_model
     end
 
     def depositor(default = '')
@@ -106,6 +106,12 @@ module Hyrax
 
     def collection_type_gid
       first(Hyrax.config.collection_type_index_field)
+    end
+
+    private
+
+    def model_classifier(classifier)
+      classifier || ActiveFedora.model_mapper
     end
   end
 end

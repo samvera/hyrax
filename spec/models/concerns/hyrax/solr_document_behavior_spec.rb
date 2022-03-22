@@ -64,6 +64,17 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       it 'resolves the correct model name' do
         expect(solr_document.hydra_model).to eq Monograph
       end
+
+      context 'using non-wings adapter', valkyrie_adapter: :test_adapter do
+        before do
+          allow(Hyrax.config).to receive(:disable_wings).and_return(true)
+          hide_const("Wings")
+        end
+
+        it 'does not call Wings' do
+          expect(solr_document.hydra_model).to eq Monograph
+        end
+      end
     end
 
     context 'with a Wings model name' do
