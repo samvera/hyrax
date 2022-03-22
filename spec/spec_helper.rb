@@ -214,7 +214,10 @@ RSpec.configure do |config|
 
   config.before(:each, type: :feature) do |example|
     clean_active_fedora_repository unless
-      example.metadata[:clean_repo] # trust clean_repo if present
+      # trust that clean_repo performed the clean if present
+      example.metadata[:clean_repo] ||
+      # don't run for adapters other than wings
+      (example.metadata[:valkyrie_adapter].present? && example.metadata[:valkyrie_adapter] != :wings_adapter)
   end
 
   config.after(:each, type: :feature) do
@@ -249,9 +252,9 @@ RSpec.configure do |config|
   config.profile_examples = 10
 
   config.before(:example, :clean_repo) do
-    clean_active_fedora_repository
-    Hyrax::RedisEventStore.instance.redis.flushdb
+    clean_active_fedora_repository unless Hyrax.config.disable_wings
 
+    Hyrax::RedisEventStore.instance.redis.flushdb
     # Not needed to clean the Solr core used by ActiveFedora since
     # clean_active_fedora_repository will wipe that core
     Hyrax::SolrService.wipe! if Hyrax.config.query_index_from_valkyrie
@@ -317,6 +320,11 @@ RSpec.configure do |config|
     allow(Hyrax)
       .to receive(:metadata_adapter)
       .and_return(Valkyrie::MetadataAdapter.find(adapter_name))
+
+    if adapter_name != :wings_adapter
+      allow(Hyrax.config).to receive(:disable_wings).and_return(true)
+      hide_const("Wings") # disable_wings=true removes the Wings constant
+    end
   end
 
   # turn on the default nested reindexer; we use a null implementation for most
