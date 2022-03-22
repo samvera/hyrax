@@ -6,8 +6,8 @@ RSpec.describe 'ControlledVocabularyInput', type: :input do
 
   describe '#input' do
     before { allow(work).to receive(:[]).with(:based_near).and_return([item1, item2]) }
-    let(:item1) { double('value 1', rdf_label: ['Item 1'], rdf_subject: 'http://example.org/1', node?: false) }
-    let(:item2) { double('value 2', rdf_label: ['Item 2'], rdf_subject: 'http://example.org/2') }
+    let(:item1) { double('value 1', rdf_label: ['Item 1'], rdf_subject: 'http://example.org/1', full_label: 'Item One', node?: false) }
+    let(:item2) { double('value 2', rdf_label: ['Item 2'], rdf_subject: 'http://example.org/2', full_label: 'Item Two') }
 
     it 'renders multi-value' do
       expect(input).to receive(:build_field).with(item1, 0)
@@ -35,7 +35,7 @@ RSpec.describe 'ControlledVocabularyInput', type: :input do
     subject { input.send(:build_field, value, 0) }
 
     context 'for a resource' do
-      let(:value) { double('value 1', rdf_label: ['Item 1'], rdf_subject: 'http://example.org/1', node?: false) }
+      let(:value) { double('value 1', rdf_label: ['Item 1'], rdf_subject: 'http://example.org/1', full_label: 'Item One', node?: false) }
 
       it 'renders multi-value' do
         expect(subject).to have_selector('input.generic_work_based_near.multi_value')
@@ -58,7 +58,7 @@ RSpec.describe 'ControlledVocabularyInput', type: :input do
 
       it "preserves passed in data" do
         subject
-        expect(options).to include(data: { attribute: :based_near, 'search-url' => '/authorities/search' })
+        expect(options).to include(data: { attribute: :based_near, label: '', 'search-url' => '/authorities/search' })
       end
     end
   end

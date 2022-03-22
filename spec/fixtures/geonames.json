@@ -1,0 +1,577 @@
+{
+  "__license__": "https://creativecommons.org/licenses/by/4.0/ https://www.geonames.org/",
+  "timezone": {
+    "gmtOffset": -6,
+    "timeZoneId": "America/Chicago",
+    "dstOffset": -5
+  },
+  "bbox": {
+    "east": -93.19402300000002,
+    "south": 44.889787,
+    "north": 45.051249999999996,
+    "west": -93.329163,
+    "accuracyLevel": 0
+  },
+  "asciiName": "Minneapolis",
+  "astergdem": 275,
+  "countryId": "6252001",
+  "fcl": "P",
+  "srtm3": 262,
+  "adminId2": "5029877",
+  "adminId3": "5037657",
+  "countryCode": "US",
+  "adminCodes1": {
+    "ISO3166_2": "MN"
+  },
+  "adminId1": "5037779",
+  "lat": "44.97997",
+  "fcode": "PPLA2",
+  "continentCode": "NA",
+  "elevation": 253,
+  "adminCode2": "053",
+  "adminCode3": "43000",
+  "adminCode1": "MN",
+  "lng": "-93.26384",
+  "geonameId": 5037649,
+  "toponymName": "Minneapolis",
+  "population": 410939,
+  "wikipediaURL": "en.wikipedia.org/wiki/Minneapolis",
+  "adminName5": "",
+  "adminName4": "",
+  "adminName3": "City of Minneapolis",
+  "alternateNames": [
+    {
+      "name": "미니애폴리스",
+      "lang": "ko"
+    },
+    {
+      "name": "55401",
+      "lang": "post"
+    },
+    {
+      "name": "55402",
+      "lang": "post"
+    },
+    {
+      "name": "55403",
+      "lang": "post"
+    },
+    {
+      "name": "55404",
+      "lang": "post"
+    },
+    {
+      "name": "55405",
+      "lang": "post"
+    },
+    {
+      "name": "55406",
+      "lang": "post"
+    },
+    {
+      "name": "55407",
+      "lang": "post"
+    },
+    {
+      "name": "55408",
+      "lang": "post"
+    },
+    {
+      "name": "55409",
+      "lang": "post"
+    },
+    {
+      "name": "55410",
+      "lang": "post"
+    },
+    {
+      "name": "55411",
+      "lang": "post"
+    },
+    {
+      "name": "55412",
+      "lang": "post"
+    },
+    {
+      "name": "55413",
+      "lang": "post"
+    },
+    {
+      "name": "55414",
+      "lang": "post"
+    },
+    {
+      "name": "55415",
+      "lang": "post"
+    },
+    {
+      "name": "55416",
+      "lang": "post"
+    },
+    {
+      "name": "55417",
+      "lang": "post"
+    },
+    {
+      "name": "55418",
+      "lang": "post"
+    },
+    {
+      "name": "55419",
+      "lang": "post"
+    },
+    {
+      "name": "55420",
+      "lang": "post"
+    },
+    {
+      "name": "55422",
+      "lang": "post"
+    },
+    {
+      "name": "55423",
+      "lang": "post"
+    },
+    {
+      "name": "55424",
+      "lang": "post"
+    },
+    {
+      "name": "55425",
+      "lang": "post"
+    },
+    {
+      "name": "55426",
+      "lang": "post"
+    },
+    {
+      "name": "55427",
+      "lang": "post"
+    },
+    {
+      "name": "55428",
+      "lang": "post"
+    },
+    {
+      "name": "55429",
+      "lang": "post"
+    },
+    {
+      "name": "55430",
+      "lang": "post"
+    },
+    {
+      "name": "55431",
+      "lang": "post"
+    },
+    {
+      "name": "55435",
+      "lang": "post"
+    },
+    {
+      "name": "55436",
+      "lang": "post"
+    },
+    {
+      "name": "55437",
+      "lang": "post"
+    },
+    {
+      "name": "55438",
+      "lang": "post"
+    },
+    {
+      "name": "55439",
+      "lang": "post"
+    },
+    {
+      "name": "55440",
+      "lang": "post"
+    },
+    {
+      "name": "55441",
+      "lang": "post"
+    },
+    {
+      "name": "55442",
+      "lang": "post"
+    },
+    {
+      "name": "55443",
+      "lang": "post"
+    },
+    {
+      "name": "55444",
+      "lang": "post"
+    },
+    {
+      "name": "55445",
+      "lang": "post"
+    },
+    {
+      "name": "55446",
+      "lang": "post"
+    },
+    {
+      "name": "55447",
+      "lang": "post"
+    },
+    {
+      "name": "55450",
+      "lang": "post"
+    },
+    {
+      "name": "55454",
+      "lang": "post"
+    },
+    {
+      "name": "55455",
+      "lang": "post"
+    },
+    {
+      "name": "55458",
+      "lang": "post"
+    },
+    {
+      "name": "55459",
+      "lang": "post"
+    },
+    {
+      "name": "55460",
+      "lang": "post"
+    },
+    {
+      "name": "55467",
+      "lang": "post"
+    },
+    {
+      "name": "55470",
+      "lang": "post"
+    },
+    {
+      "name": "55472",
+      "lang": "post"
+    },
+    {
+      "name": "55474",
+      "lang": "post"
+    },
+    {
+      "name": "55478",
+      "lang": "post"
+    },
+    {
+      "name": "55479",
+      "lang": "post"
+    },
+    {
+      "name": "55480",
+      "lang": "post"
+    },
+    {
+      "name": "55483",
+      "lang": "post"
+    },
+    {
+      "name": "55484",
+      "lang": "post"
+    },
+    {
+      "name": "55485",
+      "lang": "post"
+    },
+    {
+      "name": "55486",
+      "lang": "post"
+    },
+    {
+      "name": "55487",
+      "lang": "post"
+    },
+    {
+      "name": "55488",
+      "lang": "post"
+    },
+    {
+      "name": "City of Minneapolis"
+    },
+    {
+      "name": "Gakaabikaang"
+    },
+    {
+      "name": "https://en.wikipedia.org/wiki/Minneapolis",
+      "lang": "link"
+    },
+    {
+      "name": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B8%D0%BD%D0%BD%D0%B5%D0%B0%D0%BF%D0%BE%D0%BB%D0%B8%D1%81",
+      "lang": "link"
+    },
+    {
+      "name": "Mineapoli",
+      "lang": "haw"
+    },
+    {
+      "name": "Mineapolis",
+      "lang": "lt"
+    },
+    {
+      "name": "Mineápolis",
+      "lang": "es"
+    },
+    {
+      "name": "Mineapolisa",
+      "lang": "lv"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "ca"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "da"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "de"
+    },
+    {
+      "isPreferredName": true,
+      "name": "Minneapolis",
+      "lang": "en"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "eo"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "fi"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "fr"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "ga"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "gl"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "hu"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "id"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "io"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "it"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "la"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "nl"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "nn"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "no"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "pl"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "pt"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "sk"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "sv"
+    },
+    {
+      "name": "Minneapolis",
+      "lang": "tr"
+    },
+    {
+      "name": "Minneapòlis",
+      "lang": "oc"
+    },
+    {
+      "name": "Minnéapolis",
+      "lang": "ug"
+    },
+    {
+      "name": "Mìn-nì-â-pô-li-sṳ̂",
+      "lang": "hak"
+    },
+    {
+      "name": "Minyapolis",
+      "lang": "tl"
+    },
+    {
+      "name": "MSP",
+      "lang": "iata"
+    },
+    {
+      "name": "Q36091",
+      "lang": "wkdt"
+    },
+    {
+      "name": "USMES",
+      "lang": "unlc"
+    },
+    {
+      "name": "Μινεάπολη",
+      "lang": "el"
+    },
+    {
+      "name": "Минеаполис",
+      "lang": "bg"
+    },
+    {
+      "name": "Минеаполис",
+      "lang": "mk"
+    },
+    {
+      "name": "Минеаполис",
+      "lang": "sr"
+    },
+    {
+      "name": "Миннеаполис",
+      "lang": "kk"
+    },
+    {
+      "name": "Миннеаполис",
+      "lang": "ky"
+    },
+    {
+      "name": "Миннеаполис",
+      "lang": "mrj"
+    },
+    {
+      "name": "Миннеаполис",
+      "lang": "os"
+    },
+    {
+      "name": "Миннеаполис",
+      "lang": "ru"
+    },
+    {
+      "name": "Миннеаполис",
+      "lang": "sah"
+    },
+    {
+      "name": "Миннеаполис",
+      "lang": "tg"
+    },
+    {
+      "name": "Мінеапаліс",
+      "lang": "be"
+    },
+    {
+      "name": "Міннеаполіс",
+      "lang": "uk"
+    },
+    {
+      "name": "მინეაპოლისი",
+      "lang": "ka"
+    },
+    {
+      "name": "Մինեապոլիս",
+      "lang": "hy"
+    },
+    {
+      "name": "מיניאפוליס",
+      "lang": "he"
+    },
+    {
+      "name": "منیاپولس",
+      "lang": "ur"
+    },
+    {
+      "name": "مينيابولس",
+      "lang": "ar"
+    },
+    {
+      "name": "مینیاپولیس",
+      "lang": "fa"
+    },
+    {
+      "name": "मिनियापोलिस",
+      "lang": "hi"
+    },
+    {
+      "name": "मिनीयापोलिस",
+      "lang": "mr"
+    },
+    {
+      "name": "মিনিয়াপোলিস",
+      "lang": "bn"
+    },
+    {
+      "name": "મિનેપોલિસ",
+      "lang": "gu"
+    },
+    {
+      "name": "மினியாப்பொலிஸ்",
+      "lang": "ta"
+    },
+    {
+      "name": "మిన్నియాపోలిస్",
+      "lang": "te"
+    },
+    {
+      "name": "ಮಿನ್ನಿಯಾಪೋಲಿಸ್",
+      "lang": "kn"
+    },
+    {
+      "name": "มินนีแอโพลิส",
+      "lang": "th"
+    },
+    {
+      "name": "ミネアポリス",
+      "lang": "ja"
+    },
+    {
+      "name": "明尼亞波利斯",
+      "lang": "yue"
+    },
+    {
+      "name": "明尼阿波利斯",
+      "lang": "lzh"
+    },
+    {
+      "name": "明尼阿波利斯",
+      "lang": "wuu"
+    },
+    {
+      "name": "明尼阿波利斯",
+      "lang": "zh"
+    }
+  ],
+  "adminName2": "Hennepin",
+  "name": "Minneapolis",
+  "fclName": "city, village,...",
+  "countryName": "United States",
+  "fcodeName": "seat of a second-order administrative division",
+  "adminName1": "Minnesota"
+}

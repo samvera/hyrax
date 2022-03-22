@@ -40,11 +40,9 @@ export default class LinkedData {
         // Called when Select2 is created to allow the user to initialize the
         // selection based on the value of the element select2 is attached to.
         // Essentially this is an id->object mapping function.
-
-        // TODO: Presently we're just showing a URI, but we should show the label.
         var data = {
           id: element.val(),
-          label: element.val()
+          label: element[0].dataset.label || element.val()
         };
         callback(data);
       },
