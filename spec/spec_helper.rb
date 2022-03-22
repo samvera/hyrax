@@ -214,7 +214,7 @@ RSpec.configure do |config|
 
   config.before(:each, type: :feature) do |example|
     clean_active_fedora_repository unless
-      # trust clean_repo if present
+      # trust that clean_repo performed the clean if present
       example.metadata[:clean_repo] ||
       # only run if using wings or ActiveFedora
       (example.metadata[:valkyrie_adapter].present? && example.metadata[:valkyrie_adapter] != :wings_adapter)
