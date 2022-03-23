@@ -87,7 +87,7 @@ RSpec.describe ValkyrieIngestJob do
 
         reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
         files = Hyrax.custom_queries.find_files(file_set: reloaded_file_set)
-        expect(files).to match(a_collection_containing_exactly(be_original_file, be_thumbnail_file))
+        expect(files).to contain_exactly(be_original_file, be_thumbnail_file)
         expect(reloaded_file_set.title).to eq ["image.png"]
         expect(reloaded_file_set.label).to eq "image.png"
         expect(reloaded_file_set.file_ids)
