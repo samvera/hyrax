@@ -32,7 +32,6 @@ RSpec.describe 'Batch creation of works', type: :feature do
     end
 
     it "allows on-behalf-of batch deposit", :js do
-      byebug
       click_link "Files" # switch tab
       expect(page).to have_content "Add files"
       within('div#add-files') do
