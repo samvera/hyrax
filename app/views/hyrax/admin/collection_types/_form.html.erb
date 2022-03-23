@@ -63,7 +63,8 @@
         <% if params[:action] == "new" %>
           <%= f.submit t(:'hyrax.admin.collection_types.new.submit'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "create_submit", name: "create_collection_type" %>
         <% else %>
-          <%= f.submit t(:'hyrax.admin.collection_types.edit.submit'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "update_submit", name: "update_collection_type" %>
+          <%= f.submit t(:'hyrax.admin.collection_types.edit.submit'), 
+            class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "update_submit", name: "update_collection_type", form: 'edit_collection_type' %>
         <% end %>
         <%= link_to t(:'helpers.action.cancel'), hyrax.admin_collection_types_path, class: 'btn btn-link' %>
       </div>
