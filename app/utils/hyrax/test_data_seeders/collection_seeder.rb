@@ -45,27 +45,45 @@ module Hyrax
 
         private
 
-        def seed_user
-          @seed_user ||= NullUser.new
-        end
-
-        def collection_types
-          @collection_types ||= Hyrax::CollectionType.all.each_with_object({}) do |ct, hsh|
-            hsh[ct.title] = ct.to_global_id
-          end
-        end
-
         def create_collection(title, collection_type_gid)
-          if collection_type_gid.blank?
-            msg = "   #{title} -- NOT CREATED -- Collection type gid (#{collection_type_gid}) " \
-                  "is invalid or doesn't exist."
-            return logger.info(msg)
-          end
+          return unless valid_collection_type?(title, collection_type_gid)
+          return if exists?(title, collection_type_gid)
 
           collection = Hyrax::PcdmCollection.new(title: title, collection_type_gid: collection_type_gid)
           Hyrax.persister.save(resource: collection)
           Hyrax.publisher.publish('collection.metadata.updated', collection: collection, user: seed_user)
           logger.info("   #{collection.title.first} -- CREATED")
+        end
+
+        def seed_user
+          @seed_user ||= NullUser.new
+        end
+
+        def collection_types
+          @collection_types ||=
+            Hyrax::CollectionType.all
+                                 .each_with_object({}) { |ct, hsh| hsh[ct.title] = ct.to_global_id.to_s }
+        end
+
+        def valid_collection_type?(title, collection_type_gid)
+          return true if collection_type_gid.present? && collection_types.value?(collection_type_gid.to_s)
+
+          msg = "   #{title} -- NOT CREATED -- Collection type gid (#{collection_type_gid}) " \
+                  "is invalid or doesn't exist."
+          logger.info(msg)
+          false
+        end
+
+        def existing_collections
+          @existing_collections ||=
+            Hyrax.query_service.find_all_of_model(model: Hyrax::PcdmCollection)
+                 .each_with_object({}) { |col, hsh| hsh[col.title&.first] = col.collection_type_gid.to_s }
+        end
+
+        def exists?(title, collection_type_gid)
+          return false unless existing_collections[title] == collection_type_gid.to_s
+          logger.info("   #{title} -- ALREADY EXISTS")
+          true
         end
       end
     end

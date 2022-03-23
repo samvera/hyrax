@@ -1,16 +1,19 @@
 wipe_data = ActiveModel::Type::Boolean.new.cast(ENV.fetch('WIPE_DATA', false))
 seed_release_testing = ActiveModel::Type::Boolean.new.cast(ENV.fetch('SEED_RELEASE_TESTING', false))
+seed_dassie = ActiveModel::Type::Boolean.new.cast(ENV.fetch('SEED_DASSIE', false))
 
 unless wipe_data || seed_release_testing
   puts 'NAME'
   puts '     rails db:seed (Hyrax)'
   puts
   puts 'SYNOPSIS'
-  puts '     bundle exec rails db:seed [WIPE_DATA=true|false] [SEED_RELEASE_TESTING=true|false]'
+  puts '     bundle exec rails db:seed [WIPE_DATA=true|false] [SEED_RELEASE_TESTING=true|false] [SEED_DASSIE=true|false]'
   puts
   puts 'DESCRIPTION'
   puts '     Hyrax defined db:seed provides a means to clear repository metadata from the datastore (e.g. Fedora, Postgres) and from Solr.'
   puts '     Seeds can be run to pre-populate metadata to help with release testing and local development testing.'
+  puts
+  puts '     NOTE: Options can be passed in with the command on the command line or set as ENV variables.'
   puts
   puts '     The options are as follows:'
   puts
@@ -28,6 +31,10 @@ unless wipe_data || seed_release_testing
   puts '             When true, it will run the set of seeds for release testing creating a repository metadata and support data, including'
   puts '             test users, collection types, collections, and works with and without files.  See Hyrax::TestDataSeeder for more information'
   puts '             on what data will be created by this process.'
+  puts
+  puts '     SEED_DASSIE'
+  puts '             When true, it will run a minimal set of seeds for dassie test app, including required collection types, default admin set,'
+  puts '             and test users.'
   puts
   puts '     ALLOW_RELEASE_SEEDING_IN_PRODUCTION'
   puts '             USE WITH EXTERME CAUTION WHEN USED IN PRODUCTION - Deleted data cannot be recovered.  Attempts are made to not overwrite'
@@ -58,6 +65,11 @@ if wipe_data
 
   Hyrax::DataMaintenance.new.destroy_repository_metadata_and_related_data
   Hyrax::RequiredDataSeeder.new.generate_seed_data
+end
+
+if seed_dassie
+  Hyrax::RequiredDataSeeder.new.generate_seed_data
+  Hyrax::TestDataSeeders::UserSeeder.generate_seeds
 end
 
 if seed_release_testing
