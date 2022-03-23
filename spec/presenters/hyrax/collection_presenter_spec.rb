@@ -338,7 +338,7 @@ RSpec.describe Hyrax::CollectionPresenter do
 
     subject { presenter.collection_type_badge }
 
-    it { is_expected.to eq "<span class=\"label\" style=\"background-color: #ffa510;\">" + collection_type.title + "</span>" }
+    it { is_expected.to eq "<span class=\"badge\" style=\"background-color: #ffa510;\">" + collection_type.title + "</span>" }
   end
 
   describe "#user_can_nest_collection?" do
