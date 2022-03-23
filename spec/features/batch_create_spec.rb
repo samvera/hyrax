@@ -12,9 +12,7 @@ RSpec.describe 'Batch creation of works', type: :feature do
   it "renders the batch create form" do
     visit hyrax.new_batch_upload_path
     expect(page).to have_content "Add New Works by Batch"
-    within("ul.nav-tabs li.active") do
-      expect(page).to have_content("Files")
-    end
+    expect(page).to have_link("Files", class: "nav-link active")
     expect(page).to have_content("Each file will be uploaded to a separate new work resulting in one work per uploaded file.")
   end
 
@@ -34,6 +32,7 @@ RSpec.describe 'Batch creation of works', type: :feature do
     end
 
     it "allows on-behalf-of batch deposit", :js do
+      byebug
       click_link "Files" # switch tab
       expect(page).to have_content "Add files"
       within('div#add-files') do
