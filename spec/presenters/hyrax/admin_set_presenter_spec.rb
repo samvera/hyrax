@@ -15,7 +15,7 @@ RSpec.describe Hyrax::AdminSetPresenter do
   describe "total_items" do
     subject { presenter.total_items }
 
-    let(:admin_set) { build(:admin_set) }
+    let(:admin_set) { create(:admin_set) }
 
     context "empty admin set" do
       it { is_expected.to eq 0 }
