@@ -15,8 +15,10 @@
 //= require turbolinks
 //
 // Required by Blacklight
-//= require jquery
-//= require jquery_ujs
+//= require jquery3
+//= require rails-ujs
+//= require popper
+//= require bootstrap
 //= require dataTables/jquery.dataTables
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 //= require blacklight/blacklight
