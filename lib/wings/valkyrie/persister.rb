@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'active_fedora/cleaner'
+
 module Wings
   module Valkyrie
     ##
