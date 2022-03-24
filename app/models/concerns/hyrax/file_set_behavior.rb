@@ -35,7 +35,7 @@ module Hyrax
 
     # Cast to a SolrDocument by querying from Solr
     def to_presenter
-      CatalogController.new.fetch(id).last
+      Blacklight::SearchService.new(config: CatalogController.blacklight_config).fetch(id).last
     end
   end
 end
