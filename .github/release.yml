@@ -1,0 +1,26 @@
+changelog:
+  categories:
+    - title: Major Changes (Potentially breaking changes)
+      labels:
+        - notes-major
+    - title: New Features
+      labels:
+        - notes-minor
+    - title: Deprecations
+      labels:
+        - notes-deprecation
+    - title: Bug Fixes
+      labels:
+        - notes-bugfix
+    - title: Valkyrie Progress
+      labels:
+        - notes-valkyrie
+    - title: Documentation
+      labels:
+        - notes-docs
+    - title: Containerization
+      labels:
+        - notes-container
+    - title: Other
+      labels:
+        - "*"
