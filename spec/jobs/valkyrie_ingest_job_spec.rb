@@ -86,8 +86,8 @@ RSpec.describe ValkyrieIngestJob do
         described_class.perform_now(thumbnail_upload, pcdm_use: Hyrax::FileMetadata::Use::THUMBNAIL)
 
         reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
-        expect(reloaded_file_set)
-          .to have_attached_files(be_original_file, be_thumbnail_file)
+        files = Hyrax.custom_queries.find_files(file_set: reloaded_file_set)
+        expect(files).to contain_exactly(be_original_file, be_thumbnail_file)
         expect(reloaded_file_set.title).to eq ["image.png"]
         expect(reloaded_file_set.label).to eq "image.png"
         expect(reloaded_file_set.file_ids)
