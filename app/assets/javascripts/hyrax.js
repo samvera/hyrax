@@ -7,9 +7,6 @@
 //= require jquery-ui/effects/effect-highlight
 //= require jquery-ui/widgets/sortable
 
-//= require jquery3
-//= require popper
-//= require bootstrap
 
 //= require select2
 //= require fixedsticky
