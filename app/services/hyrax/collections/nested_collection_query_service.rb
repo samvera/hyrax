@@ -171,7 +171,7 @@ module Hyrax
       # @return [Fixnum] the largest number of collections in a path nested
       #   under this collection (including this collection)
       def self.child_nesting_depth(child:, scope:)
-        return 1 if child.nil?
+        return 1 unless child
         # The nesting depth of a child collection is found by finding the largest nesting depth
         # among all collections and works which have the child collection in the paths, and
         # subtracting the nesting depth of the child collection itself.
