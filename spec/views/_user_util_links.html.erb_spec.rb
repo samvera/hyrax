@@ -9,17 +9,18 @@ RSpec.describe '/_user_util_links.html.erb', type: :view do
     allow(view).to receive(:can?).with(:create, GenericWork).and_return(can_create_file)
   end
 
-  it 'has dropdown list of links' do
-    render
-    page = Capybara::Node::Simple.new(rendered)
-    expect(page).to have_link 'userX', href: hyrax.dashboard_profile_path('userX')
-    expect(rendered).to have_link 'Dashboard', href: hyrax.dashboard_path
-  end
+  context 'partial elements' do
+    before { render }
 
-  it 'shows the number of outstanding messages' do
-    render
-    expect(rendered).to have_selector "a[aria-label='You have no unread notifications'][href='#{hyrax.notifications_path}']"
-    expect(rendered).to have_selector 'a.notify-number span.label-default.invisible', text: '0'
+    it 'has dropdown list of links' do
+      expect(rendered).to have_link 'userX', href: '#', id: 'navbarDropdown'
+      expect(rendered).to have_link 'Dashboard', href: hyrax.dashboard_path
+    end
+
+    it 'shows the number of outstanding messages' do
+      expect(rendered).to have_selector "a[aria-label='You have no unread notifications'][href='#{hyrax.notifications_path}']"
+      expect(rendered).to have_selector 'a.notify-number.nav-link span.count.label.invisible.badge-secondary', text: '0'
+    end
   end
 
   describe 'translations' do
