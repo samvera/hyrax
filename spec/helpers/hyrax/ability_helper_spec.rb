@@ -5,15 +5,15 @@ RSpec.describe Hyrax::AbilityHelper do
 
     {
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC =>
-        "<span class=\"label label-success\">Public</span>",
+        "<span class=\"badge badge-success\">Public</span>",
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED =>
-        "<span class=\"label label-info\">%<name>s</span>",
+        "<span class=\"badge badge-info\">%<name>s</span>",
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE =>
-        "<span class=\"label label-danger\">Private</span>",
+        "<span class=\"badge badge-danger\">Private</span>",
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO =>
-        "<span class=\"label label-warning\">Embargo</span>",
+        "<span class=\"badge badge-warning\">Embargo</span>",
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE =>
-        "<span class=\"label label-warning\">Lease</span>"
+        "<span class=\"badge badge-warning\">Lease</span>"
     }.each do |value, output|
       context value do
         let(:visibility) { value }
