@@ -4,24 +4,27 @@ module Hyrax
   ##
   # @api public
   #
-  # Builds a schema module for a Valkyrie resource. The schema itself is
-  # resolved by schema loader, which must respond to
-  # `#attributes_for(schema: :name)` with a hash from attribute names to
-  # `Dry::Type` types.
+  # Builds a schema module for a +Valkyrie::Resource+. The schema itself is
+  # resolved by a schema loader instance, which must implement
+  # {SimpleSchemaLoader#attributes_for}, with a hash from attribute names to
+  # +Dry::Type+ types.
   #
   # For the default schema loader, configuration is loaded from
-  # `config/metadata/[name]}.yaml`. Custom schema loaders can be provided
-  # for other types.
+  # +config/metadata/{name}.yaml+. A custom schema loader can be provided as
+  # +:schema_loader+ to
+  # resolve the schema in other ways.
   #
-  # @note `Valkyrie::Resources`/`Hyrax::Resources` are not required to use this
-  # interface, and may define custom attributes using the base
-  # `Valkyrie::Resource.attribute` interface. This mechanism is provided to
-  # allow schemas to be defined in a unified way that don't require programmer
-  # intervention ("configurable schemas"). While the default usage defines
-  # schemas in application configuration, they could also be held in repository
-  # storage, an external schema service, etc... by using a custom schema loader.
+  # @note +Valkyrie::Resource+ and {Hyrax::Resource} classes are not required to
+  #   use this interface, and may define custom attributes using the base
+  #   +Valkyrie::Resource.attribute+ interface. This mechanism is provided to
+  #   allow schemas to be defined in a unified way that don't require programmer
+  #   intervention ("configurable schemas"). While the default schema loader derives
+  #   schemas from configuration files, alternate implementations could provide
+  #   schema definitions pulled from repository storage, an external schema service,
+  #   etc...
   #
   # @param [Symbol] schema_name
+  # @param [#attributes_for] schema_loader
   #
   # @return [Module] a module that, when included, applies a schema to a
   #   `Valkyire::Resource`
