@@ -6,7 +6,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
   let(:file2) { File.open(fixture_path + '/image.jp2') }
   let!(:uploaded_file1) { Hyrax::UploadedFile.create(file: file1, user: user) }
   let!(:uploaded_file2) { Hyrax::UploadedFile.create(file: file2, user: user) }
-  let(:permission_template) { create(:permission_template, source_id: 'admin_set/default', with_admin_set: true, with_active_workflow: true) }
+  let(:permission_template) { create(:permission_template, with_admin_set: true, with_active_workflow: true) }
 
   before do
     # Grant the user access to deposit into an admin set.
@@ -135,7 +135,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
     end
   end
 
-  context "with valkyrie resources", metadata_adapter: :postgres_adapter do
+  context "with valkyrie resources", valkyrie_adapter: :postgres_adapter do
     before do
       sign_in user
       click_link 'Works'
