@@ -314,7 +314,8 @@ RSpec.configure do |config|
     CatalogController.blacklight_config.connection_config[:url] = blacklight_connection_url
   end
 
-  config.before(:example, :valkyrie_adapter) do |example|
+  # Prepend this before block to ensure that it runs before other before blocks like clean_repo
+  config.prepend_before(:example, :valkyrie_adapter) do |example|
     adapter_name = example.metadata[:valkyrie_adapter]
 
     allow(Hyrax)
