@@ -79,7 +79,7 @@ RSpec.describe 'Editing a work', type: :feature do
     end
   end
 
-  context 'with a parent Valkyrie resource' do
+  context 'with a parent Valkyrie resource', valkyrie_adapter: :test_adapter, index_adapter: :solr_index do
     let(:monograph) { FactoryBot.valkyrie_create(:monograph, :with_member_works) }
 
     before do
