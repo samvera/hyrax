@@ -310,8 +310,10 @@ RSpec.configure do |config|
   config.around(:example, index_adapter: :solr_index) do |example|
     blacklight_connection_url = CatalogController.blacklight_config.connection_config[:url]
     CatalogController.blacklight_config.connection_config[:url] = Valkyrie::IndexingAdapter.find(:solr_index).connection.options[:url]
+    Blacklight.default_index.connection = nil # force reloading of rsolr connection
     example.run
     CatalogController.blacklight_config.connection_config[:url] = blacklight_connection_url
+    Blacklight.default_index.connection = nil # force reloading of rsolr connection
   end
 
   # Prepend this before block to ensure that it runs before other before blocks like clean_repo
