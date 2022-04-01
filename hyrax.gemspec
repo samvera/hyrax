@@ -35,7 +35,7 @@ SUMMARY
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'blacklight', '~> 7.0'
-  spec.add_dependency 'blacklight-gallery', '~> 1.0'
+  spec.add_dependency 'blacklight-gallery', '~> 4.0'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
   spec.add_dependency 'browse-everything', '>= 0.16', '< 2.0'
   spec.add_dependency 'carrierwave', '~> 1.0'
@@ -51,13 +51,11 @@ SUMMARY
   spec.add_dependency 'flot-rails', '~> 0.0.6'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'hydra-derivatives', '~> 3.3'
-  spec.add_dependency 'hydra-editor', '~> 5.0', ">= 5.0.4"
+  spec.add_dependency 'hydra-editor', '~> 6.0'
   spec.add_dependency 'hydra-file_characterization', '~> 1.1.2'
   spec.add_dependency 'hydra-head', '~> 12.0'
   spec.add_dependency 'hydra-works', '>= 0.16'
   spec.add_dependency 'iiif_manifest', '>= 0.3', '< 2.0'
-  spec.add_dependency 'jquery-datatables-rails', '~> 3.4'
-  spec.add_dependency 'jquery-ui-rails', '~> 6.0'
   spec.add_dependency 'json-schema' # for Arkivo
   # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'kaminari_route_prefix', '~> 0.1.1'
@@ -68,6 +66,7 @@ SUMMARY
   spec.add_dependency 'noid-rails', '~> 3.0.0'
   spec.add_dependency 'oauth'
   spec.add_dependency 'oauth2', '~> 1.2'
+  spec.add_dependency 'openseadragon'
   spec.add_dependency 'posix-spawn'
   spec.add_dependency 'power_converter', '~> 0.1', '>= 0.1.2'
   spec.add_dependency 'qa', '~> 5.5', '>= 5.5.1' # questioning_authority
