@@ -2,7 +2,7 @@
 //= require browse_everything/behavior
 
 // Show the files in the queue
-Blacklight.onLoad( function() {
+function showBrowseEverythingFiles() {
   // We need to check this because https://github.com/samvera/browse-everything/issues/169
   if ($('#browse-btn').length > 0) {
     $('#browse-btn').browseEverything()
@@ -12,4 +12,6 @@ Blacklight.onLoad( function() {
       $.blueimp.fileupload.prototype.options.done.call($('#fileupload').fileupload(), evt, { result: { files: files }});
     })
   }
-});
+}
+$(document).on('click', '#browse-btn', showBrowseEverythingFiles);
+
