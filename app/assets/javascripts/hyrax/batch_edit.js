@@ -9,7 +9,7 @@ function batch_edit_init () {
             var key = Pair[0];
             var val = Pair[1];
             if (Result[key] != null) {
-                if(!$.isArray(Result[key])) Result[key] = [Result[key]];
+                if(!Array.isArray(Result[key])) Result[key] = [Result[key]];
                 Result[key].push(val);
             } else
                 Result[key] = val;
@@ -159,9 +159,9 @@ function batch_edit_init () {
         setTimeout(ajaxManager.runNow(), 100);
     }
 
-    $("#permissions_visibility_save").click(runSave);
-    $("#permissions_roles_save").click(runSave);
-    $(".field-save").click(runSave);
+    $("#permissions_visibility_save").on('click', runSave);
+    $("#permissions_roles_save").on( 'click', runSave);
+    $(".field-save").on('click', runSave);
 }
 
 Blacklight.onLoad(function() {
