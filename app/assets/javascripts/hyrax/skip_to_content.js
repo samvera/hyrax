@@ -1,7 +1,7 @@
 // This code is to implement skip_to_content
 
 Blacklight.onLoad(function () {
-  $(".skip-to-content").click(function(event) {
+  $(".skip-to-content").on('click', function(event) {
     event.preventDefault();
     // element to focus on
     var skipTo = '#' + $(this)[0].firstElementChild.hash.split('#')[1];

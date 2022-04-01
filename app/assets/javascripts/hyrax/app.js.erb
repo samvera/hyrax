@@ -92,7 +92,7 @@ Hyrax = {
     // Popover help modals. Used on the user profile page.
     popovers: function () {
         $("a[data-toggle=popover]").popover({html: true})
-            .click(function () {
+            .on("click", function () {
                 return false;
             });
     },
