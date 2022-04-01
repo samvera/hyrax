@@ -51,13 +51,13 @@ export default class FileManager {
     $("#resource-form").parent().data("file_manager_member", manager)
     // Track thumbnail ID hidden field
     new InputTracker($("*[data-member-link=thumbnail_id]"), manager)
-    $("#sortable *[name=thumbnail_id]").change(function() {
+    $("#sortable *[name=thumbnail_id]").on("change", function() {
       let val = $("#sortable *[name=thumbnail_id]:checked").val()
       $("*[data-member-link=thumbnail_id]").val(val)
       $("*[data-member-link=thumbnail_id]").change()
     })
     new InputTracker($("*[data-member-link=representative_id]"), manager)
-    $("#sortable *[name=representative_id]").change(function() {
+    $("#sortable *[name=representative_id]").on("change", function() {
       let val = $("#sortable *[name=representative_id]:checked").val()
       $("*[data-member-link=representative_id]").val(val)
       $("*[data-member-link=representative_id]").change()

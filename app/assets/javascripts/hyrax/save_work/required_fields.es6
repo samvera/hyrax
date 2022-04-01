@@ -18,6 +18,6 @@ export class RequiredFields {
   reload() {
     // ":input" matches all input, select or textarea fields.
     this.requiredFields = this.form.find(':input[required]')
-    this.requiredFields.change(this.callback)
+    this.requiredFields.on('change', this.callback)
   }
 }

@@ -39,7 +39,7 @@ function setAnchorAttrs(anchor, title, data) {
 
 Blacklight.onLoad( function() {
   // #this method depends on a "current_user" global variable having been set.
-  $('.trophy-class').click(function(evt){
+  $('.trophy-class').on("click", function(evt){
     evt.preventDefault();
     anchor = $(this);
     toggleTrophy(anchor.data('url'), anchor);

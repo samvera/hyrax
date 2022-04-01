@@ -99,11 +99,11 @@ export default class SaveWorkControl {
     let $uploadsEl = this.uploads.element;
     const $cancelBtn = this.uploads.form.find('#file-upload-cancel-btn');
 
-    $uploadsEl.bind('fileuploadstart', () => {
+    $uploadsEl.on('fileuploadstart', () => {
       $cancelBtn.prop('hidden', false);
     });
 
-    $uploadsEl.bind('fileuploadstop', () => {
+    $uploadsEl.on('fileuploadstop', () => {
       $cancelBtn.prop('hidden', true);
     });
   }
@@ -116,8 +116,8 @@ export default class SaveWorkControl {
 
   // If someone adds or removes a field on a multivalue input, fire a formChanged event.
   watchMultivaluedFields() {
-      $('.multi_value.form-group', this.form).bind('managed_field:add', () => this.formChanged())
-      $('.multi_value.form-group', this.form).bind('managed_field:remove', () => this.formChanged())
+      $('.multi_value.form-group', this.form).on('managed_field:add', () => this.formChanged())
+      $('.multi_value.form-group', this.form).on('managed_field:remove', () => this.formChanged())
   }
 
   // Called when a file has been uploaded, the deposit agreement is clicked or a form field has had text entered.

@@ -62,22 +62,22 @@
 
 Blacklight.onLoad(function() {
   // check the select all page cog menu item and select the entire page
-  $("[data-behavior='batch-edit-select-page']").bind('click', function(e) {
+  $("[data-behavior='batch-edit-select-page']").on('click', function(e) {
     e.preventDefault();
     select_page(true);
   });
 
   // check the select none cog menu item and de-select the entire page
-  $("[data-behavior='batch-edit-select-none']").bind('click', function(e) {
+  $("[data-behavior='batch-edit-select-none']").on('click', function(e) {
     e.preventDefault();
     select_page(false);
   });
 
   // check all check boxes
-  $("#check_all").bind('click', check_all_page);
+  $("#check_all").on('click', check_all_page);
   
   // select/deselect all check boxes 
-  $("#checkAllBox").change(function () {
+  $("#checkAllBox").on('change', function () {
     $("input:checkbox").prop('checked', $(this).prop("checked"));
   });
 
@@ -87,12 +87,12 @@ Blacklight.onLoad(function() {
   });
 
   // toggle button on or off based on boxes being clicked
-  $(".batch_document_selector").bind('click', function(e) {
+  $(".batch_document_selector").on('click', function(e) {
      toggleButtons();
   });
 
   // toggle the state of the select boxes in the cog menu if all buttons are
-  $(".batch_document_selector").bind('click', function(e) {
+  $(".batch_document_selector").on('click', function(e) {
 
       // count the check boxes currently checked
       var selectedCount = $(".batch_document_selector:checked").length;

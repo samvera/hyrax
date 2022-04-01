@@ -3,8 +3,8 @@ export class UploadedFiles {
   constructor(form, callback) {
     this.form = form
     this.element = $('#fileupload')
-    this.element.bind('fileuploadcompleted', callback)
-    this.element.bind('fileuploaddestroyed', callback)
+    this.element.on('fileuploadcompleted', callback)
+    this.element.on('fileuploaddestroyed', callback)
   }
 
   get hasFileRequirement() {

@@ -6,7 +6,7 @@ export default class SaveManager {
 
   override_save_button() {
     Blacklight.onLoad(() => {
-      this.save_button.click(this.clicked_save)
+      this.save_button.on('click', this.clicked_save)
     })
   }
 

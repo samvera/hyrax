@@ -10,7 +10,7 @@ export class InputTracker {
     this.notifier = notifier
     this.element.data("initial-value", this.element.val())
     this.element.data("tracker", this)
-    this.element.change(this.value_changed)
+    this.element.trigger("change", this.value_changed)
   }
 
   reset() {
