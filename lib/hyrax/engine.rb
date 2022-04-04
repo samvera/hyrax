@@ -15,8 +15,6 @@ module Hyrax
     require 'flipflop'
     require 'flot-rails'
     require 'hydra-file_characterization'
-    require 'jquery-datatables-rails'
-    require 'jquery-ui-rails'
     require 'legato'
     require 'qa'
     require 'tinymce-rails'
