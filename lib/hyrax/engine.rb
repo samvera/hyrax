@@ -16,6 +16,7 @@ module Hyrax
     require 'flot-rails'
     require 'hydra-file_characterization'
     require 'legato'
+    require 'openseadragon'
     require 'qa'
     require 'tinymce-rails'
     require 'valkyrie'
