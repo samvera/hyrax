@@ -74,6 +74,7 @@ services:
     user: root
     env_file:
       - .env
+      - .dassie/.env
     command: sh -l -c 'bundle && db-migrate-seed.sh'
     depends_on:
       - postgres
