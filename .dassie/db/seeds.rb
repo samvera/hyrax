@@ -68,6 +68,8 @@ if wipe_data
 end
 
 if seed_dassie
+  puts 'Seeding Dassie ...'
+
   Hyrax::RequiredDataSeeder.new.generate_seed_data
   Hyrax::TestDataSeeders::UserSeeder.generate_seeds
 end
