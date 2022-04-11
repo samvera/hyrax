@@ -18,7 +18,6 @@ class FeaturedWorkList
     @works = FeaturedWork.all
     add_solr_document_to_works
     @works = @works.reject do |work|
-      work.destroy if work.presenter.blank?
       work.presenter.blank?
     end
   end
