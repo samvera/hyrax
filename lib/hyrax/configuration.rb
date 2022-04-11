@@ -428,6 +428,18 @@ module Hyrax
     end
 
     ##
+    # @return [Valkyrie::StorageAdapter]
+    def derivatives_storage_adapter
+      @derivatives_storage_adapter ||= Valkyrie::StorageAdapter.find(:derivatives_disk)
+    end
+
+    ##
+    # @param [#to_sym] adapter
+    def derivatives_storage_adapter=(adapter)
+      @derivatives_storage_adapter = Valkyrie::StorageAdapter.find(adapter.to_sym)
+    end
+
+    ##
     # @return [#save, #save_all, #delete, #wipe!] an indexing adapter
     def index_adapter
       @index_adapter ||= Valkyrie::IndexingAdapter.find(:null_index)
