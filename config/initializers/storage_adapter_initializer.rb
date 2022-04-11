@@ -5,3 +5,8 @@ Valkyrie::StorageAdapter.register(
                               path_generator: Hyrax::ValkyrieSimplePathGenerator),
   :branding_disk
 )
+
+Valkyrie::StorageAdapter.register(
+  Valkyrie::Storage::Disk.new(base_path: Hyrax.config.derivatives_path),
+  :derivatives_disk
+)
