@@ -9,7 +9,6 @@ module Hyrax
     include Hyrax::VisibilityIndexer
     include Hyrax::ThumbnailIndexer
     include Hyrax::Indexer(:core_metadata)
-    include Hyrax::Indexer(:basic_metadata)
 
     self.thumbnail_path_service = CollectionThumbnailPathService
 
