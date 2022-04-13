@@ -51,6 +51,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
     before { sign_in user }
 
     it "removes blank strings from params before creating Collection" do
+      pending 'creation of a collection resource that includes basic metadata'
       expect { post :create, params: { collection: collection_attrs.merge(creator: ['']) } }
         .to change { Hyrax.query_service.count_all_of_model(model: Hyrax::PcdmCollection) }
         .by(1)
@@ -309,6 +310,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       end
 
       it "removes blank strings from params before updating Collection metadata" do # rubocop:disable RSpec/ExampleLength
+        pending 'creation of a collection resource that includes basic metadata'
         put :update, params: {
           id: collection,
           collection: {

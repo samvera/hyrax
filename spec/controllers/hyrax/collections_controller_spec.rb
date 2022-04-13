@@ -8,7 +8,6 @@ RSpec.describe Hyrax::CollectionsController, clean_repo: true do
     FactoryBot.valkyrie_create(:hyrax_collection,
                                :public,
                                title: ["My collection"],
-                               description: ["My incredibly detailed description of the collection"],
                                edit_users: [user.user_key], read_users: [user.user_key])
   end
 
@@ -20,7 +19,7 @@ RSpec.describe Hyrax::CollectionsController, clean_repo: true do
   let(:unowned_asset) { FactoryBot.valkyrie_create(:work, user: other) }
 
   let(:collection_attrs) do
-    { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"] }
+    { title: ['My First Collection'] }
   end
 
   describe "#show" do # public landing page
