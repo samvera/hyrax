@@ -143,28 +143,32 @@ _This is for applications that mount Hyrax and is separate from the docker conta
 
 ### Maintaining
 
-We publish several Hyrax images to hub.docker.com under the
-[`samveralabs` group][dockerhub-samveralabs]. To build them, do:
+We publish several Hyrax images to the [GitHub container registry][ghcr] under
+the [Samvera organization][samvera-packages].  To build them:
 
 ```sh
-# build an image for an app using Postgresql (`gem 'pg'`)
-docker build --target hyrax --tag samveralabs/hyrax:(git rev-parse HEAD) .
-docker push samveralabs/hyrax:(git rev-parse HEAD)
+export HYRAX_VERSION=v3.4.1 # or desired version
+git checkout $HYRAX_VERSION
 
-# or; build a development image with sqlite
-docker build --target hyrax --tag samveralabs/hyrax:(git rev-parse HEAD)-sqlite --build-arg DATABASE_APK_PACKAGE="sqlite" .
-docker push samveralabs/hyrax:(git rev-parse HEAD)-sqlite
+docker build --target hyrax-base --tag ghcr.io/samvera/hyrax/hyrax-base:$(git rev-parse HEAD) .
+
+docker tag ghcr.io/samvera/hyrax/hyrax-base:$(git rev-parse HEAD) ghcr.io/samvera/hyrax/hyrax-base:$HYRAX_VERSION
+
+docker push ghcr.io/samvera/hyrax/hyrax-base:$(git rev-parse HEAD)
+docker push ghcr.io/samvera/hyrax/hyrax-base:$HYRAX_VERSION
 ```
+
+Do the same for `hyrax-worker-base`.
 
 We also publish an image for the stable test application `dassie`:
 
 ```sh
-docker build --target hyrax-engine-dev --tag samveralabs/dassie:(git rev-parse HEAD) .
+docker build --target hyrax-engine-dev --tag ghcr.io/samvera/hyrax/dassie:$(git rev-parse HEAD) .
 
-docker tag samveralabs/dassie:(git rev-parse HEAD) samveralabs/dassie:$HYRAX_VERSION
+docker tag ghcr.io/samvera/hyrax/dassie:$(git rev-parse HEAD) ghcr.io/samvera/hyrax/dassie:$HYRAX_VERSION
 
-docker push samveralabs/dassie:(git rev-parse HEAD)
-docker push samveralabs/dassie:$HYRAX_VERSION
+docker push ghcr.io/samvera/hyrax/dassie:$(git rev-parse HEAD)
+docker push ghcr.io/samvera/hyrax/dassie:$HYRAX_VERSION
 ```
 
 ## Deploying to Production
@@ -180,4 +184,5 @@ helm dependency update chart/hyrax
 helm install -n hyrax --set image.tag=(git rev-parse HEAD) dassie chart/hyrax
 ```
 
-[dockerhub-samveralabs]: https://hub.docker.com/r/samveralabs
+[ghcr]: https://docs.github.com/en/enterprise-cloud@latest/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+[samvera-packages]: https://github.com/orgs/samvera/packages
