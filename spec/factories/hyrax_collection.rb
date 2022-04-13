@@ -5,7 +5,7 @@
 FactoryBot.define do
   factory :hyrax_collection, class: 'Hyrax::PcdmCollection' do
     sequence(:title) { |n| ["The Tove Jansson Collection #{n}"] }
-    collection_type_gid { Hyrax::CollectionType.find_or_create_default_collection_type.to_global_id }
+    collection_type_gid { Hyrax::CollectionType.find_or_create_default_collection_type.to_global_id.to_s }
 
     transient do
       with_permission_template { true }
@@ -70,6 +70,9 @@ FactoryBot.define do
          valkyrie_create(:hyrax_collection).id,
          valkyrie_create(:hyrax_collection).id]
       end
+    end
+
+    factory :collection_resource, class: 'CollectionResource' do
     end
   end
 end

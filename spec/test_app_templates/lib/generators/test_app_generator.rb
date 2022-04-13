@@ -17,6 +17,33 @@ class TestAppGenerator < Rails::Generators::Base
     rake 'valkyrie_engine:install:migrations'
   end
 
+  def create_collection_resource
+    generate 'hyrax:collection_resource CollectionResource with_basic_metadata'
+
+    gsub_file "config/metadata/collection_resource.yaml", "attributes: {}",
+              <<-YAML
+
+---
+attributes:
+  target_audience:
+    type: string
+    form:
+      primary: true
+      multiple: true
+  department:
+    type: string
+    form:
+      primary: true
+  course:
+    type: string
+    form:
+      primary: false
+YAML
+
+    # create the collection, but don't register it as 'the' collection
+    gsub_file "config/initializers/hyrax.rb", /[^#] config.collection_model/, "  # config.collection_model"
+  end
+
   def create_generic_work
     generate 'hyrax:work GenericWork'
   end
@@ -67,7 +94,7 @@ class TestAppGenerator < Rails::Generators::Base
     end
   end
 
-  def create_work
+  def create_work_resource
     generate 'hyrax:work_resource Monograph monograph_title:string'
 
     append_file 'config/metadata/monograph.yaml' do
@@ -176,5 +203,16 @@ YAML
 
   def create_sample_metadata_configuration
     copy_file 'sample_metadata.yaml', 'config/metadata/sample_metadata.yaml'
+  end
+
+  def add_valkyrie_test_adapter
+    append_file 'spec/spec_helper.rb' do
+      <<-CONFIG
+
+require 'valkyrie'
+Valkyrie::MetadataAdapter
+  .register(Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter)
+CONFIG
+    end
   end
 end
