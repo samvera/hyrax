@@ -4,14 +4,24 @@ RSpec.describe Hyrax::CollectionPresenter do
   let(:collection) do
     build(:hyrax_collection,
           id: 'adc12v',
+          title: ['A clever title'])
+  end
+  let(:active_fedora_collection) do
+    build(:collection_lw,
+          id: 'adc12v',
           description: ['a nice collection'],
           based_near: ['Over there'],
           title: ['A clever title'],
           keyword: ['neologism'],
           resource_type: ['Collection'],
           related_url: ['http://example.com/'],
-          date_created: ['some date'])
+          date_created: ['some date'],
+          with_solr_document: true)
   end
+  let(:active_fedora_solr_hash) do
+    active_fedora_collection.to_solr
+  end
+
   let(:ability) { double(::Ability) }
   let(:solr_doc) { SolrDocument.new(solr_hash) }
   let(:solr_hash) { Hyrax::ValkyrieIndexer.for(resource: collection).to_solr }
@@ -68,10 +78,16 @@ RSpec.describe Hyrax::CollectionPresenter do
   end
 
   describe "#resource_type" do
-    it { is_expected.to have_attributes resource_type: collection.resource_type }
+    let(:collection) { active_fedora_collection }
+    let(:solr_hash) { active_fedora_solr_hash }
+    it 'has resource_type' do
+      expect(presenter).to have_attributes resource_type: collection.resource_type
+    end
   end
 
   describe "#terms_with_values" do
+    let(:collection) { active_fedora_collection }
+    let(:solr_hash) { active_fedora_solr_hash }
     it 'gives the list of terms that have values' do
       expect(presenter.terms_with_values)
         .to contain_exactly(:total_items, :size, :resource_type, :keyword,
@@ -88,22 +104,32 @@ RSpec.describe Hyrax::CollectionPresenter do
   end
 
   describe '#keyword' do
+    let(:collection) { active_fedora_collection }
+    let(:solr_hash) { active_fedora_solr_hash }
     it { is_expected.to have_attributes keyword: collection.keyword }
   end
 
   describe "#based_near" do
+    let(:collection) { active_fedora_collection }
+    let(:solr_hash) { active_fedora_solr_hash }
     it { is_expected.to have_attributes based_near: collection.based_near }
   end
 
   describe "#related_url" do
+    let(:collection) { active_fedora_collection }
+    let(:solr_hash) { active_fedora_solr_hash }
     it { is_expected.to have_attributes related_url: collection.related_url }
   end
 
   describe '#to_key' do
+    let(:collection) { active_fedora_collection }
+    let(:solr_hash) { active_fedora_solr_hash }
     it { expect(presenter.to_key).to eq ['adc12v'] }
   end
 
   describe '#size' do
+    let(:collection) { active_fedora_collection }
+    let(:solr_hash) { active_fedora_solr_hash }
     it 'returns a hard-coded string and issues a deprecation warning' do
       expect(Deprecation).to receive(:warn).once
       expect(presenter.size).to eq('unknown')
