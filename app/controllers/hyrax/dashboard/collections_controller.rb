@@ -89,11 +89,8 @@ module Hyrax
       end
 
       def after_create_error
-        form
-        respond_to do |format|
-          format.html { render action: 'new' }
-          format.json { render json: @collection.errors, status: :unprocessable_entity }
-        end
+        Deprecation.warn("Method `#after_create_error` will be removed in the next major release.")
+        after_create_errors("") # call private method for processing
       end
 
       def create
@@ -113,7 +110,7 @@ module Hyrax
         if @collection.save
           after_create_response
         else
-          after_create_error
+          after_create_errors(@collection.errors)
         end
       end
 
@@ -213,7 +210,7 @@ module Hyrax
                           'collection_resource.apply_collection_type_permissions' => { user: current_user }
                         )
                         .call(form)
-                        .value_or { return after_create_error }
+                        .value_or { return after_create_errors("FAILED") }
 
         after_create
         add_members_to_collection unless batch.empty?
@@ -564,6 +561,16 @@ module Hyrax
           format.json { render json: @collection, status: :created, location: dashboard_collection_path(@collection) }
         end
         add_members_to_collection unless batch.empty?
+      end
+
+      def after_create_errors(errors)
+        respond_to do |wants|
+          wants.html do
+            flash[:error] = errors.to_s
+            render 'new', status: :unprocessable_entity
+          end
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: errors }) }
+        end
       end
     end
   end
