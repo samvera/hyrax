@@ -84,18 +84,8 @@ module Hyrax
       end
 
       def after_create
-        if @collection.is_a?(ActiveFedora::Base)
-          form
-          set_default_permissions
-          # if we are creating the new collection as a subcollection (via the nested collections controller),
-          # we pass the parent_id through a hidden field in the form and link the two after the create.
-          link_parent_collection(params[:parent_id]) unless params[:parent_id].nil?
-        end
-        respond_to do |format|
-          Hyrax::SolrService.commit
-          format.html { redirect_to edit_dashboard_collection_path(@collection), notice: t('hyrax.dashboard.my.action.collection_create_success') }
-          format.json { render json: @collection, status: :created, location: dashboard_collection_path(@collection) }
-        end
+        Deprecation.warn("Method `#after_create` will be removed in the next major release.")
+        after_create_response # call private method for processing
       end
 
       def after_create_error
@@ -121,8 +111,7 @@ module Hyrax
         @collection.apply_depositor_metadata(current_user.user_key)
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         if @collection.save
-          after_create
-          add_members_to_collection unless batch.empty?
+          after_create_response
         else
           after_create_error
         end
@@ -559,6 +548,22 @@ module Hyrax
 
       def valid_url?(url)
         (url =~ URI.regexp(['http', 'https']))
+      end
+
+      def after_create_response
+        if @collection.is_a?(ActiveFedora::Base)
+          form
+          set_default_permissions
+          # if we are creating the new collection as a subcollection (via the nested collections controller),
+          # we pass the parent_id through a hidden field in the form and link the two after the create.
+          link_parent_collection(params[:parent_id]) unless params[:parent_id].nil?
+        end
+        respond_to do |format|
+          Hyrax::SolrService.commit
+          format.html { redirect_to edit_dashboard_collection_path(@collection), notice: t('hyrax.dashboard.my.action.collection_create_success') }
+          format.json { render json: @collection, status: :created, location: dashboard_collection_path(@collection) }
+        end
+        add_members_to_collection unless batch.empty?
       end
     end
   end
