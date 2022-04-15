@@ -170,22 +170,45 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
     end
 
     context "when create fails" do
-      before do
-        allow(controller).to receive(:authorize!)
-        allow(Hyrax::PcdmCollection).to receive(:new).and_return(collection)
-        allow(Hyrax.persister)
-          .to receive(:save)
-          .with(resource: collection)
-          .and_raise(StandardError, 'Failed to save collection')
+      context "in transaction processing" do
+        before do
+          allow(controller).to receive(:authorize!)
+          allow(Hyrax::PcdmCollection).to receive(:new).and_return(collection)
+          allow(Hyrax.persister)
+            .to receive(:save)
+            .with(resource: collection)
+            .and_raise(StandardError, 'Failed to save collection')
+        end
+
+        let(:collection) { Hyrax::PcdmCollection.new }
+
+        it "renders the form again" do
+          post :create, params: { collection: collection_attrs }
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(flash[:error]).to match(/Failed to save collection/)
+          expect(response).to render_template(:new)
+        end
       end
 
-      let(:collection) { Hyrax::PcdmCollection.new }
+      context "in validations" do
+        let(:form) { instance_double(Hyrax::Forms::PcdmCollectionForm, errors: errors) }
+        let(:errors) { instance_double(Reform::Contract::CustomError, messages: messages) }
+        let(:messages) { { "error" => "Validation error" } }
+        before do
+          allow(controller).to receive(:authorize!)
+          allow(Hyrax::Forms::ResourceForm).to receive(:for).with(collection).and_return(form)
+          allow(form).to receive(:validate).with(any_args).and_return(false)
+        end
 
-      it "renders the form again" do
-        post :create, params: { collection: collection_attrs }
+        let(:collection) { Hyrax::PcdmCollection.new }
 
-        expect(response).to be_successful
-        expect(response).to render_template(:new)
+        it "renders the form again" do
+          post :create, params: { collection: collection_attrs }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(flash[:error]).to eq "Validation error"
+          expect(response).to render_template(:new)
+        end
       end
     end
   end
