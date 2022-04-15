@@ -99,18 +99,12 @@ module Hyrax
         # collection is saved without a value for `has_model.`
         @collection = Hyrax.config.collection_class.new
         authorize! :create, @collection
-        return valkyrie_create if @collection.is_a?(Valkyrie::Resource)
 
-        # Coming from the UI, a collection type gid should always be present.  Coming from the API, if a collection type gid is not specified,
-        # use the default collection type (provides backward compatibility with versions < Hyrax 2.1.0)
-        @collection.collection_type_gid = params[:collection_type_gid].presence || default_collection_type.to_global_id
-        @collection.attributes = collection_params.except(:members, :parent_id, :collection_type_gid)
-        @collection.apply_depositor_metadata(current_user.user_key)
-        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
-        if @collection.save
-          after_create_response
+        case @collection
+        when ActiveFedora::Base
+          create_active_fedora_collection
         else
-          after_create_errors(@collection.errors)
+          create_valkyrie_collection
         end
       end
 
@@ -201,7 +195,21 @@ module Hyrax
 
       private
 
-      def valkyrie_create
+      def create_active_fedora_collection
+        # Coming from the UI, a collection type gid should always be present.  Coming from the API, if a collection type gid is not specified,
+        # use the default collection type (provides backward compatibility with versions < Hyrax 2.1.0)
+        @collection.collection_type_gid = params[:collection_type_gid].presence || default_collection_type.to_global_id
+        @collection.attributes = collection_params.except(:members, :parent_id, :collection_type_gid)
+        @collection.apply_depositor_metadata(current_user.user_key)
+        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
+        if @collection.save
+          after_create_response
+        else
+          after_create_errors(@collection.errors)
+        end
+      end
+
+      def create_valkyrie_collection
         form.validate(collection_params) &&
           @collection = transactions['change_set.create_collection']
                         .with_step_args(
