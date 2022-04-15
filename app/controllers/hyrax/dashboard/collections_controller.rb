@@ -109,18 +109,13 @@ module Hyrax
       end
 
       def after_update
-        respond_to do |format|
-          format.html { redirect_to update_referer, notice: t('hyrax.dashboard.my.action.collection_update_success') }
-          format.json { render json: @collection, status: :updated, location: dashboard_collection_path(@collection) }
-        end
+        Deprecation.warn("Method `#after_update` will be removed in Hyrax 4.0.")
+        after_update_response # call private method for processing
       end
 
       def after_update_error
-        form
-        respond_to do |format|
-          format.html { render action: 'edit' }
-          format.json { render json: @collection.errors, status: :unprocessable_entity }
-        end
+        Deprecation.warn("Method `#after_update_error` will be removed in Hyrax 4.0.")
+        after_update_errors(@collection.errors) # call private method for processing
       end
 
       def update
@@ -579,6 +574,23 @@ module Hyrax
           wants.html do
             flash[:error] = errors.to_s
             render 'new', status: :unprocessable_entity
+          end
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: errors }) }
+        end
+      end
+
+      def after_update_response
+        respond_to do |format|
+          format.html { redirect_to update_referer, notice: t('hyrax.dashboard.my.action.collection_update_success') }
+          format.json { render json: @collection, status: :updated, location: dashboard_collection_path(@collection) }
+        end
+      end
+
+      def after_update_errors(errors)
+        respond_to do |wants|
+          wants.html do
+            flash[:error] = errors.to_s
+            render 'edit', status: :unprocessable_entity
           end
           wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: errors }) }
         end
