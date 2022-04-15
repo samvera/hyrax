@@ -3,7 +3,7 @@
 require 'spec_helper'
 require 'hyrax/specs/spy_listener'
 
-RSpec.describe 'Deleting a valkyrie work', type: :feature do
+RSpec.describe 'Deleting a valkyrie work', type: :feature, valkyrie_adapter: :test_adapter, index_adapter: :solr_index do
   let(:work) do
     FactoryBot.valkyrie_create(:monograph,
                                :as_member_of_multiple_collections,

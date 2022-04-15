@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe 'The default Hyrax workflow', type: :feature do
+RSpec.describe 'The default Hyrax workflow', type: :feature, valkyrie_adapter: :test_adapter do
   let(:depositor) { FactoryBot.create(:user) }
 
   let(:work) do

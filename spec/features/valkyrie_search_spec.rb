@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe 'searching', index_adapter: :solr_index do
+RSpec.describe 'searching', index_adapter: :solr_index, valkyrie_adapter: :test_adapter do
   let(:user) { create :user }
   let(:subject_value) { 'mustache' }
   let!(:work) do
