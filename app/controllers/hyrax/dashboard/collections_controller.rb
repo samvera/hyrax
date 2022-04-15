@@ -210,19 +210,18 @@ module Hyrax
       end
 
       def create_valkyrie_collection
-        form.validate(collection_params) &&
-          @collection = transactions['change_set.create_collection']
-                        .with_step_args(
-                          'change_set.set_user_as_depositor' => { user: current_user },
-                          'change_set.add_to_collections' => { collection_ids: Array(params[:parent_id]) },
-                          'collection_resource.apply_collection_type_permissions' => { user: current_user }
-                        )
-                        .call(form)
-                        .value_or { return after_create_errors("FAILED") }
+        return after_create_errors(form_err_msg(form)) unless form.validate(collection_params)
 
-        after_create
-        add_members_to_collection unless batch.empty?
-        @collection
+        result =
+          transactions['change_set.create_collection']
+          .with_step_args(
+            'change_set.set_user_as_depositor' => { user: current_user },
+            'change_set.add_to_collections' => { collection_ids: Array(params[:parent_id]) },
+            'collection_resource.apply_collection_type_permissions' => { user: current_user }
+          )
+          .call(form)
+        @collection = result.value_or { return after_create_errors(result.failure.first) }
+        after_create_response
       end
 
       def valkyrie_update
@@ -239,6 +238,10 @@ module Hyrax
         else
           after_destroy_error(params[:id])
         end
+      end
+
+      def form_err_msg(form)
+        form.errors.messages.values.flatten.to_sentence
       end
 
       def default_collection_type
