@@ -84,12 +84,12 @@ module Hyrax
       end
 
       def after_create
-        Deprecation.warn("Method `#after_create` will be removed in the next major release.")
+        Deprecation.warn("Method `#after_create` will be removed in Hyrax 4.0.")
         after_create_response # call private method for processing
       end
 
       def after_create_error
-        Deprecation.warn("Method `#after_create_error` will be removed in the next major release.")
+        Deprecation.warn("Method `#after_create_error` will be removed in Hyrax 4.0.")
         after_create_errors("") # call private method for processing
       end
 
