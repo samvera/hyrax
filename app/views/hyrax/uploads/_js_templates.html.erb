@@ -1,5 +1,5 @@
 <!-- The template to display files available for upload -->
-<% fade_class_if_not_test = Rails.env.test? ? '' : 'fade' %>
+<% fade_class_if_not_test = Rails.env.test? ? 'show' : 'fade show' %>
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-upload <%= fade_class_if_not_test %>">
