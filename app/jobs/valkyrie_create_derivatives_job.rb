@@ -9,8 +9,6 @@ class ValkyrieCreateDerivativesJob < Hyrax::ApplicationJob
     # Call derivatives with the file_set.
     derivative_service = Hyrax::DerivativeService.for(file_metadata)
     derivative_service.create_derivatives(file.disk_path)
-    # Trigger a reindex to get the thumbnail path.
-    Hyrax.publisher.publish('file.metadata.updated', metadata: file_metadata, user: nil)
   end
 
   private
