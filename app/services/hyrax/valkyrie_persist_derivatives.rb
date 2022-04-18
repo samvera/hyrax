@@ -28,10 +28,13 @@ module Hyrax
       tmpfile.write stream.read
 
       Rails.logger.debug "Uploading thumbnail for FileSet #{fileset_id} as #{filepath}"
-      Hyrax.config.derivatives_storage_adapter.upload(
-        file: tmpfile,
-        original_filename: filepath,
-        resource: fileset
+
+      ::Hyrax::ValkyrieUpload.file(
+        io: tmpfile,
+        filename: filepath,
+        file_set: fileset,
+        use: Hyrax::FileMetadata::Use::THUMBNAIL,
+        storage_adapter: Hyrax.config.derivatives_storage_adapter
       )
     end
 
