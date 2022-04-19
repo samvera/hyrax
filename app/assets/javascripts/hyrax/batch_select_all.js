@@ -5,12 +5,12 @@
     var n = $(".batch_document_selector:checked").length;
     if ((n>0) || (forceOn)) {
         $('.batch-toggle').show();
-        $('.batch-select-all').prop('hidden', false);
-        $('#batch-edit').prop('hidden', false);
+        $('.batch-select-all').hidden = false;
+        $('#batch-edit').hidden = false;
     } else if (otherPage){
         $('.batch-toggle').hide();
-        $('.batch-select-all').prop('hidden', true);
-        $('#batch-edit').prop('hidden', true);
+        $('.batch-select-all').hidden = true;
+        $('#batch-edit').hidden = true;
     }
     $("body").css("cursor", "auto");
   }
