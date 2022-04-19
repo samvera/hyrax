@@ -31,7 +31,7 @@ export default class {
   // Immediate feedback after work creation, editing.
   formInProgress() {
     $('[data-behavior~=work-form]').on('submit', function(event){
-      $('.card-footer').prop('hidden', (_, old) => !old);
+      $('.card-footer').hidden = (_, old) => !old);
     });
   }
   
@@ -82,9 +82,9 @@ export default class {
 
   sharingTabVisiblity(visible) {
       if (visible)
-         this.sharingTabElement.prop('hidden', false)
+         this.sharingTabElement.hidden = false
       else
-         this.sharingTabElement.prop('hidden', true)
+         this.sharingTabElement.hidden = true
   }
 
   relationshipsControl() {
