@@ -32,7 +32,7 @@
         dropZone: $(this).find('.dropzone')
       }, Hyrax.config.uploader, options))
       .on('fileuploadadded', function (e, data) {
-        $(e.currentTarget).find('button.cancel').prop('hidden', false);
+        $(e.currentTarget).find('button.cancel').hidden = false;
       });
 
       $(document).on('dragover', function(e) {
