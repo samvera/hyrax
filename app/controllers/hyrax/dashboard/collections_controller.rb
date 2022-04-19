@@ -84,26 +84,13 @@ module Hyrax
       end
 
       def after_create
-        if @collection.is_a?(ActiveFedora::Base)
-          form
-          set_default_permissions
-          # if we are creating the new collection as a subcollection (via the nested collections controller),
-          # we pass the parent_id through a hidden field in the form and link the two after the create.
-          link_parent_collection(params[:parent_id]) unless params[:parent_id].nil?
-        end
-        respond_to do |format|
-          Hyrax::SolrService.commit
-          format.html { redirect_to edit_dashboard_collection_path(@collection), notice: t('hyrax.dashboard.my.action.collection_create_success') }
-          format.json { render json: @collection, status: :created, location: dashboard_collection_path(@collection) }
-        end
+        Deprecation.warn("Method `#after_create` will be removed in Hyrax 4.0.")
+        after_create_response # call private method for processing
       end
 
       def after_create_error
-        form
-        respond_to do |format|
-          format.html { render action: 'new' }
-          format.json { render json: @collection.errors, status: :unprocessable_entity }
-        end
+        Deprecation.warn("Method `#after_create_error` will be removed in Hyrax 4.0.")
+        after_create_errors("") # call private method for processing
       end
 
       def create
@@ -112,19 +99,12 @@ module Hyrax
         # collection is saved without a value for `has_model.`
         @collection = Hyrax.config.collection_class.new
         authorize! :create, @collection
-        return valkyrie_create if @collection.is_a?(Valkyrie::Resource)
 
-        # Coming from the UI, a collection type gid should always be present.  Coming from the API, if a collection type gid is not specified,
-        # use the default collection type (provides backward compatibility with versions < Hyrax 2.1.0)
-        @collection.collection_type_gid = params[:collection_type_gid].presence || default_collection_type.to_global_id
-        @collection.attributes = collection_params.except(:members, :parent_id, :collection_type_gid)
-        @collection.apply_depositor_metadata(current_user.user_key)
-        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
-        if @collection.save
-          after_create
-          add_members_to_collection unless batch.empty?
+        case @collection
+        when ActiveFedora::Base
+          create_active_fedora_collection
         else
-          after_create_error
+          create_valkyrie_collection
         end
       end
 
@@ -215,20 +195,33 @@ module Hyrax
 
       private
 
-      def valkyrie_create
-        form.validate(collection_params) &&
-          @collection = transactions['change_set.create_collection']
-                        .with_step_args(
-                          'change_set.set_user_as_depositor' => { user: current_user },
-                          'change_set.add_to_collections' => { collection_ids: Array(params[:parent_id]) },
-                          'collection_resource.apply_collection_type_permissions' => { user: current_user }
-                        )
-                        .call(form)
-                        .value_or { return after_create_error }
+      def create_active_fedora_collection
+        # Coming from the UI, a collection type gid should always be present.  Coming from the API, if a collection type gid is not specified,
+        # use the default collection type (provides backward compatibility with versions < Hyrax 2.1.0)
+        @collection.collection_type_gid = params[:collection_type_gid].presence || default_collection_type.to_global_id
+        @collection.attributes = collection_params.except(:members, :parent_id, :collection_type_gid)
+        @collection.apply_depositor_metadata(current_user.user_key)
+        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
+        if @collection.save
+          after_create_response
+        else
+          after_create_errors(@collection.errors)
+        end
+      end
 
-        after_create
-        add_members_to_collection unless batch.empty?
-        @collection
+      def create_valkyrie_collection
+        return after_create_errors(form_err_msg(form)) unless form.validate(collection_params)
+
+        result =
+          transactions['change_set.create_collection']
+          .with_step_args(
+            'change_set.set_user_as_depositor' => { user: current_user },
+            'change_set.add_to_collections' => { collection_ids: Array(params[:parent_id]) },
+            'collection_resource.apply_collection_type_permissions' => { user: current_user }
+          )
+          .call(form)
+        @collection = result.value_or { return after_create_errors(result.failure.first) }
+        after_create_response
       end
 
       def valkyrie_update
@@ -245,6 +238,10 @@ module Hyrax
         else
           after_destroy_error(params[:id])
         end
+      end
+
+      def form_err_msg(form)
+        form.errors.messages.values.flatten.to_sentence
       end
 
       def default_collection_type
@@ -559,6 +556,32 @@ module Hyrax
 
       def valid_url?(url)
         (url =~ URI.regexp(['http', 'https']))
+      end
+
+      def after_create_response
+        if @collection.is_a?(ActiveFedora::Base)
+          form
+          set_default_permissions
+          # if we are creating the new collection as a subcollection (via the nested collections controller),
+          # we pass the parent_id through a hidden field in the form and link the two after the create.
+          link_parent_collection(params[:parent_id]) unless params[:parent_id].nil?
+        end
+        respond_to do |format|
+          Hyrax::SolrService.commit
+          format.html { redirect_to edit_dashboard_collection_path(@collection), notice: t('hyrax.dashboard.my.action.collection_create_success') }
+          format.json { render json: @collection, status: :created, location: dashboard_collection_path(@collection) }
+        end
+        add_members_to_collection unless batch.empty?
+      end
+
+      def after_create_errors(errors)
+        respond_to do |wants|
+          wants.html do
+            flash[:error] = errors.to_s
+            render 'new', status: :unprocessable_entity
+          end
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: errors }) }
+        end
       end
     end
   end
