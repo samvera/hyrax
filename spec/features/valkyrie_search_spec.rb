@@ -9,7 +9,7 @@ RSpec.describe 'searching', index_adapter: :solr_index, valkyrie_adapter: :test_
   end
 
   let!(:collection) do
-    FactoryBot.valkyrie_create(:hyrax_collection, :public, title: ['collection title abc'], description: [subject_value], members: [work])
+    FactoryBot.valkyrie_create(:hyrax_collection, :public, title: ['collection title abc'], members: [work])
   end
 
   before { allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection') }
