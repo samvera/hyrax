@@ -20,18 +20,18 @@ export class Registry {
 
   addError(message) {
     this.errorMessage.html(message);
-    this.error.prop('hidden', false);
+    this.error.hidden = false;
   }
 
   reset() {
-    this.error.prop('hidden', true);
+    this.error.hidden = true;
   }
 
   removePermission(evt) {
      evt.preventDefault();
      let button = $(evt.target);
      let container = button.closest('tr');
-     container.prop('hidden', true); // do not show the block
+     container.hidden = true; // do not show the block
      this.addDestroyField(container, button.attr('data-index'));
      this.showPermissionNote();
   }
@@ -47,7 +47,7 @@ export class Registry {
   }
 
   showPermissionNote() {
-     $('#save_perm_note').prop('hidden', false);
+     $('#save_perm_note').hidden = false;
   }
 
   addDestroyField(element, index) {
