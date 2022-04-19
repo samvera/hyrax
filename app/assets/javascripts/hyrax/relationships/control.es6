@@ -86,13 +86,13 @@ export default class RelationshipsControl {
    * @param {String} message the warning message text to set
    */
   setWarningMessage(message) {
-    this.warning.text(message).prop("hidden", false);
+    this.warning.text(message).hidden= false;
   }
 
   /**
    * Hide the warning message on the appropriate row
    */
   hideWarningMessage(){
-    this.warning.prop("hidden", true);
+    this.warning.hidden= true;
   }
 }
