@@ -151,21 +151,20 @@ module Hyrax
 
     def datatables
       javascript_manifest = 'app/assets/javascripts/application.js'
-      # Generator is broken https://github.com/rweng/jquery-datatables-rails/issues/225
-      # generate 'jquery:datatables:install bootstrap3'
       insert_into_file javascript_manifest, after: /jquery.?\n/ do
-        "//= require jquery_ujs\n" \
-        "//= require dataTables/jquery.dataTables\n" \
-        "//= require dataTables/bootstrap/3/jquery.dataTables.bootstrap\n"
+        "//= require jquery.dataTables\n" \
+        "//= require dataTables.bootstrap4\n"
       end
 
-      # This is only necessary for Rails 5.1 and hopefully is temporary.
-      # There was some trouble getting the file-manager javascript (remote forms) to work well
-      # with rails-ujs. Note jquery_ujs was added to the block above (after jQuery)
-      gsub_file javascript_manifest, 'require rails-ujs', ''
-
       insert_into_file 'app/assets/stylesheets/application.css', before: ' *= require_self' do
-        " *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap\n"
+        " *= require dataTables.bootstrap4\n"
+      end
+    end
+
+    def twitter_typeahead
+      javascript_manifest = 'app/assets/javascripts/application.js'
+      insert_into_file javascript_manifest, after: /popper\n/ do
+        "//= require twitter/typeahead\n"
       end
     end
 
