@@ -40,9 +40,8 @@ RSpec.describe 'hyrax/users/show.html.erb', type: :view do
     end
 
     before do
-      allow(view).to receive(:search_session).and_return({})
       allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
-      allow(view).to receive(:current_search_session).and_return(nil)
+      allow(view).to receive(:session_tracking_params).and_return({})
       allow(presenter).to receive(:trophies).and_return([trophy_presenter])
     end
 
