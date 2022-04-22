@@ -13,7 +13,6 @@ RSpec.describe 'Creating a new Work' do
     load Rails.root.join('app', 'forms', 'hyrax', 'catapult_form.rb')
     load Rails.root.join('config', 'initializers', 'hyrax.rb')
     load Rails.root.join('config', 'routes.rb')
-    load "app/helpers/hyrax/url_helper.rb"
   end
 
   after do
