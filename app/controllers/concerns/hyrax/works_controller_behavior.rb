@@ -11,6 +11,10 @@ module Hyrax
       with_themed_layout :decide_layout
       copy_blacklight_config_from(::CatalogController)
 
+      before_action do
+        blacklight_config.track_search_session = false
+      end
+
       class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class
       class_attribute :iiif_manifest_builder, instance_accessor: false
       self.show_presenter = Hyrax::WorkShowPresenter
