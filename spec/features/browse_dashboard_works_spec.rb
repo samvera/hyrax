@@ -28,7 +28,7 @@ RSpec.describe "Browse Dashboard", type: :feature do
     within(".constraints-container") do
       expect(page).to have_content("Filtering by:")
       expect(page).to have_css("span.fa-times")
-      find(".dropdown-toggle").click
+      find(".remove").click
     end
     expect(page).to have_content("Fake Wav File")
 
