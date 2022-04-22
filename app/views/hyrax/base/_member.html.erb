@@ -1,6 +1,6 @@
 <tr class="<%= dom_class(member) %> attributes">
   <td class="thumbnail">
-    <%= render_thumbnail_tag member, { alt: "file details" } %>
+    <%= document_presenter(member).thumbnail.thumbnail_tag(alt: 'file details') %>
   </td>
   <td class="attribute attribute-filename ensure-wrapped"><%= link_to(member.link_name, contextual_path(member, @presenter)) %></td>
   <td class="attribute attribute-date_uploaded"><%= member.try(:date_uploaded) %></td>
