@@ -8,7 +8,6 @@ module Hyrax
     include Hyrax::TitleHelper
     include Hyrax::FileSetHelper
     include Hyrax::AbilityHelper
-    include Hyrax::UrlHelper
     include Hyrax::EmbargoHelper
     include Hyrax::LeaseHelper
     include Hyrax::CollectionsHelper
