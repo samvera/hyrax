@@ -220,7 +220,7 @@ de:
             summary: Zusammenfassung
             title: Sammlungsbericht
             view_collection_btn: Kollektion ansehen
-            visibility: Sichtweite
+            visibility: Sichtbarkeit
           summary:
             all_time: Alle Zeit
             collection_home_page_views: Aufrufe der Sammlungs-Startseite
@@ -239,7 +239,7 @@ de:
             export: Export
             file_downloads_in_collection: Dateiset-Downloads in dieser Sammlung
             top_collections: Top-Kollektionen
-            works_in_collection_views: Funktioniert in dieser Sammlungsansichten
+            works_in_collection_views: Arbeiten in dieser Sammlungsansichten
         date_range_form:
           date_range_heading: Datumsbereich anpassen
           end_date: Endtermin
@@ -270,7 +270,7 @@ de:
             summary: Zusammenfassung
             title: Werksbericht
             views: Ansichten
-            works: funktioniert
+            works: Arbeiten
           monthly_summary:
             file_downloads: Datei-Downloads
             monthly_subtitle: Monat für Monat Status für die letzten 12 Monate bis
@@ -285,7 +285,7 @@ de:
             summary: Zusammenfassung
             title: Arbeitsbericht
             view_work_btn: Arbeit ansehen
-            visibility: Sichtweite
+            visibility: Sichtbarkeit
             work_type: Arbeitstyp
           summary:
             all_time: Alle Zeit
@@ -310,7 +310,7 @@ de:
             work_title: Arbeitstitel
             work_views: Arbeitsseitenaufrufe
           work_counts:
-            child_works: Kind arbeitet
+            child_works: untergeordnete Arbeiten
             files: Dateien
             total_size: Gesamtgröße
           work_files:
@@ -408,7 +408,7 @@ de:
         collections_report: Sammlungsbericht
         configuration: Konfiguration
         content_blocks: Inhaltsblöcke
-        dashboard: Armaturenbrett
+        dashboard: Dashboard
         delete_all: Alles löschen
         notifications: Benachrichtigungen
         pages: Seiten
@@ -976,7 +976,7 @@ de:
           remove_from_collection: Aus der Sammlung entfernen
           select_an_action: Wählen Sie eine Aktion aus
           transfer_ownership_of_work: Übertragen Sie das Eigentum an der Arbeit
-        works: Funktioniert
+        works: Arbeiten
       create_work: Arbeiten erstellen
       current_proxies: Aktuelle Vertreter
       delete_notification: Benachrichtigung löschen
@@ -1106,7 +1106,7 @@ de:
         objects: Objekte
         subtitle: Die letzten 90 Tage
         title: Repository-Wachstum
-        works: Funktioniert
+        works: Arbeiten
       repository_objects:
         status: Aktueller Status
         subtitle: Aktueller Status
@@ -1157,7 +1157,7 @@ de:
       user_notifications: Benutzerbenachrichtigungen
       view_files: Dateien ansehen
       visibility_graph:
-        visibility: Sichtweite
+        visibility: Sichtbarkeit
       work_type_graph:
         count: Zählen
         title: Arbeitstypen
@@ -1408,10 +1408,10 @@ de:
           you_manage: "<strong> %{total_count} Sammlungen </ strong>, die Sie im Repository verwalten können"
           you_own: "<strong> %{total_count} Sammlungen </ strong>, die Sie im Repository besitzen"
         works:
-          in_repo: "<strong> %{total_count} funktioniert </ strong> im Repository"
+          in_repo: "<strong> %{total_count} Arbeiten </ strong> im Repository"
           works_listing: Auflistung der Arbeiten
-          you_manage: "<strong> %{total_count} funktioniert </ strong>, das Sie im Repository verwalten können"
-          you_own: "<strong> %{total_count} funktioniert </ strong>, das Sie im Repository besitzen"
+          you_manage: "<strong> %{total_count} Arbeiten </ strong>, das Sie im Repository verwalten können"
+          you_own: "<strong> %{total_count} Arbeiten </ strong>, das Sie im Repository besitzen"
       sort_and_per_page:
         number_of_results_to_display_per_page: Anzahl der anzuzeigenden Ergebnisse pro Seite
     nav_safety:
