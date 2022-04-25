@@ -24,7 +24,6 @@ RSpec.describe 'searching' do
       end
 
       click_link "Gallery"
-      expect(page).to have_content "Filtering by: Toothbrush"
       within "#documents" do
         expect(page).to have_content "Toothbrush"
       end
@@ -35,7 +34,7 @@ RSpec.describe 'searching' do
 
       # it "does not display search options for dashboard files" do
       # This section was tested on its own, and required a full setup.
-      within(".input-group-btn") do
+      within(".input-group-append") do
         expect(page).not_to have_content("All")
         expect(page).not_to have_content("My Works")
         expect(page).not_to have_content("My Collections")
@@ -56,8 +55,7 @@ RSpec.describe 'searching' do
       expect(page).to have_content('collection title abc')
       expect(page).to have_selector("//img")
 
-      expect(page.body).to include "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=taco&amp;locale=en\">taco</a></span>"
-      expect(page.body).to include "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=mustache&amp;locale=en\">mustache</a></span>"
+      expect(page.body).to include "<span itemprop=\"keywords\">taco</span> and <span itemprop=\"keywords\">mustache</span>"
     end
   end
 end
