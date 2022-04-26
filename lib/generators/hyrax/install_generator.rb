@@ -50,8 +50,10 @@ module Hyrax
     end
 
     def insert_builder
-      insert_into_file 'app/models/search_builder.rb', after: /include Hydra::AccessControlsEnforcement/ do
-        "\n  include Hyrax::SearchFilters\n"
+      insert_into_file 'app/models/search_builder.rb', after: /include Blacklight::Solr::SearchBuilderBehavior/ do
+        "\n  # Add a filter query to restrict the search to documents the current user has access to\n"\
+        "  include Hydra::AccessControlsEnforcement\n"\
+        "  include Hyrax::SearchFilters\n"
       end
     end
 
