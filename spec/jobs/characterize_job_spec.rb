@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 RSpec.describe CharacterizeJob, :clean_repo do
   let(:file_set_id) { 'abc12345' }
-  let(:filename)    { Rails.root.join('tmp', 'uploads', 'ab', 'c1', '23', '45', 'abc12345', 'picture.png').to_s }
+  let(:upload_root) {Pathname.new(ENV.fetch('HYRAX_UPLOAD_PATH', Rails.root.join('tmp', 'uploads')))}
+  let(:filename)    { upload_root.join('ab', 'c1', '23', '45', 'abc12345', 'picture.png').to_s }
   let(:label) { 'picture.png' }
   let(:title) { ['My User-Entered Title'] }
   let(:file_set) do
