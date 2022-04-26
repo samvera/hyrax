@@ -98,7 +98,7 @@ SUMMARY
   spec.add_development_dependency 'pg', '~> 1.2'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency 'rspec-its', '~> 1.1'
-  spec.add_development_dependency 'rspec-rails', '~> 3.1'
+  spec.add_development_dependency 'rspec-rails', '~> 4.0'
   spec.add_development_dependency 'rspec_junit_formatter'
   spec.add_development_dependency "selenium-webdriver"
   spec.add_development_dependency 'i18n-debug'
