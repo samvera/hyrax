@@ -35,7 +35,7 @@ RSpec.describe 'searching' do
 
       # it "does not display search options for dashboard files" do
       # This section was tested on its own, and required a full setup.
-      within(".input-group-btn") do
+      within(".input-group-append") do
         expect(page).not_to have_content("All")
         expect(page).not_to have_content("My Works")
         expect(page).not_to have_content("My Collections")

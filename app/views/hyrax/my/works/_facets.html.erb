@@ -2,6 +2,6 @@
 <% if has_facet_values? %>
   <div class="list-filters" role="group">
     <span class="list-filters-label"><%= t("hyrax.dashboard.my.facet_label.works") %></span>
-    <%= render_facet_partials %>
+    <%= render_facet_partials(facet_field_names, response: @response) %>
   </div>
 <% end %>

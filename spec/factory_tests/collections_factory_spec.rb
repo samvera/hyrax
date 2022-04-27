@@ -15,13 +15,13 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
       end
 
       it 'uses collection type for passed in collection_type_gid when collection_type_settings is nil' do
-        col = build(:collection_lw, collection_type_gid: collection_type.gid)
-        expect(col.collection_type_gid).to eq collection_type.gid
+        col = build(:collection_lw, collection_type_gid: collection_type.to_global_id.to_s)
+        expect(col.collection_type_gid).to eq collection_type.to_global_id.to_s
       end
 
       it 'ignores collection_type_gid when collection_type_settings is set to attributes identifying settings' do
-        col = build(:collection_lw, collection_type_settings: [:not_discoverable, :not_sharable], collection_type_gid: collection_type.gid)
-        expect(col.collection_type_gid).not_to eq collection_type.gid
+        col = build(:collection_lw, collection_type_settings: [:not_discoverable, :not_sharable], collection_type_gid: collection_type.to_global_id.to_s)
+        expect(col.collection_type_gid).not_to eq collection_type.to_global_id.to_s
       end
 
       it 'will create a collection type when collection_type_settings is set to attributes identifying settings' do
@@ -109,7 +109,7 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
       context 'without additional permissions' do
         let(:col) do
           build(:collection_lw, id: 'Collection123',
-                                collection_type_gid: collection_type.gid,
+                                collection_type_gid: collection_type.to_global_id.to_s,
                                 with_nesting_attributes: { ancestors: ['Parent_1'],
                                                            parent_ids: ['Parent_1'],
                                                            pathnames: ['Parent_1/Collection123'],
@@ -131,7 +131,7 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
       context ' and with_permission_template' do
         let(:col) do
           build(:collection_lw, id: 'Collection123',
-                                collection_type_gid: collection_type.gid,
+                                collection_type_gid: collection_type.to_global_id.to_s,
                                 with_nesting_attributes: { ancestors: ['Parent_1'],
                                                            parent_ids: ['Parent_1'],
                                                            pathnames: ['Parent_1/Collection123'],
@@ -157,7 +157,7 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
       context 'and with_permission_template and with_solr_document' do
         let(:col) do
           build(:collection_lw, id: 'Collection123',
-                                collection_type_gid: collection_type.gid,
+                                collection_type_gid: collection_type.to_global_id.to_s,
                                 with_nesting_attributes: { ancestors: ['Parent_1'],
                                                            parent_ids: ['Parent_1'],
                                                            pathnames: ['Parent_1/Collection123'],
