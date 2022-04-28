@@ -43,7 +43,9 @@ RSpec.describe Hyrax::Ability do
              permission_template: permission_template,
              agent_type: 'user',
              agent_id: user.user_key)
-      collection.reset_access_controls!
+      collection.permission_template.reset_access_controls_for(
+        collection: collection, interpret_visibility: true
+      )
     end
 
     it 'allows most template abilities' do
@@ -76,7 +78,9 @@ RSpec.describe Hyrax::Ability do
              permission_template: permission_template,
              agent_type: 'user',
              agent_id: user.user_key)
-      collection.reset_access_controls!
+      collection.permission_template.reset_access_controls_for(
+        collection: collection, interpret_visibility: true
+      )
     end
 
     it 'denies all template abilities' do
@@ -103,7 +107,9 @@ RSpec.describe Hyrax::Ability do
              permission_template: permission_template,
              agent_type: 'user',
              agent_id: user.user_key)
-      collection.reset_access_controls!
+      collection.permission_template.reset_access_controls_for(
+        collection: collection, interpret_visibility: true
+      )
     end
 
     it 'denies all template abilities' do

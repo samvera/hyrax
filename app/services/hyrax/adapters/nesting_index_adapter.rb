@@ -147,7 +147,7 @@ module Hyrax
       ##
       # @api private
       def self.find_solr_document_by(id:)
-        query = Hyrax::SolrQueryBuilderService.construct_query_for_ids([id])
+        query = Hyrax::SolrQueryService.new.with_ids(ids: [id]).build
         document = Hyrax::SolrService.query(query, rows: 1).first
         document = ActiveFedora::Base.find(id).to_solr if document.nil?
         raise "Unable to find SolrDocument with ID=#{id}" if document.nil?
