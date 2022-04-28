@@ -16,7 +16,8 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if create was successful
       def create(env)
-        Deprecation.warn('Use Hyrax::Listeners::WorkflowListener instead.')
+        Deprecation.warn('Use Hyrax::Listeners::WorkflowListener instead. ' \
+          'Scheduled to be removed by 4.0.')
         next_actor.create(env) && create_workflow(env)
       end
 
