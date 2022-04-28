@@ -15,7 +15,7 @@ RSpec.describe 'searching', index_adapter: :solr_index, valkyrie_adapter: :test_
   before { allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection') }
 
   context "as a public user", :clean_repo do
-    it "using the gallery view" do
+    xit "using the gallery view" do
       pending 'addition of a valkyrie collection with basic metadata defined'
 
       visit '/'
@@ -33,7 +33,7 @@ RSpec.describe 'searching', index_adapter: :solr_index, valkyrie_adapter: :test_
       end
     end
 
-    it "only searches all and does not display search options for dashboard files" do
+    xit "only searches all and does not display search options for dashboard files" do
       pending 'addition of a valkyrie collection with basic metadata defined'
 
       visit '/'
