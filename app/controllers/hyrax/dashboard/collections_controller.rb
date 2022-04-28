@@ -229,10 +229,17 @@ module Hyrax
       def update_valkyrie_collection
         return after_update_errors(form_err_msg(form)) unless form.validate(collection_params)
 
-        process_member_changes
         result = transactions['change_set.update_collection']
                  .call(form)
         @collection = result.value_or { return after_update_errors(result.failure.first) }
+
+        process_member_changes
+
+        unless params[:update_collection].nil?
+          process_banner_input
+          process_logo_input
+        end
+
         after_update_response
       end
 
