@@ -37,11 +37,11 @@ module Hyrax
 
     private
 
-      def process_fq
-        ids = child.member_of_collection_ids.reject(&:blank?)
+    def process_fq
+      ids = child.member_of_collection_ids.reject(&:blank?)
 
-        return "id:NEVER_USE_THIS_ID" if ids.empty?
-        Hyrax::SolrQueryService.new.with_ids(ids: child.member_of_collection_ids).build
-      end
+      return "id:NEVER_USE_THIS_ID" if ids.empty?
+      Hyrax::SolrQueryService.new.with_ids(ids: child.member_of_collection_ids).build
+    end
   end
 end
