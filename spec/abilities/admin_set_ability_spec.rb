@@ -77,7 +77,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
                permission_template: admin_set.permission_template,
                agent_type: 'user',
                agent_id: manager.user_key)
-        admin_set.reset_access_controls!
+        admin_set.permission_template.reset_access_controls_for(collection: admin_set)
       end
 
       context 'for abilities open to managers' do
@@ -157,7 +157,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
                permission_template: admin_set.permission_template,
                agent_type: 'user',
                agent_id: depositor.user_key)
-        admin_set.reset_access_controls!
+        admin_set.permission_template.reset_access_controls_for(collection: admin_set)
       end
 
       context 'for abilities open to depositor' do
@@ -245,7 +245,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
                permission_template: admin_set.permission_template,
                agent_type: 'user',
                agent_id: viewer.user_key)
-        admin_set.reset_access_controls!
+        admin_set.permission_template.reset_access_controls_for(collection: admin_set)
       end
 
       context 'for abilities open to viewer' do

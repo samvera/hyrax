@@ -56,7 +56,7 @@ RSpec.describe Hyrax::ModelProxy do
 
   describe '#valid_child_concerns' do
     it 'delegates to the has_model_ssim model' do
-      expect(proxy.valid_child_concerns)
+      expect(Hyrax::ChildTypes.for(parent: solr_document.hydra_model))
         .to contain_exactly(*model.valid_child_concerns)
     end
   end

@@ -6,7 +6,7 @@
         <%= document_presenter(featured).thumbnail.thumbnail_tag(
           {width: 90, alt: "#{featured.title.first.to_s} #{ t('hyrax.homepage.admin_sets.thumbnail')}" },
           {suppress_link: true}
-        ) + featured.title.first %>
+        )%><%= featured.title.first %>
       <% end %>
     </h3>
   </div>
