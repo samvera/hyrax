@@ -192,7 +192,9 @@ RSpec.describe Hyrax::Ability, :clean_repo do
                           permission_template: collection.permission_template,
                           agent_type: 'user',
                           agent_id: depositor.user_key)
-        collection.reset_access_controls!
+        collection.permission_template.reset_access_controls_for(
+          collection: collection, interpret_visibility: true
+        )
       end
 
       it 'can view and deposit in the collection where they are a depositor' do
