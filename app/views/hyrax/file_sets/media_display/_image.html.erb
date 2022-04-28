@@ -1,7 +1,7 @@
 <% if display_media_download_link?(file_set: file_set) %>
     <div>
       <h2 class="sr-only"><%= t('hyrax.file_set.show.downloadable_content.heading') %></h2>
-      <%= document_presenter(file_set).thumbnail.thumbnail_tag(
+      <%= document_presenter(file_set)&.thumbnail&.thumbnail_tag(
                     class: "representative-media",
                     alt: "",
                     role: "presentation") %>
@@ -13,7 +13,7 @@
     </div>
 <% else %>
     <div>
-      <%= document_presenter(file_set).thumbnail.thumbnail_tag(
+      <%= document_presenter(file_set)&.thumbnail&.thumbnail_tag(
                     class: "representative-media",
                     alt: "",
                     role: "presentation") %>
