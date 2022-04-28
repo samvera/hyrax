@@ -22,7 +22,7 @@ module Hyrax
     # @return [void]
     def parent_collections_only(solr_parameters)
       solr_parameters[:fq] ||= []
-      solr_parameters[:fq] += [Hyrax::SolrQueryBuilderService.construct_query_for_ids(child.member_of_collection_ids)]
+      solr_parameters[:fq] += [Hyrax::SolrQueryService.new.with_ids(ids: child.member_of_collection_ids).build]
     end
     self.default_processor_chain += [:parent_collections_only]
 
