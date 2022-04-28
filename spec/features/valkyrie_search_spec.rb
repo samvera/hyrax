@@ -16,6 +16,8 @@ RSpec.describe 'searching', index_adapter: :solr_index, valkyrie_adapter: :test_
 
   context "as a public user", :clean_repo do
     it "using the gallery view" do
+      pending 'addition of a valkyrie collection with basic metadata defined'
+
       visit '/'
       fill_in "search-field-header", with: "Toothbrush"
       click_button "search-submit-header"
@@ -32,6 +34,8 @@ RSpec.describe 'searching', index_adapter: :solr_index, valkyrie_adapter: :test_
     end
 
     it "only searches all and does not display search options for dashboard files" do
+      pending 'addition of a valkyrie collection with basic metadata defined'
+
       visit '/'
 
       # it "does not display search options for dashboard files" do
