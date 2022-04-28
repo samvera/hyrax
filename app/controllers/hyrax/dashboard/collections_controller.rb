@@ -119,22 +119,11 @@ module Hyrax
       end
 
       def update
-        unless params[:update_collection].nil?
-          process_banner_input
-          process_logo_input
-        end
-
-        process_member_changes
-
-        return valkyrie_update if @collection.is_a?(Valkyrie::Resource)
-
-        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
-        # we don't have to reindex the full graph when updating collection
-        @collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
-        if @collection.update(collection_params.except(:members))
-          after_update
+        case @collection
+        when ActiveFedora::Base
+          update_active_fedora_collection
         else
-          after_update_error
+          update_valkyrie_collection
         end
       end
 
@@ -219,7 +208,26 @@ module Hyrax
         after_create_response
       end
 
-      def valkyrie_update
+      def update_active_fedora_collection
+        unless params[:update_collection].nil?
+          process_banner_input
+          process_logo_input
+        end
+
+        process_member_changes
+
+        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
+        # we don't have to reindex the full graph when updating collection
+        @collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
+        if @collection.update(collection_params.except(:members))
+          after_update_response
+        else
+          after_update_errors(@collection.errors)
+        end
+      end
+
+      def update_valkyrie_collection
+        process_member_changes
         form.validate(collection_params) &&
           @collection = transactions['change_set.update_collection']
                         .call(form)
