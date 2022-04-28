@@ -32,7 +32,7 @@ RSpec.describe CatalogController, type: :controller do
         expect(response).to be_successful
         expect(response).to render_template('catalog/index')
 
-        ids = assigns(:document_list).map(&:id)
+        ids = response.documents.map(&:id)
         expect(ids).to include rocks.id
         expect(ids).to include clouds.id
         expect(ids).not_to include file.id
@@ -46,7 +46,7 @@ RSpec.describe CatalogController, type: :controller do
       it 'finds collections' do
         get :index, params: { q: 'rocks' }, xhr: true
         expect(response).to be_successful
-        doc_list = assigns(:document_list)
+        doc_list = response.documents
         expect(doc_list.map(&:id)).to match_array [collection.id, rocks.id]
       end
     end
@@ -58,7 +58,7 @@ RSpec.describe CatalogController, type: :controller do
         get :index, params: { q: 'rocks', owner: 'all' }
         expect(response).to be_successful
         expect(response).to render_template('catalog/index')
-        expect(assigns(:document_list).map(&:id)).to contain_exactly(rocks.id)
+        expect(response.documents.map(&:id)).to contain_exactly(rocks.id)
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe CatalogController, type: :controller do
       it 'finds faceted works' do
         expect(response).to be_successful
         expect(response).to render_template('catalog/index')
-        expect(assigns(:document_list).map(&:id)).to contain_exactly(clouds.id)
+        expect(response.documents.map(&:id)).to contain_exactly(clouds.id)
       end
     end
 
@@ -83,7 +83,7 @@ RSpec.describe CatalogController, type: :controller do
         get :index, params: { q: 'full_textfull_text' }
         expect(response).to be_successful
         expect(response).to render_template('catalog/index')
-        expect(assigns(:document_list).map(&:id)).to contain_exactly(clouds.id)
+        expect(response.documents.map(&:id)).to contain_exactly(clouds.id)
       end
     end
 
@@ -119,17 +119,17 @@ RSpec.describe CatalogController, type: :controller do
 
       it "finds a work and a work that contains a file set with a matching title" do
         get :index, params: { q: 'find me', search_field: 'all_fields' }
-        expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id], work2[:id])
+        expect(response.documents.map(&:id)).to contain_exactly(work1[:id], work2[:id])
       end
 
       it "finds a work that contains a file set with a matching title" do
         get :index, params: { q: 'other file', search_field: 'all_fields' }
-        expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id])
+        expect(response.documents.map(&:id)).to contain_exactly(work1[:id])
       end
 
       it "finds a work with a matching title" do
         get :index, params: { q: 'me too', search_field: 'all_fields' }
-        expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id])
+        expect(response.documents.map(&:id)).to contain_exactly(work1[:id])
       end
     end
   end
