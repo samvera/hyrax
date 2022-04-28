@@ -8,7 +8,7 @@
   <td>
     <div class='media'>
       <%= link_to [main_app, document], class: 'media-left', 'aria-hidden': true do %>
-        <%= document_presenter(document).thumbnail.thumbnail_tag(
+        <%= document_presenter(document)&.thumbnail&.thumbnail_tag(
           { class: 'd-none d-md-block file_listing_thumbnail' }, { suppress_link: true }
         ) %>
       <% end %>
