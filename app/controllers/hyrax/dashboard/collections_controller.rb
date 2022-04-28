@@ -227,12 +227,13 @@ module Hyrax
       end
 
       def update_valkyrie_collection
+        return after_update_errors(form_err_msg(form)) unless form.validate(collection_params)
+
         process_member_changes
-        form.validate(collection_params) &&
-          @collection = transactions['change_set.update_collection']
-                        .call(form)
-                        .value_or { return after_update_error }
-        after_update
+        result = transactions['change_set.update_collection']
+                 .call(form)
+        @collection = result.value_or { return after_update_errors(result.failure.first) }
+        after_update_response
       end
 
       def valkyrie_destroy
