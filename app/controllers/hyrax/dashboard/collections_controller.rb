@@ -585,13 +585,27 @@ module Hyrax
         add_members_to_collection unless batch.empty?
       end
 
-      def after_create_errors(errors)
+      def after_create_errors_for_active_fedora(errors)
+        form
+        respond_to do |format|
+          format.html do
+            flash[:error] = errors.to_s
+            render action: 'new'
+          end
+          format.json { render json: @collection.errors, status: :unprocessable_entity }
+        end
+      end
+
+      def after_create_errors(errors) # for valkyrie
+        return after_create_errors_for_active_fedora(errors) if @collection.is_a? ActiveFedora::Base
         respond_to do |wants|
           wants.html do
             flash[:error] = errors.to_s
             render 'new', status: :unprocessable_entity
           end
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: errors }) }
+          wants.json do
+            render_json_response(response_type: :unprocessable_entity, options: { errors: errors })
+          end
         end
       end
 
@@ -602,7 +616,19 @@ module Hyrax
         end
       end
 
-      def after_update_errors(errors)
+      def after_update_errors_for_active_fedora(errors)
+        form
+        respond_to do |format|
+          format.html do
+            flash[:error] = errors.to_s
+            render action: 'edit'
+          end
+          format.json { render json: @collection.errors, status: :unprocessable_entity }
+        end
+      end
+
+      def after_update_errors(errors) # for valkyrie
+        return after_update_errors_for_active_fedora(errors) if @collection.is_a? ActiveFedora::Base
         respond_to do |wants|
           wants.html do
             flash[:error] = errors.to_s
