@@ -189,12 +189,26 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
           expect(flash[:error]).to match(/Failed to save collection/)
           expect(response).to render_template(:new)
         end
+
+        it "renders json" do
+          post :create, params: { collection: collection_attrs, format: :json }
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.content_type).to eq "application/json"
+
+          json_response = JSON.parse(response.body)
+          expect(json_response["code"]).to eq 422
+          expect(json_response["message"]).to eq "Unprocessable Entity"
+          expect(json_response["description"]).to eq "The resource you attempted to modify cannot be modified according to your request."
+          expect(json_response["errors"]).to match(/Failed to save collection/)
+        end
       end
 
       context "in validations" do
         let(:form) { instance_double(Hyrax::Forms::PcdmCollectionForm, errors: errors) }
         let(:errors) { instance_double(Reform::Contract::CustomError, messages: messages) }
-        let(:messages) { { "error" => "Validation error" } }
+        let(:messages) { { "error" => errmsg } }
+        let(:errmsg) { "Validation error" }
         before do
           allow(controller).to receive(:authorize!)
           allow(Hyrax::Forms::ResourceForm).to receive(:for).with(collection).and_return(form)
@@ -205,9 +219,23 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
 
         it "renders the form again" do
           post :create, params: { collection: collection_attrs }
+
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(flash[:error]).to eq "Validation error"
+          expect(flash[:error]).to eq errmsg
           expect(response).to render_template(:new)
+        end
+
+        it "renders json" do
+          post :create, params: { collection: collection_attrs, format: :json }
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.content_type).to eq "application/json"
+
+          json_response = JSON.parse(response.body)
+          expect(json_response["code"]).to eq 422
+          expect(json_response["message"]).to eq "Unprocessable Entity"
+          expect(json_response["description"]).to eq "The resource you attempted to modify cannot be modified according to your request."
+          expect(json_response["errors"]).to eq errmsg
         end
       end
     end
@@ -360,20 +388,76 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
 
     context "when update fails" do
       before do
+        allow(controller).to receive(:authorize!)
         collection # ensure the collection is loaded before we stub the persister save
-        allow(Hyrax.persister)
-          .to receive(:save)
-          .with(any_args)
-          .and_raise(StandardError, 'Failed to save collection')
       end
 
-      it "renders the form again" do
-        put :update, params: {
-          id: collection,
-          collection: collection_attrs
-        }
-        expect(response).to be_successful
-        expect(response).to render_template(:edit)
+      context "in transaction processing" do
+        before do
+          allow(Hyrax.persister)
+            .to receive(:save)
+            .with(any_args)
+            .and_raise(StandardError, 'Failed to save collection')
+        end
+
+        it "renders the form again" do
+          put :update, params: { id: collection, collection: collection_attrs }
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(flash[:error]).to match(/Failed to save collection/)
+          expect(response).to render_template(:edit)
+        end
+
+        it "renders json" do
+          put :update, params: {
+            id: collection,
+            collection: collection_attrs,
+            format: :json
+          }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.content_type).to eq "application/json"
+
+          json_response = JSON.parse(response.body)
+          expect(json_response["code"]).to eq 422
+          expect(json_response["message"]).to eq "Unprocessable Entity"
+          expect(json_response["description"]).to eq "The resource you attempted to modify cannot be modified according to your request."
+          expect(json_response["errors"]).to match(/Failed to save collection/)
+        end
+      end
+
+      context "in validations" do
+        let(:form) { instance_double(Hyrax::Forms::PcdmCollectionForm, errors: errors) }
+        let(:errors) { instance_double(Reform::Contract::CustomError, messages: messages) }
+        let(:messages) { { "error" => errmsg } }
+        let(:errmsg) { "Validation error" }
+        before do
+          allow(Hyrax::Forms::ResourceForm).to receive(:for).with(collection).and_return(form)
+          allow(form).to receive(:validate).with(any_args).and_return(false)
+        end
+
+        it "renders the form again" do
+          put :update, params: { id: collection, collection: collection_attrs }
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(flash[:error]).to eq errmsg
+          expect(response).to render_template(:edit)
+        end
+
+        it "renders json" do
+          put :update, params: {
+            id: collection,
+            collection: collection_attrs,
+            format: :json
+          }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.content_type).to eq "application/json"
+
+          json_response = JSON.parse(response.body)
+          expect(json_response["code"]).to eq 422
+          expect(json_response["message"]).to eq "Unprocessable Entity"
+          expect(json_response["description"]).to eq "The resource you attempted to modify cannot be modified according to your request."
+          expect(json_response["errors"]).to eq errmsg
+        end
       end
     end
 

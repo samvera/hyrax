@@ -184,23 +184,29 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
     context "when create fails" do
       let(:collection) { Collection.new }
+      let(:error) { "Failed to save collection" }
 
       before do
         allow(controller).to receive(:authorize!)
         allow(Collection).to receive(:new).and_return(collection)
         allow(collection).to receive(:save).and_return(false)
-
-        allow(Hyrax.persister)
-          .to receive(:save)
-          .with(any_args)
-          .and_raise(StandardError, 'Failed to save collection')
+        allow(collection).to receive(:errors).and_return(error)
       end
 
       it "renders the form again" do
         post :create, params: { collection: collection_attrs }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:ok)
         expect(response).to render_template(:new)
+        expect(flash[:error]).to eq error
+      end
+
+      it "renders json" do
+        post :create, params: { collection: collection_attrs, format: :json }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.content_type).to eq "application/json"
+        expect(response.body).to eq error
       end
     end
   end
@@ -339,19 +345,18 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     end
 
     context "when update fails" do
-      let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
+      let(:collection) { FactoryBot.create(:collection_lw) }
       let(:repository) { instance_double(Blacklight::Solr::Repository, search: result) }
       let(:result) { double(documents: [], total: 0) }
+      let(:error) { "Failed to save collection" }
 
       before do
         allow(controller).to receive(:authorize!)
         allow(Collection).to receive(:find).and_return(collection)
         allow(collection).to receive(:update).and_return(false)
         allow(controller).to receive(:repository).and_return(repository)
-        allow(Hyrax.persister)
-          .to receive(:save)
-          .with(any_args)
-          .and_raise(StandardError, 'Failed to save collection')
+        allow_any_instance_of(::Collection).to receive(:save).and_return(false)
+        allow(collection).to receive(:errors).and_return(error)
       end
 
       it "renders the form again" do
@@ -359,8 +364,19 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
           id: collection,
           collection: collection_attrs
         }
-        expect(response).to be_successful
+        expect(response).to have_http_status(:ok)
         expect(response).to render_template(:edit)
+      end
+
+      it "renders json" do
+        put :update, params: {
+          id: collection,
+          collection: collection_attrs,
+          format: :json
+        }
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.content_type).to eq "application/json"
+        expect(response.body).to eq error
       end
     end
 

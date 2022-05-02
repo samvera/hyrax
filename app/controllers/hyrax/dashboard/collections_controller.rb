@@ -109,37 +109,21 @@ module Hyrax
       end
 
       def after_update
-        respond_to do |format|
-          format.html { redirect_to update_referer, notice: t('hyrax.dashboard.my.action.collection_update_success') }
-          format.json { render json: @collection, status: :updated, location: dashboard_collection_path(@collection) }
-        end
+        Deprecation.warn("Method `#after_update` will be removed in Hyrax 4.0.")
+        after_update_response # call private method for processing
       end
 
       def after_update_error
-        form
-        respond_to do |format|
-          format.html { render action: 'edit' }
-          format.json { render json: @collection.errors, status: :unprocessable_entity }
-        end
+        Deprecation.warn("Method `#after_update_error` will be removed in Hyrax 4.0.")
+        after_update_errors(@collection.errors) # call private method for processing
       end
 
       def update
-        unless params[:update_collection].nil?
-          process_banner_input
-          process_logo_input
-        end
-
-        process_member_changes
-
-        return valkyrie_update if @collection.is_a?(Valkyrie::Resource)
-
-        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
-        # we don't have to reindex the full graph when updating collection
-        @collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
-        if @collection.update(collection_params.except(:members))
-          after_update
+        case @collection
+        when ActiveFedora::Base
+          update_active_fedora_collection
         else
-          after_update_error
+          update_valkyrie_collection
         end
       end
 
@@ -224,12 +208,39 @@ module Hyrax
         after_create_response
       end
 
-      def valkyrie_update
-        form.validate(collection_params) &&
-          @collection = transactions['change_set.update_collection']
-                        .call(form)
-                        .value_or { return after_update_error }
-        after_update
+      def update_active_fedora_collection
+        unless params[:update_collection].nil?
+          process_banner_input
+          process_logo_input
+        end
+
+        process_member_changes
+
+        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
+        # we don't have to reindex the full graph when updating collection
+        @collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
+        if @collection.update(collection_params.except(:members))
+          after_update_response
+        else
+          after_update_errors(@collection.errors)
+        end
+      end
+
+      def update_valkyrie_collection
+        return after_update_errors(form_err_msg(form)) unless form.validate(collection_params)
+
+        result = transactions['change_set.update_collection']
+                 .call(form)
+        @collection = result.value_or { return after_update_errors(result.failure.first) }
+
+        process_member_changes
+
+        unless params[:update_collection].nil?
+          process_banner_input
+          process_logo_input
+        end
+
+        after_update_response
       end
 
       def valkyrie_destroy
@@ -574,11 +585,54 @@ module Hyrax
         add_members_to_collection unless batch.empty?
       end
 
-      def after_create_errors(errors)
+      def after_create_errors_for_active_fedora(errors)
+        form
+        respond_to do |format|
+          format.html do
+            flash[:error] = errors.to_s
+            render action: 'new'
+          end
+          format.json { render json: @collection.errors, status: :unprocessable_entity }
+        end
+      end
+
+      def after_create_errors(errors) # for valkyrie
+        return after_create_errors_for_active_fedora(errors) if @collection.is_a? ActiveFedora::Base
         respond_to do |wants|
           wants.html do
             flash[:error] = errors.to_s
             render 'new', status: :unprocessable_entity
+          end
+          wants.json do
+            render_json_response(response_type: :unprocessable_entity, options: { errors: errors })
+          end
+        end
+      end
+
+      def after_update_response
+        respond_to do |format|
+          format.html { redirect_to update_referer, notice: t('hyrax.dashboard.my.action.collection_update_success') }
+          format.json { render json: @collection, status: :updated, location: dashboard_collection_path(@collection) }
+        end
+      end
+
+      def after_update_errors_for_active_fedora(errors)
+        form
+        respond_to do |format|
+          format.html do
+            flash[:error] = errors.to_s
+            render action: 'edit'
+          end
+          format.json { render json: @collection.errors, status: :unprocessable_entity }
+        end
+      end
+
+      def after_update_errors(errors) # for valkyrie
+        return after_update_errors_for_active_fedora(errors) if @collection.is_a? ActiveFedora::Base
+        respond_to do |wants|
+          wants.html do
+            flash[:error] = errors.to_s
+            render 'edit', status: :unprocessable_entity
           end
           wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: errors }) }
         end
