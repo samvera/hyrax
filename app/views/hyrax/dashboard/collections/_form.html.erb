@@ -23,7 +23,7 @@
     <% end %>
   </ul>
 
-  <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor nav-safety' } do |f| %>
+  <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor nav-safety', data: { behavior: 'collection-form', 'param-key' => @form.model_name.param_key } } do |f| %>
     <div class="tab-content">
       <div id="description" class="tab-pane active">
         <div class="panel panel-default labels">
@@ -116,3 +116,4 @@
   <% end # simple_form_for %>
 
 </div> <!-- end collection-controls -->
+

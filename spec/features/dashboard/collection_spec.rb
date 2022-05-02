@@ -265,14 +265,16 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
 
     context 'when user can create collections of one type' do
+      let(:location) { 'Minneapolis, Minnesota, United States' }
+      let(:geonames_data) { [{ "id": "https://sws.geonames.org/5037649/", "label": "Minneapolis, Minnesota, United States" }] }
+
       before do
         user_collection_type
-
         sign_in user
         visit '/dashboard/my/collections'
       end
 
-      it 'makes a new collection' do
+      it 'makes a new collection', js: true do
         find('#add-new-collection-button').click
         expect(page).to have_selector('h1', text: 'New User Collection')
         expect(page).to have_selector "input.collection_title.multi_value"
@@ -284,9 +286,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         fill_in('Description', with: description)
         fill_in('Related URL', with: 'http://example.com/')
 
+        find('#s2id_collection_based_near').click
+        expect_any_instance_of(Qa::Authorities::Geonames).to receive(:search).and_return(geonames_data)
+        find('input.select2-input').send_keys("minneapolis", :enter)
+        first('.select2-result').click
+
         click_button("Save")
         expect(page).to have_content title
         expect(page).to have_content description
+        expect(page.body).to have_content location
       end
     end
 
