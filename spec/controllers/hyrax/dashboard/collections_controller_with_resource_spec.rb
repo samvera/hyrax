@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'hyrax/specs/spy_listener'
 ##
-# Test the Hyrax::Dashboard::CollectionsController with Hyrax::PcdmCollection,
+# Test the Hyrax::Dashboard::CollectionsController with CollectionResource,
 # which tests handling of Valkyrie::Resource collections.
 #
 # @note These are the same tests run in `spec/controllers/dashboard/collections_controller_spec.rb`
@@ -12,7 +12,7 @@ require 'hyrax/specs/spy_listener'
 RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean_repo: true do
   routes { Hyrax::Engine.routes }
 
-  before { allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection') }
+  before { allow(Hyrax.config).to receive(:collection_model).and_return('CollectionResource') }
   let(:collection_type_gid) { FactoryBot.create(:user_collection_type).to_global_id.to_s }
   let(:queries) { Hyrax.custom_queries }
   let(:user) { FactoryBot.create(:user) }
@@ -25,15 +25,17 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
   let(:unowned_asset) { FactoryBot.valkyrie_create(:monograph) }
 
   let(:collection) do
-    FactoryBot.valkyrie_create(:hyrax_collection,
+    FactoryBot.valkyrie_create(:collection_resource,
                                :public,
                                title: ["My collection"],
+                               creator: ["Mr. Smith"],
                                depositor: user.user_key,
                                edit_users: [user])
   end
 
   let(:collection_attrs) do
-    { title: ['My First Collection'],
+    { title: ["My First Collection"],
+      creator: ["Mrs. Smith"],
       description: ["The Description\r\n\r\nand more"] }
   end
 
@@ -51,9 +53,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
     before { sign_in user }
 
     it "removes blank strings from params before creating Collection" do
-      pending 'creation of a collection resource that includes basic metadata'
       expect { post :create, params: { collection: collection_attrs.merge(creator: ['']) } }
-        .to change { Hyrax.query_service.count_all_of_model(model: Hyrax::PcdmCollection) }
+        .to change { Hyrax.query_service.count_all_of_model(model: CollectionResource) }
         .by(1)
 
       expect(assigns[:collection].title).to eq ["My First Collection"]
@@ -62,7 +63,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
 
     it "sets current user as the depositor" do
       expect { post :create, params: { collection: collection_attrs } }
-        .to change { Hyrax.query_service.count_all_of_model(model: Hyrax::PcdmCollection) }
+        .to change { Hyrax.query_service.count_all_of_model(model: CollectionResource) }
         .by(1)
 
       expect(assigns[:collection].depositor).to eq user.user_key
@@ -74,7 +75,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
                        batch_document_ids: [asset1.id, asset2.id, unowned_asset.id] }
 
         expect { post :create, params: parameters }
-          .to change { Hyrax.query_service.count_all_of_model(model: Hyrax::PcdmCollection) }
+          .to change { Hyrax.query_service.count_all_of_model(model: CollectionResource) }
           .by(1)
 
         collection = Hyrax.query_service.find_by(id: assigns[:collection].id)
@@ -106,7 +107,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
 
         it 'assigns the default User Collection' do
           expect { post :create, params: { collection: collection_attrs } }
-            .to change { Hyrax.query_service.count_all_of_model(model: Hyrax::PcdmCollection) }
+            .to change { Hyrax.query_service.count_all_of_model(model: CollectionResource) }
             .by(1)
 
           type = GlobalID::Locator.locate(assigns[:collection].collection_type_gid)
@@ -124,7 +125,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
 
         it "creates a Collection of specified type" do
           expect { post :create, params: parameters }
-            .to change { Hyrax.query_service.count_all_of_model(model: Hyrax::PcdmCollection) }
+            .to change { Hyrax.query_service.count_all_of_model(model: CollectionResource) }
             .by(1)
 
           type = GlobalID::Locator.locate(assigns[:collection].collection_type_gid)
@@ -154,13 +155,13 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
     end
 
     context "when params includes parent_id" do
-      let(:parent_collection) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['Parent']) }
+      let(:parent_collection) { FactoryBot.valkyrie_create(:collection_resource, title: ['Parent']) }
 
       it "creates a collection as a subcollection of parent" do
         parameters = { collection: collection_attrs, parent_id: parent_collection.id }
 
         expect { post :create, params: parameters }
-          .to change { Hyrax.query_service.count_all_of_model(model: Hyrax::PcdmCollection) }
+          .to change { Hyrax.query_service.count_all_of_model(model: CollectionResource) }
           .by(1)
 
         collection = Hyrax.query_service.find_by(id: assigns[:collection].id)
@@ -173,14 +174,14 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       context "in transaction processing" do
         before do
           allow(controller).to receive(:authorize!)
-          allow(Hyrax::PcdmCollection).to receive(:new).and_return(collection)
+          allow(CollectionResource).to receive(:new).and_return(collection)
           allow(Hyrax.persister)
             .to receive(:save)
             .with(resource: collection)
             .and_raise(StandardError, 'Failed to save collection')
         end
 
-        let(:collection) { Hyrax::PcdmCollection.new }
+        let(:collection) { CollectionResource.new }
 
         it "renders the form again" do
           post :create, params: { collection: collection_attrs }
@@ -207,8 +208,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       context "in validations" do
         let(:form) { instance_double(Hyrax::Forms::PcdmCollectionForm, errors: errors) }
         let(:errors) { instance_double(Reform::Contract::CustomError, messages: messages) }
-        let(:messages) { { "error" => errmsg } }
-        let(:errmsg) { "Validation error" }
+        let(:messages) { { publisher: ["must exist"] } }
+        let(:errmsg) { "publisher must exist" }
         before do
           allow(controller).to receive(:authorize!)
           allow(Hyrax::Forms::ResourceForm).to receive(:for).with(collection).and_return(form)
@@ -216,7 +217,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
           allow(form).to receive(:prepopulate!).with(any_args).and_return(true)
         end
 
-        let(:collection) { Hyrax::PcdmCollection.new }
+        let(:collection) { CollectionResource.new }
 
         it "renders the form again" do
           post :create, params: { collection: collection_attrs }
@@ -362,7 +363,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       end
 
       it "removes blank strings from params before updating Collection metadata" do # rubocop:disable RSpec/ExampleLength
-        pending 'creation of a collection resource that includes basic metadata'
         put :update, params: {
           id: collection,
           collection: {
@@ -429,8 +429,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       context "in validations" do
         let(:form) { instance_double(Hyrax::Forms::PcdmCollectionForm, errors: errors) }
         let(:errors) { instance_double(Reform::Contract::CustomError, messages: messages) }
-        let(:messages) { { "error" => errmsg } }
-        let(:errmsg) { "Validation error" }
+        let(:messages) { { publisher: ["must exist"] } }
+        let(:errmsg) { "publisher must exist" }
         before do
           allow(Hyrax::Forms::ResourceForm).to receive(:for).with(collection).and_return(form)
           allow(form).to receive(:validate).with(any_args).and_return(false)
@@ -734,7 +734,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
     before { sign_in user }
 
     it 'shows a list of member files' do
-      pending 'update of test to work with Hyrax::PcdmCollection'
+      pending 'update of test to work with CollectionResource'
       get :files, params: { id: collection }, format: :json
 
       expect(response).to be_successful

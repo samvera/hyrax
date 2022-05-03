@@ -254,7 +254,11 @@ module Hyrax
       end
 
       def form_err_msg(form)
-        form.errors.messages.values.flatten.to_sentence
+        errmsg = []
+        form.errors.messages.each do |fld, err|
+          errmsg << "#{fld} #{err.to_sentence}"
+        end
+        errmsg.to_sentence
       end
 
       def default_collection_type
