@@ -1,22 +1,23 @@
 # Simple yaml config-driven schema which is used to define model attributes,
 # index key names, and form properties.
 #
-# Attributes must have a type but all other configuration options are optional.
-#
-# attributes:
-#   attribute_name:
-#     type: string
-#     multiple: false
-#     index_keys:
-#       - "attribute_name_sim"
-#     form:
-#       required: true
-#       primary: true
-#       multiple: false
-#
-# @see config/metadata/basic_metadata.yaml for an example configuration
-#
-# Generated via
+# Originally generated with no metadata via
 #  `rails generate hyrax:collection_resource CollectionResource`
+#
+# A few custom fields are added for testing purposes.
 
-attributes: {}
+---
+attributes:
+  target_audience:
+    type: string
+    form:
+      primary: true
+      multiple: true
+  department:
+    type: string
+    form:
+      primary: true
+  course:
+    type: string
+    form:
+      primary: false

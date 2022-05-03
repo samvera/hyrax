@@ -2,10 +2,10 @@ Description:
   This generator creates the necessary files for a Hyrax::PcdmCollection.
 
 Example:
-  Usage: rails generate hyrax:collection_resource MyCollection [include_basic_metadata]
+  Usage: rails generate hyrax:collection_resource MyCollection [with_basic_metadata]
 
   Argument:
-    include_basic_metadata (optional) - if present, the collection resource will include basic metadata
+    with_basic_metadata (optional) - if present, the collection resource will include basic metadata
 
   This will create:
     app/models/my_collection.rb

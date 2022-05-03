@@ -6,16 +6,27 @@ class <%= class_name %> < Hyrax::PcdmCollection
   # @note Do not directly update `basic_metadata.yaml`.  It is also used by works.
   #
   # To change metadata for collections
-  # * extend by adding fields to `/config/metadata/<%= class_name %>_metadata.yaml`
-  # * remove all or some basic metadata fields
+  # * extend by adding fields to `/config/metadata/<%= file_name %>.yaml`
+  # * remove all basic metadata
+  #   * if you generated `with_basic_metadata` and now don't want any basic metadata,
+  #       comment out or delete the schema include statement for `:basic_metadata`
+  #   * update form and indexer classes to also remove the `:basic_metadata` schema include
+  # * remove some basic metadata
   #   * comment out or delete the schema include statement for `:basic_metadata`
-  #   * modify the contents of `/config/metadata/<%= class_name %>_metadata.yaml`
-  #       to define the desired metadata characteristics, optionally copying some
-  #       definitions from Hyrax `/config/metadata/basic_metadata.yaml`
-  #   * update form and indexer classes to also remove the `:basic_metadata` schema includes
+  #   * update form and indexer classes to also remove the `:basic_metadata` schema include
+  #   * copy fields you want to keep from `/config/metadata/basic_metadata.yaml`
+  #       to `/config/metadata/<%= file_name %>.yaml`
+  # * override some basic metadata
+  #   * fields are not allowed to repeat, so to override any basic metadata, you
+  #       must first comment out or delete the schema include statement for `:basic_metadata`
+  #   * update form and indexer classes to also remove the `:basic_metadata` schema include
+  #   * copy all fields you want to keep unchanged or to override from `/config/metadata/basic_metadata.yaml`
+  #       to `/config/metadata/<%= file_name %>.yaml`
+  #   * update them in `config/metadata/<%= file_name %>.yaml to have the desired
+  #       characteristics
   #
   # Alternative:
-  # * comment out or delete both schema include statements
+  # * comment out or delete schema include statements
   # * add Valkyrie attributes to this class
   # * update form and indexer to process the attributes
   #
