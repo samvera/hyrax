@@ -127,6 +127,11 @@ module Hyrax
         end
       end
 
+      def process_branding
+        process_banner_input
+        process_logo_input
+      end
+
       def after_destroy(_id)
         # leaving id to avoid changing the method's parameters prior to release
         respond_to do |format|
@@ -209,12 +214,8 @@ module Hyrax
       end
 
       def update_active_fedora_collection
-        unless params[:update_collection].nil?
-          process_banner_input
-          process_logo_input
-        end
-
         process_member_changes
+        process_branding
 
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         # we don't have to reindex the full graph when updating collection
@@ -230,16 +231,17 @@ module Hyrax
         return after_update_errors(form_err_msg(form)) unless form.validate(collection_params)
 
         result = transactions['change_set.update_collection']
+                 .with_step_args(
+                          'collection_resource.save_collection_banner' => { update_banner_file_ids: params["banner_files"],
+                                                                            banner_unchanged_indicator: params["banner_unchanged"] },
+                          'collection_resource.save_collection_logo' => { update_logo_file_ids: params["logo_files"],
+                                                                          alttext_values: params["alttext"],
+                                                                          linkurl_values: params["linkurl"] }
+                        )
                  .call(form)
         @collection = result.value_or { return after_update_errors(result.failure.first) }
 
         process_member_changes
-
-        unless params[:update_collection].nil?
-          process_banner_input
-          process_logo_input
-        end
-
         after_update_response
       end
 
@@ -505,7 +507,9 @@ module Hyrax
         @form ||=
           case @collection
           when Valkyrie::Resource
-            Hyrax::Forms::ResourceForm.for(@collection)
+            form = Hyrax::Forms::ResourceForm.for(@collection)
+            form.prepopulate!
+            form
           else
             form_class.new(@collection, current_ability, repository)
           end
