@@ -1,4 +1,4 @@
-<% model = document["has_model_ssim"].first.safe_constantize %>
+<% model = document.hydra_model %>
 <div class="search-results-title-row">
   <% if model == Hyrax::PcdmCollection || model < Hyrax::PcdmCollection %>
     <h3 class="search-result-title"><%= link_to document.title_or_label, [hyrax, document] %></h3>
