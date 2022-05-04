@@ -9,15 +9,18 @@ RSpec.describe 'searching', index_adapter: :solr_index, valkyrie_adapter: :test_
   end
 
   let!(:collection) do
-    FactoryBot.valkyrie_create(:hyrax_collection, :public, title: ['collection title abc'], description: [subject_value], members: [work])
+    FactoryBot.valkyrie_create(:collection_resource,
+                               :public,
+                               title: ['collection title abc'],
+                               creator: user.email,
+                               description: [subject_value],
+                               members: [work])
   end
 
-  before { allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection') }
+  before { allow(Hyrax.config).to receive(:collection_model).and_return('CollectionResource') }
 
   context "as a public user", :clean_repo do
-    xit "using the gallery view" do
-      pending 'addition of a valkyrie collection with basic metadata defined'
-
+    it "using the gallery view" do
       visit '/'
       fill_in "search-field-header", with: "Toothbrush"
       click_button "search-submit-header"
@@ -33,9 +36,7 @@ RSpec.describe 'searching', index_adapter: :solr_index, valkyrie_adapter: :test_
       end
     end
 
-    xit "only searches all and does not display search options for dashboard files" do
-      pending 'addition of a valkyrie collection with basic metadata defined'
-
+    it "only searches all and does not display search options for dashboard files" do
       visit '/'
 
       # it "does not display search options for dashboard files" do
