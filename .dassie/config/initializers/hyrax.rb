@@ -54,7 +54,8 @@ Hyrax.config do |config|
   ##
   # NOTE: To Valkyrie works, use Monograph which is_a Hyrax::Work is_a Valkyrie::Resource
   # To use Valkyrie models, uncomment the following lines.
-  # config.collection_model = 'Hyrax::PcdmCollection'
+  # config.collection_model = 'Hyrax::PcdmCollection' # collection without basic metadata
+  # config.collection_model = 'CollectionResource'    # collection with basic metadata
   # config.admin_set_model = 'Hyrax::AdministrativeSet'
 end
 
