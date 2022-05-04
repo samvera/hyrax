@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Generated via
-#  `rails generate hyrax:work_resource CollectionResource`
+#  `rails generate hyrax:collection_resource CollectionResource`
 require 'rails_helper'
 require 'valkyrie/specs/shared_specs'
 
