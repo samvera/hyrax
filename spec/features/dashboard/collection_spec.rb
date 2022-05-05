@@ -254,6 +254,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         fill_in('Related URL', with: 'http://example.com/')
 
         click_button("Save")
+        expect(page).to have_content 'Collection was successfully created.'
         expect(page).to have_content title
         expect(page).to have_content description
       end
@@ -266,9 +267,12 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
     context 'when user can create collections of one type' do
       let(:location) { 'Minneapolis, Minnesota, United States' }
-      let(:geonames_data) { [{ "id": "https://sws.geonames.org/5037649/", "label": "Minneapolis, Minnesota, United States" }] }
+      let(:geonames_data) { '{"geonames":[{"geonameId":5037649,"name":"Minneapolis", "countryName":"United States","adminName1":"Minnesota"}]}' }
 
       before do
+        stub_request(:get, 'http://api.geonames.org/searchJSON')
+          .with(query: hash_including({ 'q': 'minneapolis' }))
+          .to_return(status: 200, body: geonames_data)
         user_collection_type
         sign_in user
         visit '/dashboard/my/collections'
@@ -287,14 +291,17 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         fill_in('Related URL', with: 'http://example.com/')
 
         find('#s2id_collection_based_near').click
-        expect_any_instance_of(Qa::Authorities::Geonames).to receive(:search).and_return(geonames_data)
-        find('input.select2-input').send_keys("minneapolis", :enter)
-        first('.select2-result').click
+        expect(page).to have_content 'Please enter 2 or more characters'
+        find('#s2id_autogen1_search').send_keys("minneapolis")
+        expect(page).to have_content location
+        find('#s2id_autogen1_search').send_keys(:enter)
 
         click_button("Save")
+        expect(page).to have_content 'Collection was successfully created.'
         expect(page).to have_content title
         expect(page).to have_content description
-        expect(page.body).to have_content location
+        click_link('Additional fields')
+        expect(page).to have_content location
       end
     end
 

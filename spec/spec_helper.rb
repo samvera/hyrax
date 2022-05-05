@@ -144,6 +144,8 @@ RSpec.configure do |config|
     Hyrax.config.nested_relationship_reindexer = ->(id:, extent:) {}
     # setup a test group service
     User.group_service = TestHydraGroupService.new
+    # Set a geonames username; doesn't need to be real.
+    Hyrax.config.geonames_username = 'hyrax-test'
     # disable analytics except for specs which will have proper api mocks
   end
 
