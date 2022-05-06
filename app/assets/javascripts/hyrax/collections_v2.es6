@@ -1,10 +1,12 @@
 import CollectionUtilities from 'hyrax/collections_utils';
+import Editor from 'hyrax/editor';
 
 export default class CollectionsV2 {
   constructor() {
     this.collectionUtilities = new CollectionUtilities();
     this.setupAddSharingHandler();
     this.sharingAddButtonDisabler();
+    this.setupEditor();
   }
 
   /**
@@ -54,4 +56,15 @@ export default class CollectionsV2 {
         )
       );
   }
+
+  /**
+   * Set up editor to enable Geonames autocomplete for Location data
+   * @return {void}
+   */
+   setupEditor() {
+    var element = $("[data-behavior='collection-form']");
+    if (element.length > 0) {
+      new Editor(element).init();
+    }
+   }
 }
