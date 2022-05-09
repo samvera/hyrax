@@ -7,7 +7,6 @@ module Hyrax
     include Hyrax::ResourceIndexer
     include Hyrax::PermissionIndexer
     include Hyrax::VisibilityIndexer
-    include Hyrax::ThumbnailIndexer
     include Hyrax::Indexer(:core_metadata)
     include Hyrax::Indexer(:basic_metadata)
 
@@ -21,6 +20,11 @@ module Hyrax
         solr_doc['extracted_text_id_ssi']        = resource.extracted_text_id.to_s
         solr_doc['hasRelatedMediaFragment_ssim'] = resource.representative_id.to_s
         solr_doc['hasRelatedImage_ssim']         = resource.thumbnail_id.to_s
+        solr_doc['thumbnail_path_ss'] = if resource.thumbnail_id.present?
+                                          Hyrax::Engine.routes.url_helpers.derivative_path(resource.thumbnail_id)
+                                        else
+                                          ActionController::Base.helpers.image_path 'default.png'
+                                        end
 
         # Add in metadata from the original file.
         file_metadata = original_file
