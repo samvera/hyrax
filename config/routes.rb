@@ -143,6 +143,12 @@ Hyrax::Engine.routes.draw do
     resources :profiles, only: [:show, :edit, :update]
   end
 
+  # derivatives for Valkyrie objects accessed via storage adapters
+  get '/derivative/:id',
+      controller: 'valkyrie_derivatives',
+      action: :show,
+      as: :derivative
+
   # Routes for user's works, collections, highlights and shares
   # Preserves existing behavior by maintaining paths to /dashboard
   # Routes actions to the various My controllers
