@@ -123,6 +123,56 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         end
       end
 
+      context 'when adding a collection' do
+        let(:collection) { FactoryBot.valkyrie_create(:pcdm_collection) }
+
+        let(:create_params) do
+          { title: 'comet in moominland',
+            member_of_collection_ids: [collection.id.to_s] }
+        end
+
+        it 'adds to the collection' do
+          post :create, params: { test_simple_work: create_params }
+
+          expect(assigns[:curation_concern].member_of_collection_ids)
+            .to contain_exactly(collection.id)
+        end
+
+        context 'with attributes' do
+          let(:create_params) do
+            { title: 'comet in moominland',
+              member_of_collections_attributes:
+                { "0" =>
+                 { "id" => collection.id, "_destroy" => "false" } } }
+          end
+
+          it 'adds to the collection' do
+            post :create, params: { test_simple_work: create_params }
+
+            expect(assigns[:curation_concern].member_of_collection_ids)
+              .to contain_exactly(collection.id)
+          end
+        end
+
+        context 'with both setter styles' do
+          let(:other_collection) { FactoryBot.valkyrie_create(:pcdm_collection) }
+          let(:create_params) do
+            { title: 'comet in moominland',
+              member_of_collections_attributes:
+                { "0" =>
+                 { "id" => other_collection.id, "_destroy" => "false" } },
+              member_of_collection_ids: [collection.id] }
+          end
+
+          it 'adds to the collection' do
+            post :create, params: { test_simple_work: create_params }
+
+            expect(assigns[:curation_concern].member_of_collection_ids)
+              .to contain_exactly(collection.id, other_collection.id)
+          end
+        end
+      end
+
       context 'and files' do
         let(:uploads) { FactoryBot.create_list(:uploaded_file, 2, user: user) }
 
