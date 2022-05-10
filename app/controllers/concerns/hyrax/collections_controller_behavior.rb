@@ -36,6 +36,11 @@ module Hyrax
       @curation_concern = @collection # we must populate curation_concern
       presenter
       query_collection_members
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @curation_concern }
+      end
     end
 
     def collection
