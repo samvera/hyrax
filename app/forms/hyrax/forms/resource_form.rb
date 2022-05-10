@@ -99,7 +99,7 @@ module Hyrax
       property :in_works_ids, virtual: true, prepopulator: InWorksPrepopulator
       property :member_ids, default: [], type: Valkyrie::Types::Array
       property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array
-      property :member_of_collections_attributes, virtual: true
+      property :member_of_collections_attributes, virtual: true, populator: :in_collections_populator
       validates_with CollectionMembershipValidator
 
       property :representative_id, type: Valkyrie::Types::String
@@ -207,6 +207,20 @@ module Hyrax
       end
 
       private
+
+      def in_collections_populator(fragment:, **_options)
+        adds = []
+        deletes = []
+        fragment.each do |_, h|
+          if h["_destroy"] == "true"
+            deletes << Valkyrie::ID.new(h["id"])
+          else
+            adds << Valkyrie::ID.new(h["id"])
+          end
+        end
+
+        self.member_of_collection_ids = ((member_of_collection_ids + adds) - deletes).uniq
+      end
 
       # https://trailblazer.to/2.1/docs/reform.html#reform-populators-populator-collections
       def permission_populator(collection:, index:, **)

@@ -197,25 +197,33 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
     context 'when collection membership is updated' do
       context 'from none to one' do
-        let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
+        let(:work) { FactoryBot.valkyrie_create(:hyrax_work, title: ['comet in moominland']) }
         let(:member_of_collections_attributes) do
           { "0" => { "id" => "123", "_destroy" => "false" } }
         end
 
         it 'is populated from member_of_collections_attributes' do
-          expect { form.validate(member_of_collections_attributes: member_of_collections_attributes) }
-            .to change { form.member_of_collection_ids&.map(&:id) }
+          form.validate(member_of_collections_attributes: member_of_collections_attributes)
+
+          expect { form.sync }
+            .to change { work.member_of_collection_ids }
             .to contain_exactly('123')
         end
       end
 
       context 'from 3 down to 2' do
-        let(:work) { FactoryBot.valkyrie_create(:hyrax_work, member_of_collection_ids: before_collection_ids) }
+        let(:work) do
+          FactoryBot.valkyrie_create(:hyrax_work,
+                                     member_of_collection_ids: before_collection_ids,
+                                     title: ['comet in moominland'])
+        end
+
         let(:col1) { FactoryBot.valkyrie_create(:hyrax_collection) }
         let(:col2) { FactoryBot.valkyrie_create(:hyrax_collection) }
         let(:col3) { FactoryBot.valkyrie_create(:hyrax_collection) }
         let(:before_collection_ids) { [col1.id, col2.id, col3.id] }
         let(:after_collection_ids) { [col1.id.to_s, col2.id.to_s] }
+
         let(:member_of_collections_attributes) do
           { "0" => { "id" => col1.id.to_s, "_destroy" => "false" },
             "1" => { "id" => col2.id.to_s, "_destroy" => "false" },
@@ -223,8 +231,10 @@ RSpec.describe Hyrax::Forms::ResourceForm do
         end
 
         it 'is populated from member_of_collections_attributes' do
-          expect { form.validate(member_of_collections_attributes: member_of_collections_attributes) }
-            .to change { form.member_of_collection_ids }
+          form.validate(member_of_collections_attributes: member_of_collections_attributes)
+
+          expect { form.sync }
+            .to change { work.member_of_collection_ids }
             .to contain_exactly(*after_collection_ids)
         end
       end
