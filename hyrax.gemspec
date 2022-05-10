@@ -34,7 +34,7 @@ SUMMARY
   spec.add_dependency 'active-fedora', '~> 13.1', '>= 13.1.2'
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
-  spec.add_dependency 'blacklight', '~> 7.0'
+  spec.add_dependency 'blacklight', '< 7.25'
   spec.add_dependency 'blacklight-gallery', '~> 4.0'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
   spec.add_dependency 'browse-everything', '>= 0.16', '< 2.0'
