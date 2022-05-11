@@ -21,7 +21,9 @@ module Hyrax
     # also belong to other collections of the same type.
     #
     # @return [True, String] true if no conflicts; otherwise, an error message string
+    # rubocop:disable Lint/UnreachableCode
     def validate
+      raise "when is this called?"
       return true if item.member_of_collection_ids.empty? || item.member_of_collection_ids.count <= 1
       return true unless single_membership_collection_types_exist?
 
@@ -30,6 +32,7 @@ module Hyrax
       errs = build_error_message(problematic_collections)
       errs.presence || true
     end
+    # rubocop:enable Lint/UnreachableCode
 
     # @api public
     #
