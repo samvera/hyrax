@@ -106,7 +106,7 @@ SUMMARY
   spec.add_development_dependency 'i18n_yaml_sorter'
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
   # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
-  spec.add_development_dependency 'bixby', '~> 5.0'
+  spec.add_development_dependency 'bixby', '~> 5.0', '>= 5.0.2' # bixby 5 briefly dropped Ruby 2.5
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'webdrivers', '~> 4.4'
