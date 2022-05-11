@@ -21,7 +21,9 @@ module Hyrax
     # also belong to other collections of the same type.
     #
     # @return [True, String] true if no conflicts; otherwise, an error message string
+    # @deprecated Use #check instead; for removal in 4.0.0
     def validate
+      Deprecation.warn "#{self.class}##{__method__} is deprecated; use #check instead."
       return true if item.member_of_collection_ids.empty? || item.member_of_collection_ids.count <= 1
       return true unless single_membership_collection_types_exist?
 
