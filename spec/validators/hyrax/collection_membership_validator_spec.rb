@@ -93,7 +93,12 @@ RSpec.describe Hyrax::CollectionMembershipValidator do
             it 'adds validation errors' do
               validator.validate(form)
 
-              expect(form.errors).not_to be_blank
+              expect(form.errors)
+                .to contain_exactly(
+                      start_with('Member of collection ids Error: ' \
+                                 'You have specified more than one of ' \
+                                 'the same single-membership collection type')
+                    )
             end
           end
         end
