@@ -1,4 +1,6 @@
 Blacklight.onLoad(function() {
+  $(".facets-header button").find("span").addClass("fa fa-bars");
+  
   /*
    * facets lists
    */
