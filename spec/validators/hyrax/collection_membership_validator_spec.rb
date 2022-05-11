@@ -81,8 +81,29 @@ RSpec.describe Hyrax::CollectionMembershipValidator do
             end
           end
 
-          context 'and work is in another collection that IS posing a conflict' do
+          context 'and work is already ni collections with membership restriction conflicts' do
             let(:work) { FactoryBot.build(:hyrax_work, member_of_collection_ids: [sm_col1.id]) }
+            let(:sm_col1) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
+            let(:sm_col2) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
+
+            let(:mem_of_cols_attrs) do
+              { "0" => { "id" => sm_col2.id.to_s, "_destroy" => "false" } }
+            end
+
+            it 'adds validation errors' do
+              validator.validate(form)
+
+              expect(form.errors)
+                .to contain_exactly(
+                      start_with('Member of collection ids Error: ' \
+                                 'You have specified more than one of ' \
+                                 'the same single-membership collection type')
+                    )
+            end
+          end
+
+          context 'and work is added to collections with membership restriction conflicts' do
+            let(:work) { FactoryBot.build(:hyrax_work) }
             let(:sm_col1) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
             let(:sm_col2) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
             let(:mem_of_cols_attrs) do
