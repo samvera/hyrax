@@ -28,6 +28,7 @@ RSpec.describe Hyrax::ValkyriePersistDerivatives do
       allow(tmpfile).to receive(:write).with ""
       allow(Hyrax.config.derivatives_storage_adapter).to receive(:upload)
       allow(Hyrax.metadata_adapter.query_service).to receive(:find_by).and_return(fileset)
+      allow(fileset).to receive(:id).with id
     end
 
     subject { described_class.call(stream, directives) }
