@@ -124,7 +124,6 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
     before do
       allow(file_set).to receive(:persisted?).and_return(true)
       allow(file_set).to receive(:label).and_return('CastoriaAd.tiff')
-      allow(Hyrax::ThumbnailPathService).to receive(:call).and_return('/downloads/foo12345?file=thumbnail')
       allow(Hyrax.custom_queries).to receive(:find_original_file).with(file_set: file_set).and_return(mock_file)
       allow(mock_file).to receive(:file_name).and_return(file_name)
     end
@@ -155,7 +154,7 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
       expect(subject['hasRelatedImage_ssim']).to eq mock_thumbnail.id.to_s
 
       # from ThumbnailIndexer
-      expect(subject['thumbnail_path_ss']).to eq '/downloads/foo12345?file=thumbnail'
+      expect(subject['thumbnail_path_ss']).to eq "/derivative/#{mock_thumbnail.id}"
 
       # from FileMetadata
       expect(subject['original_file_alternate_ids_tesim']).to eq mock_file['alternate_ids']
