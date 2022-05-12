@@ -40,7 +40,6 @@
 //= require hyrax/nav_safety
 //= require hyrax/analytics_events
 //= require hyrax/select_submit
-//= require hyrax/tabs
 //= require hyrax/user_search
 //= require hyrax/proxy_rights
 //= require hyrax/sorting
