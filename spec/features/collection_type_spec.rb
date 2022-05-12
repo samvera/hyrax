@@ -378,7 +378,7 @@ RSpec.describe 'collection_type', type: :feature do
         end
 
         # forwards to Dashboard -> Collections -> All Collections
-        within('li.active') do
+        within('.nav-tabs li.nav-item') do
           expect(page).to have_link('All Collections')
         end
 
