@@ -74,7 +74,8 @@ module Wings
 
         def initialize(msg = nil, obj:)
           self.obj = obj
-          msg = "Failed to save object {obj}.\n" + msg
+
+          msg = "Failed to save object #{obj}.\n" + msg
           super(msg)
         end
       end
