@@ -197,7 +197,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       it "renders the form again" do
         post :create, params: { collection: collection_attrs }
 
-        expect(response).to have_http_status(:ok)
         expect(response).to render_template(:new)
         expect(flash[:error]).to include error
       end
@@ -376,7 +375,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
           id: collection,
           collection: collection_attrs
         }
-        expect(response).to have_http_status(:ok)
         expect(response).to render_template(:edit)
       end
 
