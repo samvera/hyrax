@@ -20,8 +20,8 @@ class CatalogController < ApplicationController
     config.search_builder_class = Hyrax::CatalogSearchBuilder
 
     # Show gallery view
-    config.view.gallery.partials = [:index_header, :index]
-    config.view.slideshow.partials = [:index]
+    config.view.gallery!.partials = [:index_header, :index]
+    config.view.slideshow!.partials = [:index]
 
     # Because too many times on Samvera tech people raise a problem regarding a failed query to SOLR.
     # Often, it's because they inadvertently exceeded the character limit of a GET request.
