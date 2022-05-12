@@ -209,6 +209,7 @@ module Hyrax
             'collection_resource.apply_collection_type_permissions' => { user: current_user }
           )
           .call(form)
+
         @collection = result.value_or { return after_create_errors(result.failure.first) }
         after_create_response
       end

@@ -75,10 +75,11 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
     it "removes blank strings from params before creating Collection" do
       expect { post :create, params: { collection: collection_attrs.merge(creator: ['']) } }
-        .to change { Collection.count }.by(1)
+        .to change { Collection.count }
+        .by(1)
 
-      expect(assigns[:collection].title).to eq ["My First Collection"]
-      expect(assigns[:collection].creator).to eq []
+      expect(assigns[:collection].title).to contain_exactly("My First Collection")
+      expect(assigns[:collection].creator).to be_blank
     end
 
     it "sets current user as the depositor" do
@@ -198,7 +199,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
         expect(response).to have_http_status(:ok)
         expect(response).to render_template(:new)
-        expect(flash[:error]).to eq error
+        expect(flash[:error]).to include error
       end
 
       it "renders json" do
@@ -206,7 +207,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq "application/json"
-        expect(response.body).to eq error
+        expect(response.body).to include error
       end
     end
   end
@@ -334,13 +335,13 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         put :update, params: {
           id: collection,
           collection: {
-            title: ["My Next Collection "],
+            title: ["My Next Collection-"],
             creator: [""]
           }
         }
 
-        expect(assigns[:collection].title).to eq ["My Next Collection "]
-        expect(assigns[:collection].creator).to eq []
+        expect(assigns[:collection].title).to contain_exactly("My Next Collection-")
+        expect(assigns[:collection].creator).to be_blank
       end
     end
 
@@ -385,9 +386,10 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
           collection: collection_attrs,
           format: :json
         }
+
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq "application/json"
-        expect(response.body).to eq error
+        expect(response.body).to include error
       end
     end
 
