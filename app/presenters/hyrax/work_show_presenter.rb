@@ -154,7 +154,7 @@ module Hyrax
     def grouped_presenters(filtered_by: nil, except: nil)
       # TODO: we probably need to retain collection_presenters (as parent_presenters)
       #       and join this with member_of_collection_presenters
-      grouped = member_of_collection_presenters.group_by(&:model_name).transform_keys { |key| key.to_s.underscore }
+      grouped = member_of_collection_presenters.group_by(&:model_name).transform_keys(&:human)
       grouped.select! { |obj| obj.downcase == filtered_by } unless filtered_by.nil?
       grouped.except!(*except) unless except.nil?
       grouped
