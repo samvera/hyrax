@@ -566,6 +566,23 @@ RSpec.describe Hyrax::WorkShowPresenter do
     end
   end
 
+  describe "#grouped_presenters" do
+    let(:collections) do
+      [FactoryBot.valkyrie_create(:hyrax_collection),
+       FactoryBot.valkyrie_create(:hyrax_collection)]
+    end
+
+    before do
+      allow(presenter)
+        .to receive(:member_of_authorized_parent_collections)
+        .and_return collections.map(&:id).map(&:to_s)
+    end
+
+    it "groups the presenters with the human version of the model name" do
+      expect(presenter.grouped_presenters.keys).to contain_exactly("Collection")
+    end
+  end
+
   describe "#show_deposit_for?" do
     context "when user has depositable collections" do
       let(:user_collections) { double }
