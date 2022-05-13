@@ -23,11 +23,11 @@ module Hyrax::ValkyrieUpload
     streamfile = storage_adapter.upload(
       file: io,
       original_filename: filename,
-      resource: file_set,
+      resource: file_set
     )
     io.close
 
-    file_metadata = find_or_create_metadata(id: streamfile.id, file: streamfile)
+    file_metadata = find_or_create_metadata(id: streamfile.id, filename: filename)
     file_metadata.type << use
     file_metadata.file_set_id = file_set.id
 
@@ -94,13 +94,13 @@ module Hyrax::ValkyrieUpload
 
   # @api private
   # @param [#to_s] id
-  # @param [Valkyrie::StorageAdapter::StreamFile] file
-  def self.find_or_create_metadata(id:, file:)
+  # @param [String] filename
+  def self.find_or_create_metadata(id:, filename:)
     Hyrax.custom_queries.find_file_metadata_by(id: id)
   rescue Valkyrie::Persistence::ObjectNotFoundError => e
     Hyrax.logger.warn "Failed to find existing metadata for #{id}:"
     Hyrax.logger.warn e.message
     Hyrax.logger.warn "Creating Hyrax::FileMetadata now"
-    Hyrax::FileMetadata.for(file: file)
+    Hyrax::FileMetadata.new(label: filename, original_filename: filename)
   end
 end
