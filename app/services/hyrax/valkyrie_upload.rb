@@ -25,11 +25,14 @@ module Hyrax::ValkyrieUpload
       original_filename: filename,
       resource: file_set
     )
-    io.close
 
-    file_metadata = find_or_create_metadata(id: streamfile.id, filename: filename)
-    file_metadata.type << use
-    file_metadata.file_set_id = file_set.id
+    file_metadata = Hyrax::FileMetadata.new(
+      label: filename,
+      original_filename: filename,
+      use: [use],
+      file_set_id: file_set.id,
+      file_identifier: streamfile.id
+    )
 
     case use
     when Hyrax::FileMetadata::Use::ORIGINAL_FILE
@@ -45,7 +48,6 @@ module Hyrax::ValkyrieUpload
       # trying to update the parent attributes here doesn't seem to stick
       file_set.thumbnail_id = file_metadata.id
     end
-
     saved_metadata = Hyrax.persister.save(resource: file_metadata)
     Hyrax.publisher.publish("object.file.uploaded", metadata: saved_metadata)
 
@@ -90,17 +92,5 @@ module Hyrax::ValkyrieUpload
         Rails.logger.warn "Unknown file use #{file_metadata.type} specified for #{file_metadata.file_identifier}"
       end
     end
-  end
-
-  # @api private
-  # @param [#to_s] id
-  # @param [String] filename
-  def self.find_or_create_metadata(id:, filename:)
-    Hyrax.custom_queries.find_file_metadata_by(id: id)
-  rescue Valkyrie::Persistence::ObjectNotFoundError => e
-    Hyrax.logger.warn "Failed to find existing metadata for #{id}:"
-    Hyrax.logger.warn e.message
-    Hyrax.logger.warn "Creating Hyrax::FileMetadata now"
-    Hyrax::FileMetadata.new(label: filename, original_filename: filename)
   end
 end
