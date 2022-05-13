@@ -24,11 +24,11 @@ module Hyrax::ValkyrieUpload
       file: io,
       original_filename: filename,
       resource: file_set,
-      use: use
     )
     io.close
 
     file_metadata = find_or_create_metadata(id: streamfile.id, file: streamfile)
+    file_metadata.type << use
     file_metadata.file_set_id = file_set.id
 
     case use
