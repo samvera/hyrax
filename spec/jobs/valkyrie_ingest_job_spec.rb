@@ -39,9 +39,11 @@ RSpec.describe ValkyrieIngestJob do
     context "when in Valkyrie mode" do
       it 'runs derivatives', index_adapter: :solr_index, perform_enqueued: true do
         allow(ValkyrieCreateDerivativesJob).to receive(:perform_later).and_call_original
+        allow(Hyrax::ValkyrieUpload).to receive(:file).and_call_original
 
         described_class.perform_now(upload)
 
+        expect(Hyrax::ValkyrieUpload).to have_received(:file)
         expect(ValkyrieCreateDerivativesJob).to have_received(:perform_later)
         expect(File.exist?(Hyrax::DerivativePath.new(file_set.id.to_s, "thumbnail").derivative_path)).to eq true
         solr_doc = Hyrax.index_adapter.connection.get("select", params: { q: "id:#{file_set.id}" })["response"]["docs"].first
@@ -56,22 +58,6 @@ RSpec.describe ValkyrieIngestJob do
 
       expect(Hyrax.custom_queries.find_original_file(file_set: resource))
         .to be_a Hyrax::FileMetadata
-    end
-
-    it 'publishes object.file.uploaded with a FileMetadata' do
-      expect { described_class.perform_now(upload) }
-        .to change { listener.object_file_uploaded.map(&:payload) }
-        .from(be_empty)
-        .to contain_exactly(match(metadata: have_attributes(id: an_instance_of(Valkyrie::ID),
-                                                            original_filename: upload.file.filename)))
-    end
-
-    it 'publishes object.membership.updated for the changed file set' do
-      expect { described_class.perform_now(upload) }
-        .to change { listener.object_membership_updated.map(&:payload) }
-        .from(be_empty)
-        .to contain_exactly(match(object: have_attributes(id: file_set.id),
-                                  user: upload.user))
     end
 
     context 'with a thumbnail added' do
