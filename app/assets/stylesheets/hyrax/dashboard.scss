@@ -129,7 +129,7 @@ body.dashboard {
     .btn-group > .facet-values {
       display: none;
     }
-    .btn-group.open > .facet-values {
+    .btn-group.show > .facet-values.show {
       display: table;
     }
 
