@@ -120,6 +120,11 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/
+      - run:
+          name: Install system dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install imagemagick
       - samvera/install_solr_core:
           solr_config_path: .internal_test_app/solr/conf
       - samvera/install_solr_core:
