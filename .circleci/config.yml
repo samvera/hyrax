@@ -6,13 +6,13 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.8
+        default: 2.7.4
       bundler_version:
         type: string
-        default: 1.17.3
+        default: 2.3.13
       rails_version:
         type: string
-        default: '5.2.6'
+        default: '5.2.8'
     executor:
       name: 'samvera/ruby'
       ruby_version: << parameters.ruby_version >>
@@ -67,13 +67,13 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.8
+        default: 2.7.4
       bundler_version:
         type: string
-        default: 1.17.3
+        default: 2.3.13
       rails_version:
         type: string
-        default: '5.2.6'
+        default: '5.2.8'
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
@@ -101,10 +101,10 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.8
+        default: 2.7.4
       bundler_version:
         type: string
-        default: 1.17.3
+        default: 2.3.13
       hyrax_valkyrie:
         type: string
         default: "false"
@@ -150,58 +150,29 @@ jobs:
             --header 'Content-Type: application/json'
 workflows:
   version: 2
-  ruby2-5-8:
-    jobs:
-      - bundle:
-          ruby_version: "2.5.8"
-          rails_version: "5.2.6"
-      - build:
-          ruby_version: "2.5.8"
-          rails_version: "5.2.6"
-          requires:
-            - bundle
-      - test:
-          name: "ruby2-5-8"
-          ruby_version: "2.5.8"
-          requires:
-            - build
-  ruby2-6-6:
-    jobs:
-      - bundle:
-          ruby_version: "2.6.6"
-          rails_version: "5.2.6"
-      - build:
-          ruby_version: "2.6.6"
-          rails_version: "5.2.6"
-          requires:
-            - bundle
-      - test:
-          name: "ruby2-6-6"
-          ruby_version: "2.6.6"
-          requires:
-            - build
-      - test:
-          name: "ruby2-6-6-valkyrie"
-          ruby_version: "2.6.6"
-          hyrax_valkyrie: "true"
-          requires:
-            - build
   ruby2-7-4:
     jobs:
       - bundle:
           ruby_version: "2.7.4"
-          rails_version: "5.2.6"
-          bundler_version: "2.1.4"
+          rails_version: "5.2.8"
+          bundler_version: "2.3.13"
       - build:
           ruby_version: "2.7.4"
-          rails_version: "5.2.6"
-          bundler_version: "2.1.4"
+          rails_version: "5.2.8"
+          bundler_version: "2.3.13"
           requires:
             - bundle
       - test:
           name: "ruby2-7-4"
           ruby_version: "2.7.4"
-          bundler_version: "2.1.4"
+          bundler_version: "2.3.13"
+          requires:
+            - build
+      - test:
+          name: "ruby2-7-4-valkyrie"
+          ruby_version: "2.7.4"
+          bundler_version: "2.3.13"
+          hyrax_valkyrie: "true"
           requires:
             - build
   nurax-dev_deploy:
