@@ -44,7 +44,7 @@ module Hyrax
     end
 
     def workflows_class
-      'in ' if open
+      'show ' if open
     end
   end
 end
