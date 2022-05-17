@@ -24,7 +24,7 @@ export default class SaveManager {
   }
 
   check_button() {
-    if(this.is_changed && this.save_button.selector.valueOf("data-action") === "*[data-action='save-actions']") {
+    if (this.is_changed) {
       this.save_button.removeClass("disabled")
     } else {
       this.save_button.addClass("disabled")
