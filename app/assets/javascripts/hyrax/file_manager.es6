@@ -5,7 +5,6 @@ export default class FileManager {
   constructor() {
     this.save_manager = this.initialize_save_manager()
     this.sorting()
-    this.save_affix()
     this.member_tracking()
     this.sortable_placeholder()
     this.resource_form()
@@ -17,20 +16,6 @@ export default class FileManager {
 
   sorting() {
     window.new_sort_manager = new SortManager(this.save_manager)
-  }
-
-  save_affix() {
-    let tools = $("#file-manager-tools")
-    if(tools.length > 0) {
-      tools.affix({
-        offset: {
-          top: $("#file-manager-tools .actions").offset().top,
-          bottom: function() {
-            return $("#file-manager-extra-tools").outerHeight(true) + $("footer").outerHeight(true)
-          }
-        }
-      })
-    }
   }
 
   member_tracking() {
