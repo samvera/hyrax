@@ -34,7 +34,7 @@ module Hyrax::User
     scope :without_system_accounts, -> { where("#{::User.user_key_field} not in (?)", [::User.batch_user_key, ::User.audit_user_key, ::User.system_user_key]) }
 
     # Validate and normalize ORCIDs
-    validates_with OrcidValidator
+    validates_with Hyrax::OrcidValidator
     after_validation :normalize_orcid
 
     # Set up user profile avatars
