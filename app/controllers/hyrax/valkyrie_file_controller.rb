@@ -3,7 +3,8 @@ module Hyrax
   class ValkyrieFileController < ApplicationController
     def show
       begin
-        file = storage_adapter.find_by(id: params[:id])
+        metadata = Hyrax.query_service.find_by(id: params[:id])
+        file = storage_adapter.find_by(id: metadata.file_identifier)
       rescue => e
         return render plain: e.message, status: :not_found
       end
