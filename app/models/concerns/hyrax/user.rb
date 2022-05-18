@@ -39,7 +39,7 @@ module Hyrax::User
 
     # Set up user profile avatars
     mount_uploader :avatar, AvatarUploader, mount_on: :avatar_file_name
-    validates_with AvatarValidator
+    validates_with Hyrax::AvatarValidator
 
     # Add token to authenticate Arkivo API calls
     after_initialize :set_arkivo_token, unless: :persisted? if Hyrax.config.arkivo_api?
