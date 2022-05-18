@@ -33,5 +33,5 @@
   position: absolute;
   top: 0.5rem;
   width: auto;
-  z-index: 1005;
+  z-index: 99999; // always display on top
 }
