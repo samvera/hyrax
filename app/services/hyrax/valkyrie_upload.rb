@@ -27,27 +27,22 @@ module Hyrax::ValkyrieUpload
     )
 
     file_metadata = Hyrax::FileMetadata.new(
-      label: filename,
-      original_filename: filename,
-      use: [use],
+      label: File.basename(filename),
+      original_filename: File.basename(filename),
+      type: [use],
       file_set_id: file_set.id,
       file_identifier: streamfile.id
     )
 
-    case use
-    when Hyrax::FileMetadata::Use::ORIGINAL_FILE
+    if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE
       # Set file set label.
       reset_title = file_set.title.first == file_set.label
       # set title to label if that's how it was before this characterization
       file_set.title = file_metadata.original_filename if reset_title
       # always set the label to the original_name
       file_set.label = file_metadata.original_filename
-    when Hyrax::FileMetadata::Use::THUMBNAIL
-      # TODO: the parent work's thumbnail_id remains incorrect (it's set to the
-      # FileSet ID, rather than the ID of this thumbnail FileMetadata; but
-      # trying to update the parent attributes here doesn't seem to stick
-      file_set.thumbnail_id = file_metadata.id
     end
+
     saved_metadata = Hyrax.persister.save(resource: file_metadata)
     Hyrax.publisher.publish("object.file.uploaded", metadata: saved_metadata)
 
