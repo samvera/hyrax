@@ -18,6 +18,7 @@ module Hyrax
     include Hyrax::PermissionLevelsHelper
     include Hyrax::WorkFormHelper
     include Hyrax::WorkflowsHelper
+    include Hyrax::FacetsHelper
 
     ##
     # @return [Array<String>] the list of all user groups
