@@ -126,9 +126,6 @@ body.dashboard {
     margin-bottom: 20px;
     padding: $card-spacer-y $card-spacer-x;
 
-    .btn-group > .facet-values {
-      display: none;
-    }
     .btn-group.open > .facet-values {
       display: table;
     }
