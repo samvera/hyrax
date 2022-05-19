@@ -3,7 +3,7 @@
       class in only necessary for the former and causes display issues in the latter. -%>
   <ul id="<%= facet_field.field.parameterize + '-dropdown-options' %>" class="<%= 'dropdown-menu ' if action_name == 'index' %>facet-values" aria-labelledby="<%= facet_field.field.parameterize %>">
     <% paginator = facet_paginator(facet_field, display_facet) %>
-    <%= render_facet_limit_list paginator, facet_field.key %>
+    <%= render_facet_limit_list(paginator, facet_field.key) %>
 
     <% unless paginator.last_page? || params[:action] == "facet" %>
       <li role="separator" class="dropdown-divider"></li>
