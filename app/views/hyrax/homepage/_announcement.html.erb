@@ -1,5 +1,5 @@
 <% if display_content_block? @announcement_text %>
-  <div id="announcement_text" class="row">
-    <%= displayable_content_block @announcement_text, class: 'row', id: 'announcement', role: 'complementary', 'aria-label': 'announcement-text' %>
+  <div id="announcement_text">
+    <%= displayable_content_block @announcement_text, id: 'announcement', role: 'complementary', 'aria-label': 'announcement-text' %>
   </div>
 <% end %>
