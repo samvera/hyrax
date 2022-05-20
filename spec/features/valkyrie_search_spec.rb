@@ -29,7 +29,7 @@ RSpec.describe 'searching', index_adapter: :solr_index, valkyrie_adapter: :test_
         expect(page).to have_content "Toothbrush"
       end
 
-      click_link "Gallery"
+      find_link("Gallery").click
       expect(page).to have_content "Filtering by: Toothbrush"
       within "#documents" do
         expect(page).to have_content "Toothbrush"
