@@ -38,7 +38,7 @@ module Hyrax::User
     after_validation :normalize_orcid
 
     # Set up user profile avatars
-    mount_uploader :avatar, AvatarUploader, mount_on: :avatar_file_name
+    mount_uploader :avatar, Hyrax::AvatarUploader, mount_on: :avatar_file_name
     validates_with Hyrax::AvatarValidator
 
     # Add token to authenticate Arkivo API calls
