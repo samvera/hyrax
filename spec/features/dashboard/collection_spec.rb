@@ -834,9 +834,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           fill_in('Title', with: new_title)
           fill_in('Description', with: new_description)
           fill_in('Creator', with: creators.first)
-          within('.panel-footer') do
-            click_button('Save changes')
-          end
+          click_button('Save changes')
           # URL: /dashboard/collections/collection-id/edit
           expect(page).not_to have_field('collection_title', with: collection.title.first)
           expect(page).not_to have_field('collection_description', with: collection.description.first)
