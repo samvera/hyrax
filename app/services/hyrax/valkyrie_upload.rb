@@ -26,13 +26,9 @@ module Hyrax::ValkyrieUpload
       resource: file_set
     )
 
-    file_metadata = Hyrax::FileMetadata.new(
-      label: File.basename(filename),
-      original_filename: File.basename(filename),
-      type: [use],
-      file_set_id: file_set.id,
-      file_identifier: streamfile.id
-    )
+    file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: streamfile.id)
+
+    file_metadata.type << use
 
     if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE
       # Set file set label.
