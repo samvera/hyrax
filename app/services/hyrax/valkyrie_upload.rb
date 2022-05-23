@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-module Hyrax::ValkyrieUpload
+class Hyrax::ValkyrieUpload
   # @param [IO] io
   # @param [String] filename
   # @param [Hyrax::FileSet] file_set
+  # @param [Valkyrie::StorageAdapter] storage_adapter
   # @param [RDF::URI] use
   # @param [User] user
   #
@@ -19,15 +20,23 @@ module Hyrax::ValkyrieUpload
     use: Hyrax::FileMetadata::Use::ORIGINAL_FILE,
     user: nil
   )
+    new(storage_adapter: storage_adapter)
+      .upload(filename: filename, file_set: file_set, io: io, use: use, user: user)
+  end
 
-    streamfile = storage_adapter.upload(
-      file: io,
-      original_filename: filename,
-      resource: file_set
-    )
+  ##
+  # @!attribute [r] storage_adapter
+  #   @return [Valkyrie::StorageAdapter] storage_adapter
+  attr_reader :storage_adapter
+  ##
+  # @param [Valkyrie::StorageAdapter] storage_adapter
+  def initialize(storage_adapter: Hyrax.storage_adapter)
+    @storage_adapter = storage_adapter
+  end
 
+  def upload(filename:, file_set:, io:, use: Hyrax::FileMetadata::Use::ORIGINAL_FILE, user: nil)
+    streamfile = storage_adapter.upload(file: io, original_filename: filename, resource: file_set)
     file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: streamfile.id)
-
     file_metadata.type << use
 
     if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE
@@ -57,7 +66,7 @@ module Hyrax::ValkyrieUpload
   # @param [::User] user  the user performing the add
   #
   # @return [Hyrax::FileSet] updated file set
-  def self.add_file_to_file_set(file_set:, file_metadata:, user:)
+  def add_file_to_file_set(file_set:, file_metadata:, user:)
     file_set.file_ids << file_metadata.id
     set_file_use_ids(file_set, file_metadata)
 
@@ -65,12 +74,14 @@ module Hyrax::ValkyrieUpload
     Hyrax.publisher.publish('object.membership.updated', object: file_set, user: user)
   end
 
+  private
+
   # @api private
   # @param [Hyrax::FileSet] file_set the file set to add to
   # @param [Hyrax::FileMetadata] file_metadata the metadata object representing
   #   the file to add
   # @return [void]
-  def self.set_file_use_ids(file_set, file_metadata)
+  def set_file_use_ids(file_set, file_metadata)
     file_metadata.type.each do |type|
       case type
       when Hyrax::FileMetadata::Use::ORIGINAL_FILE
