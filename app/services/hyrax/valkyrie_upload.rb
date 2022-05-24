@@ -36,7 +36,7 @@ class Hyrax::ValkyrieUpload
 
   def upload(filename:, file_set:, io:, use: Hyrax::FileMetadata::Use::ORIGINAL_FILE, user: nil)
     streamfile = storage_adapter.upload(file: io, original_filename: filename, resource: file_set)
-    file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: streamfile.id)
+    file_metadata = Hyrax::FileMetadata(streamfile)
     file_metadata.type << use
 
     if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE
