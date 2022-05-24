@@ -114,6 +114,7 @@ form {
 .collection-types-settings {
 
   .form-inline {
+    display: block;
     label {
       font-weight: bold;
 
@@ -138,6 +139,11 @@ form {
       &::before {
         content: ' ';
       }
+    }
+
+    .form-group .help-block {
+      display: inline;
+      margin: 0 0.5rem 10px;
     }
   }
 }
