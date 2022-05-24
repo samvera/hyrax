@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 module Hyrax
+  ##
+  # Casts a resource to an associated FileMetadata
+  #
+  # @param [Valkyrie::StorageAdapter::File] file
+  #
+  # @return [Hyrax::FileMetadata]
+  # @raise [ArgumentError]
+  def self.FileMetadata(file)
+    raise ArgumentError if file.is_a?(Valkyrie::Resource) # maybe heavy handed?
+
+    Hyrax.custom_queries.find_file_metadata_by(id: file.id)
+  rescue Hyrax::ObjectNotFoundError, Ldp::BadRequest => err
+    Hyrax.logger.debug('Could not find an existing metadata node for file ' \
+                       "with id #{file.id}. Initializing a new one")
+
+    FileMetadata.new(file_identifier: file.id)
+  end
+
   class FileMetadata < Valkyrie::Resource
     # Include mime-types for Hydra Derivatives mime-type checking. We may want
     # to move this logic someday.
