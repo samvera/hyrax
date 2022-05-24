@@ -29,9 +29,8 @@
             APPLY TO NEW WORKS
           </label>
         </div>
-        </div>
-        <p class="form-text"><%= t('simple_form.hints.collection_type.share_applies_to_new_works') %></p>
       </div>
+      <p class="form-text"><%= t('simple_form.hints.collection_type.share_applies_to_new_works') %></p>
     </div>
     <p><%= f.input :allow_multiple_membership, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
     <p><%= f.input :require_membership, as: :boolean, disabled: true %></p>
