@@ -61,8 +61,8 @@ body.dashboard {
     border-top: 2px solid transparent;
   }
 
-  .nav-tabs > li.active > a,
-  .nav-tabs > li.active > a:hover {
+  .nav-tabs > li.nav-item > a.active,
+  .nav-tabs > li.nav-item > a:hover {
     border-top: 2px solid $tab-active-accent-color;
   }
 
