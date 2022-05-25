@@ -43,6 +43,28 @@ form {
   .form-group {
     align-items: center;
 
+    > div {
+      width: 100%;
+      padding: 0 15px;
+
+      > .row {
+        margin: 0;
+
+        > div > .select2-container {
+          width: 100%;
+
+          > .select2-choice {
+            height: 100%;
+            > .select2-chosen {
+              height: 100%;
+              padding-top: 0.5rem;
+              padding-left: 0.5rem;
+            }
+          }
+        }
+      }
+    }
+
     > label {
       text-align: left;
 
