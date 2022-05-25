@@ -51,7 +51,9 @@ export class UserControls {
   }
 
   userName() {
-    return this.userField.val()
+    if (this.userField.select2('data')) {
+      return this.userField.select2('data').text
+    }
   }
 
   addError(message) {
