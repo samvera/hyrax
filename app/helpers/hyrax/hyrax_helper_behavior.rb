@@ -314,7 +314,7 @@ module Hyrax
     def count_classes_for(unread_count)
       classes = unread_count.zero? ? 'invisible badge-secondary' : 'badge-danger'
 
-      "count label #{classes}"
+      "count badge #{classes}"
     end
 
     def search_action_for_dashboard
