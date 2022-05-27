@@ -79,7 +79,7 @@ module Valkyrie
                    end
 
           # if any configuration is missing, derive it from Blacklight
-          config = blacklight_based_config.merge(config)
+          config = blacklight_based_config.with_indifferent_access.merge(config)
 
           "http://#{config['host']}:#{config['port']}/solr/#{config['core']}"
         end
