@@ -133,6 +133,9 @@ jobs:
             google-chrome --version
             chromedriver --version
           name: Check Chrome install
+      - run:
+          name: Yarn install
+          command: yarn install
       - samvera/install_solr_core:
           solr_config_path: .internal_test_app/solr/conf
       - samvera/install_solr_core:
