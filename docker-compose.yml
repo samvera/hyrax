@@ -6,7 +6,7 @@ services:
       context: .
       target: hyrax-engine-dev
       args:
-        - EXTRA_APK_PACKAGES=git less
+        - EXTRA_APK_PACKAGES=git less chromium
     image: ghcr.io/samvera/dassie
     command: sh -l -c 'bundle && bundle exec puma -v -b tcp://0.0.0.0:3000'
     stdin_open: true
@@ -27,6 +27,7 @@ services:
       - solr
     ports:
       - 3000:3000
+      - 9876:9876
     volumes:
       - .dassie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
