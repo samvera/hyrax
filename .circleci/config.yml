@@ -163,14 +163,14 @@ jobs:
             --header 'Content-Type: application/json'
 workflows:
   version: 2
-  ruby2-7-4:
+  ruby2-7-6:
     jobs:
       - bundle:
           ruby_version: "2.7.6"
           rails_version: "5.2.8"
           bundler_version: "2.3.13"
       - build:
-          ruby_version: "2.7.4"
+          ruby_version: "2.7.6"
           rails_version: "5.2.8"
           bundler_version: "2.3.13"
           requires:
