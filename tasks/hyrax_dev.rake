@@ -34,6 +34,38 @@ task :i18n_sorter do
   end
 end
 
+Rake::Task["engine_cart:generate"].clear
+
+namespace :engine_cart do
+  desc "Create the test rails app"
+  task generate: [:setup] do
+    if EngineCart.fingerprint_expired?
+
+      # Create a new test rails app
+      Rake::Task['engine_cart:create_test_rails_app'].invoke
+      Rake::Task['engine_cart:inject_gemfile_extras'].invoke
+
+      # Copy our test app generators into the app and prepare it
+      Bundler.clean_system "cp -r #{EngineCart.templates_path}/lib/generators #{EngineCart.destination}/lib" if File.exist? "#{EngineCart.templates_path}/lib/generators"
+
+      within_test_app do
+        unless (system("bundle install --quiet") || system("bundle update --quiet")) &&
+               system("(bundle exec rails g | grep test_app) && bundle exec rails generate test_app") &&
+               system("bundle exec rake db:migrate") &&
+               system("bundle exec rake db:test:prepare")
+          raise "EngineCart failed on with: #{$CHILD_STATUS}"
+        end
+      end
+
+      Bundler.clean_system "bundle install --quiet"
+
+      EngineCart.write_fingerprint
+
+      puts "Done generating test app"
+    end
+  end
+end
+
 if Gem.loaded_specs.key? 'engine_cart'
   namespace :engine_cart do
     # This generate task should only add its action to an existing engine_cart:generate task
