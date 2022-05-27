@@ -10,6 +10,7 @@ describe("VisibilityComponent", function() {
     var fixture = setFixtures(visibilityForm(''));
     element = fixture.find('.visibility');
     form = element.closest('form');
+    form.on("submit", function (e) { e.preventDefault(); });
     admin_set = new AdminSetWidget(fixture.find('select'));
     target = new VisibilityComponent(element, admin_set);
   });
