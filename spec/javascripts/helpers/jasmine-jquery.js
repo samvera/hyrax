@@ -836,3 +836,5 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     return jasmine.getJSONFixtures().proxyCallTo_('read', arguments)[url]
   }
 }));
+
+jasmine.getFixtures().fixturesPath = 'base/spec/javascripts/fixtures/';
