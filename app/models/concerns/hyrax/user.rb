@@ -34,12 +34,12 @@ module Hyrax::User
     scope :without_system_accounts, -> { where("#{::User.user_key_field} not in (?)", [::User.batch_user_key, ::User.audit_user_key, ::User.system_user_key]) }
 
     # Validate and normalize ORCIDs
-    validates_with OrcidValidator
+    validates_with Hyrax::OrcidValidator
     after_validation :normalize_orcid
 
     # Set up user profile avatars
-    mount_uploader :avatar, AvatarUploader, mount_on: :avatar_file_name
-    validates_with AvatarValidator
+    mount_uploader :avatar, Hyrax::AvatarUploader, mount_on: :avatar_file_name
+    validates_with Hyrax::AvatarValidator
 
     # Add token to authenticate Arkivo API calls
     after_initialize :set_arkivo_token, unless: :persisted? if Hyrax.config.arkivo_api?
