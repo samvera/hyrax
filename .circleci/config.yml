@@ -7,7 +7,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.7.4
+        default: 2.7.6
       bundler_version:
         type: string
         default: 2.3.13
@@ -68,7 +68,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.7.4
+        default: 2.7.6
       bundler_version:
         type: string
         default: 2.3.13
@@ -102,7 +102,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.7.4
+        default: 2.7.6
       bundler_version:
         type: string
         default: 2.3.13
@@ -166,7 +166,7 @@ workflows:
   ruby2-7-4:
     jobs:
       - bundle:
-          ruby_version: "2.7.4"
+          ruby_version: "2.7.6"
           rails_version: "5.2.8"
           bundler_version: "2.3.13"
       - build:
@@ -176,14 +176,14 @@ workflows:
           requires:
             - bundle
       - test:
-          name: "ruby2-7-4"
-          ruby_version: "2.7.4"
+          name: "ruby2-7-6"
+          ruby_version: "2.7.6"
           bundler_version: "2.3.13"
           requires:
             - build
       - test:
-          name: "ruby2-7-4-valkyrie"
-          ruby_version: "2.7.4"
+          name: "ruby2-7-6-valkyrie"
+          ruby_version: "2.7.6"
           bundler_version: "2.3.13"
           hyrax_valkyrie: "true"
           requires:
