@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::IIIFAuthorizationService do
+RSpec.describe Hyrax::IiifAuthorizationService do
   let(:user) { create(:user) }
   let(:ability) { Ability.new(user) }
   let(:controller) { double(current_ability: ability) }

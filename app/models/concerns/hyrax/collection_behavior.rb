@@ -18,7 +18,7 @@ module Hyrax
 
       self.indexer = Hyrax::CollectionIndexer
 
-      class_attribute :index_collection_type_gid_as, writer: false
+      class_attribute :index_collection_type_gid_as, instance_writer: false
       self.index_collection_type_gid_as = [:symbol]
 
       property :collection_type_gid, predicate: ::RDF::Vocab::SCHEMA.additionalType, multiple: false do |index|
