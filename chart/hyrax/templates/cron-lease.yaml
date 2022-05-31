@@ -11,6 +11,11 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+        {{- with .Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
         spec:
           containers:
           - name: lease-release
