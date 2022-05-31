@@ -37,7 +37,7 @@ RSpec.describe HyraxHelper, type: :helper do
       it 'renders with label-danger and is visible' do
         expect(subject).to eq '<a aria-label="Foobar" class="notify-number nav-link" href="/notifications"><span class="fa fa-bell"></span>' \
                               "\n" \
-                              '<span class="count label badge-danger">10</span></a>'
+                              '<span class="count badge badge-danger">10</span></a>'
       end
     end
 
@@ -47,7 +47,7 @@ RSpec.describe HyraxHelper, type: :helper do
       it 'renders with label-default and is invisible' do
         expect(subject).to eq '<a aria-label="Foobar" class="notify-number nav-link" href="/notifications"><span class="fa fa-bell"></span>' \
                               "\n" \
-                              '<span class="count label invisible badge-secondary">0</span></a>'
+                              '<span class="count badge invisible badge-secondary">0</span></a>'
       end
     end
   end
