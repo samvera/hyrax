@@ -188,7 +188,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
           expect(response).to be_successful
           expect(response.body).to eq "ttl graph"
-          expect(response.content_type).to eq 'text/turtle'
+          expect(response.media_type).to eq 'text/turtle'
         end
       end
     end
