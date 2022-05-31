@@ -8,7 +8,7 @@ module Hyrax
   # @attr_reader [FileSet] file_set file that will be examined to generate the CSVs
   # @attr_reader [Array] terms list of terms that will be output in CSV form
   # @attr_reader [String] multi_value_separator separator for terms that have more than one value
-  class FileSetCSVService
+  class FileSetCsvService
     attr_reader :file_set, :terms, :multi_value_separator
 
     # @param [SolrDocument] file solr document that will be examined to generate the CSVs
