@@ -38,8 +38,6 @@ module Hyrax
       )
     end
 
-    private
-
     # The filepath will look something like
     # /app/samvera/hyrax-webapp/derivatives/95/93/tv/12/3-thumbnail.jpeg and
     # we want to extract the FileSet id, which in this case would be 9593tv123
@@ -56,7 +54,7 @@ module Hyrax
     end
 
     def self.filename(directives)
-      path = URI(directives.fetch(:url)).path.split('/').last
+      URI(directives.fetch(:url)).path.split('/').last
     end
   end
 end
