@@ -100,7 +100,7 @@ RSpec.describe Hyrax::DownloadsController do
               expect(response.headers["Content-Length"]).to eq '4218'
               expect(response.headers['Accept-Ranges']).to eq 'bytes'
               expect(response.headers['Content-Type']).to start_with "image/png"
-              expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"world.png\""
+              expect(response.headers["Content-Disposition"]).to include "inline; filename=\"world.png\""
               expect(response.body).to eq content
               expect(response.status).to eq 206
             end
