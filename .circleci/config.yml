@@ -67,10 +67,10 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.8
+        default: 2.7.4
       bundler_version:
         type: string
-        default: 1.17.3
+        default: 2.2.27
       rails_version:
         type: string
         default: 6.0.5
