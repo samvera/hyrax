@@ -9,7 +9,7 @@ jobs:
         default: 2.5.8
       bundler_version:
         type: string
-        default: 1.17.3
+        default: 2.2.27
       rails_version:
         type: string
         default: 6.0.5
@@ -104,7 +104,7 @@ jobs:
         default: 2.5.8
       bundler_version:
         type: string
-        default: 1.17.3
+        default: 2.2.27
       hyrax_valkyrie:
         type: string
         default: "false"
@@ -191,17 +191,17 @@ workflows:
       - bundle:
           ruby_version: "2.7.4"
           rails_version: "6.0.5"
-          bundler_version: "2.1.4"
+          bundler_version: "2.2.27"
       - build:
           ruby_version: "2.7.4"
           rails_version: "6.0.5"
-          bundler_version: "2.1.4"
+          bundler_version: "2.2.27"
           requires:
             - bundle
       - test:
           name: "ruby2-7-4"
           ruby_version: "2.7.4"
-          bundler_version: "2.1.4"
+          bundler_version: "2.2.27"
           requires:
             - build
   nurax-dev_deploy:
