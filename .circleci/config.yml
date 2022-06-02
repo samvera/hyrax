@@ -9,7 +9,7 @@ jobs:
         default: 2.5.8
       bundler_version:
         type: string
-        default: 2.1.4
+        default: 1.17.3
       rails_version:
         type: string
         default: 6.0.5
@@ -104,7 +104,7 @@ jobs:
         default: 2.5.8
       bundler_version:
         type: string
-        default: 2.1.4
+        default: 1.17.3
       hyrax_valkyrie:
         type: string
         default: "false"
