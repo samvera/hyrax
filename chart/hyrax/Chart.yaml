@@ -2,7 +2,7 @@ apiVersion: v2
 name: hyrax
 description: An open-source, Samvera-powered digital repository system
 type: application
-version: 1.4.0
+version: 1.4.1
 appVersion: 3.3.0
 dependencies:
   - name: fcrepo
@@ -11,23 +11,23 @@ dependencies:
     condition: fcrepo.enabled
   - name: memcached
     version: 4.2.21
-    repository: https://charts.bitnami.com/bitnami
+    repository: https://raw.githubusercontent.com/bitnami/charts/defb094c658024e4aa8245622dab202874880cbc/bitnami
     condition: memcached.enabled
   - name: minio
     version: 6.7.2
-    repository: https://charts.bitnami.com/bitnami
+    repository: https://raw.githubusercontent.com/bitnami/charts/defb094c658024e4aa8245622dab202874880cbc/bitnami
     condition: minio.enabled
   - name: postgresql
     version: 10.3.13
-    repository: https://charts.bitnami.com/bitnami
+    repository: https://raw.githubusercontent.com/bitnami/charts/defb094c658024e4aa8245622dab202874880cbc/bitnami
     condition: postgresql.enabled
   - name: redis
     version: 10.7.16
-    repository: https://charts.bitnami.com/bitnami
+    repository: https://raw.githubusercontent.com/bitnami/charts/defb094c658024e4aa8245622dab202874880cbc/bitnami
     condition: redis.enabled
   - name: solr
     version: 1.0.1
-    repository: https://charts.bitnami.com/bitnami
+    repository: https://raw.githubusercontent.com/bitnami/charts/defb094c658024e4aa8245622dab202874880cbc/bitnami
     condition: solr.enabled
   - name: nginx
     version: 9.8.0
