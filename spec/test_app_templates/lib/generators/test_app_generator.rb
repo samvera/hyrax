@@ -198,7 +198,7 @@ YAML
   end
 
   def install_universal_viewer
-    raise '`yarn install` failed!' unless system('./bin/yarn install')
+    # raise '`yarn install` failed!' unless system('./bin/yarn install')
   end
 
   def create_sample_metadata_configuration
