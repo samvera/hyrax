@@ -81,7 +81,7 @@ jobs:
     environment:
       RAILS_VERSION: << parameters.rails_version >>
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
-      ENGINE_CART_RAILS_OPTIONS: --database=postgresql --skip-git --skip-bundle --skip-listen --skip-spring --skip-keeps --skip-test --skip-bootsnap
+      ENGINE_CART_RAILS_OPTIONS: --database=postgresql --skip-git --skip-bundle --skip-listen --skip-spring --skip-keeps --skip-test --skip-bootsnap --skip-webpacker
       DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test # Hard-coded with data from CircleCI orb, related to https://github.com/samvera-labs/samvera-circleci-orb/issues/42
     steps:
       - attach_workspace:
