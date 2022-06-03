@@ -88,7 +88,7 @@ SUMMARY
   spec.add_development_dependency "capybara", '~> 3.29'
   spec.add_development_dependency 'capybara-screenshot', '~> 1.0'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
-  spec.add_development_dependency 'engine_cart', '~> 2.2'
+  spec.add_development_dependency 'engine_cart', '~> 2.3.0'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "factory_bot", '~> 4.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
