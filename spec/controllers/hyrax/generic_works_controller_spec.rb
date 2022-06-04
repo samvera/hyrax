@@ -188,7 +188,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
           expect(response).to be_successful
           expect(response.body).to eq "ttl graph"
-          expect(response.content_type).to eq 'text/turtle'
+          expect(response.content_type).to eq "text/turtle; charset=utf-8"
         end
       end
     end

@@ -195,7 +195,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
           post :create, params: { collection: collection_attrs, format: :json }
 
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.content_type).to eq "application/json"
+          expect(response.content_type).to eq "application/json; charset=utf-8"
 
           json_response = JSON.parse(response.body)
           expect(json_response["code"]).to eq 422
@@ -231,7 +231,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
           post :create, params: { collection: collection_attrs, format: :json }
 
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.content_type).to eq "application/json"
+          expect(response.content_type).to eq "application/json; charset=utf-8"
 
           json_response = JSON.parse(response.body)
           expect(json_response["code"]).to eq 422
@@ -416,7 +416,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
             format: :json
           }
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.content_type).to eq "application/json"
+          expect(response.content_type).to eq "application/json; charset=utf-8"
 
           json_response = JSON.parse(response.body)
           expect(json_response["code"]).to eq 422
@@ -452,7 +452,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
             format: :json
           }
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.content_type).to eq "application/json"
+          expect(response.content_type).to eq "application/json; charset=utf-8"
 
           json_response = JSON.parse(response.body)
           expect(json_response["code"]).to eq 422
