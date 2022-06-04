@@ -116,5 +116,5 @@ SUMMARY
   #
   # Pin sass-rails to 5.x because rails 5.x apps have this same dependency in their generated Gemfiles
   # See https://github.com/samvera/hyrax/issues/3919
-  spec.add_dependency 'sass-rails', '~> 5.0'
+  spec.add_dependency 'sass-rails', '~> 6.0'
 end
