@@ -32,19 +32,19 @@ module Hyrax
     end
 
     def stored_and_facetable_index_config
-      stored_and_facetable_fields.each_with_object({}) do |name, hash|
+      stored_and_facetable_fields.index_with({}) do |name, hash|
         hash[name] = index_object_for(name, as: [:stored_searchable, :facetable])
       end
     end
 
     def stored_searchable_index_config
-      stored_fields.each_with_object({}) do |name, hash|
+      stored_fields.index_with({}) do |name, hash|
         hash[name] = index_object_for(name, as: [:stored_searchable])
       end
     end
 
     def symbol_index_config
-      symbol_fields.each_with_object({}) do |name, hash|
+      symbol_fields.index_with({}) do |name, hash|
         hash[name] = index_object_for(name, as: [:symbol])
       end
     end
