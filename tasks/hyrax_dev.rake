@@ -51,6 +51,8 @@ namespace :engine_cart do
       within_test_app do
         unless (system("bundle install --quiet") || system("bundle update --quiet")) &&
                system("(bundle exec rails g | grep test_app) && bundle exec rails generate test_app") &&
+               system("yarn install") &&
+               system("rails assets:precompile") &&
                system("bundle exec rake db:migrate") &&
                system("bundle exec rake db:test:prepare")
           raise "EngineCart failed on with: #{$CHILD_STATUS}"
