@@ -117,8 +117,7 @@ module Hyrax
       app.config.assets.paths << config.root.join('app', 'assets', 'images', 'blacklight')
       app.config.assets.paths << config.root.join('app', 'assets', 'images', 'hydra')
       app.config.assets.paths << config.root.join('app', 'assets', 'images', 'site_images')
-
-      app.config.assets.precompile << /fontawesome-webfont\.(?:svg|ttf|woff)$/
+      app.config.assets.precompile += ['fontawesome-webfont.svg', 'fontawesome-webfont.ttf', 'fontawesome-webfont.woff']
       app.config.assets.precompile += %w[*.png *.jpg *.ico *.gif *.svg]
 
       Sprockets::ES6.configuration = { 'modules' => 'amd', 'moduleIds' => true }
