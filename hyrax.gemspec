@@ -84,6 +84,7 @@ SUMMARY
   spec.add_dependency 'tinymce-rails', '~> 5.10'
   spec.add_dependency 'valkyrie', '~> 2', '>= 2.1.1'
   spec.add_dependency 'babel-transpiler'
+  spec.add_dependency 'sprockets-rails', '~> 2.3.3'
 
   spec.add_development_dependency "capybara", '~> 3.29'
   spec.add_development_dependency 'capybara-screenshot', '~> 1.0'
