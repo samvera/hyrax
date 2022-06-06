@@ -209,3 +209,17 @@ body.dashboard {
     margin-bottom: 5px;
   }
 }
+
+#discovery .panel .panel-body {
+  > .set-access-controls .form-group label {
+    display: block;
+    text-align: left !important;
+
+    > input {
+      position: absolute;
+      margin-left: -1.25rem;
+      margin-top: 0.25rem;
+    }
+  }
+  padding: 1rem;
+}
