@@ -223,3 +223,42 @@ body.dashboard {
   }
   padding: 1rem;
 }
+
+.dropdown-item {
+  padding: 0 0;
+  display: list-item;
+
+  > .facet-values {
+    display: table;
+    table-layout: fixed;
+
+    > .facet-label {
+      display: table-cell;
+      hyphens: auto;
+      text-indent: -0.938rem;
+    }
+
+    > .facet-count {
+      display: table-cell;
+      text-align: right;
+    }
+  }
+}
+
+ul#visibility_ssi-dropdown-options {
+  table-layout: fixed;
+
+  > li {
+    display: table-row;
+
+    > .facet-label {
+      display: table-cell;
+      hyphens: auto;
+    }
+
+    > .facet-count {
+      display: table-cell;
+      text-align: right;
+    }
+  }
+}
