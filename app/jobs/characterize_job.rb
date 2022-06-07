@@ -62,7 +62,7 @@ class CharacterizeJob < Hyrax::ApplicationJob
     file_set.date_modified = Hyrax::TimeService.time_in_utc if file_set.characterization_proxy.original_checksum.first != previous_checksum
 
     # set title to label if that's how it was before this characterization
-    file_set.title = [file_set.characterization_proxy.original_name] if reset_title
+    file_set.title = [file_set.characterization_proxy.original_name.force_encoding("UTF-8")] if reset_title
     # always set the label to the original_name
     file_set.label = file_set.characterization_proxy.original_name
 
