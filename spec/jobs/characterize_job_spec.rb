@@ -92,12 +92,13 @@ RSpec.describe CharacterizeJob, :clean_repo do
         allow(file_set).to receive(:characterization_proxy).and_call_original
       end
 
-      context 'title and label were the previously the same' do
+      context 'title and label were previously the same' do
         let(:title) { ['old_filename.jpg'] }
         let(:label) { 'old_filename.jpg' }
 
         before do
-          allow(file_set).to receive_message_chain(:characterization_proxy, :original_name).and_return('new_filename.jpg') # rubocop:disable RSpec/MessageChain
+          allow(file_set).to receive_message_chain(:characterization_proxy, :original_name)
+            .and_return(String.new('new_filename.jpg', encoding: 'ASCII-8BIT')) # rubocop:disable RSpec/MessageChain
         end
 
         it 'sets title to label' do
@@ -107,14 +108,33 @@ RSpec.describe CharacterizeJob, :clean_repo do
           expect(file_set.title).to eq ['new_filename.jpg']
           expect(file_set.label).to eq 'new_filename.jpg'
         end
+
+        # https://github.com/samvera/hyrax/issues/5671
+        context 'original_name, which has encoding set to ASCII-8BIT, contains non-ASCII characters' do
+          before do
+            allow(file_set).to receive_message_chain(:characterization_proxy, :original_name)
+              .and_return(String.new('ファイル.txt', encoding: 'ASCII-8BIT')) # rubocop:disable RSpec/MessageChain
+          end
+
+          it 'does not raise an error, and still sets title to label' do
+            expect(file).to receive(:save!)
+            expect(file_set).to receive(:update_index)
+            expect { described_class.perform_now(file_set, file.id) }
+              .not_to raise_error(Encoding::UndefinedConversionError, '"\xE3" from ASCII-8BIT to UTF-8')
+            expect(file_set.title).to eq ['ファイル.txt']
+            expect(file_set.label).to eq 'ファイル.txt'
+          end
+        end
       end
 
       context 'title and label were not previously the same' do
         let(:title) { ['My User-Entered Title'] }
         let(:label) { 'old_filename.jpg' }
+        let(:original_name) { 'new_filename.jpg' }
 
         before do
-          allow(file_set).to receive_message_chain(:characterization_proxy, :original_name).and_return('new_filename.jpg') # rubocop:disable RSpec/MessageChain
+          allow(file_set).to receive_message_chain(:characterization_proxy, :original_name)
+            .and_return(String.new('new_filename.jpg', encoding: 'ASCII-8BIT')) # rubocop:disable RSpec/MessageChain
         end
 
         it 'assumes a user-entered title value and leaves title as-is' do
