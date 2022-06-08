@@ -18,11 +18,8 @@ class Hyrax::AssetsGenerator < Rails::Generators::Base
 
   def inject_js
     return if hyrax_javascript_installed?
-    insert_into_file 'app/assets/javascripts/application.js', after: '//= require_tree .' do
-      <<-JS.strip_heredoc
-
-        //= require hyrax
-      JS
+    insert_into_file 'app/assets/javascripts/application.js', after: "//= require blacklight/blacklight\n" do
+      "//= require hyrax\n" \
     end
   end
 
