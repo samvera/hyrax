@@ -132,6 +132,9 @@ RSpec.describe "work show view" do
       expect(page).to have_content collection.title.first
       expect(page).to have_content work.title.first
       expect(page).to have_selector '.alert-success', text: 'Collection was successfully updated.'
+
+      visit work_path
+      expect(page).to have_selector 'a', text: collection.title.first, count: 1
     end
   end
 
