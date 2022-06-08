@@ -34,6 +34,54 @@ task :i18n_sorter do
   end
 end
 
+Rake::Task["engine_cart:create_test_rails_app"].clear
+
+namespace :engine_cart do
+  task create_test_rails_app: [:setup] do
+    require 'tmpdir'
+    require 'fileutils'
+    Dir.mktmpdir do |dir|
+      # Fork into a new process to avoid polluting the current one with the partial Rails environment ...
+      pid = fork do
+        Dir.chdir dir do
+          require 'rails/generators'
+          require 'rails/generators/rails/app/app_generator'
+
+          # Clear out our current bundle so that the rails generator can run with it's own bundle
+          backup_gemfile = ENV['BUNDLE_GEMFILE']
+          ENV.delete('BUNDLE_GEMFILE')
+
+          # Using the Rails generator directly, instead of shelling out, to
+          # ensure we use the right version of Rails.
+          Rails::Generators::AppGenerator.start([
+            'internal',
+            '--skip-git',
+            '--skip-keeps',
+            '--skip_spring',
+            '--skip-bootsnap',
+            '--skip-listen',
+            '--skip-test',
+            '--skip-javascript',
+            *EngineCart.rails_options,
+            ("-m #{EngineCart.template}" if EngineCart.template)
+          ].compact)
+
+          # Restore our gemfile
+          ENV['BUNDLE_GEMFILE'] = backup_gemfile
+        end
+        exit 0
+      end
+
+      # ... and then wait for it to catch up.
+      _, status = Process.waitpid2 pid
+      exit status.exitstatus unless status.success?
+
+      Rake::Task['engine_cart:clean'].invoke if File.exist? EngineCart.destination
+      FileUtils.move "#{dir}/internal", EngineCart.destination.to_s
+    end
+  end
+end
+
 Rake::Task["engine_cart:generate"].clear
 
 namespace :engine_cart do
