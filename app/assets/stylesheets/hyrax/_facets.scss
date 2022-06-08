@@ -10,3 +10,27 @@
 .facet-label .facet_select, .selected, .facet-label .remove {
     margin-right: 0.5rem;
 }
+
+ul.facet-values.list-unstyled {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+
+    > li {
+        display: table-row;
+
+        > .facet-label {
+            display: table-cell;
+            hyphens: auto;
+            padding: 0 0.875rem 0.375rem 0.875rem;
+            text-indent: -0.938rem;
+
+            > a.facet_select { margin-right: unset;}
+        }
+
+        > .facet-count {
+            display: table-cell;
+            text-align: right;
+        }
+    }
+}
