@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   samvera: samvera/circleci-orb@0
-  docker-buildx: sensu/docker-buildx@1.1.1
+  buildx: sensu/docker-buildx@1.1.1
 jobs:
   bundle:
     parameters:
@@ -150,10 +150,14 @@ jobs:
             --header 'Accept: text/plain'    \
             --header 'Content-Type: application/json'
   publish:
+    executor:
+      name: docker/machine
+      image: "ubuntu-2004:202101-01"
+      dlc: true
     steps:
       - attach_workspace:
           at: ~/
-      - docker-buildx/install
+      - buildx/install
       - run:
           name: Enable additional Docker features
           command: |
