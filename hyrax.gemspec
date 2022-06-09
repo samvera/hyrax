@@ -84,6 +84,7 @@ SUMMARY
   spec.add_dependency 'tinymce-rails', '~> 5.10'
   spec.add_dependency 'valkyrie', '~> 2', '>= 2.1.1'
   spec.add_dependency 'sprockets', '~> 3.7'
+  spec.add_dependency 'sass-rails', '~> 6.0'
 
   spec.add_development_dependency "capybara", '~> 3.29'
   spec.add_development_dependency 'capybara-screenshot', '~> 1.0'
@@ -111,11 +112,4 @@ SUMMARY
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'webdrivers', '~> 4.4'
   spec.add_development_dependency 'webmock'
-
-  ########################################################
-  # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
-  #
-  # Pin sass-rails to 5.x because rails 5.x apps have this same dependency in their generated Gemfiles
-  # See https://github.com/samvera/hyrax/issues/3919
-  spec.add_dependency 'sass-rails', '~> 6.0'
 end

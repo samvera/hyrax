@@ -151,8 +151,8 @@ RSpec.describe Hyrax::CollectionsHelper do
       form = doc.xpath('//form').first
       expect(form.attr('action')).to eq hyrax.dashboard_collection_path(collection)
       i = form.xpath('.//input')[2]
-      expect(i.attr('value')).to eq("remove")
-      expect(i.attr('name')).to eq("collection[members]")
+      expect(i.attr('value')).to eq("Remove From Collection")
+      expect(i.attr('name')).to eq("commit")
     end
 
     it "creates a button with my text" do
