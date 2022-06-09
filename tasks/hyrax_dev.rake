@@ -34,6 +34,8 @@ task :i18n_sorter do
   end
 end
 
+# rubocop:disable Metrics/BlockLength
+
 Rake::Task["engine_cart:create_test_rails_app"].clear
 
 namespace :engine_cart do
@@ -133,6 +135,8 @@ if Gem.loaded_specs.key? 'engine_cart'
     end
   end
 end
+
+# rubocop:enable Metrics/BlockLength
 
 desc 'Generate the engine_cart and spin up test servers and run specs'
 task ci: ['rubocop', 'engine_cart:generate'] do
