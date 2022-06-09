@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   samvera: samvera/circleci-orb@0
+  docker: circleci/docker@1.4.0
   buildx: sensu/docker-buildx@1.1.1
 jobs:
   bundle:
