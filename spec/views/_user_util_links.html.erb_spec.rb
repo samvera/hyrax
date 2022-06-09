@@ -19,7 +19,7 @@ RSpec.describe '/_user_util_links.html.erb', type: :view do
 
     it 'shows the number of outstanding messages' do
       expect(rendered).to have_selector "a[aria-label='You have no unread notifications'][href='#{hyrax.notifications_path}']"
-      expect(rendered).to have_selector 'a.notify-number.nav-link span.count.label.invisible.badge-secondary', text: '0'
+      expect(rendered).to have_selector 'a.notify-number.nav-link span.count.badge.invisible.badge-secondary', text: '0'
     end
   end
 
