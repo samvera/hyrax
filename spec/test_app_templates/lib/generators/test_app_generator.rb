@@ -5,6 +5,14 @@ class TestAppGenerator < Rails::Generators::Base
   # so the following path gets us to /path/to/hyrax/spec/test_app_templates/
   source_root File.expand_path('../../../../spec/test_app_templates/', __FILE__)
 
+  def install_turbolinks
+    gem 'turbolinks', '~> 5'
+
+    Bundler.with_clean_env do
+      run "bundle install"
+    end
+  end
+
   def install_engine
     generate 'hyrax:install', '-f'
   end
@@ -198,7 +206,7 @@ YAML
   end
 
   def install_universal_viewer
-    raise '`yarn install` failed!' unless system('./bin/yarn install')
+    raise '`yarn install` failed!' unless system('yarn install')
   end
 
   def create_sample_metadata_configuration
