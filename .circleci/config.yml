@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   samvera: samvera/circleci-orb@0
+  docker-buildx: sensu/docker-buildx@1.1.1
 jobs:
   bundle:
     parameters:
@@ -148,6 +149,27 @@ jobs:
             --header "Circle-Token: $NURAX_CIRCLECI_TOKEN" \
             --header 'Accept: text/plain'    \
             --header 'Content-Type: application/json'
+  publish:
+    steps:
+      - attach_workspace:
+          at: ~/
+      - docker-buildx/install
+      - run:
+          name: Enable additional Docker features
+          command: |
+            echo 'export DOCKER_BUILDKIT=1' >> $BASH_ENV && \
+            echo 'export COMPOSE_DOCKER_CLI_BUILD=1' >> $BASH_ENV
+      - run:
+          name: Build Images
+          command: |
+            docker buildx bake -f docker-compose.yml --set \*.platform=linux/arm64,linux/amd64%
+      - run:
+          name: Push Images
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login ghcr.io -u "$DOCKERHUB_USERNAME" --password-stdin && \
+            export SHORT_SHA=`git rev-parse --short=8 HEAD` && \
+            docker tag ghcr.io/samvera/dassie:latest ghcr.io/samvera/dassie:$SHORT_SHA
+            docker push ghcr.io/samvera/dassie:$SHORT_SHA
 workflows:
   version: 2
   ruby2-5-8:
@@ -211,3 +233,11 @@ workflows:
             branches:
               only:
                 - main
+  publish_dassie_images:
+    jobs:
+      - publish:
+          filters:
+            branches:
+              only:
+                - main
+                - publish_or_parish
