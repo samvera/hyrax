@@ -13,7 +13,9 @@ RSpec.describe 'catalog/_index_list_default', type: :view do
   end
   let(:document) { SolrDocument.new(attributes) }
 
-  it "displays metadata" do
+  it "displays metadata" do # rubocop:disable RSpec/AnyInstance
+    allow_any_instance_of(Blacklight::Rendering::LinkToFacet)
+      .to receive(:search_path).with(any_args).and_return('http://example.com')
     render 'catalog/index_list_default', document: document
 
     expect(rendered).not_to include 'Title:'
@@ -29,5 +31,5 @@ RSpec.describe 'catalog/_index_list_default', type: :view do
     expect(rendered).to include 'Test depositor_tesim'
     expect(rendered).to include 'Embargo release date:'
     expect(rendered).to include 'Lease expiration date:'
-  end
+  end # rubocop:enable RSpec/AnyInstance
 end
