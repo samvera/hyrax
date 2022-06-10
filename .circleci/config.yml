@@ -241,6 +241,8 @@ workflows:
   publish_dassie_images:
     jobs:
       - publish:
+          requires:
+            - build
           filters:
             branches:
               only:
