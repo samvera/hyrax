@@ -167,11 +167,11 @@ jobs:
       - run:
           name: Build Images
           command: |
-            docker buildx bake -f docker-compose.yml --set \*.platform=linux/arm64,linux/amd64%
+            docker buildx bake -f docker-compose.yml --set \*.platform=linux/arm64,linux/amd64
       - run:
           name: Push Images
           command: |
-            echo "$DOCKERHUB_PASS" | docker login ghcr.io -u "$DOCKERHUB_USERNAME" --password-stdin && \
+            echo "$GITHUB_PASS" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin && \
             export SHORT_SHA=`git rev-parse --short=8 HEAD` && \
             docker tag ghcr.io/samvera/dassie:latest ghcr.io/samvera/dassie:$SHORT_SHA
             docker push ghcr.io/samvera/dassie:$SHORT_SHA
