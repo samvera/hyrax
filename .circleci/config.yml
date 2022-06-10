@@ -231,15 +231,6 @@ workflows:
           bundler_version: "2.1.4"
           requires:
             - build
-  nurax-dev_deploy:
-    jobs:
-      - deploy:
-          filters:
-            branches:
-              only:
-                - main
-  publish_dassie_images:
-    jobs:
       - publish:
           requires:
             - build
@@ -248,3 +239,11 @@ workflows:
               only:
                 - main
                 - publish_or_parish
+
+  nurax-dev_deploy:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only:
+                - main
