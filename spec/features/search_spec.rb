@@ -23,7 +23,7 @@ RSpec.describe 'searching' do
         expect(page).to have_content "Toothbrush"
       end
 
-      click_link "Gallery"
+      find('a.view-type-gallery').click
       expect(page).to have_content "Filtering by: Toothbrush"
       within "#documents" do
         expect(page).to have_content "Toothbrush"
