@@ -171,7 +171,7 @@ jobs:
       - run:
           name: Push Images
           command: |
-            echo "$GITHUB_PASS" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin && \
+            echo "$GITHUB_PASS" | docker login ghcr.io -u "$GITHUB_USER" --password-stdin && \
             export SHORT_SHA=`git rev-parse --short=8 HEAD` && \
             docker tag ghcr.io/samvera/dassie:latest ghcr.io/samvera/dassie:$SHORT_SHA
             docker push ghcr.io/samvera/dassie:$SHORT_SHA
