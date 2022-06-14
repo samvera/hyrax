@@ -3,6 +3,7 @@ module Hyrax
   # @deprecated Use JobIoWrapper instead
   class WorkingDirectory
     class << self
+      # @deprecated No longer used anywhere in Hyrax code, naively assumes filenames of versions/revisions are distinct
       # Returns the file passed as filepath if that file exists. Otherwise it grabs the file from repository,
       # puts it on the disk and returns that path.
       # @param [String] repository_file_id identifier for Hydra::PCDM::File
@@ -10,6 +11,7 @@ module Hyrax
       # @param [String, NilClass] filepath path to existing cached copy of the file
       # @return [String] path of the working file
       def find_or_retrieve(repository_file_id, id, filepath = nil)
+        Deprecation.warn("Hyrax::WorkingDirectory.find_or_retrieve() is deprecated and no longer used in Hyrax")
         return filepath if filepath && File.exist?(filepath)
         repository_file = Hydra::PCDM::File.find(repository_file_id)
         working_path = full_filename(id, repository_file.original_name)

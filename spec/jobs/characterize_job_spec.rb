@@ -33,8 +33,18 @@ RSpec.describe CharacterizeJob, :clean_repo do
   context 'with valid filepath param' do
     let(:filename) { File.join(fixture_path, 'world.png') }
 
-    it 'skips Hyrax::WorkingDirectory' do
-      expect(Hyrax::WorkingDirectory).not_to receive(:find_or_retrieve)
+    it 'skips Hyrax::WorkingDirectory.copy_repository_resource_to_working_directory' do
+      expect(Hyrax::WorkingDirectory).not_to receive(:copy_repository_resource_to_working_directory)
+      expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+      described_class.perform_now(file_set, file.id, filename)
+    end
+  end
+
+  context 'with no filepath param' do
+    let(:filename) { nil }
+
+    it 'uses Hyrax::WorkingDirectory.copy_repository_resource_to_working_directory to pull the repo file' do
+      expect(Hyrax::WorkingDirectory).to receive(:copy_repository_resource_to_working_directory)
       expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
       described_class.perform_now(file_set, file.id, filename)
     end
