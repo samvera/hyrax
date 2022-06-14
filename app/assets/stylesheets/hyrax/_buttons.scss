@@ -60,3 +60,7 @@ span.appliedFilter .remove {
   background-color: #e6e6e6;
   border-color: #adadad;
 }
+
+td.toggle input[type="submit"]:not(.active) {
+  @extend .btn-default;
+}
