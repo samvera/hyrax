@@ -1,4 +1,4 @@
-<div class="search-results-title-row">
-  <h3 class="search-result-title"><%= link_to document.title_or_label, [hyrax, document] %></h3>
+<div class="search-results-title-row col-12 d-flex flex-row align-items-center pb-2">
+  <h3 class="search-result-title mb-0 pr-3"><%= link_to document.title_or_label, [hyrax, document] %></h3>
   <%= Hyrax::CollectionPresenter.new(document, current_ability).collection_type_badge %>
 </div>

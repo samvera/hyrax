@@ -1,5 +1,5 @@
 <% model = document.hydra_model %>
-<div class="col-md-2">
+<div class="col-md-3">
   <% if model == Hyrax::PcdmCollection || model < Hyrax::PcdmCollection %>
     <%= document_presenter(document)&.thumbnail&.thumbnail_tag({}, suppress_link: true) %>
   <% else %>

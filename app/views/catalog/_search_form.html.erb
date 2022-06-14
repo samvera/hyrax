@@ -1,7 +1,7 @@
 <%= form_tag search_form_action, method: :get, class: "search-form", id: "search-form-header", role: "search" do %>
   <%= render Blacklight::HiddenSearchStateComponent.new(params: search_state.params_for_search.except(:q, :search_field, :qt, :page, :utf8)) %>
   <%= hidden_field_tag :search_field, 'all_fields' %>
-  <div class="form-group row">
+  <div class="form-group row pt-4">
 
     <label class="col-sm-3" for="search-field-header">
       <%= t("hyrax.search.form.q.label", application_name: application_name) %>

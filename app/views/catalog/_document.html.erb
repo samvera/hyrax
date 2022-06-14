@@ -1,5 +1,5 @@
-<li id="document_<%= document.to_param %>" class="document <%= render_document_class document %>" itemscope itemtype="<%= document.itemtype %>">
-  <div class="row search-result-wrapper">
+<li id="document_<%= document.to_param %>" class="pb-3 document <%= render_document_class document %>" itemscope itemtype="<%= document.itemtype %>">
+  <div class="search-result-wrapper row">
     <%= render_document_partials document, blacklight_config.view_config(document_index_view_type).partials, document_counter: document_counter %>
   </div>
 </li>
