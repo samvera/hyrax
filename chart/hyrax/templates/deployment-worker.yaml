@@ -64,6 +64,17 @@ spec:
             {{- end }}
           env:
             {{- toYaml .Values.worker.extraEnvVars | nindent 12 }}
+          {{- if .Values.worker.readinessProbe.enabled }}
+          readinessProbe:
+            exec:
+              command:
+                {{- toYaml .Values.worker.readinessProbe.command | nindent 16 }}
+            failureThreshold: {{ .Values.worker.readinessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.worker.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.worker.readinessProbe.periodSeconds }}
+            successThreshold: {{ .Values.worker.readinessProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.worker.readinessProbe.timeoutSeconds }}
+          {{- end }}
           volumeMounts:
             - name: derivatives
               mountPath: /app/samvera/derivatives

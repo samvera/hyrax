@@ -201,6 +201,18 @@ worker:
   affinity: {}
   resources: {}
 
+  # see: https://github.com/mperham/sidekiq/wiki/Kubernetes#health-checks
+  readinessProbe:
+    enabled: false
+    # command:
+    #  - cat
+    #  - /app/samvera/hyrax-webapp/tmp/sidekiq_process_has_started_and_will_begin_processing_jobs
+    # initialDelaySeconds: 10
+    # periodSeconds: 2
+    # timeoutSeconds: 1
+    # failureThreshold: 10
+    # successThreshold: 2
+
 fcrepo:
   enabled: true
   externalDatabaseUsername: "hyrax"
