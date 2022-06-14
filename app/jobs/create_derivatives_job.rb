@@ -7,9 +7,11 @@ class CreateDerivativesJob < Hyrax::ApplicationJob
   # @param [String, NilClass] filepath the cached file within the Hyrax.config.working_path
   def perform(file_set, file_id, filepath = nil)
     return if file_set.video? && !Hyrax.config.enable_ffmpeg
-    filename = Hyrax::WorkingDirectory.find_or_retrieve(file_id, file_set.id, filepath)
 
-    file_set.create_derivatives(filename)
+    # Ensure a fresh copy of the repo file's latest version is being worked on, if no filepath is directly provided
+    filepath = Hyrax::WorkingDirectory.copy_repository_resource_to_working_directory(Hydra::PCDM::File.find(file_id), file_set.id) unless filepath && File.exist?(filepath)
+
+    file_set.create_derivatives(filepath)
 
     # Reload from Fedora and reindex for thumbnail and extracted text
     file_set.reload
