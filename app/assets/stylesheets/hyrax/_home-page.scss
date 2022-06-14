@@ -24,60 +24,17 @@
 
   .background-container-gradient {
     @include masthead-background-containers();
-    background:
-      linear-gradient(
-        rgba(0, 0, 0, 0.0),
-        rgba(0, 0, 0, 0.4),
-        rgba(0, 0, 0, 0.5)
-      );
+    background: linear-gradient(
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.4),
+      rgba(0, 0, 0, 0.5)
+    );
   }
 
   .site-title {
     min-height: $title-height;
     padding-bottom: 6px;
     position: relative;
-  }
-
-  .navbar {
-    background-color: $navbar-transparent-bg;
-    color: #fff;
-    margin-bottom: 0;
-
-    .navbar-nav {
-      align-self: stretch;
-
-      a {
-        display: flex;
-        align-items: center;
-        height: 100%;
-        color: $navbar-transparent-link-color;
-        text-transform: uppercase;
-
-        &:hover,
-        &:focus {
-          background-color: $navbar-transparent-link-hover-bg;
-          color: $navbar-transparent-link-hover-color;
-        }
-      }
-      li {
-        background-color: #286090;
-      }
-    }
-
-    @media only screen and (max-width: 767px) {
-      .navbar-nav {
-        margin-left: 10px;
-      }
-    }
-
-    .active > a {
-      &,
-      &:hover,
-      &:focus {
-        background-color: $navbar-transparent-link-active-bg;
-        color: $navbar-transparent-link-active-color;
-      }
-    }
   }
 }
 
