@@ -28,7 +28,7 @@
   </li>
 
   <% if can? :read, :admin_dashboard %>
-    <%= menu.nav_link(hyrax.admin_stats_path) do %>
+    <%= menu.nav_link(hyrax.admin_stats_path, class: "nav-link") do %>
       <span class="fa fa-bar-chart" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.statistics') %></span>
     <% end %>
   <% end %>
@@ -46,7 +46,7 @@
         <% end %>
 
         <%= menu.nav_link(hyrax.admin_analytics_work_reports_path,
-                          onclick: "dontChangeAccordion(event);") do %>
+                          onclick: "dontChangeAccordion(event);", class: "nav-link") do %>
           <span class="fa fa-file" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.works_report') %></span>
         <% end %>
 
