@@ -65,6 +65,10 @@ Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter)
 Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Postgres::MetadataAdapter.new, :postgres_adapter)
+Valkyrie::StorageAdapter.register(
+  Valkyrie::Storage::Disk.new(base_path: Rails.root / 'tmp' / 'test_adapter_uploads'),
+  :test_disk
+)
 
 # Require supporting ruby files from spec/support/ and subdirectories.  Note: engine, not Rails.root context.
 Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each { |f| require f }
