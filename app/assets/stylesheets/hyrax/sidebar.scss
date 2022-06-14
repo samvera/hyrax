@@ -105,7 +105,6 @@ $gutter-width: $grid-gutter-width/2;
     margin-left: 0;
     margin-right: 0;
     li {
-      overflow: hidden;
       white-space: nowrap;
     }
     li .fa {
@@ -115,11 +114,6 @@ $gutter-width: $grid-gutter-width/2;
 
   .nav-pills > li > a {
     border-radius: 0;
-
-    &:focus {
-      background-color: transparent;
-      color: $admin-sidebar-link-color;
-    }
   }
 
   .nav-pills > li.active > a,
