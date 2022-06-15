@@ -147,6 +147,8 @@ module Hyrax
     end
 
     def presenter_types
+      # "Collection" was added because the humanization of the keys in #grouped_presenters
+      #   now produces a capitalized string, instead of the expected downcased string.
       Hyrax.config.registered_curation_concern_types.map(&:underscore) + ["collection", "Collection"]
     end
 
