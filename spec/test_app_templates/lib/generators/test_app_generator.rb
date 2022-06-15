@@ -13,6 +13,14 @@ class TestAppGenerator < Rails::Generators::Base
     end
   end
 
+  def install_dalli
+    gem 'dalli', '~> 3'
+
+    Bundler.with_clean_env do
+      run "bundle install"
+    end
+  end
+
   def install_engine
     generate 'hyrax:install', '-f'
   end
