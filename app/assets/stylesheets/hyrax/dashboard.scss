@@ -45,27 +45,6 @@ body.dashboard {
     font-size: 1.1em;
   }
 
-  .tabs {
-    margin-top: $tab-margin;
-    position: relative;
-  }
-
-  .nav-tabs {
-    border-bottom: 0;
-    margin-bottom: 0;
-    margin-top: -$tab-margin;
-    padding: 0 5px;
-  }
-
-  .nav-tabs > li > a {
-    border-top: 2px solid transparent;
-  }
-
-  .nav-tabs > li.nav-item > a.active,
-  .nav-tabs > li.nav-item > a:hover {
-    border-top: 2px solid $tab-active-accent-color;
-  }
-
   /* This is needed in Chrome for the admin/admin_sets edit view AND the collection
    * sharing edit view to render the participants tab
    * Without this the contents of that tab flow off the right-hand side of the screen
@@ -208,20 +187,6 @@ body.dashboard {
   .spacer {
     margin-bottom: 5px;
   }
-}
-
-#discovery .panel .panel-body {
-  > .set-access-controls .form-group label {
-    display: block;
-    text-align: left !important;
-
-    > input {
-      position: absolute;
-      margin-left: -1.25rem;
-      margin-top: 0.25rem;
-    }
-  }
-  padding: 1rem;
 }
 
 .dropdown-item {
