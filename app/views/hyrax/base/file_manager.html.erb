@@ -7,11 +7,11 @@
 
 <% if !@form.member_presenters.empty? %>
   <div class="row" data-action="file-manager">
-    <div class="col-md-3" id="file-manager-tools">
+    <div class="col-lg-3" id="file-manager-tools">
       <h2><%= t('.toolbar') %></h2>
       <%= render "file_manager_actions" %>
     </div>
-    <div class="col-md-9" id="order-grid">
+    <div class="col-lg-9" id="order-grid">
       <%= render "file_manager_members" %>
     </div>
   </div>
