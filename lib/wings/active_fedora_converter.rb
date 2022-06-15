@@ -3,6 +3,7 @@
 require 'wings/converter_value_mapper'
 require 'wings/active_fedora_converter/default_work'
 require 'wings/active_fedora_converter/file_metadata_node'
+require 'wings/active_fedora_converter/instance_builder'
 require 'wings/active_fedora_converter/nested_resource'
 
 module Wings
@@ -101,24 +102,7 @@ module Wings
     private
 
     def instance
-      if resource.try(:file_identifier).present?
-        adapter_for_file =
-          begin
-            ::Valkyrie::StorageAdapter.adapter_for(id: resource.file_identifier)
-          rescue ::Valkyrie::StorageAdapter::AdapterNotFoundError => err
-            Hyrax.logger.warn "Processing a FileMetadata (id: #{id}) referencing " \
-                              "a file #{resource.file_identifier}; could not find a " \
-                              "storage adapter to handle that file.\n\t#{err.message}"
-            nil
-          end
-
-        return Wings::ActiveFedoraConverter::FileMetadataNode(resource.class).new(file_identifier: Array(resource.file_identifier).map(&:to_s)) unless
-          adapter_for_file.is_a?(::Valkyrie::Storage::Fedora)
-      end
-
-      id.present? ? active_fedora_class.find(id) : active_fedora_class.new
-    rescue ActiveFedora::ObjectNotFoundError
-      active_fedora_class.new
+      InstanceBuilder.new(self).build
     end
 
     def attributes_class
