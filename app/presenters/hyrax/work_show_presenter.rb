@@ -149,7 +149,7 @@ module Hyrax
     def presenter_types
       # "Collection" was added because the humanization of the keys in #grouped_presenters
       #   now produces a capitalized string, instead of the expected downcased string.
-      Hyrax.config.registered_curation_concern_types.map(&:underscore) + ["collection", "Collection"]
+      Hyrax.config.registered_curation_concern_types.map(&:underscore) + ["collection"]
     end
 
     # @return [Array] presenters grouped by model name, used to show the parents of this object
@@ -157,8 +157,8 @@ module Hyrax
       # TODO: we probably need to retain collection_presenters (as parent_presenters)
       #       and join this with member_of_collection_presenters
       grouped = member_of_collection_presenters.group_by(&:model_name).transform_keys(&:human)
-      grouped.select! { |obj| obj.downcase == filtered_by } unless filtered_by.nil?
-      grouped.except!(*except) unless except.nil?
+      grouped.select! { |obj| obj.downcase == filtered_by.downcase } unless filtered_by.nil?
+      grouped.reject! { |obj| except.map(&:downcase).include? obj.downcase } unless except.nil?
       grouped
     end
 
