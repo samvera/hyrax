@@ -63,6 +63,32 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       end
     end
 
+    context 'when given a FileMetadata node' do
+      let(:resource) { Hyrax::FileMetadata.new(file_identifier: file.id) }
+      let(:file) do
+        io = fixture_file_upload('/world.png', 'image/png')
+        file_set = FactoryBot.valkyrie_create(:hyrax_file_set)
+        storage_adapter.upload(file: io, resource: file_set, original_filename: 'test-world.png')
+      end
+
+      context 'when it describes an ActiveFedora File' do
+        it 'converts to a Hydra::Pcdm::File'
+      end
+
+      context 'when it describes a file for an arbitrary storage adapter' do
+        let(:storage_adapter) { Valkyrie::StorageAdapter.find(:test_disk) }
+
+        it 'converts to a generic FileMetadataNode' do
+          expect(converter.convert).to be_a Wings::FileMetadataNode
+        end
+
+        it 'refers to the correct file id' do
+          expect(converter.convert)
+            .to have_attributes(file_identifier: contain_exactly(file.id))
+        end
+      end
+    end
+
     context 'when given a valkyrie native model' do
       let(:resource) { klass.new(title: ['comet in moominland'], distant_relation: ['Snufkin']) }
       let(:klass) { Hyrax::Test::Converter::Resource }
