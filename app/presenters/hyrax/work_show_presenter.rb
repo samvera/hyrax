@@ -155,7 +155,7 @@ module Hyrax
       # TODO: we probably need to retain collection_presenters (as parent_presenters)
       #       and join this with member_of_collection_presenters
       grouped = member_of_collection_presenters.group_by(&:model_name).transform_keys(&:human)
-      grouped.select! { |obj| obj.downcase == filtered_by.downcase } unless filtered_by.nil?
+      grouped.select! { |obj| obj.casecmp(filtered_by).zero? } unless filtered_by.nil?
       grouped.reject! { |obj| except.map(&:downcase).include? obj.downcase } unless except.nil?
       grouped
     end
