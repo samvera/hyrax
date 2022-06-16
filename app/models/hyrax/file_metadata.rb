@@ -156,7 +156,14 @@ module Hyrax
     end
 
     def file
-      Hyrax.storage_adapter.find_by(id: file_identifier)
+      adapter =
+        begin
+          Valkyrie::StorageAdapter.adapter_for(id: file_identifier)
+        rescue Valkyrie::StorageAdapter::AdapterNotFoundError => _err
+          Hyrax.storage_adapter
+        end
+
+      adapter.find_by(id: file_identifier)
     end
   end
 end
