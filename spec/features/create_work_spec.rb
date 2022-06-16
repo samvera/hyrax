@@ -98,7 +98,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
       expect(page).to have_content "My Test Work"
 
       # check that user can get to the files
-      within('.media-heading') do
+      within('.media-body') do
         click_link "My Test Work"
       end
       click_link "image.jp2"
@@ -107,7 +107,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
       visit '/dashboard'
       click_link 'Works'
 
-      within('.media-heading') do
+      within('.media-body') do
         click_link "My Test Work"
       end
       click_link "jp2_fits.xml"

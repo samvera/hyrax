@@ -1,7 +1,7 @@
 <% # we will yield to content_for for each tab, e.g. :files_tab %>
 <div class="row">
   <div class="col-12 col-sm-8">
-    <div class="card tabs" role="main">
+    <div class="tabs" role="main">
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
         <% (tabs - ['share']).each_with_index do | tab, i | %>
@@ -20,7 +20,7 @@
       </ul>
 
       <!-- Tab panes -->
-      <div class="tab-content">
+      <div class="tab-content card">
         <% (tabs - ['share']).each_with_index do | tab, i | %>
           <div role="tabpanel" class="tab-pane <% if i == 0 %>show active<% end %>" id="<%= tab %>">
             <div class="form-tab-content">
