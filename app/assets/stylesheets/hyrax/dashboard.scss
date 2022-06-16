@@ -166,19 +166,6 @@ body.dashboard {
     margin-bottom: 0;
   }
 
-  // The select collection modal for batch operations
-  .collection-list-modal {
-    .modal-content {
-      float: left;
-      .modal-header,
-      .modal-footer,
-      .modal-body {
-        float: left;
-        width: 100%;
-      }
-    }
-  }
-
   .card.labels {
     border-top: 1px solid $card-border-color;
     margin-bottom: 0;
