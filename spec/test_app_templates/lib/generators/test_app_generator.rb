@@ -223,4 +223,10 @@ Valkyrie::MetadataAdapter
 CONFIG
     end
   end
+
+  def enable_cache_store
+    inject_into_file 'config/environments/test.rb', after: "Rails.application.configure do\n" do
+      "  config.cache_store = :memory_store\n"
+    end
+  end
 end
