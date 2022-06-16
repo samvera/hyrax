@@ -225,8 +225,8 @@ CONFIG
   end
 
   def enable_cache_store
-    inject_into_file 'config/environments/test.rb', after: "Rails.application.configure do\n" do
-      "  config.cache_store = :memory_store\n"
-    end
+    gsub_file 'config/environments/test.rb', 'config.action_controller.perform_caching = false',
+      'config.action_controller.perform_caching = true'
+    gsub_file 'config/environments/test.rb', 'config.cache_store = :null_store', 'config.cache_store = :memory_store'
   end
 end
