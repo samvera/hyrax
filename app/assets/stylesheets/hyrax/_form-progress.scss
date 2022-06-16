@@ -24,7 +24,8 @@
   margin-bottom: $save-viz-widget-legend-margin;
 }
 
-.requirements, .visibility {
+.requirements,
+.visibility {
   list-style-type: none;
   padding-left: 8px;
 }
@@ -32,16 +33,16 @@
 // FIXME: There should be a better way to implement these with FontAwesome direct in the markup?
 aside.form-progress {
   .incomplete::before {
-    content: "\e101";
+    content: "\f00d";
     color: $brand-danger;
-    font-family: 'Glyphicons Halflings';
+    font-family: "FontAwesome";
     padding-right: 5px;
   }
 
   .complete::before {
-    content: "\e013";
+    content: "\f00c";
     color: $brand-success;
-    font-family: 'Glyphicons Halflings';
+    font-family: "FontAwesome";
     padding-right: 5px;
   }
 }
@@ -49,5 +50,3 @@ aside.form-progress {
 .progress-bar-complete {
   width: 100%;
 }
-
-
