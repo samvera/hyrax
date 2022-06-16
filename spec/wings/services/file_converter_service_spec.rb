@@ -56,16 +56,14 @@ RSpec.describe Wings::FileConverterService, :clean_repo do
 
     it 'copies attributes to af_file' do
       expect(subject.id.to_s).to eq id
-      expect(subject.original_name).to eq plain_text_valkyrie_attrs[:original_filename]
 
       expected_attrs = plain_text_valkyrie_attrs
 
-      expect(subject.metadata_node.type).to match_array expected_attrs[:type]
-      expect(subject.mime_type).to eq expected_attrs[:mime_type]
-      expect(subject.format_label).to eq Array(expected_attrs[:format_label])
-      expect(subject.language).to eq Array(expected_attrs[:language])
-      expect(subject.word_count).to eq Array(expected_attrs[:content].split(' ').count)
-      expect(subject.character_count).to eq Array(expected_attrs[:content].size)
+      expect(subject.mime_type).to contain_exactly(expected_attrs[:mime_type])
+      expect(subject.format_label).to contain_exactly(expected_attrs[:format_label])
+      expect(subject.language).to contain_exactly(expected_attrs[:language])
+      expect(subject.word_count).to contain_exactly(expected_attrs[:content].split(' ').count)
+      expect(subject.character_count).to contain_exactly(expected_attrs[:content].size)
     end
   end
 
@@ -79,11 +77,11 @@ RSpec.describe Wings::FileConverterService, :clean_repo do
       expect(subject.modified_date).not_to eq af_file.modified_date
       expect(subject.original_name).to eq plain_text_af_attrs[:original_name]
 
-      expect(subject.mime_type).to eq plain_text_af_attrs[:mime_type]
-      expect(subject.format_label).to eq Array(plain_text_af_attrs[:format_label])
-      expect(subject.language).to eq Array(plain_text_af_attrs[:language])
-      expect(subject.word_count).to eq Array(plain_text_af_attrs[:content].split(' ').count)
-      expect(subject.character_count).to eq Array(plain_text_af_attrs[:content].size)
+      expect(subject.mime_type).to eq 'text/plain'
+      expect(subject.format_label).to contain_exactly(plain_text_af_attrs[:format_label])
+      expect(subject.language).to contain_exactly(plain_text_af_attrs[:language])
+      expect(subject.word_count).to contain_exactly(plain_text_af_attrs[:content].split(' ').count)
+      expect(subject.character_count).to contain_exactly(plain_text_af_attrs[:content].size)
     end
   end
 
