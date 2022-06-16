@@ -157,15 +157,17 @@ module Hyrax
       ''
     end
 
+    ##
+    # @return [Valkyrie::StorageAdapter::File]
+    #
+    # @raise [Valkyrie::StorageAdapter::AdapterNotFoundError] if no adapter
+    #   could be found matching the file_identifier's scheme
+    # @raise [Valkyrie::StorageAdapter::FileNotFound] when the file can't
+    #   be found in the registered adapter
     def file
-      adapter =
-        begin
-          Valkyrie::StorageAdapter.adapter_for(id: file_identifier)
-        rescue Valkyrie::StorageAdapter::AdapterNotFoundError => _err
-          Hyrax.storage_adapter
-        end
-
-      adapter.find_by(id: file_identifier)
+      Valkyrie::StorageAdapter
+        .adapter_for(id: file_identifier)
+        .find_by(id: file_identifier)
     end
   end
 end

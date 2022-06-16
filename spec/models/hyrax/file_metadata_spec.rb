@@ -116,8 +116,41 @@ RSpec.describe Hyrax::FileMetadata do
   end
 
   describe '#file' do
-    it 'returns file from storage adapter' do
-      expect(subject.file).to be_a Valkyrie::StorageAdapter::StreamFile
+    it 'raises an error for a missing file_identifier' do
+      expect { file_metadata.file }
+        .to raise_error Valkyrie::StorageAdapter::AdapterNotFoundError
+    end
+
+    context 'when file_identifier is saved with storage_adapter' do
+      let(:file_metadata) { described_class.new(file_identifier: stored.id) }
+      let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+
+      let(:stored) do
+        Hyrax.storage_adapter.upload(resource: file_set,
+                                     file: file,
+                                     original_filename: file.original_filename)
+      end
+
+      it 'gives the exact file' do
+        expect(file_metadata.file.read).to eq stored.read
+      end
+    end
+
+    context 'when file_identifier is saved with an arbitrary adapter' do
+      let(:file_metadata) { described_class.new(file_identifier: stored.id) }
+      let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+
+      let(:stored) do
+        Valkyrie::StorageAdapter
+          .find(:test_disk)
+          .upload(resource: file_set,
+                  file: file,
+                  original_filename: file.original_filename)
+      end
+
+      it 'gives the exact file' do
+        expect(file_metadata.file.read).to eq stored.read
+      end
     end
   end
 
