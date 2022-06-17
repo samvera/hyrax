@@ -1,4 +1,4 @@
-<dl class="work-show <%= dom_class(presenter) %>" <%= presenter.microdata_type_to_html %>>
+<dl class="work-show pt-3 <%= dom_class(presenter) %>" <%= presenter.microdata_type_to_html %>>
     <%= render 'attribute_rows', presenter: presenter %>
     <%= presenter.attribute_to_html(:embargo_release_date, render_as: :date, html_dl: true) %>
     <%= presenter.attribute_to_html(:lease_expiration_date, render_as: :date, html_dl: true) %>
