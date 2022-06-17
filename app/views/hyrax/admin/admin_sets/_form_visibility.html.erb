@@ -41,7 +41,7 @@
                       </li>
                     </ul>
                   </div>
-                  <div id="release-fixed" class="form-check form-check-inline">
+                  <div id="release-fixed" class="form-check form-check-inline mb-4">
                     <label class="form-check-label">
                       <%= f.radio_button :release_period, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED, class: 'form-check-input' %>
                       <%= t('.release.fixed') %>
@@ -56,9 +56,9 @@
                     <% b.label(class: 'form-check-label') { b.radio_button(class: 'form-check-input') + b.text } %>
                   <% end %>
                 </div>
-                <div class="card-footer">
-                  <%= link_to t('.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-secondary float-right' %>
-                  <%= f.button :submit, class: 'btn btn-primary float-right' %>
+                <div class="card-footer d-flex justify-content-end">
+                  <%= f.button :submit, class: 'btn btn-primary text-white mr-2' %>
+                  <%= link_to t('.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-light' %>
                 </div>
               <% end %>
             </div>
