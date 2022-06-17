@@ -32,9 +32,9 @@
   </ul>
 
   <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor nav-safety', data: { behavior: 'collection-form', 'param-key' => @form.model_name.param_key } } do |f| %>
-    <div class="tab-content" id="dashboard-collection-tab-content">
+    <div class="tab-content card" id="dashboard-collection-tab-content">
       <div id="description" class="tab-pane show active">
-        <div class="card labels">
+        <div class="labels">
           <div class="card-body">
 
             <div id="base-terms">

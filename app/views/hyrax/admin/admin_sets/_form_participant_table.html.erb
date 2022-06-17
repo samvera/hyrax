@@ -1,33 +1,35 @@
-                  <h3><%= t(".#{access}.title") %></h3>
-                  <p><%= t(".#{access}.help") %></p>
-                  <% if collection_permission_template_form_for(form: @form).access_grants.select(&filter).any? %>
-                    <table class="table table-striped share-status">
-                      <thead>
-                        <tr>
-                          <th><%= t(".#{access}.agent_name") %></th>
-                          <th><%= t(".#{access}.type") %></th>
-                          <th><%= t(".#{access}.action") %></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      <% collection_permission_template_form_for(form: @form).access_grants.select(&filter).each do |g| %>
-                        <tr>
-                          <td data-agent="<%= g.agent_id %>"><%= g.label %></td>
-                          <td><%= g.agent_type.titleize %></td>
-                          <td>
-                            <% if g.admin_group? && g.access == Hyrax::PermissionTemplateAccess::MANAGE %>
-                              <%= button_to t(".#{access}.remove"), hyrax.admin_permission_template_access_path(g), method: :delete, class: 'btn btn-sm btn-danger disabled', disabled: true, title: t('hyrax.admin.admin_sets.form.permission_destroy_errors.admin_group') %>
-                            <% else %>
-                              <%= button_to t(".#{access}.remove"), hyrax.admin_permission_template_access_path(g), method: :delete, class: 'btn btn-sm btn-danger' %>
-                            <% end %>
-                          </td>
-                        </tr>
-                      <% end %>
-                      </tbody>
-                    </table>
-                  <% else %>
-                    <p><em><%= t(".#{access}.empty") %></em></p>
-                  <% end %>
-                  <%= button_tag t('.allow_all_registered'),
-                                 class: 'btn btn-info',
-                                 data: { behavior: 'add-registered-users' } if access == 'depositors' %>
+<div class="mb-4">
+  <h3 class="h4"><%= t(".#{access}.title") %></h3>
+  <p><%= t(".#{access}.help") %></p>
+  <% if collection_permission_template_form_for(form: @form).access_grants.select(&filter).any? %>
+    <table class="table table-striped share-status">
+      <thead>
+        <tr>
+          <th><%= t(".#{access}.agent_name") %></th>
+          <th><%= t(".#{access}.type") %></th>
+          <th><%= t(".#{access}.action") %></th>
+        </tr>
+      </thead>
+      <tbody>
+      <% collection_permission_template_form_for(form: @form).access_grants.select(&filter).each do |g| %>
+        <tr>
+          <td data-agent="<%= g.agent_id %>"><%= g.label %></td>
+          <td><%= g.agent_type.titleize %></td>
+          <td>
+            <% if g.admin_group? && g.access == Hyrax::PermissionTemplateAccess::MANAGE %>
+              <%= button_to t(".#{access}.remove"), hyrax.admin_permission_template_access_path(g), method: :delete, class: 'btn btn-sm btn-danger disabled', disabled: true, title: t('hyrax.admin.admin_sets.form.permission_destroy_errors.admin_group') %>
+            <% else %>
+              <%= button_to t(".#{access}.remove"), hyrax.admin_permission_template_access_path(g), method: :delete, class: 'btn btn-sm btn-danger' %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p><em><%= t(".#{access}.empty") %></em></p>
+  <% end %>
+  <%= button_tag t('.allow_all_registered'),
+                  class: 'btn btn-primary ',
+                  data: { behavior: 'add-registered-users' } if access == 'depositors' %>
+</div>
