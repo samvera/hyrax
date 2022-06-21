@@ -33,7 +33,20 @@ module Wings
       #
       # @raise [Hyrax::ObjectNotFoundError]
       def find_file_metadata_by(id:, use_valkyrie: true)
-        find_file_metadata_by_alternate_identifier(alternate_identifier: id, use_valkyrie: use_valkyrie)
+        fcrepo_flag =
+          begin
+            ::Valkyrie::StorageAdapter.adapter_for(id: id).is_a?(::Valkyrie::Storage::Fedora)
+          rescue ::Valkyrie::StorageAdapter::AdapterNotFoundError
+            true # assume fcrepo if we can't find an adapter
+          end
+
+        if fcrepo_flag
+          find_file_metadata_by_alternate_identifier(alternate_identifier: id, use_valkyrie: use_valkyrie)
+        else
+          result = ActiveFedora::Base.where(file_identifier_ssim: id.to_s).first ||
+                   raise(Hyrax::ObjectNotFoundError)
+          result.valkyrie_resource
+        end
       end
 
       # Find a Hyrax::FileMetadata using an alternate ID, and map it to a
@@ -48,8 +61,8 @@ module Wings
       #
       # @raise [Hyrax::ObjectNotFoundError]
       def find_file_metadata_by_alternate_identifier(alternate_identifier:, use_valkyrie: true)
-        alternate_identifier = ::Valkyrie::ID.new(alternate_identifier)
-        object = Hydra::PCDM::File.find(alternate_identifier.to_s)
+        alternate_identifier = ::Valkyrie::ID.new(alternate_identifier).to_s
+        object = Hydra::PCDM::File.find(alternate_identifier)
         raise Hyrax::ObjectNotFoundError if object.new_record?
 
         if use_valkyrie == false
