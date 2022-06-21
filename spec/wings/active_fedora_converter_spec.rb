@@ -86,6 +86,13 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
           expect(converter.convert)
             .to have_attributes(file_identifier: contain_exactly(file.id))
         end
+
+        it 'round trips' do
+          af = converter.convert
+          af.save
+
+          expect(ActiveFedora::Base.find(af.id)).to be_a(Wings::FileMetadataNode)
+        end
       end
     end
 
