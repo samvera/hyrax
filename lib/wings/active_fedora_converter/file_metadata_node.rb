@@ -23,8 +23,26 @@ module Wings
 
     class_attribute :valkyrie_class
 
-    def model_name(*)
-      Hyrax::Name.new(valkyrie_class)
+    class << self
+      def model_name(*)
+        Hyrax::Name.new(valkyrie_class)
+      end
+
+      def to_rdf_representation
+        "Wings(#{valkyrie_class})"
+      end
+      alias inspect to_rdf_representation
+      alias to_s inspect
+    end
+
+    def indexing_service
+      Hyrax::ValkyrieIndexer.for(resource: valkyrie_resource)
+    end
+
+    def to_solr
+      super.tap do |doc|
+        doc[:file_identifier_ssim] = file_identifier
+      end
     end
   end
 end
