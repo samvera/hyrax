@@ -2,6 +2,39 @@
 
 require 'valkyrie/specs/shared_specs'
 
+RSpec.describe Hyrax do
+  describe ".FileMetadata()" do
+    let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+
+    context 'when trying to cast a resource class' do
+      it 'raises an argument error' do
+        expect { described_class::FileMetadata(file_set) }
+          .to raise_error(ArgumentError)
+      end
+    end
+
+    context 'when uploaded from a generic storage adapter' do
+      let(:storage_adapter) { Valkyrie::StorageAdapter.find(:derivatives_disk) }
+
+      let(:file) do
+        storage_adapter.upload(resource: file_set,
+                               file: Tempfile.new('moomin'),
+                               original_filename: 'test_for_filemetadata')
+      end
+
+      it 'builds a new FileMetadata' do
+        expect(described_class::FileMetadata(file))
+          .to have_attributes(file_identifier: file.id)
+      end
+
+      it 'can recover the metadata after saving' do
+        file_meta = Hyrax.persister.save(resource: described_class::FileMetadata(file))
+        expect(described_class::FileMetadata(file)).to eq file_meta
+      end
+    end
+  end
+end
+
 RSpec.describe Hyrax::FileMetadata do
   it_behaves_like 'a Valkyrie::Resource' do
     let(:resource_klass) { described_class }
