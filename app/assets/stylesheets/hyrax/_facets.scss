@@ -11,6 +11,10 @@
     margin-right: 0.5rem;
 }
 
+.facet-label .remove {
+    margin-left: 0.75rem;
+}
+
 ul.facet-values.list-unstyled {
     display: table;
     table-layout: fixed;
@@ -33,4 +37,10 @@ ul.facet-values.list-unstyled {
             text-align: right;
         }
     }
+}
+
+.filter-name:after {
+    content: "\f105";
+    font-family: "FontAwesome";
+    padding-left: 0.5rem;
 }
