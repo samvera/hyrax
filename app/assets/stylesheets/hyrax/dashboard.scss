@@ -213,3 +213,11 @@ ul#visibility_ssi-dropdown-options {
     }
   }
 }
+
+.card.tabs {
+  background-color: transparent;
+
+  > .card-body {
+    background-color: white;
+  }
+}
