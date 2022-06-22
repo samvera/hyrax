@@ -42,7 +42,8 @@ RSpec.describe Hyrax::Characterization::FileSetDescription, valkyrie_adapter: :t
       let(:other_file) { Rack::Test::UploadedFile.new('spec/fixtures/1.5mb-avatar.jpg', other_ctype) }
 
       let(:custom_file) do
-        resource = Hyrax::FileMetadata.for(file: other_file).new(type: custom_type)
+        resource = Hyrax::FileMetadata(other_file)
+        resource.type = custom_type
         Hyrax.persister.save(resource: resource)
       end
 

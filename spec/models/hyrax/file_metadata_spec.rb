@@ -41,7 +41,7 @@ RSpec.describe Hyrax::FileMetadata do
   end
 
   subject(:file_metadata) do
-    described_class.for(file: file).new(id: 'test_id', format_label: 'test_format_label')
+    described_class.new(id: 'test_id', format_label: 'test_format_label')
   end
 
   let(:file) { Rack::Test::UploadedFile.new('spec/fixtures/world.png', 'image/png') }
