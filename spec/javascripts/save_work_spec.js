@@ -145,6 +145,9 @@ describe("SaveWorkControl", function() {
         form_id = 'edit_generic_work'
         target = buildTarget(form_id)
       });
+      afterEach(function() {
+        form_id = 'new_generic_work';
+      });
       it("is complete", function() {
         target.validateFiles();
         expect(mockCheckbox.uncheck.calls.count()).toEqual(0);

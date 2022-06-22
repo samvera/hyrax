@@ -2,6 +2,8 @@
 
 require 'wings/converter_value_mapper'
 require 'wings/active_fedora_converter/default_work'
+require 'wings/active_fedora_converter/file_metadata_node'
+require 'wings/active_fedora_converter/instance_builder'
 require 'wings/active_fedora_converter/nested_resource'
 
 module Wings
@@ -100,9 +102,7 @@ module Wings
     private
 
     def instance
-      id.present? ? active_fedora_class.find(id) : active_fedora_class.new
-    rescue ActiveFedora::ObjectNotFoundError
-      active_fedora_class.new
+      InstanceBuilder.new(self).build
     end
 
     def attributes_class

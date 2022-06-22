@@ -2,6 +2,39 @@
 
 require 'valkyrie/specs/shared_specs'
 
+RSpec.describe Hyrax do
+  describe ".FileMetadata()" do
+    let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+
+    context 'when trying to cast a resource class' do
+      it 'raises an argument error' do
+        expect { described_class::FileMetadata(file_set) }
+          .to raise_error(ArgumentError)
+      end
+    end
+
+    context 'when uploaded from a generic storage adapter' do
+      let(:storage_adapter) { Valkyrie::StorageAdapter.find(:derivatives_disk) }
+
+      let(:file) do
+        storage_adapter.upload(resource: file_set,
+                               file: Tempfile.new('moomin'),
+                               original_filename: 'test_for_filemetadata')
+      end
+
+      it 'builds a new FileMetadata' do
+        expect(described_class::FileMetadata(file))
+          .to have_attributes(file_identifier: file.id)
+      end
+
+      it 'can recover the metadata after saving' do
+        file_meta = Hyrax.persister.save(resource: described_class::FileMetadata(file))
+        expect(described_class::FileMetadata(file)).to eq file_meta
+      end
+    end
+  end
+end
+
 RSpec.describe Hyrax::FileMetadata do
   it_behaves_like 'a Valkyrie::Resource' do
     let(:resource_klass) { described_class }
@@ -116,8 +149,41 @@ RSpec.describe Hyrax::FileMetadata do
   end
 
   describe '#file' do
-    it 'returns file from storage adapter' do
-      expect(subject.file).to be_a Valkyrie::StorageAdapter::StreamFile
+    it 'raises an error for a missing file_identifier' do
+      expect { file_metadata.file }
+        .to raise_error Valkyrie::StorageAdapter::AdapterNotFoundError
+    end
+
+    context 'when file_identifier is saved with storage_adapter' do
+      let(:file_metadata) { described_class.new(file_identifier: stored.id) }
+      let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+
+      let(:stored) do
+        Hyrax.storage_adapter.upload(resource: file_set,
+                                     file: file,
+                                     original_filename: file.original_filename)
+      end
+
+      it 'gives the exact file' do
+        expect(file_metadata.file.read).to eq stored.read
+      end
+    end
+
+    context 'when file_identifier is saved with an arbitrary adapter' do
+      let(:file_metadata) { described_class.new(file_identifier: stored.id) }
+      let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+
+      let(:stored) do
+        Valkyrie::StorageAdapter
+          .find(:test_disk)
+          .upload(resource: file_set,
+                  file: file,
+                  original_filename: file.original_filename)
+      end
+
+      it 'gives the exact file' do
+        expect(file_metadata.file.read).to eq stored.read
+      end
     end
   end
 

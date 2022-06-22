@@ -1,6 +1,25 @@
 # frozen_string_literal: true
 
 module Hyrax
+  ##
+  # Casts a resource to an associated FileMetadata
+  #
+  # @param [Valkyrie::StorageAdapter::File] file
+  #
+  # @return [Hyrax::FileMetadata]
+  # @raise [ArgumentError]
+  def self.FileMetadata(file)
+    raise(ArgumentError, "Expected a Valkyrie::StorageAdapter::File; got #{file.class}: #{file}") if
+      file.is_a?(Valkyrie::Resource)
+
+    Hyrax.custom_queries.find_file_metadata_by(id: file.id)
+  rescue Hyrax::ObjectNotFoundError, Ldp::BadRequest
+    Hyrax.logger.debug('Could not find an existing metadata node for file ' \
+                       "with id #{file.id}. Initializing a new one")
+
+    FileMetadata.new(file_identifier: file.id, alternative_ids: [file.id])
+  end
+
   class FileMetadata < Valkyrie::Resource
     # Include mime-types for Hydra Derivatives mime-type checking. We may want
     # to move this logic someday.
@@ -39,7 +58,7 @@ module Hyrax
     end
 
     attribute :file_identifier, Valkyrie::Types::ID # id of the file stored by the storage adapter
-    attribute :alternate_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID) # id of the Hydra::PCDM::File which holds metadata and the file in ActiveFedora
+    attribute :alternate_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID) # id of the file, populated for queryability
     attribute :file_set_id, ::Valkyrie::Types::ID # id of parent file set resource
 
     # all remaining attributes are on AF::File metadata_node unless otherwise noted
@@ -107,7 +126,9 @@ module Hyrax
     attribute :aspect_ratio, ::Valkyrie::Types::Set
 
     # @param [ActionDispatch::Http::UploadedFile] file
+    # @deprecated Use #new instead; for removal in 4.0.0
     def self.for(file:)
+      Deprecation.warn "#{self.class}##{__method__} is deprecated; use #new instead."
       new(label: file.original_filename,
           original_filename: file.original_filename,
           mime_type: file.content_type)
@@ -155,8 +176,17 @@ module Hyrax
       ''
     end
 
+    ##
+    # @return [Valkyrie::StorageAdapter::File]
+    #
+    # @raise [Valkyrie::StorageAdapter::AdapterNotFoundError] if no adapter
+    #   could be found matching the file_identifier's scheme
+    # @raise [Valkyrie::StorageAdapter::FileNotFound] when the file can't
+    #   be found in the registered adapter
     def file
-      Hyrax.storage_adapter.find_by(id: file_identifier)
+      Valkyrie::StorageAdapter
+        .adapter_for(id: file_identifier)
+        .find_by(id: file_identifier)
     end
   end
 end

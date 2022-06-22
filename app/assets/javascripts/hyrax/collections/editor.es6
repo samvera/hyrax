@@ -15,8 +15,12 @@ export default class {
   }
 
   url() {
-    let urlParts = window.location.pathname.split("/")
+    let urlParts = this.pathname().split("/")
     urlParts[urlParts.length - 1] = "files"
     return urlParts.join("/") 
+  }
+
+  pathname() {
+    return window.location.pathname
   }
 }
