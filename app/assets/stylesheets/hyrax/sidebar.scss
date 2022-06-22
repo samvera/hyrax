@@ -26,22 +26,26 @@ $gutter-width: $grid-gutter-width/2;
   z-index: 1000;
 
   &.maximized {
+    width: $drawer-large;
+
     .h5,
     .sidebar-action-text,
     .profile,
     .collapse-toggle::after {
       opacity: 1;
     }
-    width: $drawer-large;
 
     .sidebar-toggle {
       transform: rotate(-180deg);
     }
 
     .nav-pills > li {
+      width: 100%;
+
       a {
         padding-left: 24px;
       }
+
       ul > li a {
         padding-left: 52px;
       }
@@ -63,6 +67,7 @@ $gutter-width: $grid-gutter-width/2;
     width: 18px;
     z-index: 1001;
   }
+
   a {
     color: $admin-sidebar-link-color;
   }
@@ -74,6 +79,7 @@ $gutter-width: $grid-gutter-width/2;
   .sidebar-action-text {
     opacity: 0;
   }
+
   .h5 {
     color: $admin-sidebar-section-heading-color;
     opacity: 0;
@@ -104,22 +110,41 @@ $gutter-width: $grid-gutter-width/2;
   .nav {
     margin-left: 0;
     margin-right: 0;
+
     li {
       white-space: nowrap;
+
+      > a:hover, > a:focus {
+        text-decoration: none;
+        background-color: $admin-sidebar-link-background-color;
+      }
     }
+    
     li .fa {
       margin-right: $input-btn-padding-x;
     }
   }
 
-  .nav-pills > li > a {
-    border-radius: 0;
-  }
+  .nav-pills > li {
+    > a {
+      border-radius: 0;
+    }
 
-  .nav-pills > li.active > a,
-  .nav-pills > li.active > a:focus,
-  .nav-pills > li.active > a:hover {
-    background-color: $admin-sidebar-link-background-color;
+    > a.collapse-toggle.nav-link {
+      background-color: unset;
+
+      &:hover {
+        background-color: $admin-sidebar-link-background-color;
+      }
+    }
+
+    &.active > a,
+    &.active > a:focus,
+    &.active > a:hover {
+      text-decoration: none;
+      background-color: $admin-sidebar-link-background-color;
+      color: $admin-sidebar-link-hover-color;
+    }
   }
 
   // submenu items
