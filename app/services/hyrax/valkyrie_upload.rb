@@ -28,7 +28,7 @@ module Hyrax::ValkyrieUpload
     )
     io.close
 
-    file_metadata = find_or_create_metadata(id: streamfile.id, file: streamfile)
+    file_metadata = Hyrax::FileMetadata(streamfile)
     file_metadata.file_set_id = file_set.id
 
     case use
@@ -90,17 +90,5 @@ module Hyrax::ValkyrieUpload
         Rails.logger.warn "Unknown file use #{file_metadata.type} specified for #{file_metadata.file_identifier}"
       end
     end
-  end
-
-  # @api private
-  # @param [#to_s] id
-  # @param [Valkyrie::StorageAdapter::StreamFile] file
-  def self.find_or_create_metadata(id:, file:)
-    Hyrax.custom_queries.find_file_metadata_by(id: id)
-  rescue Valkyrie::Persistence::ObjectNotFoundError => e
-    Hyrax.logger.warn "Failed to find existing metadata for #{id}:"
-    Hyrax.logger.warn e.message
-    Hyrax.logger.warn "Creating Hyrax::FileMetadata now"
-    Hyrax::FileMetadata.for(file: file)
   end
 end
