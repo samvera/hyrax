@@ -52,17 +52,6 @@ module Hyrax
       require 'hyrax/transactions/steps/update_work_members'
       require 'hyrax/transactions/steps/validate'
 
-      # The following transactions and steps are deprecated.
-      require 'hyrax/transactions/create_work'
-      require 'hyrax/transactions/destroy_work'
-      require 'hyrax/transactions/update_work'
-      require 'hyrax/transactions/steps/apply_collection_permission_template'
-      require 'hyrax/transactions/steps/apply_permission_template'
-      require 'hyrax/transactions/steps/apply_visibility'
-      require 'hyrax/transactions/steps/destroy_work'
-      require 'hyrax/transactions/steps/ensure_permission_template'
-      require 'hyrax/transactions/steps/save_work'
-
       extend Dry::Container::Mixin
 
       # Disable BlockLength rule for DSL code
@@ -238,49 +227,6 @@ module Hyrax
 
         ops.register 'update_work_members' do
           Steps::UpdateWorkMembers.new
-        end
-      end
-
-      # legacy AF works processing by transactions is deprecated
-      namespace 'work' do |ops|
-        ops.register 'apply_collection_permission_template' do
-          Steps::ApplyCollectionPermissionTemplate.new
-        end
-
-        ops.register 'apply_permission_template' do
-          Steps::ApplyPermissionTemplate.new
-        end
-
-        ops.register 'apply_visibility' do
-          Steps::ApplyVisibility.new
-        end
-
-        ops.register 'destroy_work' do
-          Steps::DestroyWork.new
-        end
-
-        ops.register 'ensure_admin_set' do
-          Steps::EnsureAdminSet.new
-        end
-
-        ops.register 'ensure_permission_template' do
-          Steps::EnsurePermissionTemplate.new
-        end
-
-        ops.register 'save_work' do
-          Steps::SaveWork.new
-        end
-
-        ops.register 'set_default_admin_set' do
-          Steps::SetDefaultAdminSet.new
-        end
-
-        ops.register 'set_modified_date' do
-          Steps::SetModifiedDate.new
-        end
-
-        ops.register 'set_uploaded_date_unless_present' do
-          Steps::SetUploadedDateUnlessPresent.new
         end
       end
       # rubocop:enable Metrics/BlockLength
