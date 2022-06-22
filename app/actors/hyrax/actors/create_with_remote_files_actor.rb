@@ -93,19 +93,13 @@ module Hyrax
 
         def create_file_from_url(uri, file_name, auth_header)
           import_url = URI.decode_www_form_component(uri.to_s)
-          use_valkyrie = false
-          case curation_concern
-          when Valkyrie::Resource
-            file_set = Hyrax.persister.save(resource: Hyrax::FileSet.new(import_url: import_url, label: file_name))
-            use_valkyrie = true
-          else
-            file_set = ::FileSet.new(import_url: import_url, label: file_name)
-          end
-          __create_file_from_url(file_set: file_set, uri: uri, auth_header: auth_header, use_valkyrie: use_valkyrie)
+          file_set = ::FileSet.new(import_url: import_url, label: file_name)
+
+          __create_file_from_url(file_set: file_set, uri: uri, auth_header: auth_header)
         end
 
-        def __create_file_from_url(file_set:, uri:, auth_header:, use_valkyrie: Hyrax.config.use_valkyrie?)
-          actor = file_set_actor_class.new(file_set, user, use_valkyrie: use_valkyrie)
+        def __create_file_from_url(file_set:, uri:, auth_header:)
+          actor = file_set_actor_class.new(file_set, user)
           actor.create_metadata(visibility: curation_concern.visibility)
           actor.attach_to_work(curation_concern)
           file_set.save! if file_set.respond_to?(:save!)
