@@ -15,18 +15,13 @@ class CatalogController < ApplicationController
   end
 
   configure_blacklight do |config|
-    config.view.gallery!.partials = [:index_header, :index]
-    config.view.masonry!.partials = [:index]
-    config.view.slideshow!.partials = [:index]
-
+    config.view.gallery(document_component: Blacklight::Gallery::DocumentComponent)
+    config.view.masonry(document_component: Blacklight::Gallery::DocumentComponent)
+    config.view.slideshow(document_component: Blacklight::Gallery::SlideshowComponent)
 
     config.show.tile_source_field = :content_metadata_image_iiif_info_ssm
     config.show.partials.insert(1, :openseadragon)
     config.search_builder_class = Hyrax::CatalogSearchBuilder
-
-    # Show gallery view
-    config.view.gallery.partials = [:index_header, :index]
-    config.view.slideshow.partials = [:index]
 
     # Because too many times on Samvera tech people raise a problem regarding a failed query to SOLR.
     # Often, it's because they inadvertently exceeded the character limit of a GET request.

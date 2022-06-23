@@ -1,12 +1,12 @@
 /* These styles are very specific to override the thumbnails from blacklight gallery */
 
-.slideshow-documents {
+.documents-slideshow {
   .grid {
     .document {
       .thumbnail {
         padding: 0;
 
-        a > img {
+        > img {
           left: 0;
           max-width: 100%;
           top: 0;
@@ -14,4 +14,26 @@
       }
     }
   }
+}
+
+.documents-gallery li div.search-result-wrapper {
+    margin: 0.25rem;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+
+    > .document-thumbnail {
+      margin: 0 auto 0.5rem auto;
+    }
+
+    > header {
+      margin: 0.5rem auto;
+      text-align: center;
+      width: 100%;
+      height: fit-content;
+    }
+
+    > .document-metadata {
+      margin: unset;
+    }
 }
