@@ -20,7 +20,6 @@ class Hyrax::AssetsGenerator < Rails::Generators::Base
     return if hyrax_javascript_installed?
     insert_into_file 'app/assets/javascripts/application.js', after: "//= require blacklight/blacklight\n" do
       "//= require hyrax\n" \
-      "//= require blacklight_gallery\n" \
     end
   end
 
