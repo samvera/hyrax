@@ -11,17 +11,6 @@ experience for all its members, whether they are at a formal gathering, in
 a social setting, or taking part in activities online. Please see our
 [Code of Conduct](CODE_OF_CONDUCT.md) for more information.
 
-## Samvera Community Intellectual Property Licensing and Ownership
-
-All code contributors must have an Individual Contributor License Agreement
-(iCLA) on file with the Samvera Steering Group. If the contributor works for
-an institution, the institution must have a Corporate Contributor License
-Agreement (cCLA) on file.
-
-https://wiki.duraspace.org/display/samvera/Samvera+Community+Intellectual+Property+Licensing+and+Ownership
-
-You should also add yourself to the `CONTRIBUTORS.md` file in the root of the project.
-
 ## Language
 
 The language we use matters.  Today, tomorrow, and for years to come
