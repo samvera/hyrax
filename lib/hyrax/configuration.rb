@@ -137,21 +137,6 @@ module Hyrax
     attr_writer :analytic_start_date
     attr_reader :analytic_start_date
 
-    ##
-    # @deprecated use analytics_id from config/analytics.yml instead
-    def google_analytics_id=(value)
-      Deprecation.warn("google_analytics_id is deprecated; use analytics_id from config/analytics.yml instead.")
-      Hyrax::Analytics.config.analytics_id = value
-    end
-
-    ##
-    # @deprecated use analytics_id from config/analytics.yml instead
-    def google_analytics_id
-      Deprecation.warn("google_analytics_id is deprecated; use analytics_id from config/analytics.yml instead.")
-      Hyrax::Analytics.config.analytics_id
-    end
-    alias google_analytics_id? google_analytics_id
-
     # @!endgroup
     # @!group Groups
 
@@ -546,20 +531,6 @@ module Hyrax
       @ingest_queue_name ||= :default
     end
 
-    # @deprecated
-    def whitelisted_ingest_dirs
-      Deprecation.warn(self, "Samvera is deprecating #{self.class}#whitelisted_ingest_dirs " \
-        "in Hyrax 3.0. Instead use #{self.class}#registered_ingest_dirs.")
-      registered_ingest_dirs
-    end
-
-    # @deprecated
-    def whitelisted_ingest_dirs=(input)
-      Deprecation.warn(self, "Samvera is deprecating #{self.class}#whitelisted_ingest_dirs= " \
-        "in Hyrax 3.0. Instead use #{self.class}#registered_ingest_dirs=.")
-      self.registered_ingest_dirs = input
-    end
-
     # @!attribute [w] registered_ingest_dirs
     #   List of directories which can be used for local file system ingestion.
     attr_writer :registered_ingest_dirs
@@ -835,17 +806,6 @@ module Hyrax
     def translate_id_to_uri
       @translate_id_to_uri ||= lambda do |id|
         "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{::Noid::Rails.treeify(id)}"
-      end
-    end
-
-    attr_writer :resource_id_to_uri_transformer
-    def resource_id_to_uri_transformer
-      Deprecation.warn('Use Hyrax.config.translate_uri_to_id instead.')
-
-      @resource_id_to_uri_transformer ||= lambda do |resource, base_url|
-        file_id = CGI.escape(resource.file_identifier.to_s)
-        fs_id = CGI.escape(resource.file_set_id.to_s)
-        "#{base_url}#{::Noid::Rails.treeify(fs_id)}/files/#{file_id}"
       end
     end
 

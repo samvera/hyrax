@@ -50,8 +50,6 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:enable_noids?) }
   it { is_expected.to respond_to(:extract_full_text?) }
   it { is_expected.to respond_to(:feature_config_path) }
-  it { is_expected.to respond_to(:google_analytics_id) }
-  it { is_expected.to respond_to(:google_analytics_id?) }
   it { is_expected.to respond_to(:identifier_registrars) }
   it { is_expected.to respond_to(:iiif_image_compliance_level_uri) }
   it { is_expected.to respond_to(:iiif_image_compliance_level_uri=) }
