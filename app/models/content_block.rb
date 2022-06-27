@@ -24,12 +24,6 @@ class ContentBlock < ActiveRecord::Base
   end
 
   class << self
-    # @deprecated
-    def whitelisted?(key)
-      Deprecation.warn(self, "Samvera is deprecating '#{self}.whitelisted?' in Hyrax 3.0. Use #{self}.registered? instead.")
-      registered?(key)
-    end
-
     def registered?(key)
       NAME_REGISTRY.include?(key)
     end
