@@ -10,7 +10,6 @@ module Hyrax
     include Hydra::WithDepositor
     include HasRepresentative
     include HasRendering
-    include WithFileSets
     include Naming
     include CoreMetadata
     include InAdminSet
