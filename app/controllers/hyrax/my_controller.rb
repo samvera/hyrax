@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
   class MyController < ApplicationController
-    extend Deprecation
     include Hydra::Catalog
     include Hyrax::Collections::AcceptsBatches
 
@@ -62,11 +61,6 @@ module Hyrax
       @add_works_to_collection = params.fetch(:add_works_to_collection, '')
       @add_works_to_collection_label = params.fetch(:add_works_to_collection_label, '')
     end
-
-    def query_solr
-      search_service.search_results
-    end
-    deprecation_deprecate :query_solr
 
     def search_service
       Hyrax::SearchService.new(config: blacklight_config, user_params: params, scope: self)
