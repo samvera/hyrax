@@ -23,6 +23,7 @@ SUMMARY
   spec.require_paths = ["lib"]
   spec.version       = Hyrax::VERSION
   spec.license       = 'Apache-2.0'
+  spec.metadata      = { "rubygems_mfa_required" => "true" }
 
   spec.required_ruby_version = '>= 2.7'
 
