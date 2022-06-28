@@ -8,10 +8,10 @@
     </div>
     <% if can? :edit, id %>
       <% if can? :edit, document.id %>
-        <button class="btn btn-xs btn-danger remove-from-collection-button"><%= t('hyrax.collections.show.buttons.remove_from_collection') %></button>
+        <button class="btn btn-sm btn-danger remove-from-collection-button"><%= t('hyrax.collections.show.buttons.remove_from_collection') %></button>
       <% else %>
         <%= link_to "#",
-                    class: 'btn btn-xs btn-danger remove-parent-from-collection-deny-button',
+                    class: 'btn btn-sm btn-danger remove-parent-from-collection-deny-button',
                     title: t('hyrax.collections.show.buttons.remove_from_collection') do %>
             <%= t('hyrax.collections.show.buttons.remove_from_collection') %>
         <% end %>

@@ -1,11 +1,11 @@
-<div class="panel panel-default permissions-confirm">
-  <div class="panel-heading">
+<div class="card permissions-confirm">
+  <div class="card-header">
     <h4><%= I18n.t("hyrax.upload.change_access_title_html") %><h4>
   </div>
-  <div class="panel-body">
+  <div class="card-body">
       <%= sanitize I18n.t("hyrax.upload.change_access_message_html", curation_concern: curation_concern) %>
   </div>
-  <div class="form-actions panel-footer">
+  <div class="form-actions card-footer">
     <%= button_to I18n.t("hyrax.upload.change_access_yes_message"), hyrax.copy_access_permission_path(curation_concern), class: 'btn btn-primary' %>
     <%= link_to I18n.t("hyrax.upload.change_access_no_message"), [main_app, curation_concern], class: 'btn' %>
   </div>

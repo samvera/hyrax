@@ -4,11 +4,11 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h2 class="panel-title h2"><%= t('.new_role') %></h2>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title h2"><%= t('.new_role') %></h2>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <%= simple_form_for Hyrax::Forms::WorkflowResponsibilityForm.new, url: hyrax.admin_workflow_roles_path do |f| %>
           <%= f.input :user_id, as: :select, collection: f.object.user_options %>
           <%= f.input :workflow_role_id, as: :select, collection: f.object.workflow_role_options %>
@@ -21,11 +21,11 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h2 class="panel-title h2"><%= t('.current_roles') %></h3>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title h2"><%= t('.current_roles') %></h3>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <table class="table table-striped datatable">
           <thead>
             <th><%= t('.header.name') %></th>

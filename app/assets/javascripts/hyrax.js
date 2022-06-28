@@ -1,23 +1,5 @@
-//= require jquery-ui/core
-//= require jquery-ui/widget
-//= require jquery-ui/widgets/menu
-//= require jquery-ui/widgets/autocomplete
-//= require jquery-ui/position
-//= require jquery-ui/effect
-//= require jquery-ui/effects/effect-highlight
-//= require jquery-ui/widgets/sortable
+//= require jquery-ui
 
-//= require bootstrap/alert
-//= require bootstrap/button
-//= require bootstrap/collapse
-//= require bootstrap/dropdown
-//= require bootstrap/modal
-//= require bootstrap/tooltip
-// Popover requires that tooltip be loaded first
-//= require bootstrap/popover
-//= require bootstrap/tab
-// Affix is used for the file manager
-//= require bootstrap/affix
 
 //= require select2
 //= require fixedsticky

@@ -1,9 +1,9 @@
 <% if has_alternative_views? -%>
-<div class="view-type pull-right">
+<div class="view-type float-right">
   <span class="sr-only"><%= t('blacklight.search.view_title') %></span>
   <div class="view-type-group btn-group">
     <% document_index_views.each do |view, config| %>
-      <%= link_to collection_path(params[:id], view: view), title: t("blacklight.search.view_title.#{view}", default: t("blacklight.search.view.#{view}", default: blacklight_config.view[view].title)), class: "btn btn-default view-type-#{view.to_s.parameterize } #{"active" if document_index_view_type == view}" do %>
+      <%= link_to collection_path(params[:id], view: view), title: t("blacklight.search.view_title.#{view}", default: t("blacklight.search.view.#{view}", default: blacklight_config.view[view].title)), class: "btn btn-light view-type-#{view.to_s.parameterize } #{"active" if document_index_view_type == view}" do %>
         <%= render_view_type_group_icon view %>
         <span class="caption"><%= t("blacklight.search.view.#{view}") %></span>
       <% end %>

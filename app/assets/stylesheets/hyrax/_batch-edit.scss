@@ -1,6 +1,6 @@
 .help-icon {
-  @extend .glyphicon;
-  @extend .glyphicon-question-sign;
+  @extend .fa !optional;
+  @extend .fa-question !optional;
   @extend .large-icon;
   top: 5px;
 }
@@ -14,13 +14,13 @@
 }
 
 #hide_addl_descriptions {
-  margin-bottom: $padding-large-vertical;
+  margin-bottom: $input-btn-padding-y-lg;
 }
 
-.glyphicon-chevron-right-helper.collapsed .chevron {
-  @extend .glyphicon-chevron-right;
+.fa-chevron-right-helper.collapsed .chevron {
+  @extend .fa-chevron-right !optional;
 }
-.glyphicon-chevron-right-helper .chevron {
-  @extend .glyphicon;
-  @extend .glyphicon-chevron-down;
+.fa-chevron-right-helper .chevron {
+  @extend .fa !optional;
+  @extend .fa-chevron-down !optional;
 }

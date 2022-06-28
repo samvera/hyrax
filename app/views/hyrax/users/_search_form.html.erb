@@ -4,9 +4,9 @@
     <label class="sr-only" for="user_search"><%= t('.search_users') %></label>
     <%= text_field_tag :uq, params[:uq], class: "q", placeholder: t('.search_users'), size: '30', type: "search", id: "user_search" %>
     <%= hidden_field_tag :sort, params[:sort], id: 'user_sort' %>
-    <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:uq, :sort, :qt, :page, :utf8)) %>
+    <%= render Blacklight::HiddenSearchStateComponent.new(params: search_state.params_for_search.except(:uq, :sort, :qt, :page, :utf8)) %>
     <button type="submit" class="btn btn-primary" id="user_submit">
-      <span class="glyphicon glyphicon-search"></span><%= t('.go') %>
+      <span class="fa fa-search"></span><%= t('.go') %>
     </button>
   <% end %>
 </div>

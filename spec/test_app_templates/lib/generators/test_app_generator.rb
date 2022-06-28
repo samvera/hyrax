@@ -5,6 +5,14 @@ class TestAppGenerator < Rails::Generators::Base
   # so the following path gets us to /path/to/hyrax/spec/test_app_templates/
   source_root File.expand_path('../../../../spec/test_app_templates/', __FILE__)
 
+  def install_turbolinks
+    gem 'turbolinks', '~> 5'
+
+    Bundler.with_clean_env do
+      run "bundle install"
+    end
+  end
+
   def install_engine
     generate 'hyrax:install', '-f'
   end
@@ -198,7 +206,7 @@ YAML
   end
 
   def install_universal_viewer
-    raise '`yarn install` failed!' unless system('./bin/yarn install')
+    raise '`yarn install` failed!' unless system('yarn install')
   end
 
   def create_sample_metadata_configuration
@@ -214,5 +222,11 @@ Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter)
 CONFIG
     end
+  end
+
+  def enable_cache_store
+    gsub_file 'config/environments/test.rb', 'config.action_controller.perform_caching = false',
+      'config.action_controller.perform_caching = true'
+    gsub_file 'config/environments/test.rb', 'config.cache_store = :null_store', 'config.cache_store = :memory_store'
   end
 end

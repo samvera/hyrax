@@ -9,7 +9,7 @@ export default class SortManager {
   }
 
   initialize_sort() {
-    this.element.sortable({handle: ".panel-heading"})
+    this.element.sortable({handle: ".card-header"})
     this.element.on("sortstop", this.stopped_sorting)
     this.element.on("sortstart", this.started_sorting)
   }
@@ -104,7 +104,7 @@ export default class SortManager {
 
   initialize_alpha_sort_button() {
     let that = this
-    this.alpha_sort_button.click(function() { that.sort_alpha() } )
+    this.alpha_sort_button.on("click", function() { that.sort_alpha() } )
   }
 
   sort_alpha() {

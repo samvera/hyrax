@@ -1,5 +1,5 @@
-@import 'morris.js/0.5.1/morris';
-@import 'bootstrap/variables';
+@import "morris";
+@import "bootstrap/variables";
 $tab-margin: 44px !default;
 $title-text-color: #4e4a42 !default;
 $body-background-color: #f0f0f0 !default;
@@ -9,7 +9,7 @@ $admin-sidebar-profile-background-color: #505050 !default;
 $admin-sidebar-section-heading-color: #dedede !default;
 $admin-sidebar-link-color: #ffffff !default;
 $admin-sidebar-link-hover-color: #000000 !default;
-$admin-sidebar-link-background-color: #505050 !default;
+$admin-sidebar-link-background-color: #eeeeee !default;
 $admin-content-background-color: #f0f0f0 !default;
 $admin-vertical-padding: 0 !default;
 $admin-panel-border-color: #dedede !default;
@@ -37,52 +37,12 @@ $admin-panel-border-color: #dedede !default;
 
 body.dashboard {
   background-color: $body-background-color;
-  padding-top: $navbar-height;
-
-  @media only screen and (max-width : 767px) {
-    padding-top: 0;
-  }
+  padding-top: 3.5rem;
 }
 
 .dashboard {
   .count-display {
     font-size: 1.1em;
-  }
-
-  .tabs {
-    margin-top: $tab-margin;
-    position: relative;
-  }
-
-  .nav-tabs {
-    border-bottom: 0;
-    margin-bottom: 0;
-    margin-top: -$tab-margin;
-    padding: 0 5px;
-  }
-
-  .nav-tabs > li > a {
-    border-top: 2px solid transparent;
-  }
-
-  .nav-tabs > li.active > a,
-  .nav-tabs > li.active > a:hover {
-    border-top: 2px solid $tab-active-accent-color;
-  }
-
-  /* The #masthead selector below could (and ideally, should) be removed if we can
-   * replace the "navbar-static-top" class with "navbar-fixed-top" for the Admin UI only
-   */
-  #masthead {
-    border: 0;
-    left: 0;
-    position: fixed;
-    right: 0;
-    top: 0;
-
-    @media only screen and (max-width : 767px) {
-      position: initial;
-    }
   }
 
   /* This is needed in Chrome for the admin/admin_sets edit view AND the collection
@@ -103,30 +63,30 @@ body.dashboard {
     margin-top: 0;
 
     h1 {
-      font-size: $font-size-h2;
-      margin-left: $padding-xs-horizontal;
-      margin-top: $padding-base-vertical;
+      font-size: $h2-font-size;
+      margin-left: $table-cell-padding-sm;
+      margin-top: $input-btn-padding-y;
 
       .fa {
         color: $gray;
-        margin-right: $padding-xs-horizontal;
+        margin-right: $table-cell-padding-sm;
       }
     }
 
-
     .btn {
-      margin-bottom: $padding-base-vertical;
+      margin-bottom: $input-btn-padding-y;
     }
   }
 
   // the span selector is required because Blacklight is using it.
-  .list-filters-label, span.constraints-label {
+  .list-filters-label,
+  span.constraints-label {
     font-weight: bold;
     margin-right: 2em;
   }
 
   .constraints-container {
-    padding: $panel-heading-padding;
+    padding: $card-spacer-y $card-spacer-x;
 
     .start-over {
       padding: 4px 6px;
@@ -134,21 +94,21 @@ body.dashboard {
   }
 
   .table {
-     .date,
-     .action {
+    .date,
+    .action {
       width: 13ch;
     }
   }
 
   .list-filters {
-    background-color: $panel-default-heading-bg;
+    background-color: $card-cap-bg;
     margin-bottom: 20px;
-    padding: $panel-heading-padding;
+    padding: $card-spacer-y $card-spacer-x;
 
     .btn-group > .facet-values {
       display: none;
     }
-    .btn-group.open > .facet-values {
+    .btn-group.show > .facet-values.show {
       display: table;
     }
 
@@ -179,7 +139,7 @@ body.dashboard {
     padding: 0;
   }
 
-  .user-activity .panel-body {
+  .user-activity .card-body {
     overflow: scroll;
     max-height: 20em;
   }
@@ -206,51 +166,66 @@ body.dashboard {
     margin-bottom: 0;
   }
 
-  // The select collection modal for batch operations
-  .collection-list-modal {
-    .modal-content {
-      float: left;
-      .modal-header,
-      .modal-footer,
-      .modal-body {
-        float: left;
-        width: 100%;
-      }
-    }
-  }
-
-  .panel {
-    border: 1px solid $admin-panel-border-color;
-    float: left;
-    width: 100%;
-
-    .panel-heading,
-    .panel-footer,
-    .panel-body,
-    .list-group-item {
-      float: left;
-      width: 100%;
-    }
-
-    .panel-title {
-      color: $title-text-color;
-      display: block;
-      font-size: 18px;
-      font-weight: 600;
-      line-height: 30px;
-
-      &.h2 {
-        font-size: 22px;
-      }
-    }
-  }
-
-  .panel.panel-default.labels {
-    border-top: 1px solid $panel-default-border;
+  .card.labels {
+    border-top: 1px solid $card-border-color;
     margin-bottom: 0;
   }
 
   .spacer {
     margin-bottom: 5px;
   }
+}
+
+.dropdown-item {
+  display: list-item;
+
+  > .facet-values {
+    display: table;
+    table-layout: fixed;
+
+    > .facet-label {
+      display: table-cell;
+      hyphens: auto;
+      text-indent: -0.938rem;
+    }
+
+    > .facet-count {
+      display: table-cell;
+      text-align: right;
+    }
+  }
+}
+
+ul#visibility_ssi-dropdown-options {
+  table-layout: fixed;
+
+  > li {
+    display: table-row;
+
+    > .facet-label {
+      display: table-cell;
+      hyphens: auto;
+    }
+
+    > .facet-count {
+      display: table-cell;
+      text-align: right;
+    }
+  }
+}
+
+.card.tabs {
+  background-color: transparent;
+
+  > .card-body {
+    background-color: white;
+  }
+}
+
+#form_workflows .card-body .radio label span input {
+  margin-right: 0.5rem;
+}
+
+div.main-content.maximized.admin-stats {
+  background-color: white;
 }

@@ -9,18 +9,18 @@
     <div class="skip-to-content">
       <%= link_to "Skip to Content", "#skip-to-content" %>
     </div>
-    <%= render '/masthead' %>
+    <%= render '/masthead', placement_class: 'fixed-top' %>
     <%= content_for(:navbar) %>
     <div id="content-wrapper" role="main">
       <div class="sidebar maximized">
         <%= render 'hyrax/dashboard/sidebar' %>
       </div>
-      <div class="main-content maximized">
+      <div class="main-content maximized<%= " admin-stats" if request.fullpath.include? '/admin/stats' %>">
         <%= render_breadcrumbs builder: Hyrax::BootstrapBreadcrumbsBuilder %>
         <%= render '/flash_msg' %>
         <% if content_for?(:page_header) %>
           <div class="row">
-            <div class="col-xs-12 main-header">
+            <div class="col-12 main-header">
               <%= yield(:page_header) %>
             </div>
           </div>
@@ -33,6 +33,6 @@
       </div>
 
     </div><!-- /#content-wrapper -->
-    <%= render 'shared/ajax_modal' %>
+    <%= render 'shared/modal' %>
   </body>
 </html>

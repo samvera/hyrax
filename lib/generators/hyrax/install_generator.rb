@@ -45,13 +45,15 @@ module Hyrax
     end
 
     def replace_blacklight_layout
-      gsub_file 'app/controllers/application_controller.rb', /layout 'blacklight'/,
+      gsub_file 'app/controllers/application_controller.rb', /layout :determine_layout.+$/,
                 "include Hyrax::ThemedLayoutController\n  with_themed_layout '1_column'\n"
     end
 
     def insert_builder
-      insert_into_file 'app/models/search_builder.rb', after: /include Hydra::AccessControlsEnforcement/ do
-        "\n  include Hyrax::SearchFilters\n"
+      insert_into_file 'app/models/search_builder.rb', after: /include Blacklight::Solr::SearchBuilderBehavior/ do
+        "\n  # Add a filter query to restrict the search to documents the current user has access to\n"\
+        "  include Hydra::AccessControlsEnforcement\n"\
+        "  include Hyrax::SearchFilters\n"
       end
     end
 
@@ -151,21 +153,20 @@ module Hyrax
 
     def datatables
       javascript_manifest = 'app/assets/javascripts/application.js'
-      # Generator is broken https://github.com/rweng/jquery-datatables-rails/issues/225
-      # generate 'jquery:datatables:install bootstrap3'
       insert_into_file javascript_manifest, after: /jquery.?\n/ do
-        "//= require jquery_ujs\n" \
-        "//= require dataTables/jquery.dataTables\n" \
-        "//= require dataTables/bootstrap/3/jquery.dataTables.bootstrap\n"
+        "//= require jquery.dataTables\n" \
+        "//= require dataTables.bootstrap4\n"
       end
 
-      # This is only necessary for Rails 5.1 and hopefully is temporary.
-      # There was some trouble getting the file-manager javascript (remote forms) to work well
-      # with rails-ujs. Note jquery_ujs was added to the block above (after jQuery)
-      gsub_file javascript_manifest, 'require rails-ujs', ''
-
       insert_into_file 'app/assets/stylesheets/application.css', before: ' *= require_self' do
-        " *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap\n"
+        " *= require dataTables.bootstrap4\n"
+      end
+    end
+
+    def twitter_typeahead
+      javascript_manifest = 'app/assets/javascripts/application.js'
+      insert_into_file javascript_manifest, after: /popper\n/ do
+        "//= require twitter/typeahead\n"
       end
     end
 
@@ -183,16 +184,6 @@ module Hyrax
 
     def universalviewer_files
       rake('hyrax:universal_viewer:install')
-    end
-
-    # Blacklight::Controller will by default add an after_action filter to discard all flash messages on xhr requests.
-    # This has caused problems when we perform a post-redirect-get cycle using xhr and turbolinks.
-    # This injector will modify the generated ApplicationController to skip this action.
-    # TODO: This may be removed in Blacklight 7.x, so we'll likely need to remove this after updating.
-    def inject_skip_blacklilght_flash_discarding
-      insert_into_file "app/controllers/application_controller.rb", after: "include Blacklight::Controller\n" do
-        "  skip_after_action :discard_flash_if_xhr\n"
-      end
     end
   end
 end

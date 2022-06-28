@@ -80,15 +80,15 @@ header {
   }
 }
 
-.label-default a:link,
-.label-default a:visited,
-.label-default a:hover {
+.badge-secondary a:link,
+.badge-secondary a:visited,
+.badge-secondary a:hover {
   color: #fff;
   text-align: center;
 }
 
 .dropdown-menu .edit_collection {
-  margin-top: 2 * $padding-large-vertical;
+  margin-top: 2 * $input-btn-padding-y-lg;
 }
 
 div.view-type {
@@ -128,8 +128,8 @@ button.branding-banner-remove:hover {
 }
 
 .dashboard .collections-wrapper {
-  .panel {
-    .panel-title {
+  .card {
+    .card-title {
       font-weight: 300;
     }
   }
@@ -219,7 +219,7 @@ button.branding-banner-remove:hover {
       }
     }
 
-    .glyphicon {
+    .fa {
       margin: 4px 0 0 4px;
     }
   }
@@ -276,7 +276,7 @@ button.branding-banner-remove:hover {
 // Admin show page
 .admin-show-page {
 
-  .panel-body > section {
+  .card-body > section {
     border-top: 1px solid #efefef;
     margin-bottom: 40px;
 
@@ -285,7 +285,7 @@ button.branding-banner-remove:hover {
     }
   }
 
-  .panel-heading {
+  .card-header {
     vertical-align: middle;
 
     .btn {
@@ -312,7 +312,7 @@ button.branding-banner-remove:hover {
         margin-bottom: 10px;
       }
 
-      .label {
+      .badge {
         margin-left: 5px;
       }
 
@@ -404,7 +404,7 @@ button.branding-banner-remove:hover {
     padding-bottom: 40px;
 
     .sharing-row-form {
-      margin-bottom: $padding-large-vertical;
+      margin-bottom: $input-btn-padding-y-lg;
     }
   }
 
@@ -463,7 +463,7 @@ button.branding-banner-remove:hover {
       text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.5);
     }
 
-    .label {
+    .badge {
       border: 1px solid rgba(255, 255, 255, 0.5);
       box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
       margin-left: 0.5em;
@@ -537,7 +537,7 @@ button.branding-banner-remove:hover {
       padding: 0;
     }
 
-    .label {
+    .badge {
       margin-left: 0.5em;
       vertical-align: 100%;
     }

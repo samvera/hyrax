@@ -10,26 +10,36 @@
     </legend>
 
     <div class="form-group">
-      <label class="radio">
-        <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>
-        <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) %>
-      </label>
-      <label class="radio">
-        <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>
-        <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) %>
-      </label>
-      <label class="radio">
-        <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO %>
-        <%= render "form_permission_embargo", f: f %>
-      </label>
-      <label class="radio">
-        <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE %>
-        <%= render "form_permission_lease", f: f %>
-      </label>
-      <label class="radio">
-        <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>
-        <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE) %>
-      </label>
+      <div class="form-check">
+        <label class="form-check-label">
+          <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, class: 'form-check-input' %>
+          <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) %>
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED, class: 'form-check-input' %>
+          <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) %>
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO, class: 'form-check-input' %>
+          <%= render "form_permission_embargo", f: f %>
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE, class: 'form-check-input' %>
+          <%= render "form_permission_lease", f: f %>
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, class: 'form-check-input' %>
+          <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE) %>
+        </label>
+      </div>
     </div>
   </fieldset>
 <% end %>

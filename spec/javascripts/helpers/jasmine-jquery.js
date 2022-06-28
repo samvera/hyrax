@@ -509,7 +509,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             var actualText = $(actual).text()
             var trimmedText = $.trim(actualText)
 
-            if (text && $.isFunction(text.test)) {
+            if (text && typeof text.test === "function") {
               return { pass: text.test(actualText) || text.test(trimmedText) }
             } else {
               return { pass: (actualText == text || trimmedText == text) }
@@ -523,7 +523,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           compare: function (actual, text) {
             var trimmedText = $.trim($(actual).text())
 
-            if (text && $.isFunction(text.test)) {
+            if (text && typeof text.test === "function") {
               return { pass: text.test(trimmedText) }
             } else {
               return { pass: trimmedText.indexOf(text) != -1 }

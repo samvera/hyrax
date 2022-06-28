@@ -1,11 +1,11 @@
 <p><%= t('.directions') %></p>
-<h2><%= t('.add_sharing') %></h2>
+<h2 class="h3 mt-4"><%= t('.add_sharing') %></h2>
 
 <% depositor = f.object.depositor %>
 
-<div class="alert alert-info hidden" id="save_perm_note"><%= t('.permissions_save_note_html') %></div>
+<div class="alert alert-info" id="save_perm_note"><%= t('.permissions_save_note_html') %></div>
 
-<div class="alert alert-warning hidden" role="alert" id="permissions_error">
+<div class="alert alert-warning" role="alert" id="permissions_error">
   <span id="permissions_error_text"></span>
 </div>
 
@@ -22,7 +22,7 @@
     <label for="new_group_permission_skel" class="sr-only"><%= t(".access_type_to_grant") %></label>
     <%= select_tag 'new_group_permission_skel', options_for_select(configured_permission_options), class: 'form-control' %>
 
-    <button class="btn btn-default" id="add_new_group_skel">
+    <button class="btn btn-secondary ml-2" id="add_new_group_skel">
       <span><%= t(".add_this_group_html") %></span>
     </button>
     <br /><span id="directory_group_result"></span>
@@ -38,7 +38,7 @@
     <%= text_field_tag 'new_user_name_skel', nil %>
     <label for="new_user_permission_skel" class="sr-only"><%= t('.access_type_to_grant') %></label>
     <%= select_tag 'new_user_permission_skel', options_for_select(configured_permission_options), class: 'form-control' %>
-    <button class="btn btn-default" id="add_new_user_skel">
+    <button class="btn btn-secondary ml-2" id="add_new_user_skel">
       <span>Add<span class="sr-only"> this <%= t('hyrax.account_label') %></span></span>
     </button>
     <br /> <span id="directory_user_result"></span>
@@ -49,7 +49,7 @@
 
 <script type="text/x-tmpl" id="tmpl-work-grant">
   <tr>
-    <td><label class="control-label">{%= o.name %}</label></td>
+    <td><label class="col-form-label">{%= o.name %}</label></td>
     <td><div class="col-sm-10">{%= o.accessLabel %}<button class="btn close">&times;</button></div></td>
   </tr>
 </script>

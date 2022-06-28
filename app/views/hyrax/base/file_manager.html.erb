@@ -1,18 +1,17 @@
 <h1><%= t("hyrax.file_manager.link_text") %></h1>
 <ul class="breadcrumb">
-  <li>
+  <li class="breadcrumb-item">
     <%= t('.back_to') %> <%= link_to @form.to_s, [main_app, @form] %>
   </li>
 </ul>
 
 <% if !@form.member_presenters.empty? %>
-  <div data-action="file-manager">
-    <div class="col-md-3" id="file-manager-tools">
+  <div class="row" data-action="file-manager">
+    <div class="col-lg-3" id="file-manager-tools">
       <h2><%= t('.toolbar') %></h2>
       <%= render "file_manager_actions" %>
     </div>
-    <div class="col-md-3" id="label-tools-spacer" class="fixed"></div>
-    <div class="col-md-9" id="order-grid">
+    <div class="col-lg-9" id="order-grid">
       <%= render "file_manager_members" %>
     </div>
   </div>

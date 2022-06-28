@@ -77,7 +77,7 @@ FactoryBot.define do
     end
 
     after(:create) do |adminset, _evaluator|
-      adminset.reset_access_controls!
+      adminset.permission_template.reset_access_controls_for(collection: adminset)
     end
 
     factory :default_adminset, class: AdminSet do

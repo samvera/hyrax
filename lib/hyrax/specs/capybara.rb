@@ -17,6 +17,8 @@ require 'capybara-screenshot/rspec'
 require 'selenium-webdriver'
 require 'webdrivers' unless ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
 
+Capybara.save_path = ENV['CI'] ? "/tmp/test-results" : Rails.root.join('tmp', 'capybara')
+
 if ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
   args = %w[disable-gpu no-sandbox whitelisted-ips window-size=1400,1400]
   args.push('headless') if ActiveModel::Type::Boolean.new.cast(ENV['CHROME_HEADLESS_MODE'])
@@ -67,8 +69,8 @@ Capybara::Screenshot.register_driver(:selenium_chrome_headless_sandboxless) do |
   driver.browser.save_screenshot(path)
 end
 
-Capybara::Screenshot.autosave_on_failure = false
-Capybara::Screenshot.prune_strategy = { keep: 10 }
+Capybara::Screenshot.autosave_on_failure = true
+Capybara::Screenshot.prune_strategy = :keep_last_run
 
 # Save CircleCI artifacts
 
@@ -79,7 +81,7 @@ def save_timestamped_page_and_screenshot(page, meta)
   time_now = Time.zone.now
   timestamp = "#{time_now.strftime('%Y-%m-%d-%H-%M-%S.')}#{'%03d' % (time_now.usec / 1000).to_i}"
 
-  artifact_dir = ENV['CI'] ? "/tmp/test-results" : Rails.root.join('tmp', 'capybara')
+  artifact_dir = Capybara.save_path
 
   screenshot_name = "screenshot-#{filename}-#{line_number}-#{timestamp}.png"
   screenshot_path = "#{artifact_dir}/#{screenshot_name}"

@@ -15,9 +15,9 @@ describe "tabs", ->
     describe "tabNavigation", ->
 
       it "It sets the first tab to active", ->
-        expect($('#homeTabs li').attr('class')).toBeUndefined()
+        expect($('#homeTabs a:first').attr('class')).toBeUndefined()
         tabNavigation();
-        expect($('#homeTabs li').attr('class')).toBe('active')
+        expect($('#homeTabs a:first').attr('class')).toBe('active')
 
   describe "dashboard tabs", ->
     beforeEach ->

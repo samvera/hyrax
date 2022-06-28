@@ -1,8 +1,8 @@
           <div id="participants" class="tab-pane">
-            <div class="panel panel-default labels edit-sharing-tab">
-              <div class="panel-body">
+            <div class="card labels edit-sharing-tab">
+              <div class="card-body">
                 <section class="section-add-sharing clearfix">
-                  <h3><%= t('.add_participants') %></h3>
+                  <h2 class="h3"><%= t('.add_participants') %></h2>
                   <% access_options = options_for_select([['Manager', 'manage'], ['Depositor', 'deposit'], ['Viewer', 'view']]) %>
                   <div class="sharing-row-form">
                     <%= simple_form_for collection_permission_template_form_for(form: @form),
@@ -27,7 +27,7 @@
                                 class: 'form-control' %>
                           </div>
                         <% end %>
-                        <%= f.submit t('helpers.submit.hyrax_permission_template_access.create'), class: 'btn btn-info' %>
+                        <%= f.submit t('helpers.submit.hyrax_permission_template_access.create'), class: 'btn btn-secondary ml-2' %>
 
                     <% end %>
                   </div>
@@ -54,20 +54,21 @@
                                       class: 'form-control' %>
                         </div>
                       <% end %>
-                      <%= f.submit t('helpers.submit.hyrax_permission_template_access.create'), class: 'btn btn-info' %>
+                      <%= f.submit t('helpers.submit.hyrax_permission_template_access.create'), class: 'btn btn-secondary ml-2' %>
                     <% end %>
                   </div>
 
-                  <p class="help-block"><%= t('hyrax.admin.admin_sets.form.note') %></p>
+                  <p class="form-text"><%= t('hyrax.admin.admin_sets.form.note') %></p>
                 </section>
 
+                <h2 class="h3"><%= t(".current_participants") %></h2>
                 <fieldset class="admin-set-participants section-collection-sharing">
-                  <legend><%= t(".current_participants") %></legend>
+                  
                   <%= render 'form_participant_table', access: 'managers', filter: :manage? %>
                   <%= render 'form_participant_table', access: 'depositors', filter: :deposit? %>
                   <%= render 'form_participant_table', access: 'viewers', filter: :view? %>
                 </fieldset>
 
-              </div><!-- /.panel-body -->
+              </div><!-- /.card-body -->
             </div>
           </div>

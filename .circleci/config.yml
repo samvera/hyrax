@@ -13,7 +13,7 @@ jobs:
         default: 2.3.13
       rails_version:
         type: string
-        default: '5.2.8'
+        default: 6.0.5
     executor:
       name: 'samvera/ruby'
       ruby_version: << parameters.ruby_version >>
@@ -74,7 +74,7 @@ jobs:
         default: 2.3.13
       rails_version:
         type: string
-        default: '5.2.8'
+        default: 6.0.5
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
@@ -82,7 +82,7 @@ jobs:
     environment:
       RAILS_VERSION: << parameters.rails_version >>
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
-      ENGINE_CART_RAILS_OPTIONS: --database=postgresql --skip-git --skip-bundle --skip-listen --skip-spring --skip-keeps --skip-test --skip-bootsnap
+      ENGINE_CART_RAILS_OPTIONS: --database=postgresql --skip-git --skip-bundle --skip-listen --skip-spring --skip-keeps --skip-test --skip-bootsnap --skip-javascript
       DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test # Hard-coded with data from CircleCI orb, related to https://github.com/samvera-labs/samvera-circleci-orb/issues/42
     steps:
       - attach_workspace:
@@ -172,11 +172,11 @@ workflows:
     jobs:
       - bundle:
           ruby_version: "2.7.6"
-          rails_version: "5.2.8"
+          rails_version: "6.0.5"
           bundler_version: "2.3.13"
       - build:
           ruby_version: "2.7.6"
-          rails_version: "5.2.8"
+          rails_version: "6.0.5"
           bundler_version: "2.3.13"
           requires:
             - bundle

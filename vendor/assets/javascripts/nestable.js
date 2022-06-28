@@ -413,7 +413,7 @@
                 if(parentItem !== null && !parentItem.is('.' + this.options.rootClass))
                     parentId = parentItem.data('id');
 
-                if($.isFunction(this.options.dropCallback))
+                if (typeof this.options.dropCallback === "function")
                 {
                     var details = {
                         sourceId   : el.data('id'),

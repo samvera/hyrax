@@ -26,7 +26,7 @@
       }
     };
 
-    $('.generate-single-use-link').click(function(event) {
+    $('.generate-single-use-link').on('click', function(event) {
       event.preventDefault()
       manager.create_link($(this))
       return false

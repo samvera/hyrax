@@ -1,6 +1,6 @@
 Blacklight.onLoad(function() {
   // toggle button on or off based on boxes being clicked
-  $(".batch_document_selector, .batch_document_selector_all").bind('click', function(e) {
+  $(".batch_document_selector, .batch_document_selector_all").on('click', function(e) {
     var n = $(".batch_document_selector:checked").length;
     if (n>0 || ($('input#check_all').length && $('input#check_all')[0].checked)) {
       $('.sort-toggle').hide();
@@ -14,21 +14,21 @@ Blacklight.onLoad(function() {
     if (array.length > 1) {
       var docId = array[1];
       $("#detail_" + docId + " .expanded-details").slideToggle();
-      $(item).toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+      $(item).toggleClass('fa-chevron-right fa-chevron-down');
     }
   }
 
   // show/hide more information on the dashboard when clicking
   // plus/minus
-  $('.glyphicon-chevron-right').on('click', function() {
+  $('.fa-chevron-right').on('click', function() {
     show_details(this);
     return false;
   });
 
   $('a').filter( function() {
-      return $(this).find('.glyphicon-chevron-right').length === 1;
+      return $(this).find('.fa-chevron-right').length === 1;
    }).on('click', function() {
-    show_details($(this).find(".glyphicon-chevron-right")[0]);
+    show_details($(this).find(".fa-chevron-right")[0]);
     return false;
   });
 

@@ -7,8 +7,10 @@
             <div class="media-body">
               <div class="media-heading">
                 <%= link_to [hyrax, collection] do %>
-                  <%= render_thumbnail_tag(collection, { class: 'hidden-xs file_listing_thumbnail', alt: "#{collection.title_or_label} #{ t('hyrax.homepage.admin_sets.thumbnail')}" },
-                                           { suppress_link: true }) + collection.title_or_label %>
+                  <%= document_presenter(collection)&.thumbnail&.thumbnail_tag(
+                    { class: 'd-none d-md-block file_listing_thumbnail', alt: "#{collection.title_or_label} #{ t('hyrax.homepage.admin_sets.thumbnail')}" },
+                    { suppress_link: true }
+                  ) + collection.title_or_label %>
                 <% end %>
               </div>
             </div>
@@ -19,9 +21,9 @@
   </tbody>
 </table>
 <ul class="list-inline collection-highlights-list">
-  <li>
+  <li class="list-inline-item">
     <%= link_to t('hyrax.homepage.admin_sets.link'),
                 main_app.search_catalog_path(f: { human_readable_type_sim: ["Collection"]}),
-                class: 'btn btn-default' %>
+                class: 'btn btn-secondary' %>
   </li>
 </ul>

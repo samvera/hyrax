@@ -1,19 +1,19 @@
 <%= form_for @user,
              url: hyrax.dashboard_profile_path(@user.to_param),
-             html: { multipart: true, class: 'form-horizontal' } do |f| %>
-  <div class="form-group">
-    <%= f.label :avatar, t(".change_picture").html_safe, class: "col-xs-4 control-label" %>
-    <div class="col-xs-8">
+             html: { multipart: true } do |f| %>
+  <div class="form-group row">
+    <%= f.label :avatar, t(".change_picture").html_safe, class: "col-4 col-form-label" %>
+    <div class="col-8">
       <%= image_tag @user.avatar.url(:thumb) if @user.avatar? %>
       <%= f.file_field :avatar %>
       <%= f.hidden_field :avatar_cache %>
-      <span class="help-block"><%= t('.help_change_picture_type') %></span>
+      <span class="form-text"><%= t('.help_change_picture_type') %></span>
 
-      <div class="checkbox">
-        <%= f.label :remove_avatar do %>
-          <%= f.check_box :remove_avatar %>
+      <div class="form-check">
+        <%= f.label :remove_avatar, class: 'form-check-label' do %>
+          <%= f.check_box :remove_avatar, class: 'form-check-input' %>
           <%= t(".delete_picture") %>
-          <a href="#" id="delete_picture_help" data-toggle="popover" data-content="<%= t('.delete_picture_data_content') %>" data-original-title="<%= t('.delete_picture_data_original_title') %>"><i class="glyphicon glyphicon-question-sign"></i></a>
+          <a href="#" id="delete_picture_help" data-toggle="popover" data-content="<%= t('.delete_picture_data_content') %>" data-original-title="<%= t('.delete_picture_data_original_title') %>"><i class="fa fa-question"></i></a>
         <% end %>
       </div>
     </div>
@@ -23,32 +23,32 @@
     <%= render partial: 'zotero', locals: { f: f, user: @user } %>
   <% end %>
 
-  <div class="form-group">
-    <%= f.label :orcid, class: 'col-xs-4 control-label' do %>
+  <div class="form-group row">
+    <%= f.label :orcid, class: 'col-4 col-form-label' do %>
       <%= orcid_label %>
     <% end %>
-    <div class="col-xs-8">
+    <div class="col-8">
        <%= f.text_field :orcid, class: "form-control" %>
     </div>
   </div><!-- .form-group -->
 
-  <div class="form-group">
-    <%= f.label :twitter_handle, t(".twitter_handle").html_safe, class: 'col-xs-4 control-label' %>
-    <div class="col-xs-8">
+  <div class="form-group row">
+    <%= f.label :twitter_handle, t(".twitter_handle").html_safe, class: 'col-4 col-form-label' %>
+    <div class="col-8">
        <%= f.text_field :twitter_handle, class: "form-control" %>
     </div>
   </div><!-- .form-group -->
 
-  <div class="form-group">
-    <%= f.label :facebook_handle, t(".facebook_handle").html_safe, class: 'col-xs-4 control-label' %>
-    <div class="col-xs-8">
+  <div class="form-group row">
+    <%= f.label :facebook_handle, t(".facebook_handle").html_safe, class: 'col-4 col-form-label' %>
+    <div class="col-8">
        <%= f.text_field :facebook_handle, class: "form-control" %>
     </div>
   </div><!-- .form-group -->
 
-  <div class="form-group">
-    <%= f.label :googleplus_handle, t(".google_handle").html_safe, class: 'col-xs-4 control-label' %>
-    <div class="col-xs-8">
+  <div class="form-group row">
+    <%= f.label :googleplus_handle, t(".google_handle").html_safe, class: 'col-4 col-form-label' %>
+    <div class="col-8">
        <%= f.text_field :googleplus_handle, class: "form-control" %>
     </div>
   </div><!-- .form-group -->

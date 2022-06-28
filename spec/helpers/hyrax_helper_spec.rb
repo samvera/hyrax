@@ -34,20 +34,20 @@ RSpec.describe HyraxHelper, type: :helper do
     context 'with unread messages' do
       let(:unread_count) { 10 }
 
-      it 'renders with label-danger and is visible' do
-        expect(subject).to eq '<a aria-label="Foobar" class="notify-number" href="/notifications"><span class="fa fa-bell"></span>' \
+      it 'renders with badge-danger and is visible' do
+        expect(subject).to eq '<a aria-label="Foobar" class="notify-number nav-link" href="/notifications"><span class="fa fa-bell"></span>' \
                               "\n" \
-                              '<span class="count label label-danger">10</span></a>'
+                              '<span class="count badge badge-danger">10</span></a>'
       end
     end
 
     context 'with no unread messages' do
       let(:unread_count) { 0 }
 
-      it 'renders with label-default and is invisible' do
-        expect(subject).to eq '<a aria-label="Foobar" class="notify-number" href="/notifications"><span class="fa fa-bell"></span>' \
+      it 'renders with badge-secondary and is invisible' do
+        expect(subject).to eq '<a aria-label="Foobar" class="notify-number nav-link" href="/notifications"><span class="fa fa-bell"></span>' \
                               "\n" \
-                              '<span class="count label invisible label-default">0</span></a>'
+                              '<span class="count badge invisible badge-secondary">0</span></a>'
       end
     end
   end
@@ -278,7 +278,7 @@ RSpec.describe HyraxHelper, type: :helper do
 
   describe "#iconify_auto_link" do
     let(:text)              { 'Foo < http://www.example.com. & More text' }
-    let(:linked_text)       { 'Foo &lt; <a href="http://www.example.com"><span class="glyphicon glyphicon-new-window"></span> http://www.example.com</a>. &amp; More text' }
+    let(:linked_text)       { 'Foo &lt; <a href="http://www.example.com"><span class="fa fa-external-link"></span> http://www.example.com</a>. &amp; More text' }
     let(:document)          { SolrDocument.new(has_model_ssim: ['GenericWork'], id: 512, title_tesim: text, description_tesim: text) }
     let(:blacklight_config) { CatalogController.blacklight_config }
 
@@ -300,7 +300,7 @@ RSpec.describe HyraxHelper, type: :helper do
         expect(subject).to include('<a href="http://www.example.com">')
       end
       it "adds icons" do
-        expect(subject).to include('class="glyphicon glyphicon-new-window"')
+        expect(subject).to include('class="fa fa-external-link"')
       end
     end
 

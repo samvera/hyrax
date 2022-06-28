@@ -226,7 +226,7 @@ RSpec.configure do |config|
       (example.metadata[:valkyrie_adapter].present? && example.metadata[:valkyrie_adapter] != :wings_adapter)
   end
 
-  config.after(:each, type: :feature) do
+  config.append_after(:each, type: :feature) do
     Warden.test_reset!
     Capybara.reset_sessions!
     page.driver.reset!

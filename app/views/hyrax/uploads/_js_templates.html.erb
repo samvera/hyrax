@@ -1,5 +1,5 @@
 <!-- The template to display files available for upload -->
-<% fade_class_if_not_test = Rails.env.test? ? '' : 'fade' %>
+<% fade_class_if_not_test = Rails.env.test? ? 'show' : 'fade show' %>
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-upload <%= fade_class_if_not_test %>">
@@ -12,18 +12,18 @@
         </td>
         <td>
             <p class="size">Processing...</p>
-            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%;"></div></div>
         </td>
         <td class="text-right">
             {% if (!i && !o.options.autoUpload) { %}
                 <button class="btn btn-primary start" disabled>
-                    <span class="glyphicon glyphicon-upload"></span>
+                    <span class="fa fa-upload"></span>
                     <span><%= t('.start') %></span>
                 </button>
             {% } %}
             {% if (!i) { %}
                 <button class="btn btn-sm btn-warning cancel">
-                    <span class="glyphicon glyphicon-ban-circle"></span>
+                    <span class="fa fa-ban"></span>
                     <span><%= t('helpers.action.cancel') %></span>
                 </button>
             {% } %}
@@ -63,28 +63,28 @@
             </div>
             <div class="col-sm-6">
               {% if (file.error) { %}
-                  <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+                  <div><span class="badge badge-danger">Error</span> {%=file.error%}</div>
               {% } %}
               <span class="size">{%=o.formatFileSize(file.size)%}</span>
-              <button class="btn btn-sm btn-danger delete pull-right" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-                  <span class="glyphicon glyphicon-trash"></span>
+              <button class="btn btn-sm btn-danger delete float-right" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                  <span class="fa fa-trash"></span>
                   <span><%= t('helpers.action.delete') %></span>
               </button>
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-12 form-horizontal">
-              <div class="form-group">
-                <label for="title_{%=file.id%}" class="col-sm-5 control-label"><%= t('.display_label') %></label>
+            <div class="col-sm-12">
+              <div class="form-group row">
+                <label for="title_{%=file.id%}" class="col-sm-5 col-form-label"><%= t('.display_label') %></label>
                 <div class="col-sm-7 padding-bottom">
                   <input type="text" class="form-control" name="title[{%=file.id%}]" id="title_{%=file.id%}" value="{%=file.name%}">
                 </div>
-                <label for="resource_type_{%=file.id%}" class="col-sm-5 control-label">Resource Type</label>
+                <label for="resource_type_{%=file.id%}" class="col-sm-5 col-form-label">Resource Type</label>
                 <div class="col-sm-7 padding-bottom">
                   <select class="form-control resource_type_dropdown" multiple="multiple" size="6" name="resource_type[{%=file.id%}][]" id="resource_type_{%=file.id%}" value="{%=file.name%}">
                     <%= options_for_select(Hyrax::ResourceTypesService.select_options) %>
                   </select>
-                  <button class="btn btn-default pull-right resource_type_button" onClick="setAllResourceTypes({%= file.id %}); return false;"><%= t('.set_all_to_this_resource_type') %></button>
+                  <button class="btn btn-secondary float-right resource_type_button" onClick="setAllResourceTypes({%= file.id %}); return false;"><%= t('.set_all_to_this_resource_type') %></button>
                 </div>
               </div>
             </div>
@@ -116,7 +116,7 @@
                 <input type="hidden" name="uploaded_files[]" value="{%=file.id%}">
             </p>
             {% if (file.error) { %}
-                <div><span class="label label-danger"><%= t('.error') %></span> {%=file.error%}</div>
+                <div><span class="badge badge-danger"><%= t('.error') %></span> {%=file.error%}</div>
             {% } %}
         </td>
         <td>
@@ -124,7 +124,7 @@
         </td>
         <td class="text-right">
             <button class="btn btn-sm btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-                <span class="glyphicon glyphicon-trash"></span>
+                <span class="fa fa-trash"></span>
                 <%= t('helpers.action.delete') %>
             </button>
         </td>

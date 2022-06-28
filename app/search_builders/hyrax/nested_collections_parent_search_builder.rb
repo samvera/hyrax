@@ -22,7 +22,7 @@ module Hyrax
     # @return [void]
     def parent_collections_only(solr_parameters)
       solr_parameters[:fq] ||= []
-      solr_parameters[:fq] += [Hyrax::SolrQueryBuilderService.construct_query_for_ids(child.member_of_collection_ids)]
+      solr_parameters[:fq] += [process_fq]
     end
     self.default_processor_chain += [:parent_collections_only]
 
@@ -34,5 +34,14 @@ module Hyrax
       solr_parameters[:page] = page
     end
     self.default_processor_chain += [:with_pagination]
+
+    private
+
+    def process_fq
+      ids = child.member_of_collection_ids.reject(&:blank?)
+
+      return "id:NEVER_USE_THIS_ID" if ids.empty?
+      Hyrax::SolrQueryService.new.with_ids(ids: child.member_of_collection_ids).build
+    end
   end
 end

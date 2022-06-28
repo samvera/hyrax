@@ -1,6 +1,6 @@
 <%# container for all documents in index view -%>
 <div id="search-results">
-  <ul class="list-unstyled catalog" start="<%= document_counter_with_offset(0) %>">
+  <ul class="list-unstyled catalog mt-4" start="<%= document_counter_with_offset(0) %>">
     <%= render documents, as: :document %>
   </ul>
 </div>

@@ -40,8 +40,8 @@
   </section>
 
   <%# Collections list %>
-  <div class="panel panel-default collections-panel-wrapper">
-    <div class="panel-heading">
+  <div class="card collections-panel-wrapper">
+    <div class="card-header">
       <% if  current_page?(hyrax.my_collections_path(locale: nil)) %>
         <span class="count-display"><%= I18n.t('hyrax.my.count.collections.you_own', total_count: @response.total_count).html_safe %></span>
       <% elsif current_page?(hyrax.dashboard_collections_path(locale: nil)) && !current_ability.admin? %>
@@ -50,7 +50,7 @@
         <span class="count-display"><%= I18n.t('hyrax.my.count.collections.in_repo', total_count: @response.total_count).html_safe %></span>
       <% end %>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
       <h2 class="sr-only"><%= t('hyrax.my.count.collections.collections_listing') %></h2>
       <%= render 'search_header' %>
       <%= render 'hyrax/my/document_list' %>

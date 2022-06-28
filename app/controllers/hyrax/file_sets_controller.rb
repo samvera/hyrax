@@ -10,6 +10,9 @@ module Hyrax
     before_action :authenticate_user!, except: [:show, :citation, :stats]
     load_and_authorize_resource class: ::FileSet, except: :show
     before_action :build_breadcrumbs, only: [:show, :edit, :stats]
+    before_action do
+      blacklight_config.track_search_session = false
+    end
 
     # provides the help_text view method
     helper PermissionsHelper

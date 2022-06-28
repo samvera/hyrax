@@ -29,7 +29,7 @@ RSpec.describe Hyrax::FixityStatusPresenter do
       it "creates success message with details" do
         result = presenter.render_file_set_status
         expect(result).to be_html_safe
-        expect(result).to include("<span class=\"label label-success\">passed</span>")
+        expect(result).to include("<span class=\"badge badge-success\">passed</span>")
         expect(result).to match(/2 Files with 4 total versions checked between .* and .*/)
       end
     end
@@ -46,7 +46,7 @@ RSpec.describe Hyrax::FixityStatusPresenter do
       it "creates failure message with details" do
         result = presenter.render_file_set_status
         expect(result).to be_html_safe
-        expect(result).to include("<span class=\"label label-danger\">FAIL</span>")
+        expect(result).to include("<span class=\"badge badge-danger\">FAIL</span>")
         expect(result).to match(/2 Files with 3 total versions checked between .* and .*/)
         expect(result).to include failing_checked_uri
         expect(result).to include failing_file_id

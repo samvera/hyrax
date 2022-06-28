@@ -7,14 +7,22 @@
 
 <div>
   <h3><%= t('.descriptions_title') %></h3>
-  <div class="panel panel-default tabs">
+  <div class="card tabs">
     <ul class="nav nav-tabs">
-      <li id="edit_descriptions_link" class="active"><a href="#descriptions_display" data-toggle="tab"><span class="glyphicon glyphicon-tags"></span> <%= t('.descriptions') %></a></li>
-      <li id="edit_permissions_link"><a href="#permissions_display" data-toggle="tab"><span class="glyphicon glyphicon-lock"></span> <%= t('.permissions') %></a></li>
+      <li id="edit_descriptions_link" class="nav-item">
+        <a class="nav-link active" href="#descriptions_display" data-toggle="tab">
+          <span class="fa fa-tags"></span> <%= t('.descriptions') %>
+        </a>
+      </li>
+      <li id="edit_permissions_link" class="nav-item">
+        <a class="nav-link" href="#permissions_display" data-toggle="tab">
+          <span class="fa fa-lock"></span> <%= t('.permissions') %>
+        </a>
+      </li>
     </ul>
-    <div class="panel-body">
+    <div class="card-body">
       <div class="tab-content">
-        <div class="tab-pane active" id="descriptions_display">
+        <div class="tab-pane show active" id="descriptions_display">
           <% @form.terms.each do |term| %>
             <div class="row">
               <%= simple_form_for @form,
@@ -25,12 +33,12 @@
                                   html: { id: "form_#{term.to_s}",
                                           class: "ajax-form" },
                                   data: { model: @form.model_name.param_key } do |f| %>
-                <div class="col-xs-12 col-sm-4">
-                  <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_<%= term %>" id="expand_link_<%=term.to_s%>">
+                <div class="col-12 col-sm-4">
+                  <a class="accordion-toggle grey fa-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_<%= term %>" id="expand_link_<%=term.to_s%>">
                     <%= f.input_label term %> <span class="chevron"></span>
                   </a>
                 </div>
-                <div id="collapse_<%= term %>" class="collapse scrolly col-xs-12 col-sm-7">
+                <div id="collapse_<%= term %>" class="collapse scrolly col-12 col-sm-7">
                   <%= hidden_field_tag('update_type', 'update') %>
                   <%= hidden_field_tag('key', term.to_s) %>
                   <%# TODO we don't need to show required %>
@@ -40,7 +48,7 @@
                   <% end %>
                   <div>
                     <%= f.submit "Save changes", class: 'btn btn-primary field-save', id: "#{term.to_s}_save" %>
-                    <a class="btn btn-default" data-toggle="collapse" data-parent="#row_<%= term.to_s %>" href="#collapse_<%= term.to_s %>"><%= t('helpers.action.cancel') %> </a>
+                    <a class="btn btn-secondary" data-toggle="collapse" data-parent="#row_<%= term.to_s %>" href="#collapse_<%= term.to_s %>"><%= t('helpers.action.cancel') %> </a>
                     <div class="status fleft"></div>
                   </div>
                 </div>
@@ -58,12 +66,12 @@
                                 builder: Hyrax::FormBuilder,
                                 html: { id: "form_permissions_visibility", class: "ajax-form"},
                                 data: { 'param-key' => @form.model_name.param_key } do |f| %>
-              <div class="col-xs-12 col-sm-4">
-                <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_visibility" id="expand_link_permissions_visibility">
+              <div class="col-12 col-sm-4">
+                <a class="accordion-toggle grey fa-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_visibility" id="expand_link_permissions_visibility">
                   <%= f.input_label t(".visibility") %> <span class="chevron"></span>
                 </a>
               </div>
-              <div id="collapse_permissions_visibility" class="collapse scrolly col-xs-12 col-sm-7">
+              <div id="collapse_permissions_visibility" class="collapse scrolly col-12 col-sm-7">
                 <%= hidden_field_tag('update_type', 'update') %>
                 <%= hidden_field_tag('key', 'permissions') %>
                 <%= render "hyrax/base/form_permission", f: f %>
@@ -73,7 +81,7 @@
                 <% end %>
                 <div>
                   <%= f.submit "Save changes", class: 'btn btn-primary field-save', id: "permissions_visibility_save" %>
-                  <a class="btn btn-default" data-toggle="collapse" data-parent="#row_permissions_visibility" href="#collapse_permissions_visibility"><%= t('helpers.action.cancel') %></a>
+                  <a class="btn btn-secondary" data-toggle="collapse" data-parent="#row_permissions_visibility" href="#collapse_permissions_visibility"><%= t('helpers.action.cancel') %></a>
                   <div class="status fleft"></div>
                 </div>
               </div>
@@ -88,12 +96,12 @@
                                 builder: Hyrax::FormBuilder,
                                 html: { id: "form_permissions", class: "ajax-form"},
                                 data: { 'param-key' => @form.model_name.param_key } do |f| %>
-              <div class="col-xs-12 col-sm-4">
-                <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_sharing" id="expand_link_permissions_sharing">
+              <div class="col-12 col-sm-4">
+                <a class="accordion-toggle grey fa-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_sharing" id="expand_link_permissions_sharing">
                   <%= f.input_label t(".sharing") %> <span class="chevron"></span>
                 </a>
               </div>
-              <div id="collapse_permissions_sharing" class="collapse scrolly col-xs-12 col-sm-7">
+              <div id="collapse_permissions_sharing" class="collapse scrolly col-12 col-sm-7">
                 <%= hidden_field_tag('update_type', 'update') %>
                 <%= hidden_field_tag('key', 'permissions') %>
                 <%= render "hyrax/base/form_share", f: f %>
@@ -103,7 +111,7 @@
                 <% end %>
                 <div>
                   <%= f.submit "Save changes", class: 'btn btn-primary field-save', id: "permissions_sharing_save" %>
-                  <a class="btn btn-default" data-toggle="collapse" data-parent="#row_permissions_sharing" href="#collapse_permissions_sharing"><%= t('helpers.action.cancel') %></a>
+                  <a class="btn btn-secondary" data-toggle="collapse" data-parent="#row_permissions_sharing" href="#collapse_permissions_sharing"><%= t('helpers.action.cancel') %></a>
                   <div class="status fleft"></div>
                 </div>
               </div>
@@ -115,6 +123,6 @@
   </div>
 
 <!-- Ajax call to clear the batch before page uload. -->
-<%= button_to t(".clear_batch"), hyrax.clear_batch_edits_path, form_class: 'hidden', remote: true, id: 'clear_batch' %>
+<%= button_to t(".clear_batch"), hyrax.clear_batch_edits_path, form: { hidden: true }, remote: true, id: 'clear_batch' %>
 
 </div><!-- descriptions_display -->

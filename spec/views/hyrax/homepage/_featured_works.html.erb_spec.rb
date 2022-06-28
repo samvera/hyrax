@@ -25,7 +25,6 @@ RSpec.describe "hyrax/homepage/_featured_works.html.erb", type: :view do
 
     before do
       allow(view).to receive(:can?).with(:update, FeaturedWork).and_return(false)
-      allow(view).to receive(:render_thumbnail_tag).with(presenter, any_args).and_return("thumbnail")
       allow(list).to receive(:empty?).and_return(false)
       allow(list).to receive(:featured_works).and_return([featured_work])
       allow(featured_work).to receive(:presenter).and_return(presenter)

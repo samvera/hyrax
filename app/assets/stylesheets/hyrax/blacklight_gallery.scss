@@ -1,12 +1,12 @@
 /* These styles are very specific to override the thumbnails from blacklight gallery */
 
-.slideshow-documents {
+.documents-slideshow {
   .grid {
     .document {
       .thumbnail {
         padding: 0;
 
-        a > img {
+        > img {
           left: 0;
           max-width: 100%;
           top: 0;
@@ -14,4 +14,77 @@
       }
     }
   }
+}
+
+.documents-gallery li div.search-result-wrapper {
+    margin: 0.25rem;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+
+    > .document-thumbnail {
+      margin: 0 auto 0.5rem auto;
+    }
+
+    > header {
+      margin: 0.5rem auto;
+      text-align: center;
+      width: 100%;
+      height: fit-content;
+    }
+
+    > .document-metadata {
+      margin: unset;
+    }
+}
+
+.documents-masonry {
+  list-style-type: none;
+
+  > li.document {
+    border-bottom: 1px dotted #ddd;
+    display: block;
+    margin-bottom: 0.625rem;
+    margin-top: 0.375rem;
+    margin-right: 0.313rem;
+    max-width: unset;
+    min-height: 4.5rem;
+    padding-bottom: unset !important;
+    padding-top: 0.375rem;
+    width: 25%;
+
+    &:hover div.search-result-wrapper header,
+    &:focus div.search-result-wrapper header {
+      background-color: rgba(0,0,0,0.3);
+      bottom: 0;
+      color: #333333;
+      display: block;
+      height: fit-content;
+      margin: unset;
+      padding: 0.25rem 0.5rem;
+      position: absolute;
+      left: 0;
+      text-align: center;
+      width: 100%;
+    }
+
+    > div.search-result-wrapper {
+      display: block;
+      margin: unset;
+      text-align: center;
+
+      > header {
+        display: none;
+      }
+
+      > .document-thumbnail {
+        margin: unset;
+        text-align: center;
+      }
+
+      > .document-metadata {
+        display: none;
+      }
+    }
+  } 
 }

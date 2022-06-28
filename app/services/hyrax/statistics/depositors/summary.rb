@@ -5,8 +5,6 @@ module Hyrax
       ##
       # Gather information about the depositors who have contributed to the repository
       class Summary
-        include Blacklight::SearchHelper
-
         # @api public
         # @param [Time] start_date optionally specify the start date to gather the stats from
         # @param [Time] end_date optionally specify the end date to gather the stats from
@@ -43,7 +41,7 @@ module Hyrax
         # [ abc123, 55, ccczzz, 205 ]
         # @return [#each] an enumerable object of tuples (user and count)
         def results
-          facet_results = repository.search(query)
+          facet_results = blacklight_config.repository.search(query)
           facet_results.facet_fields[depositor_field].each_slice(2)
         end
 

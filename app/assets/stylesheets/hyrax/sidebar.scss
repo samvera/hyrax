@@ -18,28 +18,34 @@ $gutter-width: $grid-gutter-width/2;
 // .sidebar is a class on the div
 .sidebar {
   background-color: $admin-sidebar-background-color;
-  padding-top: $admin-vertical-padding;
+  min-height: 100vh;
+  padding-bottom: 2rem;
   position: absolute;
-  transition: width .1s;
+  transition: width 0.1s;
   width: $drawer-small;
   z-index: 1000;
-  min-height: 600px;
-  min-height: 100vh;
 
   &.maximized {
-    .h5, .sidebar-action-text, .profile, .collapse-toggle::after {
+    width: $drawer-large;
+
+    .h5,
+    .sidebar-action-text,
+    .profile,
+    .collapse-toggle::after {
       opacity: 1;
     }
-    width: $drawer-large;
 
     .sidebar-toggle {
       transform: rotate(-180deg);
     }
 
     .nav-pills > li {
+      width: 100%;
+
       a {
         padding-left: 24px;
       }
+
       ul > li a {
         padding-left: 52px;
       }
@@ -61,6 +67,7 @@ $gutter-width: $grid-gutter-width/2;
     width: 18px;
     z-index: 1001;
   }
+
   a {
     color: $admin-sidebar-link-color;
   }
@@ -72,6 +79,7 @@ $gutter-width: $grid-gutter-width/2;
   .sidebar-action-text {
     opacity: 0;
   }
+
   .h5 {
     color: $admin-sidebar-section-heading-color;
     opacity: 0;
@@ -102,29 +110,41 @@ $gutter-width: $grid-gutter-width/2;
   .nav {
     margin-left: 0;
     margin-right: 0;
+
     li {
-      overflow: hidden;
       white-space: nowrap;
+
+      > a:hover, > a:focus {
+        text-decoration: none;
+        background-color: $admin-sidebar-link-background-color;
+      }
     }
+    
     li .fa {
-      margin-right: $padding-base-horizontal;
+      margin-right: $input-btn-padding-x;
     }
   }
 
-  .nav-pills > li > a {
-    border-radius: 0;
-    padding: 12px 10px 12px 12px;
-
-    &:focus {
-      background-color: transparent;
-      color: $admin-sidebar-link-color;
+  .nav-pills > li {
+    > a {
+      border-radius: 0;
     }
-  }
 
-  .nav-pills > li.active > a,
-  .nav-pills > li.active > a:focus,
-  .nav-pills > li.active > a:hover {
-    background-color: $admin-sidebar-link-background-color;
+    > a.collapse-toggle.nav-link {
+      background-color: unset;
+
+      &:hover {
+        background-color: $admin-sidebar-link-background-color;
+      }
+    }
+
+    &.active > a,
+    &.active > a:focus,
+    &.active > a:hover {
+      text-decoration: none;
+      background-color: $admin-sidebar-link-background-color;
+      color: $admin-sidebar-link-hover-color;
+    }
   }
 
   // submenu items

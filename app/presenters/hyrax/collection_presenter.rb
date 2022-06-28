@@ -111,7 +111,7 @@ module Hyrax
     end
 
     def collection_type_badge
-      tag.span(collection_type.title, class: "label", style: "background-color: " + collection_type.badge_color + ";")
+      tag.span(collection_type.title, class: "badge", style: "background-color: " + collection_type.badge_color + ";")
     end
 
     # The total number of parents that this collection belongs to, visible or not.

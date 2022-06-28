@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
-  class IIIFAuthorizationService
+  class IiifAuthorizationService
     attr_reader :controller
     def initialize(controller)
       @controller = controller

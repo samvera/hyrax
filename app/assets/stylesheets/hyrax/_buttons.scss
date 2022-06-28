@@ -4,7 +4,7 @@
 }
 
 .multi_value .listing .input-group {
-  margin-bottom: .35em;
+  margin-bottom: 0.35em;
 }
 
 .input-group-btn:last-child > .btn {
@@ -33,4 +33,34 @@ span.appliedFilter .remove {
 
 .additional-fields {
   margin-bottom: 1.5em;
+}
+
+/* add bootstrap 3.x style .btn-default */
+
+.btn-default {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+.btn-default:focus {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #8c8c8c;
+}
+
+.btn-default:hover {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+
+.btn-default:active {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+
+td.toggle input[type="submit"]:not(.active) {
+  @extend .btn-default;
 }

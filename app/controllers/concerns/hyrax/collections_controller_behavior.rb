@@ -12,6 +12,10 @@ module Hyrax
       # This is needed as of BL 3.7
       copy_blacklight_config_from(::CatalogController)
 
+      before_action do
+        blacklight_config.track_search_session = false
+      end
+
       class_attribute :presenter_class,
                       :form_class,
                       :single_item_search_builder_class,
@@ -32,6 +36,11 @@ module Hyrax
       @curation_concern = @collection # we must populate curation_concern
       presenter
       query_collection_members
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @curation_concern }
+      end
     end
 
     def collection

@@ -2,7 +2,7 @@
 
 <% provide :page_header do %>
   <h1><span class="fa fa-bar-chart" aria-hidden="true"></span> <%= t('.title') %>
-  <%= link_to "#{t('.return_to_btn')}", admin_analytics_collection_reports_path, class: "btn btn-primary pull-right" %>
+  <%= link_to "#{t('.return_to_btn')}", admin_analytics_collection_reports_path, class: "btn btn-primary float-right" %>
   </h1>
   <br>
 <% end %>
@@ -11,23 +11,23 @@
   <div class="col-sm-12">
     <div class="collection-reports">
 
-      <div class="panel panel-default">
-        <div class="panel-heading">
+      <div class="card">
+        <div class="card-header">
           <div class="col-sm-10">
             <h3><%= @document %></h3>
           </div>
           <div class="col-sm-2">
-            <%= link_to "#{t('.view_collection_btn')}", collection_path(@document.id), class: "btn btn-default pull-right" %>
+            <%= link_to "#{t('.view_collection_btn')}", collection_path(@document.id), class: "btn btn-secondary float-right" %>
           </div>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
           <div class="row">
-            <div class="col-xs-12 col-md-5">
+            <div class="col-12 col-md-5">
               <p><%= t('.created_by') %> <b><%= @document.depositor %></b> on <b><%= @document.create_date %></b></p>
               <p><%= t('.collection_type') %> <b><%= @document.collection_type_gid %></b></p>
             </div>
-            <div class="col-xs-12 col-md-5">
+            <div class="col-12 col-md-5">
               <p><%= t('.last_updated') %> <b><%= @document.modified_date.strftime("%B %d, %Y") %></b></p>
               <p><%= t('.visibility') %> <b><%= @document.read_groups.join(",") %></b></p>
             </div>
@@ -38,19 +38,19 @@
             <div class="row text-center">
         <div class="nav nav-pills btn-group" role="group">
             <% if params[:start_date] %>
-              <a button id='summary-btn' class="btn btn-default nav-link" type="button" href="#summary" data-toggle="pill">
+              <a button id='summary-btn' class="btn btn-secondary nav-link" type="button" href="#summary" data-toggle="pill">
             <% else %>
               <a button id='summary-btn' class="btn btn-primary nav-link" type="button" href="#summary" data-toggle="pill">
             <% end %>
                 <%= t('.summary') %>
               </a>
-              <a button id='monthly-btn' class="btn btn-default nav-link" type="button" href="#monthly" data-toggle="pill">
+              <a button id='monthly-btn' class="btn btn-secondary nav-link" type="button" href="#monthly" data-toggle="pill">
                 <%= t('.monthly') %>
               </a>
             <% if params[:start_date] %>
               <a button id='range-btn' class="btn btn-primary nav-link" type="button" href="#custom-range" data-toggle="pill">
             <% else %>
-              <a button id='range-btn' class="btn btn-default nav-link" type="button" href="#custom-range" data-toggle="pill">
+              <a button id='range-btn' class="btn btn-secondary nav-link" type="button" href="#custom-range" data-toggle="pill">
             <% end %>
                 <%= t('.custom_range') %>
               </a>

@@ -205,7 +205,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         post :create, params: { collection: collection_attrs, format: :json }
 
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq "application/json"
+        expect(response.media_type).to eq "application/json"
         expect(response.body).to include error
       end
     end
@@ -386,7 +386,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         }
 
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq "application/json"
+        expect(response.media_type).to eq "application/json"
         expect(response.body).to include error
       end
     end

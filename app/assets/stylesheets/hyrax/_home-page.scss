@@ -8,8 +8,8 @@
 }
 
 .image-masthead {
-  border-bottom: 1px solid $navbar-default-border;
-  margin-bottom: $padding-large-vertical * 2.5;
+  border-bottom: 1px solid $nav-divider-color;
+  margin-bottom: $navbar-padding-y * 2.5;
   position: relative;
 
   .background-container {
@@ -24,12 +24,11 @@
 
   .background-container-gradient {
     @include masthead-background-containers();
-    background:
-      linear-gradient(
-        rgba(0, 0, 0, 0.0),
-        rgba(0, 0, 0, 0.4),
-        rgba(0, 0, 0, 0.5)
-      );
+    background: linear-gradient(
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.4),
+      rgba(0, 0, 0, 0.5)
+    );
   }
 
   .site-title {
@@ -37,54 +36,17 @@
     padding-bottom: 6px;
     position: relative;
   }
-
-  .navbar {
-    background-color: $navbar-transparent-bg;
-    color: #fff;
-    margin-bottom: 0;
-
-    .navbar-nav {
-      a {
-        color: $navbar-transparent-link-color;
-        text-transform: uppercase;
-
-        &:hover,
-        &:focus {
-          background-color: $navbar-transparent-link-hover-bg;
-          color: $navbar-transparent-link-hover-color;
-        }
-      }
-      li {
-        background-color: #286090;
-      }
-    }
-
-    @media only screen and (max-width: 767px) {
-      .navbar-nav {
-        margin-left: 10px;
-      }
-    }
-
-    .active > a {
-      &,
-      &:hover,
-      &:focus {
-        background-color: $navbar-transparent-link-active-bg;
-        color: $navbar-transparent-link-active-color;
-      }
-    }
-  }
 }
 
 .home-content {
   .nav {
-    margin-bottom: $padding-large-vertical * 2;
+    margin-bottom: $navbar-padding-y * 2;
   }
 
   // Give some separation between the Works and Collections columns, which stack up vertically on mobile
   @media screen and (max-width: 640px) {
     > div {
-      margin-bottom: $padding-large-vertical * 3;
+      margin-bottom: $navbar-padding-y * 3;
     }
   }
 }
@@ -101,11 +63,11 @@
 }
 
 .home-share-work {
-  margin-bottom: $padding-large-vertical * 4;
-  margin-top: $padding-large-vertical * 2;
+  margin-bottom: $navbar-padding-y * 4;
+  margin-top: $navbar-padding-y * 2;
 
   .terms-of-use {
-    margin-top: $padding-large-vertical;
+    margin-top: $navbar-padding-y;
   }
 }
 
@@ -137,7 +99,7 @@ div#announcement {
 
 ol.list-group.list-group-striped {
   li:nth-of-type(odd) {
-    background: $table-bg-accent;
+    background: $table-accent-bg;
   }
 
   li:nth-of-type(even) {

@@ -44,7 +44,7 @@ RSpec.describe Hyrax::WorkflowPresenter do
         allow(entity).to receive(:workflow_state_name).and_return('complete')
         allow(presenter).to receive(:sipity_entity).and_return(entity)
       end
-      it { is_expected.to eq '<span class="state state-complete label label-primary">Complete</span>' }
+      it { is_expected.to eq '<span class="state state-complete badge badge-primary">Complete</span>' }
     end
     context 'without a Sipity::Entity' do
       before do

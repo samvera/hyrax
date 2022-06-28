@@ -1,11 +1,13 @@
-<div class="col-md-6">
+<div class="col-md-9 col-lg-6">
   <div class="metadata">
-    <dl class="dl-horizontal">
+    <dl>
     <% doc_presenter = index_presenter(document) %>
     <% index_fields(document).each do |field_name, field| -%>
       <% if should_render_index_field? document, field %>
-          <dt data-solr-field-name="<%= field_name %>"><%= render_index_field_label document, field: field_name %></dt>
-          <dd><%= doc_presenter.field_value field %></dd>
+        <div class="row">
+          <dt class="col-5 text-right" data-solr-field-name="<%= field_name %>"><%= render_index_field_label document, field: field_name %></dt>
+          <dd class="col-7"><%= doc_presenter.field_value field %></dd>
+        </div>
       <% end %>
     <% end %>
     </dl>
@@ -13,7 +15,7 @@
 </div>
 <% if document.collection? %>
 <% collection_presenter = Hyrax::CollectionPresenter.new(document, current_ability) %>
-<div class="col-md-4">
+<div class="col-md-12 col-lg-3">
   <div class="collection-counts-wrapper">
     <div class="collection-counts-item">
       <span><%= collection_presenter.total_viewable_collections %></span>Collections

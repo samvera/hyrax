@@ -1,26 +1,26 @@
     <%= render 'shared/nav_safety_modal' %>
-    <div class="panel panel-default tabs" id="admin-set-controls">
+    <div class="tabs mt-4" id="admin-set-controls">
       <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-          <a href="#description" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.description') %></a>
+        <li class="nav-item">
+          <a href="#description" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm"><%= t('.tabs.description') %></a>
         </li>
         <% if @form.persisted? %>
-          <li>
-            <a href="#participants" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.participants') %></a>
+          <li class="nav-item">
+            <a href="#participants" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.participants') %></a>
           </li>
-          <li>
-            <a href="#visibility" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.visibility') %></a>
+          <li class="nav-item">
+            <a href="#visibility" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.visibility') %></a>
           </li>
-          <li>
-            <a href="#workflow" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.workflow') %></a>
+          <li class="nav-item">
+            <a href="#workflow" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.workflow') %></a>
           </li>
         <% end %>
       </ul>
-      <div class="tab-content">
-        <div id="description" class="tab-pane active">
-          <div class="panel panel-default labels">
+      <div class="tab-content card">
+        <div id="description" class="tab-pane show active">
+          <div class="labels">
             <%= simple_form_for @form, url: [hyrax, :admin, @form], html: { class: 'nav-safety' } do |f| %>
-              <div class="panel-body">
+              <div class="card-body">
                 <%= render 'form_metadata', f: f %>
 
                 <% if f.object.persisted? && f.object.member_ids.present? %>
@@ -31,10 +31,10 @@
 
               </div>
 
-              <div class="panel-footer">
+              <div class="card-footer d-flex justify-content-end">
                 <% cancel_path = f.object.persisted? ? hyrax.admin_admin_set_path(f.object) : hyrax.dashboard_collections_path %>
-                <%= link_to t('.cancel'), cancel_path, class: 'btn btn-default pull-right' %>
-                <%= f.button :submit, class: 'btn btn-primary pull-right' %>
+                <%= f.button :submit, class: 'btn btn-primary text-white mr-2' %>
+                <%= link_to t('.cancel'), cancel_path, class: 'btn btn-light' %>
               </div>
             <% end %>
           </div>

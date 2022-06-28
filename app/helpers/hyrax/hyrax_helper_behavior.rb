@@ -8,7 +8,6 @@ module Hyrax
     include Hyrax::TitleHelper
     include Hyrax::FileSetHelper
     include Hyrax::AbilityHelper
-    include Hyrax::UrlHelper
     include Hyrax::EmbargoHelper
     include Hyrax::LeaseHelper
     include Hyrax::CollectionsHelper
@@ -19,6 +18,7 @@ module Hyrax
     include Hyrax::PermissionLevelsHelper
     include Hyrax::WorkFormHelper
     include Hyrax::WorkflowsHelper
+    include Hyrax::FacetsHelper
 
     ##
     # @return [Array<String>] the list of all user groups
@@ -69,7 +69,7 @@ module Hyrax
       unread_notifications = mailbox.unread_count
       link_to(hyrax.notifications_path,
               'aria-label' => mailbox.label(params[:locale]),
-              class: 'notify-number') do
+              class: 'notify-number nav-link') do
         capture do
           concat tag.span('', class: 'fa fa-bell')
           concat "\n"
@@ -195,7 +195,7 @@ module Hyrax
       # this block is only executed when a link is inserted;
       # if we pass text containing no links, it just returns text.
       auto_link(html_escape(text)) do |value|
-        "<span class='glyphicon glyphicon-new-window'></span>#{('&nbsp;' + value) if show_link}"
+        "<span class='fa fa-external-link'></span>#{('&nbsp;' + value) if show_link}"
       end
     end
 
@@ -312,9 +312,9 @@ module Hyrax
     end
 
     def count_classes_for(unread_count)
-      classes = unread_count.zero? ? 'invisible label-default' : 'label-danger'
+      classes = unread_count.zero? ? 'invisible badge-secondary' : 'badge-danger'
 
-      "count label #{classes}"
+      "count badge #{classes}"
     end
 
     def search_action_for_dashboard

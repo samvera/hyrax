@@ -20,18 +20,18 @@ export class Registry {
 
   addError(message) {
     this.errorMessage.html(message);
-    this.error.removeClass('hidden');
+    this.error.removeAttr("hidden");
   }
 
   reset() {
-    this.error.addClass('hidden');
+    this.error.attr("hidden", "");
   }
 
   removePermission(evt) {
      evt.preventDefault();
      let button = $(evt.target);
      let container = button.closest('tr');
-     container.addClass('hidden'); // do not show the block
+     container.attr("hidden", ""); // do not show the block
      this.addDestroyField(container, button.attr('data-index'));
      this.showPermissionNote();
   }
@@ -47,7 +47,7 @@ export class Registry {
   }
 
   showPermissionNote() {
-     $('#save_perm_note').removeClass('hidden');
+     $('#save_perm_note').removeAttr("hidden");
   }
 
   addDestroyField(element, index) {

@@ -31,11 +31,11 @@
         type: 'POST',
         dropZone: $(this).find('.dropzone')
       }, Hyrax.config.uploader, options))
-      .bind('fileuploadadded', function (e, data) {
-        $(e.currentTarget).find('button.cancel').removeClass('hidden');
+      .on('fileuploadadded', function (e, data) {
+        $(e.currentTarget).find('button.cancel').removeAttr("hidden");
       });
 
-      $(document).bind('dragover', function(e) {
+      $(document).on('dragover', function(e) {
         var dropZone = $('.dropzone'),
             timeout = window.dropZoneTimeout;
         if (!timeout) {

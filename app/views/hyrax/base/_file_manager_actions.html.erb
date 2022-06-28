@@ -1,5 +1,7 @@
-  <div class="actions form-horizontal panel panel-default">
-    <%= button_tag t('.save'), class: "btn btn-primary disabled", data: { action: "save-actions" } %>
-    <%= button_tag t('.sort_alphabetically'), class: "btn btn-primary", data: { action: "alpha-sort-action" } %>
+  <div class="actions card">
+    <div class="d-flex">
+      <%= button_tag t('.save'), class: "btn btn-primary disabled mr-2", data: { action: "save-actions" } %>
+      <%= button_tag t('.sort_alphabetically'), class: "btn btn-primary ", data: { action: "alpha-sort-action" } %>
+    </div>
   </div>
   <%= render "file_manager_resource_form" %>

@@ -37,8 +37,7 @@ RSpec.describe "hyrax/base/file_manager.html.erb" do
     assign(:form, form)
     # Blacklight nonsense
     allow(view).to receive(:dom_class) { '' }
-    allow(view).to receive(:search_session).and_return({})
-    allow(view).to receive(:current_search_session).and_return(nil)
+    allow(view).to receive(:session_tracking_params).and_return({})
     allow(view).to receive(:curation_concern).and_return(parent)
     allow(view).to receive(:contextual_path).with(anything, anything) do |x, y|
       Hyrax::ContextualPath.new(x, y).show

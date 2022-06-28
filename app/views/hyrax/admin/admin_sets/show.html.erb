@@ -4,14 +4,14 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="panel panel-default">
+    <div class="card">
       <%= render 'show_actions', presenter: @presenter %>
 
-      <div class="panel-body admin-set row">
+      <div class="card-body admin-set row">
         <div class="col-md-2">
           <% if has_thumbnail? @presenter.solr_document %>
             <div class="document-thumbnail">
-              <%= render_thumbnail_tag @presenter.solr_document, {}, suppress_link: true %>
+              <%= render_thumbnail_tag(@presenter.solr_document, {}, { suppress_link: true }) %>
             </div>
           <% else %>
             <span class="fa fa-sitemap collection-icon-search" aria-hidden="true"></span>
@@ -23,7 +23,7 @@
         </div>
       </div>
 
-      <div class="panel-body admin-set-members">
+      <div class="card-body admin-set-members">
         <h3><%= t '.item_list_header' %></h3>
         <%= render 'sort_and_per_page', collection: @presenter %>
 

@@ -1,7 +1,3 @@
-.input-group {
-  margin-bottom: $padding-large-vertical;
-}
-
 .breadcrumbs {
   padding: 1em 0;
 }
@@ -63,17 +59,16 @@ label.disabled {
   display: flex;
 }
 
-.navbar-default {
-  .navbar-nav {
-    li {
-      a {
-        color: #666;
-      }
-    }
-  }
-}
-
 .read-only {
   font-size: 1.2em;
   margin: 0 0 10px;
+}
+
+
+// Bootstrap 4 has no default row margins, so this helper
+// class will wrap rows giving some margin between
+.spaced-rows {
+  .row > .col {
+    margin-bottom: 1rem;
+  }
 }

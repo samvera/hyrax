@@ -15,11 +15,15 @@
 //= require turbolinks
 //
 // Required by Blacklight
-//= require jquery
-//= require jquery_ujs
-//= require dataTables/jquery.dataTables
-//= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
+//= require jquery3
+//= require rails-ujs
+//= require popper
+//= require twitter/typeahead
+//= require bootstrap
+//= require jquery.dataTables
+//= require dataTables.bootstrap4
 //= require blacklight/blacklight
+//= require blacklight_gallery
 
 //= require_tree .
 //= require hyrax

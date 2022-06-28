@@ -21,7 +21,7 @@ module Hyrax
 
     def button_tag
       tag.a(role: 'button',
-            class: "#{button_class}collapse-toggle",
+            class: "#{button_class}collapse-toggle nav-link",
             data: { toggle: 'collapse' },
             href: "##{id}",
             onclick: "toggleCollapse(this)",
@@ -44,7 +44,7 @@ module Hyrax
     end
 
     def workflows_class
-      'in ' if open
+      'show ' if open
     end
   end
 end

@@ -4,7 +4,7 @@ Blacklight.onLoad(function() {
 	 itag.toggleClass("caret up");
   }
 
-  $(".sorts").click(function(){
+  $(".sorts").on("click", function(){
     var itag =$(this).find('i');
     toggle_icon(itag);
     sort = itag.attr('class') == "caret" ? itag.attr('id') + ' desc' :  itag.attr('id');

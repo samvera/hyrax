@@ -53,7 +53,7 @@ module Hyrax
     end
 
     def query
-      Hyrax::SolrQueryBuilderService.construct_query_for_ids([id])
+      Hyrax::SolrQueryService.new.with_ids(ids: [id]).build
     end
   end
 end

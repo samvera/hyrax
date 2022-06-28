@@ -4,14 +4,13 @@
  *= require_self
 */
 
-@import "bootstrap-sprockets";
 @import "bootstrap-default-overrides";
 @import 'bootstrap';
-@import 'blacklight/blacklight';
 @import "font-awesome";
 @import "blacklight_gallery/gallery";
 @import "blacklight_gallery/masonry";
 @import "blacklight_gallery/slideshow";
 @import "blacklight_gallery/osd_viewer";
+@import "hyrax/blacklight_gallery";
 @import 'hyrax/hyrax';
 @import 'hyrax/login_signup';

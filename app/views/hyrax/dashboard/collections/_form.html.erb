@@ -1,33 +1,41 @@
 <%= render "shared/nav_safety_modal" %>
-<div class="panel panel-default tabs" id="collection-edit-controls">
-  <ul class="nav nav-tabs" role="tablist">
-    <li class="active">
-      <a href="#description" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.description') %></a>
+<div class="tabs mt-4" id="collection-edit-controls">
+  <ul class="nav nav-tabs" id="dashboard-collection-tab" role="tablist">
+    <li class="nav-item">
+      <a href="#description" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm">
+        <%= t('.tabs.description') %>
+      </a>
     </li>
     <% if @form.persisted? %>
       <% if collection_brandable?(collection: @collection) %>
-      <li>
-        <a href="#branding" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.branding') %></a>
+      <li class="nav-item">
+        <a href="#branding" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
+          <%= t('.tabs.branding') %>
+        </a>
       </li>
       <% end %>
       <% if collection_discoverable?(collection: @collection) %>
-      <li>
-        <a href="#discovery" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.discovery') %></a>
+      <li class="nav-item">
+        <a href="#discovery" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
+          <%= t('.tabs.discovery') %>
+        </a>
       </li>
       <% end %>
       <% if collection_sharable?(collection: @collection) %>
-      <li>
-        <a href="#sharing" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.sharing') %></a>
+      <li class="nav-item">
+        <a href="#sharing" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
+          <%= t('.tabs.sharing') %>
+        </a>
       </li>
       <% end %>
     <% end %>
   </ul>
 
   <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor nav-safety', data: { behavior: 'collection-form', 'param-key' => @form.model_name.param_key } } do |f| %>
-    <div class="tab-content">
-      <div id="description" class="tab-pane active">
-        <div class="panel panel-default labels">
-          <div class="panel-body">
+    <div class="tab-content card" id="dashboard-collection-tab-content">
+      <div id="description" class="tab-pane show active">
+        <div class="labels">
+          <div class="card-body">
 
             <div id="base-terms">
               <% f.object.primary_terms.each do |term| %>
@@ -44,7 +52,7 @@
             <% if f.object.display_additional_fields? %>
               <%= link_to t('hyrax.collection.form.additional_fields'),
                       '#extended-terms',
-                      class: 'btn btn-default additional-fields',
+                      class: 'btn btn-secondary additional-fields',
                       data: { toggle: 'collapse' },
                       role: "button",
                       'aria-expanded'=> "false",
@@ -74,8 +82,8 @@
       <% if @form.persisted? %>
         <% if collection_brandable?(collection: @collection) %>
           <div id="branding" class="tab-pane">
-            <div class="panel panel-default labels">
-              <div class="panel-body">
+            <div class="card labels">
+              <div class="card-body">
                 <%= render 'form_branding', f: f %>
               </div>
             </div>
@@ -84,8 +92,8 @@
 
         <% if collection_discoverable?(collection: @collection) %>
           <div id="discovery" class="tab-pane">
-            <div class="panel panel-default labels">
-              <div class="panel-body">
+            <div class="card labels">
+              <div class="card-body">
                 <%= render 'form_discovery', f: f %>
               </div>
             </div>
@@ -94,8 +102,8 @@
 
         <% if collection_sharable?(collection: @collection) %>
           <div id="sharing" class="tab-pane">
-            <div class="panel panel-default labels" id="collection_permissions" data-param-key="<%= f.object.model_name.param_key %>">
-              <div class="panel-body">
+            <div class="card labels" id="collection_permissions" data-param-key="<%= f.object.model_name.param_key %>">
+              <div class="card-body">
                 <%= render 'form_share', f: f %>
               </div>
             </div>
@@ -103,7 +111,7 @@
         <% end %>
       <% end %>
 
-      <div class="panel-footer">
+      <div class="card-footer">
         <% if @collection.persisted? %>
           <%= f.submit t(:'hyrax.collection.select_form.update'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "update_submit", name: "update_collection" %>
           <%= link_to t(:'helpers.action.cancel'), hyrax.dashboard_collection_path(@collection), class: 'btn btn-link' %>

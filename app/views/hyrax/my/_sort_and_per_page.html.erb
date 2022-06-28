@@ -1,16 +1,14 @@
 <% if show_sort_and_per_page? %>
-  <div class="sort-toggle">
-      <%= form_tag search_action_for_dashboard, method: :get, class: 'per_page form-inline' do %>
-        <div class="form-group">
-          <fieldset class="col-xs-12">
-            <legend class="sr-only"><%= t('hyrax.dashboard.my.sr.results_per_page') %></legend>
-            <%= label_tag :per_page do %>
-                Show <%= select_tag :per_page, options_for_select(Hyrax.config.range_for_number_of_results_to_display_per_page.map(&:to_s), h(params[:per_page])),
-                                    title: t(".number_of_results_to_display_per_page") %> per page
-            <% end %>
-            <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:per_page, :sort, :utf8)) %>
-          </fieldset>
-        </div>
+  <div class="sort-toggle mt-2">
+      <%= form_tag search_action_for_dashboard, method: :get, class: 'per_page' do %>
+        <fieldset class="col-12">
+          <legend class="sr-only"><%= t('hyrax.dashboard.my.sr.results_per_page') %></legend>
+          <%= label_tag :per_page do %>
+              Show <%= select_tag :per_page, options_for_select(Hyrax.config.range_for_number_of_results_to_display_per_page.map(&:to_s), h(params[:per_page])),
+                                  title: t(".number_of_results_to_display_per_page") %> per page
+          <% end %>
+          <%= render Blacklight::HiddenSearchStateComponent.new(params: search_state.params_for_search.except(:per_page, :sort, :utf8)) %>
+        </fieldset>
       <% end %>
   </div>
 <% end %>

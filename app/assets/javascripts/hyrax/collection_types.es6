@@ -86,7 +86,7 @@ export default class CollectionTypes {
             .remove();
           let defaultButton = $(event.target)
             .parent('div')
-            .find('.btn-default');
+            .find('.btn-secondary');
           defaultButton.trigger('click');
         }
       });

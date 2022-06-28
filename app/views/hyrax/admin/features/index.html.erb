@@ -3,8 +3,8 @@
 <% end %>
 <div class="flip row">
   <div class="col-md-12">
-    <div class="panel">
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-body">
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
@@ -30,7 +30,7 @@
               <% features.each do |feature| %>
               <tr data-feature="<%= feature.name.dasherize.parameterize %>">
                 <td class="status">
-                  <span class="<%= @feature_set.status(feature) -%>"><%= @feature_set.status(feature) -%></span>
+                  <span class="badge badge-<%= @feature_set.status(feature) -%>"><%= @feature_set.status(feature) -%></span>
                 </td>
                 <td class="name"><%= feature.name.humanize -%></td>
                 <td class="description"><%= feature.description -%></td>

@@ -1,5 +1,5 @@
 legend small {
-  margin-left:.5em;
+  margin-left: 0.5em;
   color: #999999;
   font-size: 15px;
 }
@@ -7,16 +7,15 @@ legend small {
 .label-large {
   font-size: 110%;
   line-height: 1.2;
-  padding: .3em .6em;
+  padding: 0.3em 0.6em;
   white-space: normal;
   position: relative;
 
-
-  input[type="checkbox"]{
-    margin:-2px 0 0;
+  input[type="checkbox"] {
+    margin: -2px 0 0;
     position: absolute;
-    left:.5em;
-    top:38%;
+    left: 0.5em;
+    top: 38%;
   }
 }
 
@@ -25,14 +24,14 @@ legend small {
 }
 
 .label-checkbox .label-text {
-  display:block;
-  padding-left:1.2em;
+  display: block;
+  padding-left: 1.2em;
 }
 
-.form-group.has-error input,
-.form-group.has-error option,
-.form-group.has-error textarea {
-  color:$gray-dark;
+.form-group:invalid input,
+.form-group:invalid option,
+.form-group:invalid textarea {
+  color: $gray-dark;
 }
 
 .form-actions {
@@ -40,18 +39,47 @@ legend small {
 }
 
 form {
-  label { font-weight: bold; }
+  .form-group {
+    align-items: center;
 
-  label { margin-bottom: 7px; }
+    > div {
+      > .row {
+        margin: 0;
 
-  .help-block {
+        > div > .select2-container {
+          width: 100%;
+
+          > .select2-choice {
+            height: 100%;
+            > .select2-chosen {
+              height: 100%;
+              padding-top: 0.5rem;
+              padding-left: 0.5rem;
+            }
+          }
+        }
+      }
+    }
+
+    > label {
+      text-align: left;
+
+      @media only screen and (min-width: 640px) {
+        text-align: right;
+      }
+    }
+  }
+
+  .form-text {
     margin-top: 0;
     margin-bottom: 10px;
   }
 }
 
 .set-access-controls {
-  label { font-weight: normal; }
+  label {
+    font-weight: normal;
+  }
   & .form-group {
     padding: 0 1.75em;
 
@@ -87,25 +115,26 @@ form {
   }
 
   .form-inline {
-    .control-label, label {
+    .col-form-label,
+    label {
       padding-left: 0;
       display: inline;
       &:after {
-        content: ' ';
+        content: " ";
       }
     }
-    .help-block {
+    .form-text {
       display: inline;
       &:before {
-        content: ' ';
+        content: " ";
       }
     }
   }
 }
 
 .collection-types-settings {
-
   .form-inline {
+    display: block;
     label {
       font-weight: bold;
 
@@ -114,34 +143,39 @@ form {
       }
     }
 
-    .control-label,
+    .col-form-label,
     label {
       display: inline;
       padding-left: 0;
 
       &::after {
-        content: ' ';
+        content: " ";
       }
     }
 
-    .help-block {
+    .form-text {
       display: inline;
 
       &::before {
-        content: ' ';
+        content: " ";
       }
+    }
+
+    .form-group .help-block {
+      display: inline;
+      margin: 0 0.5rem 10px;
     }
   }
 }
 
-.control-label.required {
+.col-form-label.required {
   abbr {
     font-weight: bold;
   }
 }
 
 form.button-to {
-  margin:0 .3em;
+  margin: 0 0.3em;
 }
 
 .required-tag {
@@ -164,7 +198,6 @@ form.button-to {
 }
 
 .search-form {
-
   .form-group {
     margin: 0;
   }
