@@ -71,38 +71,6 @@ module Hyrax
       private
 
       ##
-      # @deprecated
-      def build_within_form
-        authorize! :read, form_params[:child_id]
-        form_class.new(context: self, **form_params.to_h.symbolize_keys)
-      end
-      deprecation_deprecate :build_within_form
-
-      ##
-      # @deprecated
-      def build_under_form
-        authorize! :read, form_params[:parent_id]
-        form_class.new(context: self, **form_params.to_h.symbolize_keys)
-      end
-      deprecation_deprecate :build_under_form
-
-      ##
-      # @deprecated
-      def build_create_collection_form
-        authorize! :deposit, form_params[:parent_id]
-        form_class.new(context: self, **form_params.to_h.symbolize_keys)
-      end
-      deprecation_deprecate :build_create_collection_form
-
-      ##
-      # @deprecated
-      def build_remove_form
-        authorize! :edit, form_params[:parent_id]
-        form_class.new(context: self, **form_params.to_h.symbolize_keys)
-      end
-      deprecation_deprecate :build_create_collection_form
-
-      ##
       # @api public
       # @since 3.2.0
       def form
