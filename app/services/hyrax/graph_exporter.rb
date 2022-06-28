@@ -10,11 +10,9 @@ module Hyrax
     # @param [SolrDocument, #id] solr_document idea here is that in the future, ActiveFedora may serialize the object as JSON+LD
     # @param [ActionDispatch::Request] request the http request context
     # @param [String] hostname  the current http host
-    def initialize(solr_document, request = nil, hostname: nil)
-      Deprecation.warn('passing `request` is deprecated; pass a host as `hostname:` instead.') if request
+    def initialize(solr_document, hostname:)
       @solr_document = solr_document
-      @request = request
-      @hostname = hostname || request.host
+      @hostname = hostname
       @additional_resources = []
       @visited_subresources = Set.new
     end
@@ -22,15 +20,12 @@ module Hyrax
     ##
     # @!attribute [r] additional_resources
     #   @return [Array<RDF::Graph>]
-    # @!attribute [r] request
-    #   @deprecated use {#hostname} to access the host
     #   @return [ActionDispatch::Request]
     # @!attribute [r] solr_document
     #   @return [#id]
     # @!attribute [r] hostname
     #   @return [String]
-    attr_reader :solr_document, :request, :additional_resources, :hostname
-    deprecation_deprecate :request
+    attr_reader :solr_document, :additional_resources, :hostname
 
     ##
     # @return [RDF::Graph]
