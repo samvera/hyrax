@@ -249,15 +249,6 @@ module Hyrax
       ::Hyrax::ContextualPath.new(presenter, parent_presenter).show
     end
 
-    # @deprecated
-    def curation_concern_from_search_results
-      Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
-                       "Instead, use '#search_result_document'.")
-      search_params = params.deep_dup
-      search_params.delete :page
-      search_result_document(search_params)
-    end
-
     ##
     # Only returns unsuppressed documents the user has read access to
     #
