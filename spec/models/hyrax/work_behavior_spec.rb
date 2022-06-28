@@ -12,8 +12,7 @@ RSpec.describe Hyrax::WorkBehavior do
   subject { EssentialWork.new }
 
   it 'mixes together some junk' do
-    expect(subject.class.ancestors).to include(::Hyrax::WithFileSets,
-                                               ::Hyrax::HumanReadableType,
+    expect(subject.class.ancestors).to include(::Hyrax::HumanReadableType,
                                                Hyrax::Noid,
                                                Hyrax::Serializers,
                                                Hydra::WithDepositor,

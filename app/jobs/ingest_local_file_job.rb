@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+##
+# Ingest a local file using ActiveFedora & FileSetActor.
 class IngestLocalFileJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
 
@@ -6,25 +8,15 @@ class IngestLocalFileJob < Hyrax::ApplicationJob
   # @param [String] path
   # @param [User] user
   def perform(file_set, path, user)
-    case file_set
-    when ActiveFedora::Base
-      __perform(file_set, path, user, use_valkyrie: false)
-    else
-      __perform(file_set, path, user, use_valkyrie: true)
-    end
+    __perform(file_set, path, user)
   end
 
   private
 
-  # @note Based on the present implementation (see SHA a8597884e) of
-  # the Hyrax::Actors::FileSetActor, we wouldn't need to pass the
-  # `use_valkyrie` parameter.  However, I want to include this logic
-  # to demonstrate that "Yes, the IngestLocalFileJob has been tested
-  # for Valkyrie usage"
-  def __perform(file_set, path, user, use_valkyrie:)
+  def __perform(file_set, path, user)
     file_set.label ||= File.basename(path)
 
-    actor = Hyrax::Actors::FileSetActor.new(file_set, user, use_valkyrie: use_valkyrie)
+    actor = Hyrax::Actors::FileSetActor.new(file_set, user)
 
     if actor.create_content(File.open(path))
       Hyrax.config.callback.run(:after_import_local_file_success, file_set, user, path, warn: false)

@@ -91,30 +91,6 @@ module Hyrax
       raise Hyrax::ObjectNotFoundError
     end
 
-    # A bit of an analogue for a `belongs_to :admin_set` as it crosses from Fedora to the DB
-    # @deprecated Use #source instead
-    # @return [AdminSet]
-    # @raise [Hyrax::ObjectNotFoundError] when the we cannot find the AdminSet
-    def admin_set
-      Deprecation.warn("#admin_set is deprecated; use #source instead.")
-      return AdminSet.find(source_id) if AdminSet.exists?(source_id)
-      raise Hyrax::ObjectNotFoundError
-    rescue ActiveFedora::ActiveFedoraError # TODO: remove the rescue when active_fedora issue #1276 is fixed
-      raise Hyrax::ObjectNotFoundError
-    end
-
-    # A bit of an analogue for a `belongs_to :collection` as it crosses from Fedora to the DB
-    # @deprecated Use #source instead
-    # @return [Collection]
-    # @raise [Hyrax::ObjectNotFoundError] when the we cannot find the Collection
-    def collection
-      Deprecation.warn("#collection is deprecated; use #source instead.")
-      return ::Collection.find(source_id) if ::Collection.exists?(source_id)
-      raise Hyrax::ObjectNotFoundError
-    rescue ActiveFedora::ActiveFedoraError # TODO: remove the rescue when active_fedora issue #1276 is fixed
-      raise Hyrax::ObjectNotFoundError
-    end
-
     # Valid Release Period values
     RELEASE_TEXT_VALUE_FIXED = 'fixed'
     RELEASE_TEXT_VALUE_NO_DELAY = 'now'
@@ -217,17 +193,6 @@ module Hyrax
       (agent_ids_for(access: 'view', agent_type: 'group') +
         agent_ids_for(access: 'deposit', agent_type: 'group')).uniq -
         [::Ability.registered_group_name, ::Ability.public_group_name]
-    end
-
-    ##
-    # @deprecated Use #reset_access_controls_for instead
-    # @param interpret_visibility [Boolean] whether to retain the existing
-    #   visibility when applying permission template ACLs
-    # @return [Boolean]
-    def reset_access_controls(interpret_visibility: false)
-      Deprecation.warn("#reset_access_controls is deprecated; use #reset_access_controls_for instead.")
-      reset_access_controls_for(collection: source_model,
-                                interpret_visibility: interpret_visibility)
     end
 
     ##

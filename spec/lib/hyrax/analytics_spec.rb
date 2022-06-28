@@ -42,14 +42,11 @@ RSpec.describe Hyrax::Analytics do
       end
 
       it 'reads its config from a yaml file' do
-        Hyrax.config.google_analytics_id = "UA-XXXXXXXX"
         expect(config.app_name).to eql 'My App Name'
         expect(config.app_version).to eql '0.0.1'
         expect(config.privkey_path).to eql '/tmp/privkey.p12'
         expect(config.privkey_secret).to eql 's00pers3kr1t'
         expect(config.client_email).to eql 'oauth@example.org'
-        # In the previous version analytics id was set ny Hyrax.config
-        expect(config.analytics_id).to eql 'UA-XXXXXXXX'
       end
     end
 

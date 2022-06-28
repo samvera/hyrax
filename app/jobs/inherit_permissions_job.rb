@@ -5,11 +5,7 @@ class InheritPermissionsJob < Hyrax::ApplicationJob
   # Perform the copy from the work to the contained filesets
   #
   # @param work containing access level and filesets
-  # @param use_valkyrie [Boolean] whether to use valkyrie support (deprecated)
-  def perform(work, use_valkyrie: :DEFAULT)
-    Deprecation.warn("use_valkyrie argument is deprecated, behavior depends on deserialized resource") unless
-      use_valkyrie == :DEFAULT
-
+  def perform(work)
     case work
     when ActiveFedora::Base
       af_perform(work)

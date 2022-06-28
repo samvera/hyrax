@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'wings/services/file_metadata_builder'
 
 module Hyrax
   module Actors
@@ -11,8 +10,7 @@ module Hyrax
       # @param [FileSet] file_set the parent FileSet
       # @param [Symbol, #to_sym] relation the type/use for the file
       # @param [User] user the user to record as the Agent acting upon the file
-      def initialize(file_set, relation, user, use_valkyrie: Hyrax.config.query_index_from_valkyrie)
-        @use_valkyrie = use_valkyrie
+      def initialize(file_set, relation, user)
         @file_set = file_set
         @relation = normalize_relation(relation)
         @user = user
@@ -25,7 +23,14 @@ module Hyrax
       # @see IngestJob
       # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
       def ingest_file(io)
-        use_valkyrie ? perform_ingest_file_through_valkyrie(io) : perform_ingest_file_through_active_fedora(io)
+        Hydra::Works::AddFileToFileSet.call(file_set,
+                                            io,
+                                            relation,
+                                            versioning: false)
+        return false unless file_set.save
+        repository_file = related_file
+        create_version(repository_file, user)
+        CharacterizeJob.perform_later(file_set, repository_file.id, pathhint(io))
       end
 
       # Reverts file and spawns async job to characterize and create derivatives.
@@ -61,39 +66,6 @@ module Hyrax
       # @return [Hydra::PCDM::File] the file referenced by relation
       def related_file
         file_set.public_send(normalize_relation(relation)) || raise("No #{relation} returned for FileSet #{file_set.id}")
-      end
-
-      def perform_ingest_file_through_active_fedora(io)
-        # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
-        Hydra::Works::AddFileToFileSet.call(file_set,
-                                            io,
-                                            relation,
-                                            versioning: false)
-        return false unless file_set.save
-        repository_file = related_file
-        create_version(repository_file, user)
-        CharacterizeJob.perform_later(file_set, repository_file.id, pathhint(io))
-      end
-
-      def perform_ingest_file_through_valkyrie(io) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-        Deprecation.warn "FileActor support for Valkyrie was experimental and " \
-                         "is slated to be removed in favor of WorkUploadsHandler."
-        file =
-          begin
-            Hyrax.storage_adapter.upload(resource: file_set, file: io, original_filename: io.original_name, use: relation)
-          rescue StandardError => err
-            Rails.logger.error("Failed to save file_metadata through valkyrie: #{err.message}")
-            return false
-          end
-        file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: file.id)
-        create_version(file_metadata, user)
-
-        file_set.file_ids << file_metadata.id
-        file_set.original_file_id = file_metadata.id
-        Hyrax.persister.save(resource: file_set)
-        Hyrax.publisher.publish('object.metadata.updated', object: file_set, user: user)
-        CharacterizeJob.perform_later(file_set, file_metadata.id.to_s, pathhint(io))
-        file_metadata
       end
 
       def normalize_relation(relation)
