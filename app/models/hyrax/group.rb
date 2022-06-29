@@ -10,7 +10,7 @@ module Hyrax
     ##
     # @return [Hyrax::Group]
     def self.from_key(key)
-      new(key.slice!(name_prefix))
+      new(key.delete_prefix(name_prefix))
     end
 
     def initialize(name)
