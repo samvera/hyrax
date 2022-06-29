@@ -53,6 +53,13 @@ module Hyrax::User
     public_send(self.class.user_key_field)
   end
 
+  ##
+  # @return [String] a local identifier for this user; for use (e.g.) in ACL
+  #   data
+  def agent_key
+    user_key
+  end
+
   # Look for, in order:
   #   A cached version of the agent
   #   A non-cached version (direct read of the database)
@@ -175,6 +182,10 @@ module Hyrax::User
 
     def find_or_create_system_user(user_key)
       User.find_by_user_key(user_key) || User.create!(user_key_field => user_key, password: Devise.friendly_token[0, 20])
+    end
+
+    def from_agent_key(key)
+      User.find_by_user_key(key)
     end
 
     def from_url_component(component)
