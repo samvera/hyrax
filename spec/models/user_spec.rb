@@ -61,6 +61,20 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '#agent_key' do
+    let(:key) { user.agent_key }
+
+    it 'is the same as the user key' do
+      expect(key).to eq user.user_key
+    end
+
+    it 'is findable by agent_key' do
+      user.save!
+
+      expect(described_class.from_agent_key(key)).to eq user
+    end
+  end
+
   it "has an email" do
     expect(user.email).to be_kind_of String
   end
