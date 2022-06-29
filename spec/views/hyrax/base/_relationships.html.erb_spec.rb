@@ -35,7 +35,7 @@ RSpec.describe 'hyrax/base/relationships', type: :view do
     Hyrax::CollectionPresenter.new(
       SolrDocument.new(
         id: '345',
-        has_model_ssim: ['Collection'],
+        has_model_ssim: [Hyrax.config.collection_model],
         title_tesim: ['Containing collection']
       ),
       ability
