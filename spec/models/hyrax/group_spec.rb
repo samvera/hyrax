@@ -4,14 +4,14 @@ RSpec.describe Hyrax::Group, type: :model do
   let(:name) { 'etaoin' }
   let(:group) { described_class.new(name) }
 
-  describe '.from_key' do
+  describe '.from_agent_key' do
     it 'returns an equivalent group' do
-      expect(Hyrax::Group.from_key(Hyrax::Group.name_prefix + group.name)).to eq group
+      expect(described_class.from_agent_key(group.agent_key)).to eq group
     end
   end
 
   describe '#==' do
-    let (:other_group) { described_class.new(group.name) }
+    let(:other_group) { described_class.new(group.name) }
 
     it 'correctly determines equality for equivalent groups' do
       expect(other_group).to eq group
@@ -21,6 +21,12 @@ RSpec.describe Hyrax::Group, type: :model do
   describe '#name' do
     it 'returns the name' do
       expect(group.name).to eq name
+    end
+  end
+
+  describe '#agent_key' do
+    it 'returns the name prefixed with the name prefix' do
+      expect(group.agent_key).to eq described_class.name_prefix + group.name
     end
   end
 

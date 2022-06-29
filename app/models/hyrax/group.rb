@@ -9,7 +9,7 @@ module Hyrax
 
     ##
     # @return [Hyrax::Group]
-    def self.from_key(key)
+    def self.from_agent_key(key)
       new(key.delete_prefix(name_prefix))
     end
 
@@ -22,17 +22,15 @@ module Hyrax
     ##
     # @return [Boolean]
     def ==(other)
-      other.class == self.class &&
-        other.name == self.name
+      other.class == self.class && other.name == name
     end
 
     ##
     # @return [String] a local identifier for this group; for use (e.g.) in ACL
     #   data
-    def group_key
+    def agent_key
       self.class.name_prefix + name
     end
-    alias user_key group_key
 
     def to_sipity_agent
       sipity_agent || create_sipity_agent!

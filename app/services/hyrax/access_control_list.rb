@@ -200,8 +200,14 @@ module Hyrax
 
       private
 
+      ##
+      # Returns the identifier used by ACLs to identify agents.
+      #
+      # This defaults to the `:agent_key`, but if that method doesn’t exist,
+      # `:user_key` will be used as a fallback.
       def id_for(agent:)
-        agent.user_key.to_s
+        key = agent.try(:agent_key) || agent.user_key
+        key.to_s
       end
     end
 
