@@ -15,9 +15,9 @@ RSpec.describe Hyrax::My::CollectionsSearchBuilder do
     subject { builder.models }
 
     it do
-      is_expected.to contain_exactly(AdminSet,
-                                     Hyrax::AdministrativeSet,
-                                     Hyrax.config.collection_class)
+      is_expected.to include(AdminSet,
+                             Hyrax::AdministrativeSet,
+                             Hyrax.config.collection_class)
     end
 
     context 'when collection class is something other than ::Collection' do
