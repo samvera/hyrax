@@ -163,13 +163,6 @@ module Hyrax
       end
     end
 
-    def twitter_typeahead
-      javascript_manifest = 'app/assets/javascripts/application.js'
-      insert_into_file javascript_manifest, after: /popper\n/ do
-        "//= require twitter/typeahead\n"
-      end
-    end
-
     def noid_rails_database_minter_initialize
       generate 'noid:rails:install'
     end
@@ -184,6 +177,7 @@ module Hyrax
 
     def universalviewer_files
       rake('hyrax:universal_viewer:install')
+      rake('yarn:install')
     end
   end
 end
