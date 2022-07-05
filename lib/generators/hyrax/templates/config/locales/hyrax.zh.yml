@@ -50,7 +50,7 @@ zh:
     directory:
       suffix: "@example.org"
     footer:
-      copyright_html: "<strong>版权所有 &copy; 2018 Samvera</strong> 根据Apache许可证2.0版许可"
+      copyright_html: "<strong>版权所有 &copy; 2022 Samvera</strong> 根据Apache许可证2.0版许可"
       service_html: 的服务<a href="http://samvera.org/" class="navbar-link" target="_blank">Samvera</a>.
     institution_name: 机构
     institution_name_full: 机构名称
