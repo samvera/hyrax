@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::ValkyriePersistDerivatives do
+  let(:fits_response) { IO.read('spec/fixtures/png_fits.xml') }
+
   before do
     allow(Hyrax.config)
       .to receive(:derivatives_path)
       .and_return('/app/samvera/hyrax-webapp/derivatives/')
+
+    # stub out characterization to avoid system calls. It's important some
+    # amount of characterization happens so listeners fire.
+    allow(Hydra::FileCharacterization).to receive(:characterize).and_return(fits_response)
   end
 
   describe '.call' do
