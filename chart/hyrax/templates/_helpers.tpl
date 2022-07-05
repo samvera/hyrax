@@ -147,6 +147,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end }}
 {{- end -}}
 
+{{- define "hyrax.postgresql.url" -}}
+{{- printf "postgresql://%s:%s@%s/%s?pool=5" ( include "hyrax.postgresql.username" . ) ( include "hyrax.postgresql.password" . ) ( include "hyrax.postgresql.host" . ) ( include "hyrax.postgresql.database" . ) -}}
+{{- end -}}
+
 {{- define "hyrax.redis.fullname" -}}
 {{- printf "%s-%s" .Release.Name "redis" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
