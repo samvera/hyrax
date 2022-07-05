@@ -193,7 +193,11 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{- define "hyrax.solr.port" -}}
-{{- .Values.externalSolrPort | default "8983" }}
+{{- if .Values.solr.enabled }}
+{{- .Values.solr.containerPorts.http | default 8983 }}
+{{- else }}
+{{- .Values.externalSolrPort }}
+{{- end }}
 {{- end -}}
 
 {{- define "hyrax.solr.url" -}}
