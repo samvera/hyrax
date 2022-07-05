@@ -423,12 +423,14 @@ solr:
   enabled: true
   image:
     repository: bitnami/solr
-    tag: 8.11.1
+    tag: 8.11.2-debian-11-r4
+  containerPorts:
+    http: 8983
   auth:
     enabled: true
     adminUsername: admin
     adminPassword: admin
-  coreName: hyrax
+  coreNames: hyrax
   collection: hyrax
   cloudBootstrap: true
   cloudEnabled: true
