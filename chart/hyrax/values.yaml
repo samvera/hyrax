@@ -279,12 +279,11 @@ postgresql:
 ## and to act as an auth proxy for Cantelope
 nginx:
   enabled: false
+  image:
+    repository: bitnami/nginx
+    tag: 1.23.0-debian-11-r1
   # The set up below does malicious bot / ip blocking and mounts
-  # vaolumes to allow nginx to server assets and other public directory items
-  # image:
-  #   registry: registry.gitlab.com
-  #   repository: notch8/scripts/bitnami-nginx
-  #   tag: 1.21.5-debian-10-r4
+  # volumes to allow nginx to server assets and other public directory items
   # extraVolumes:
   #   - name: "uploads"
   #     persistentVolumeClaim:
