@@ -413,6 +413,9 @@ nginx:
 
 redis:
   enabled: true
+  image:
+    repository: bitnami/redis
+    tag: 7.0.2-debian-11-r7
   auth:
     password: mysecret
 
