@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: samveralabs/dassie
+  repository: ghcr.io/samvera/dassie
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -220,13 +220,12 @@ worker:
 
 fcrepo:
   enabled: true
-  externalDatabaseUsername: "hyrax"
   servicePort: 8080
   postgresql:
     enabled: false
     image:
       repository: bitnami/postgresql
-      tag: 14.4.0-debian-11-r6
+      tag: 12.11.0-debian-11-r12
 
 # configuration for an external/existing fits service;
 #   ignored if `fits.enabled` is true
@@ -449,6 +448,7 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 global:
+  # These global postgresql values are used by the fcrepo chart
   postgresql:
     auth:
       username: hyrax
