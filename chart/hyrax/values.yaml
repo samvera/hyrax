@@ -261,7 +261,7 @@ postgresql:
   enabled: true
   image:
     repository: bitnami/postgresql
-    tag: 12.3.0
+    tag: 12.11.0-debian-11-r12
   auth:
     database: hyrax
     password: hyrax_pass
@@ -446,8 +446,9 @@ autoscaling:
 
 global:
   postgresql:
-    postgresqlUsername: hyrax
-    postgresqlPassword: hyrax_pass
+    auth:
+      username: hyrax
+      password: hyrax_pass
   # This is th name of the running rails server pod
   hyraxHostName: hyrax
 
