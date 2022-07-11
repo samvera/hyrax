@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/samvera/dassie
+  repository: ghcr.io/samvera/hyrax/dassie
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -193,7 +193,7 @@ worker:
   enabled: true
   replicaCount: 3
   image:
-    repository: samveralabs/dassie-worker
+    repository: ghcr.io/samvera/hyrax/dassie-worker
     pullPolicy: IfNotPresent
     tag: ""
   extraInitContainers: []
