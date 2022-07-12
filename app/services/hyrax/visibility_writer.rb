@@ -36,6 +36,9 @@ module Hyrax
     #
     # @return [void]
     def assign_access_for(visibility:)
+      # If it is embargo, don't do anything, also for lease...
+      return if visibility.eql?("embargo")
+
       permission_manager.read_groups =
         permission_manager.read_groups.to_a - visibility_map.deletions_for(visibility: visibility)
 
