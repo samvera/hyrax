@@ -205,6 +205,26 @@ module Hyrax
       end
     end
 
+    ##
+    # Decide whether to display the collection thumbnail form fields for a
+    # collection.
+    #
+    # We only want to do this if we can lookup candidate thumbnails when:
+    #   - the collection is persisted;
+    #   - the collection model supports this lookup (is not valkyrie);
+    #   - the field isn't suppressed by config.
+    #
+    # @note hyrax provides configuration to supress this form field because we
+    #   think we're likely to reimplement in a more efficient way/with a better
+    #   UI. see: https://github.com/samvera/hyrax/issues/5764
+    #
+    # @return [Boolean]
+    def show_collection_thumbnail_form?(collection)
+      !Hyrax.config.suppress_collection_thumbnail_selection? &&
+        !(Hyrax.config.collection_class < Valkyrie::Resource) &&
+        collection.persisted?
+    end
+
     private
 
     # add hidden fields to a form for performing an action on a single document on a collection

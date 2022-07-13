@@ -819,6 +819,15 @@ module Hyrax
       @subject_prefix ||= "Contact form:"
     end
 
+    ##
+    # @return [Boolean]
+    # @see https://github.com/samvera/hyrax/issues/5764
+    def suppress_collection_thumbnail_selection?
+      ActiveModel::Type::Boolean.new.cast(
+        ENV.fetch('HYRAX_SUPPRESS_COLLECTION_THUMBNAIL_SELECTION', false)
+      )
+    end
+
     attr_writer :extract_full_text
     def extract_full_text?
       return @extract_full_text unless @extract_full_text.nil?
