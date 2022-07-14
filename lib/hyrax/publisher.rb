@@ -119,6 +119,10 @@ module Hyrax
     #     unique id), AND a `:user` (the ::User responsible for the update).
     register_event('collection.membership.updated')
 
+    # @since 3.5.0
+    # @macro a_registered_event
+    register_event('file.characterized')
+
     # @since 3.3.0
     # @macro a_registered_event
     register_event('file.downloaded')

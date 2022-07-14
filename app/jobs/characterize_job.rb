@@ -31,7 +31,11 @@ class CharacterizeJob < Hyrax::ApplicationJob
     raise "#{file_set.class.characterization_proxy} was not found for FileSet #{file_set.id}" unless file_set.characterization_proxy?
     filepath = Hyrax::WorkingDirectory.find_or_retrieve(file_id, file_set.id) unless filepath && File.exist?(filepath)
     characterize(file_set, file_id, filepath)
-    CreateDerivativesJob.perform_later(file_set, file_id, filepath)
+
+    Hyrax.publisher.publish('file.characterized',
+                            file_set: file_set,
+                            file_id: file_id,
+                            path_hint: filepath)
   end
 
   private
