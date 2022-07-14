@@ -194,5 +194,21 @@ module Hyrax
     # @since 3.2.0
     # @macro a_registered_event
     register_event('object.file.uploaded')
+
+    ##
+    # @return Array[Object] the listeners Hyrax subscribes by default.
+    def default_listeners
+      @default_listeners ||=
+        [Hyrax::Listeners::AclIndexListener.new,
+         Hyrax::Listeners::BatchNotificationListener.new,
+         Hyrax::Listeners::FileMetadataListener.new,
+         Hyrax::Listeners::FileSetLifecycleListener.new,
+         Hyrax::Listeners::FileSetLifecycleNotificationListener.new,
+         Hyrax::Listeners::MemberCleanupListener.new,
+         Hyrax::Listeners::MetadataIndexListener.new,
+         Hyrax::Listeners::ObjectLifecycleListener.new,
+         Hyrax::Listeners::TrophyCleanupListener.new,
+         Hyrax::Listeners::WorkflowListener.new].freeze
+    end
   end
 end
