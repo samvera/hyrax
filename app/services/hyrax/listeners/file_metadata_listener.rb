@@ -6,6 +6,17 @@ module Hyrax
     # Listens for events related to {Hyrax::FileMetadata}
     class FileMetadataListener
       ##
+      # Called when 'file.characterized' event is published;
+      # allows post-characterization handling, like derivatives generation.
+      #
+      # @param [Dry::Events::Event] event
+      # @return [void]
+      def on_file_characterized(event)
+        CreateDerivativesJob
+          .perform_later(event[:file_set], event[:file_id], event[:path_hint])
+      end
+
+      ##
       # Called when 'file.metadata.updated' event is published; reindexes a
       # {Hyrax::FileSet} when a file claiming to be its `pcdm_use:OriginalFile`
       #
