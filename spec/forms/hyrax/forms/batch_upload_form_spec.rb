@@ -59,6 +59,7 @@ RSpec.describe Hyrax::Forms::BatchUploadForm do
                          :identifier,
                          :based_near,
                          :related_url,
+                         :bibliographic_citation,
                          :representative_id,
                          :thumbnail_id,
                          :rendering_ids,
