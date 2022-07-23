@@ -5,7 +5,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
   let(:current_ability) { ability }
-  let(:scope) { double('Scope', can?: true, current_ability: current_ability, repository: repository, blacklight_config: blacklight_config) }
+  let(:scope) { double('Scope', can?: true, current_ability: current_ability, repository: repository, blacklight_config: blacklight_config, search_state_class: nil) }
 
   let(:collection_type) { create(:collection_type) }
   let(:another_collection_type) { create(:collection_type) }

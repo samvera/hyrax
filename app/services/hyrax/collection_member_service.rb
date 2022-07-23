@@ -31,5 +31,7 @@ module Hyrax
     def collection_search_builder
       @collection_search_builder ||= ParentCollectionSearchBuilder.new([:include_item_ids, :add_paging_to_solr, :add_access_controls_to_solr_params], self)
     end
+
+    def search_state_class; end
   end
 end

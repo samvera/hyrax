@@ -22,6 +22,10 @@ module Hyrax
         presenters(builder)
       end
 
+      def search_state_class
+        nil
+      end
+
       private
 
       def presenter_class

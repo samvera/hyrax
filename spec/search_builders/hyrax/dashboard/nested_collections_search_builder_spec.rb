@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Dashboard::NestedCollectionsSearchBuilder do
-  let(:scope) { double(current_ability: ability, blacklight_config: CatalogController.blacklight_config) }
+  let(:scope) { double(current_ability: ability, blacklight_config: CatalogController.blacklight_config, search_state_class: nil) }
   let(:access) { :read }
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
