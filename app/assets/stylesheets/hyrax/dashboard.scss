@@ -105,33 +105,14 @@ body.dashboard {
     margin-bottom: 20px;
     padding: $card-spacer-y $card-spacer-x;
 
-    .btn-group > .facet-values {
-      display: none;
-    }
-    .btn-group.show > .facet-values.show {
-      display: table;
-    }
-
-    .facet-values {
-      width: 20em; // TODO: make this responsive.
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .facet-label {
-      padding: 3px 20px;
-      font-weight: 400;
-      line-height: 1.42857143;
-      color: #333;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .facet-count {
-      padding: 3px 20px;
-      font-weight: 400;
-      line-height: 1.42857143;
-      color: #333;
-      white-space: nowrap;
+      padding-right: 20px;
     }
   }
 
@@ -173,44 +154,6 @@ body.dashboard {
 
   .spacer {
     margin-bottom: 5px;
-  }
-}
-
-.dropdown-item {
-  display: list-item;
-
-  > .facet-values {
-    display: table;
-    table-layout: fixed;
-
-    > .facet-label {
-      display: table-cell;
-      hyphens: auto;
-      text-indent: -0.938rem;
-    }
-
-    > .facet-count {
-      display: table-cell;
-      text-align: right;
-    }
-  }
-}
-
-ul#visibility_ssi-dropdown-options {
-  table-layout: fixed;
-
-  > li {
-    display: table-row;
-
-    > .facet-label {
-      display: table-cell;
-      hyphens: auto;
-    }
-
-    > .facet-count {
-      display: table-cell;
-      text-align: right;
-    }
   }
 }
 
