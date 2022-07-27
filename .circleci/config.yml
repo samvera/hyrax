@@ -13,7 +13,7 @@ jobs:
         default: 2.3.13
       rails_version:
         type: string
-        default: 6.0.5
+        default: 6.1.6.1
     executor:
       name: 'samvera/ruby'
       ruby_version: << parameters.ruby_version >>
@@ -74,7 +74,7 @@ jobs:
         default: 2.3.13
       rails_version:
         type: string
-        default: 6.0.5
+        default: 6.1.6.1
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
@@ -172,11 +172,11 @@ workflows:
     jobs:
       - bundle:
           ruby_version: "2.7.6"
-          rails_version: "6.0.5"
+          rails_version: "6.1.6.1"
           bundler_version: "2.3.13"
       - build:
           ruby_version: "2.7.6"
-          rails_version: "6.0.5"
+          rails_version: "6.1.6.1"
           bundler_version: "2.3.13"
           requires:
             - bundle
