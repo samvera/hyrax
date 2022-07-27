@@ -4,7 +4,8 @@ RSpec.describe Hyrax::AdminSetService do
   let(:context) do
     double(current_ability: Ability.new(user),
            repository: controller.repository,
-           blacklight_config: controller.blacklight_config)
+           blacklight_config: controller.blacklight_config,
+           search_state_class: nil)
   end
   let(:service) { described_class.new(context) }
   let(:user) { create(:user) }

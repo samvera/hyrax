@@ -3,7 +3,8 @@ RSpec.describe Hyrax::Dashboard::WorksSearchBuilder do
   let(:context) do
     double(blacklight_config: CatalogController.blacklight_config,
            current_ability: ability,
-           current_user: user)
+           current_user: user,
+           search_state_class: nil)
   end
   let(:ability) do
     ::Ability.new(user)

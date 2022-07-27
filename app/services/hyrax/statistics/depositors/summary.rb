@@ -33,7 +33,7 @@ module Hyrax
 
         private
 
-        delegate :blacklight_config, to: CatalogController
+        delegate :blacklight_config, :search_state_class, to: CatalogController
         delegate :depositor_field, to: DepositSearchBuilder
 
         # results come from Solr in an array where the first item is the user and

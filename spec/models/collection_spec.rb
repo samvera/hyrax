@@ -307,7 +307,7 @@ RSpec.describe ::Collection, type: :model do
       let(:blacklight_config) { CatalogController.blacklight_config }
       let(:repository) { Blacklight::Solr::Repository.new(blacklight_config) }
       let(:current_ability) { instance_double(Ability, admin?: true) }
-      let(:scope) { double('Scope', can?: true, current_ability: current_ability, repository: repository, blacklight_config: blacklight_config) }
+      let(:scope) { double('Scope', can?: true, current_ability: current_ability, repository: repository, blacklight_config: blacklight_config, search_state_class: nil) }
 
       context 'when building a collection' do
         let(:coll123) do

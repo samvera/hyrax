@@ -20,6 +20,7 @@ RSpec.describe Hyrax::CollectionsHelper do
       allow(controller).to receive(:blacklight_config).and_return(bl_config)
       allow(controller).to receive(:repository).and_return(repository)
       allow(controller).to receive(:current_ability).and_return(ability)
+      allow(controller).to receive(:search_state_class).and_return(nil)
     end
 
     it 'gives an empty set for a missing collection' do

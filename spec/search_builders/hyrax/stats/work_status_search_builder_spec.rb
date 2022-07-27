@@ -4,7 +4,8 @@ RSpec.describe Hyrax::Stats::WorkStatusSearchBuilder do
 
   let(:context) do
     double(blacklight_config: CatalogController.blacklight_config,
-           current_ability: ability)
+           current_ability: ability,
+           search_state_class: nil)
   end
 
   let(:ability) do

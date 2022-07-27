@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::CollectionMemberSearchBuilder do
   subject(:builder) { described_class.new(scope: context, collection: collection, search_includes_models: include_models) }
-  let(:context) { double("context", blacklight_config: CatalogController.blacklight_config) }
+  let(:context) { double("context", blacklight_config: CatalogController.blacklight_config, search_state_class: nil) }
   let(:solr_params) { { fq: [] } }
   let(:include_models) { :both }
   let(:collection) { build(:collection_lw, id: '12345') }
