@@ -83,7 +83,7 @@ module Hyrax
 
       # Force CatalogController to use our SearchState class, which has an important
       # work-around for some highly suspect SPARQL-gem monkeypatching.
-      CatalogController.search_state_class = Hyrax::SearchState if CatalogController.search_state_class == Blacklight::SearchState
+      CatalogController.search_state_class = Hyrax::SearchState if CatalogController.try(:search_state_class) == Blacklight::SearchState
     end
 
     initializer 'requires' do
