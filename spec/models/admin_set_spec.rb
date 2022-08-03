@@ -211,7 +211,6 @@ RSpec.describe AdminSet, type: :model do
         expect(new_id).to be
         expect(new_id.size).to eq(9)
       end
-
     end
 
     context 'with noid false' do
