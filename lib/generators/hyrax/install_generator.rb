@@ -35,6 +35,15 @@ module Hyrax
   18. Generates RIIIF image server implementation
          """
 
+    # browse-everything 1.2.0 is not compatible with Ruby 2.5
+    def pin_browse_everything
+      return unless Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.6')
+      gem 'browse-everything', '~> 1.1.2'
+      Bundler.with_clean_env do
+        run "bundle update browse-everything"
+      end
+    end
+
     def run_required_generators
       say_status('info', '[Hyrax] GENERATING BLACKLIGHT', :blue)
       generate 'blacklight:install --devise'

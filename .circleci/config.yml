@@ -86,6 +86,15 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/
+      - when:
+          condition:
+            equal: [ '2.5.9', << parameters.ruby_version >> ]
+          steps:
+            - run:
+                name: "Lock browse everything for Ruby 2.5"
+                command: |
+                  sed -i.bak "s/browse-everything.*/browse-everything\', \'1.1.2\'/" hyrax.gemspec
+                  bundle
       - samvera/engine_cart_generate:
           cache_key: v1-internal-test-app-{{ checksum "hyrax.gemspec" }}-{{ checksum ".regen" }}-{{ checksum ".circleci/config.yml" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
       - samvera/bundle:
