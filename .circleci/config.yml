@@ -165,24 +165,24 @@ workflows:
           ruby_version: "2.5.8"
           requires:
             - build
-  ruby2-6-6:
+  ruby2-6-7:
     jobs:
       - bundle:
-          ruby_version: "2.6.6"
+          ruby_version: "2.6.7"
           rails_version: "5.2.6"
       - build:
-          ruby_version: "2.6.6"
+          ruby_version: "2.6.7"
           rails_version: "5.2.6"
           requires:
             - bundle
       - test:
-          name: "ruby2-6-6"
-          ruby_version: "2.6.6"
+          name: "ruby2-6-7"
+          ruby_version: "2.6.7"
           requires:
             - build
       - test:
-          name: "ruby2-6-6-valkyrie"
-          ruby_version: "2.6.6"
+          name: "ruby2-6-7-valkyrie"
+          ruby_version: "2.6.7"
           hyrax_valkyrie: "true"
           requires:
             - build
