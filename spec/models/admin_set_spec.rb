@@ -204,6 +204,30 @@ RSpec.describe AdminSet, type: :model do
     end
   end
 
+  describe '#assign_id' do
+    context 'with noid true' do
+      around(:each) do |example|
+        Hyrax.config.enable_noids = true
+        example.run
+        Hyrax.config.enable_noids = false
+      end
+
+      it 'should assign a NOID' do
+        new_id = subject.assign_id
+        expect(new_id).to be
+        expect(new_id.size).to eq(9)
+      end
+    end
+
+    context 'with noid false' do
+      it 'should assign a UUID if no other id is minted' do
+        new_id = subject.assign_id
+        expect(new_id).to be
+        expect(new_id.size).to eq(36)
+      end
+    end
+  end
+
   describe '#reset_access_controls!' do
     let!(:user) { build(:user) }
     let!(:admin_set) { create(:admin_set, creator: [user.user_key], edit_users: [user.user_key], edit_groups: [::Ability.admin_group_name], read_users: [], read_groups: ['public']) }
