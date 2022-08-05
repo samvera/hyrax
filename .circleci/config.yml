@@ -6,7 +6,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.8
+        default: 2.5.9
       bundler_version:
         type: string
         default: 1.17.3
@@ -67,7 +67,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.8
+        default: 2.5.9
       bundler_version:
         type: string
         default: 1.17.3
@@ -86,6 +86,15 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/
+      - when:
+          condition:
+            equal: [ '2.5.9', << parameters.ruby_version >> ]
+          steps:
+            - run:
+                name: "Lock browse everything for Ruby 2.5"
+                command: |
+                  sed -i.bak "s/browse-everything.*/browse-everything\', \'1.1.2\'/" hyrax.gemspec
+                  bundle
       - samvera/engine_cart_generate:
           cache_key: v1-internal-test-app-{{ checksum "hyrax.gemspec" }}-{{ checksum ".regen" }}-{{ checksum ".circleci/config.yml" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
       - samvera/bundle:
@@ -101,7 +110,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.8
+        default: 2.5.9
       bundler_version:
         type: string
         default: 1.17.3
@@ -150,43 +159,43 @@ jobs:
             --header 'Content-Type: application/json'
 workflows:
   version: 2
-  ruby2-5-8:
+  ruby2-5:
     jobs:
       - bundle:
-          ruby_version: "2.5.8"
+          ruby_version: "2.5.9"
           rails_version: "5.2.6"
       - build:
-          ruby_version: "2.5.8"
+          ruby_version: "2.5.9"
           rails_version: "5.2.6"
           requires:
             - bundle
       - test:
-          name: "ruby2-5-8"
-          ruby_version: "2.5.8"
+          name: "ruby2-5"
+          ruby_version: "2.5.9"
           requires:
             - build
-  ruby2-6-6:
+  ruby2-6:
     jobs:
       - bundle:
-          ruby_version: "2.6.6"
+          ruby_version: "2.6.7"
           rails_version: "5.2.6"
       - build:
-          ruby_version: "2.6.6"
+          ruby_version: "2.6.7"
           rails_version: "5.2.6"
           requires:
             - bundle
       - test:
-          name: "ruby2-6-6"
-          ruby_version: "2.6.6"
+          name: "ruby2-6"
+          ruby_version: "2.6.7"
           requires:
             - build
       - test:
-          name: "ruby2-6-6-valkyrie"
-          ruby_version: "2.6.6"
+          name: "ruby2-6-valkyrie"
+          ruby_version: "2.6.7"
           hyrax_valkyrie: "true"
           requires:
             - build
-  ruby2-7-4:
+  ruby2-7:
     jobs:
       - bundle:
           ruby_version: "2.7.4"
@@ -199,7 +208,7 @@ workflows:
           requires:
             - bundle
       - test:
-          name: "ruby2-7-4"
+          name: "ruby2-7"
           ruby_version: "2.7.4"
           bundler_version: "2.1.4"
           requires:
