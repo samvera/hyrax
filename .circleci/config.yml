@@ -6,7 +6,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.8
+        default: 2.5.9
       bundler_version:
         type: string
         default: 1.17.3
@@ -67,7 +67,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.8
+        default: 2.5.9
       bundler_version:
         type: string
         default: 1.17.3
@@ -110,7 +110,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.8
+        default: 2.5.9
       bundler_version:
         type: string
         default: 1.17.3
@@ -159,19 +159,19 @@ jobs:
             --header 'Content-Type: application/json'
 workflows:
   version: 2
-  ruby2-5-8:
+  ruby2-5-9:
     jobs:
       - bundle:
-          ruby_version: "2.5.8"
+          ruby_version: "2.5.9"
           rails_version: "5.2.6"
       - build:
-          ruby_version: "2.5.8"
+          ruby_version: "2.5.9"
           rails_version: "5.2.6"
           requires:
             - bundle
       - test:
-          name: "ruby2-5-8"
-          ruby_version: "2.5.8"
+          name: "ruby2-5-9"
+          ruby_version: "2.5.9"
           requires:
             - build
   ruby2-6-7:
