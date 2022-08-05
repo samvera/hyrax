@@ -97,6 +97,14 @@ class AdminSet < ActiveFedora::Base
     permission_template.reset_access_controls_for(collection: self)
   end
 
+  # @api public
+  #
+  # return an id for the AdminSet.
+  # defaults to calling Hyrax::Noid, but needs a fall back if noid is off
+  def assign_id
+    super || SecureRandom.uuid
+  end
+
   private
 
   def destroy_permission_template
