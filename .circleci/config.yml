@@ -159,7 +159,7 @@ jobs:
             --header 'Content-Type: application/json'
 workflows:
   version: 2
-  ruby2-5-9:
+  ruby2-5:
     jobs:
       - bundle:
           ruby_version: "2.5.9"
@@ -170,11 +170,11 @@ workflows:
           requires:
             - bundle
       - test:
-          name: "ruby2-5-9"
+          name: "ruby2-5"
           ruby_version: "2.5.9"
           requires:
             - build
-  ruby2-6-7:
+  ruby2-6:
     jobs:
       - bundle:
           ruby_version: "2.6.7"
@@ -185,17 +185,17 @@ workflows:
           requires:
             - bundle
       - test:
-          name: "ruby2-6-7"
+          name: "ruby2-6"
           ruby_version: "2.6.7"
           requires:
             - build
       - test:
-          name: "ruby2-6-7-valkyrie"
+          name: "ruby2-6-valkyrie"
           ruby_version: "2.6.7"
           hyrax_valkyrie: "true"
           requires:
             - build
-  ruby2-7-4:
+  ruby2-7:
     jobs:
       - bundle:
           ruby_version: "2.7.4"
@@ -208,7 +208,7 @@ workflows:
           requires:
             - bundle
       - test:
-          name: "ruby2-7-4"
+          name: "ruby2-7"
           ruby_version: "2.7.4"
           bundler_version: "2.1.4"
           requires:
