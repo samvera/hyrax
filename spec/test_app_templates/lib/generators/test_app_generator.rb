@@ -193,10 +193,12 @@ YAML
   end
 
   def disable_animations_for_more_reliable_feature_specs
+    prepend_file 'config/environments/test.rb' do
+      "require 'hyrax/specs/disable_animations_in_test_environment'\n"
+    end
     inject_into_file 'config/environments/test.rb', after: "Rails.application.configure do\n" do
       "  config.middleware.use DisableAnimationsInTestEnvironment\n"
     end
-    copy_file 'disable_animations_in_test_environment.rb', 'app/middleware/disable_animations_in_test_environment.rb'
   end
 
   def configure_action_cable_to_use_redis
