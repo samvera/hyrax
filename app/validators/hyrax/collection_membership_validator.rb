@@ -16,8 +16,8 @@ module Hyrax
       checker = @multiple_membership_checker.new(item: nil)
       ids = collections_ids(record)
 
-      errors = Array(checker.check(collection_ids: ids))
-      record.errors[:member_of_collection_ids].concat(errors)
+      error = checker.check(collection_ids: ids)
+      record.errors.add(:member_of_collection_ids, error) if error
     end
 
     private
