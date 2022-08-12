@@ -71,10 +71,6 @@ module Hyrax
       end
     end
 
-    def catalog_controller
-      copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"
-    end
-
     # Add behaviors to the SolrDocument model
     def inject_solr_document_behavior
       file_path = 'app/models/solr_document.rb'
@@ -124,6 +120,10 @@ module Hyrax
       else
         puts "     \e[31mFailure\e[0m  Could not find #{file_path}.  To add Hyrax behaviors to your Controllers, you must include the Hyrax::Controller module in the Controller class definition."
       end
+    end
+
+    def catalog_controller
+      copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"
     end
 
     def copy_helper
