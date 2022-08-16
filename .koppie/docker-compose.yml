@@ -1,0 +1,140 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      target: nurax-pg
+    image: nurax-pg
+    stdin_open: true
+    tty: true
+    restart: always
+    user: root
+    env_file:
+      - .env.docker
+    environment:
+      - RAILS_ROOT=/app/samvera/hyrax-webapp
+    depends_on:
+      - chrome
+      - db_migrate
+      - postgres
+      - redis
+      - solr
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app/samvera/hyrax-webapp:cached
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - rails-public:/app/samvera/hyrax-webapp/public
+    networks:
+      - nurax-pg
+
+  sidekiq:
+    build:
+      context: .
+      target: nurax-pg-worker
+    image: nurax-pg-worker
+    restart: always
+    user: root
+    env_file:
+      - .env.docker
+    depends_on:
+      - db_migrate
+      - postgres
+      - redis
+      - solr
+    volumes:
+      - .:/app/samvera/hyrax-webapp:cached
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - sidekiq-public:/app/samvera/hyrax-webapp/public
+      - sidekiq-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - nurax-pg
+
+  chrome:
+    image: selenium/standalone-chrome:4.1
+    logging:
+      driver: none
+    volumes:
+      - /dev/shm:/dev/shm
+    shm_size: 2G
+    ports:
+      - "4444:4444"
+      - "5959:5900"
+    networks:
+      - nurax-pg
+
+  db_migrate:
+    image: nurax-pg
+    env_file:
+      - .env.docker
+    command:
+      - sh
+      - -c
+      - >
+        echo "Ensuring database: $$METADATA_DATABASE_NAME exists" &&
+        PGPASSWORD=$$DB_PASSWORD PGHOST=$$DB_HOST PGUSER=$$DB_USERNAME PGDATABASE=$$DB_NAME; export PGPASSWORD PGHOST PGUSER PGDATABASE &&
+        while ! psql -tc "SELECT * FROM pg_database"; do echo "-- Waiting for PGSQL ..."; sleep 5s; done &&
+        psql -tc "SELECT 1 FROM pg_database WHERE datname = '$$METADATA_DATABASE_NAME'" | grep -q 1 || createdb -e -w $$METADATA_DATABASE_NAME &&
+        db-wait.sh "$${SOLR_HOST}:$${SOLR_PORT}" db-migrate-seed.sh
+    depends_on:
+      - postgres
+      - solr
+    volumes:
+      - .:/app/samvera/hyrax-webapp:cached
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - nurax-pg
+
+  postgres:
+    image: bitnami/postgresql:14
+    restart: always
+    env_file:
+      - .env.docker
+    # ports:
+    #   - "5432:5432"
+    volumes:
+      - db:/bitnami/postgresql
+    networks:
+      - nurax-pg
+
+  redis:
+    image: bitnami/redis:6.2
+    env_file:
+      - .env.docker
+    volumes:
+      - redis:/bitnami/redis/data
+    networks:
+      - nurax-pg
+
+  solr:
+    image: bitnami/solr:8.11.1
+    ports:
+      - 8983:8983
+    env_file:
+      - .env.docker
+    volumes:
+      - ./solr/conf:/opt/nurax-pg
+      - solr_home:/bitnami
+    networks:
+      - nurax-pg
+
+volumes:
+  db:
+  hyrax-derivatives:
+  hyrax-uploads:
+  rails-public:
+  rails-tmp:
+  redis:
+  sidekiq-public:
+  sidekiq-tmp:
+  solr_home:
+
+networks:
+  nurax-pg:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-nurax-pg

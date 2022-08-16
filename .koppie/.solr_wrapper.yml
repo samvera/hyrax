@@ -1,0 +1,8 @@
+# Place any default configuration for solr_wrapper here
+version: 7.1.0
+port: 8983
+instance_dir: tmp/solr-development
+collection:
+  persist: true
+  dir: solr/conf/
+  name: nurax-pg-solrwrapper-dev

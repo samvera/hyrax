@@ -1,0 +1,15 @@
+---
+:queues:
+  - [ingest, 4]
+  - [batch, 2]
+  - [default, 1]
+
+test: # n/a
+  :concurrency: 1
+
+development:
+  :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 1 %>
+  :logfile: ./log/sidekiq_development.log
+
+production:
+  :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 2 %>

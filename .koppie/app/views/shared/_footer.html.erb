@@ -1,0 +1,39 @@
+<div class="blue-footer container">
+  <div class="row">
+
+    <div class="col-md-6 version">
+      <br>QA Testing for Hyrax
+      <div class="version">
+        Hyrax Version:
+          <%= if(HYRAX_VERSION.present? && HYRAX_VERSION != 'Unknown') &&
+                (HYRAX_BRANCH_REVISION.blank? || HYRAX_BRANCH_REVISION == 'Unknown')
+                  link_to(HYRAX_VERSION,
+                          "https://github.com/samvera/hyrax/tree/v#{HYRAX_VERSION}",
+                          class: "footer-link")
+              else
+                HYRAX_VERSION
+              end %>
+        <br><%= "Hyrax Branch: #{HYRAX_BRANCH}" if HYRAX_BRANCH.present? %>
+        <br><%= "Hyrax Revision: " if HYRAX_BRANCH_REVISION.present? %>
+          <%= if HYRAX_BRANCH_REVISION.present? && HYRAX_BRANCH_REVISION != 'Unknown'
+                link_to(HYRAX_BRANCH_REVISION,
+                        "https://github.com/samvera/hyrax/tree/#{HYRAX_BRANCH_REVISION}",
+                        class: "footer-link")
+              elsif HYRAX_BRANCH_REVISION.present?
+                HYRAX_BRANCH_REVISION
+              end %>
+      </div>
+    </div>
+
+    <div class="pull-right col-md-4" id="copyright">
+      <span> &copy; <%= Date.today.year %> Samvera-Hyrax </span>
+      <br> Nurax-pg Version
+      <div class="version">
+        ENV: <%= Rails.env %>
+        <br>SHA: <%= GIT_SHA %>
+        <br>Branch: <%= BRANCH %>
+        <br>Updated: <%= LAST_DEPLOYED %>
+      </div>
+    </div>
+  </div>
+</div>

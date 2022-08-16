@@ -1,0 +1,25 @@
+#
+# To make browse-everything aware of a provider, uncomment the info for that provider and add your API key information.
+# The file_system provider can be a path to any directory on the server where your application is running.
+#
+---
+# file_system:
+#  :home: "/tmp"
+# dropbox:
+#   client_id: YOUR_DROPBOX_APP_KEY
+#   client_secret: YOUR_DROPBOX_APP_SECRET
+#   download_directory: tmp/
+# box:
+#   client_id: YOUR_BOX_CLIENT_ID
+#   client_secret: YOUR_BOX_CLIENT_SECRET
+# google_drive:
+#   client_id: YOUR_GOOGLE_API_CLIENT_ID
+#   client_secret: YOUR_GOOGLE_API_CLIENT_SECRET
+# s3:
+#   bucket: YOUR_AWS_S3_BUCKET
+#   response_type: signed_url # set to :public_url for public urls or :s3_uri for an s3://BUCKET/KEY uri
+#   expires_in: 14400 # for signed_url response_type, number of seconds url will be valid for.
+#   app_key: YOUR_AWS_S3_KEY       # :app_key, :app_secret, and :region can be specified
+#   app_secret: YOUR_AWS_S3_SECRET # explicitly here, or left out to use system-configured
+#   region: YOUR_AWS_S3_REGION     # defaults.
+#   See https://aws.amazon.com/blogs/security/a-new-and-standardized-way-to-manage-credentials-in-the-aws-sdks/
