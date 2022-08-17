@@ -51,15 +51,23 @@ module Hyrax
     end
 
     def additions_for(visibility:)
-      self[visibility][:additions]
+      fetch(visibility)&.fetch(:additions)
     end
 
     def deletions_for(visibility:)
-      self[visibility][:deletions]
+      fetch(visibility)&.fetch(:deletions)
+    end
+
+    def fetch(key, &block)
+      @map.fetch(key, &block)
+    rescue KeyError => e
+      raise(UnknownVisibility, e.message)
     end
 
     def visibilities
       @map.keys
     end
+
+    class UnknownVisibility < KeyError; end
   end
 end
