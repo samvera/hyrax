@@ -51,5 +51,11 @@ RSpec.describe Hyrax::Resource do
           .to contain_exactly(Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC)
       end
     end
+
+    context 'when setting to unknown visibility' do
+      it 'raises a useful error' do
+        expect { resource.visibility = "oops" }.to raise_error KeyError
+      end
+    end
   end
 end
