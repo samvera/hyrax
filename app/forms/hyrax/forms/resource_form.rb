@@ -72,7 +72,7 @@ module Hyrax
       property :on_behalf_of
       property :proxy_depositor
 
-      property :visibility, default: VisibilityIntention::PRIVATE
+      property :visibility, default: VisibilityIntention::PRIVATE, populator: :visibility_populator
 
       property :date_modified, readable: false
       property :date_uploaded, readable: false
@@ -84,6 +84,9 @@ module Hyrax
                  form: Hyrax::Forms::Permission,
                  populator: :permission_populator,
                  prepopulator: ->(_opts) { self.permissions = Hyrax::AccessControl.for(resource: model).permissions })
+
+      property :embargo, form: Hyrax::Forms::Embargo, populator: :embargo_populator
+      property :lease, form: Hyrax::Forms::Lease, populator: :lease_populator
 
       # virtual properties for embargo/lease;
       property :embargo_release_date, virtual: true, prepopulator: ->(_opts) { self.embargo_release_date = model.embargo&.embargo_release_date }
@@ -208,6 +211,14 @@ module Hyrax
 
       private
 
+      def embargo_populator(**)
+        self.embargo = Hyrax::EmbargoManager.embargo_for(resource: model)
+      end
+
+      def lease_populator(**)
+        self.lease = Hyrax::LeaseManager.lease_for(resource: model)
+      end
+
       def in_collections_populator(fragment:, **_options)
         adds = []
         deletes = []
@@ -225,6 +236,24 @@ module Hyrax
       # https://trailblazer.to/2.1/docs/reform.html#reform-populators-populator-collections
       def permission_populator(collection:, index:, **)
         Hyrax::Forms::Permission.new(collection[index])
+      end
+
+      def visibility_populator(fragment:, doc:, **)
+        case fragment
+        when "embargo"
+          self.visibility = doc['visibility_during_embargo']
+
+          doc['embargo'] = doc.slice('visibility_after_embargo',
+                                     'visibility_during_embargo',
+                                     'embargo_release_date')
+        when "lease"
+          self.visibility = doc['visibility_during_lease']
+          doc['lease'] = doc.slice('visibility_after_lease',
+                                     'visibility_during_lease',
+                                     'lease_expiration_date')
+        else
+          self.visibility = fragment
+        end
       end
 
       def _form_field_definitions
