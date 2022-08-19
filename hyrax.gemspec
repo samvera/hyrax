@@ -58,6 +58,7 @@ SUMMARY
   spec.add_dependency 'iiif_manifest', '>= 0.3', '< 2.0'
   spec.add_dependency 'jquery-datatables-rails', '~> 3.4'
   spec.add_dependency 'jquery-ui-rails', '~> 6.0'
+  spec.add_dependency 'json-ld', '< 3.2'
   spec.add_dependency 'json-schema' # for Arkivo
   # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'kaminari_route_prefix', '~> 0.1.1'
@@ -70,6 +71,7 @@ SUMMARY
   spec.add_dependency 'oauth2', '~> 1.2'
   spec.add_dependency 'posix-spawn'
   spec.add_dependency 'power_converter', '~> 0.1', '>= 0.1.2'
+  spec.add_dependency 'psych', '~> 3.3'
   spec.add_dependency 'qa', '~> 5.5', '>= 5.5.1' # questioning_authority
   spec.add_dependency 'rails_autolink', '~> 1.1'
   spec.add_dependency 'rdf-rdfxml' # controlled vocabulary importer
