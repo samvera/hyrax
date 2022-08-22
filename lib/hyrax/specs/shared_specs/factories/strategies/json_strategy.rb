@@ -10,4 +10,8 @@ class JsonStrategy
   def result(evaluation)
     @strategy.result(evaluation).to_json
   end
+
+  def to_sym
+    :json
+  end
 end

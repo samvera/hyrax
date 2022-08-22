@@ -13,6 +13,10 @@ class ValkyrieCreateStrategy
     result
   end
 
+  def to_sym
+    :valkyrie_create
+  end
+
   private
 
   def persister
