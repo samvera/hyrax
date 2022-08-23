@@ -1687,6 +1687,8 @@ en:
         note_html: Keep to myself with option to share.
         text: Private
       restricted_title_attr: Change the visibility of this resource
+      unknown:
+        text: Unknown
     work_button_row:
       attach_child: Attach Child
     workflow:
