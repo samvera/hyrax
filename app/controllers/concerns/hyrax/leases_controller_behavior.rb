@@ -15,7 +15,7 @@ module Hyrax
     # Removes a single lease
     def destroy
       Hyrax::Actors::LeaseActor.new(curation_concern).destroy
-      flash[:notice] = curation_concern.lease_history.last
+      flash[:notice] = lease_history(curation_concern)&.last
       if curation_concern.work? && curation_concern.file_sets.present?
         redirect_to confirm_permission_path
       else
@@ -55,6 +55,13 @@ module Hyrax
       add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.leases.index.manage_leases'), hyrax.leases_path
       add_breadcrumb t(:'hyrax.leases.edit.lease_update'), '#'
+    end
+
+    private
+
+    def lease_history(concern)
+      concern.try(:lease_history) ||
+        concern.try(:lease)&.lease_history
     end
   end
 end
