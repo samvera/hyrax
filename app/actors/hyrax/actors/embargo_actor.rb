@@ -15,8 +15,8 @@ module Hyrax
         case work
         when Valkyrie::Resource
           embargo_manager = Hyrax::EmbargoManager.new(resource: work)
-          embargo_manager.release
-          Hyrax::AccessControlList(work).save
+          embargo_manager.release && Hyrax::AccessControlList(work).save
+          embargo_manager.nullify
         else
           work.embargo_visibility! # If the embargo has lapsed, update the current visibility.
           work.deactivate_embargo!
