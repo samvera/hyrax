@@ -35,6 +35,13 @@ RSpec.describe Hyrax::PermissionBadge do
       context "when private" do
         it { is_expected.to eq "<span class=\"label label-danger\">Private</span>" }
       end
+
+      # solr document can have no visibility indexed
+      it "does not fail when nil is passed" do
+        badge = described_class.new(nil)
+
+        expect(badge.render).to eq "<span class=\"label label-info\">Unknown</span>"
+      end
     end
   end
 
