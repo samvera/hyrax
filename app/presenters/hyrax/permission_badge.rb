@@ -24,14 +24,15 @@ module Hyrax
     private
 
     def dom_label_class
-      VISIBILITY_LABEL_CLASS.fetch(@visibility.to_sym, 'badge-info')
+      VISIBILITY_LABEL_CLASS.fetch(@visibility&.to_sym, 'badge-info')
     end
 
     def text
       if registered?
         Institution.name
       else
-        I18n.t("hyrax.visibility.#{@visibility}.text")
+        visibility_key = @visibility || 'unknown'
+        I18n.t("hyrax.visibility.#{visibility_key}.text")
       end
     end
 
