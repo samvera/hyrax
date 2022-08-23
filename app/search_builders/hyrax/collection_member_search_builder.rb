@@ -17,8 +17,8 @@ module Hyrax
                    scope: nil,
                    collection: nil,
                    search_includes_models: nil)
-      @collection = collection
-      @search_includes_models = search_includes_models
+      @collection = collection || (scope.context[:collection] if scope&.respond_to?(:context))
+      @search_includes_models = search_includes_models || :works
 
       if args.any?
         super(*args)
@@ -27,23 +27,10 @@ module Hyrax
       end
     end
 
-    def collection
-      @collection || (scope.context[:collection] if scope&.respond_to?(:context))
-    end
-
-    def search_includes_models
-      @search_includes_models || :works
-    end
-
     # include filters into the query to only include the collection memebers
     def member_of_collection(solr_parameters)
       solr_parameters[:fq] ||= []
       solr_parameters[:fq] << "#{collection_membership_field}:#{collection.id}"
-    end
-
-    # This overrides the models in FilterByType
-    def models
-      work_classes + collection_classes
     end
 
     private
