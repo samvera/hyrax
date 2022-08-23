@@ -6,7 +6,7 @@ module Hyrax
     included do
       attr_accessor :curation_concern
       helper_method :curation_concern
-      load_and_authorize_resource class: ActiveFedora::Base, instance_name: :curation_concern
+      load_and_authorize_resource class: ActiveFedora::Base, instance_name: :curation_concern, except: [:index]
     end
 
     # This is an override of Hyrax::ApplicationController
