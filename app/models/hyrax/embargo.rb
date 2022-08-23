@@ -15,7 +15,7 @@ module Hyrax
     attribute :embargo_history,           Valkyrie::Types::Array
 
     def active?
-      (embargo_release_date.present? && Time.zone.today < embargo_release_date)
+      (embargo_release_date.present? && Hyrax::TimeService.time_in_utc < embargo_release_date)
     end
   end
 end
