@@ -6,7 +6,8 @@ module Hyrax
     included do
       attr_accessor :curation_concern
       helper_method :curation_concern
-      load_and_authorize_resource class: ActiveFedora::Base, instance_name: :curation_concern, except: [:index]
+      base_class = Hyrax.config.use_valkyrie? ? Hyrax::Resource : ActiveFedora::Base
+      load_and_authorize_resource class: base_class, instance_name: :curation_concern, except: [:index]
     end
 
     # This is an override of Hyrax::ApplicationController
