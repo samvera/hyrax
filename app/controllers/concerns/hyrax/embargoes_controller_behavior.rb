@@ -15,8 +15,8 @@ module Hyrax
     # Removes a single embargo
     def destroy
       Hyrax::Actors::EmbargoActor.new(curation_concern).destroy
-      flash[:notice] = curation_concern.embargo_history.last
-      if curation_concern.work? && curation_concern.file_sets.present?
+      flash[:notice] = curation_concern.try(:embargo_history)&.last
+      if curation_concern.work? && work_has_file_set_members?(curation_concern)
         redirect_to confirm_permission_path
       else
         redirect_to edit_embargo_path
@@ -64,6 +64,17 @@ module Hyrax
       add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.embargoes.index.manage_embargoes'), hyrax.embargoes_path
       add_breadcrumb t(:'hyrax.embargoes.edit.embargo_update'), '#'
+    end
+
+    private
+
+    def work_has_file_set_members?(work)
+      case work
+      when Valkyrie::Resource
+        Hyrax.custom_queries.find_child_file_set_ids(resource: work).any?
+      else
+        work.file_sets.present?
+      end
     end
   end
 end
