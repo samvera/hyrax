@@ -3,7 +3,7 @@ module Hyrax
   # This search builder requires that a accessor named "collection" exists in the scope
   class CollectionMemberSearchBuilder < ::Hyrax::CollectionSearchBuilder
     include Hyrax::FilterByType
-    attr_writer :collection, :search_includes_models
+    attr_accessor :collection, :search_includes_models
 
     class_attribute :collection_membership_field
     self.collection_membership_field = 'member_of_collection_ids_ssim'
