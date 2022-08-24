@@ -152,4 +152,47 @@ RSpec.describe Hyrax::EmbargoHelper do
       end
     end
   end
+
+  describe '#embargo_history' do
+    context 'with an ActiveFedora resource' do
+      let(:resource) { FactoryBot.build(:work) }
+
+      it 'is empty' do
+        expect(embargo_history(resource)).to be_empty
+      end
+
+      context 'when the resource is under embargo' do
+        let(:resource) { FactoryBot.build(:embargoed_work) }
+
+        before do
+          resource.embargo.embargo_history << "updated the lease"
+        end
+
+        it 'has a history' do
+          expect(embargo_history(resource)).to contain_exactly("updated the lease")
+        end
+      end
+    end
+
+    context 'with a Hyrax::Work' do
+      let(:resource) { FactoryBot.build(:hyrax_work) }
+
+      it 'is empty' do
+        expect(embargo_history(resource)).to be_empty
+      end
+
+      context 'when the resource is under embargo' do
+        let(:resource) { FactoryBot.build(:hyrax_work, :under_embargo) }
+
+        before do
+          resource.embargo.embargo_history = ['Embargo in place!', 'Embargo expired!']
+        end
+
+        it 'contains the lease history' do
+          expect(embargo_history(resource))
+            .to contain_exactly 'Embargo in place!', 'Embargo expired!'
+        end
+      end
+    end
+  end
 end

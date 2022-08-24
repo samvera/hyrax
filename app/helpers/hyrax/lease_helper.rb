@@ -40,5 +40,16 @@ module Hyrax
         Hyrax::LeaseManager.new(resource: resource).enforced?
       end
     end
+
+    ##
+    # @since 3.5.0
+    #
+    # @param [#lease_history, #lease] resource
+    #
+    # @return [Array]
+    def lease_history(resource)
+      resource.try(:lease_history) ||
+        Array(resource.lease&.lease_history)
+    end
   end
 end
