@@ -40,5 +40,16 @@ module Hyrax
         Hyrax::EmbargoManager.new(resource: resource).enforced?
       end
     end
+
+    ##
+    # @since 3.5.0
+    #
+    # @param [#embargo_history, #embargo] resource
+    #
+    # @return [Array]
+    def embargo_history(resource)
+      resource.try(:embargo_history) ||
+        Array(resource.embargo&.embargo_history)
+    end
   end
 end
