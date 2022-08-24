@@ -13,7 +13,7 @@
       <fieldset class="set-access-controls">
         <section class="help-block">
           <p>
-            <% if curation_concern.embargo_release_date %>
+            <% if embargo_enforced?(curation_concern) %>
               <%= t('.embargo_true_html',  cc: cc_type) %>
             <% else %>
               <%= t('.embargo_false_html', cc: cc_type) %>
@@ -29,7 +29,7 @@
 
       <div class="row">
         <div class="col-md-12 form-actions">
-          <% if curation_concern.embargo_release_date %>
+          <% if embargo_enforced?(curation_concern) %>
             <%= f.submit t('.embargo_update'), class: 'btn btn-primary' %>
             <%= link_to t('.embargo_deactivate'), embargo_path(curation_concern), method: :delete, class: 'btn btn-danger' %>
           <% else %>
@@ -48,7 +48,7 @@
     <h2 class="panel-title"><%= t('.header.past') %></h2>
   </div>
   <div class="panel-body">
-    <% if curation_concern.embargo_history.empty? %>
+    <% if embargo_history(curation_concern).empty? %>
       <%= t('.history_empty', cc: cc_type) %>
     <% else %>
       <%= render partial: "embargo_history", object: curation_concern.embargo_history %>
