@@ -117,6 +117,12 @@ RSpec.describe Hyrax::Forms::CollectionForm, skip: !(Hyrax.config.collection_cla
     it { is_expected.to eq 'Collection' }
   end
 
+  describe "#visibility" do
+    subject { form.visibility }
+
+    it { is_expected.to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
+  end
+
   describe "#member_ids" do
     before do
       allow(collection).to receive(:member_ids).and_return(['9999'])

@@ -9,7 +9,7 @@ module Hyrax
       attr_reader :scope
 
       delegate :id, :depositor, :permissions, :human_readable_type, :member_ids, :nestable?,
-               :alternative_title, to: :model
+               :alternative_title, :visibility, to: :model
 
       class_attribute :membership_service_class
 
