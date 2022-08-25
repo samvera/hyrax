@@ -49,6 +49,13 @@ module Hyrax
 
     ##
     # @api public
+    # @return [String]
+    def human_readable_type
+      @model.human_readable_type
+    end
+
+    ##
+    # @api public
     #
     # @note uses the @model's `._to_partial_path` if implemented, otherwise
     #   constructs a default

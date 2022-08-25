@@ -70,6 +70,8 @@ RSpec.describe 'embargo' do
     let(:work) do
       create(:work, title: ['embargoed work1'],
                     embargo_release_date: future_date.to_datetime.iso8601,
+                    visibility_after_embargo: 'open',
+                    visibility_during_embargo: 'restricted',
                     admin_set_id: my_admin_set.id,
                     edit_users: [user])
     end
