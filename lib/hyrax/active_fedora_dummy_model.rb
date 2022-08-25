@@ -37,6 +37,12 @@ module Hyrax
 
     ##
     # @api public
+    def to_key
+      [@id]
+    end
+
+    ##
+    # @api public
     def model_name
       @model.model_name
     end
