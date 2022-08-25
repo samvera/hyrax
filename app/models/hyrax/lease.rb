@@ -15,7 +15,7 @@ module Hyrax
     attribute :lease_history,           Valkyrie::Types::Array
 
     def active?
-      (lease_expiration_date.present? && Time.zone.today < lease_expiration_date)
+      (lease_expiration_date.present? && Hyrax::TimeService.time_in_utc < lease_expiration_date)
     end
   end
 end
