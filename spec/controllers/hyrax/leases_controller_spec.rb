@@ -59,15 +59,8 @@ RSpec.describe Hyrax::LeasesController do
     end
 
     context 'when I have permission to edit the object' do
-      let(:actor) { double('lease actor') }
-
-      before do
-        allow(Hyrax::Actors::LeaseActor).to receive(:new).with(a_work).and_return(actor)
-      end
-
       context 'that has no files' do
         it 'deactivates the lease and redirects' do
-          expect(actor).to receive(:destroy)
           get :destroy, params: { id: a_work }
           expect(response).to redirect_to edit_lease_path(a_work)
         end
@@ -80,7 +73,6 @@ RSpec.describe Hyrax::LeasesController do
         end
 
         it 'deactivates the lease and redirects' do
-          expect(actor).to receive(:destroy)
           get :destroy, params: { id: a_work }
           expect(response).to redirect_to confirm_permission_path(a_work)
         end

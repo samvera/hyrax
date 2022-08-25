@@ -60,6 +60,8 @@ module Hyrax
     end
 
     def edit
+      @curation_concern = Hyrax::Forms::WorkEmbargoForm.new(curation_concern).prepopulate! if
+        Hyrax.config.use_valkyrie?
       add_breadcrumb t(:'hyrax.controls.home'), root_path
       add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.embargoes.index.manage_embargoes'), hyrax.embargoes_path

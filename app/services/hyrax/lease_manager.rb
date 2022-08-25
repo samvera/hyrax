@@ -90,6 +90,15 @@ module Hyrax
     end
 
     ##
+    # Drop the lease by setting its release date to `nil`.
+    #
+    # @return [void]
+    def nullify
+      return unless under_lease?
+      lease.lease_expiration_date = nil
+    end
+
+    ##
     # @return [Boolean]
     def release
       return false if under_lease?
