@@ -305,6 +305,21 @@ module Hyrax
         ""
     end
 
+    ##
+    # @param value [Object] the thing we'll attempt to cast to a formatted date.
+    # @param format [String] the `DateTime.strftime` format string
+    # @return [String]
+    #
+    # @see https://github.com/samvera/hyrax/issues/5818
+    # @see https://ruby-doc.org/core-3.0.1/Time.html#method-i-strftime
+    def cast_to_date_time_format(value, format:)
+      return value.strftime(format) if value.respond_to?(:strftime)
+
+      Time.zone.parse(value)&.strftime(format) || value
+    rescue ArgumentError, TypeError
+      value.to_s
+    end
+
     private
 
     def user_agent

@@ -416,4 +416,23 @@ RSpec.describe HyraxHelper, type: :helper do
       expect(helper.thumbnail_label_for(object: form)).to eq 'thumbnail'
     end
   end
+
+  describe "#cast_to_date_time_format" do
+    it "casts well date-like strings to the specified format" do
+      expect(helper.cast_to_date_time_format("2022-08-29 09:41:00 -0400", format: "%Y-%m-%d")).to eq("2022-08-29")
+    end
+
+    it "casts well date-like strings to the specified format" do
+      now = Time.zone.now
+      expect(helper.cast_to_date_time_format(now, format: "%Y-%m-%d")).to eq(now.strftime("%Y-%m-%d"))
+    end
+
+    it "falls back to the given string" do
+      expect(helper.cast_to_date_time_format("Hyrax Life", format: "%Y-%m-%d")).to eq("Hyrax Life")
+    end
+
+    it "handles a nil value" do
+      expect(helper.cast_to_date_time_format(nil, format: "%Y-%m-%d")).to be_nil
+    end
+  end
 end
