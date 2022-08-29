@@ -10,7 +10,7 @@
 <div class="row">
   <div class="col-sm-12">
     <div class="work-reports">
-    
+
       <div class="card">
         <div class="card-header">
           <div class="col-sm-10">
@@ -23,7 +23,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-12 col-md-5">
-              <p><%= t('.deposited_by') %> <b><%= @document.depositor %></b> on <b><%= @document.date_uploaded.strftime("%Y-%m-%d") %></b></p>
+              <p><%= t('.deposited_by') %> <b><%= @document.depositor %></b> on <b><%= cast_to_date_time_format(@document.date_uploaded, format: "%Y-%m-%d") %></b></p>
               <p><%= t('.work_type') %> <b><%= @document.human_readable_type %></b></p>
               <p><%= t('.resource_type') %> <b><%= @document.resource_type.join(", ") %></b></p>
             </div>
@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-          
+
       <div class="row text-center">
         <div class="nav nav-pills btn-group" role="group">
             <% if params[:start_date] %>
@@ -69,7 +69,7 @@
             <div class="tab-pane" id="monthly">
               <%= render "monthly_summary" %>
             </div>
-            
+
           <% if params[:start_date] %>
             <div class="tab-pane active" id="custom-range">
           <% else %>
@@ -79,12 +79,12 @@
               <%= render "custom_range" %>
             </div>
         </div>
-         
+
           <% unless @files.nil? %>
             <%= render "work_files" %>
             <%= render "work_counts" %>
          <% end %>
-         
+
     </div>
   </div>
 </div>
