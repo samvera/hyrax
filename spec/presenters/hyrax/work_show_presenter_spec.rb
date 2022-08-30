@@ -509,13 +509,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       subject { presenter.export_as_jsonld }
 
       it do
-        is_expected.to eq '{
-  "@context": {
-    "dc": "http://purl.org/dc/terms/"
-  },
-  "@id": "http://example.com/1",
-  "dc:title": "Test title"
-}'
+        is_expected.to eq '{"@context":{"dc":"http://purl.org/dc/terms/"},"@id":"http://example.com/1","dc:title":"Test title"}'
       end
     end
   end
