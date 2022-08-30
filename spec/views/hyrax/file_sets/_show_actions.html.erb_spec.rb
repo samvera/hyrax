@@ -21,7 +21,10 @@ RSpec.describe 'hyrax/file_sets/_show_actions.html.erb', type: :view do
     Hyrax::WorkShowPresenter.new(solr_document, ability)
   end
   let(:page) { Capybara::Node::Simple.new(rendered) }
-  before { allow(controller).to receive(:current_ability).and_return(ability) }
+  before do
+    allow(controller).to receive(:current_ability).and_return(ability)
+    allow(controller).to receive(:controller_name).and_return('file_sets')
+  end
 
   describe 'citations' do
     before do
