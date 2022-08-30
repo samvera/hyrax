@@ -138,7 +138,7 @@ RSpec.describe Hyrax::DefaultMiddlewareStack, :clean_repo do
         it 'populates meaningful errors on the work' do
           expect { actor.create(env) }
             .to change { env.curation_concern.errors.messages }
-            .to include(embargo_release_date: ["Must be a future date."])
+            .to match(hash_including(embargo_release_date: array_including("Must be a future date.")))
         end
       end
     end
