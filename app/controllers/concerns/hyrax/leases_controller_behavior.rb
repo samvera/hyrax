@@ -16,7 +16,7 @@ module Hyrax
     def destroy
       Hyrax::Actors::LeaseActor.new(curation_concern).destroy
       flash[:notice] = lease_history(curation_concern)&.last
-      if curation_concern.work? && curation_concern.file_sets.present?
+      if curation_concern.work? && work_has_file_set_members?(curation_concern)
         redirect_to confirm_permission_path
       else
         redirect_to edit_lease_path

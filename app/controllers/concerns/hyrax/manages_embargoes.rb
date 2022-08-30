@@ -16,5 +16,16 @@ module Hyrax
     end
 
     def edit; end
+
+    private
+
+    def work_has_file_set_members?(work)
+      case work
+      when Valkyrie::Resource
+        Hyrax.custom_queries.find_child_file_set_ids(resource: work).any?
+      else
+        work.file_sets.present?
+      end
+    end
   end
 end
