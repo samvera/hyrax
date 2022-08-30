@@ -508,7 +508,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     describe "#export_as_jsonld" do
       it do
         json = '{"@context": {"dc": "http://purl.org/dc/terms/"},"@id": "http://example.com/1","dc:title": "Test title"}'
-b
+
         expect(JSON.parse(presenter.export_as_jsonld)).to eq JSON.parse(json)
       end
     end
