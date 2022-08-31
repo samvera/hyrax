@@ -76,11 +76,11 @@ RSpec.describe Hyrax::Forms::PcdmCollectionForm do
     end
 
     context 'when collection_type_gid is missing' do
-      let(:params_missing_type) do
+      let(:params_missing_collection_type_gid) do
         { title: 'My title' }
       end
       it 'returns error message for field' do
-        expect(form.validate(params_missing_type)).to eq false
+        expect(form.validate(params_missing_collection_type_gid)).to eq false
         expect(form.errors.messages).to include(collection_type_gid: ["can't be blank"])
         expect(form.errors.messages).not_to include(title: ["can't be blank"])
       end
