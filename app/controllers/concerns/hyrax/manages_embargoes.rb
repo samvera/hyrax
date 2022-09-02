@@ -6,7 +6,8 @@ module Hyrax
     included do
       attr_accessor :curation_concern
       helper_method :curation_concern
-      load_and_authorize_resource class: ActiveFedora::Base, instance_name: :curation_concern, except: [:index]
+      base_class = Hyrax.config.use_valkyrie? ? Hyrax::Resource : ActiveFedora::Base
+      load_and_authorize_resource class: base_class, instance_name: :curation_concern, except: [:index]
     end
 
     # This is an override of Hyrax::ApplicationController
@@ -15,5 +16,16 @@ module Hyrax
     end
 
     def edit; end
+
+    private
+
+    def work_has_file_set_members?(work)
+      case work
+      when Valkyrie::Resource
+        Hyrax.custom_queries.find_child_file_set_ids(resource: work).any?
+      else
+        work.file_sets.present?
+      end
+    end
   end
 end

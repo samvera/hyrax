@@ -1,0 +1,25 @@
+default: &default
+  adapter: postgresql
+  pool: <%= ENV.fetch('DB_POOL') { 5 } %>
+  timeout: <%= ENV.fetch('DB_TIMEOUT') { 5000 } %>
+  database: <%= ENV['APP_DB_NAME'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  host: <%= ENV['DB_HOST'] %>
+  port: <%= ENV['DB_PORT'] %>
+
+development:
+  <<: *default
+  database: <%= ENV.fetch('APP_DB_NAME', 'nurax_pg_development') %>
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: <%= ENV.fetch('APP_DB_NAME', 'nurax_pg_test') %>
+
+production:
+  <<: *default
+  encoding: unicode
+  pool: 50

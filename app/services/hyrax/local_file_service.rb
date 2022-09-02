@@ -5,7 +5,9 @@ module Hyrax
     # @param [Hash] _options
     # @yield [File] opens the file and yields it to the block
     def self.call(file_name, _options)
-      yield File.open(file_name)
+      File.open(file_name) do |file|
+        yield(file)
+      end
     end
   end
 end

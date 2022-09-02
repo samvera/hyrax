@@ -56,15 +56,8 @@ RSpec.describe Hyrax::EmbargoesController do
     end
 
     context 'when I have permission to edit the object' do
-      before do
-        expect(Hyrax::Actors::EmbargoActor).to receive(:new).with(a_work).and_return(actor)
-      end
-
-      let(:actor) { double }
-
       context 'that has no files' do
         it 'deactivates embargo and redirects' do
-          expect(actor).to receive(:destroy)
           get :destroy, params: { id: a_work }
           expect(response).to redirect_to edit_embargo_path(a_work)
         end
@@ -77,7 +70,6 @@ RSpec.describe Hyrax::EmbargoesController do
         end
 
         it 'deactivates embargo and checks to see if we want to copy the visibility to files' do
-          expect(actor).to receive(:destroy)
           get :destroy, params: { id: a_work }
           expect(response).to redirect_to confirm_permission_path(a_work)
         end
