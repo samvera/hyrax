@@ -1,0 +1,12 @@
+development:
+  adapter: redis
+  url: <%= ENV.fetch("REDIS_URL") { sprintf "redis://%s%s:%s/1", (ENV['REDIS_PASSWORD'].present? ? ":#{ENV['REDIS_PASSWORD']}@" : ''), ENV.fetch('REDIS_HOST', 'localhost'), ENV.fetch('REDIS_PORT', '6379') } %>
+  channel_prefix: nurax-pg_development
+
+test:
+  adapter: async
+
+production:
+  adapter: redis
+  url: <%= ENV.fetch("REDIS_URL") { sprintf "redis://%s%s:%s/1", (ENV['REDIS_PASSWORD'].present? ? ":#{ENV['REDIS_PASSWORD']}@" : ''), ENV.fetch('REDIS_HOST', 'localhost'), ENV.fetch('REDIS_PORT', '6379') } %>
+  channel_prefix: nurax-pg_production

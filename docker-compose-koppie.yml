@@ -1,0 +1,165 @@
+version: '3.7'
+
+services:
+  app: &app
+    build:
+      context: .
+      target: hyrax-engine-dev
+      args:
+        - EXTRA_APK_PACKAGES=git less chromium
+        - APP_PATH=.koppie
+    image: ghcr.io/samvera/koppie
+    command: sh -l -c 'bundle && bundle exec puma -v -b tcp://0.0.0.0:3000'
+    stdin_open: true
+    tty: true
+    user: root
+    env_file:
+      - .env
+      - .koppie/.env
+    environment:
+      - RAILS_ROOT=/app/samvera/hyrax-webapp
+    depends_on:
+      - chrome
+      - db_migrate
+      - memcached
+      - postgres
+      - redis
+      - solr
+    ports:
+      - 3000:3000
+      - 9876:9876
+      - 1048:1048
+    volumes:
+      - .koppie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - hyrax
+
+  sidekiq:
+    build:
+      context: .
+      target: hyrax-engine-dev-worker
+      args:
+        - APP_PATH=.koppie
+    image: ghcr.io/samvera/koppie-worker
+    command: sh -l -c 'bundle && bundle exec sidekiq'
+    user: root
+    env_file:
+      - .env
+      - .koppie/.env
+    depends_on:
+      - db_migrate
+      - memcached
+      - postgres
+      - redis
+      - solr
+    volumes:
+      - .koppie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - sidekiq-public:/app/samvera/hyrax-webapp/public
+      - sidekiq-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - hyrax
+
+  db_migrate:
+    build:
+      context: .
+      target: hyrax-engine-dev
+      args:
+        - EXTRA_APK_PACKAGES=git less
+        - APP_PATH=.koppie
+    image: ghcr.io/samvera/koppie
+    user: root
+    env_file:
+      - .env
+      - .koppie/.env
+    command: sh -l -c 'bundle && db-migrate-seed.sh'
+    depends_on:
+      - postgres
+    volumes:
+      - .koppie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - hyrax
+
+  chrome:
+    image: selenium/standalone-chrome:3.141
+    logging:
+      driver: none
+    volumes:
+      - /dev/shm:/dev/shm
+    shm_size: 2G
+    ports:
+      - "4444:4444"
+      - "5959:5900"
+    networks:
+      - hyrax
+
+  postgres:
+    image: bitnami/postgresql:14
+    restart: always
+    env_file:
+      - .env
+      - .koppie/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/bitnami/postgresql
+    networks:
+      - hyrax
+
+  memcached:
+    image: bitnami/memcached
+    ports:
+      - '11211:11211'
+    networks:
+      - hyrax
+
+  redis:
+    image: bitnami/redis:6.2
+    env_file:
+      - .env
+      - .koppie/.env
+    volumes:
+      - redis:/bitnami/redis/data
+    networks:
+      - hyrax
+
+  solr:
+    image: solr:8.11
+    ports:
+      - 8983:8983
+    command:
+      - sh
+      - "-c"
+      - "precreate-core koppie_test /opt/solr/server/configsets/hyraxconf; solr-precreate koppie /opt/solr/server/configsets/hyraxconf"
+    volumes:
+      - solr_home:/var/solr/data:cached
+      - .koppie/solr/conf:/opt/solr/server/configsets/hyraxconf
+    networks:
+      - hyrax
+
+volumes:
+  db:
+  hyrax-derivatives:
+  hyrax-uploads:
+  rails-public:
+  rails-tmp:
+  redis:
+  sidekiq-public:
+  sidekiq-tmp:
+  solr_home:
+
+networks:
+  hyrax:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-hyrax
