@@ -3,9 +3,11 @@ FROM ruby:$RUBY_VERSION-alpine3.15 as hyrax-base
 
 ARG DATABASE_APK_PACKAGE="postgresql-dev"
 ARG EXTRA_APK_PACKAGES="git"
+ARG RUBYGEMS_VERSION=3.3.20
 
 RUN apk --no-cache upgrade && \
-  apk --no-cache add build-base \
+  apk --no-cache add acl \
+  build-base \
   curl \
   gcompat \
   imagemagick \
@@ -16,11 +18,12 @@ RUN apk --no-cache upgrade && \
   $DATABASE_APK_PACKAGE \
   $EXTRA_APK_PACKAGES
 
+RUN setfacl -d -m o::rwx /usr/local/bundle && \
+  gem update --system $RUBYGEMS_VERSION
+
 RUN addgroup -S --gid 101 app && \
   adduser -S -G app -u 1001 -s /bin/sh -h /app app
 USER app
-
-RUN gem update bundler
 
 RUN mkdir -p /app/samvera/hyrax-webapp
 WORKDIR /app/samvera/hyrax-webapp
@@ -87,9 +90,10 @@ ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
 COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
 
-RUN gem update bundler && gem cleanup bundler && bundle -v && \
+RUN bundle -v && \
   bundle install --jobs "$(nproc)" && \
-  cd $HYRAX_ENGINE_PATH && bundle install --jobs "$(nproc)"
+  cd $HYRAX_ENGINE_PATH && \
+  bundle install --jobs "$(nproc)"
 RUN RAILS_ENV=production SECRET_KEY_BASE='fakesecret1234' DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
 
