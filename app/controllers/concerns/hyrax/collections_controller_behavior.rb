@@ -66,13 +66,6 @@ module Hyrax
       Hyrax::SearchService.new(config: blacklight_config, user_params: params.except(:q, :page), scope: self, search_builder_class: single_item_search_builder_class)
     end
 
-    # Instantiates the search builder that builds a query for a single item
-    # this is useful in the show view.
-    def single_item_search_builder
-      search_service.search_builder
-    end
-    deprecation_deprecate :single_item_search_builder
-
     def collection_params
       form_class.model_attributes(params[:collection])
     end
