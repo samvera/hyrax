@@ -202,20 +202,7 @@ module Hyrax
         # Hyrax::AdministrativeSet, we need to test both cases.
         true
       else
-        if resource.respond_to?(:share_applies_to_new_works?)
-          # The Collection model has traditionally delegated #share_applies_to_new_works? to
-          # the underlying collection_type
-          # (see https://github.com/samvera/hyrax/blob/696da5db/spec/models/collection_spec.rb#L189)
-          resource.share_applies_to_new_works?
-        elsif resource.respond_to?(:collection_type_gid)
-          # This is likely a Hyrax::PcdmCollection object, which means we don't have the delegation
-          # behavior.  Instead we'll query the collection type directly.
-          collection_type = CollectionType.find_by_gid(resource.collection_type_gid)
-          collection_type&.share_applies_to_new_works?
-        else
-          # How might we get here?
-          false
-        end
+        Hyrax::CollectionType.for(collection: resource).share_applies_to_new_works?
       end
     end
 

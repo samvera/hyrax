@@ -123,14 +123,7 @@ module Hyrax
     ##
     # @param collection [Object]
     def collection_type_label_for(collection:)
-      case collection
-      when Valkyrie::Resource
-        CollectionType
-          .find_by_gid!(collection.collection_type_gid)
-          .title
-      else
-        collection.collection_type.title
-      end
+      CollectionType.for(collection: collection).title
     end
 
     ##
@@ -138,14 +131,7 @@ module Hyrax
     #
     # @return [Boolean]
     def collection_brandable?(collection:)
-      case collection
-      when Valkyrie::Resource
-        CollectionType
-          .find_by_gid!(collection.collection_type_gid)
-          .brandable?
-      else
-        collection.try(:brandable?)
-      end
+      CollectionType.for(collection: collection).brandable?
     end
 
     ##
@@ -153,14 +139,7 @@ module Hyrax
     #
     # @return [Boolean]
     def collection_discoverable?(collection:)
-      case collection
-      when Valkyrie::Resource
-        CollectionType
-          .find_by_gid!(collection.collection_type_gid)
-          .discoverable?
-      else
-        collection.try(:discoverable?)
-      end
+      CollectionType.for(collection: collection).discoverable?
     end
 
     ##
@@ -168,14 +147,7 @@ module Hyrax
     #
     # @return [Boolean]
     def collection_sharable?(collection:)
-      case collection
-      when Valkyrie::Resource
-        CollectionType
-          .find_by_gid!(collection.collection_type_gid)
-          .sharable?
-      else
-        collection.try(:sharable?)
-      end
+      CollectionType.for(collection: collection).sharable?
     end
 
     ##

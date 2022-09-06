@@ -76,11 +76,15 @@ module Hyrax
       @_prefixes ||= super + ['catalog', 'hyrax/base']
     end
 
+    # rubocop:disable Style/GuardClause
     def query_collection_members
       load_member_works
-      load_member_subcollections if collection.collection_type.nestable?
-      load_parent_collections if collection.collection_type.nestable? && action_name == 'show'
+      if Hyrax::CollectionType.for(collection: collection).nestable?
+        load_member_subcollections
+        load_parent_collections if action_name == 'show'
+      end
     end
+    # rubocop:enable Style/GuardClause
 
     # Instantiate the membership query service
     def collection_member_service

@@ -39,7 +39,7 @@ FactoryBot.define do
       # if requested, create a solr document and add the nesting fields into it
       # when a nestable collection is built. This reduces the need to use
       # create and :with_nested_indexing for nested collection testing
-      if evaluator.with_nesting_attributes.present? && collection.nestable?
+      if evaluator.with_nesting_attributes.present? && Hyrax::CollectionType.for(collection: collection).nestable?
         Hyrax::Adapters::NestingIndexAdapter.add_nesting_attributes(
           solr_doc: evaluator.to_solr,
           ancestors: evaluator.with_nesting_attributes[:ancestors],
