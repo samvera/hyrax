@@ -40,6 +40,7 @@ module Hyrax
     end
 
     delegate(*Hyrax::CollectionType.settings_attributes, to: :collection_type)
+    ActiveSupport::Deprecation.deprecate_methods(self, *Hyrax::CollectionType.settings_attributes)
 
     # Get the collection_type when accessed
     def collection_type

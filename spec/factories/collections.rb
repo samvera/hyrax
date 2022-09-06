@@ -286,7 +286,7 @@ FactoryBot.define do
     # @param [Collection] collection object being built/created by the factory
     # @param [Class] evaluator holding the transient properties for the current build/creation process
     def self.process_with_nesting_attributes(collection, evaluator)
-      return unless evaluator.with_nesting_attributes.present? && collection.nestable?
+      return unless evaluator.with_nesting_attributes.present? && Hyrax::CollectionType.for(collection: collection).nestable?
       Hyrax::Adapters::NestingIndexAdapter.add_nesting_attributes(
         solr_doc: solr_document_with_permissions(collection, evaluator),
         ancestors: evaluator.with_nesting_attributes[:ancestors],
@@ -303,7 +303,7 @@ FactoryBot.define do
     # @param [Class] evaluator holding the transient properties for the current build/creation process
     def self.process_with_solr_document(collection, evaluator)
       return unless evaluator.with_solr_document
-      return if evaluator.with_nesting_attributes.present? && collection.nestable? # will create the solr document there instead
+      return if evaluator.with_nesting_attributes.present? && Hyrax::CollectionType.for(collection: collection).nestable? # will create the solr document there instead
       Hyrax::SolrService.add(solr_document_with_permissions(collection, evaluator), commit: true)
     end
 

@@ -137,8 +137,7 @@ module Hyrax
         def nestable?(collection)
           return false if collection.blank?
           return collection.nestable? if collection.respond_to? :nestable?
-          collection_type = Hyrax::CollectionType.find_by_gid!(collection.collection_type_gid)
-          collection_type.nestable?
+          Hyrax::CollectionType.for(collection: collection).nestable?
         end
       end
     end

@@ -108,7 +108,7 @@ module Hyrax
 
         # Do not apply permissions to work if collection type is configured not to
         collection = Hyrax.config.collection_class.find(collection_id)
-        return unless collection.share_applies_to_new_works?
+        return unless Hyrax::CollectionType.for(collection: collection).share_applies_to_new_works?
 
         # Save the collection id in env for use in apply_permission_template_actor
         env.attributes[:collection_id] = collection_id
