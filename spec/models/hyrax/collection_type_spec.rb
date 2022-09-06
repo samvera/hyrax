@@ -4,7 +4,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
 
   shared_context 'with a collection' do
     let(:collection_type) { FactoryBot.create(:collection_type) }
-    let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.to_global_id) }
+    let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.to_global_id.to_s) }
   end
 
   describe '.collection_type_settings_methods' do
@@ -125,6 +125,14 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     it "ensures uniqueness" do
       is_expected.to validate_uniqueness_of(:title)
       is_expected.to validate_uniqueness_of(:machine_id)
+    end
+  end
+
+  describe '.for' do
+    include_context 'with a collection'
+
+    it 'returns the collection type for the collection' do
+      expect(described_class.for(collection: collection)).to eq collection_type
     end
   end
 

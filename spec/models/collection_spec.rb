@@ -163,9 +163,9 @@ RSpec.describe ::Collection, type: :model do
       expect { collection.collection_type_gid = nil }.to raise_error(URI::InvalidURIError)
     end
 
-    it 'updates the collection_type instance variable' do
+    it 'updates the collection_type' do
       expect { collection.collection_type_gid = collection_type.to_global_id }
-        .to change { collection.collection_type }
+        .to change { Hyrax::CollectionType.for(collection: collection) }
         .from(create(:user_collection_type)).to(collection_type)
     end
 
