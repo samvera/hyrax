@@ -242,10 +242,10 @@ module Hyrax
 
     def workflow_agents
       [
-        Hyrax::Group.new(admin_group_name)
+        Sipity::Agent(Hyrax::Group.new(admin_group_name))
       ].tap do |agent_list|
         # The default admin set does not have a creating user
-        agent_list << creating_user if creating_user
+        agent_list << Sipity::Agent(creating_user) if creating_user
       end
     end
 

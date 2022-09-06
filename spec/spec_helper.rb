@@ -137,6 +137,7 @@ RSpec.configure do |config|
   end
 
   config.fixture_path = File.expand_path("../fixtures", __FILE__)
+  config.file_fixture_path = File.expand_path("../fixtures", __FILE__)
   config.use_transactional_fixtures = false
 
   config.before :suite do
