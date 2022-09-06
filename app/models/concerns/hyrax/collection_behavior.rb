@@ -43,6 +43,8 @@ module Hyrax
 
     # Get the collection_type when accessed
     def collection_type
+      Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
+                         "Instead, use Hyrax::CollectionType.for(collection: collection).")
       @collection_type ||= Hyrax::CollectionType.find_by_gid!(collection_type_gid)
     end
 

@@ -31,10 +31,11 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
 
       it 'will create a collection type with specified settings when collection_type_settings is set to attributes identifying settings' do
         col = build(:collection_lw, collection_type_settings: [:not_discoverable, :not_sharable, :not_brandable, :nestable])
-        expect(col.collection_type.discoverable?).to be false
-        expect(col.collection_type.sharable?).to be false
-        expect(col.collection_type.brandable?).to be false
-        expect(col.collection_type.nestable?).to be true
+        collection_type = Hyrax::CollectionType.for(collection: col)
+        expect(collection_type.discoverable?).to be false
+        expect(collection_type.sharable?).to be false
+        expect(collection_type.brandable?).to be false
+        expect(collection_type.nestable?).to be true
       end
     end
 

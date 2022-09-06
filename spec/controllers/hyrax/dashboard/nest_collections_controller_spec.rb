@@ -9,7 +9,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
   end
 
   let(:parent) do
-    FactoryBot.create(:collection_lw, collection_type_settings: :nestable, user: user)
+    FactoryBot.valkyrie_create(:hyrax_collection, :public, user: user)
   end
 
   before { sign_in(user) }
@@ -21,8 +21,8 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
     Class.new do
       attr_reader :child, :parent
       def initialize(parent: nil, parent_id: nil, child: nil, child_id: nil, context:)
-        @parent = parent || (parent_id.present? && Hyrax.config.collection_class.find(parent_id))
-        @child = child || (child_id.present? && Hyrax.config.collection_class.find(child_id))
+        @parent = parent || (parent_id.present? && Hyrax.query_service.find_by(id: parent_id))
+        @child = child || (child_id.present? && Hyrax.query_service.find_by(id: child_id))
         @context = context
       end
     end
@@ -139,7 +139,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
         get 'create_collection_under', params: parameters
 
         expect(response)
-          .to redirect_to new_dashboard_collection_path(collection_type_id: parent.collection_type.id,
+          .to redirect_to new_dashboard_collection_path(collection_type_id: Hyrax::CollectionType.for(collection: parent).id,
                                                         parent_id: parent.id)
       end
     end

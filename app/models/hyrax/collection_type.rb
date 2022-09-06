@@ -52,6 +52,14 @@ module Hyrax
     alias_attribute :visibility, :assigns_visibility
     alias_attribute :branding, :brandable
 
+    # Find the collection type associated with the collection
+    # @param [::Collection, Hyrax::PcdmCollection] collection
+    # @return [Hyrax::PcdmCollection | ::Collection] an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)
+    # @raise [ActiveRecord::RecordNotFound] if record matching gid is not found
+    def self.for(collection:)
+      find_by_gid!(collection.collection_type_gid)
+    end
+
     # Find the collection type associated with the Global Identifier (gid)
     # @param [String] gid - Global Identifier for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
     # @return [Hyrax::CollectionType] if record matching gid is found, an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)

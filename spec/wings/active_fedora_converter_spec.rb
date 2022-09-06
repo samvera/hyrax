@@ -255,7 +255,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       end
 
       it 'has the given collection type' do
-        expect(converter.convert.collection_type.to_global_id.to_s)
+        expect(Hyrax::CollectionType.for(collection: converter.convert).to_global_id.to_s)
           .to eq resource.collection_type_gid
       end
 
