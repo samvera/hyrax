@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 # Generated via
-#  `rails generate hyrax:work_resource Image`
+#  `rails generate hyrax:work_resource Monograph`
 #
 # @see https://github.com/samvera/hyrax/wiki/Hyrax-Valkyrie-Usage-Guide#forms
 # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
-class ImageForm < Hyrax::Forms::ResourceForm(Image)
+class MonographForm < Hyrax::Forms::ResourceForm(Monograph)
   include Hyrax::FormFields(:basic_metadata)
-  include Hyrax::FormFields(:image)
+  include Hyrax::FormFields(:monograph)
 
   # Define custom form fields using the Valkyrie::ChangeSet interface
   #
