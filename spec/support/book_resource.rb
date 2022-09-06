@@ -33,4 +33,4 @@ module Hyrax
   end
 end
 
-Wings::ModelRegistry.register(Hyrax::Test::BookResource, Hyrax::Test::Book)
+Wings::ModelRegistry.register(Hyrax::Test::BookResource, Hyrax::Test::Book) if defined?(Wings)
