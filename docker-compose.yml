@@ -13,7 +13,6 @@ services:
     tty: true
     user: root
     env_file:
-      - .env
       - .dassie/.env
     environment:
       - RAILS_ROOT=/app/samvera/hyrax-webapp
@@ -46,7 +45,6 @@ services:
     command: sh -l -c 'bundle && bundle exec sidekiq'
     user: root
     env_file:
-      - .env
       - .dassie/.env
     depends_on:
       - db_migrate
@@ -74,7 +72,6 @@ services:
     image: ghcr.io/samvera/dassie
     user: root
     env_file:
-      - .env
       - .dassie/.env
     command: sh -l -c 'bundle && db-migrate-seed.sh'
     depends_on:
