@@ -104,7 +104,7 @@ services:
       - hyrax
 
   postgres:
-    image: bitnami/postgresql:14
+    image: postgres:latest
     restart: always
     env_file:
       - .env
@@ -112,7 +112,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db:/bitnami/postgresql
+      - db:/var/lib/postgresql/data
     networks:
       - hyrax
 
