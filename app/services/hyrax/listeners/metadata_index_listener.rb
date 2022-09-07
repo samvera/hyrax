@@ -20,6 +20,7 @@ module Hyrax
       def on_collection_metadata_updated(event)
         return unless resource? event[:collection]
         Hyrax.index_adapter.save(resource: event[:collection])
+        Hyrax.config.nested_relationship_reindexer.call(id: event[:collection].id.to_s, extent: Hyrax::Adapters::NestingIndexAdapter::FULL_REINDEX)
       end
 
       ##
@@ -44,6 +45,7 @@ module Hyrax
         return unless resource?(resource)
 
         Hyrax.index_adapter.save(resource: resource)
+        Hyrax.config.nested_relationship_reindexer.call(id: resource.id.to_s, extent: Hyrax::Adapters::NestingIndexAdapter::FULL_REINDEX)
       rescue Valkyrie::Persistence::ObjectNotFoundError => err
         Hyrax.logger.error("Tried to index for an #{event.id} event with " \
                            "payload #{event.payload}, but failed due to error:\n"\
@@ -59,6 +61,7 @@ module Hyrax
       def on_object_metadata_updated(event)
         return unless resource? event[:object]
         Hyrax.index_adapter.save(resource: event[:object])
+        Hyrax.config.nested_relationship_reindexer.call(id: event[:object].id.to_s, extent: Hyrax::Adapters::NestingIndexAdapter::FULL_REINDEX)
       end
 
       ##

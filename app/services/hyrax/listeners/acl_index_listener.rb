@@ -17,6 +17,7 @@ module Hyrax
       def on_object_acl_updated(event)
         return unless event[:result] == :success # do nothing on failure
         Hyrax.index_adapter.save(resource: event[:acl].resource)
+        Hyrax.config.nested_relationship_reindexer.call(id: event[:acl].resource.id.to_s, extent: Hyrax::Adapters::NestingIndexAdapter::FULL_REINDEX)
       end
     end
   end
