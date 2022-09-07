@@ -34,6 +34,11 @@ module Hyrax
       @collection_type ||= Hyrax::CollectionType.find_or_create_admin_set_type
     end
 
+    # Overrides delegate because admin sets do not index collection type gid
+    def collection_type_gid
+      collection_type.to_global_id
+    end
+
     def show_path
       Hyrax::Engine.routes.url_helpers.admin_admin_set_path(id, locale: I18n.locale)
     end
