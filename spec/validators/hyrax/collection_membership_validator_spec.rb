@@ -68,7 +68,7 @@ RSpec.describe Hyrax::CollectionMembershipValidator do
           context 'and work is in another collection NOT posing a conflict' do
             let(:work) { FactoryBot.build(:hyrax_work, :as_collection_member) }
             let(:col_id) { work.member_of_collection_ids.first.id }
-            let(:sm_col) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
+            let(:sm_col) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id.to_s) }
             let(:mem_of_cols_attrs) do
               { "0" => { "id" => col_id.to_s, "_destroy" => "false" },
                 "1" => { "id" => sm_col.id.to_s, "_destroy" => "false" } }
@@ -83,8 +83,8 @@ RSpec.describe Hyrax::CollectionMembershipValidator do
 
           context 'and work is already ni collections with membership restriction conflicts' do
             let(:work) { FactoryBot.build(:hyrax_work, member_of_collection_ids: [sm_col1.id]) }
-            let(:sm_col1) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
-            let(:sm_col2) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
+            let(:sm_col1) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id.to_s) }
+            let(:sm_col2) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id.to_s) }
 
             let(:mem_of_cols_attrs) do
               { "0" => { "id" => sm_col2.id.to_s, "_destroy" => "false" } }
@@ -104,8 +104,8 @@ RSpec.describe Hyrax::CollectionMembershipValidator do
 
           context 'and work is added to collections with membership restriction conflicts' do
             let(:work) { FactoryBot.build(:hyrax_work) }
-            let(:sm_col1) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
-            let(:sm_col2) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
+            let(:sm_col1) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id.to_s) }
+            let(:sm_col2) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id.to_s) }
             let(:mem_of_cols_attrs) do
               { "0" => { "id" => sm_col1.id.to_s, "_destroy" => "false" },
                 "1" => { "id" => sm_col2.id.to_s, "_destroy" => "false" } }
@@ -206,7 +206,7 @@ RSpec.describe Hyrax::CollectionMembershipValidator do
           context 'and collection is in another collection of a different collection type' do
             let(:col) { FactoryBot.build(:hyrax_collection, :as_collection_member) }
             let(:col_id) { col.member_of_collection_ids.first.id }
-            let(:sm_col) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
+            let(:sm_col) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id.to_s) }
             let(:mem_of_cols_attrs) do
               { "0" => { "id" => col_id.to_s, "_destroy" => "false" },
                 "1" => { "id" => sm_col.id.to_s, "_destroy" => "false" } }
@@ -221,8 +221,8 @@ RSpec.describe Hyrax::CollectionMembershipValidator do
 
           context 'and collection is in another collection of the same single membership type' do
             let(:col) { FactoryBot.build(:hyrax_collection, member_of_collection_ids: [sm_col1.id]) }
-            let(:sm_col1) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
-            let(:sm_col2) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
+            let(:sm_col1) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id.to_s) }
+            let(:sm_col2) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id.to_s) }
             let(:mem_of_cols_attrs) do
               { "0" => { "id" => sm_col1.id.to_s, "_destroy" => "false" },
                 "1" => { "id" => sm_col2.id.to_s, "_destroy" => "false" } }

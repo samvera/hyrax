@@ -132,6 +132,11 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor, skip: !(Hyrax.config.c
       let!(:collection_type) { create(:collection_type) }
       let!(:collection) { FactoryBot.create(:collection_lw, collection_type: collection_type, with_permission_template: true) }
 
+      before do
+        # Return the collection type instance which has stubs
+        allow(Hyrax::CollectionType).to receive(:for).with(collection: collection).and_return(collection_type)
+      end
+
       subject(:middleware) do
         stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
           middleware.use described_class
@@ -141,7 +146,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor, skip: !(Hyrax.config.c
 
       context "when share applies to works" do
         before do
-          allow(collection.collection_type).to receive(:share_applies_to_works).and_return(true)
+          allow(collection_type).to receive(:share_applies_to_works).and_return(true)
         end
 
         context "and only one collection" do
@@ -186,7 +191,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor, skip: !(Hyrax.config.c
 
       context "when share does NOT apply to works" do
         before do
-          allow(collection.collection_type).to receive(:share_applies_to_new_works?).and_return(false)
+          allow(collection_type).to receive(:share_applies_to_new_works?).and_return(false)
           allow(Collection).to receive(:find).with(collection.id).and_return(collection)
           allow(Collection).to receive(:find).with([collection.id]).and_return([collection])
         end
