@@ -1,5 +1,5 @@
-version: '3.7'
-
+# Requires Docker Compose v2
+name: koppie
 services:
   app: &app
     build:
@@ -14,7 +14,6 @@ services:
     tty: true
     user: root
     env_file:
-      - .env
       - .koppie/.env
     environment:
       - RAILS_ROOT=/app/samvera/hyrax-webapp
@@ -26,9 +25,9 @@ services:
       - redis
       - solr
     ports:
-      - 3000:3000
-      - 9876:9876
-      - 1048:1048
+      - 3001:3000
+      - 9877:9876
+      - 1049:1048
     volumes:
       - .koppie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
@@ -37,7 +36,7 @@ services:
       - rails-public:/app/samvera/hyrax-webapp/public
       - rails-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
-      - hyrax
+      - koppie
 
   sidekiq:
     build:
@@ -49,7 +48,6 @@ services:
     command: sh -l -c 'bundle && bundle exec sidekiq'
     user: root
     env_file:
-      - .env
       - .koppie/.env
     depends_on:
       - db_migrate
@@ -65,7 +63,7 @@ services:
       - sidekiq-public:/app/samvera/hyrax-webapp/public
       - sidekiq-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
-      - hyrax
+      - koppie
 
   db_migrate:
     build:
@@ -77,7 +75,6 @@ services:
     image: ghcr.io/samvera/koppie
     user: root
     env_file:
-      - .env
       - .koppie/.env
     command: sh -l -c 'bundle && db-migrate-seed.sh'
     depends_on:
@@ -88,7 +85,7 @@ services:
       - rails-public:/app/samvera/hyrax-webapp/public
       - rails-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
-      - hyrax
+      - koppie
 
   chrome:
     image: selenium/standalone-chrome:3.141
@@ -98,45 +95,43 @@ services:
       - /dev/shm:/dev/shm
     shm_size: 2G
     ports:
-      - "4444:4444"
-      - "5959:5900"
+      - "4445:4444"
+      - "5960:5900"
     networks:
-      - hyrax
+      - koppie
 
   postgres:
     image: postgres:latest
     restart: always
     env_file:
-      - .env
       - .koppie/.env
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - db:/var/lib/postgresql/data
     networks:
-      - hyrax
+      - koppie
 
   memcached:
     image: bitnami/memcached
     ports:
-      - '11211:11211'
+      - '11212:11211'
     networks:
-      - hyrax
+      - koppie
 
   redis:
     image: bitnami/redis:6.2
     env_file:
-      - .env
       - .koppie/.env
     volumes:
       - redis:/bitnami/redis/data
     networks:
-      - hyrax
+      - koppie
 
   solr:
     image: solr:8.11
     ports:
-      - 8983:8983
+      - 8984:8983
     command:
       - sh
       - "-c"
@@ -145,7 +140,7 @@ services:
       - solr_home:/var/solr/data:cached
       - .koppie/solr/conf:/opt/solr/server/configsets/hyraxconf
     networks:
-      - hyrax
+      - koppie
 
 volumes:
   db:
@@ -159,7 +154,7 @@ volumes:
   solr_home:
 
 networks:
-  hyrax:
+  koppie:
     driver: bridge
     driver_opts:
-      com.docker.network.bridge.name: br-hyrax
+      com.docker.network.bridge.name: br-koppie
