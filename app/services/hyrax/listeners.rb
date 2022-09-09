@@ -22,7 +22,6 @@ module Hyrax
     autoload :FileMetadataListener
     autoload :FileSetLifecycleListener
     autoload :FileSetLifecycleNotificationListener
-    autoload :NestingIndexingListener
     autoload :MemberCleanupListener
     autoload :MetadataIndexListener
     autoload :ObjectLifecycleListener
