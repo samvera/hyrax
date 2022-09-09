@@ -91,5 +91,36 @@ RSpec.describe Hyrax::ValkyrieWorkIndexer do
         expect(solr_document.fetch('suppressed_bsi')).to be false
       end
     end
+
+    context 'when work is under embargo' do
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, embargo: embargo) }
+      let(:embargo) { FactoryBot.valkyrie_create(:hyrax_embargo) }
+
+      it 'indexes the embargo visibilities' do
+        expect(service.to_solr)
+          .to include('visibility_after_embargo_ssim' => embargo.visibility_after_embargo,
+                      'visibility_during_embargo_ssim' => embargo.visibility_during_embargo)
+      end
+
+      it 'indexes the embargo release date' do
+        expect(service.to_solr)
+          .to include('embargo_release_date_dtsi' => embargo.embargo_release_date.to_datetime)
+      end
+    end
+
+    context 'when work is under lease' do
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, lease: lease) }
+      let(:lease) { FactoryBot.valkyrie_create(:hyrax_lease) }
+
+      it 'indexes the lease visibilities' do
+        expect(service.to_solr).to include('visibility_after_lease_ssim' => lease.visibility_after_lease,
+                                           'visibility_during_lease_ssim' => lease.visibility_during_lease)
+      end
+
+      it 'indexes the lease expiration date' do
+        expect(service.to_solr)
+          .to include('lease_expiration_date_dtsi' => lease.lease_expiration_date.to_datetime)
+      end
+    end
   end
 end
