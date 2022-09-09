@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'samvera/nesting_indexer/adapters/interface_behavior_spec'
 
-RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
+RSpec.describe Hyrax::Adapters::ValkyrieNestingIndexAdapter do
   it_behaves_like 'a Samvera::NestingIndexer::Adapter'
 
   describe '.find_preservation_document_by' do
@@ -12,15 +12,15 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
     context 'with a not found fedora document ' do
       let(:id) { 'so-very-missing-no-document-here' }
 
-      it 'raises ActiveFedora::ObjectNotFound' do
-        expect { subject }.to raise_error(ActiveFedora::ObjectNotFoundError)
+      it 'raises Valkyrie::Persistence::ObjectNotFoundError' do
+        expect { subject }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
       end
     end
     context 'with fedora document that does not have #member_of_collection_ids' do
       let(:document) { double("Document", id: id) }
 
       before do
-        expect(ActiveFedora::Base).to receive(:find).with(document.id).and_return(document)
+        expect(Hyrax.query_service).to receive(:find_by).with(id: document.id).and_return(document)
       end
 
       it { is_expected.to be_a(Samvera::NestingIndexer::Documents::PreservationDocument) }
@@ -29,7 +29,7 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
       let(:document) { double("Document", id: id, member_of_collection_ids: ['456', '789']) }
 
       before do
-        expect(ActiveFedora::Base).to receive(:find).with(document.id).and_return(document)
+        expect(Hyrax.query_service).to receive(:find_by).with(id: document.id).and_return(document)
       end
 
       it { is_expected.to be_a(Samvera::NestingIndexer::Documents::PreservationDocument) }
@@ -39,13 +39,14 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
   describe '.find_index_document_by' do
     subject { described_class.find_index_document_by(id: id) }
 
-    context 'with id not in solr, it builds from Fedora' do
+    context 'with id not in solr, it builds from resource' do
       let(:id) { 'so-very-missing-no-document-here' }
       let(:document) { double("Document", id: id, fetch: nil) }
-      let(:object) { double("Object_to_reindex", id: id, to_solr: document) }
+      let(:object) { FactoryBot.valkyrie_create(:hyrax_work) }
 
       before do
-        allow(ActiveFedora::Base).to receive(:find).with(id).and_return(object)
+        allow(Hyrax.query_service).to receive(:find_by).and_call_original
+        expect(Hyrax.query_service).to receive(:find_by).with(id: id).and_return(object)
       end
 
       it { is_expected.to be_a(Samvera::NestingIndexer::Documents::IndexDocument) }
@@ -65,10 +66,10 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
   end
 
   describe '.each_perservation_document_id_and_parent_ids', clean_repo: true do
-    let!(:nested_parent) { build(:collection_lw, member_of_collections: []) }
-    let!(:nested_with_parent) { create(:collection_lw, member_of_collections: [nested_parent]) }
-    let!(:work) { create(:generic_work) }
-    let(:count_of_items) { ActiveFedora::Base.descendant_uris(ActiveFedora.fedora.base_uri, exclude_uri: true).count }
+    let!(:nested_parent) { FactoryBot.valkyrie_create(:hyrax_collection, member_of_collection_ids: []) }
+    let!(:nested_with_parent) { FactoryBot.valkyrie_create(:hyrax_collection, member_of_collection_ids: [nested_parent.id]) }
+    let!(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
+    let(:count_of_items) { Hyrax.query_service.find_all.size }
 
     it 'uses direct add to Solr on non-nested objects but yields the document and parent_ids to allow nesting logic to fire' do
       # The two collections and the work are handled via the nesting indexer.
@@ -145,11 +146,11 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
   end
 
   describe '.write_nesting_document_to_index_layer' do
-    let(:work) { create(:work) }
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
     let(:query_for_works_solr_document) { ->(id:) { Hyrax::SolrService.query(Hyrax::SolrQueryBuilderService.construct_query_for_ids([id])).first } }
     # rubocop:disable RSpec/ExampleLength
     it 'will append parent_ids, ancestors, pathnames, and deepest_nested_depth to the SOLR document' do
-      previous_solr_keys = work.to_solr.keys
+      previous_solr_keys = Hyrax::ValkyrieIndexer.for(resource: work).to_solr.keys
       expect(previous_solr_keys).not_to include(described_class.solr_field_name_for_storing_ancestors)
       expect(previous_solr_keys).not_to include(described_class.solr_field_name_for_storing_parent_ids)
       expect(previous_solr_keys).not_to include(described_class.solr_field_name_for_storing_pathnames)
