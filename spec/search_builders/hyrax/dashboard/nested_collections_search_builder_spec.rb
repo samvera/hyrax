@@ -58,9 +58,9 @@ RSpec.describe Hyrax::Dashboard::NestedCollectionsSearchBuilder do
           it 'will exclude the given collection and its parents' do
             subject
             expect(solr_params.fetch(:fq)).to contain_exactly(
-              "-{!terms f=id}#{collection_id},#{nesting_attributes.parents.first},#{nesting_attributes.parents.last}",
               "_query_:\"{!field f=collection_type_gid_ssim}#{collection.collection_type_gid}\"",
-              "-_query_:\"{!lucene df=nesting_collection__pathnames_ssim}*#{collection_id}*\""
+              "-{!graph to=id from=member_of_collection_ids_ssim}id:#{collection.id}",
+              "-{!graph from=id to=member_of_collection_ids_ssim}id:#{collection.id}"
             )
           end
         end
@@ -70,14 +70,11 @@ RSpec.describe Hyrax::Dashboard::NestedCollectionsSearchBuilder do
 
           it 'will build the search for valid children' do
             subject
-            # rubocop:disable Layout/LineLength
             expect(solr_params.fetch(:fq)).to contain_exactly(
-              "-{!terms f=id}#{collection_id}",
               "_query_:\"{!field f=collection_type_gid_ssim}#{collection.collection_type_gid}\"",
-              "-_query_:\"{!lucene q.op=OR df=nesting_collection__pathnames_ssim}#{nesting_attributes.pathnames.first} #{nesting_attributes.pathnames.last} #{nesting_attributes.ancestors.first} #{nesting_attributes.ancestors.last}\"",
-              "-_query_:\"{!field f=nesting_collection__parent_ids_ssim}#{collection_id}\""
+              "-{!graph to=id from=member_of_collection_ids_ssim}id:#{collection.id}",
+              "-{!graph from=id to=member_of_collection_ids_ssim}id:#{collection.id}"
             )
-            # rubocop:enable Layout/LineLength
           end
         end
       end

@@ -11,84 +11,43 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
   let(:another_collection_type) { create(:collection_type) }
 
   let(:coll_a) do
-    build(:public_collection,
+    create(:public_collection,
           id: 'Collection_A',
-          collection_type: collection_type,
-          with_nesting_attributes:
-          { ancestors: [],
-            parent_ids: [],
-            pathnames: ['Collection_A'],
-            depth: 1 })
+          collection_type: collection_type)
   end
   let(:coll_b) do
-    build(:public_collection,
+    create(:public_collection,
           id: 'Collection_B',
           collection_type: collection_type,
-          member_of_collections: [coll_a],
-          with_nesting_attributes:
-          { ancestors: ['Collection_A'],
-            parent_ids: ['Collection_A'],
-            pathnames: ['Collection_A/Collection_B'],
-            depth: 2 })
+          member_of_collections: [coll_a])
   end
   let(:coll_c) do
-    build(:public_collection,
+    create(:public_collection,
           id: 'Collection_C',
           collection_type: collection_type,
-          member_of_collections: [coll_b],
-          with_nesting_attributes:
-          { ancestors: ["Collection_A",
-                        "Collection_A/Collection_B"],
-            parent_ids: ['Collection_B'],
-            pathnames: ['Collection_A/Collection_B/Collection_C'],
-            depth: 3 })
+          member_of_collections: [coll_b])
   end
   let(:coll_d) do
-    build(:public_collection,
+    create(:public_collection,
           id: 'Collection_D',
           collection_type: collection_type,
-          member_of_collections: [coll_c],
-          with_nesting_attributes:
-          { ancestors: ["Collection_A",
-                        "Collection_A/Collection_B",
-                        "Collection_A/Collection_B/Collection_C"],
-            parent_ids: ['Collection_C'],
-            pathnames: ["Collection_A/Collection_B/Collection_C/Collection_D"],
-            depth: 4 })
+          member_of_collections: [coll_c])
   end
   let(:coll_e) do
-    build(:public_collection,
+    create(:public_collection,
           id: 'Collection_E',
           collection_type: collection_type,
-          member_of_collections: [coll_d],
-          with_nesting_attributes:
-          { ancestors: ["Collection_A",
-                        "Collection_A/Collection_B",
-                        "Collection_A/Collection_B/Collection_C",
-                        "Collection_A/Collection_B/Collection_C/Collection_D"],
-            parent_ids: ['Collection_D'],
-            pathnames: ['Collection_A/Collection_B/Collection_C/Collection_D/Collection_E'],
-            depth: 5 })
+          member_of_collections: [coll_d])
   end
   let(:another) do
-    build(:public_collection,
+    create(:public_collection,
           id: 'Another_One',
-          collection_type: collection_type,
-          with_nesting_attributes:
-          { ancestors: [],
-            parent_ids: [],
-            pathnames: ['Another_One'],
-            depth: 1 })
+          collection_type: collection_type)
   end
   let(:wrong) do
-    build(:public_collection,
+    create(:public_collection,
           id: 'Wrong_Type',
-          collection_type: another_collection_type,
-          with_nesting_attributes:
-          { ancestors: [],
-            parent_ids: [],
-            pathnames: ['Wrong_Type'],
-            depth: 1 })
+          collection_type: another_collection_type)
   end
 
   describe '.available_child_collections' do
@@ -104,7 +63,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
       subject { described_class.available_child_collections(parent: coll_c, scope: scope) }
 
       before do
-        coll_e # this will also build coll_a through coll_d
+        coll_e # this will also create coll_a through coll_d
         another
         wrong
       end
@@ -122,7 +81,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
           it 'returns an array of valid collections of the same collection type' do
             expect(scope).to receive(:can?).with(:deposit, coll_c).and_return(true)
             expect(described_class).to receive(:query_solr).with(collection: coll_c, access: :read, scope: scope, limit_to_id: nil, nest_direction: :as_child).and_call_original
-            expect(subject.map(&:id)).to contain_exactly(another.id, coll_e.id)
+            expect(subject.map(&:id)).to contain_exactly(another.id)
           end
         end
       end
@@ -149,19 +108,19 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         end
       end
 
-      describe 'and can read the child', with_nested_reindexing: true do
+      describe 'and can read the child' do
         subject { described_class.available_parent_collections(child: coll_c, scope: scope) }
 
         # using create option here because permission template is required for testing :deposit access
         let(:coll_a) do
-          build(:public_collection_lw,
+          create(:public_collection_lw,
                 id: 'Collection_A',
                 collection_type: collection_type,
                 user: user,
                 with_permission_template: true)
         end
         let(:coll_b) do
-          build(:public_collection_lw,
+          create(:public_collection_lw,
                 id: 'Collection_B',
                 collection_type: collection_type,
                 user: user,
@@ -169,7 +128,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
                 member_of_collections: [coll_a])
         end
         let(:coll_c) do
-          build(:public_collection_lw,
+          create(:public_collection_lw,
                 id: 'Collection_C',
                 collection_type: collection_type,
                 user: user,
@@ -177,7 +136,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
                 member_of_collections: [coll_b])
         end
         let(:coll_d) do
-          build(:public_collection_lw,
+          create(:public_collection_lw,
                 id: 'Collection_D',
                 collection_type: collection_type,
                 user: user,
@@ -200,7 +159,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
                  with_permission_template: true)
         end
         let(:wrong) do
-          build(:public_collection_lw,
+          create(:public_collection_lw,
                 id: 'Wrong_Type',
                 collection_type: another_collection_type,
                 user: user,
@@ -208,7 +167,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         end
 
         before do
-          coll_e # this will also build coll_a through coll_d
+          coll_e # this will also create coll_a through coll_d
           another
           wrong
         end
@@ -217,7 +176,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
           it 'returns an array of collections of the same collection type excluding the given collection' do
             expect(scope).to receive(:can?).with(:read, coll_c).and_return(true)
             expect(described_class).to receive(:query_solr).with(collection: coll_c, access: :deposit, scope: scope, limit_to_id: nil, nest_direction: :as_parent).and_call_original
-            expect(subject.map(&:id)).to contain_exactly(coll_a.id, another.id)
+            expect(subject.map(&:id)).to contain_exactly(another.id)
           end
         end
       end
@@ -243,7 +202,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         it { is_expected.to eq(false) }
       end
 
-      describe 'and are of the same collection type', with_nested_reindexing: true do
+      describe 'and are of the same collection type' do
         # using create option here because permission template is required for testing :deposit access
         let!(:parent) do
           create(:public_collection_lw,
@@ -309,8 +268,9 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
       let(:parent) { coll_e }
       let(:child) { another }
 
-      it 'returns false' do
-        expect(subject).to eq false
+      # Limit no longer applies so it will always return true
+      it 'returns true' do
+        expect(subject).to eq true
       end
     end
 
@@ -321,35 +281,6 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
       it 'returns true' do
         expect(subject).to eq true
       end
-    end
-  end
-
-  describe 'nesting attributes object', with_nested_reindexing: true do
-    let(:user) { create(:user) }
-    let(:parent) { FactoryBot.create(:collection_lw, id: 'Parent_Coll', collection_type: collection_type, user: user) }
-    let(:child) { FactoryBot.create(:collection_lw, id: 'Child_Coll', collection_type: collection_type, user: user) }
-    let(:nesting_attributes) { Hyrax::Collections::NestedCollectionQueryService::NestingAttributes.new(id: child.id, scope: scope) }
-
-    before do
-      Hyrax::Collections::NestedCollectionPersistenceService
-        .persist_nested_collection_for(parent: parent, child: child)
-    end
-
-    it 'will respond to expected methods' do
-      expect(nesting_attributes).to respond_to(:id)
-      expect(nesting_attributes).to respond_to(:parents)
-      expect(nesting_attributes).to respond_to(:pathnames)
-      expect(nesting_attributes).to respond_to(:ancestors)
-      expect(nesting_attributes).to respond_to(:depth)
-    end
-
-    it 'will encapsulate the nesting attributes in an object' do
-      expect(nesting_attributes).to be_a(Hyrax::Collections::NestedCollectionQueryService::NestingAttributes)
-      expect(nesting_attributes.id).to eq('Child_Coll')
-      expect(nesting_attributes.parents).to eq(['Parent_Coll'])
-      expect(nesting_attributes.pathnames).to eq(['Parent_Coll/Child_Coll'])
-      expect(nesting_attributes.ancestors).to eq(['Parent_Coll'])
-      expect(nesting_attributes.depth).to eq(2)
     end
   end
 end
