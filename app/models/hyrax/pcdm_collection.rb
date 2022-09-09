@@ -66,11 +66,6 @@ module Hyrax
       true
     end
 
-    # Used to determine whether a model gets reindexed via Samvera::NestingIndexer during full repository reindexing,
-    def use_nested_reindexing?
-      true
-    end
-
     def permission_manager
       @permission_manager ||= Hyrax::PermissionManager.new(resource: self)
     end

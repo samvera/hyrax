@@ -120,10 +120,5 @@ module Hyrax
     def work?
       true
     end
-
-    # Used to determine whether a model gets reindexed via Samvera::NestingIndexer during full repository reindexing,
-    def use_nested_reindexing?
-      true
-    end
   end
 end

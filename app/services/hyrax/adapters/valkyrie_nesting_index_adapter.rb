@@ -51,7 +51,7 @@ module Hyrax
 
           # NOTE: we do not yield when the object has parents. Calling the nested indexer for the
           # top id will reindex all descendants as well.
-          if resource.try(:use_nested_reindexing?)
+          if resource.try(:work?) || resource.try(:collection?)
             yield(resource.id, parent_ids) if parent_ids.empty?
           else
             Rails.logger.info "Re-indexing via to_solr ... #{resource.id}"
