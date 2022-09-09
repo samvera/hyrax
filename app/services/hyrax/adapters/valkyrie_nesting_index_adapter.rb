@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Hyrax
   module Adapters
-    module NestingIndexAdapter
+    module ValkyrieNestingIndexAdapter
       FULL_REINDEX = "full"
       LIMITED_REINDEX = "limited"
 
@@ -25,17 +25,8 @@ module Hyrax
       # @param id [String]
       # @return Samvera::NestingIndexer::Document::PreservationDocument
       def self.find_preservation_parent_ids_for(id:)
-        # Not everything is guaranteed to have library_collection_ids
-        # If it doesn't have it, what do we do?
-        fedora_object = Hyrax::Base.uncached do
-          fedora_object = ActiveFedora::Base.find(id)
-        end
-
-        if fedora_object.respond_to?(:member_of_collection_ids)
-          fedora_object.member_of_collection_ids
-        else
-          []
-        end
+        resource = Hyrax.query_service.find_by(id: id)
+        resource.try(:member_of_collection_ids) || []
       end
 
       ##
@@ -55,18 +46,16 @@ module Hyrax
       #
       # @see Samvera::NestingIndexer.reindex_all!(extent: FULL_REINDEX)
       def self.each_perservation_document_id_and_parent_ids(&block) # rubocop:disable Lint/UnusedMethodArgument
-        ActiveFedora::Base.descendant_uris(ActiveFedora.fedora.base_uri, exclude_uri: true).each do |uri|
-          id = Hyrax.config.translate_uri_to_id.call(uri)
-          object = ActiveFedora::Base.find(id)
-          parent_ids = object.try(:member_of_collection_ids) || []
+        Hyrax.query_service.find_all.each do |resource|
+          parent_ids = resource.try(:member_of_collection_ids) || []
 
           # NOTE: we do not yield when the object has parents. Calling the nested indexer for the
           # top id will reindex all descendants as well.
-          if object.try(:use_nested_reindexing?)
-            yield(id, parent_ids) if parent_ids.empty?
+          if resource.try(:use_nested_reindexing?)
+            yield(resource.id, parent_ids) if parent_ids.empty?
           else
-            Rails.logger.info "Re-indexing via to_solr ... #{id}"
-            Hyrax::SolrService.add(object.to_solr, commit: true)
+            Rails.logger.info "Re-indexing via to_solr ... #{resource.id}"
+            Hyrax::SolrService.add(Hyrax::ValkyrieIndexer.for(resource: resource).to_solr, commit: true)
           end
         end
       end
@@ -79,9 +68,8 @@ module Hyrax
       # @param nesting_document [Samvera::NestingIndexer::Documents::IndexDocument]
       # @return Hash - the attributes written to the indexing layer
       def self.write_nesting_document_to_index_layer(nesting_document:)
-        solr_doc = Hyrax::Base.uncached do
-          ActiveFedora::Base.find(nesting_document.id).to_solr # What is the current state of the solr document
-        end
+        # What is the current state of the solr document
+        solr_doc = Hyrax::ValkyrieIndexer.for(resource: Hyrax.query_service.find_by(id: nesting_document.id)).to_solr
 
         # Now add the details from the nesting indexer to the document
         add_nesting_attributes(
@@ -133,7 +121,6 @@ module Hyrax
       ##
       # @api private
       #
-      # @todo Need to implement retrieving parent_ids, pathnames, and ancestors from the given document
       def self.coerce_solr_document_to_index_document(original_solr_document:, id:)
         Samvera::NestingIndexer::Documents::IndexDocument.new(
           id: id,
@@ -149,7 +136,7 @@ module Hyrax
       def self.find_solr_document_by(id:)
         query = Hyrax::SolrQueryService.new.with_ids(ids: [id]).build
         document = Hyrax::SolrService.query(query, rows: 1).first
-        document = ActiveFedora::Base.find(id).to_solr if document.nil?
+        document ||= Hyrax::ValkyrieIndexer.for(resource: Hyrax.query_service.find_by(id: id)).to_solr
         raise "Unable to find SolrDocument with ID=#{id}" if document.nil?
         document
       end

@@ -8,7 +8,7 @@ Samvera::NestingIndexer.configure do |config|
   # For maximum_nesting_depth of 3 the following will raise an exception
   # C1 <- C2 <- C3 <- W1
   config.maximum_nesting_depth = 5
-  config.adapter = Hyrax::Adapters::NestingIndexAdapter
+  config.adapter = Hyrax.config.use_valkyrie? ? Hyrax::Adapters::ValkyrieNestingIndexAdapter : Hyrax::Adapters::NestingIndexAdapter
   config.solr_field_name_for_storing_parent_ids = "nesting_collection__parent_ids_ssim"
   config.solr_field_name_for_storing_ancestors =  "nesting_collection__ancestors_ssim"
   config.solr_field_name_for_storing_pathnames =  "nesting_collection__pathnames_ssim"
