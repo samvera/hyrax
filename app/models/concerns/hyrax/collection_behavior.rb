@@ -10,7 +10,6 @@ module Hyrax
     include Hyrax::HumanReadableType
     include Hyrax::HasRepresentative
     include Hyrax::Permissions
-    include Hyrax::CollectionNesting
 
     included do
       validates_with HasOneTitleValidator
