@@ -64,6 +64,7 @@ module Hyrax
         original_input_params_for_form = params[hash_key_for_curation_concern].deep_dup
         actor.create(actor_environment) ? after_create_response : after_create_error(curation_concern.errors, original_input_params_for_form)
       else
+        # Using Valkyrie
         create_valkyrie_work
       end
     end
@@ -189,7 +190,9 @@ module Hyrax
           'work_resource.add_to_parent' => { parent_id: params[:parent_id], user: current_user },
           'work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: params[hash_key_for_curation_concern][:file_set] },
           'change_set.set_user_as_depositor' => { user: current_user },
-          'work_resource.change_depositor' => { user: ::User.find_by_user_key(form.on_behalf_of) }
+          'work_resource.change_depositor' => { user: ::User.find_by_user_key(form.on_behalf_of) },
+          'work_resource.set_embargo' => { embargo_set: params[:generic_work][:visibility], end_date: params[:generic_work][:embargo_release_date],
+                                           visibility_after_embargo: params[:generic_work][:visibility_after_embargo], visibility_during_embargo: params[:generic_work][:visibility_during_embargo] }
         )
         .call(form)
       @curation_concern = result.value_or { return after_create_error(transaction_err_msg(result)) }

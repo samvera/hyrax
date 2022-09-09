@@ -228,6 +228,10 @@ module Hyrax
         ops.register 'update_work_members' do
           Steps::UpdateWorkMembers.new
         end
+
+        ops.register 'set_embargo' do
+          Steps::SetEmbargo.new
+        end
       end
       # rubocop:enable Metrics/BlockLength
     end
