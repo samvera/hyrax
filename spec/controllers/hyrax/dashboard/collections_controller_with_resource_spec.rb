@@ -526,6 +526,25 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
         end
       end
     end
+
+    context 'with nested collection' do
+      let(:parent_collection) { FactoryBot.valkyrie_create(:collection_resource) }
+      let(:collection) do
+        FactoryBot.valkyrie_create(:collection_resource,
+          :public,
+          title: ["My collection"],
+          creator: ["Mr. Smith"],
+          depositor: user.user_key,
+          edit_users: [user],
+          member_of_collection_ids: [parent_collection.id])
+      end
+
+      it 'retains parent collection relationship' do
+        put :update, params: { id: collection, collection: { description: ['Videos of importance'] } }
+        expect(assigns[:collection].description).to eq ['Videos of importance']
+        expect(assigns[:collection].member_of_collection_ids).to eq [parent_collection.id]
+      end
+    end
   end
 
   describe "#show" do

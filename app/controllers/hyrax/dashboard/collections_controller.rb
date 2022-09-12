@@ -422,7 +422,6 @@ module Hyrax
           params.permit(collection: {})[:collection]
                 .merge(params.permit(:collection_type_gid)
                              .with_defaults(collection_type_gid: default_collection_type_gid))
-                .merge(member_of_collection_ids: Array(params[:parent_id]))
         end
       end
 
