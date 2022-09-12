@@ -835,6 +835,11 @@ module Hyrax
                     end
     end
 
+    attr_writer :carrierwave_uploader
+    def carrierwave_uploader
+      @carrierwave_uploader ||= UploadedFileUploader
+    end
+
     attr_accessor :nested_relationship_reindexer
 
     def default_nested_relationship_reindexer

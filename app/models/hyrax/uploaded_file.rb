@@ -6,7 +6,7 @@ module Hyrax
   # Eventually these files get attached to {FileSet}s and pushed into Fedora.
   class UploadedFile < ActiveRecord::Base
     self.table_name = 'uploaded_files'
-    mount_uploader :file, UploadedFileUploader
+    mount_uploader :file, Hyrax.config.carrierwave_uploader
     alias uploader file
     has_many :job_io_wrappers,
              inverse_of: 'uploaded_file',
