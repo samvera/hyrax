@@ -41,7 +41,6 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:collection_model=) }
   it { is_expected.to respond_to(:contact_email) }
   it { is_expected.to respond_to(:default_admin_set_id) }
-  it { is_expected.to respond_to(:default_nested_relationship_reindexer) }
   it { is_expected.to respond_to(:derivative_services) }
   it { is_expected.to respond_to(:derivative_services=) }
   it { is_expected.to respond_to(:display_media_download_link=) }
@@ -75,7 +74,6 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:max_days_between_fixity_checks) }
   it { is_expected.to respond_to(:max_days_between_fixity_checks=) }
   it { is_expected.to respond_to(:max_notifications_for_dashboard) }
-  it { is_expected.to respond_to(:nested_relationship_reindexer) }
   it { is_expected.to respond_to(:owner_permission_levels) }
   it { is_expected.to respond_to(:permission_levels) }
   it { is_expected.to respond_to(:permission_options) }

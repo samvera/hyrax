@@ -16,7 +16,7 @@ module Hyrax
       def self.available_child_collections(parent:, scope:, limit_to_id: nil)
         return [] unless nestable?(collection: parent)
         return [] unless scope.can?(:deposit, parent)
-        query_solr(collection: parent, access: :read, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_child).documents
+        query_solr(collection: parent, access: :read, scope: scope, limit_to_id: limit_to_id).documents
       end
 
       ##
@@ -34,7 +34,7 @@ module Hyrax
       def self.available_parent_collections(child:, scope:, limit_to_id: nil)
         return [] unless nestable?(collection: child)
         return [] unless scope.can?(:read, child)
-        query_solr(collection: child, access: :deposit, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_parent).documents
+        query_solr(collection: child, access: :deposit, scope: scope, limit_to_id: limit_to_id).documents
       end
 
       ##
@@ -63,14 +63,11 @@ module Hyrax
       #   to +repository+, +can?+, +blacklight_config+, +current_ability+
       # @param limit_to_id [nil, String] Limit the query to just check if the given
       #   id is in the response. Useful for validation.
-      # @param nest_direction [Symbol] :as_child or :as_parent
-      def self.query_solr(collection:, access:, scope:, limit_to_id:, nest_direction:)
+      def self.query_solr(collection:, access:, scope:, limit_to_id:)
         query_builder = Hyrax::Dashboard::NestedCollectionsSearchBuilder.new(
           access: access,
           collection: collection,
-          scope: scope,
-          nesting_attributes: nil,
-          nest_direction: nest_direction
+          scope: scope
         )
 
         query_builder.where(id: limit_to_id.to_s) if limit_to_id
@@ -100,21 +97,6 @@ module Hyrax
         return false unless parent.collection_type_gid == child.collection_type_gid
         return false if available_parent_collections(child: child, scope: scope, limit_to_id: parent.id.to_s).none?
         return false if available_child_collections(parent: parent, scope: scope, limit_to_id: child.id.to_s).none?
-        true
-      end
-
-      # @api public
-      #
-      # Does the nesting depth fall within defined limit?
-      #
-      # @param parent [::Collection]
-      # @param child [nil, ::Collection] will be nil if we are nesting a new
-      #   collection under the parent
-      # @param scope [Object] Typically a controller object that responds
-      #   to +repository+, +can?+, +blacklight_config+, +current_ability+
-      #
-      # @return [Boolean] true Always return true because we are no longer limited
-      def self.valid_combined_nesting_depth?(*)
         true
       end
 

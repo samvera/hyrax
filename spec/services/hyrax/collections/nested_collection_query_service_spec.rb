@@ -80,7 +80,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         describe 'it prevents circular nesting' do
           it 'returns an array of valid collections of the same collection type' do
             expect(scope).to receive(:can?).with(:deposit, coll_c).and_return(true)
-            expect(described_class).to receive(:query_solr).with(collection: coll_c, access: :read, scope: scope, limit_to_id: nil, nest_direction: :as_child).and_call_original
+            expect(described_class).to receive(:query_solr).with(collection: coll_c, access: :read, scope: scope, limit_to_id: nil).and_call_original
             expect(subject.map(&:id)).to contain_exactly(another.id)
           end
         end
@@ -175,7 +175,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         describe 'it prevents circular nesting' do
           it 'returns an array of collections of the same collection type excluding the given collection' do
             expect(scope).to receive(:can?).with(:read, coll_c).and_return(true)
-            expect(described_class).to receive(:query_solr).with(collection: coll_c, access: :deposit, scope: scope, limit_to_id: nil, nest_direction: :as_parent).and_call_original
+            expect(described_class).to receive(:query_solr).with(collection: coll_c, access: :deposit, scope: scope, limit_to_id: nil).and_call_original
             expect(subject.map(&:id)).to contain_exactly(another.id)
           end
         end
@@ -258,29 +258,6 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
       end
 
       it { is_expected.to eq(false) }
-    end
-  end
-
-  describe '.valid_combined_nesting_depth?' do
-    subject { described_class.valid_combined_nesting_depth?(parent: parent, child: child, scope: scope) }
-
-    context 'when total depth > limit' do
-      let(:parent) { coll_e }
-      let(:child) { another }
-
-      # Limit no longer applies so it will always return true
-      it 'returns true' do
-        expect(subject).to eq true
-      end
-    end
-
-    context 'when valid combined depth' do
-      let(:parent) { coll_c }
-      let(:child) { coll_e }
-
-      it 'returns true' do
-        expect(subject).to eq true
-      end
     end
   end
 end

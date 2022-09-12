@@ -6,16 +6,11 @@ module Hyrax
       # @param access [Symbol] :edit, :read, :discover - With the given :access what all can
       # @param collection [::Collection]
       # @param scope [Object] Typically a controller that responds to #current_ability, #blackligh_config
-      # @param nesting_attributes - no longer used
-      # @param nest_direction [Symbol] (:as_parent or :as_child) the direction we are adding nesting to this collection
-      # rubocop:disable Lint/UnusedMethodArgument
-      def initialize(access:, collection:, scope:, nesting_attributes:, nest_direction:)
+      def initialize(access:, collection:, scope:)
         super(scope)
         @collection = collection
         @discovery_permissions = extract_discovery_permissions(access)
-        @nest_direction = nest_direction
       end
-      # rubocop:enable Lint/UnusedMethodArgument
 
       # Override for Hydra::AccessControlsEnforcement
       attr_reader :discovery_permissions

@@ -9,14 +9,7 @@ RSpec.describe Hyrax::Dashboard::NestedCollectionsSearchBuilder do
   [false, true].each do |test_valkyrie|
     context "when test_valkyrie is #{test_valkyrie}" do
       let(:builder) do
-        described_class.new(scope: scope, access: access, collection: collection,
-                            nesting_attributes: nesting_attributes, nest_direction: test_nest_direction)
-      end
-      let(:nesting_attributes) do
-        double(parents: ['Parent_1', 'Parent_2'],
-               pathnames: ["Parent_1/#{collection_id}", "Parent_2/#{collection_id}"],
-               ancestors: ['Parent_1', 'Parent_2'],
-               depth: 2)
+        described_class.new(scope: scope, access: access, collection: collection)
       end
       let(:collection_id) { collection.id.to_s }
 
@@ -52,30 +45,13 @@ RSpec.describe Hyrax::Dashboard::NestedCollectionsSearchBuilder do
 
         subject { builder.show_only_other_collections_of_the_same_collection_type(solr_params) }
 
-        context 'when nesting :as_parent' do
-          let(:test_nest_direction) { :as_parent }
-
-          it 'will exclude the given collection and its parents' do
-            subject
-            expect(solr_params.fetch(:fq)).to contain_exactly(
-              "_query_:\"{!field f=collection_type_gid_ssim}#{collection.collection_type_gid}\"",
-              "-{!graph to=id from=member_of_collection_ids_ssim}id:#{collection.id}",
-              "-{!graph from=id to=member_of_collection_ids_ssim}id:#{collection.id}"
-            )
-          end
-        end
-
-        context 'when nesting :as_child' do
-          let(:test_nest_direction) { :as_child }
-
-          it 'will build the search for valid children' do
-            subject
-            expect(solr_params.fetch(:fq)).to contain_exactly(
-              "_query_:\"{!field f=collection_type_gid_ssim}#{collection.collection_type_gid}\"",
-              "-{!graph to=id from=member_of_collection_ids_ssim}id:#{collection.id}",
-              "-{!graph from=id to=member_of_collection_ids_ssim}id:#{collection.id}"
-            )
-          end
+        it 'will exclude the given collection and its parents and children' do
+          subject
+          expect(solr_params.fetch(:fq)).to contain_exactly(
+            "_query_:\"{!field f=collection_type_gid_ssim}#{collection.collection_type_gid}\"",
+            "-{!graph to=id from=member_of_collection_ids_ssim}id:#{collection.id}",
+            "-{!graph from=id to=member_of_collection_ids_ssim}id:#{collection.id}"
+          )
         end
       end
 

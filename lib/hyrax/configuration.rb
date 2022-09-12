@@ -64,7 +64,6 @@ module Hyrax
       @registered_concerns = []
       @role_registry = Hyrax::RoleRegistry.new
       @default_active_workflow_name = DEFAULT_ACTIVE_WORKFLOW_NAME
-      @nested_relationship_reindexer = default_nested_relationship_reindexer
     end
 
     DEFAULT_ACTIVE_WORKFLOW_NAME = 'default'
@@ -840,14 +839,6 @@ module Hyrax
     attr_writer :uploader
     def uploader
       @uploader ||= default_uploader_config
-    end
-
-    attr_accessor :nested_relationship_reindexer
-
-    # Deprecated
-    # Now a no-op
-    def default_nested_relationship_reindexer
-      ->(id:, extent:) {}
     end
 
     attr_writer :solr_select_path
