@@ -827,12 +827,7 @@ module Hyrax
 
     attr_writer :uploader
     def uploader
-      @uploader ||= if Rails.env.development?
-                      # use sequential uploads in development to avoid database locking problems with sqlite3.
-                      default_uploader_config.merge(limitConcurrentUploads: 1, sequentialUploads: true)
-                    else
-                      default_uploader_config
-                    end
+      @uploader ||= default_uploader_config
     end
 
     attr_accessor :nested_relationship_reindexer
