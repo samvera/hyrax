@@ -42,42 +42,22 @@ RSpec.describe Hyrax::Transactions::Steps::RemoveFileSetFromWork do
         end
 
         describe 'it unlinks the file set from the parent' do
-          # before do
-          #   expect(step).to receive(:do_it) do |args|
-          #     expect(args[0].id).to eq work.id
-          #     expect(args[1].id).to eq file_set.id
-          #   end.and_call_original
-          #   #puts work.class.name
-          #   #puts work.methods.sort.join "\n"
-          # end
+          before do
+            expect(step).to receive(:find_parents).with(resource: file_set).and_return [work]
+          end
 
           it 'unlinks' do
-            # byebug
-            puts "file_set.id=#{file_set.id}"
-            puts "work.member_ids=#{work.member_ids}"
-            puts "work.thumbnail_id=#{work.thumbnail_id}"
-            puts "work.representative_id=#{work.representative_id}"
             expect(work.member_ids.include? file_set.id).to eq true
             expect(work.representative_id).to eq file_set.id
             expect(Hyrax.query_service.find_parents(resource: file_set).is_a? Array).to eq true
             expect(Hyrax.query_service.find_parents(resource: file_set).first).to eq work
             step.call(file_set, user: user)
-            reloaded = Hyrax.query_service.find_by(id: work.id)
-            expect(work.id).to eq reloaded.id
-            puts "file_set.id=#{file_set.id}"
-            puts "reloaded.member_ids=#{reloaded.member_ids}"
-            puts "reloaded.thumbnail_id=#{reloaded.thumbnail_id}"
-            puts "reloaded.representative_id=#{reloaded.representative_id}"
-            expect(reloaded.member_ids.include? file_set.id).to eq false
-            expect(reloaded.thumbnail_id).not_to eq file_set.id
-            expect(reloaded.representative_id).not_to eq file_set.id
-            # byebug
-            # puts "file_set.id=#{file_set.id}"
-            # puts "work.member_ids=#{work.member_ids}"
-            # puts "work.thumbnail_id=#{work.thumbnail_id}"
-            # puts "work.representative_id=#{work.representative_id}"
-            # expect(work.member_ids.include? file_set.id).to eq false
-            # expect(work.representative_id).not_to eq file_set.id
+            # reloaded = Hyrax.query_service.find_by(id: work.id)
+            # expect(reloaded.member_ids.include? file_set.id).to eq false
+            # expect(reloaded.thumbnail_id).not_to eq file_set.id
+            # expect(reloaded.representative_id).not_to eq file_set.id
+            expect(work.member_ids.include? file_set.id).to eq false
+            expect(work.representative_id).not_to eq file_set.id
           end
         end
 
