@@ -48,11 +48,9 @@ module Hyrax
     #
     # @overload member_presenters
     #   @return [Enumerator<FileSetPresenter, WorkShowPresenter>]
-    #   @raise [ArgumentError] if an unindexed id is passed
     # @overload member_presenters
     #   @param [Array<#to_s>] ids
     #   @return [Enumerator<FileSetPresenter, WorkShowPresenter>]
-    #   @raise [ArgumentError] if an unindexed id is passed
     def member_presenters(ids = object.member_ids)
       return enum_for(:member_presenters, ids) unless block_given?
 
@@ -61,8 +59,12 @@ module Hyrax
       ids.each do |id|
         id = id.to_s
         indx = results.index { |doc| id == doc['id'] }
-        raise(ArgumentError, "Could not find an indexed document for id: #{id}") if
-          indx.nil?
+        if indx.blank?
+          # raise(ArgumentError, "Could not find an indexed document for id: #{id}") if indx.nil?
+          # log an error if indx is not found and skip
+          Rails.logger.error "While building presenters, could not find an indexed document for id: #{id}"
+          next
+        end
         hash = results.delete_at(indx)
         yield presenter_for(document: ::SolrDocument.new(hash), ability: ability)
       end
