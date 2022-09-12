@@ -875,10 +875,17 @@ module Hyrax
                     end
     end
 
-    attr_accessor :nested_relationship_reindexer
+    def use_solr_graph_for_collection_nesting
+      ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_USE_SOLR_GRAPH_NESTING', false))
+    end
 
+    attr_accessor :nested_relationship_reindexer
     def default_nested_relationship_reindexer
-      ->(id:, extent:) { Samvera::NestingIndexer.reindex_relationships(id: id, extent: extent) }
+      if use_solr_graph_for_collection_nesting
+        ->(id:, extent:) {}
+      else
+        ->(id:, extent:) { Samvera::NestingIndexer.reindex_relationships(id: id, extent: extent) }
+      end
     end
 
     attr_writer :solr_select_path
