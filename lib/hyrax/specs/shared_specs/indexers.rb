@@ -266,6 +266,11 @@ RSpec.shared_examples 'a Collection indexer' do
         .to include(generic_type_sim: a_collection_containing_exactly('Collection'))
     end
 
+    it 'indexes member_of_collection_ids' do
+      expect(indexer.to_solr)
+        .to include(member_of_collection_ids_ssim: resource.member_of_collection_ids)
+    end
+
     it 'indexes depositor' do
       expect(indexer.to_solr)
         .to include(depositor_ssim: [resource.depositor],
