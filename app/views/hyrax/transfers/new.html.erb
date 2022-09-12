@@ -5,7 +5,7 @@
 <span class="sr-only"><%= t(:'.sr_only_description', work_title: @proxy_deposit_request.to_s) %></span>
 
 <%= simple_form_for @proxy_deposit_request,
-             url: hyrax.work_transfers_path(@work) do |f| %>
+             url: hyrax.work_transfers_path(params[:id]) do |f| %>
   <%= f.input :transfer_to,
         placeholder: t(:'.placeholder') %>
   <%= f.input :sender_comment %>
