@@ -7,7 +7,7 @@ class ProxyDepositRequest < ActiveRecord::Base
   include ActionView::Helpers::UrlHelper
 
   class_attribute :work_query_service_class
-  self.work_query_service_class = Hyrax::WorkQueryService
+  self.work_query_service_class = Hyrax.config.use_valkyrie? ? Hyrax::WorkResourceQueryService : Hyrax::WorkQueryService
 
   delegate :deleted_work?, :work, :to_s, to: :work_query_service
 

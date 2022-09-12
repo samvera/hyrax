@@ -15,4 +15,6 @@ module Hyrax
   class SingleMembershipError < HyraxError; end
 
   class ObjectNotFoundError < ActiveFedora::ObjectNotFoundError; end
+
+  class ModelMismatchError < HyraxError; end
 end
