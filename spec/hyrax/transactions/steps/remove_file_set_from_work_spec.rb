@@ -47,16 +47,16 @@ RSpec.describe Hyrax::Transactions::Steps::RemoveFileSetFromWork do
           end
 
           it 'unlinks' do
-            expect(work.member_ids.include? file_set.id).to eq true
+            expect(work.member_ids.include?(file_set.id)).to eq true
             expect(work.representative_id).to eq file_set.id
-            expect(Hyrax.query_service.find_parents(resource: file_set).is_a? Array).to eq true
+            expect(Hyrax.query_service.find_parents(resource: file_set).is_a?(Array)).to eq true
             expect(Hyrax.query_service.find_parents(resource: file_set).first).to eq work
             step.call(file_set, user: user)
             # reloaded = Hyrax.query_service.find_by(id: work.id)
             # expect(reloaded.member_ids.include? file_set.id).to eq false
             # expect(reloaded.thumbnail_id).not_to eq file_set.id
             # expect(reloaded.representative_id).not_to eq file_set.id
-            expect(work.member_ids.include? file_set.id).to eq false
+            expect(work.member_ids.include?(file_set.id)).to eq false
             expect(work.representative_id).not_to eq file_set.id
           end
         end

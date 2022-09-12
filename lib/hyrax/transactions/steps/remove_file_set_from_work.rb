@@ -45,19 +45,20 @@ module Hyrax
           @query_service.find_parents(resource: resource)
         end
 
+        # rubocop:disable Metrics/CyclomaticComplexity
         def unlink_file_set(parent:, file_set:)
           fid = file_set.id
-          return unless (parent.thumbnail_id == fid || parent.representative_id == fid ||
-            (parent.respond_to?(:rendering_ids) && parent.rendering_ids.present? && parent.rendering_ids.include?(fid)) )
+          return unless parent.thumbnail_id == fid || parent.representative_id == fid ||
+                        (parent.respond_to?(:rendering_ids) && parent.rendering_ids.present? && parent.rendering_ids.include?(fid))
           if parent.thumbnail_id == fid
             parent.thumbnail = nil if parent.respond_to? :thumbnail
             parent.thumbnail_id = nil
           end
           parent.representative_id = nil if parent.representative_id == fid
-          if parent.respond_to?(:rendering_ids) && parent.rendering_ids.present?
-            parent.rendering_ids = parent.rendering_ids - [fid]
-          end
+          return unless parent.respond_to?(:rendering_ids) && parent.rendering_ids.present?
+          parent.rendering_ids = parent.rendering_ids - [fid]
         end
+        # rubocop:enable Metrics/CyclomaticComplexity
       end
     end
   end

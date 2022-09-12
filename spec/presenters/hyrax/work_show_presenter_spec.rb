@@ -387,8 +387,8 @@ RSpec.describe Hyrax::WorkShowPresenter do
     context 'has an unindexed representative' do
       it 'has a nil presenter' do
         expect(presenter).to receive(:member_presenters)
-                               .with([obj.members[0].id])
-                               .and_raise ArgumentError
+          .with([obj.members[0].id])
+          .and_raise ArgumentError
         expect(presenter.representative_presenter).to be_nil
       end
     end
