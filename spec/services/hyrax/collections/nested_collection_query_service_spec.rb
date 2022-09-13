@@ -80,8 +80,8 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         describe 'it prevents circular nesting' do
           it 'returns an array of valid collections of the same collection type' do
             expect(scope).to receive(:can?).with(:deposit, coll_c).and_return(true)
-            expect(described_class).to receive(:query_solr).with(collection: coll_c, access: :read, scope: scope, limit_to_id: nil).and_call_original
-            expect(subject.map(&:id)).to contain_exactly(another.id)
+            expect(described_class).to receive(:query_solr).with(collection: coll_c, access: :read, scope: scope, limit_to_id: nil, nest_direction: :as_child).and_call_original
+            expect(subject.map(&:id)).to contain_exactly(another.id, coll_e.id)
           end
         end
       end
@@ -175,8 +175,8 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         describe 'it prevents circular nesting' do
           it 'returns an array of collections of the same collection type excluding the given collection' do
             expect(scope).to receive(:can?).with(:read, coll_c).and_return(true)
-            expect(described_class).to receive(:query_solr).with(collection: coll_c, access: :deposit, scope: scope, limit_to_id: nil).and_call_original
-            expect(subject.map(&:id)).to contain_exactly(another.id)
+            expect(described_class).to receive(:query_solr).with(collection: coll_c, access: :deposit, scope: scope, limit_to_id: nil, nest_direction: :as_parent).and_call_original
+            expect(subject.map(&:id)).to contain_exactly(another.id, coll_a.id)
           end
         end
       end

@@ -9,7 +9,7 @@ RSpec.describe Hyrax::Dashboard::NestedCollectionsSearchBuilder do
   [false, true].each do |test_valkyrie|
     context "when test_valkyrie is #{test_valkyrie}" do
       let(:builder) do
-        described_class.new(scope: scope, access: access, collection: collection)
+        described_class.new(scope: scope, access: access, collection: collection, nest_direction: test_nest_direction)
       end
       let(:collection_id) { collection.id.to_s }
 
@@ -45,13 +45,28 @@ RSpec.describe Hyrax::Dashboard::NestedCollectionsSearchBuilder do
 
         subject { builder.show_only_other_collections_of_the_same_collection_type(solr_params) }
 
-        it 'will exclude the given collection and its parents and children' do
-          subject
-          expect(solr_params.fetch(:fq)).to contain_exactly(
-            "_query_:\"{!field f=collection_type_gid_ssim}#{collection.collection_type_gid}\"",
-            "-{!graph to=id from=member_of_collection_ids_ssim}id:#{collection.id}",
-            "-{!graph from=id to=member_of_collection_ids_ssim}id:#{collection.id}"
-          )
+        context 'when nesting :as_parent' do
+          it 'will exclude the given collection, its parents, and direct children' do
+            subject
+            expect(solr_params.fetch(:fq)).to contain_exactly(
+              "_query_:\"{!field f=collection_type_gid_ssim}#{collection.collection_type_gid}\"",
+              "-{!graph to=id from=member_of_collection_ids_ssim}id:#{collection.id}",
+              "-{!graph from=id to=member_of_collection_ids_ssim maxDepth=1}id:#{collection.id}"
+            )
+          end
+        end
+
+        context 'when nesting :as_child' do
+          let(:test_nest_direction) { :as_child }
+
+          it 'will exclude the given collection, its children, and direct parents' do
+            subject
+            expect(solr_params.fetch(:fq)).to contain_exactly(
+              "_query_:\"{!field f=collection_type_gid_ssim}#{collection.collection_type_gid}\"",
+              "-{!graph to=id from=member_of_collection_ids_ssim maxDepth=1}id:#{collection.id}",
+              "-{!graph from=id to=member_of_collection_ids_ssim}id:#{collection.id}"
+            )
+          end
         end
       end
 

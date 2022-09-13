@@ -16,7 +16,7 @@ module Hyrax
       def self.available_child_collections(parent:, scope:, limit_to_id: nil)
         return [] unless nestable?(collection: parent)
         return [] unless scope.can?(:deposit, parent)
-        query_solr(collection: parent, access: :read, scope: scope, limit_to_id: limit_to_id).documents
+        query_solr(collection: parent, access: :read, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_child).documents
       end
 
       ##
@@ -34,7 +34,7 @@ module Hyrax
       def self.available_parent_collections(child:, scope:, limit_to_id: nil)
         return [] unless nestable?(collection: child)
         return [] unless scope.can?(:read, child)
-        query_solr(collection: child, access: :deposit, scope: scope, limit_to_id: limit_to_id).documents
+        query_solr(collection: child, access: :deposit, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_parent).documents
       end
 
       ##
@@ -63,11 +63,13 @@ module Hyrax
       #   to +repository+, +can?+, +blacklight_config+, +current_ability+
       # @param limit_to_id [nil, String] Limit the query to just check if the given
       #   id is in the response. Useful for validation.
-      def self.query_solr(collection:, access:, scope:, limit_to_id:)
+      # @param nest_direction [Symbol] :as_child or :as_parent
+      def self.query_solr(collection:, access:, scope:, limit_to_id:, nest_direction:)
         query_builder = Hyrax::Dashboard::NestedCollectionsSearchBuilder.new(
           access: access,
           collection: collection,
-          scope: scope
+          scope: scope,
+          nest_direction: nest_direction
         )
 
         query_builder.where(id: limit_to_id.to_s) if limit_to_id

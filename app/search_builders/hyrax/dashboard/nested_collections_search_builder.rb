@@ -6,10 +6,12 @@ module Hyrax
       # @param access [Symbol] :edit, :read, :discover - With the given :access what all can
       # @param collection [::Collection]
       # @param scope [Object] Typically a controller that responds to #current_ability, #blackligh_config
-      def initialize(access:, collection:, scope:)
+      # @param nest_direction [Symbol] (:as_parent or :as_child) the direction we are adding nesting to this collection
+      def initialize(access:, collection:, scope:, nest_direction:)
         super(scope)
         @collection = collection
         @discovery_permissions = extract_discovery_permissions(access)
+        @nest_direction = nest_direction
       end
 
       # Override for Hydra::AccessControlsEnforcement
@@ -27,8 +29,8 @@ module Hyrax
         solr_parameters[:fq] ||= []
         solr_parameters[:fq] += [
           Hyrax::SolrQueryBuilderService.construct_query(Hyrax.config.collection_type_index_field => @collection.collection_type_gid),
-          "-{!graph from=id to=member_of_collection_ids_ssim}id:#{@collection.id}",
-          "-{!graph to=id from=member_of_collection_ids_ssim}id:#{@collection.id}"
+          "-{!graph from=id to=member_of_collection_ids_ssim#{' maxDepth=1' if @nest_direction == :as_parent}}id:#{@collection.id}",
+          "-{!graph to=id from=member_of_collection_ids_ssim#{' maxDepth=1' if @nest_direction == :as_child}}id:#{@collection.id}"
         ]
       end
     end
