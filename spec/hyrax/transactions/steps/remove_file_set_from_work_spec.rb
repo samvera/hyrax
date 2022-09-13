@@ -50,13 +50,13 @@ RSpec.describe Hyrax::Transactions::Steps::RemoveFileSetFromWork, valkyrie_adapt
           it 'by clearing thumbnail_id' do
             expect { step.call(file_set, user: user) }
               .to change { Hyrax.query_service.find_by(id: parent.id).thumbnail_id }
-                    .to be_nil
+              .to be_nil
           end
 
           it 'by deleting from rendering_ids' do
             expect { step.call(file_set, user: user) }
               .to change { Hyrax.query_service.find_by(id: parent.id).rendering_ids }
-                    .to be_empty
+              .to be_empty
           end
         end
 

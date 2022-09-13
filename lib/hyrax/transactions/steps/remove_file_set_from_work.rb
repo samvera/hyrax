@@ -63,10 +63,9 @@ module Hyrax
         end
 
         def unlink_thumbnail_id(fid:, parent:)
-          if parent.thumbnail_id == fid
-            parent.thumbnail = nil if parent.respond_to? :thumbnail
-            parent.thumbnail_id = nil
-          end
+          return unless parent.thumbnail_id == fid
+          parent.thumbnail = nil if parent.respond_to? :thumbnail
+          parent.thumbnail_id = nil
         end
       end
     end

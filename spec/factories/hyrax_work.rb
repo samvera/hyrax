@@ -112,7 +112,7 @@ FactoryBot.define do
     trait :with_renderings do
       rendering_ids do
         file_set = members.find(&:file_set?) ||
-          valkyrie_create(:hyrax_file_set)
+                   valkyrie_create(:hyrax_file_set)
         file_set.id
       end
     end
