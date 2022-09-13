@@ -97,5 +97,112 @@ module Hyrax
         hash[presenter.title_or_label] = presenter.id
       end
     end
+
+    ##
+    # This helper retrieves errors based on form type.
+    #
+    # @param form [Hyrax::Forms::WorkForm] or Hyrax::ChangeSet
+    # @return [String] specific error message
+    def in_works_ids_errors_for(form:)
+      case form
+      when Hyrax::ChangeSet
+        form.errors[:in_works_ids]
+      else
+        form.model.errors[:in_works_ids]
+      end
+    end
+
+    ##
+    # This helper retrieves errors based on form type.
+    #
+    # @param form [Hyrax::Forms::WorkForm] or Hyrax::ChangeSet
+    # @return [String] specific error message
+    def ordered_member_ids_errors_for(form:)
+      case form
+      when Hyrax::ChangeSet
+        form.errors[:ordered_member_ids]
+      else
+        form.model.errors[:ordered_member_ids]
+      end
+    end
+
+    ##
+    # This helper retrieves errors based on form type.
+    #
+    # @param form [Hyrax::Forms::WorkForm] or Hyrax::ChangeSet
+    # @return [String] specific error message
+    def visibility_errors_for(form:)
+      case form
+      when Hyrax::ChangeSet
+        form.errors[:visibility]
+      else
+        form.model.errors[:visibility]
+      end
+    end
+
+    ##
+    # This helper retrieves errors based on form type.
+    #
+    # @param form [Hyrax::Forms::WorkForm] or Hyrax::ChangeSet
+    # @return [String] specific error message
+    def embargo_release_date_errors_for(form:)
+      case form
+      when Hyrax::ChangeSet
+        form.errors[:embargo_release_date]
+      else
+        form.model.errors[:embargo_release_date]
+      end
+    end
+
+    ##
+    # This helper retrieves errors based on form type.
+    #
+    # @param form [Hyrax::Forms::WorkForm] or Hyrax::ChangeSet
+    # @return [String] specific error message
+    def visibility_after_embargo_errors_for(form:)
+      case form
+      when Hyrax::ChangeSet
+        form.errors[:visibility_after_embargo]
+      else
+        form.model.errors[:visibility_after_embargo]
+      end
+    end
+
+    ##
+    # This helper retrieves errors based on form type.
+    #
+    # @param form [Hyrax::Forms::WorkForm] or Hyrax::ChangeSet
+    # @return [String] specific error message
+    def lease_expiration_date_errors_for(form:)
+      case form
+      when Hyrax::ChangeSet
+        form.errors[:lease_expiration_date_errors]
+      else
+        form.model.errors[:lease_expiration_date_errors]
+      end
+    end
+
+    ##
+    # This helper retrieves errors based on form type.
+    #
+    # @param form [Hyrax::Forms::WorkForm] or Hyrax::ChangeSet
+    # @return [String] specific error message
+    def visibility_after_lease_errors_for(form:)
+      case form
+      when Hyrax::ChangeSet
+        form.errors[:visibility_after_lease]
+      else
+        form.model.errors[:visibility_after_lease]
+      end
+    end
+
+    ##
+    # This helper retrieves errors based on form type.
+    #
+    # @param form [Hyrax::Forms::WorkForm] or Hyrax::ChangeSet
+    # @return [String] specific error message
+    def full_collections_errors(form:)
+      form.full_error(:collections) || form.full_error(:member_of_collection_ids)
+    end
   end
 end
