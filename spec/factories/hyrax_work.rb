@@ -109,6 +109,14 @@ FactoryBot.define do
       end
     end
 
+    trait :with_renderings do
+      rendering_ids do
+        file_set = members.find(&:file_set?) ||
+          valkyrie_create(:hyrax_file_set)
+        file_set.id
+      end
+    end
+
     trait :as_collection_member do
       member_of_collection_ids { [valkyrie_create(:hyrax_collection).id] }
     end
