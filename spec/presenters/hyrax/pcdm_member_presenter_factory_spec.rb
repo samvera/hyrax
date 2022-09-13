@@ -67,7 +67,7 @@ RSpec.describe Hyrax::PcdmMemberPresenterFactory do
 
       it 'raises an error if given an unindexed id' do
         expect { factory.member_presenters(['FAKE_ID']).to_a }
-          .to raise_error ArgumentError
+          .to raise_error Hyrax::ObjectNotFoundError
       end
 
       context 'with members' do
@@ -159,7 +159,7 @@ RSpec.describe Hyrax::PcdmMemberPresenterFactory do
 
       it 'raises an error if given an unindexed id' do
         expect { factory.member_presenters(['FAKE_ID']).to_a }
-          .to raise_error ArgumentError
+          .to raise_error Hyrax::ObjectNotFoundError
       end
 
       context 'with members' do
