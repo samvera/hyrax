@@ -24,11 +24,7 @@ module Hyrax
     def work
       # Need to ensure it is a work?
       resource = Hyrax.query_service.find_by(id: id)
-      unless Hyrax.config.curation_concerns.include?(resource.class) ||
-             Hyrax.config.curation_concerns.map(&:to_s).include?(resource.class.to_s) || # Wings-wrapped models
-             Hyrax.config.curation_concerns.map(&:to_s).include?(resource.class.name) # Wings-wrapped models
-        raise ModelMismatchError, "Expected allowed work type but got #{resource.class}"
-      end
+      raise ModelMismatchError, "Expected work but got #{resource.class}" unless resource.work?
       resource
     end
 
