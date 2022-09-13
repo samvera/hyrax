@@ -388,7 +388,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       it 'has a nil presenter' do
         expect(presenter).to receive(:member_presenters)
           .with([obj.members[0].id])
-          .and_raise ArgumentError
+          .and_raise Hyrax::ObjectNotFoundError
         expect(presenter.representative_presenter).to be_nil
       end
     end
