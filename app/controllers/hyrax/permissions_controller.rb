@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Hyrax
   class PermissionsController < ApplicationController
-    load_resource class: ActiveFedora::Base, instance_name: :curation_concern
+    load_resource class: Hyrax::Resource, instance_name: :curation_concern
 
     attr_reader :curation_concern
     helper_method :curation_concern
