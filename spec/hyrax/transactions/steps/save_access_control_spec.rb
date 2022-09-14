@@ -42,6 +42,15 @@ RSpec.describe Hyrax::Transactions::Steps::SaveAccessControl, valkyrie_adapter: 
                                     have_attributes(mode: :edit, agent: user.user_key),
                                     have_attributes(mode: :read, agent: 'group/admin'))
       end
+
+      context 'with invalid params' do
+        let(:params) { [{ "access" => "read", "type" => "group" }, { "type" => "person", "name" => "foo@bar.com" }, { "access" => "edit", "name" => "foo@bar.com" }] }
+
+        it 'does not persist the params' do
+          step.call(work, permissions_params: params)
+          expect(Hyrax::AccessControlList.new(resource: work).permissions).to contain_exactly(have_attributes(mode: :read, agent: user.user_key))
+        end
+      end
     end
   end
 
