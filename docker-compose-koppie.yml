@@ -31,6 +31,7 @@ services:
     volumes:
       - .koppie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
+      - hyrax-storage:/app/samvera/hyrax-webapp/storage
       - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
       - rails-public:/app/samvera/hyrax-webapp/public
@@ -58,6 +59,7 @@ services:
     volumes:
       - .koppie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
+      - hyrax-storage:/app/samvera/hyrax-webapp/storage
       - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
       - sidekiq-public:/app/samvera/hyrax-webapp/public
@@ -144,6 +146,7 @@ services:
 
 volumes:
   db:
+  hyrax-storage:
   hyrax-derivatives:
   hyrax-uploads:
   rails-public:
