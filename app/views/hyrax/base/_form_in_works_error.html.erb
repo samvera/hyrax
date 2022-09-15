@@ -1,3 +1,3 @@
-<% unless f.object.model.errors[:in_works_ids].empty? %>
+<% unless in_works_ids_errors_for(form: f.object).empty? %>
   <%= f.full_error(:in_works_ids) %>
 <% end %>
