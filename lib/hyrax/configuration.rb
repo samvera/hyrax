@@ -860,6 +860,16 @@ module Hyrax
       @range_for_number_of_results_to_display_per_page ||= [10, 20, 50, 100]
     end
 
+    attr_writer :derivative_services
+    # The registered candidate derivative services.  In the array, the first `valid?` candidate will
+    # handle the derivative generation.
+    #
+    # @return [Array] of objects that conform to Hyrax::DerivativeService interface.
+    # @see Hyrax::DerivativeService
+    def derivative_services
+      @derivative_services ||= [Hyrax::FileSetDerivativesService]
+    end
+
     private
 
     # @param [Symbol, #to_s] model_name - symbol representing the model
