@@ -98,6 +98,9 @@ module Hyrax
           result = member_presenters([representative_id]).first
           return nil if result.try(:id) == id
           result.try(:representative_presenter) || result
+        rescue Hyrax::ObjectNotFoundError
+          Rails.logger.warn "Unable to find representative_id #{representative_id} for work #{id}"
+          return nil
         end
     end
 
