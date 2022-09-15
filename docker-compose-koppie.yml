@@ -9,7 +9,7 @@ services:
         - EXTRA_APK_PACKAGES=git less chromium
         - APP_PATH=.koppie
     image: ghcr.io/samvera/koppie
-    command: sh -l -c 'bundle && bundle exec puma -v -b tcp://0.0.0.0:3000'
+    command: sh -l -c 'bundle && yarn && bundle exec puma -v -b tcp://0.0.0.0:3000'
     stdin_open: true
     tty: true
     user: root
