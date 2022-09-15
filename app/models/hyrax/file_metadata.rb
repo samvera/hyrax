@@ -13,11 +13,13 @@ module Hyrax
       file.is_a?(Valkyrie::Resource)
 
     Hyrax.custom_queries.find_file_metadata_by(id: file.id)
-  rescue Hyrax::ObjectNotFoundError, Ldp::BadRequest
+  rescue Hyrax::ObjectNotFoundError, Ldp::BadRequest, Valkyrie::Persistence::ObjectNotFoundError
     Hyrax.logger.debug('Could not find an existing metadata node for file ' \
                        "with id #{file.id}. Initializing a new one")
 
-    FileMetadata.new(file_identifier: file.id, alternative_ids: [file.id])
+    FileMetadata.new(file_identifier: file.id,
+                     alternative_ids: [file.id],
+                     original_filename: File.basename(file.io))
   end
 
   class FileMetadata < Valkyrie::Resource
