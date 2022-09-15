@@ -47,8 +47,9 @@ module Hyrax
     def self.fileset_for_directives(directives)
       path = URI(directives.fetch(:url)).path
       id = path.sub(Hyrax.config.derivatives_path.to_s, "")
-               .split('/')[0..-2]
-               .join('')
+               .delete('/')
+               .match(/^(.*)-\w*(\.\w+)*$/) { |m| m[1] }
+      raise "Could not extract fileset id from path #{path}" unless id
 
       Hyrax.metadata_adapter.query_service.find_by(id: id)
     end
