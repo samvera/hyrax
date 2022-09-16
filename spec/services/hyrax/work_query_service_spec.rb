@@ -30,7 +30,7 @@ module Hyrax
 
       subject { work_query_service.work }
 
-      context 'when not in SOLR' do
+      context 'when in SOLR' do
         before { allow(work_relation).to receive(:find).with(work_id).and_return(expected_work) }
         it { is_expected.to eq(expected_work) }
       end
