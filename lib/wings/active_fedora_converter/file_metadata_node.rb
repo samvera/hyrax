@@ -9,7 +9,7 @@ module Wings
         # skip reserved attributes, we assume we don't need to translate valkyrie internals
         schema = resource_class.schema.reject do |key|
           resource_class.reserved_attributes.include?(key.name) ||
-            key.name == :size
+            key.name == :size || key.name == :has_model
         end
 
         Wings::ActiveFedoraConverter.apply_properties(self, schema)
