@@ -84,6 +84,8 @@ module Hyrax
     rescue StandardError => exception
       log_message fail_message
       log_message "Last exception #{exception}"
+      # Without returning false, we return the results of log_message; which is true.
+      false
     end
 
     def date_since_last_cache(user)
