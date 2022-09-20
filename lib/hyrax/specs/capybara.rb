@@ -23,12 +23,12 @@ if ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
   args = %w[disable-gpu no-sandbox whitelisted-ips window-size=1400,1400]
   args.push('headless') if ActiveModel::Type::Boolean.new.cast(ENV['CHROME_HEADLESS_MODE'])
 
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome("goog:chromeOptions" => { args: args })
+  options = Selenium::WebDriver::Options.chrome("goog:chromeOptions" => { args: args })
 
   Capybara.register_driver :selenium_chrome_headless_sandboxless do |app|
     driver = Capybara::Selenium::Driver.new(app,
                                        browser: :remote,
-                                       desired_capabilities: capabilities,
+                                       capabilities: options,
                                        url: ENV['HUB_URL'])
 
     # Fix for capybara vs remote files. Selenium handles this for us

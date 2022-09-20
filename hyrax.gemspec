@@ -102,7 +102,7 @@ SUMMARY
   spec.add_development_dependency 'rspec-its', '~> 1.1'
   spec.add_development_dependency 'rspec-rails', '~> 5.0'
   spec.add_development_dependency 'rspec_junit_formatter'
-  spec.add_development_dependency "selenium-webdriver"
+  spec.add_development_dependency "selenium-webdriver", '~> 4.4'
   spec.add_development_dependency 'i18n-debug'
   spec.add_development_dependency 'i18n_yaml_sorter'
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
