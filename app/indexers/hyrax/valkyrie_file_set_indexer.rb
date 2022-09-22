@@ -23,7 +23,7 @@ module Hyrax
         solr_doc['hasRelatedImage_ssim']         = resource.thumbnail_id.to_s
 
         # Add in metadata from the original file.
-        file_metadata = original_file
+        file_metadata = Hyrax::FileSetFileService.new(file_set: resource).original_file
         return solr_doc unless file_metadata
 
         # Label is the actual file name. It's not editable by the user.
@@ -98,12 +98,6 @@ module Hyrax
     end
 
     private
-
-    def original_file
-      Hyrax.custom_queries.find_original_file(file_set: resource)
-    rescue Valkyrie::Persistence::ObjectNotFoundError
-      Hyrax.custom_queries.find_files(file_set: resource).first
-    end
 
     def file_format(file)
       if file.mime_type.present? && file.format_label.present?

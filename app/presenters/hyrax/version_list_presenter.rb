@@ -19,7 +19,12 @@ module Hyrax
     #
     # @raise [ArgumentError] if we can't build an enu
     def self.for(file_set:)
-      new(file_set.original_file&.versions&.all.to_a)
+      original_file = if file_set.respond_to?(:original_file)
+                        file_set.original_file
+                      else
+                        Hyrax::FileSetFileService.new(file_set: file_set).original_file
+                      end
+      new(original_file&.versions&.all.to_a)
     rescue NoMethodError
       raise ArgumentError
     end
