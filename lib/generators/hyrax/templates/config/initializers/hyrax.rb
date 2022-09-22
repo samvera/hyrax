@@ -165,6 +165,10 @@ Hyrax.config do |config|
   #  config.upload_path = ->() { Rails.root + 'tmp' + 'uploads' }
   #  config.cache_path = ->() { Rails.root + 'tmp' + 'uploads' + 'cache' }
 
+  # The registered candidate derivative services.  In the array, the first `valid?` candidate will
+  # handle the derivative generation.
+  # config.derivative_services = [Hyrax::FileSetDerivativesService]
+
   # Location on local file system where derivatives will be stored
   # If you use a multi-server architecture, this MUST be a shared volume
   # config.derivatives_path = Rails.root.join('tmp', 'derivatives')
