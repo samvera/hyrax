@@ -86,7 +86,7 @@ module Hyrax
       doc = permissions_doc(id)
       return [] if doc.nil?
       groups = Array(doc[self.class.read_group_field]) + Array(doc[self.class.edit_group_field])
-      Rails.logger.debug("[CANCAN] download_groups: #{groups.inspect}")
+      Hyrax.logger.debug("[CANCAN] download_groups: #{groups.inspect}")
       groups
     end
 
@@ -95,7 +95,7 @@ module Hyrax
       doc = permissions_doc(id)
       return [] if doc.nil?
       users = Array(doc[self.class.read_user_field]) + Array(doc[self.class.edit_user_field])
-      Rails.logger.debug("[CANCAN] download_users: #{users.inspect}")
+      Hyrax.logger.debug("[CANCAN] download_users: #{users.inspect}")
       users
     end
 

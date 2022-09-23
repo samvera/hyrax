@@ -17,7 +17,7 @@ RSpec.describe Hyrax::Listeners::WorkflowListener do
     end
 
     it 'logs an error' do
-      expect(Rails.logger).to receive(:error)
+      expect(Hyrax.logger).to receive(:error)
 
       listener.on_object_deposited(event)
     end
@@ -42,7 +42,7 @@ RSpec.describe Hyrax::Listeners::WorkflowListener do
       let(:user) { nil }
 
       it 'logs a warning' do
-        expect(Rails.logger).to receive(:warn)
+        expect(Hyrax.logger).to receive(:warn)
 
         listener.on_object_deposited(event)
       end

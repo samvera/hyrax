@@ -7,7 +7,7 @@ module Hyrax
     # @see .generate_from_json_file
     class WorkflowImporter
       class_attribute :default_logger
-      self.default_logger = Rails.logger
+      self.default_logger = Hyrax.logger
       class_attribute :path_to_workflow_files
       self.path_to_workflow_files = Rails.root.join('config', 'workflows', '*.json')
 
@@ -132,7 +132,7 @@ module Hyrax
         rescue InvalidStateRemovalException => e
           e.states.each do |state|
             error = I18n.t('hyrax.workflow.load.state_error', workflow_name: state.workflow.name, state_name: state.name, entity_count: state.entities.count)
-            Rails.logger.error(error)
+            Hyrax.logger.error(error)
             errors << error
           end
           Sipity::Workflow.find_by(name: configuration[:name])

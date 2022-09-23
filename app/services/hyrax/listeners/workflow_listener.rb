@@ -25,13 +25,13 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_object_deposited(event)
-        return Rails.logger.warn("Skipping workflow initialization for #{event[:object]}; no user is given\n\t#{event}") if
+        return Hyrax.logger.warn("Skipping workflow initialization for #{event[:object]}; no user is given\n\t#{event}") if
           event[:user].blank?
 
         factory.create(event[:object], {}, event[:user])
       rescue Sipity::StateError, Sipity::ConversionError => err
         # don't error on known sipity error types; log instead
-        Rails.logger.error(err)
+        Hyrax.logger.error(err)
       end
     end
   end

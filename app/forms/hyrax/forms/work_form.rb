@@ -120,7 +120,7 @@ module Hyrax
         primary = (required_fields & terms)
 
         (required_fields - primary).each do |missing|
-          Rails.logger.warn("The form field #{missing} is configured as a " \
+          Hyrax.logger.warn("The form field #{missing} is configured as a " \
                             'required field, but not as a term. This can lead ' \
                             'to unexpected behavior. Did you forget to add it ' \
                             "to `#{self.class}#terms`?")

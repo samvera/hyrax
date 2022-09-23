@@ -42,7 +42,7 @@ module Hyrax
       def perform_create(content, user, use_valkyrie)
         use_valkyrie ? perform_create_through_valkyrie(content, user) : perform_create_through_active_fedora(content, user)
       rescue NotImplementedError
-        Rails.logger.warn "Declining to create a Version for #{content}; #{self} doesn't support versioning with use_valkyrie: #{use_valkyrie}"
+        Hyrax.logger.warn "Declining to create a Version for #{content}; #{self} doesn't support versioning with use_valkyrie: #{use_valkyrie}"
       end
 
       def perform_create_through_active_fedora(content, user)

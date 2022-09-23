@@ -87,7 +87,7 @@ module Hyrax::ValkyrieUpload
       when Hyrax::FileMetadata::Use::EXTRACTED_TEXT
         file_set.extracted_text_id = file_metadata.id
       else
-        Rails.logger.warn "Unknown file use #{file_metadata.type} specified for #{file_metadata.file_identifier}"
+        Hyrax.logger.warn "Unknown file use #{file_metadata.type} specified for #{file_metadata.file_identifier}"
       end
     end
   end

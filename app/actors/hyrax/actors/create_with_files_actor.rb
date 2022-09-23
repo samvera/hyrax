@@ -40,7 +40,7 @@ module Hyrax
         expected_user_id = env.user.id
         files.each do |file|
           if file.user_id != expected_user_id
-            Rails.logger.error "User #{env.user.user_key} attempted to ingest uploaded_file #{file.id}, but it belongs to a different user"
+            Hyrax.logger.error "User #{env.user.user_key} attempted to ingest uploaded_file #{file.id}, but it belongs to a different user"
             return false
           end
         end

@@ -27,7 +27,7 @@ module Hyrax
       tmpfile = Tempfile.new(fileset_id, encoding: 'ascii-8bit')
       tmpfile.write stream.read
 
-      Rails.logger.debug "Uploading thumbnail for FileSet #{fileset_id} as #{filepath}"
+      Hyrax.logger.debug "Uploading thumbnail for FileSet #{fileset_id} as #{filepath}"
       Hyrax.config.derivatives_storage_adapter.upload(
         file: tmpfile,
         original_filename: filepath,

@@ -86,7 +86,7 @@ module Hyrax
       raise(URI::InvalidURIError) if gid.nil?
       GlobalID::Locator.locate(gid)
     rescue NameError
-      Rails.logger.warn "#{self.class}##{__method__} called with #{gid}, which is " \
+      Hyrax.logger.warn "#{self.class}##{__method__} called with #{gid}, which is " \
                         "a legacy collection type global id format. If this " \
                         "collection type gid is attached to a collection in " \
                         "your repository you'll want to run " \

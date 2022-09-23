@@ -13,17 +13,17 @@ module Hyrax
       def self.migrate_all_collections
         Deprecation.warn('This migration tool will be removed in Hyrax 4.0.0.')
 
-        Rails.logger.info "*** Migrating #{::Collection.count} collections"
+        Hyrax.logger.info "*** Migrating #{::Collection.count} collections"
         ::Collection.all.each do |col|
           migrate_collection(col)
-          Rails.logger.info "  migrating collection - id: #{col.id}, title: #{col.title}"
+          Hyrax.logger.info "  migrating collection - id: #{col.id}, title: #{col.title}"
         end
 
         AdminSet.all.each do |adminset|
           migrate_adminset(adminset)
-          Rails.logger.info "  migrating adminset - id: #{adminset.id}, title: #{adminset.title}"
+          Hyrax.logger.info "  migrating adminset - id: #{adminset.id}, title: #{adminset.title}"
         end
-        Rails.logger.info "--- Migration Complete"
+        Hyrax.logger.info "--- Migration Complete"
       end
 
       # @api private
@@ -64,16 +64,16 @@ module Hyrax
       def self.repair_migrated_collections
         Deprecation.warn('This migration tool will be removed in Hyrax 4.0.0.')
 
-        Rails.logger.info "*** Repairing migrated collections"
+        Hyrax.logger.info "*** Repairing migrated collections"
         ::Collection.all.each do |col|
           repair_migrated_collection(col)
-          Rails.logger.info "  repairing collection - id: #{col.id}, title: #{col.title}"
+          Hyrax.logger.info "  repairing collection - id: #{col.id}, title: #{col.title}"
         end
         AdminSet.all.each do |adminset|
           migrate_adminset(adminset)
-          Rails.logger.info "  repairing adminset - id: #{adminset.id}, title: #{adminset.title}"
+          Hyrax.logger.info "  repairing adminset - id: #{adminset.id}, title: #{adminset.title}"
         end
-        Rails.logger.info "--- Repairing Complete"
+        Hyrax.logger.info "--- Repairing Complete"
       end
 
       # @api private

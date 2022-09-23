@@ -80,7 +80,7 @@ module Hyrax
   ##
   # @return [Logger]
   def self.logger
-    @logger ||= Valkyrie.logger
+    config.logger
   end
 
   def self.primary_work_type

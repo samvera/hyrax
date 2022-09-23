@@ -35,12 +35,12 @@ module Hyrax
         return unless action.triggered_methods.any?
         success = action.triggered_methods.order(:weight).all? do |method|
           status = process_action(method.service_name)
-          Rails.logger.debug("Result of #{method.service_name} is #{status}")
+          Hyrax.logger.debug("Result of #{method.service_name} is #{status}")
           status
         end
 
         return save_target if success
-        Rails.logger.error "Not all workflow methods were successful, so not saving (#{target.id})"
+        Hyrax.logger.error "Not all workflow methods were successful, so not saving (#{target.id})"
         false
       end
 
@@ -63,11 +63,11 @@ module Hyrax
         klass = begin
                   class_name.constantize
                 rescue NameError
-                  Rails.logger.error "Unable to find '#{class_name}', so not running workflow callback"
+                  Hyrax.logger.error "Unable to find '#{class_name}', so not running workflow callback"
                   return nil
                 end
         return klass if klass.respond_to?(:call)
-        Rails.logger.error "Expected '#{class_name}' to respond to 'call', but it didn't, so not running workflow callback"
+        Hyrax.logger.error "Expected '#{class_name}' to respond to 'call', but it didn't, so not running workflow callback"
         nil
       end
 

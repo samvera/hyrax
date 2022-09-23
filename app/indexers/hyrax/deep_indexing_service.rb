@@ -48,12 +48,12 @@ module Hyrax
     end
 
     def fetch_value(value)
-      Rails.logger.info "Fetching #{value.rdf_subject} from the authorative source. (this is slow)"
+      Hyrax.logger.info "Fetching #{value.rdf_subject} from the authorative source. (this is slow)"
       value.fetch(headers: { 'Accept' => default_accept_header })
     rescue IOError, SocketError => e
       # IOError could result from a 500 error on the remote server
       # SocketError results if there is no server to connect to
-      Rails.logger.error "Unable to fetch #{value.rdf_subject} from the authorative source.\n#{e.message}"
+      Hyrax.logger.error "Unable to fetch #{value.rdf_subject} from the authorative source.\n#{e.message}"
     end
 
     # Stripping off the */* to work around https://github.com/rails/rails/issues/9940

@@ -165,7 +165,7 @@ module Hyrax
           end
         end
       rescue StandardError => err
-        Rails.logger.error(err)
+        Hyrax.logger.error(err)
         after_destroy_error(params[:id])
       end
 
@@ -484,7 +484,7 @@ module Hyrax
           params[:destination_collection_id]
         flash[:notice] = "Successfully moved #{batch.count} files to #{destination_title} Collection."
       rescue StandardError => err
-        Rails.logger.error(err)
+        Hyrax.logger.error(err)
         destination_title =
           Hyrax.query_service.find_by(id: params[:destination_collection_id]).title.first ||
           destination_id
