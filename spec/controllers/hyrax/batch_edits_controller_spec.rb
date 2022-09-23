@@ -55,6 +55,8 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
     let(:mycontroller) { "hyrax/my/works" }
 
+    let(:model_name) { controller.send(:form_class).model_class.model_name.param_key }
+
     before do
       # TODO: why aren't we just submitting batch_document_ids[] as a parameter?
       controller.batch = [one.id, two.id, three.id]
@@ -222,7 +224,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       end
 
       it "updates the records" do
-        put :update, params: { update_type: "update", monograph: { subject: ["zzz"] } }
+        put :update, params: { update_type: "update", model_name => { subject: ["zzz"] } }
         expect(response).to be_redirect
         expect(work1.subject).to eq ["zzz"]
         expect(work2.subject).to eq ["zzz"]
@@ -230,7 +232,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       end
 
       it "updates permissions" do
-        put :update, params: { update_type: "update", monograph: { visibility: "authenticated" } }
+        put :update, params: { update_type: "update", model_name => { visibility: "authenticated" } }
         expect(response).to be_redirect
 
         expect(work1.visibility).to eq "authenticated"
@@ -242,7 +244,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       it 'creates leases' do
         put :update, params: { update_type: "update",
-                               monograph: { visibility: "lease", lease_expiration_date: release_date, visibility_during_lease: 'open', visibility_after_lease: 'restricted' } }
+                               model_name => { visibility: "lease", lease_expiration_date: release_date, visibility_during_lease: 'open', visibility_after_lease: 'restricted' } }
         expect(response).to be_redirect
 
         expect(work1.visibility).to eq "open"
@@ -266,7 +268,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       it 'creates embargoes' do
         put :update, params: { update_type: "update",
-                               monograph: { visibility: "embargo", embargo_release_date: release_date, visibility_during_embargo: 'authenticated', visibility_after_embargo: 'open' } }
+                               model_name => { visibility: "embargo", embargo_release_date: release_date, visibility_during_embargo: 'authenticated', visibility_after_embargo: 'open' } }
         expect(response).to be_redirect
 
         expect(work1.visibility).to eq "authenticated"
@@ -290,7 +292,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       context 'with roles' do
         it 'updates roles' do
-          put :update, params: { update_type: "update", monograph: { permissions_attributes: { "0" => { type: 'person', access: 'read', name: 'foo@bar.com' } } } }
+          put :update, params: { update_type: "update", model_name => { permissions_attributes: { "0" => { type: 'person', access: 'read', name: 'foo@bar.com' } } } }
           expect(response).to be_redirect
 
           expect(work1.read_users.to_a).to include "foo@bar.com"
@@ -317,8 +319,8 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
                                       user: user)
       end
 
-      let!(:work1) { create(:work, title: ["First of the Assets"], member_of_collections: [collection1], user: user) }
-      let(:work2)  { create(:work, title: ["Second of the Assets"], user: user) }
+      let(:work1) { create(:work, title: ["First of the Assets"], member_of_collections: [collection1], user: user) }
+      let(:work2) { create(:work, title: ["Second of the Assets"], user: user) }
 
       context 'when user has edit access' do
         before do

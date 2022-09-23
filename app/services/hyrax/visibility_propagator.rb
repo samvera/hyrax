@@ -15,7 +15,11 @@ module Hyrax
       when Hyrax::Resource # Valkyrie
         ResourceVisibilityPropagator.new(source: source)
       else
-        NullVisibilityPropagator.new(source: source)
+        if source.is_a?(ActiveFedora::Base) && source.respond_to?(:work?) && source.work? # Wings
+          FileSetVisibilityPropagator.new(source: source)
+        else
+          NullVisibilityPropagator.new(source: source)
+        end
       end
     end
 
