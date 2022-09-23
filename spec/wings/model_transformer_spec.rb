@@ -359,7 +359,7 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
       let(:file_set) { create(:file_set) }
 
       it 'does not set file id in file set resource' do
-        expect(factory.build.original_file_id).to be_empty
+        expect(factory.build.original_file_id).to be_nil
       end
     end
   end

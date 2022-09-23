@@ -234,7 +234,7 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
       # end
 
       it "does not have version info indexed" do
-        expect(subject['original_file_id_ssi']).to eq file_set.original_file_id
+        expect(subject['original_file_id_ssi']).to eq file_set.original_file_id.to_s
       end
     end
   end
