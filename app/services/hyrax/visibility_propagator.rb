@@ -15,13 +15,17 @@ module Hyrax
       when Hyrax::Resource # Valkyrie
         ResourceVisibilityPropagator.new(source: source)
       else
-        NullVisibilityPropogator.new(source: source)
+        if source.is_a?(ActiveFedora::Base) && source.respond_to?(:work?) && source.work? # Wings
+          FileSetVisibilityPropagator.new(source: source)
+        else
+          NullVisibilityPropagator.new(source: source)
+        end
       end
     end
 
     ##
-    # Provides a null/logging implementation of the visibility propogator.
-    class NullVisibilityPropogator
+    # Provides a null/logging implementation of the visibility propagator.
+    class NullVisibilityPropagator
       ##
       # @!attribute [rw] source
       #   @return [#visibility]
@@ -36,8 +40,8 @@ module Hyrax
       ##
       # @return [void]
       # @raise [RuntimeError] if we're in development mode
-      def propogate
-        message =  "Tried to propogate visibility to members of #{source} " \
+      def propagate
+        message =  "Tried to propagate visibility to members of #{source} " \
                    "but didn't know what kind of object it is. Model " \
                    "name #{source.try(:model_name)}. Called from #{caller[0]}."
 

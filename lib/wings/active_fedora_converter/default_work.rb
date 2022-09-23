@@ -60,7 +60,13 @@ module Wings
                    foreign_key: :target }
         end
 
-        { predicate: predicate }
+        { predicate: predicate, multiple: multiple? }
+      end
+
+      ##
+      # @return [Boolean]
+      def multiple?
+        @key.respond_to?(:rule) && (@key.rule&.options&.dig(:args)&.include?(Array) || @key.rule&.options&.dig(:args)&.include?(Set))
       end
 
       ##
@@ -142,6 +148,18 @@ module Wings
 
       def to_global_id
         GlobalID.create(valkyrie_class.new(id: id))
+      end
+
+      def file_sets
+        members.select(&:file_set?)
+      end
+
+      def work?
+        true
+      end
+
+      def pcdm_object?
+        true
       end
     end
   end
