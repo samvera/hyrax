@@ -65,7 +65,7 @@ module Hyrax
           if object.try(:use_nested_reindexing?)
             yield(id, parent_ids) if parent_ids.empty?
           else
-            Rails.logger.info "Re-indexing via to_solr ... #{id}"
+            Hyrax.logger.info "Re-indexing via to_solr ... #{id}"
             Hyrax::SolrService.add(object.to_solr, commit: true)
           end
         end

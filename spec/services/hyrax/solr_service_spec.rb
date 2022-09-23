@@ -117,7 +117,7 @@ RSpec.describe Hyrax::SolrService do
 
     it "warns about not passing rows" do
       allow(mock_conn).to receive(:get).and_return(stub_result)
-      expect(Rails.logger).to receive(:warn).with(/^Calling Hyrax::SolrService\.get without passing an explicit value for ':rows' is not recommended/)
+      expect(Hyrax.logger).to receive(:warn).with(/^Calling Hyrax::SolrService\.get without passing an explicit value for ':rows' is not recommended/)
       described_class.query('querytext')
     end
 

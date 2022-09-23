@@ -106,7 +106,7 @@ RSpec.describe Hyrax::CollectionTypes::CreateService do
       end
 
       it 'logs and raises an error' do
-        expect(Rails.logger)
+        expect(Hyrax.logger)
           .to receive(:error)
           .with a_string_starting_with('Participants not created')
 

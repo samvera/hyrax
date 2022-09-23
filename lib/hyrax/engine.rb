@@ -68,7 +68,7 @@ module Hyrax
 
       can_persist = can_connect && begin
         Hyrax.config.persist_registered_roles!
-        Rails.logger.info("Hyrax::Engine.after_initialize - persisting registered roles!")
+        Hyrax.logger.info("Hyrax::Engine.after_initialize - persisting registered roles!")
         true
                                    rescue ActiveRecord::StatementInvalid
                                      false
@@ -78,7 +78,7 @@ module Hyrax
         message = "Hyrax::Engine.after_initialize - unable to persist registered roles.\n"
         message += "It is expected during the application installation - during integration tests, rails install.\n"
         message += "It is UNEXPECTED if you are booting up a Hyrax powered application via `rails server'"
-        Rails.logger.info(message)
+        Hyrax.logger.info(message)
       end
 
       # Force CatalogController to use our SearchState class, which has an important

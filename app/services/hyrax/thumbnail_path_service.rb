@@ -31,7 +31,7 @@ module Hyrax
         return object if object.thumbnail_id == object.id
         Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: object.thumbnail_id)
       rescue Valkyrie::Persistence::ObjectNotFoundError, Hyrax::ObjectNotFoundError
-        Rails.logger.error("Couldn't find thumbnail #{object.thumbnail_id} for #{object.id}")
+        Hyrax.logger.error("Couldn't find thumbnail #{object.thumbnail_id} for #{object.id}")
         nil
       end
 

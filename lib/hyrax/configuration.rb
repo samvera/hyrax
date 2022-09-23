@@ -71,6 +71,19 @@ module Hyrax
     DEFAULT_ACTIVE_WORKFLOW_NAME = 'default'
     private_constant :DEFAULT_ACTIVE_WORKFLOW_NAME
 
+    # Set the default logger for Hyrax.
+    attr_writer :logger
+
+    ##
+    # @return [Logger]
+    def logger
+      @logger ||= if defined?(Rails)
+                    Rails.logger
+                  else
+                    Valkyrie.logger
+                  end
+    end
+
     # @api public
     # When an admin set is created, we need to activate a workflow.
     # The :default_active_workflow_name is the name of the workflow we will activate.
@@ -643,7 +656,7 @@ module Hyrax
       # overriding the value in0 their config unless it's already
       # flipped to false
       if ENV.fetch('SERVER_SOFTWARE', '').match(/Apache.*Phusion_Passenger/).present?
-        Rails.logger.warn('Cannot enable realtime notifications atop Passenger + Apache. Coercing `Hyrax.config.realtime_notifications` to `false`. Set this value to `false` in config/initializers/hyrax.rb to stop seeing this warning.') unless @realtime_notifications == false
+        Hyrax.logger.warn('Cannot enable realtime notifications atop Passenger + Apache. Coercing `Hyrax.config.realtime_notifications` to `false`. Set this value to `false` in config/initializers/hyrax.rb to stop seeing this warning.') unless @realtime_notifications == false
         @realtime_notifications = false
       end
       return @realtime_notifications unless @realtime_notifications.nil?

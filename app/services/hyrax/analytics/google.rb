@@ -27,7 +27,7 @@ module Hyrax
             filename = Rails.root.join('config', 'analytics.yml')
             yaml = YAML.safe_load(ERB.new(File.read(filename)).result)
             unless yaml
-              Rails.logger.error("Unable to fetch any keys from #{filename}.")
+              Hyrax.logger.error("Unable to fetch any keys from #{filename}.")
               return new({})
             end
             config = yaml.fetch('analytics')&.fetch('google', nil)

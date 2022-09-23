@@ -22,6 +22,9 @@ Hyrax.config do |config|
   # avoid clashes if you plan to use the default (dct:hasFormat) for other relations.
   # config.rendering_predicate = ::RDF::DC.hasFormat
 
+  # Configure the Logger for the Hyrax application; by default it is the Rails.logger.
+  # config.logger = Rails.logger
+
   # Email recipient of messages sent via the contact form
   # config.contact_email = "repo-admin@example.org"
 
@@ -260,7 +263,7 @@ Hyrax.config do |config|
     if defined? BrowseEverything
       config.browse_everything = BrowseEverything.config
     else
-      Rails.logger.warn "BrowseEverything is not installed"
+      Hyrax.logger.warn "BrowseEverything is not installed"
     end
   rescue Errno::ENOENT
     config.browse_everything = nil

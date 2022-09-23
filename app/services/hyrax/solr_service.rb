@@ -75,7 +75,7 @@ module Hyrax
     # Wraps get by default
     # @return [Array<SolrHit>] the response docs wrapped in SolrHit objects
     def query(query, **args)
-      Rails.logger.warn rows_warning unless args.key?(:rows)
+      Hyrax.logger.warn rows_warning unless args.key?(:rows)
       method = args.delete(:method) || :get
 
       result = case method

@@ -28,7 +28,7 @@ module Hyrax
                                       'json.nl': 'map',
                                       omitHeader: 'true')
         unless json
-          Rails.logger.error "Unable to reach TermsComponent via Solr connection. Is it enabled in your solr config?"
+          Hyrax.logger.error "Unable to reach TermsComponent via Solr connection. Is it enabled in your solr config?"
           return []
         end
 
