@@ -45,7 +45,7 @@ Hyrax is a front-end based on the robust [Samvera](http://samvera.org) framework
 
 # Help
 
-The Samvera community is here to help. Please see our [support guide](./.github/SUPPORT.md).
+The Samvera community is here to help. Please see our [support guide](../.github/SUPPORT.md).
 
 # Getting started
 
