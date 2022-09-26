@@ -140,7 +140,17 @@ If any of the services fail to start on `docker-compose up`, try clearing out an
 
 Build docker images for Koppie: `docker compose -f docker-compose-koppie.yml build`
 Start Koppie: `docker compose -f docker-compose-koppie.yml up`
-Load `http://localhost:3001` in a browser.
+
+This starts containers for:
+
+  - a `hyrax` test application (`.koppie`);
+  - Solr
+  - Postgresql
+  - Redis
+  - Memcached
+  - SideKiq (for background jobs)
+
+It also runs database migrations. This will also bring up a development application on `http://localhost:3001`.
 
 To stop the containers for the Hyrax-based application, type <kbd>Ctrl</kbd>+<kbd>c</kbd>. To restart the containers run `docker compose -f docker-compose-koppie.yml up`.
 
