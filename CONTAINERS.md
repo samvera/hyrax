@@ -5,16 +5,22 @@ Our goal is to provide a practical, reusable reference environment for applicati
 
 The [Hyrax Engine Development](#hyrax-engine-development) is further along than the [Docker Image for Hyrax-based Applications](#docker-image-for-hyrax-based-applications) which is further along than [Deploying to Production](#deploying-to-production).
 
-See the [Troubleshooting](#troubleshooting) section if you encounter any issues.
+There are two options for development environments to run: 
+
+[Dassie](#dassie-internal-test-app-with-activefedora) is the default internal test app that will run an ActiveFedora-based Hyrax web application using Fedora 4 as the backend storage. See [Troubleshooting Dassie](#troubleshooting-dassie) if you encounter any issues.
+
+[Koppie](#koppie-internal-test-app-with-valkyrie-connector-to-postgres) is a newer internal test app that is a Valkyrie-based Hyrax web application that runs with PostGres as backend storage. It does not run ActiveFedora or use Fedora 4. See [Troubleshooting Koppie](#troubleshooting-koppie) if you encounter any issues.
 
 <!-- NOTE: This title is referenced in the top-level README.md. Keep that in mind if you change it. -->
-## Hyrax Engine Development
+## Hyrax Engine Development 
 
 We support a `docker-compose`-based development environment for folks working on
 the Hyrax engine. This environment is substantially more like a Hyrax production
 setup than the older `fedora_wrapper`/`solr_wrapper` approach.
 
 First, make sure you have installed [Docker](https://www.docker.com/).  Then clone [the Hyrax repository](https://github.com/samvera/hyrax).
+
+### Dassie internal test app with ActiveFedora
 
 Within your cloned repository, tell Docker to get started installing your development environment:
 
@@ -39,7 +45,7 @@ To stop the containers for the Hyrax-based application, type <kbd>Ctrl</kbd>+<kb
 
 _**Note:** Starting and stopping Docker in this way will preserve your data between restarts._
 
-### Code Changes and Testing
+#### Code Changes and Testing
 
 With `docker-compose up` running, any changes you make to your cloned Hyrax code-base should show up in `http://localhost:3000`; There may be cases where you need to restart your test application (e.g. stop the containers and start them up again).
 
@@ -68,7 +74,7 @@ _**Note:**_ The `bundle exec rspec` portion of the command runs the whole test s
 
 _**Note**: The `/app/samvera/hyrax-webapp` is analogous to the `.internal_test_app` that we generate as part of the Hyrax engine Continuous Integration._
 
-### The Docker Container Named "app"
+#### The Docker Container Named "app"
 
 As a developer, you may need to run commands against the Hyrax-based application and/or the Hyrax engine.  Examples
 of those commands are `rails db:migrate` and `rspec`.  You would run `rails db:migrate` on the Hyrax-based
@@ -92,7 +98,7 @@ docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rake -T"
 
 In the two examples, note the difference in the `-w` switch. In the first case, it's referencing the Hyrax-based application. In the latter case, it's referencing the Hyrax engine.
 
-### Debugging
+#### Debugging
 
 If you are interested in running Hyrax in debug mode, this requires a somewhat different approach than running Hyrax bare-metal.  You need to use `docker attach` to debug the running docker instance.
 
@@ -102,9 +108,9 @@ If you are interested in running Hyrax in debug mode, this requires a somewhat d
 
 This advice comes from [Debugging Rails App With Docker Compose: How to use Byebug in a dockerized rails app](https://medium.com/gogox-technology/debugging-rails-app-with-docker-compose-39a3767962f4).
 
-### Troubleshooting
+#### Troubleshooting Dassie
 
-#### Bad Address SOLR
+##### Bad Address SOLR
 
 With `docker-compose up` running, if you see the following, then there may be issues with file permissions:
 
@@ -122,13 +128,41 @@ cp: cannot create directory '/var/solr/data/hyrax_test': Permission denied
 
 The solution that appears to work is to `docker-compose down --volumes`; This will tear down the docker instance, and remove the volumes.  You can then run `docker-compose up` to get back to work.  _**Note:** the `--volumes` switch will remove all custom data._
 
-#### Errors building the Docker image
+##### Errors building the Docker image
 
 If you encounter errors running `docker-compose build`, try running `bundle update` in `./hyrax` as well as within `./hyrax/.dassie`. That can help clear up the problem of a failure to build a particular gem.
 
-#### Containers do not all start
+##### Containers do not all start
 
 If any of the services fail to start on `docker-compose up`, try clearing out any `Gemfile.lock` files that might exist in `./hyrax` or `./hyrax/.dassie` and run `docker-compose build` again, then `docker-compose up` again.
+
+### Koppie Internal Test App with Valkyrie Connector to Postgres
+
+Build docker images for Koppie: `docker compose -f docker-compose-koppie.yml build`
+Start Koppie: `docker compose -f docker-compose-koppie.yml up`
+Load `http://localhost:3001` in a browser.
+
+To stop the containers for the Hyrax-based application, type <kbd>Ctrl</kbd>+<kbd>c</kbd>. To restart the containers run `docker compose -f docker-compose-koppie.yml up`.
+
+_**Note:** Starting and stopping Docker in this way will preserve your data between restarts._
+
+Koppie runs as a different project than Dassie, so it should be possible to run both concurrently (assuming your workstation has enough RAM).
+
+#### Run rails console on Koppie
+
+Currently Koppie should not be used for running specs. See [Code Changes and Testing](#code-changes-and-testing) under Dassie instead until the specs can be updated for a valkyrie only environment.
+
+```sh
+docker compose -f docker-compose-koppie.yml up
+docker compose -f docker-compose-koppie.yml exec app bundle exec rails c
+```
+#### Troubleshooting Koppie
+
+If the postgres service logs show permissions errors, there may be old data from alternate versions of the postgres image. The old data volumes can deleted by using `docker compose -f docker-compose-koppie.yml down -v`
+
+Errors such as `exec /app/samvera/hyrax-entrypoint.sh: no such file or directory` in the app, sidekiq and db_migrate services may indicate an outdated cached hyrax-base image layer was used to build the koppie image. Try `docker compose -f docker-compose-koppie.yml build --no-cache`  to rebuild all the image layers.
+
+It was also seen on a Windows 10 host and was resolved by using the git ``--core.autocrlf` option when cloning the repo.
 
 <!-- NOTE: This title is referenced in the top-level documentation/developing-your-hyrax-based-app.md. Keep that in mind if you change it. -->
 ## Docker Image for Hyrax-based Applications
