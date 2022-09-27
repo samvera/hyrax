@@ -35,14 +35,19 @@ module Hyrax
     def original_file
       if file_set.original_file_id
         # Always just use original_file_id if it is defined.
-        query_service.find_by(id: file_set.original_file_id)
+        #
+        # NOTE: This needs to use :find_file_metadata_by, not :find_by, because
+        # at time of writing the latter does not work in Wings.
+        query_service.custom_queries.find_file_metadata_by(id: file_set.original_file_id)
       else
         # Cache the fallback to avoid needing to do this query twice.
+        #
+        # See NOTE above regarding use of :find_file_metadata_by.
         @original_file ||= begin
                              query_service.custom_queries.find_original_file(file_set: file_set)
                            rescue Valkyrie::Persistence::ObjectNotFoundError
                              fallback_id = file_set.file_ids.first
-                             query_service.find_by(id: fallback_id) if fallback_id
+                             query_service.custom_queries.find_file_metadata_by(id: fallback_id) if fallback_id
                            end
       end
     end
