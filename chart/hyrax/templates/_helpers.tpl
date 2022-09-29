@@ -163,8 +163,12 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end }}
 {{- end -}}
 
+{{- define "hyrax.solr.port" -}}
+{{- .Values.externalSolrPort | default "8983" }}
+{{- end -}}
+
 {{- define "hyrax.solr.url" -}}
-{{- printf "http://%s:%s@%s:%s/solr/%s" (include "hyrax.solr.username" .) (include "hyrax.solr.password" .) (include "hyrax.solr.host" .) "8983" (include "hyrax.solr.collectionName" .)  -}}
+{{- printf "http://%s:%s@%s:%s/solr/%s" (include "hyrax.solr.username" .) (include "hyrax.solr.password" .) (include "hyrax.solr.host" .) (include "hyrax.solr.port" .) (include "hyrax.solr.collectionName" .)  -}}
 {{- end -}}
 
 {{- define "hyrax.zk.fullname" -}}
