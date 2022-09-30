@@ -22,6 +22,7 @@ loadSolrConfigSet: true
 #   ignored if `solr.enabled` is true
 solrExistingSecret: ""
 externalSolrHost: ""
+externalSolrPort: ""
 externalSolrUser: ""
 externalSolrPassword: ""
 externalSolrCollection: "hyrax"
