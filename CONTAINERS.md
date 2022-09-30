@@ -172,7 +172,7 @@ If the postgres service logs show permissions errors, there may be old data from
 
 Errors such as `exec /app/samvera/hyrax-entrypoint.sh: no such file or directory` in the app, sidekiq and db_migrate services may indicate an outdated cached hyrax-base image layer was used to build the koppie image. Try `docker compose -f docker-compose-koppie.yml build --no-cache`  to rebuild all the image layers.
 
-It was also seen on a Windows 10 host and was resolved by using the git ``--core.autocrlf` option when cloning the repo.
+It was also seen on a Windows 10 host and was resolved by using the git `--core.autocrlf` option when cloning the repo.
 
 <!-- NOTE: This title is referenced in the top-level documentation/developing-your-hyrax-based-app.md. Keep that in mind if you change it. -->
 ## Docker Image for Hyrax-based Applications
