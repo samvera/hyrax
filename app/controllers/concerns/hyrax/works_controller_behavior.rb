@@ -189,7 +189,8 @@ module Hyrax
           'work_resource.add_to_parent' => { parent_id: params[:parent_id], user: current_user },
           'work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: params[hash_key_for_curation_concern][:file_set] },
           'change_set.set_user_as_depositor' => { user: current_user },
-          'work_resource.change_depositor' => { user: ::User.find_by_user_key(form.on_behalf_of) }
+          'work_resource.change_depositor' => { user: ::User.find_by_user_key(form.on_behalf_of) },
+          'work_resource.save_acl' => { permissions_params: form.input_params["permissions"] }
         )
         .call(form)
       @curation_concern = result.value_or { return after_create_error(transaction_err_msg(result)) }
@@ -202,7 +203,8 @@ module Hyrax
       result =
         transactions['change_set.update_work']
         .with_step_args('work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: params[hash_key_for_curation_concern][:file_set] },
-                        'work_resource.update_work_members' => { work_members_attributes: work_members_attributes })
+                        'work_resource.update_work_members' => { work_members_attributes: work_members_attributes },
+                        'work_resource.save_acl' => { permissions_params: form.input_params["permissions"] })
         .call(form)
       @curation_concern = result.value_or { return after_update_error(transaction_err_msg(result)) }
       after_update_response
