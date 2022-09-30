@@ -219,8 +219,6 @@ module Hyrax
         process_branding
 
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless Hyrax::CollectionType.for(collection: @collection).discoverable?
-        # we don't have to reindex the full graph when updating collection
-        @collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
         if @collection.update(collection_params.except(:members))
           after_update_response
         else

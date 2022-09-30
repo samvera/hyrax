@@ -289,56 +289,5 @@ RSpec.describe ::Collection, type: :model do
         expect { build(:collection_lw) }.not_to change { Hyrax::PermissionTemplateAccess.count }
       end
     end
-
-    describe 'when including nesting indexing', with_nested_reindexing: true do
-      # Nested indexing requires that the user's permissions be saved
-      # on the Fedora object... if simply in local memory, they are
-      # lost when the adapter pulls the object from Fedora to reindex.
-      let(:user) { create(:user) }
-      let(:collection) { create(:collection, user: user) }
-
-      it 'will authorize the creating user' do
-        expect(user.can?(:edit, collection)).to be true
-      end
-    end
-
-    describe 'when including with_nesting_attributes' do
-      let(:collection_type) { create(:collection_type) }
-      let(:blacklight_config) { CatalogController.blacklight_config }
-      let(:repository) { Blacklight::Solr::Repository.new(blacklight_config) }
-      let(:current_ability) { instance_double(Ability, admin?: true) }
-      let(:scope) { double('Scope', can?: true, current_ability: current_ability, repository: repository, blacklight_config: blacklight_config, search_state_class: nil) }
-
-      context 'when building a collection' do
-        let(:coll123) do
-          build(:collection_lw,
-                id: 'Collection123',
-                collection_type_gid: collection_type.to_global_id,
-                with_nesting_attributes:
-                { ancestors: ['Parent_1'],
-                  parent_ids: ['Parent_1'],
-                  pathnames: ['Parent_1/Collection123'],
-                  depth: 2 })
-        end
-        let(:nesting_attributes) do
-          Hyrax::Collections::NestedCollectionQueryService::NestingAttributes.new(id: coll123.id, scope: scope)
-        end
-
-        it 'will persist a queryable solr document with the given attributes' do
-          expect(nesting_attributes.id).to eq('Collection123')
-          expect(nesting_attributes.parents).to eq(['Parent_1'])
-          expect(nesting_attributes.pathnames).to eq(['Parent_1/Collection123'])
-          expect(nesting_attributes.ancestors).to eq(['Parent_1'])
-          expect(nesting_attributes.depth).to eq(2)
-        end
-      end
-    end
-  end
-
-  describe '#update_nested_collection_relationship_indices', :with_nested_reindexing do
-    it 'will be called once for the Collection resource and once for the nested ACL permission resource' do
-      expect(Samvera::NestingIndexer).to receive(:reindex_relationships).exactly(2).times.with(id: kind_of(String), extent: kind_of(String))
-      collection.save!
-    end
   end
 end

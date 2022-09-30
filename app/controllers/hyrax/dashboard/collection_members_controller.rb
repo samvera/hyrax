@@ -30,7 +30,6 @@ module Hyrax
         after_update_error(err_msg) if err_msg.present?
         return if err_msg.present?
 
-        @collection.try(:reindex_extent=, Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX)
         begin
           Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection_id: collection_id,
                                                                          new_member_ids: batch_ids,

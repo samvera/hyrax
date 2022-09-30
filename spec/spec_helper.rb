@@ -145,8 +145,6 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
     # Noid minting causes extra LDP requests which slow the test suite.
     Hyrax.config.enable_noids = false
-    # Don't use the nested relationship reindexer. Null is much faster
-    Hyrax.config.nested_relationship_reindexer = ->(id:, extent:) {}
     # setup a test group service
     User.group_service = TestHydraGroupService.new
     # Set a geonames username; doesn't need to be real.
@@ -335,16 +333,5 @@ RSpec.configure do |config|
       allow(Hyrax.config).to receive(:disable_wings).and_return(true)
       hide_const("Wings") # disable_wings=true removes the Wings constant
     end
-  end
-
-  # turn on the default nested reindexer; we use a null implementation for most
-  # tests because it's (supposedly?) much faster. why is it faster but doesn't
-  # impact most tests? maybe we should fix this in the implementation instead?
-  config.around(:example, :with_nested_reindexing) do |example|
-    original_indexer = Hyrax.config.nested_relationship_reindexer
-    Hyrax.config.nested_relationship_reindexer =
-      Hyrax.config.default_nested_relationship_reindexer
-    example.run
-    Hyrax.config.nested_relationship_reindexer = original_indexer
   end
 end
