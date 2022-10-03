@@ -10,7 +10,7 @@ module Hyrax
   class VersioningService
     ##
     # @!attribute [rw] resource
-    #   @return [ActiveFedora::File | Hyrax::FileMetadata]
+    #   @return [ActiveFedora::File | Hyrax::FileMetadata | NilClass]
     attr_accessor :resource
 
     ##
@@ -19,20 +19,22 @@ module Hyrax
     attr_reader :storage_adapter
 
     ##
-    # @param resource [ActiveFedora::File | Hyrax::FileMetadata]
+    # @param resource [ActiveFedora::File | Hyrax::FileMetadata | NilClass]
     def initialize(resource:, storage_adapter: Hyrax.storage_adapter)
       @storage_adapter = storage_adapter
       self.resource = resource
     end
 
     ##
-    # Returns an array of versions for the file associated with this
+    # Returns an array of versions for the resource associated with this
     # Hyrax::VersioningService.
     #
-    # If the file is a Hyrax::FileMetadata and versioning is not supported in
-    # the storage adapter, an empty array will be returned.
+    # If the resource is nil, or if it is a Hyrax::FileMetadata and versioning
+    # is not supported in the storage adapter, an empty array will be returned.
     def versions
-      if resource.is_a? Hyrax::FileMetadata
+      if resource.nil?
+        []
+      elsif resource.is_a?(Hyrax::FileMetadata)
         if storage_adapter.try(:"supports?", :versions)
           storage_adapter.find_versions(id: resource.file_identifier).to_a
         else
@@ -54,6 +56,8 @@ module Hyrax
     # Returns the file ID of the latest version of the file associated with this
     # Hyrax::VersioningService, or the ID of the file resource itself if no
     # latest version is defined.
+    #
+    # If the resource is nil, this method returns an empty string.
     def versioned_file_id
       latest = latest_version
       if latest
@@ -62,8 +66,12 @@ module Hyrax
         else
           Hyrax.config.translate_uri_to_id.call(latest.uri)
         end
+      elsif resource.nil?
+        ""
+      elsif resource.is_a?(Hyrax::FileMetadata)
+        resource.file_identifier
       else
-        resource.is_a?(Hyrax::FileMetadata) ? resource.file_identifier : resource.id
+        resource.id
       end
     end
 
