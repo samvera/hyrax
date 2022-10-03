@@ -24,7 +24,7 @@ module Hyrax
                       else
                         Hyrax::FileSetFileService.new(file_set: file_set).original_file
                       end
-      new(original_file ? Hyrax::VersioningService.new(resource: original_file).versions : [])
+      new(Hyrax::VersioningService.new(resource: original_file).versions)
     rescue NoMethodError
       raise ArgumentError
     end
