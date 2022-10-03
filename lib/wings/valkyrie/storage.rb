@@ -73,7 +73,7 @@ module Wings
             version_graph.query([uri, RDF::Vocab::Fcrepo4.created, :created])
                          .first_object
                          .object
-          Version.new(cast_to_valkyrie_id(uri.to_s), timestamp, self)
+          Version.new(id: cast_to_valkyrie_id(uri.to_s), created: timestamp, adapter: self)
         end.sort
       end
 
@@ -86,13 +86,17 @@ module Wings
       # this implementation uses an orderable {#version_token}. in practice
       # the token is the fcrepo created date for the version, as extracted from
       # the versions graph.
-      Version = Struct.new(:id, :version_token, :adapter) do
+      Version = Struct.new("Version", :id, :created, :adapter, keyword_init: true) do
         include Comparable
 
         ##
         # @return [#read]
         def io
           adapter.find_by(id: id)
+        end
+
+        def version_token
+          created
         end
 
         def <=>(other)
