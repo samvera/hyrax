@@ -70,5 +70,9 @@ module Hyrax
     def file_set?
       true
     end
+
+    def to_presenter
+      Hyrax::SearchService.new(config: CatalogController.blacklight_config).fetch(id).last
+    end
   end
 end
