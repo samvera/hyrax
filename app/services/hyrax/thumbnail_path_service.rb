@@ -30,7 +30,7 @@ module Hyrax
       def fetch_thumbnail(object)
         return object if object.thumbnail_id == object.id ||
                          object.try(:file_ids)&.detect { |fid| fid == object.thumbnail_id }
-        Hyrax.query_service.find_by(id: object.thumbnail_id)
+        Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: object.thumbnail_id)
       rescue Valkyrie::Persistence::ObjectNotFoundError, Hyrax::ObjectNotFoundError
         Hyrax.logger.error("Couldn't find thumbnail #{object.thumbnail_id} for #{object.id}")
         nil
@@ -39,12 +39,8 @@ module Hyrax
       # @return the network path to the thumbnail
       # @param [FileSet] thumbnail the object that is the thumbnail
       def thumbnail_path(thumbnail)
-        case thumbnail
-        when Hyrax::Resource
-          Hyrax::Engine.routes.url_helpers.download_path(thumbnail.id, use: 'thumbnail_file')
-        else
-          Hyrax::Engine.routes.url_helpers.download_path(thumbnail.id, file: 'thumbnail')
-        end
+        Hyrax::Engine.routes.url_helpers.download_path(thumbnail.id,
+                                                       file: 'thumbnail')
       end
 
       def default_image
