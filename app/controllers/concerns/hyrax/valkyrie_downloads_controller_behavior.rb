@@ -6,30 +6,23 @@ module Hyrax
     def show_valkyrie
       file_set_id = params.require(:id)
       file_set = Hyrax.query_service.find_by(id: file_set_id)
-      send_file_contents(file_set)
+      send_file_contents_valkyrie(file_set)
     end
 
     private
 
-    def authorize_download!
-      authorize!(:download, params[:id])
-    rescue CanCan::AccessDenied, Blacklight::Exceptions::RecordNotFound
-      unauthorized_image = Rails.root.join("app", "assets", "images", "unauthorized.png")
-      send_file unauthorized_image, status: :unauthorized
-    end
-
-    def send_file_contents(file_set)
+    def send_file_contents_valkyrie(file_set)
       response.headers["Accept-Ranges"] = "bytes"
       self.status = 200
       use = params.fetch(:use, :original_file).to_sym
       file_metadata = find_file_metadata(file_set: file_set, use: use)
       file = Hyrax.storage_adapter.find_by(id: file_metadata.file_identifier)
-      prepare_file_headers(metadata: file_metadata, file: file)
+      prepare_file_headers_valkyrie(metadata: file_metadata, file: file)
       file.rewind
       self.response_body = file.read
     end
 
-    def prepare_file_headers(metadata:, file:, inline: false)
+    def prepare_file_headers_valkyrie(metadata:, file:, inline: false)
       inline_display = ActiveRecord::Type::Boolean.new.cast(params.fetch(:inline, inline))
       response.headers["Content-Disposition"] = "#{inline_display ? 'inline' : 'attachment'}; filename=#{metadata.original_filename}"
       response.headers["Content-Type"] = metadata.mime_type
@@ -37,10 +30,6 @@ module Hyrax
       # Prevent Rack::ETag from calculating a digest over body
       response.headers["Last-Modified"] = metadata.updated_at.utc.strftime("%a, %d %b %Y %T GMT")
       self.content_type = metadata.mime_type
-    end
-
-    def content_options(file_metadata)
-      { disposition: "attachment", type: file_metadata.mime_type, filename: file_metadata.original_filename }
     end
 
     def find_file_metadata(file_set:, use: :original_file)
