@@ -1,8 +1,3 @@
-<% depositor = f.object.depositor %>
-<% public_perm = f.object.permissions.map { |perm| perm.access if perm.agent_name == "public"}.compact.first %>
-<% public_perm = true if params[:controller] == 'batch' %>
-<% registered_perm = f.object.permissions.map { |perm| perm.access if perm.agent_name == "registered"}.compact.first %>
-
 <h2 id="permissions_display"><% if params[:controller] == 'batch' %><%= t('.bulk') %> <% end %><%= t('.header') %> <% if params[:controller] == 'batch' %>
       <small><%= t('.applied_to') %></small><% end %>
 </h2>
