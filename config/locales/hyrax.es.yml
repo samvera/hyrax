@@ -601,6 +601,7 @@ es:
         legend_html: Miniatura
       form_visibility_component:
         visibility: La visibilidad
+        subtitle_html: <small>¿Quién debería poder ver o descargar este contenido?</small>
       inspect_work:
         back_to: De regreso
         entity_id: ID de entidad
