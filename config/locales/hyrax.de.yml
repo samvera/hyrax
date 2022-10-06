@@ -557,7 +557,7 @@ de:
           actions: Aktion
           title: Sammlungstitel
       form_permission:
-        visibility: Sichtbarkeit <small> Wer sollte diesen Inhalt anzeigen oder herunterladen können? </ Small>
+        visibility: Sichtbarkeit <small> Wer sollte diesen Inhalt anzeigen oder herunterladen können? </small>
       form_permission_under_embargo:
         help_html: "<strong>Diese Arbeit ist unter Embargo.</strong> Hier können Sie die Einstellungen des Embargos ändern, oder Sie können den %{edit_link} besuchen, um ihn zu deaktivieren."
         legend_html: Sichtbarkeit <small>Wer sollte in der Lage sein, diesen Inhalt anzusehen oder herunterzuladen?</small>
@@ -596,6 +596,7 @@ de:
         legend_html: Miniaturansicht
       form_visibility_component:
         visibility: Sichtbarkeit
+        subtitle_html: <small>Wer sollte diesen Inhalt anzeigen oder herunterladen können?</small>
       inspect_work:
         back_to: Zurück zu
         entity_id: Mandanten-ID
