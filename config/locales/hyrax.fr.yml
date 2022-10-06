@@ -563,7 +563,7 @@ fr:
           actions: action
           title: Titre de la collection
       form_permission:
-        visibility: Visibilité <small> Qui devrait être en mesure d’afficher ou de télécharger ce contenu? </ Small>
+        visibility: Visibilité <small> Qui devrait être en mesure d’afficher ou de télécharger ce contenu? </small>
       form_permission_under_embargo:
         help_html: "<strong>Ce travail est sous embargo.</strong> Vous pouvez modifier les paramètres de l'embargo ici, ou vous pouvez visiter le %{edit_link} pour le désactiver."
         legend_html: Visibilité <small>Qui devrait pouvoir afficher ou télécharger ce contenu?</small>
@@ -602,6 +602,7 @@ fr:
         legend_html: La vignette
       form_visibility_component:
         visibility: Visibilité
+        subtitle_html: <small>Qui devrait être en mesure d’afficher ou de télécharger ce contenu?</small>
       inspect_work:
         back_to: Retour à
         entity_id: ID d'entité

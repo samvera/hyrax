@@ -588,6 +588,7 @@ en:
         legend_html: Thumbnail
       form_visibility_component:
         visibility: Visibility
+        subtitle_html: <small>Who should be able to view or download this content?</small>
       inspect_work:
         back_to: Back to
         entity_id: Entity ID

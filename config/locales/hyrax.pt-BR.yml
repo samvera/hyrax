@@ -596,6 +596,7 @@ pt-BR:
         legend_html: Miniatura
       form_visibility_component:
         visibility: Visibilidade
+        subtitle_html: <small>Quem deve conseguir visualizar ou baixar este conteúdo?</small>
       inspect_work:
         back_to: De volta a
         entity_id: ID da entidade
