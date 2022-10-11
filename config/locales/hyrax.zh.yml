@@ -599,6 +599,7 @@ zh:
         legend_html: 缩略图
       form_visibility_component:
         visibility: 可见性
+        subtitle_html: <small>谁应该能够查看或下载此内容？</ small>
       inspect_work:
         back_to: 回到
         entity_id: 实体ID

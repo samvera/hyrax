@@ -601,6 +601,7 @@ it:
         legend_html: Thumbnail
       form_visibility_component:
         visibility: Visibilità
+        subtitle_html: <small>Chi dovrebbe essere in grado di visualizzare o scaricare questo contenuto?</small>
       inspect_work:
         back_to: Torna a
         entity_id: ID entità
