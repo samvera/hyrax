@@ -19,6 +19,7 @@ module Hyrax
       # @param user [User]
       # @return [TrueClass]
       def self.create(work, attributes, user)
+        return true if Sipity::Entity.find_by(proxy_for_global_id: work.to_global_id.to_s)
         new(work, attributes, user).create
       end
 
