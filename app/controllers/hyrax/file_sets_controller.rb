@@ -13,6 +13,7 @@ module Hyrax
     before_action do
       blacklight_config.track_search_session = false
     end
+    before_action :presenter
 
     # provides the help_text view method
     helper PermissionsHelper
