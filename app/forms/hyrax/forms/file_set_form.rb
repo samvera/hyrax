@@ -7,6 +7,11 @@ module Hyrax
     class FileSetForm < Hyrax::ChangeSet
       include Hyrax::FormFields(:core_metadata)
 
+      # The fields in +:file_set_metadata+ were hardcoded into this form in a
+      # previous version of Hyrax, but ideally in the future this metadata will
+      # be configurable.
+      include Hyrax::FormFields(:file_set_metadata)
+
       class << self
         ##
         # @return [Array<Symbol>] list of required field names as symbols
@@ -16,20 +21,6 @@ module Hyrax
             .keys.map(&:to_sym)
         end
       end
-
-      property :creator, required: true
-      property :license, required: true
-
-      property :based_near
-      property :contributor
-      property :date_created
-      property :description
-      property :identifier
-      property :keyword
-      property :language
-      property :publisher
-      property :related_url
-      property :subject
 
       property :permissions, virtual: true
       property :visibility, default: VisibilityIntention::PRIVATE
