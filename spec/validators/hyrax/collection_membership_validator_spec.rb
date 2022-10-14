@@ -18,7 +18,7 @@ RSpec.describe Hyrax::CollectionMembershipValidator do
     end
 
     context 'when record is a work form changeset' do
-      let(:form) { Hyrax::Forms::ResourceForm.new(work) }
+      let(:form) { Hyrax::Forms::ResourceForm.for(work) }
       let(:work) { FactoryBot.build(:hyrax_work) }
       let(:mem_of_cols_attrs) { {} }
 
