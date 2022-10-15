@@ -192,7 +192,14 @@ module Hyrax
     def initialize_edit_form
       guard_for_workflow_restriction_on!(parent: parent)
 
-      @version_list = Hyrax::VersionListPresenter.for(file_set: @file_set)
+      case file_set
+      when Hyrax::Resource
+        @form = Hyrax::Forms::ResourceForm.for(file_set)
+        @form.prepopulate!
+      else
+        @form = form_class.new(file_set)
+      end
+      @version_list = Hyrax::VersionListPresenter.for(file_set: file_set)
       @groups = current_user.groups
     end
 

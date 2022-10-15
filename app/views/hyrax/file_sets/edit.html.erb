@@ -27,7 +27,7 @@
             <h2><%= t('.descriptions') %></h2>
             <%= render "form" %>
           </div>
-          <%= render "permission", file_set: curation_concern %>
+          <%= render "permission", file_set: curation_concern, form_object: @form %>
           <%= render "versioning", file_set: curation_concern %>
         </div>
       </div>
