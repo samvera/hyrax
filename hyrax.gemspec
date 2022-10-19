@@ -44,8 +44,8 @@ SUMMARY
   spec.add_dependency 'draper', '~> 4.0'
   spec.add_dependency 'dry-events', '~> 0.2.0'
   spec.add_dependency 'dry-equalizer', '~> 0.2'
+  spec.add_dependency 'dry-monads', '~> 1.5'
   spec.add_dependency 'dry-struct', '~> 1.0'
-  spec.add_dependency 'dry-transaction', '~> 0.11'
   spec.add_dependency 'dry-validation', '~> 1.3'
   spec.add_dependency 'flipflop', '~> 2.3'
   # Pin more tightly because 0.x gems are potentially unstable
