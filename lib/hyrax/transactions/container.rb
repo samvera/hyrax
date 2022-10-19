@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require "dry/transaction"
-require "dry/transaction/operation"
 
 module Hyrax
   module Transactions
