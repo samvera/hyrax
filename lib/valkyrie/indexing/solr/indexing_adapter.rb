@@ -62,7 +62,7 @@ module Valkyrie
             # generator now (if not, the application has bigger problems
             # than this missing configuration)
             bl_index = Blacklight.default_index.connection.uri
-          rescue RuntimeError
+          rescue StandardError
             return {}
           end
 
