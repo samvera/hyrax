@@ -13,11 +13,13 @@ module Hyrax
       file.is_a?(Valkyrie::Resource)
 
     Hyrax.custom_queries.find_file_metadata_by(id: file.id)
-  rescue Hyrax::ObjectNotFoundError, Ldp::BadRequest
+  rescue Hyrax::ObjectNotFoundError, Ldp::BadRequest, Valkyrie::Persistence::ObjectNotFoundError
     Hyrax.logger.debug('Could not find an existing metadata node for file ' \
                        "with id #{file.id}. Initializing a new one")
 
-    FileMetadata.new(file_identifier: file.id, alternative_ids: [file.id])
+    FileMetadata.new(file_identifier: file.id,
+                     alternative_ids: [file.id],
+                     original_filename: File.basename(file.io))
   end
 
   class FileMetadata < Valkyrie::Resource
@@ -65,7 +67,7 @@ module Hyrax
     attribute :label, ::Valkyrie::Types::Set
     attribute :original_filename, ::Valkyrie::Types::String
     attribute :mime_type, ::Valkyrie::Types::String.default(GENERIC_MIME_TYPE)
-    attribute :type, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE].freeze)
+    attribute :type, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE])
 
     # attributes set by fits
     attribute :format_label, ::Valkyrie::Types::Set

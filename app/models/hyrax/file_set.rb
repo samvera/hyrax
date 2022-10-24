@@ -52,14 +52,6 @@ module Hyrax
     end
 
     ##
-    # @return [Valkyrie::ID]
-    # If one is set then return it, otherwise use self as the ID to allow for
-    # derivative generators to find the on-disk path for the thumbnail.
-    def thumbnail_id
-      self.[](:thumbnail_id) || id
-    end
-
-    ##
     # @return [Boolean] true
     def pcdm_object?
       true

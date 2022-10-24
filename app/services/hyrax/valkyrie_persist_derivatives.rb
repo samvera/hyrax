@@ -16,22 +16,25 @@ module Hyrax
     # @param [#read] stream the derivative filestream
     # @param [Hash] directives
     # @option directives [String] :url a url to the file destination
-    def self.call(stream, directives)
-      filepath = URI(directives.fetch(:url)).path
-      fileset_id = fileset_id_from_path(filepath)
-      fileset = Hyrax.metadata_adapter.query_service.find_by(id: fileset_id)
+    def self.call(stream,
+                  directives,
+                  uploader: Hyrax::ValkyrieUpload.new(storage_adapter: Hyrax.config.derivatives_storage_adapter))
+      file_set = fileset_for_directives(directives)
 
       # Valkyrie storage adapters will typically expect an IO-like object that
       # responds to #path -- here we only have a StringIO, so some
       # transformation is in order
-      tmpfile = Tempfile.new(fileset_id, encoding: 'ascii-8bit')
+      tmpfile = Tempfile.new(file_set.id, encoding: 'ascii-8bit')
       tmpfile.write stream.read
 
-      Hyrax.logger.debug "Uploading thumbnail for FileSet #{fileset_id} as #{filepath}"
-      Hyrax.config.derivatives_storage_adapter.upload(
-        file: tmpfile,
-        original_filename: filepath,
-        resource: fileset
+      filename = filename(directives)
+      Hyrax.logger.debug "Uploading thumbnail for FileSet #{file_set.id} as #{filename}"
+
+      uploader.upload(
+        io: tmpfile,
+        filename: filename,
+        file_set: file_set,
+        use: Hyrax::FileMetadata::Use::THUMBNAIL
       )
     end
 
@@ -40,11 +43,19 @@ module Hyrax
     # we want to extract the FileSet id, which in this case would be 9593tv123
     #
     # @param [String] path
-    # @return [String]
-    def self.fileset_id_from_path(path)
-      path.sub(Hyrax.config.derivatives_path.to_s, "")
-          .sub(/-[^\/]+\..*$/, "")
-          .delete("/")
+    # @return [Hyrax::FileSet]
+    def self.fileset_for_directives(directives)
+      path = URI(directives.fetch(:url)).path
+      id = path.sub(Hyrax.config.derivatives_path.to_s, "")
+               .delete('/')
+               .match(/^(.*)-\w*(\.\w+)*$/) { |m| m[1] }
+      raise "Could not extract fileset id from path #{path}" unless id
+
+      Hyrax.metadata_adapter.query_service.find_by(id: id)
+    end
+
+    def self.filename(directives)
+      URI(directives.fetch(:url)).path.split('/').last
     end
   end
 end
