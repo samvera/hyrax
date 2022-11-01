@@ -14,12 +14,29 @@ module Hyrax
     def send_file_contents_valkyrie(file_set)
       response.headers["Accept-Ranges"] = "bytes"
       self.status = 200
-      use = params.fetch(:use, :original_file).to_sym
+      use = params.fetch(:file, :original_file).to_sym
       file_metadata = find_file_metadata(file_set: file_set, use: use)
       file = Hyrax.storage_adapter.find_by(id: file_metadata.file_identifier)
       prepare_file_headers_valkyrie(metadata: file_metadata, file: file)
       file.rewind
-      self.response_body = file.read
+
+      if request.headers['Range']
+        send_range_valkyrie(file: file)
+      else
+        self.response_body = file.read
+      end
+    end
+
+    def send_range_valkyrie(file:)
+      _, range = request.headers['Range'].split('bytes=')
+      from, to = range.split('-').map(&:to_i)
+      to = file.size - 1 unless to
+      length = to - from + 1
+      response.headers['Content-Range'] = "bytes #{from}-#{to}/#{file.size}"
+      response.headers['Content-Length'] = length.to_s
+      self.status = 206
+      file.read from  # Seek to start of requested range
+      self.response_body = file.read length
     end
 
     def prepare_file_headers_valkyrie(metadata:, file:, inline: false)
@@ -33,10 +50,9 @@ module Hyrax
     end
 
     def find_file_metadata(file_set:, use: :original_file)
+      use = :thumbnail_file if use == :thumbnail
       use = Hyrax::FileMetadata::Use.uri_for(use: use)
-
       results = Hyrax.custom_queries.find_many_file_metadata_by_use(resource: file_set, use: use)
-
       results.first || raise(Hyrax::ObjectNotFoundError)
     end
   end
