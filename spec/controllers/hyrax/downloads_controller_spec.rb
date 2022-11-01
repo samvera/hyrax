@@ -5,7 +5,11 @@ RSpec.describe Hyrax::DownloadsController do
   describe '#show' do
     let(:user) { create(:user) }
     let(:file_set) do
-      create(:file_with_work, user: user, content: File.open(fixture_path + '/image.png'))
+      if Hyrax.config.use_valkyrie?
+        FactoryBot.valkyrie_create()
+      else
+        create(:file_with_work, user: user, content: File.open(fixture_path + '/image.png'))
+      end
     end
 
     it 'raises an error if the object does not exist' do
