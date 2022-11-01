@@ -52,6 +52,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Worker Selector labels
+*/}}
+{{- define "hyrax.workerSelectorLabels" -}}
+app.kubernetes.io/name: {{ include "hyrax.name" . }}-worker
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "hyrax.serviceAccountName" -}}
