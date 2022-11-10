@@ -41,7 +41,7 @@ RSpec.describe Hyrax::FileMetadata do
   end
 
   subject(:file_metadata) do
-    described_class.new(id: 'test_id', format_label: 'test_format_label')
+    described_class.new(id: 'test_id', format_label: 'test_format_label', label: 'world.png')
   end
 
   let(:file) { Rack::Test::UploadedFile.new('spec/fixtures/world.png', 'image/png') }
@@ -52,19 +52,17 @@ RSpec.describe Hyrax::FileMetadata do
       .to have_attributes(id: 'test_id',
                           format_label: contain_exactly('test_format_label'),
                           label: contain_exactly('world.png'),
-                          mime_type: 'image/png',
-                          original_filename: 'world.png',
                           type: contain_exactly(described_class::Use::ORIGINAL_FILE))
   end
 
   context 'when saved with a file' do
-    subject(:file_metadata) { Hyrax.custom_queries.find_file_metadata_by(id: file.id) }
+    subject(:file_metadata) { Hyrax.custom_queries.find_file_metadata_by(id: stored_file.id) }
     let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
 
-    let(:file) do
+    let(:stored_file) do
       Hyrax.storage_adapter.upload(resource: file_set,
-                                   file: Tempfile.new('blah'),
-                                   original_filename: 'blah.txt')
+                                   file: file,
+                                   original_filename: 'world.png')
     end
 
     it 'can be changed and saved' do
@@ -72,6 +70,12 @@ RSpec.describe Hyrax::FileMetadata do
 
       expect(Hyrax.persister.save(resource: file_metadata).creator)
         .to contain_exactly('Tove')
+    end
+
+    it 'contains file metadata' do
+      expect(file_metadata)
+        .to have_attributes(mime_type: 'image/png',
+                            original_filename: 'world.png')
     end
   end
 
