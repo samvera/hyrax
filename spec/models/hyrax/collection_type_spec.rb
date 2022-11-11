@@ -189,7 +189,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     end
   end
 
-  describe "collections?", :clean_repo do
+  describe "collections.any?", :clean_repo do
     let(:collection_type) { FactoryBot.create(:collection_type) }
 
     it 'returns true if there are any collections of this collection type' do
