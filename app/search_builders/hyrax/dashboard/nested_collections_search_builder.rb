@@ -28,8 +28,8 @@ module Hyrax
         solr_parameters[:fq] ||= []
         if Hyrax.config.use_solr_graph_for_collection_nesting
           solr_parameters[:fq] += [
-            "-{!graph from=id to=member_of_collection_ids_ssim}id:#{@collection.id}",
-            "-{!graph to=id from=member_of_collection_ids_ssim}id:#{@collection.id}"
+            "-{!graph from=id to=member_of_collection_ids_ssim#{' maxDepth=1' if @nest_direction == :as_parent}}id:#{@collection.id}",
+            "-{!graph to=id from=member_of_collection_ids_ssim#{' maxDepth=1' if @nest_direction == :as_child}}id:#{@collection.id}"
           ]
         else
           solr_parameters[:fq] += [
