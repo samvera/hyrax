@@ -28,6 +28,7 @@ module Hyrax
         solr_parameters[:fq] ||= []
         if Hyrax.config.use_solr_graph_for_collection_nesting
           solr_parameters[:fq] += [
+            Hyrax::SolrQueryBuilderService.construct_query(Hyrax.config.collection_type_index_field => @collection.collection_type_gid),
             "-{!graph from=id to=member_of_collection_ids_ssim#{' maxDepth=1' if @nest_direction == :as_parent}}id:#{@collection.id}",
             "-{!graph to=id from=member_of_collection_ids_ssim#{' maxDepth=1' if @nest_direction == :as_child}}id:#{@collection.id}"
           ]
