@@ -3,11 +3,20 @@ module Hyrax
   # Responsible for adding the necessary callbacks for updating the nested collection information
   # This is part of the after update index because it is a potentially very expensive process.
   #
-  # @todo Consider extracting the update_index callback to ActiveFedora::Base
+  # @deprecation deprecated for removal in 4.0.0; nested reindexing is replaced by solr
+  #   graph query. if you want to drop this behavior now, you can set
+  #   +HYRAX_USE_SOLR_GRAPH_NESTING+ to +true+ in the environment.
   module CollectionNesting
     extend ActiveSupport::Concern
 
     included do
+      Deprecation.warn "Hyrax::CollectionNesting is deprecated for removal in " \
+                       "4.0.0. Nested reindexing behavior can be replaced " \
+                       "by a Solr graph traversal query. Legacy nested " \
+                       "indexing behavior is retained by default, but can be " \
+                       "replaced with the 4.0.0 default by setting " \
+                       "HYRAX_USE_SOLR_GRAPH_NESTING to `true` in the environment."
+
       extend ActiveModel::Callbacks
       include ActiveModel::Validations::Callbacks
 

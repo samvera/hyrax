@@ -10,7 +10,8 @@ module Hyrax
     include Hyrax::HumanReadableType
     include Hyrax::HasRepresentative
     include Hyrax::Permissions
-    include Hyrax::CollectionNesting
+    include(Hyrax::CollectionNesting) unless
+      Hyrax.config.use_solr_graph_for_collection_nesting
 
     included do
       validates_with HasOneTitleValidator

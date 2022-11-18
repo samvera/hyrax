@@ -21,7 +21,8 @@ module Hyrax
     include ProxyDeposit
     include Works::Metadata
     include WithEvents
-    include Hyrax::CollectionNesting
+    include(Hyrax::CollectionNesting) unless
+      Hyrax.config.use_solr_graph_for_collection_nesting
 
     included do
       property :owner, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/owner'), multiple: false
