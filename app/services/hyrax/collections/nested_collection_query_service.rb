@@ -86,7 +86,10 @@ module Hyrax
       #   id is in the response. Useful for validation.
       # @param nest_direction [Symbol] :as_child or :as_parent
       def self.query_solr(collection:, access:, scope:, limit_to_id:, nest_direction:)
-        nesting_attributes = NestingAttributes.new(id: collection.id.to_s, scope: scope)
+
+        nesting_attributes = begin
+          Hyrax.config.use_solr_graph_for_collection_nesting ? nil : NestingAttributes.new(id: collection.id.to_s, scope: scope)
+        end
         query_builder = Hyrax::Dashboard::NestedCollectionsSearchBuilder.new(
           access: access,
           collection: collection,

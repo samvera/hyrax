@@ -109,7 +109,9 @@ module Hyrax
         # needed to make the determination are too expensive to do for every possible
         # collection, so we only test for this situation prior to saving the new
         # relationship.
+        # note: the graph indexer does not care about nesting depth
         def nesting_within_maximum_depth
+          return true if Hyrax.config.use_solr_graph_for_collection_nesting
           return true if query_service.valid_combined_nesting_depth?(parent: parent, child: child, scope: context)
           errors.add(:collection, :exceeds_maximum_nesting_depth)
           false
