@@ -55,11 +55,18 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
         it 'is invalid if child cannot be nested within the parent' do
           expect(query_service).to receive(:parent_and_child_can_nest?).with(parent: parent, child: child, scope: context).and_return(false)
 
-          expect { form.valid? }
+          if graph_status == "Solr graph is on"
+            expect { form.valid? }
+            .to change { form.errors.to_hash }
+            .to include parent: ["cannot have child nested within it"],
+                        child: ["cannot nest within parent"]
+          else
+            expect { form.valid? }
             .to change { form.errors.to_hash }
             .to include parent: ["cannot have child nested within it"],
                         child: ["cannot nest within parent"],
                         collection: ["nesting exceeds the allowed maximum nesting depth."]
+          end
         end
       end
 
