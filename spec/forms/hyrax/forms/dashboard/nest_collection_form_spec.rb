@@ -243,9 +243,9 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
 
           if graph_status == "Solr graph is on"
             expect { form.valid? }
-            .to change { form.errors.to_hash }
-            .to include parent: ["cannot have child nested within it"],
-                        child: ["cannot nest within parent"]
+              .to change { form.errors.to_hash }
+              .to include parent: ["cannot have child nested within it"],
+                          child: ["cannot nest within parent"]
           else
             expect { form.valid? }
               .to change { form.errors.to_hash }
