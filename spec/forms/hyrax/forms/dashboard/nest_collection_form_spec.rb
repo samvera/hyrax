@@ -155,7 +155,7 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
             it 'validates the parent cannot have additional files nested' do
               if graph_status == "Solr graph is on"
                 expect { form.validate_add }
-                .not_to change { form.errors.to_hash }
+                  .not_to change { form.errors.to_hash }
               else
                 expect { form.validate_add }
                   .to change { form.errors.to_hash }
