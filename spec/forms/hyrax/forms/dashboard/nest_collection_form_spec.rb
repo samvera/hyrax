@@ -55,11 +55,18 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
         it 'is invalid if child cannot be nested within the parent' do
           expect(query_service).to receive(:parent_and_child_can_nest?).with(parent: parent, child: child, scope: context).and_return(false)
 
-          expect { form.valid? }
-            .to change { form.errors.to_hash }
-            .to include parent: ["cannot have child nested within it"],
-                        child: ["cannot nest within parent"],
-                        collection: ["nesting exceeds the allowed maximum nesting depth."]
+          if graph_status == "Solr graph is on"
+            expect { form.valid? }
+              .to change { form.errors.to_hash }
+              .to include parent: ["cannot have child nested within it"],
+                          child: ["cannot nest within parent"]
+          else
+            expect { form.valid? }
+              .to change { form.errors.to_hash }
+              .to include parent: ["cannot have child nested within it"],
+                          child: ["cannot nest within parent"],
+                          collection: ["nesting exceeds the allowed maximum nesting depth."]
+          end
         end
       end
 
@@ -146,9 +153,14 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
             let(:nesting_depth_result) { false }
 
             it 'validates the parent cannot have additional files nested' do
-              expect { form.validate_add }
-                .to change { form.errors.to_hash }
-                .to include collection: ["nesting exceeds the allowed maximum nesting depth."]
+              if graph_status == "Solr graph is on"
+                expect { form.validate_add }
+                  .not_to change { form.errors.to_hash }
+              else
+                expect { form.validate_add }
+                  .to change { form.errors.to_hash }
+                  .to include collection: ["nesting exceeds the allowed maximum nesting depth."]
+              end
             end
           end
 
@@ -234,11 +246,18 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
         it 'is invalid if child cannot be nested within the parent' do
           expect(query_service).to receive(:parent_and_child_can_nest?).with(parent: parent, child: child, scope: context).and_return(false)
 
-          expect { form.valid? }
-            .to change { form.errors.to_hash }
-            .to include parent: ["cannot have child nested within it"],
-                        child: ["cannot nest within parent"],
-                        collection: ["nesting exceeds the allowed maximum nesting depth."]
+          if graph_status == "Solr graph is on"
+            expect { form.valid? }
+              .to change { form.errors.to_hash }
+              .to include parent: ["cannot have child nested within it"],
+                          child: ["cannot nest within parent"]
+          else
+            expect { form.valid? }
+              .to change { form.errors.to_hash }
+              .to include parent: ["cannot have child nested within it"],
+                          child: ["cannot nest within parent"],
+                          collection: ["nesting exceeds the allowed maximum nesting depth."]
+          end
         end
       end
 
@@ -325,9 +344,14 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
             let(:nesting_depth_result) { false }
 
             it 'validates the parent cannot have additional files nested' do
-              expect { form.validate_add }
-                .to change { form.errors.to_hash }
-                .to include collection: ["nesting exceeds the allowed maximum nesting depth."]
+              if graph_status == "Solr graph is on"
+                expect { form.validate_add }
+                  .not_to change { form.errors.to_hash }
+              else
+                expect { form.validate_add }
+                  .to change { form.errors.to_hash }
+                  .to include collection: ["nesting exceeds the allowed maximum nesting depth."]
+              end
             end
           end
 
