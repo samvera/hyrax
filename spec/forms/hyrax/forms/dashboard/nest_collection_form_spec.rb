@@ -153,9 +153,14 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
             let(:nesting_depth_result) { false }
 
             it 'validates the parent cannot have additional files nested' do
-              expect { form.validate_add }
-                .to change { form.errors.to_hash }
-                .to include collection: ["nesting exceeds the allowed maximum nesting depth."]
+              if graph_status == "Solr graph is on"
+                expect { form.validate_add }
+                .not_to change { form.errors.to_hash }
+              else
+                expect { form.validate_add }
+                  .to change { form.errors.to_hash }
+                  .to include collection: ["nesting exceeds the allowed maximum nesting depth."]
+              end
             end
           end
 
@@ -327,14 +332,9 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
           let(:parent_nestable) { false }
 
           it 'validates the parent cannnot contain nested subcollections' do
-            if graph_status == "Solr graph is on"
-              expect { form.validate_add }
-                .not_to change { form.errors.to_hash }
-            else
-              expect { form.validate_add }
-                .to change { form.errors.to_hash }
-                .to include parent: ["cannot have child nested within it"]
-            end
+            expect { form.validate_add }
+              .to change { form.errors.to_hash }
+              .to include parent: ["cannot have child nested within it"]
           end
         end
 
