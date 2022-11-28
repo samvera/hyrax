@@ -198,6 +198,7 @@ module Hyrax
         @form.prepopulate!
       else
         @form = form_class.new(file_set)
+        @form[:visibility] = file_set.visibility # workaround for hydra-head < 12
       end
       @version_list = Hyrax::VersionListPresenter.for(file_set: file_set)
       @groups = current_user.groups
