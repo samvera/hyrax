@@ -303,7 +303,7 @@ RSpec.describe 'collection_type', type: :feature do
       end
 
       it 'all settings are disabled', :js do
-        expect(exhibit_collection_type.collections?).to be true
+        expect(exhibit_collection_type.collections.any?).to be true
 
         click_link('Settings', href: '#settings')
 
