@@ -26,6 +26,18 @@ RSpec.describe Hyrax::DownloadsController do
       end
     end
 
+    context 'when restricted by workflow' do
+      before do
+        allow(subject).to receive(:workflow_restriction?).and_return(true)
+      end
+
+      it 'returns :unauthorized status with image content' do
+        get :show, params: { id: file_set.to_param }
+        expect(response).to have_http_status(:unauthorized)
+        expect(response.content_type).to eq 'image/png'
+      end
+    end
+
     context "when user isn't logged in" do
       context "and the unauthorized image exists" do
         before do

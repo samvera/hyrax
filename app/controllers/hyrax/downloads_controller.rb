@@ -3,6 +3,7 @@ module Hyrax
   class DownloadsController < ApplicationController
     include Hydra::Controller::DownloadBehavior
     include Hyrax::LocalFileDownloadsControllerBehavior
+    include Hyrax::WorkflowsHelper # Provides #workflow_restriction?
 
     def self.default_content_path
       :original_file
@@ -42,7 +43,11 @@ module Hyrax
     # that files are in a LDP basic container, and thus, included in the asset's uri.
     def authorize_download!
       authorize! :download, params[asset_param_key]
-    rescue CanCan::AccessDenied
+      # Deny access if the work containing this file is restricted by a workflow
+      file_set = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[asset_param_key], use_valkyrie: Hyrax.config.use_valkyrie?)
+      return unless workflow_restriction?(file_set.parent, ability: current_ability)
+      raise Hyrax::WorkflowAuthorizationException
+    rescue CanCan::AccessDenied, Hyrax::WorkflowAuthorizationException
       unauthorized_image = Rails.root.join("app", "assets", "images", "unauthorized.png")
       send_file unauthorized_image, status: :unauthorized
     end
