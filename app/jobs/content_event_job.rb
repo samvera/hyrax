@@ -18,6 +18,6 @@ class ContentEventJob < EventJob
 
   # log the event to the users profile stream
   def log_user_event(depositor)
-    depositor.log_profile_event(event)
+    depositor&.log_profile_event(event)
   end
 end
