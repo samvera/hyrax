@@ -82,6 +82,11 @@ RSpec.describe Hyrax::DownloadsController do
             expect(response.headers['Accept-Ranges']).to eq "bytes"
           end
 
+          it 'retrieves the thumbnail without contacting Fedora' do
+            expect(ActiveFedora::Base).not_to receive(:find).with(file_set.id)
+            get :show, params: { id: file_set, file: 'thumbnail' }
+          end
+
           it 'sends 304 response when client has valid cached data' do
             get :show, params: { id: file_set, file: 'thumbnail' }
             expect(response).to have_http_status :success

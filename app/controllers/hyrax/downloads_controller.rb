@@ -38,14 +38,9 @@ module Hyrax
       { type: mime_type_for(file), disposition: 'inline' }
     end
 
-    def parent(file_set: curation_concern)
-      @parent ||=
-        case file_set
-        when Hyrax::Resource
-          Hyrax.query_service.find_parents(resource: file_set).first
-        else
-          file_set.parent
-        end
+    def file_set_parent(file_set_id)
+      file_set = ActiveFedora::Base.where(id: file_set_id).first
+      file_set.parent
     end
 
     # Customize the :read ability in your Ability class, or override this method.
@@ -54,9 +49,8 @@ module Hyrax
     def authorize_download!
       authorize! :download, params[asset_param_key]
       # Deny access if the work containing this file is restricted by a workflow
-      file_set = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[asset_param_key], use_valkyrie: Hyrax.config.use_valkyrie?)
-      file_set_parent = parent(file_set: file_set)
-      return unless workflow_restriction?(file_set_parent, ability: current_ability)
+      return unless workflow_restriction?(file_set_parent(params[asset_param_key]),
+                                          ability: current_ability)
       raise Hyrax::WorkflowAuthorizationException
     rescue CanCan::AccessDenied, Hyrax::WorkflowAuthorizationException
       unauthorized_image = Rails.root.join("app", "assets", "images", "unauthorized.png")
