@@ -14,6 +14,8 @@ group :development, :test do
   gem "simplecov", require: false
 end
 
+gem 'qa', github: 'samvera/questioning_authority', branch: 'rails_7'
+
 test_app_path = ENV['RAILS_ROOT'] ||
                 ENV.fetch('ENGINE_CART_DESTINATION', File.expand_path('.internal_test_app', File.dirname(__FILE__)))
 test_app_gemfile = File.expand_path('Gemfile', test_app_path)
