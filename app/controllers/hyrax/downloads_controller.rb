@@ -39,9 +39,7 @@ module Hyrax
     end
 
     def file_set_parent(file_set_id)
-      file_set = Hyrax.query_service.find_by_alternate_identifier(
-                      alternate_identifier: file_set_id,
-                      use_valkyrie: Hyrax.config.use_valkyrie?)
+      file_set = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: file_set_id, use_valkyrie: Hyrax.config.use_valkyrie?)
       @parent ||=
         case file_set
         when Hyrax::Resource
@@ -57,8 +55,7 @@ module Hyrax
     def authorize_download!
       authorize! :download, params[asset_param_key]
       # Deny access if the work containing this file is restricted by a workflow
-      return unless workflow_restriction?(file_set_parent(params[asset_param_key]),
-                                          ability: current_ability)
+      return unless workflow_restriction?(file_set_parent(params[asset_param_key]), ability: current_ability)
       raise Hyrax::WorkflowAuthorizationException
     rescue CanCan::AccessDenied, Hyrax::WorkflowAuthorizationException
       unauthorized_image = Rails.root.join("app", "assets", "images", "unauthorized.png")
