@@ -53,6 +53,18 @@ RSpec.describe Hyrax::DownloadsController do
         expect(response.body).to eq file_set.original_file.content
       end
 
+      context 'when restricted by workflow' do
+        before do
+          allow(subject).to receive(:workflow_restriction?).and_return(true)
+        end
+
+        it 'returns :unauthorized status with image content' do
+          get :show, params: { id: file_set.to_param }
+          expect(response).to have_http_status(:unauthorized)
+          expect(response.content_type).to eq 'image/png'
+        end
+      end
+
       context "with an alternative file" do
         context "that is persisted" do
           let(:file) { File.open(fixture_path + '/world.png', 'rb') }
@@ -68,11 +80,6 @@ RSpec.describe Hyrax::DownloadsController do
             expect(response.body).to eq content
             expect(response.headers['Content-Length']).to eq "4218"
             expect(response.headers['Accept-Ranges']).to eq "bytes"
-          end
-
-          it 'retrieves the thumbnail without contacting Fedora' do
-            expect(ActiveFedora::Base).not_to receive(:find).with(file_set.id)
-            get :show, params: { id: file_set, file: 'thumbnail' }
           end
 
           it 'sends 304 response when client has valid cached data' do

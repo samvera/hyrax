@@ -3,6 +3,7 @@ module Hyrax
   class DownloadsController < ApplicationController
     include Hydra::Controller::DownloadBehavior
     include Hyrax::LocalFileDownloadsControllerBehavior
+    include Hyrax::WorkflowsHelper # Provides #workflow_restriction?
 
     def self.default_content_path
       :original_file
@@ -37,12 +38,26 @@ module Hyrax
       { type: mime_type_for(file), disposition: 'inline' }
     end
 
+    def file_set_parent(file_set_id)
+      file_set = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: file_set_id, use_valkyrie: Hyrax.config.use_valkyrie?)
+      @parent ||=
+        case file_set
+        when Hyrax::Resource
+          Hyrax.query_service.find_parents(resource: file_set).first
+        else
+          file_set.parent
+        end
+    end
+
     # Customize the :read ability in your Ability class, or override this method.
     # Hydra::Ability#download_permissions can't be used in this case because it assumes
     # that files are in a LDP basic container, and thus, included in the asset's uri.
     def authorize_download!
       authorize! :download, params[asset_param_key]
-    rescue CanCan::AccessDenied
+      # Deny access if the work containing this file is restricted by a workflow
+      return unless workflow_restriction?(file_set_parent(params[asset_param_key]), ability: current_ability)
+      raise Hyrax::WorkflowAuthorizationException
+    rescue CanCan::AccessDenied, Hyrax::WorkflowAuthorizationException
       unauthorized_image = Rails.root.join("app", "assets", "images", "unauthorized.png")
       send_file unauthorized_image, status: :unauthorized
     end
