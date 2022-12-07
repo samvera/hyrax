@@ -39,8 +39,16 @@ module Hyrax
     end
 
     def file_set_parent(file_set_id)
-      file_set = ActiveFedora::Base.where(id: file_set_id).first
-      file_set.parent
+      file_set = Hyrax.query_service.find_by_alternate_identifier(
+                      alternate_identifier: file_set_id,
+                      use_valkyrie: Hyrax.config.use_valkyrie?)
+      @parent ||=
+        case file_set
+        when Hyrax::Resource
+          Hyrax.query_service.find_parents(resource: file_set).first
+        else
+          file_set.parent
+        end
     end
 
     # Customize the :read ability in your Ability class, or override this method.
