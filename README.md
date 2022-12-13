@@ -11,7 +11,7 @@ Docs: [![Documentation Status](https://inch-ci.org/github/samvera/hyrax.svg?bran
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./.github/CONTRIBUTING.md)
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 
-Jump in: [![Samvera Community Slack](https://img.shields.io/badge/samvera-slack-orange)](https://samvera.slack.com/)
+Jump in: [![Samvera Community Slack](https://img.shields.io/badge/samvera-slack-blueviolet)](https://samvera.slack.com/)
 
 ## Table of Contents
 
