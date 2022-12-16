@@ -28,7 +28,7 @@ module Hyrax
     ##
     # @return [Hash] the results returned from solr for the current query
     def get
-      solr_service.get(build)
+      solr_service.post(build)
     end
 
     ##
