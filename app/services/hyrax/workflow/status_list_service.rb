@@ -69,7 +69,7 @@ module Hyrax
         actionable_roles = roles_for_user
         Hyrax.logger.debug("Actionable roles for #{@user.user_key} are #{actionable_roles}")
         return [] if actionable_roles.empty?
-        WorkRelation.new.search_with_conditions(query(actionable_roles), method: :post)
+        WorkRelation.new.search_with_conditions(query(actionable_roles), method: Hyrax.config.solr_default_method)
       end
 
       def query(actionable_roles)
