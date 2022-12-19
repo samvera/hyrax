@@ -80,13 +80,13 @@ module Hyrax
       method = args.delete(:method) || Hyrax.config.solr_default_method
 
       case method
-       when :get
-         get(query, **args)
-       when :post
-         post(query, **args)
-       else
-         raise "Unsupported HTTP method for querying SolrService (#{method.inspect})"
-       end
+      when :get
+        get(query, **args)
+      when :post
+        post(query, **args)
+      else
+        raise "Unsupported HTTP method for querying SolrService (#{method.inspect})"
+      end
     end
 
     # Execute the provided query. Uses the configured http method by default.
