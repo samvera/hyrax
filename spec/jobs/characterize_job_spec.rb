@@ -130,7 +130,6 @@ RSpec.describe CharacterizeJob, :clean_repo do
       context 'title and label were not previously the same' do
         let(:title) { ['My User-Entered Title'] }
         let(:label) { 'old_filename.jpg' }
-        let(:original_name) { 'new_filename.jpg' }
 
         before do
           allow(file_set).to receive_message_chain(:characterization_proxy, :original_name)
@@ -143,6 +142,23 @@ RSpec.describe CharacterizeJob, :clean_repo do
           described_class.perform_now(file_set, file.id)
           expect(file_set.title).to eq ['My User-Entered Title']
           expect(file_set.label).to eq 'new_filename.jpg'
+        end
+
+        # https://github.com/samvera/hyrax/issues/5671
+        context 'original_name, which has encoding set to ASCII-8BIT, contains non-ASCII characters' do
+          before do
+            allow(file_set).to receive_message_chain(:characterization_proxy, :original_name)
+              .and_return(String.new('ファイル.txt', encoding: 'ASCII-8BIT')) # rubocop:disable RSpec/MessageChain
+          end
+
+          it 'does not raise an error, and still sets title to label' do
+            expect(file).to receive(:save!)
+            expect(file_set).to receive(:update_index)
+            expect { described_class.perform_now(file_set, file.id) }
+              .not_to raise_error(Encoding::UndefinedConversionError, '"\xE3" from ASCII-8BIT to UTF-8')
+            expect(file_set.title).to eq ['My User-Entered Title']
+            expect(file_set.label).to eq 'ファイル.txt'
+          end
         end
       end
     end
