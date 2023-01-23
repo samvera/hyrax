@@ -67,7 +67,7 @@ module Hyrax
     attribute :label, ::Valkyrie::Types::Set
     attribute :original_filename, ::Valkyrie::Types::String
     attribute :mime_type, ::Valkyrie::Types::String.default(GENERIC_MIME_TYPE)
-    attribute :type, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE])
+    attribute :type, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE].freeze) # Use += to add types, not <<
 
     # attributes set by fits
     attribute :format_label, ::Valkyrie::Types::Set
