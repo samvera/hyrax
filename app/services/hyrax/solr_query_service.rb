@@ -26,21 +26,29 @@ module Hyrax
     end
 
     ##
+    # execute the query using a GET request
     # @return [Hash] the results returned from solr for the current query
     def get
       solr_service.get(build)
     end
 
     ##
+    # execute the solr query and return results
+    # @return [Hash] the results returned from solr for the current query
+    def query_result
+      solr_service.query_result(build)
+    end
+
+    ##
     # @return [Enumerable<SolrDocument>]
     def solr_documents
-      get['response']['docs'].map { |doc| self.class.document_model.new(doc) }
+      query_result['response']['docs'].map { |doc| self.class.document_model.new(doc) }
     end
 
     ##
     # @return [Array<String>] ids of documents matching the current query
     def get_ids # rubocop:disable Naming/AccessorMethodName
-      results = get
+      results = query_result
       results['response']['docs'].map { |doc| doc['id'] }
     end
 

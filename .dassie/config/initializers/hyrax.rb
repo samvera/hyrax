@@ -46,6 +46,10 @@ Hyrax.config do |config|
   # Set the system-wide virus scanner
   config.virus_scanner = Hyrax::VirusScanner
 
+  # The default method used for Solr queries. Values are :get or :post.
+  # Post is suggested to prevent issues with URL length.
+  config.solr_default_method = :post
+
   ##
   # To index to the Valkyrie core, uncomment the following lines.
   # config.query_index_from_valkyrie = true
