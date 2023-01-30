@@ -105,6 +105,26 @@ RSpec.describe Hyrax::Ability do
         expect(ability.can?(:edit, presenter)).to eq true
       end
     end
+
+    describe 'can?(:transfer)' do
+      before do
+        allow(Hyrax::SolrService).to receive(:search_by_id).and_return(solr_document)
+      end
+
+      context 'without a depositor field' do
+        it 'does not have transfer ability' do
+          expect(ability.can?(:transfer, 'my_solr_doc_id')).to eq false
+        end
+      end
+
+      context 'with a depositor field' do
+        let(:attributes) { { id: 'my_solr_doc_id', depositor_ssim: [user.email] } }
+
+        it 'has transfer ability ' do
+          expect(ability.can?(:transfer, 'my_solr_doc_id')).to eq true
+        end
+      end
+    end
     # rubocop:enable RSpec/SubjectStub
   end
 end
