@@ -48,6 +48,12 @@ module Hyrax
     end
 
     ##
+    # @return [String]
+    def hostname
+      @hostname || 'localhost'
+    end
+
+    ##
     # @return [Boolean]
     def file_set?
       model.try(:file_set?) || Array(model[:has_model_ssim]).include?('FileSet')
@@ -209,6 +215,14 @@ module Hyrax
                iiif_endpoint: iiif_endpoint(latest_file_id, base_url: hostname))
       end
 
+      ##
+      # @return [#can?]
+      def ability
+        @ability ||= NullAbility.new
+      end
+
+      ##
+      # @return [String]
       def hostname
         @hostname || 'localhost'
       end
@@ -221,10 +235,6 @@ module Hyrax
     end
 
     private
-
-    def hostname
-      @hostname || 'localhost'
-    end
 
     def metadata_fields
       Hyrax.config.iiif_metadata_fields
