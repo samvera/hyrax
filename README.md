@@ -16,7 +16,7 @@ Jump in: [![Samvera Community Slack](https://img.shields.io/badge/samvera-slack-
 ## Table of Contents
 
 * [What is Hyrax?](#what-is-hyrax)
-* [Getting Help/Asking Questions](#getting-help/Asking-questions)
+* [Getting Help/Asking Questions](#getting-help-and-asking-questions)
 * [How to Run the Code](#how-to-run-the-code)
 * [Contribute](#contribute)
 * [Release Process](#release-process)
@@ -38,7 +38,7 @@ Hyrax offers the ability to:
 * Enable/disable optional features via an administrative dashboard
 * And more (https://hyrax.samvera.org/about/)
 
-## Getting Help/Asking Questions
+## Getting Help and Asking Questions
 
 More detailed documentation about Hyrax is available on the [Hyrax Github Wiki](https://github.com/samvera/hyrax/wiki) but if you have questions or need help, please email the [Samvera community tech list](https://samvera.atlassian.net/wiki/spaces/samvera/pages/1171226735/Samvera+Community+Email+Lists#Samvera-Tech-(15-20-messages-per-week-on-average) or stop by the #dev channel in the [Samvera community Slack team](https://samvera.atlassian.net/wiki/spaces/samvera/pages/405211682/Getting+Started+in+the+Samvera+Community#Join-the-Samvera-Slack-workspace). You can also get in touch with the [Hyrax Maintenance Working Group](https://samvera.atlassian.net/wiki/spaces/samvera/pages/496632295/Hyrax+Maintenance+Working+Group), including the Hyrax Product Owner and Hyrax Tech Lead.
 
