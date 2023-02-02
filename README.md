@@ -16,19 +16,13 @@ Jump in: [![Samvera Community Slack](https://img.shields.io/badge/samvera-slack-
 ## Table of Contents
 
 * [What is Hyrax?](#what-is-hyrax)
-* [Feature Documentation](#feature-documentation)
-* [Support Policies](#support-policies)
-* [Help](#help)
-* [Working with Hyrax](#working-with-hyrax)
-  * [Developing the Hyrax Engine](#developing-the-hyrax-engine)
-    * [Contributing](#contributing)
-    * [Release process](#release-process)
-  * [Developing your Hyrax\-based Application](#developing-your-hyrax-based-application)
-  * [Deploying your Hyrax\-based Application to production](#deploying-your-hyrax-based-application-to-production)
+* [Getting Help/Asking Questions](#getting-help/Asking-questions)
+* [How to Run the Code](#how-to-run-the-code)
+* [Contribute](#contribute)
+* [Release Process](#release-process)
+* [Deploy](#deploy)
 * [Acknowledgments](#acknowledgments)
 * [License](#license)
-
-<aside>Table of contents created by <a href="https://github.com/ekalinin/github-markdown-toc.go">gh-md-toc</a></aside>
 
 ## What is Hyrax?
 
@@ -67,6 +61,8 @@ We'd love to accept your contributions. Please see our [guide to contributing to
 ## Release Process
 
 See the [release management process](https://github.com/samvera/hyrax/wiki/Release-management-process).
+
+We also have a [Maintenance Policy](./documentation/MAINTENANCE.md).
 
 ## Deploy
 
