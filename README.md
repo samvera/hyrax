@@ -16,7 +16,7 @@ Jump in: [![Samvera Community Slack](https://img.shields.io/badge/samvera-slack-
 ## Table of Contents
 
 * [What is Hyrax?](#what-is-hyrax)
-* [Getting Help/Asking Questions](#getting-help-and-asking-questions)
+* [Getting Help and Asking Questions](#getting-help-and-asking-questions)
 * [How to Run the Code](#how-to-run-the-code)
 * [Contribute](#contribute)
 * [Release Process](#release-process)
