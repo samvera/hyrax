@@ -38,7 +38,7 @@ module Hyrax
       end
 
       delegate :add, :commit, :count, :delete, :get, :instance, :ping, :post,
-               :query, :delete_by_query, :search_by_id, :wipe!, to: :new
+               :query, :query_result, :delete_by_query, :search_by_id, :wipe!, to: :new
     end
 
     # Wraps rsolr get
@@ -72,21 +72,27 @@ module Hyrax
       connection.post(solr_path, data: args)
     end
 
-    # Wraps get by default
+    # Query solr using the provided or default http method, returning the result as a hash.
+    # @return [Hash] raw query result from solr
+    def query_result(query, **args)
+      Hyrax.logger.warn rows_warning unless args.key?(:rows)
+      # Use the provided solr query method, or fall back to the configured default
+      method = args.delete(:method) || Hyrax.config.solr_default_method
+
+      case method
+      when :get
+        get(query, **args)
+      when :post
+        post(query, **args)
+      else
+        raise "Unsupported HTTP method for querying SolrService (#{method.inspect})"
+      end
+    end
+
+    # Execute the provided query. Uses the configured http method by default.
     # @return [Array<SolrHit>] the response docs wrapped in SolrHit objects
     def query(query, **args)
-      Hyrax.logger.warn rows_warning unless args.key?(:rows)
-      method = args.delete(:method) || :get
-
-      result = case method
-               when :get
-                 get(query, **args)
-               when :post
-                 post(query, **args)
-               else
-                 raise "Unsupported HTTP method for querying SolrService (#{method.inspect})"
-               end
-      result['response']['docs'].map do |doc|
+      query_result(query, **args)['response']['docs'].map do |doc|
         ::SolrHit.new(doc)
       end
     end
@@ -114,10 +120,10 @@ module Hyrax
     end
 
     # Wraps rsolr count
-    # @return [Hash] the hash straight form rsolr
+    # @return [Hash] the hash straight from rsolr
     def count(query)
       args = { rows: 0 }
-      get(query, **args)['response']['numFound'].to_i
+      query_result(query, **args)['response']['numFound'].to_i
     end
 
     # Wraps ActiveFedora::Base#search_by_id(id, opts)
