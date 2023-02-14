@@ -83,7 +83,7 @@ SUMMARY
   spec.add_dependency 'samvera-nesting_indexer', '~> 2.0'
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 5.10'
-  spec.add_dependency 'valkyrie', '~> 2', '>= 2.1.1'
+  spec.add_dependency 'valkyrie', '~> 3.0.1'
   spec.add_dependency 'view_component', '~> 2.74.1' # Pin until blacklight is updated with workaround for https://github.com/ViewComponent/view_component/issues/1565
   spec.add_dependency 'sprockets', '~> 3.7'
   spec.add_dependency 'sass-rails', '~> 6.0'
