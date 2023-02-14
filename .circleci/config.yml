@@ -127,7 +127,7 @@ jobs:
           name: Install system dependencies
           command: |
             sudo apt-get update
-            sudo apt-get install imagemagick librsvg2-bin
+            sudo apt-get install imagemagick librsvg2-bin lsof
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - run:
