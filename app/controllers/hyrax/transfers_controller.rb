@@ -46,9 +46,8 @@ module Hyrax
     def accept
       @proxy_deposit_request.transfer!(params[:reset])
       if params[:sticky]
-        unless current_user.can_receive_deposits_from.include? @proxy_deposit_request.sending_user
-          current_user.can_receive_deposits_from << @proxy_deposit_request.sending_user
-        end
+        current_user.can_receive_deposits_from << @proxy_deposit_request.sending_user unless
+                current_user.can_receive_deposits_from.include? @proxy_deposit_request.sending_user
       end
       redirect_to hyrax.transfers_path, notice: "Transfer complete"
     end
