@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'rails/generators/actions'
+require 'rails/generators'
 require 'rails/generators/active_record'
 
 module Hyrax
