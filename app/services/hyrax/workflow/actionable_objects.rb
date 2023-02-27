@@ -34,15 +34,16 @@ module Hyrax
         ids_and_states = id_state_pairs
         return if ids_and_states.none?
 
-        docs = Hyrax::SolrQueryService.new.with_ids(ids: ids_and_states.map(&:first)).solr_documents
+        ids_and_states.map(&:first).each do |work_id|
+          docs = Hyrax::SolrQueryService.new.with_ids(ids: [work_id]).solr_documents
+          docs.each do |solr_doc|
+            object = ObjectInWorkflowDecorator.new(solr_doc)
+            _, state = ids_and_states.find { |id, _| id == object.id }
 
-        docs.each do |solr_doc|
-          object = ObjectInWorkflowDecorator.new(solr_doc)
-          _, state = ids_and_states.find { |id, _| id == object.id }
+            object.workflow_state = state
 
-          object.workflow_state = state
-
-          yield object
+            yield object
+          end
         end
       end
 
