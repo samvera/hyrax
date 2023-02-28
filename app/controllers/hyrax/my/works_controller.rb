@@ -30,7 +30,9 @@ module Hyrax
       private
 
       def collections_service
-        Hyrax::CollectionsService.new(self)
+        cloned = clone
+        cloned.params = {}
+        Hyrax::CollectionsService.new(cloned)
       end
 
       def search_action_url(*args)
