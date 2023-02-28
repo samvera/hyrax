@@ -592,7 +592,7 @@ zh:
         depositor: 储户
         directions: 无论此工作的可见性设置如何，您也可以与其他用户和组共享。
         group: 组
-        permissions_save_note_html: 权限<strong> </ strong>保存，直到“保存”为止。按钮在页面底部按下。
+        permissions_save_note_html: 权限<strong> </strong>保存，直到“保存”为止。按钮在页面底部按下。
         use_add_button: 使用添加按钮一次可以访问一个%{account_label}（它将被添加到下面的列表中）。按名称或%{account_label} \选择用户。然后选择您要授予的访问级别，并单击“添加此%{account_label}”以完成添加权限。
       form_thumbnail:
         help_html: 选择要用作此作品缩略图的文件。
@@ -1408,14 +1408,14 @@ zh:
       count:
         collections:
           collections_listing: 收藏清单
-          in_repo: 存储库中的<strong> %{total_count}集合</ strong>
-          you_manage: 您可以在存储库中管理<strong> %{total_count}集合</ strong>
-          you_own: 您在存储库中拥有<strong> %{total_count}集合</ strong>
+          in_repo: 存储库中的<strong> %{total_count}集合</strong>
+          you_manage: 您可以在存储库中管理<strong> %{total_count}集合</strong>
+          you_own: 您在存储库中拥有<strong> %{total_count}集合</strong>
         works:
-          in_repo: 存储库中的<strong> %{total_count}有效</ strong>
+          in_repo: 存储库中的<strong> %{total_count}有效</strong>
           works_listing: 作品清单
-          you_manage: 您可以在存储库中管理<strong> %{total_count}作品</ strong>
-          you_own: 您在存储库中拥有<strong> %{total_count}作品</ strong>
+          you_manage: 您可以在存储库中管理<strong> %{total_count}作品</strong>
+          you_own: 您在存储库中拥有<strong> %{total_count}作品</strong>
       sort_and_per_page:
         number_of_results_to_display_per_page: 每页显示的结果数
     nav_safety:
