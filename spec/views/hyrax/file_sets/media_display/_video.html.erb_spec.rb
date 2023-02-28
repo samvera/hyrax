@@ -4,12 +4,17 @@ RSpec.describe 'hyrax/file_sets/media_display/_video.html.erb', type: :view do
   let(:file_set) { stub_model(FileSet, parent: parent) }
   let(:parent) { double }
   let(:link) { true }
+  let(:work_solr_document) do
+    SolrDocument.new(id: '900', title_tesim: ['My Video'])
+  end
+  let(:parent_presenter) { Hyrax::WorkShowPresenter.new(work_solr_document, ability) }
 
   before do
     allow(controller).to receive(:current_ability).and_return(ability)
     allow(ability).to receive(:can?).with(:download, file_set).and_return(true)
     allow(Hyrax.config).to receive(:display_media_download_link?).and_return(link)
     allow(view).to receive(:workflow_restriction?).with(parent).and_return(false)
+    assign(:presenter, parent_presenter)
     render 'hyrax/file_sets/media_display/video', file_set: file_set
   end
 
