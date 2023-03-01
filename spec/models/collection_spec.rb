@@ -6,13 +6,6 @@ RSpec.describe ::Collection, type: :model do
     expect(collection.read_groups).to eq ['public']
   end
 
-  describe '#bytes' do
-    it 'returns a hard-coded integer and issues a deprecation warning' do
-      expect(Deprecation).to receive(:warn).at_least(:once)
-      expect(collection.bytes).to eq(0)
-    end
-  end
-
   describe "#validates_with" do
     before { collection.title = nil }
     it "ensures the collection has a title" do
@@ -226,25 +219,25 @@ RSpec.describe ::Collection, type: :model do
 
     it 'resets user edit access' do
       expect(collection.edit_users).to match_array([user.user_key])
-      collection.reset_access_controls!
+      permission_template.reset_access_controls_for(collection: collection)
       expect(collection.edit_users).to match_array([user.user_key, 'mgr1@ex.com', 'mgr2@ex.com'])
     end
 
     it 'resets group edit access' do
       expect(collection.edit_groups).to match_array([])
-      collection.reset_access_controls!
+      permission_template.reset_access_controls_for(collection: collection)
       expect(collection.edit_groups).to match_array(['managers', ::Ability.admin_group_name])
     end
 
     it 'resets user read access' do
       expect(collection.read_users).to match_array([])
-      collection.reset_access_controls!
+      permission_template.reset_access_controls_for(collection: collection)
       expect(collection.read_users).to match_array(['vw1@ex.com', 'vw2@ex.com', 'dep1@ex.com', 'dep2@ex.com'])
     end
 
     it 'resets group read access' do
       expect(collection.read_groups).to match_array([])
-      collection.reset_access_controls!
+      permission_template.reset_access_controls_for(collection: collection)
       expect(collection.read_groups).to match_array(['viewers', 'depositors', ::Ability.admin_group_name])
     end
   end
