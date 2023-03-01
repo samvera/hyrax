@@ -33,7 +33,7 @@ FactoryBot.define do
         attributes[:manage_users] = CollectionFactoryHelper.user_managers(evaluator.with_permission_template, evaluator.user, evaluator.create_access)
         attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
         create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
-        collection.reset_access_controls!
+        collection.permission_template.reset_access_controls_for(collection: collection, interpret_visibility: true)
       end
     end
 

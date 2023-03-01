@@ -178,19 +178,19 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
              permission_template: collection1.permission_template,
              agent_type: 'user',
              agent_id: user2.user_key)
-      collection1.reset_access_controls!
+      collection1.permission_template.reset_access_controls_for(collection: collection1, interpret_visibility: true)
       create(:permission_template_access,
              :deposit,
              permission_template: collection2.permission_template,
              agent_type: 'user',
              agent_id: user2.user_key)
-      collection2.reset_access_controls!
+      collection2.permission_template.reset_access_controls_for(collection: collection2, interpret_visibility: true)
       create(:permission_template_access,
              :view,
              permission_template: collection4.permission_template,
              agent_type: 'user',
              agent_id: user2.user_key)
-      collection4.reset_access_controls!
+      collection4.permission_template.reset_access_controls_for(collection: collection4, interpret_visibility: true)
       sign_in user2
       visit '/dashboard/my/collections'
     end

@@ -106,7 +106,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
                           permission_template: collection.permission_template,
                           agent_type: 'user',
                           agent_id: manager.user_key)
-        collection.reset_access_controls!
+        collection.permission_template.reset_access_controls_for(collection: collection)
       end
 
       it 'can do everything for the collection they manage' do
@@ -280,7 +280,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
                           permission_template: collection.permission_template,
                           agent_type: 'user',
                           agent_id: viewer.user_key)
-        collection.reset_access_controls!
+        collection.permission_template.reset_access_controls_for(collection: collection)
       end
 
       it 'can view the collection where they are a viewer' do
