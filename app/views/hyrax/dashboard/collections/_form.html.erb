@@ -2,28 +2,28 @@
 <div class="tabs mt-4" id="collection-edit-controls">
   <ul class="nav nav-tabs" id="dashboard-collection-tab" role="tablist">
     <li class="nav-item">
-      <a href="#description" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm">
+      <a onclick="changeLocale('description', <% request.params[:tag] %>)" href="#description" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm">
         <%= t('.tabs.description') %>
       </a>
     </li>
     <% if @form.persisted? %>
       <% if collection_brandable?(collection: @collection) %>
       <li class="nav-item">
-        <a href="#branding" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
+        <a onclick="changeLocale('branding', <% request.params[:tag] %>)" href="#branding" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
           <%= t('.tabs.branding') %>
         </a>
       </li>
       <% end %>
       <% if collection_discoverable?(collection: @collection) %>
       <li class="nav-item">
-        <a href="#discovery" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
+        <a onclick="changeLocale('discovery', <% request.params[:tag] %>)" href="#discovery" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
           <%= t('.tabs.discovery') %>
         </a>
       </li>
       <% end %>
       <% if collection_sharable?(collection: @collection) %>
       <li class="nav-item">
-        <a href="#sharing" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
+        <a onclick="changeLocale('sharing', <% request.params[:tag] %>)" href="#sharing" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
           <%= t('.tabs.sharing') %>
         </a>
       </li>

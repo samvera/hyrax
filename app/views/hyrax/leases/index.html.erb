@@ -5,17 +5,17 @@
 <div class="card tabs">
   <ul class="nav nav-tabs">
     <li class="nav-item">
-      <a class="nav-link active" href="#active" data-toggle="tab">
+      <a onclick="changeLocale('active', <% request.params[:tag] %>)" class="nav-link active" href="#active" data-toggle="tab">
         <%= t('.active') %>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#expired" data-toggle="tab">
+      <a onclick="changeLocale('expired', <% request.params[:tag] %>)" class="nav-link" href="#expired" data-toggle="tab">
         <%= t('.expired') %>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#deactivated" data-toggle="tab">
+      <a onclick="changeLocale('deactivated', <% request.params[:tag] %>)" class="nav-link" href="#deactivated" data-toggle="tab">
         <%= t('.deactivated') %>
       </a>
     </li>
