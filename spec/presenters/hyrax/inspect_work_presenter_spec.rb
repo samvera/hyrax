@@ -52,8 +52,8 @@ RSpec.describe Hyrax::InspectWorkPresenter do
     context "when no sipity_entity with workflow exists" do
       let(:invalid) { described_class.new('no_solr_document', ability) }
 
-      it "raises PowerConverter::ConversionError" do
-        expect { invalid.workflow }.to raise_exception(PowerConverter::ConversionError)
+      it "raises Sipity::ConversionError" do
+        expect { invalid.workflow }.to raise_exception(Sipity::ConversionError)
       end
     end
   end

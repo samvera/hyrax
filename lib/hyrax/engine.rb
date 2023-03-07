@@ -87,7 +87,6 @@ module Hyrax
     end
 
     initializer 'requires' do
-      require 'power_converters'
       require 'wings' unless Hyrax.config.disable_wings
     end
 
