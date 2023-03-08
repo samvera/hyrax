@@ -10,10 +10,10 @@ jobs:
         default: 2.7.7
       bundler_version:
         type: string
-        default: 2.3.13
+        default: 2.4.8
       rails_version:
         type: string
-        default: 6.1.6.1
+        default: 6.1.7.2
     executor:
       name: 'samvera/ruby'
       ruby_version: << parameters.ruby_version >>
@@ -71,10 +71,10 @@ jobs:
         default: 2.7.7
       bundler_version:
         type: string
-        default: 2.3.13
+        default: 2.4.8
       rails_version:
         type: string
-        default: 6.1.6.1
+        default: 6.1.7.2
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
@@ -105,7 +105,7 @@ jobs:
         default: 2.7.7
       bundler_version:
         type: string
-        default: 2.3.13
+        default: 2.4.8
       hyrax_valkyrie:
         type: string
         default: "false"
@@ -153,28 +153,28 @@ jobs:
 
 workflows:
   version: 2
-  ruby2-7-7:
+  ruby2-7:
     jobs:
       - bundle:
           ruby_version: "2.7.7"
-          rails_version: "6.1.6.1"
-          bundler_version: "2.3.13"
+          rails_version: "6.1.7.2"
+          bundler_version: "2.4.8"
       - build:
           ruby_version: "2.7.7"
-          rails_version: "6.1.6.1"
-          bundler_version: "2.3.13"
+          rails_version: "6.1.7.2"
+          bundler_version: "2.4.8"
           requires:
             - bundle
       - test:
-          name: "ruby2-7-7"
+          name: "ruby2-7"
           ruby_version: "2.7.7"
-          bundler_version: "2.3.13"
+          bundler_version: "2.4.8"
           requires:
             - build
       - test:
-          name: "ruby2-7-7-valkyrie"
+          name: "ruby2-7-valkyrie"
           ruby_version: "2.7.7"
-          bundler_version: "2.3.13"
+          bundler_version: "2.4.8"
           hyrax_valkyrie: "true"
           requires:
             - build
