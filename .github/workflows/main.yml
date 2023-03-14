@@ -11,7 +11,7 @@ jobs:
       with:
          token: ${{ secrets.NURAX_ACCESS_TOKEN }}
          event-type: push
-         repository: curationexperts/nurax
+         repository: samvera-labs/nurax
          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
 
 
