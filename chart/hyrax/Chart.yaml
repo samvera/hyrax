@@ -2,7 +2,7 @@ apiVersion: v2
 name: hyrax
 description: An open-source, Samvera-powered digital repository system
 type: application
-version: 2.0.0
+version: 2.1.0
 appVersion: 3.3.0
 dependencies:
   - name: fcrepo
@@ -26,7 +26,7 @@ dependencies:
     repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: redis.enabled
   - name: solr
-    version: 1.0.1
+    version: 6.1.4
     repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: solr.enabled
   - name: nginx
