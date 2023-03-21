@@ -30,6 +30,6 @@ dependencies:
     repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: solr.enabled
   - name: nginx
-    version: 9.8.0
+    version: 13.2.30
     repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: nginx.enabled
