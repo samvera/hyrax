@@ -393,7 +393,8 @@ nginx:
 
 redis:
   enabled: true
-  password: mysecret
+  auth:
+    password: mysecret
 
 solr:
   enabled: true
