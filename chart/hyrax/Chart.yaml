@@ -10,7 +10,7 @@ dependencies:
     repository: oci://ghcr.io/samvera
     condition: fcrepo.enabled
   - name: memcached
-    version: 4.2.21
+    version: 6.3.13
     repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: memcached.enabled
   - name: minio
