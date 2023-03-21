@@ -26,7 +26,7 @@ dependencies:
     repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: redis.enabled
   - name: solr
-    version: 6.1.4
+    version: 7.2.1
     repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: solr.enabled
   - name: nginx

@@ -401,7 +401,7 @@ solr:
   image:
     repository: bitnami/solr
     tag: 8.11.1
-  authentication:
+  auth:
     enabled: true
     adminUsername: admin
     adminPassword: admin
