@@ -55,7 +55,7 @@ USER root
 RUN apk --no-cache add bash \
   ffmpeg \
   mediainfo \
-  openjdk11-jre \
+  openjdk17-jre \
   perl
 USER app
 
