@@ -229,10 +229,9 @@ memcached:
 
 minio:
   enabled: false
-  accessKey:
-    password: hyrax-access-key
-  secretKey:
-    password: hyrax-secret-key
+  auth:
+    rootUser: hyrax-access-key
+    rootPassword: hyrax-secret-key
   persistence:
     enabled: false
   # defaultBuckets: bucketOne;bucketTwo
