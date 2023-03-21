@@ -241,15 +241,18 @@ postgresql:
   image:
     repository: bitnami/postgresql
     tag: 12.3.0
-  postgresqlUsername: hyrax
-  postgresqlPassword: hyrax_pass
-  postgresqlDatabase: hyrax
-  servicePort: 5432
-  # cpu: 1000m
-  # memory: 1Gi
-  # persistence:
-  #   size: 10Gi
-
+  auth:
+    database: hyrax
+    password: hyrax_pass
+    username: hyrax
+  primary:
+    service:
+      ports:
+        postgresql: 5432
+  readReplicas:
+    service:
+      ports:
+        postgresql: 5432
 
 ## Nginx proxy is used to keep puma from having to serve static assets
 ## and to act as an auth proxy for Cantelope
