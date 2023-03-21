@@ -18,7 +18,7 @@ dependencies:
     repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: minio.enabled
   - name: postgresql
-    version: 10.3.13
+    version: 12.2.5
     repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: postgresql.enabled
   - name: redis
