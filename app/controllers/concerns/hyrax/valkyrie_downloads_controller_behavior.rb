@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
   module ValkyrieDownloadsControllerBehavior
-    # before_action :authorize_download!
-
     def show_valkyrie
       file_set_id = params.require(:id)
       file_set = Hyrax.query_service.find_by(id: file_set_id)
@@ -18,12 +16,13 @@ module Hyrax
       file_metadata = find_file_metadata(file_set: file_set, use: use)
       file = Hyrax.storage_adapter.find_by(id: file_metadata.file_identifier)
       prepare_file_headers_valkyrie(metadata: file_metadata, file: file)
-      file.rewind
-
+      # Warning - using the range header will load the range selection in to memory
+      # this can cause memory bloat
       if request.headers['Range']
+        file.rewind
         send_range_valkyrie(file: file)
       else
-        self.response_body = file.read
+        send_file file.disk_path
       end
     end
 
