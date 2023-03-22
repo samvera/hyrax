@@ -34,7 +34,7 @@ module Hyrax
       response.headers['Content-Range'] = "bytes #{from}-#{to}/#{file.size}"
       response.headers['Content-Length'] = length.to_s
       self.status = 206
-      file.read from  # Seek to start of requested range
+      file.read from # Seek to start of requested range
       self.response_body = file.read length
     end
 
