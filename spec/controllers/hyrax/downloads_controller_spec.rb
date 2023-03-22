@@ -6,7 +6,7 @@ RSpec.describe Hyrax::DownloadsController do
     let(:user) { create(:user) }
     let(:file_set) do
       if Hyrax.config.use_valkyrie?
-        FactoryBot.valkyrie_create()
+        FactoryBot.valkyrie_create
       else
         create(:file_with_work, user: user, content: File.open(fixture_path + '/image.png'))
       end
