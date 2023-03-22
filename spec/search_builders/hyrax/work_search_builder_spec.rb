@@ -73,7 +73,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
     context "when the current_work doesn't have a workflow entity" do
       before do
         expect(Hyrax::Workflow::PermissionQuery).to receive(:scope_permitted_workflow_actions_available_for_current_state)
-          .and_raise(Sipity::ConversionError.new(double, {}))
+          .and_raise(Sipity::ConversionError.new(double))
       end
 
       context "and the current user is not the depositor" do
