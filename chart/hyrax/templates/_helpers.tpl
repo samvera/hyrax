@@ -108,7 +108,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 
 {{- define "hyrax.postgresql.database" -}}
 {{- if .Values.postgresql.enabled }}
-{{- .Values.postgresql.postgresqlDatabase }}
+{{- .Values.postgresql.auth.database }}
 {{- else }}
 {{- .Values.externalPostgresql.database | default ( include "hyrax.fullname" . ) }}
 {{- end }}
@@ -116,7 +116,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 
 {{- define "hyrax.postgresql.username" -}}
 {{- if .Values.postgresql.enabled }}
-{{- .Values.postgresql.postgresqlUsername }}
+{{- .Values.postgresql.auth.username }}
 {{- else }}
 {{- .Values.externalPostgresql.username | default "postgres" }}
 {{- end }}
