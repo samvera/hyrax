@@ -124,7 +124,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 
 {{- define "hyrax.postgresql.password" -}}
 {{- if .Values.postgresql.enabled }}
-{{- .Values.postgresql.postgresqlPassword }}
+{{- .Values.postgresql.auth.password }}
 {{- else }}
 {{- .Values.externalPostgresql.password }}
 {{- end }}
@@ -157,7 +157,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 
 {{- define "hyrax.solr.username" -}}
 {{- if .Values.solr.enabled }}
-{{- .Values.solr.authentication.adminUsername }}
+{{- .Values.solr.auth.adminUsername }}
 {{- else }}
 {{- .Values.externalSolrUser }}
 {{- end }}
@@ -165,7 +165,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 
 {{- define "hyrax.solr.password" -}}
 {{- if .Values.solr.enabled }}
-{{- .Values.solr.authentication.adminPassword }}
+{{- .Values.solr.auth.adminPassword }}
 {{- else }}
 {{- .Values.externalSolrPassword }}
 {{- end }}
@@ -188,7 +188,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{- define "hyrax.redis.url" -}}
-{{- printf "redis://:%s@%s:%s" .Values.redis.password (include "hyrax.redis.host" .) "6379/0" -}}
+{{- printf "redis://:%s@%s:%s" .Values.redis.auth.password (include "hyrax.redis.host" .) "6379/0" -}}
 {{- end -}}
 
 {{- define "hyrax.nginx.host" -}}
