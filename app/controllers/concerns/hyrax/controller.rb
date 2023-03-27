@@ -47,7 +47,7 @@ module Hyrax::Controller
     search_service_class.new(config: blacklight_config,
                              scope: self,
                              user_params: search_params,
-                             search_builder_class: search_builder_class)
+                             search_builder_class: blacklight_config.search_builder_class)
   end
 
   private

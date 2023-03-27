@@ -13,6 +13,7 @@ module Hyrax
 
       before_action do
         blacklight_config.track_search_session = false
+        blacklight_config.search_builder_class = search_builder_class
       end
 
       class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class
