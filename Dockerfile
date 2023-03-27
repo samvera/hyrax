@@ -1,4 +1,4 @@
-ARG RUBY_VERSION=2.7.6
+ARG RUBY_VERSION=2.7.7
 
 # Replace with official jemalloc package in alpine 3.17
 FROM ruby:$RUBY_VERSION-alpine3.16 as builder
@@ -9,7 +9,7 @@ RUN curl -sL https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemall
     make && \
     make install
 
-FROM ruby:$RUBY_VERSION-alpine3.15 as hyrax-base
+FROM ruby:$RUBY_VERSION-alpine3.16 as hyrax-base
 
 ARG DATABASE_APK_PACKAGE="postgresql-dev"
 ARG EXTRA_APK_PACKAGES="git"
