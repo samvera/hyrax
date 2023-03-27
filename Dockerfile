@@ -13,7 +13,7 @@ FROM ruby:$RUBY_VERSION-alpine3.16 as hyrax-base
 
 ARG DATABASE_APK_PACKAGE="postgresql-dev"
 ARG EXTRA_APK_PACKAGES="git"
-ARG RUBYGEMS_VERSION=3.3.20
+ARG RUBYGEMS_VERSION=""
 
 RUN apk --no-cache upgrade && \
   apk --no-cache add acl \
