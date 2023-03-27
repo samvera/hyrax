@@ -74,10 +74,11 @@ USER app
 
 RUN mkdir -p /app/fits && \
     cd /app/fits && \
-    wget https://github.com/harvard-lts/fits/releases/download/1.5.1/fits-1.5.1.zip -O fits.zip && \
+    wget https://github.com/harvard-lts/fits/releases/download/1.6.0/fits-1.6.0.zip -O fits.zip && \
     unzip fits.zip && \
-    rm fits.zip && \
-    chmod a+x /app/fits/fits.sh
+    rm fits.zip tools/mediainfo/linux/libmediainfo.so.0 tools/mediainfo/linux/libzen.so.0 && \
+    chmod a+x /app/fits/fits.sh && \
+    sed -i 's/\(<tool.*TikaTool.*>\)/<!--\1-->/' /app/fits/xml/fits.xml
 ENV PATH="${PATH}:/app/fits"
 
 CMD bundle exec sidekiq
