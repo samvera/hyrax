@@ -15,7 +15,7 @@ module Hyrax
 
     # @param [Symbol] access :deposit, :read or :edit
     def search_results(access)
-      response = context.repository.search(builder(access))
+      response = context.blacklight_config.repository.search(builder(access))
       response.documents
     end
 

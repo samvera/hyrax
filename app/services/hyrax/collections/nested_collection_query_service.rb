@@ -51,7 +51,7 @@ module Hyrax
       def self.parent_collections(child:, scope:, page: 1)
         return [] unless nestable?(collection: child)
         query_builder = Hyrax::NestedCollectionsParentSearchBuilder.new(scope: scope, child: child, page: page)
-        scope.repository.search(query_builder.query)
+        scope.blacklight_config.repository.search(query_builder.query)
       end
 
       ##
@@ -73,7 +73,7 @@ module Hyrax
         )
 
         query_builder.where(id: limit_to_id.to_s) if limit_to_id
-        scope.repository.search(query_builder.query)
+        scope.blacklight_config.repository.search(query_builder.query)
       end
       private_class_method :query_solr
 
