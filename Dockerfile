@@ -1,9 +1,19 @@
-ARG RUBY_VERSION=2.7.6
-FROM ruby:$RUBY_VERSION-alpine3.15 as hyrax-base
+ARG RUBY_VERSION=2.7.7
+
+# Replace with official jemalloc package in alpine 3.17
+FROM ruby:$RUBY_VERSION-alpine3.16 as builder
+RUN apk add build-base curl
+RUN curl -sL https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2 | tar -xj && \
+    cd jemalloc-5.3.0 && \
+    ./configure && \
+    make && \
+    make install
+
+FROM ruby:$RUBY_VERSION-alpine3.16 as hyrax-base
 
 ARG DATABASE_APK_PACKAGE="postgresql-dev"
 ARG EXTRA_APK_PACKAGES="git"
-ARG RUBYGEMS_VERSION=3.3.20
+ARG RUBYGEMS_VERSION=""
 
 RUN apk --no-cache upgrade && \
   apk --no-cache add acl \
@@ -33,6 +43,9 @@ ENV PATH="/app/samvera:$PATH"
 ENV RAILS_ROOT="/app/samvera/hyrax-webapp"
 ENV RAILS_SERVE_STATIC_FILES="1"
 
+COPY --from=builder /usr/local/lib/libjemalloc.so.2 /usr/local/lib/
+ENV LD_PRELOAD="/usr/local/lib/libjemalloc.so.2"
+
 ENTRYPOINT ["hyrax-entrypoint.sh"]
 CMD ["bundle", "exec", "puma", "-v", "-b", "tcp://0.0.0.0:3000"]
 
@@ -61,10 +74,11 @@ USER app
 
 RUN mkdir -p /app/fits && \
     cd /app/fits && \
-    wget https://github.com/harvard-lts/fits/releases/download/1.5.1/fits-1.5.1.zip -O fits.zip && \
+    wget https://github.com/harvard-lts/fits/releases/download/1.6.0/fits-1.6.0.zip -O fits.zip && \
     unzip fits.zip && \
-    rm fits.zip && \
-    chmod a+x /app/fits/fits.sh
+    rm fits.zip tools/mediainfo/linux/libmediainfo.so.0 tools/mediainfo/linux/libzen.so.0 && \
+    chmod a+x /app/fits/fits.sh && \
+    sed -i 's/\(<tool.*TikaTool.*>\)/<!--\1-->/' /app/fits/xml/fits.xml
 ENV PATH="${PATH}:/app/fits"
 
 CMD bundle exec sidekiq
