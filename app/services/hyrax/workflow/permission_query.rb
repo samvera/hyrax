@@ -194,7 +194,7 @@ module Hyrax
       # @return [ActiveRecord::Relation<Sipity::Entity>]
       #
       # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-      def scope_entities_for_the_user(user:)
+      def scope_entities_for_the_user(user:, page: 1, per_page: 10)
         entities = Sipity::Entity.arel_table
         workflow_state_actions = Sipity::WorkflowStateAction.arel_table
         workflow_states = Sipity::WorkflowState.arel_table
@@ -232,7 +232,7 @@ module Hyrax
         Sipity::Entity.where(
           entities[:id].in(entity_specific_joins.where(entity_specific_where))
           .or(entities[:id].in(workflow_specific_joins.where(workflow_specific_where)))
-        )
+        ).page(page).per(per_page)
       end
       # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
