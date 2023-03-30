@@ -589,7 +589,7 @@ de:
         depositor: Deponent
         directions: Unabhängig von den Sichtbarkeitseinstellungen für diese Arbeit können Sie sie auch für andere Benutzer und Gruppen freigeben.
         group: Gruppe
-        permissions_save_note_html: Berechtigungen werden <strong> nicht </ strong> gespeichert, bis die Option & quot; Speichern & quot; Die Taste wird unten auf der Seite gedrückt.
+        permissions_save_note_html: Berechtigungen werden <strong> nicht </strong> gespeichert, bis die Option & quot; Speichern & quot; Die Taste wird unten auf der Seite gedrückt.
         use_add_button: Verwenden Sie die Schaltfläche "Hinzufügen", um Zugriff auf jeweils eine %{account_label} zu gewähren (diese wird der folgenden Liste hinzugefügt). Wählen Sie den Benutzer nach Name oder %{account_label} \ aus. Wählen Sie dann die Zugriffsebene aus, die Sie gewähren möchten, und klicken Sie auf Add this %{account_label}, um das Hinzufügen der Berechtigung abzuschließen.
       form_thumbnail:
         help_html: Wählen Sie die Datei aus, die als Miniaturansicht für diese Arbeit verwendet werden soll.
@@ -1405,14 +1405,14 @@ de:
       count:
         collections:
           collections_listing: Auflistung der Sammlungen
-          in_repo: "<strong> %{total_count} Sammlungen </ strong> im Repository"
-          you_manage: "<strong> %{total_count} Sammlungen </ strong>, die Sie im Repository verwalten können"
-          you_own: "<strong> %{total_count} Sammlungen </ strong>, die Sie im Repository besitzen"
+          in_repo: "<strong> %{total_count} Sammlungen </strong> im Repository"
+          you_manage: "<strong> %{total_count} Sammlungen </strong>, die Sie im Repository verwalten können"
+          you_own: "<strong> %{total_count} Sammlungen </strong>, die Sie im Repository besitzen"
         works:
-          in_repo: "<strong> %{total_count} Arbeiten </ strong> im Repository"
+          in_repo: "<strong> %{total_count} Arbeiten </strong> im Repository"
           works_listing: Auflistung der Arbeiten
-          you_manage: "<strong> %{total_count} Arbeiten </ strong>, das Sie im Repository verwalten können"
-          you_own: "<strong> %{total_count} Arbeiten </ strong>, das Sie im Repository besitzen"
+          you_manage: "<strong> %{total_count} Arbeiten </strong>, das Sie im Repository verwalten können"
+          you_own: "<strong> %{total_count} Arbeiten </strong>, das Sie im Repository besitzen"
       sort_and_per_page:
         number_of_results_to_display_per_page: Anzahl der anzuzeigenden Ergebnisse pro Seite
     nav_safety:
