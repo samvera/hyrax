@@ -62,8 +62,6 @@ ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nu
 
 FROM hyrax-base as hyrax-worker-base
 
-ENV MALLOC_ARENA_MAX=2
-
 USER root
 RUN apk --no-cache add bash \
   ffmpeg \
