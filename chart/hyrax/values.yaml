@@ -66,6 +66,10 @@ extraEnvFrom: []
 # tty: true
 extraContainerConfiguration: []
 
+## @param extraDeploy Array of extra objects to deploy with the release (evaluated as a template)
+##
+extraDeploy: []
+
 # an existing volume containing a Hyrax-based application
 # must be a ReadWriteMany volume if worker is enabled
 applicationExistingClaim: ""
