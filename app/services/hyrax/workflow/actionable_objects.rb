@@ -56,9 +56,7 @@ module Hyrax
 
         # starting_query = query ? [{'title_tesim' : query}] : []
         query_service = Hyrax::SolrQueryService.new
-        if query
-          query_service.with_field_pairs(field_pairs: {'title_tesim' => query})
-        end
+        query_service.with_field_pairs(field_pairs: { 'title_tesim' => query }) if query
         docs = query_service.with_ids(ids: ids_and_states.map(&:first))
                             .solr_documents
 
