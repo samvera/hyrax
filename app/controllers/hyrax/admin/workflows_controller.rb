@@ -19,6 +19,7 @@ module Hyrax
       per_page = params.fetch('per_page', 10)
       actionable_objects.page = page
       actionable_objects.per_page = per_page
+      actionable_objects.query = params['q']
       under_review = viewing_under_review?(params['state'])
       if under_review
         state = 'under-review'
@@ -33,6 +34,10 @@ module Hyrax
 
     def ensure_authorized!
       authorize! :review, :submissions
+    end
+
+    def search_action_url(*args)
+      hyrax.admin_workflows_url(*args)
     end
 
     def actionable_objects
