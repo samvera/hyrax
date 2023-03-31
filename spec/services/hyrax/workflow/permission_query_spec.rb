@@ -76,6 +76,36 @@ module Hyrax
         end
       end
 
+      describe 'scope_entities_for_the_user' do
+        context 'with multiple entities in different states' do
+          let(:sipity_entity2) do
+            Sipity::Entity.create!(proxy_for_global_id: 'gid://internal/Mock/2',
+                                   workflow: sipity_workflow,
+                                   workflow_state: Sipity::WorkflowState('forwarded', sipity_workflow))
+          end
+
+          before do
+            # Give reviewing_user permission to all workflow states
+            PermissionGenerator.call(roles: 'reviewing', workflow: sipity_workflow, agents: reviewing_user)
+            PermissionGenerator.call(roles: 'completing', workflow: sipity_workflow, agents: reviewing_user)
+          end
+
+          it 'filters entities by provided workflow states' do
+            # Not filtered by workflow state
+            both_entities = Array.wrap([sipity_entity, sipity_entity2]).map { |entity| Sipity::Entity(entity) }
+            expect(described_class.scope_entities_for_the_user(user: reviewing_user, workflow_state_filter: nil)).to eq(both_entities)
+            # filtered by a workflow state
+            initial_entities = Array.wrap([sipity_entity]).map { |entity| Sipity::Entity(entity) }
+            expect(described_class.scope_entities_for_the_user(user: reviewing_user, workflow_state_filter: 'initial')).to eq(initial_entities)
+            # Negated filtered by a workflow state
+            forwarded_entities = Array.wrap([sipity_entity2]).map { |entity| Sipity::Entity(entity) }
+            expect(described_class.scope_entities_for_the_user(user: reviewing_user, workflow_state_filter: '!initial')).to eq(forwarded_entities)
+            # filtered directly by forwarded workflow state
+            expect(described_class.scope_entities_for_the_user(user: reviewing_user, workflow_state_filter: 'forwarded')).to eq(forwarded_entities)
+          end
+        end
+      end
+
       describe 'permissions assigned at the workflow level' do
         let(:reviewing_group_member) { create(:user) }
         let(:reviewing_group) { Group.new('librarians') }
