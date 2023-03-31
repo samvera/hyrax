@@ -15,9 +15,18 @@ module Hyrax
       add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.admin.sidebar.tasks'), '#'
       add_breadcrumb t(:'hyrax.admin.sidebar.workflow_review'), request.path
-
-      @status_list = actionable_objects.reject(&:published?)
-      @published_list = actionable_objects.select(&:published?)
+      page = params.fetch('page', 1)
+      per_page = params.fetch('per_page', 10)
+      actionable_objects.page = page
+      actionable_objects.per_page = per_page
+      under_review = viewing_under_review?(params['state'])
+      if under_review
+        state = 'under-review'
+        actionable_objects.workflow_state_filter = '!' + self.deposited_workflow_state_name
+      else
+        actionable_objects.workflow_state_filter = self.deposited_workflow_state_name
+      end
+      @response = WorkflowResponse.new(actionable_objects.to_a, actionable_objects.total_count, page, per_page, under_review)
     end
 
     private
@@ -29,6 +38,38 @@ module Hyrax
     def actionable_objects
       @actionable_objects ||=
         Hyrax::Workflow::ActionableObjects.new(user: current_user)
+    end
+
+    def viewing_under_review?(state)
+      state != 'published'
+    end
+
+    class WorkflowResponse
+      attr_reader :total_count
+      attr_reader :current_page
+      attr_reader :per_page
+      attr_reader :docs
+      attr_reader :under_review
+
+      def initialize(docs, total_count, page, per_page, under_review)
+        @docs = docs
+        @total_count = total_count
+        @per_page = per_page.to_i
+        @current_page = page.to_i
+        @under_review = under_review
+      end
+
+      def total_pages
+        (total_count.to_f / per_page).round
+      end
+
+      def limit_value
+        docs.length
+      end
+
+      def viewing_under_review?
+        under_review
+      end
     end
   end
 end
