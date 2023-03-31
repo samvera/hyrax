@@ -191,8 +191,8 @@ We publish several Hyrax images to the [GitHub container registry][ghcr] under
 the [Samvera organization][samvera-packages].  To build them:
 
 ```sh
-export HYRAX_VERSION=v3.4.1 # or desired version
-git checkout $HYRAX_VERSION
+export HYRAX_VERSION=v4.0.0.rc1 # or desired version
+git checkout hyrax-$HYRAX_VERSION
 
 docker build --target hyrax-base --tag ghcr.io/samvera/hyrax/hyrax-base:$(git rev-parse HEAD) .
 
