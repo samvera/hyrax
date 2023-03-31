@@ -15,19 +15,8 @@ module Hyrax
       add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.admin.sidebar.tasks'), '#'
       add_breadcrumb t(:'hyrax.admin.sidebar.workflow_review'), request.path
-      page = params.fetch('page', 1)
-      per_page = params.fetch('per_page', 10)
-      actionable_objects.page = page
-      actionable_objects.per_page = per_page
-      actionable_objects.query = params['q']
-      under_review = viewing_under_review?(params['state'])
-      if under_review
-        state = 'under-review'
-        actionable_objects.workflow_state_filter = '!' + self.deposited_workflow_state_name
-      else
-        actionable_objects.workflow_state_filter = self.deposited_workflow_state_name
-      end
-      @response = WorkflowResponse.new(actionable_objects.to_a, actionable_objects.total_count, page, per_page, under_review)
+      assign_action_objects_params
+      @response = WorkflowResponse.new(actionable_objects.to_a, actionable_objects.total_count, current_page, per_page, under_review?)
     end
 
     private
@@ -45,8 +34,27 @@ module Hyrax
         Hyrax::Workflow::ActionableObjects.new(user: current_user)
     end
 
-    def viewing_under_review?(state)
-      state != 'published'
+    def current_page
+      @page ||= params.fetch('page', 1).to_i
+    end
+
+    def per_page
+      @per_page ||= params.fetch('per_page', 10).to_i
+    end
+
+    def query
+      @query ||= params['q']
+    end
+
+    def assign_action_objects_params
+      actionable_objects.page = current_page
+      actionable_objects.per_page = per_page
+      actionable_objects.query = query
+      actionable_objects.workflow_state_filter = (under_review? ? '!' : '') + deposited_workflow_state_name
+    end
+
+    def under_review?
+      @under_review = params['state'] != 'published'
     end
 
     class WorkflowResponse

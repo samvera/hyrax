@@ -228,9 +228,7 @@ module Hyrax
           entities[:id].eq(entity_responsibilities[:entity_id])
         )
         workflow_specific_where = where_builder.call(workflow_responsibilities)
-        if workflow_state_filter
-          workflow_specific_where = filter_by_workflow_state(workflow_specific_where, workflow_states, workflow_state_filter)
-        end
+        workflow_specific_where = filter_by_workflow_state(workflow_specific_where, workflow_states, workflow_state_filter) if workflow_state_filter
 
         result = Sipity::Entity.where(
           entities[:id].in(entity_specific_joins.where(entity_specific_where))
