@@ -12,9 +12,9 @@ RSpec.describe Hyrax::Workflow::ActionableObjects do
     context 'with objects in workflow' do
       let(:admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set) }
       let(:objects) do
-        [FactoryBot.valkyrie_create(:hyrax_work, admin_set_id: admin_set.id),
-         FactoryBot.valkyrie_create(:hyrax_work, admin_set_id: admin_set.id),
-         FactoryBot.valkyrie_create(:hyrax_work, admin_set_id: admin_set.id)]
+        [FactoryBot.valkyrie_create(:hyrax_work, admin_set_id: admin_set.id, title: ['Work One']),
+         FactoryBot.valkyrie_create(:hyrax_work, admin_set_id: admin_set.id, title: ['Work Two']),
+         FactoryBot.valkyrie_create(:hyrax_work, admin_set_id: admin_set.id, title: ['Something else'])]
       end
 
       let(:permission_template) do
@@ -84,6 +84,26 @@ RSpec.describe Hyrax::Workflow::ActionableObjects do
 
         it 'lists the objects' do
           expect(service.map(&:id)).to contain_exactly(*objects.map(&:id))
+        end
+
+        it 'supports pagination' do
+          service.per_page = 2
+          service.page = 1
+          expect(service.map(&:id)).to contain_exactly(*objects[0..1].map(&:id))
+          service.page = 2
+          expect(service.map(&:id)).to contain_exactly(*objects[2..2].map(&:id))
+        end
+
+        it 'supports filtering by title' do
+          service.query = 'work'
+          expect(service.map(&:id)).to contain_exactly(*objects[0..1].map(&:id))
+        end
+
+        it 'supports filtering by state' do
+          service.workflow_state_filter = 'needs_attention'
+          expect(service.map(&:id)).to contain_exactly(*objects.map(&:id))
+          service.workflow_state_filter = 'nope'
+          expect(service.map(&:id)).to be_empty
         end
 
         it 'includes the workflow states' do

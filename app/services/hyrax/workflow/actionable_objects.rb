@@ -25,6 +25,10 @@ module Hyrax
       #   @return [String]
       attr_accessor :workflow_state_filter
       ##
+      # @!attribute [rw] keyword search which results will be limited by (searches titles)
+      #   @return [String]
+      attr_accessor :query
+      ##
       # @!attribute [rw] page of results to return, 1 based
       #   @return [Integer]
       attr_accessor :page
@@ -50,7 +54,13 @@ module Hyrax
         ids_and_states = id_state_pairs
         return if ids_and_states.none?
 
-        docs = Hyrax::SolrQueryService.new.with_ids(ids: ids_and_states.map(&:first)).solr_documents
+        # starting_query = query ? [{'title_tesim' : query}] : []
+        query_service = Hyrax::SolrQueryService.new
+        if query
+          query_service.with_field_pairs(field_pairs: {'title_tesim' => query})
+        end
+        docs = query_service.with_ids(ids: ids_and_states.map(&:first))
+                            .solr_documents
 
         docs.each do |solr_doc|
           object = ObjectInWorkflowDecorator.new(solr_doc)
