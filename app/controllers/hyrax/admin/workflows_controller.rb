@@ -25,10 +25,6 @@ module Hyrax
       authorize! :review, :submissions
     end
 
-    def search_action_url(*args)
-      hyrax.admin_workflows_url(*args)
-    end
-
     def actionable_objects
       @actionable_objects ||=
         Hyrax::Workflow::ActionableObjects.new(user: current_user)
@@ -42,14 +38,9 @@ module Hyrax
       @per_page ||= params.fetch('per_page', 10).to_i
     end
 
-    def query
-      @query ||= params['q']
-    end
-
     def assign_action_objects_params
       actionable_objects.page = current_page
       actionable_objects.per_page = per_page
-      actionable_objects.query = query
       actionable_objects.workflow_state_filter = (under_review? ? '!' : '') + deposited_workflow_state_name
     end
 
