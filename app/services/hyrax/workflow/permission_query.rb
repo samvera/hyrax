@@ -227,6 +227,7 @@ module Hyrax
         entity_specific_where = where_builder.call(entity_responsibilities).and(
           entities[:id].eq(entity_responsibilities[:entity_id])
         )
+        entity_specific_where = filter_by_workflow_state(entity_specific_where, workflow_states, workflow_state_filter) if workflow_state_filter
         workflow_specific_where = where_builder.call(workflow_responsibilities)
         workflow_specific_where = filter_by_workflow_state(workflow_specific_where, workflow_states, workflow_state_filter) if workflow_state_filter
 
