@@ -459,6 +459,14 @@ en:
       workflows:
         index:
           header: Review Submissions
+          heading:
+            work: Work
+            depositor: Depositor
+            submission_date: Submission Date
+            status: status
+          works_published: "<strong>%{total_count} works</strong> published"
+          works_under_review: "<strong>%{total_count} works</strong> under review"
+          works_listing: Works listing
           tabs:
             published: Published
             under_review: Under Review

@@ -8,7 +8,13 @@
       <%= render 'tabs' %>
       <div class="card">
         <div class="card-header">
-          <span class="count-display"><%= I18n.t('hyrax.my.count.works.you_manage', total_count: @response.total_count).html_safe %></span>
+          <span class="count-display">
+            <% if @response.viewing_under_review? %>
+              <%= I18n.t('hyrax.admin.workflows.index.works_under_review', total_count: @response.total_count).html_safe %>
+            <% else %>
+              <%= I18n.t('hyrax.admin.workflows.index.works_published', total_count: @response.total_count).html_safe %>
+            <% end %>
+          </span>
         </div>
         <div class="card-body">
           <div class="row">
@@ -29,14 +35,14 @@
               <%= render 'hyrax/my/search_form' %>
             </div>
           </div>
-          <h2 class="sr-only"><%= t('hyrax.my.count.works.works_listing') %></h2>
+          <h2 class="sr-only"><%= t('.works_listing') %></h2>
           <table class="table table-sm table-striped works-list">
             <thead>
               <tr>
-                <th width="40%">Work</th>
-                <th width="20%">Depositor</th>
-                <th width="20%">Submission Date</th>
-                <th width="20%">Status</th>
+                <th width="40%"><%= t(".heading.work") %></th>
+                <th width="20%"><%= t(".heading.depositor") %></th>
+                <th width="20%"><%= t(".heading.submission_date") %></th>
+                <th width="20%"><%= t(".heading.status") %></th>
               </tr>
             </thead>
             <tbody>
