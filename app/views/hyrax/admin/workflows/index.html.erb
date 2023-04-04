@@ -17,7 +17,7 @@
       </div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-sm-5">
+          <div class="col-sm-12">
             <div class="sort-toggle mt-2">
               <%= form_tag hyrax.admin_workflows_path, method: :get, class: 'per_page' do %>
                 <fieldset class="col-12">
@@ -29,9 +29,6 @@
                 </fieldset>
               <% end %>
             </div>
-          </div>
-          <div class="col-sm-7">
-            <%= render 'hyrax/my/search_form' %>
           </div>
         </div>
         <h2 class="sr-only"><%= t('.works_listing') %></h2>
