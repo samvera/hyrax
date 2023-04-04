@@ -50,7 +50,8 @@ module Hyrax
         ids_and_states = id_state_pairs
         return if ids_and_states.none?
 
-        docs = Hyrax::SolrQueryService.new.with_ids(ids: ids_and_states.map(&:first)).solr_documents(page: @page, rows: @per_page)
+        docs = Hyrax::SolrQueryService.new.with_ids(ids: ids_and_states.map(&:first))
+                                          .solr_documents(page: @page, rows: @per_page, sort: 'system_create_dtsi ASC')
 
         docs.each do |solr_doc|
           object = ObjectInWorkflowDecorator.new(solr_doc)
@@ -77,6 +78,7 @@ module Hyrax
       def id_state_pairs
         gids_and_states = PermissionQuery
                           .scope_entities_for_the_user(user: user, page: page, per_page: per_page, workflow_state_filter: workflow_state_filter)
+                          .order(created_at: :asc)
                           .pluck(:proxy_for_global_id, :workflow_state_id)
 
         return [] if gids_and_states.none?
