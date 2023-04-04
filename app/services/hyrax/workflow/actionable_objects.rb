@@ -51,7 +51,7 @@ module Hyrax
         return if ids_and_states.none?
 
         docs = Hyrax::SolrQueryService.new.with_ids(ids: ids_and_states.map(&:first))
-                                          .solr_documents(page: @page, rows: @per_page, sort: 'system_create_dtsi ASC')
+                                      .solr_documents(page: @page, rows: @per_page, sort: 'system_create_dtsi ASC')
 
         docs.each do |solr_doc|
           object = ObjectInWorkflowDecorator.new(solr_doc)
