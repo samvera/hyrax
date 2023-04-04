@@ -50,7 +50,7 @@ module Hyrax
         ids_and_states = id_state_pairs
         return if ids_and_states.none?
 
-        docs = Hyrax::SolrQueryService.new.with_ids(ids: ids_and_states.map(&:first)).solr_documents
+        docs = Hyrax::SolrQueryService.new.with_ids(ids: ids_and_states.map(&:first)).solr_documents(page: @page, rows: @per_page)
 
         docs.each do |solr_doc|
           object = ObjectInWorkflowDecorator.new(solr_doc)
