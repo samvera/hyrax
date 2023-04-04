@@ -64,7 +64,7 @@ module Hyrax
       end
 
       def total_pages
-        (total_count.to_f / per_page).round
+        (total_count.to_f / per_page).ceil
       end
 
       def limit_value
