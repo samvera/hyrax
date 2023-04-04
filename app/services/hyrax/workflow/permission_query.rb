@@ -249,7 +249,7 @@ module Hyrax
       # If the filter begins with a !, it will filter to states not equal to the filter.
       def filter_by_workflow_state(where_builder, workflow_states, filter)
         if filter.start_with?('!')
-          where_builder.and(workflow_states[:name].not_eq(filter[1..]))
+          where_builder.and(workflow_states[:name].not_eq(filter[1..-1]))
         else
           where_builder.and(workflow_states[:name].eq(filter))
         end
