@@ -32,7 +32,7 @@ SUMMARY
   # http://guides.rubyonrails.org/maintenance_policy.html
   spec.add_dependency 'rails', '~> 6.0'
 
-  spec.add_dependency 'active-fedora', '~> 13.1', '>= 13.1.2'
+  spec.add_dependency 'active-fedora', '~> 14.0'
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'blacklight', '~> 7.29'
@@ -53,18 +53,18 @@ SUMMARY
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'hydra-derivatives', '~> 3.3'
   spec.add_dependency 'hydra-editor', '~> 6.0'
-  spec.add_dependency 'hydra-file_characterization', '~> 1.1.2'
+  spec.add_dependency 'hydra-file_characterization', '~> 1.1'
   spec.add_dependency 'hydra-head', '~> 12.0'
-  spec.add_dependency 'hydra-works', '>= 0.16'
+  spec.add_dependency 'hydra-works', '~> 2.1'
   spec.add_dependency 'iiif_manifest', '>= 0.3', '< 2.0'
   spec.add_dependency 'json-schema' # for Arkivo
   # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'kaminari_route_prefix', '~> 0.1.1'
   spec.add_dependency 'legato', '~> 0.3'
-  spec.add_dependency 'linkeddata' # Required for getting values from geonames
+  spec.add_dependency 'linkeddata', '~> 3.2', '>= 3.2.1' # Required for getting values from geonames
   spec.add_dependency 'mailboxer', '~> 0.12'
   spec.add_dependency 'nest', '~> 3.1'
-  spec.add_dependency 'noid-rails', '~> 3.0.0'
+  spec.add_dependency 'noid-rails', '~> 3.0'
   spec.add_dependency 'oauth'
   spec.add_dependency 'oauth2', '~> 1.2'
   spec.add_dependency 'openseadragon'
@@ -79,7 +79,6 @@ SUMMARY
   spec.add_dependency 'reform', '~> 2.3'
   spec.add_dependency 'reform-rails', '~> 0.2.0'
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
-  spec.add_dependency 'samvera-nesting_indexer', '~> 2.0'
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 5.10'
   spec.add_dependency 'valkyrie', '~> 3.0.1'
