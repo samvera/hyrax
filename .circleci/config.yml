@@ -1,22 +1,34 @@
 version: 2.1
 orbs:
   samvera: samvera/circleci-orb@1
-  browser-tools: circleci/browser-tools@1.3
+  browser-tools: circleci/browser-tools@1
   ruby: circleci/ruby@2
   node: circleci/node@5
+
+# Default versions. Can be overridden by the workflow.
+parameters:
+  ruby_version:
+    type: string
+    default: 3.0.6
+  bundler_version:
+    type: string
+    default: 2.4.12
+  rails_version:
+    type: string
+    default: 6.1.7.3
 
 jobs:
   bundle:
     parameters:
       ruby_version:
         type: string
-        default: 2.7.7
+        default: << pipeline.parameters.ruby_version >>
       bundler_version:
         type: string
-        default: 2.4.8
+        default: << pipeline.parameters.bundler_version >>
       rails_version:
         type: string
-        default: 6.1.7.2
+        default: << pipeline.parameters.rails_version >>
     executor:
       name: 'samvera/ruby'
       ruby_version: << parameters.ruby_version >>
@@ -71,13 +83,13 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.7.7
+        default: << pipeline.parameters.ruby_version >>
       bundler_version:
         type: string
-        default: 2.4.8
+        default: << pipeline.parameters.bundler_version >>
       rails_version:
         type: string
-        default: 6.1.7.2
+        default: << pipeline.parameters.rails_version >>
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
@@ -114,10 +126,10 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.7.7
+        default: << pipeline.parameters.ruby_version >>
       bundler_version:
         type: string
-        default: 2.4.8
+        default: << pipeline.parameters.bundler_version >>
       hyrax_valkyrie:
         type: string
         default: "false"
@@ -190,25 +202,34 @@ workflows:
   ruby2-7:
     jobs:
       - bundle:
-          ruby_version: "2.7.7"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
+          ruby_version: "2.7.8"
       - build:
-          ruby_version: "2.7.7"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
+          ruby_version: "2.7.8"
           requires:
             - bundle
       - test:
           name: "ruby2-7"
-          ruby_version: "2.7.7"
-          bundler_version: "2.4.8"
+          ruby_version: "2.7.8"
           requires:
             - build
       - test:
           name: "ruby2-7-valkyrie"
-          ruby_version: "2.7.7"
-          bundler_version: "2.4.8"
+          ruby_version: "2.7.8"
+          hyrax_valkyrie: "true"
+          requires:
+            - build
+  ruby3-0:
+    jobs:
+      - bundle
+      - build:
+          requires:
+            - bundle
+      - test:
+          name: "ruby3-0"
+          requires:
+            - build
+      - test:
+          name: "ruby3-0-valkyrie"
           hyrax_valkyrie: "true"
           requires:
             - build
