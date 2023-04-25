@@ -880,6 +880,17 @@ module Hyrax
       @derivative_services ||= [Hyrax::FileSetDerivativesService]
     end
 
+    attr_writer :visibility_map
+    # A mapping from visibility string values to permissions; the default and
+    # reference implementation is provided by {Hyrax::VisibilityMap}.
+    #
+    # @return [Hyrax::VisibilityMap]
+    # @see Hyrax::VisibilityReader
+    # @see Hyrax::VisibilityWriter
+    def visibility_map
+      @visibility_map ||= Hyrax::VisibilityMap.instance
+    end
+
     private
 
     # @param [Symbol, #to_s] model_name - symbol representing the model
