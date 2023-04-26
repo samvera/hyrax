@@ -32,7 +32,7 @@ SUMMARY
   # http://guides.rubyonrails.org/maintenance_policy.html
   spec.add_dependency 'rails', '~> 6.0'
 
-  spec.add_dependency 'active-fedora', '~> 13.1', '>= 13.1.2'
+  spec.add_dependency 'active-fedora', '~> 14.0'
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'blacklight', '~> 7.29'
