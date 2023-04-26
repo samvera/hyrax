@@ -95,7 +95,8 @@ module Hyrax
       def call(value)
         Success(
           steps.inject(value) do |val, step_name|
-            yield container[step_name].call(val, *step_arguments_for(step_name))
+            args = step_arguments_for(step_name)
+            yield container[step_name].call(val, *args[0..-2], **Hash(args[-1]))
           end
         )
       end
@@ -119,7 +120,7 @@ module Hyrax
       #   tx = Hyrax::Transactions::Transaction.new(steps: [:first_step, :second_step])
       #   result = tx.with_step_args(second_step: {named_parameter: :param_value}).call(:value)
       #
-      def with_step_args(args)
+      def with_step_args(**args)
         raise(ArgumentError, key_err_msg(args.keys)) if
           args.keys.any? { |key| !step?(key) }
 
