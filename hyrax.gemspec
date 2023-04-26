@@ -79,7 +79,6 @@ SUMMARY
   spec.add_dependency 'reform', '~> 2.3'
   spec.add_dependency 'reform-rails', '~> 0.2.0'
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
-  spec.add_dependency 'samvera-nesting_indexer', '~> 2.0'
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 5.10'
   spec.add_dependency 'valkyrie', '~> 3.0.1'
