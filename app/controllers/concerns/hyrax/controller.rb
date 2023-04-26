@@ -41,12 +41,12 @@ module Hyrax::Controller
 
   ##
   # @note for Blacklight 6/7 compatibility
-  def search_service(**search_params)
+  def search_service(*search_params)
     return super if defined?(super) && search_params.empty?
 
     search_service_class.new(config: blacklight_config,
                              scope: self,
-                             user_params: search_params,
+                             user_params: search_params.first,
                              search_builder_class: blacklight_config.search_builder_class)
   end
 
