@@ -128,8 +128,8 @@ module Hyrax
 
     # Wraps ActiveFedora::Base#search_by_id(id, opts)
     # @return [Array<SolrHit>] the response docs wrapped in SolrHit objects
-    def search_by_id(id, opts = {})
-      result = Hyrax::SolrService.query("id:#{id}", opts.merge(rows: 1))
+    def search_by_id(id, **opts)
+      result = Hyrax::SolrService.query("id:#{id}", **opts.merge(rows: 1))
 
       raise Hyrax::ObjectNotFoundError, "Object '#{id}' not found in solr" if result.empty?
       result.first
