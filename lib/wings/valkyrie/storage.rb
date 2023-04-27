@@ -69,7 +69,7 @@ module Wings
 
         reader = RDF::Reader.for(content_type: response.headers['content-type'])
         version_graph = RDF::Graph.new << reader.new(response.body)
-        query = {predicate: RDF::Vocab::Fcrepo4.hasVersion}
+        query = { predicate: RDF::Vocab::Fcrepo4.hasVersion }
 
         version_graph.query(query).objects.map do |uri|
           timestamp =
