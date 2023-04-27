@@ -413,7 +413,7 @@ module Hyrax
     # Returns true if the current user is the depositor of the specified work
     # @param document_id [String] the id of the document.
     def user_is_depositor?(document_id)
-      doc = Hyrax::SolrService.search_by_id(document_id, fl: 'depositor_ssim')
+      doc = Hyrax::SolrService.search_by_id(document_id, { fl: 'depositor_ssim' })
       current_user.user_key == doc['depositor_ssim']&.first
     end
 
