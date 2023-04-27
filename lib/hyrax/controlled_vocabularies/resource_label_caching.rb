@@ -27,7 +27,7 @@ module Hyrax
       # @note adds behavior to clear the cache whenever a manual fetch of data
       #   is performed.
       # @see ActiveTriples::Resource#fetch
-      def fetch(*)
+      def fetch(*, **)
         Rails.cache.delete(cache_key)
         super
       end
