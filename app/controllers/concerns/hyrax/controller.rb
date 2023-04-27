@@ -41,7 +41,8 @@ module Hyrax::Controller
 
   ##
   # @note for Blacklight 6/7 compatibility
-  def search_service(**search_params)
+  def search_service(*args, **search_params)
+    search_params.merge!(args.last) if args.last.is_a?(Hash)
     return super if defined?(super) && search_params.empty?
 
     search_service_class.new(config: blacklight_config,
