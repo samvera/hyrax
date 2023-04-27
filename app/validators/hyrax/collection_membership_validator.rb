@@ -7,7 +7,7 @@ module Hyrax
     # @param multiple_membership_checker
     def initialize(multiple_membership_checker: Hyrax::MultipleMembershipChecker, **options)
       @multiple_membership_checker = multiple_membership_checker
-      super(options)
+      super(**options)
     end
 
     def validate(record)
