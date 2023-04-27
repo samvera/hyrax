@@ -12,7 +12,7 @@ module Hyrax
       property :proxy_depositor
 
       # pcdm relationships
-      property :admin_set_id, prepopulator: ->(_opts) { self.admin_set_id = Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s }
+      property :admin_set_id, prepopulator: proc { |_opts| self.admin_set_id = Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s }
       property :member_ids, default: [], type: Valkyrie::Types::Array
       property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array
       property :member_of_collections_attributes, virtual: true, populator: :in_collections_populator
