@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 class CollectionBrandingInfo < ApplicationRecord
-  def initialize(collection_id:,
-                 filename:,
-                 role:,
-                 alt_txt: "",
-                 target_url: "")
+  attr_accessor :collection_id, :filename, :role, :alt_txt, :target_url
+  after_initialize :set_collection_attributes
 
-    super()
+  def set_collection_attributes
     self.collection_id = collection_id
     self.role = role
     self.alt_text = alt_txt
