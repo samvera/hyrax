@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 class CollectionBrandingInfo < ApplicationRecord
-  def initialize(collection_id:,
-                 filename:,
-                 role:,
-                 alt_txt: "",
-                 target_url: "")
+  def initialize(*_args, **opts)
+    collection_id = opts.fetch(:collection_id)
+    filename = opts.fetch(:filename)
+    role = opts.fetch(:role)
+    opts[:alt_txt] ||= ""
+    opts[:target_url] ||= ""
 
-    super()
+    super(**opts)
     self.collection_id = collection_id
     self.role = role
-    self.alt_text = alt_txt
-    self.target_url = target_url
+    self.alt_text = opts[:alt_txt]
+    self.target_url = opts[:target_url]
     self.local_path = File.join(role, filename)
   end
 
