@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 class CollectionBrandingInfo < ApplicationRecord
-  attr_accessor :collection_id, :filename, :role, :alt_txt, :target_url
+  attr_accessor :filename, :alt_txt
   after_initialize :set_collection_attributes
 
   def set_collection_attributes
-    self.collection_id = collection_id
-    self.role = role
-    self.alt_text = alt_txt
-    self.target_url = target_url
-    self.local_path = File.join(role, filename)
+    self.alt_text ||= alt_txt || ''
+    self.local_path ||= File.join(role, filename)
   end
 
   def save(file_location, upload_file = true)
