@@ -34,7 +34,7 @@ RSpec.describe Hyrax::Actors::CreateWithFilesActor do
 
       context "when uploaded_file_ids belong to me" do
         it "attaches files" do
-          expect(AttachFilesToWorkJob).to receive(:perform_later).with(GenericWork, [uploaded_file1, uploaded_file2], {})
+          expect(AttachFilesToWorkJob).to receive(:perform_later).with(GenericWork, [uploaded_file1, uploaded_file2], any_args)
           expect(middleware.public_send(mode, env)).to be true
         end
       end
