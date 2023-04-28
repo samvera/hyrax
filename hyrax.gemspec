@@ -58,8 +58,6 @@ SUMMARY
   spec.add_dependency 'hydra-works', '>= 0.16'
   spec.add_dependency 'iiif_manifest', '>= 0.3', '< 2.0'
   spec.add_dependency 'json-schema' # for Arkivo
-  # Pin more tightly because 0.x gems are potentially unstable
-  spec.add_dependency 'kaminari_route_prefix', '~> 0.1.1'
   spec.add_dependency 'legato', '~> 0.3'
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
   spec.add_dependency 'mailboxer', '~> 0.12'
