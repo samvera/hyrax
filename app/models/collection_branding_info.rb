@@ -3,11 +3,6 @@ class CollectionBrandingInfo < ApplicationRecord
   attr_accessor :filename, :alt_txt
   after_initialize :set_collection_attributes
 
-  def set_collection_attributes
-    self.alt_text ||= alt_txt || ''
-    self.local_path ||= File.join(role, filename)
-  end
-
   def save(file_location, upload_file = true)
     filename = File.split(local_path).last
     role_and_filename = File.join(role, filename)
@@ -45,6 +40,11 @@ class CollectionBrandingInfo < ApplicationRecord
   end
 
   private
+
+  def set_collection_attributes
+    self.alt_text ||= alt_txt || ''
+    self.local_path ||= File.join(role, filename)
+  end
 
   def storage
     Hyrax.config.branding_storage_adapter
