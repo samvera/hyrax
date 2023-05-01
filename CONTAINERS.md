@@ -5,13 +5,13 @@ Our goal is to provide a practical, reusable reference environment for applicati
 
 The [Hyrax Engine Development](#hyrax-engine-development) is further along than the [Docker Image for Hyrax-based Applications](#docker-image-for-hyrax-based-applications) which is further along than [Deploying to Production](#deploying-to-production).
 
-There are two options for development environments to run: 
+There are two options for development environments to run:
 
 - [Dassie](#dassie-internal-test-app-with-activefedora) is the default internal test app that will run an ActiveFedora-based Hyrax web application using Fedora 4 as the backend storage. See [Troubleshooting Dassie](#troubleshooting-dassie) if you encounter any issues.
 - [Koppie](#koppie-internal-test-app-with-valkyrie-connector-to-postgres) is a newer internal test app that is a Valkyrie-based Hyrax web application that runs with PostGres as backend storage. It does not run ActiveFedora or use Fedora 4. See [Troubleshooting Koppie](#troubleshooting-koppie) if you encounter any issues.
 
 <!-- NOTE: This title is referenced in the top-level README.md. Keep that in mind if you change it. -->
-## Hyrax Engine Development 
+## Hyrax Engine Development
 
 We support a `docker-compose`-based development environment for folks working on
 the Hyrax engine. This environment is substantially more like a Hyrax production
@@ -191,7 +191,7 @@ We publish several Hyrax images to the [GitHub container registry][ghcr] under
 the [Samvera organization][samvera-packages].  To build them:
 
 ```sh
-export HYRAX_VERSION=v4.0.0.rc1 # or desired version
+export HYRAX_VERSION=v4.0.0.rc2 # or desired version
 git checkout hyrax-$HYRAX_VERSION
 
 docker build --target hyrax-base --tag ghcr.io/samvera/hyrax/hyrax-base:$(git rev-parse HEAD) .
