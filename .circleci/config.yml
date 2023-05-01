@@ -205,6 +205,13 @@ workflows:
           bundler_version: "2.4.8"
           requires:
             - build
+      - test:
+          name: "ruby3-2-valkyrie"
+          ruby_version: "3.2.2"
+          bundler_version: "2.4.8"
+          hyrax_valkyrie: "true"
+          requires:
+            - build
   ruby3-1:
     jobs:
       - bundle:
