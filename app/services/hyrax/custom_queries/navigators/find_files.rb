@@ -80,10 +80,7 @@ module Hyrax
           files =
             query_service.custom_queries.find_many_file_metadata_by_use(resource: file_set, use: use)
 
-          raise Valkyrie::Persistence::ObjectNotFoundError, "FileSet #{file_set.id}'s #{use.fragment} is missing." if
-            files.empty?
-
-          files.first
+          files.first || raise(Valkyrie::Persistence::ObjectNotFoundError, "FileSet #{file_set.id}'s #{use.fragment} is missing.")
         end
       end
     end
