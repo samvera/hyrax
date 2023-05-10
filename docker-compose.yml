@@ -99,7 +99,6 @@ services:
 
   postgres:
     image: postgres:latest
-    restart: always
     environment:
       - POSTGRES_USER=hyrax_user
       - POSTGRES_PASSWORD=hyrax_password
