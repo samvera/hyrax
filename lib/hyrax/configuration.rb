@@ -393,6 +393,11 @@ module Hyrax
       @banner_image ||= 'https://user-images.githubusercontent.com/101482/29949206-ffa60d2c-8e67-11e7-988d-4910b8787d56.jpg'
     end
 
+    attr_writer :breadcrumb_builder
+    def breadcrumb_builder
+      @breadcrumb_builder ||= Hyrax::BootstrapBreadcrumbsBuilder
+    end
+
     ##
     # @return [Boolean]
     def disable_wings
