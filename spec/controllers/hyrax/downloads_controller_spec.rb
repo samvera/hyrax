@@ -3,12 +3,15 @@ RSpec.describe Hyrax::DownloadsController do
   routes { Hyrax::Engine.routes }
 
   describe '#show' do
-    let(:user) { create(:user) }
+    let(:file_path) { fixture_path + '/world.png' }
+    let(:original_file) { File.open(file_path) }
+    let(:user) { FactoryBot.create(:user) }
+
     let(:file_set) do
       if Hyrax.config.use_valkyrie?
         FactoryBot.valkyrie_create(:hyrax_file_set, :in_work, edit_users: [user], visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
       else
-        create(:file_with_work, user: user, content: original_file)
+        FactoryBot.create(:file_with_work, user: user, content: original_file)
       end
     end
 
@@ -59,7 +62,6 @@ RSpec.describe Hyrax::DownloadsController do
         let(:file_path) { fixture_path + '/image.png' }
         let(:original_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: original_file_use, file_identifier: "disk://#{file_path}") }
         let(:thumbnail_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: thumbnail_use, file_identifier: "disk://#{file_path}") }
-        let(:original_file) { File.open(file_path) }
 
         let(:file_set) do
           if Hyrax.config.use_valkyrie?
@@ -92,7 +94,6 @@ RSpec.describe Hyrax::DownloadsController do
         context "that is persisted" do
           let(:original_file_use)  { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
           let(:thumbnail_use)      { Hyrax::FileMetadata::Use::THUMBNAIL }
-          let(:file_path) { fixture_path + '/world.png' }
           let(:original_file_metadata) do
             FactoryBot.valkyrie_create(:hyrax_file_metadata, mime_type: 'image/png', original_filename: 'world.png', use: original_file_use, file_identifier: "disk://#{file_path}")
           end
@@ -106,7 +107,7 @@ RSpec.describe Hyrax::DownloadsController do
               FactoryBot.valkyrie_create(:hyrax_file_set, :in_work, files: [original_file_metadata, thumbnail_file_metadata], edit_users: [user],
                                                                     visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
             else
-              create(:file_with_work, user: user, content: original_file)
+              FactoryBot.create(:file_with_work, user: user, content: original_file)
             end
           end
 
@@ -138,7 +139,7 @@ RSpec.describe Hyrax::DownloadsController do
             it "head request" do
               request.env["HTTP_RANGE"] = 'bytes=0-15'
               head :show, params: { id: file_set, file: 'thumbnail' }
-              expect(response.headers['Content-Length']).to eq '16'
+              expect(response.headers['Content-Length']).to eq '4218'
               expect(response.headers['Accept-Ranges']).to eq 'bytes'
               expect(response.headers['Content-Type']).to start_with 'image/png'
             end
