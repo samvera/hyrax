@@ -11,7 +11,7 @@ module Hyrax
     # @param [Fixnum] retry_delay Maximum wait time in milliseconds before retrying. Wait time is a random value between 0 and retry_delay.
     def initialize(time_to_live, retry_count, retry_delay)
       @ttl = time_to_live
-      @client = Redlock::Client.new([Redis.current], retry_count: retry_count, retry_delay: retry_delay)
+      @client = Redlock::Client.new([(Hyrax.config.redis_connection || Redis.current)], retry_count: retry_count, retry_delay: retry_delay)
     end
 
     # Blocks until lock is acquired or timeout.
