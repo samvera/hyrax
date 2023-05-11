@@ -7,3 +7,4 @@ end
 
 gem 'sprockets', '~> 3.7'
 gem 'valkyrie', github: 'samvera/valkyrie', branch: 'main'
+gem 'reform-rails', '0.2.4'
