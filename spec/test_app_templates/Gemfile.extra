@@ -6,3 +6,4 @@ group :development do
 end
 
 gem 'sprockets', '~> 3.7'
+gem 'valkyrie', github: 'samvera/valkyrie', branch: 'main'
