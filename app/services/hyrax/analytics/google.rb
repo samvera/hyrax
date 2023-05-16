@@ -44,7 +44,8 @@ module Hyrax
             new config
           end
 
-          REQUIRED_KEYS = %w[analytics_id app_name app_version privkey_path privkey_value privkey_secret client_email].freeze
+          KEYS = %w[analytics_id app_name app_version privkey_path privkey_value privkey_secret client_email].freeze
+          REQUIRED_KEYS = %w[analytics_id app_name app_version privkey_secret client_email].freeze
 
           def initialize(config)
             @config = config
@@ -53,17 +54,13 @@ module Hyrax
           # @return [Boolean] are all the required values present?
           def valid?
             config_keys = @config.keys
+            return false unless config_keys.include?('privkey_value') || config_keys.include?('privkey_path')
             REQUIRED_KEYS.all? { |required| config_keys.include?(required) }
           end
 
-          REQUIRED_KEYS.each do |key|
+          KEYS.each do |key|
             class_eval %{ def #{key};  @config.fetch('#{key}'); end }
-          end
-
-          # This method allows setting the analytics id in the initializer
-          # @deprecated set the analytics id in either ENV['GOOGLE_ANALYTICS_ID'] or config/analytics.yaml
-          def analytics_id=(value)
-            @config['analytics_id'] = value
+            class_eval %{ def #{key}=(value);  @config['#{key}'] = value; end }
           end
         end
 
@@ -82,11 +79,8 @@ module Hyrax
         def auth_client(scope)
           private_key = Base64.decode64(config.privkey_value) if config.privkey_value.present?
           if private_key.blank?
-            if File.exists?(config.privkey_path)
-              private_key = File.read(config.privkey_path)
-            else
-              raise "Private key file for Google analytics was expected at '#{config.privkey_path}', but no file was found."
-            end
+            raise "Private key file for Google analytics was expected at '#{config.privkey_path}', but no file was found." unless File.exist?(config.privkey_path)
+            private_key = File.read(config.privkey_path)
           end
           Signet::OAuth2::Client.new token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
                                      audience: 'https://accounts.google.com/o/oauth2/token',
