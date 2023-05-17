@@ -41,6 +41,7 @@ SUMMARY
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'draper', '~> 4.0'
   spec.add_dependency 'dry-equalizer', '~> 0.2'
+  spec.add_dependency 'dry-monads', '< 1.5'
   spec.add_dependency 'dry-struct', '>= 0.1', '< 2.0'
   spec.add_dependency 'dry-transaction', '~> 0.11'
   spec.add_dependency 'dry-validation', '>= 0.9', '< 2.0'
