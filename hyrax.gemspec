@@ -40,6 +40,8 @@ SUMMARY
   spec.add_dependency 'carrierwave', '~> 1.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'draper', '~> 4.0'
+  spec.add_dependency 'dry-configurable', '< 0.16'
+  spec.add_dependency 'dry-core', '< 0.9'
   spec.add_dependency 'dry-equalizer', '~> 0.2'
   spec.add_dependency 'dry-monads', '< 1.5'
   spec.add_dependency 'dry-struct', '>= 0.1', '< 2.0'
