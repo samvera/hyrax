@@ -86,7 +86,8 @@ module Hyrax
       CatalogController.search_state_class = Hyrax::SearchState if CatalogController.try(:search_state_class) == Blacklight::SearchState
     end
 
-    initializer 'requires' do
+    # Require wings after initialization because it depends on autoloaded classes
+    config.after_initialize do
       require 'wings' unless Hyrax.config.disable_wings
     end
 

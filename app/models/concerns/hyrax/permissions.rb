@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 module Hyrax
   module Permissions
+    extend ActiveSupport::Autoload
     extend ActiveSupport::Concern
-    include Hyrax::Permissions::Writable
-    include Hyrax::Permissions::Readable
+    autoload :Writable
+    autoload :Readable
+
+    include Writable
+    include Readable
   end
 end

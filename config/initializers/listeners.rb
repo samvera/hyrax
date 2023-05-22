@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 Hyrax.publisher.subscribe(Hyrax::Listeners::AclIndexListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::ActiveFedoraAclIndexListener.new) unless Hyrax.config.disable_wings
 Hyrax.publisher.subscribe(Hyrax::Listeners::BatchNotificationListener.new)
