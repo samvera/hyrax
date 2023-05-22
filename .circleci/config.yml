@@ -121,6 +121,7 @@ jobs:
       hyrax_valkyrie:
         type: string
         default: "false"
+     
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
@@ -128,6 +129,111 @@ jobs:
     parallelism: 10
     environment:
       HYRAX_VALKYRIE: << parameters.hyrax_valkyrie >>
+      VALKYRIE_SOLR_PORT: 8985
+      DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test # Hard-coded with data from CircleCI orb, related to https://github.com/samvera-labs/samvera-circleci-orb/issues/42
+      KARMA_BROWSER: ChromeHeadlessCustom
+      RAILS_ROOT: .internal_test_app
+      SPEC_OPTS: "" # Clear output conflicts between samvera orb executor and ruby orb rspec command
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install system dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install imagemagick librsvg2-bin lsof
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
+      - run:
+          name: Check Chrome install
+          command: |
+            google-chrome --version
+            chromedriver --version
+      - restore_cache:
+          keys:
+            - engine-node-v1-{{ checksum "package.json" }}
+      # Call yarn directly for hyrax engine; node orb demands a lockfile to use caching
+      - run:
+          name: Yarn Install (engine)
+          command: yarn install
+      - save_cache:
+          key: engine-node-v1-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - samvera/install_solr_core:
+          solr_config_path: .internal_test_app/solr/conf
+      - samvera/install_solr_core:
+          solr_config_path: .internal_test_app/solr/conf
+          core_name: hyrax-valkyrie-test
+      # Rerun bundler in case this is a different ruby version than bundle and build steps
+      - samvera/bundle:
+          ruby_version: << parameters.ruby_version >>
+          bundler_version: << parameters.bundler_version >>
+      # Ensure gems needed by the test app are installed
+      - ruby/install-deps:
+          app-dir: .internal_test_app
+      - node/install-packages:
+          pkg-manager: yarn
+          app-dir: .internal_test_app
+      - run:
+          command: bundle exec rake db:migrate
+          working_directory: .internal_test_app
+      - ruby/rspec-test
+      - store_artifacts:
+          path: Gemfile.lock
+          destination: engine-gemfile-lock
+      - store_artifacts:
+          path: .internal_test_app/Gemfile.lock
+          destination: webapp-gemfile-lock
+
+  test-nofcrepo:
+    parameters:
+      postgres_version:
+        type: string
+        default: '9.6'
+      redis_version:
+        type: string
+        default: '6.2'
+      ruby_type:
+        type: string
+        default: 'ruby'
+      ruby_version:
+        type: string
+        default: '2.5.5'
+      solr_port:
+        type: string
+        default: '8985'
+      solr_version:
+        type: string
+        default: 'slim'
+      bundler_version:
+        type: string
+        default: 2.4.8
+      skip_wings:
+        type: string
+        default: "false"
+
+    docker:
+      - image: cimg/<< parameters.ruby_type >>:<< parameters.ruby_version >>-browsers
+      - image: zookeeper:3.4
+      - image: solr:<< parameters.solr_version >>
+        environment:
+          VERBOSE: yes
+          SECURITY_JSON: '{"authentication":{"blockUnknown": false, "class":"solr.BasicAuthPlugin", "credentials":{"solr":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c="}, "realm":"My Solr users", "forwardCredentials": false}, "authorization":{ "class":"solr.RuleBasedAuthorizationPlugin", "permissions":[{"name":"security-edit", "role":"admin"}], "user-role":{"solr":"admin"}}}'
+        command: sh -c "server/scripts/cloud-scripts/zkcli.sh -zkhost localhost:2181 -cmd put /security.json \"${SECURITY_JSON}\" && solr-fg -cloud -noprompt  -p << parameters.solr_port >> -z localhost:2181"
+      - image: redis:<< parameters.redis_version >>
+      - image: cimg/postgres:<< parameters.postgres_version >>     
+    parallelism: 10
+    environment:
+      BUNDLE_PATH: vendor/bundle
+      BUNDLE_JOBS: 4
+      BUNDLE_RETRY: 3
+      RAILS_ENV: test
+      RACK_ENV: test
+      POSTGRES_DB: circle_test
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_USER: postgres
+      HYRAX_SKIP_WINGS: << parameters.skip_wings >>
       VALKYRIE_SOLR_PORT: 8985
       DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test # Hard-coded with data from CircleCI orb, related to https://github.com/samvera-labs/samvera-circleci-orb/issues/42
       KARMA_BROWSER: ChromeHeadlessCustom
@@ -210,6 +316,13 @@ workflows:
           ruby_version: "3.2.2"
           bundler_version: "2.4.8"
           hyrax_valkyrie: "true"
+          requires:
+            - build
+      - test-nofcrepo:
+          name: "ruby3-2-valkyrie"
+          ruby_version: "3.2.2"
+          bundler_version: "2.4.8"
+          skip_wings: "true"
           requires:
             - build
   ruby3-1:
