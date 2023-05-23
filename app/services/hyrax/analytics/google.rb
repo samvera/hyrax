@@ -5,7 +5,7 @@ require 'signet/oauth_2/client'
 
 module Hyrax
   module Analytics
-    # rubcop:disable Metrics/ModuleLength
+    # rubocop:disable Metrics/ModuleLength
     module Google
       extend ActiveSupport::Concern
       # rubocop:disable Metrics/BlockLength
@@ -111,7 +111,7 @@ module Hyrax
           @profile
         end
 
-        # rubcop:disable Metrics/MethodLength
+        # rubocop:disable Metrics/MethodLength
         def to_date_range(period)
           case period
           when "day"
@@ -130,7 +130,7 @@ module Hyrax
 
           [start_date, end_date]
         end
-        # rubcop:enable Metrics/MethodLength
+        # rubocop:enable Metrics/MethodLength
 
         def keyword_conversion(date)
           case date
@@ -206,7 +206,7 @@ module Hyrax
       end
       # rubocop:enable Metrics/BlockLength
     end
-    # rubcop:enable Metrics/ModuleLength
+    # rubocop:enable Metrics/ModuleLength
   end
 end
 # rubocop:enable Metrics/ModuleLength
