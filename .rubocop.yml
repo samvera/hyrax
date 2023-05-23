@@ -125,3 +125,7 @@ RSpec/NestedGroups:
 
 RSpec/LeadingSubject:
   Enabled: false
+
+Naming/MethodName:
+  Exclude:
+    - 'app/forms/hyrax/forms.rb'
