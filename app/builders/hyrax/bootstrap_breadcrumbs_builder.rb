@@ -12,7 +12,7 @@ class Hyrax::BootstrapBreadcrumbsBuilder < BreadcrumbsOnRails::Breadcrumbs::Buil
   def render
     return "" if @elements.blank?
 
-    @context.tag.nav(breadcrumbs_options) do
+    @context.tag.nav(**breadcrumbs_options) do
       @context.tag.ol do
         safe_join(@elements.uniq.collect { |e| render_element(e) })
       end
