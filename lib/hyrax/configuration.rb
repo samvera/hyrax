@@ -743,7 +743,7 @@ module Hyrax
     ##
     # @return [Class] the configured admin set model class
     def admin_set_class
-      admin_set_model.safe_constantize || Hyrax::NilAdminSet
+      admin_set_model.safe_constantize
     end
 
     attr_writer :file_set_model
