@@ -243,7 +243,7 @@ module Hyrax
     end
 
     def single_item_search_service
-      Hyrax::SearchService.new(config: blacklight_config, user_params: params.except(:q, :page), scope: self, search_builder_class: search_builder_class)
+      Hyrax::SearchService.new(config: blacklight_config, user_params: params.except(:q, :page), scope: self, search_builder_class: blacklight_config.search_builder_class)
     end
 
     def wants_to_revert?

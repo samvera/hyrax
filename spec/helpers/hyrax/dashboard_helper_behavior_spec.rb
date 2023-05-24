@@ -72,15 +72,15 @@ RSpec.describe Hyrax::DashboardHelperBehavior, type: :helper do
 
     # deposited by the first user
     2.times do |t|
-      solr_service.add id: "199#{t}", "depositor_tesim" => user1.user_key, "has_model_ssim" => [model],
-                       "depositor_ssim" => user1.user_key, "generic_type_sim" => "Work"
+      solr_service.add({ id: "199#{t}", "depositor_tesim" => user1.user_key, "has_model_ssim" => [model],
+                         "depositor_ssim" => user1.user_key, "generic_type_sim" => "Work" })
     end
 
-    solr_service.add id: "1993", "depositor_tesim" => user1.user_key, "generic_type_sim" => "Big Work", "has_model_ssim" => [model], "depositor_ssim" => user1.user_key
+    solr_service.add({ id: "1993", "depositor_tesim" => user1.user_key, "generic_type_sim" => "Big Work", "has_model_ssim" => [model], "depositor_ssim" => user1.user_key })
 
     # deposited by the second user, but editable by the first
-    solr_service.add id: "1994", "depositor_tesim" => user2.user_key, "has_model_ssim" => [model],
-                     "depositor_ssim" => user2.user_key, "edit_access_person_ssim" => user1.user_key
+    solr_service.add({ id: "1994", "depositor_tesim" => user2.user_key, "has_model_ssim" => [model],
+                       "depositor_ssim" => user2.user_key, "edit_access_person_ssim" => user1.user_key })
     solr_service.commit
   end
 end

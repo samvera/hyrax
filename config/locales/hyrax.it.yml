@@ -1410,14 +1410,14 @@ it:
       count:
         collections:
           collections_listing: Elenco delle collezioni
-          in_repo: "<strong> collezioni %{total_count} </ strong> nel repository"
-          you_manage: "<strong> collezioni %{total_count} </ strong> che puoi gestire nel repository"
-          you_own: "<strong> collezioni %{total_count} </ strong> che possiedi nel repository"
+          in_repo: "<strong> collezioni %{total_count} </strong> nel repository"
+          you_manage: "<strong> collezioni %{total_count} </strong> che puoi gestire nel repository"
+          you_own: "<strong> collezioni %{total_count} </strong> che possiedi nel repository"
         works:
-          in_repo: "<strong> %{total_count} funziona </ strong> nel repository"
+          in_repo: "<strong> %{total_count} funziona </strong> nel repository"
           works_listing: Elenco delle opere
-          you_manage: "<strong> %{total_count} funziona </ strong> che puoi gestire nel repository"
-          you_own: "<strong> %{total_count} funziona </ strong> nel repository"
+          you_manage: "<strong> %{total_count} funziona </strong> che puoi gestire nel repository"
+          you_own: "<strong> %{total_count} funziona </strong> nel repository"
       sort_and_per_page:
         number_of_results_to_display_per_page: Numero di risultati da visualizzare per pagina
     nav_safety:

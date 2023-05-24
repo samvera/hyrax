@@ -3,12 +3,15 @@ RSpec.describe Hyrax::DownloadsController do
   routes { Hyrax::Engine.routes }
 
   describe '#show' do
-    let(:user) { create(:user) }
+    let(:file_path) { fixture_path + '/world.png' }
+    let(:original_file) { File.open(file_path) }
+    let(:user) { FactoryBot.create(:user) }
+
     let(:file_set) do
       if Hyrax.config.use_valkyrie?
         FactoryBot.valkyrie_create(:hyrax_file_set, :in_work, edit_users: [user], visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
       else
-        create(:file_with_work, user: user, content: original_file)
+        FactoryBot.create(:file_with_work, user: user, content: original_file)
       end
     end
 
@@ -106,7 +109,7 @@ RSpec.describe Hyrax::DownloadsController do
               FactoryBot.valkyrie_create(:hyrax_file_set, :in_work, files: [original_file_metadata, thumbnail_file_metadata], edit_users: [user],
                                                                     visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
             else
-              create(:file_with_work, user: user, content: original_file)
+              FactoryBot.create(:file_with_work, user: user, content: original_file)
             end
           end
 

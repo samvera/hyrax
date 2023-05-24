@@ -289,7 +289,7 @@ module Hyrax
     end
 
     def collection_title_by_id(id)
-      solr_docs = controller.repository.find(id).docs
+      solr_docs = controller.blacklight_config.repository.find(id).docs
       return nil if solr_docs.empty?
       solr_field = solr_docs.first["title_tesim"]
       return nil if solr_field.nil?

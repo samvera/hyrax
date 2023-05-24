@@ -37,7 +37,7 @@ module Hyrax
     class ResourceForm < Hyrax::ChangeSet # rubocop:disable Metrics/ClassLength
       ##
       # @api private
-      InWorksPrepopulator = lambda do |_options|
+      InWorksPrepopulator = proc do |_options|
         self.in_works_ids =
           if persisted?
             Hyrax.query_service
@@ -56,7 +56,7 @@ module Hyrax
       #   with `etag`-driven, application-side lock checks. for non-wings adapters
       #   we want to move away from application side lock validation and rely
       #   on the adapter/database features instead.
-      LockKeyPrepopulator = lambda do |_options|
+      LockKeyPrepopulator = proc do |_options|
         if Hyrax.config.disable_wings || !Hyrax.metadata_adapter.is_a?(Wings::Valkyrie::MetadataAdapter)
           Hyrax.logger.info "trying to prepopulate a lock token for " \
                             "#{self.class.inspect}, but optimistic locking isn't " \
@@ -78,26 +78,26 @@ module Hyrax
 
       property :date_modified, readable: false
       property :date_uploaded, readable: false
-      property :agreement_accepted, virtual: true, default: false, prepopulator: ->(_opts) { self.agreement_accepted = !model.new_record }
+      property :agreement_accepted, virtual: true, default: false, prepopulator: proc { |_opts| self.agreement_accepted = !model.new_record }
 
       collection(:permissions,
                  virtual: true,
                  default: [],
                  form: Hyrax::Forms::Permission,
                  populator: :permission_populator,
-                 prepopulator: ->(_opts) { self.permissions = Hyrax::AccessControl.for(resource: model).permissions })
+                 prepopulator: proc { |_opts| self.permissions = Hyrax::AccessControl.for(resource: model).permissions })
 
       property :embargo, form: Hyrax::Forms::Embargo, populator: :embargo_populator
       property :lease, form: Hyrax::Forms::Lease, populator: :lease_populator
 
       # virtual properties for embargo/lease;
-      property :embargo_release_date, virtual: true, prepopulator: ->(_opts) { self.embargo_release_date = model.embargo&.embargo_release_date }
-      property :visibility_after_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_after_embargo = model.embargo&.visibility_after_embargo }
-      property :visibility_during_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_during_embargo = model.embargo&.visibility_during_embargo }
+      property :embargo_release_date, virtual: true, prepopulator: proc { |_opts| self.embargo_release_date = model.embargo&.embargo_release_date }
+      property :visibility_after_embargo, virtual: true, prepopulator: proc { |_opts| self.visibility_after_embargo = model.embargo&.visibility_after_embargo }
+      property :visibility_during_embargo, virtual: true, prepopulator: proc { |_opts| self.visibility_during_embargo = model.embargo&.visibility_during_embargo }
 
-      property :lease_expiration_date, virtual: true,  prepopulator: ->(_opts) { self.lease_expiration_date = model.lease&.lease_expiration_date }
-      property :visibility_after_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_after_lease = model.lease&.visibility_after_lease }
-      property :visibility_during_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_during_lease = model.lease&.visibility_during_lease }
+      property :lease_expiration_date, virtual: true,  prepopulator: proc { |_opts| self.lease_expiration_date = model.lease&.lease_expiration_date }
+      property :visibility_after_lease, virtual: true, prepopulator: proc { |_opts| self.visibility_after_lease = model.lease&.visibility_after_lease }
+      property :visibility_during_lease, virtual: true, prepopulator: proc { |_opts| self.visibility_during_lease = model.lease&.visibility_during_lease }
 
       property :in_works_ids, virtual: true, prepopulator: InWorksPrepopulator
 
