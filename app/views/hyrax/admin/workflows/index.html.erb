@@ -5,87 +5,62 @@
 <div class="row">
   <div class="col-md-12">
     <div class="panel panel-default tabs">
-      <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-          <a href="#under-review" role="tab" data-toggle="tab"><%= t('.tabs.under_review') %></a>
-        </li>
-        <li>
-          <a href="#published" role="tab" data-toggle="tab"><%= t('.tabs.published') %></a>
-        </li>
-      </ul>
-      <div class="tab-content">
-        <div id="under-review" class="tab-pane active">
-          <div class="panel panel-default labels">
-            <div class="panel-body">
-              <div class="table-responsive">
-                <table class="table table-condensed table-striped datatable">
-                  <thead>
-                    <tr>
-                      <th width="40%">Work</th>
-                      <th width="20%">Depositor</th>
-                      <th width="20%">Submission Date</th>
-                      <th width="20%">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% @status_list.each do |document| %>
-                      <tr>
-                        <td>
-                          <%= link_to document, [main_app, document] %>
-                        </td>
-                        <td>
-                          <%= safe_join(document.creator, tag(:br)) %>
-                        </td>
-                        <td>
-                          <%= document.date_modified %>
-                        </td>
-                        <td>
-                          <span class="state state-pending"><%= document.workflow_state %></span>
-                        </td>
-                      </tr>
-                    <% end %>
-                  </tbody>
-                </table>
-              </div>
+      <%= render 'tabs' %>
+      <div class="panel-heading">
+        <span class="count-display">
+          <% if @response.viewing_under_review? %>
+            <%= I18n.t('hyrax.admin.workflows.index.works_under_review', total_count: @response.total_count).html_safe %>
+          <% else %>
+            <%= I18n.t('hyrax.admin.workflows.index.works_published', total_count: @response.total_count).html_safe %>
+          <% end %>
+        </span>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="sort-toggle mt-2">
+              <%= form_tag hyrax.admin_workflows_path, method: :get, class: 'per_page' do %>
+                <fieldset class="col-12">
+                  <legend class="sr-only"><%= t('hyrax.dashboard.my.sr.results_per_page') %></legend>
+                  <%= label_tag :per_page do %>
+                      Show <%= select_tag :per_page, options_for_select(Hyrax.config.range_for_number_of_results_to_display_per_page.map(&:to_s), h(params[:per_page])), title: "entries" %> per page
+                  <% end %>
+                  <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:per_page, :sort, :utf8)) %>
+                </fieldset>
+              <% end %>
             </div>
           </div>
         </div>
-        <div id="published" class="tab-pane">
-          <div class="panel panel-default labels">
-            <div class="panel-body">
-              <div class="table-responsive">
-                <table class="table table-condensed table-striped datatable">
-                  <thead>
-                    <tr>
-                      <th width="40%">Work</th>
-                      <th width="20%">Depositor</th>
-                      <th width="20%">Submission Date</th>
-                      <th width="20%">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% @published_list.each do |document| %>
-                      <tr>
-                        <td>
-                          <%= link_to document, [main_app, document] %>
-                        </td>
-                        <td>
-                          <%= safe_join(document.creator, tag(:br)) %>
-                        </td>
-                        <td>
-                          <%= document.date_modified %>
-                        </td>
-                        <td>
-                          <span class="state state-pending"><%= document.workflow_state %></span>
-                        </td>
-                      </tr>
-                    <% end %>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+        <h2 class="sr-only"><%= t('.works_listing') %></h2>
+        <table class="table table-sm table-striped works-list">
+          <thead>
+            <tr>
+              <th width="40%"><%= t(".heading.work") %></th>
+              <th width="20%"><%= t(".heading.depositor") %></th>
+              <th width="20%"><%= t(".heading.submission_date") %></th>
+              <th width="20%"><%= t(".heading.status") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @response.docs.each do |document| %>
+              <tr>
+                <td>
+                  <%= link_to document, [main_app, document] %>
+                </td>
+                <td>
+                  <%= safe_join(document.creator, tag(:br)) %>
+                </td>
+                <td>
+                  <%= document.date_modified %>
+                </td>
+                <td>
+                  <span class="state state-pending"><%= document.workflow_state %></span>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <%= render 'hyrax/my/results_pagination' %>
       </div>
     </div>
   </div>

@@ -1,0 +1,9 @@
+<ul class="nav nav-tabs" id="my_nav" role="list">
+  <li<%= ' class="active"'.html_safe if @response.viewing_under_review? %>>
+      <%= link_to t('hyrax.admin.workflows.index.tabs.under_review'),
+        hyrax.admin_workflows_path(state: 'under-review'), class: "nav-link#{' active' if @response.viewing_under_review?}" %>
+  </li>
+  <li<%= ' class="active"'.html_safe if !@response.viewing_under_review? %>>
+    <%= link_to t('hyrax.admin.workflows.index.tabs.published'), hyrax.admin_workflows_path(state: 'published'), class: "nav-link#{' active' if !@response.viewing_under_review?}" %>
+  </li>
+</ul>
