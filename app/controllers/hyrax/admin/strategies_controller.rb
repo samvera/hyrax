@@ -7,8 +7,8 @@ module Hyrax
       end
 
       # TODO: we could remove this if we used an isolated engine
-      def features_url
-        hyrax.admin_features_path
+      def features_url(*args)
+        hyrax.admin_features_path(*args)
       end
     end
   end

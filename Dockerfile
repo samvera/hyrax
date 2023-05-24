@@ -1,4 +1,4 @@
-ARG RUBY_VERSION=2.7.7
+ARG RUBY_VERSION=3.2.1
 
 # Replace with official jemalloc package in alpine 3.17
 FROM ruby:$RUBY_VERSION-alpine3.16 as builder
