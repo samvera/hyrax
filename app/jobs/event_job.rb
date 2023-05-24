@@ -5,10 +5,6 @@
 #
 # A generic job for sending events to a user.
 class EventJob < Hyrax::ApplicationJob
-  include Rails.application.routes.url_helpers
-  include ActionView::Helpers # For link_to
-  include HyraxHelper # For link_to_profile
-
   queue_as Hyrax.config.ingest_queue_name
   attr_reader :depositor
 
