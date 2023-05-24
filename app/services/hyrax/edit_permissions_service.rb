@@ -150,7 +150,7 @@ module Hyrax
 
     # Fixed set of users & groups to exclude from "editable" section of display
     def exclude_from_display
-      [::Ability.public_group_name, ::Ability.registered_group_name, ::Ability.admin_group_name, @depositor]
+      [Hyrax.config.ability_class.public_group_name, Hyrax.config.ability_class.registered_group_name, Hyrax.config.ability_class.admin_group_name, @depositor]
     end
 
     BlockedPermissions = Struct.new(:unauthorized_managers, :unauthorized_collection_managers)

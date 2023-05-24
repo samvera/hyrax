@@ -47,9 +47,9 @@ module Hyrax
         attribute :based_near_label, Solr::Array, "based_near_label_tesim"
         attribute :related_url, Solr::Array, "related_url_tesim"
         attribute :resource_type, Solr::Array, "resource_type_tesim"
-        attribute :edit_groups, Solr::Array, ::Ability.edit_group_field
-        attribute :edit_people, Solr::Array, ::Ability.edit_user_field
-        attribute :read_groups, Solr::Array, ::Ability.read_group_field
+        attribute :edit_groups, Solr::Array, Hyrax.config.ability_class.edit_group_field
+        attribute :edit_people, Solr::Array, Hyrax.config.ability_class.edit_user_field
+        attribute :read_groups, Solr::Array, Hyrax.config.ability_class.read_group_field
         attribute :collection_ids, Solr::Array, 'collection_ids_tesim'
         attribute :admin_set, Solr::Array, "admin_set_tesim"
         attribute :admin_set_id, Solr::Array, "admin_set_id_ssim"

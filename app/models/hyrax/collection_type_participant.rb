@@ -28,9 +28,9 @@ module Hyrax
     def label
       return agent_id unless agent_type == GROUP_TYPE
       case agent_id
-      when ::Ability.registered_group_name
+      when Hyrax.config.ability_class.registered_group_name
         I18n.t('hyrax.admin.admin_sets.form_participant_table.registered_users')
-      when ::Ability.admin_group_name
+      when Hyrax.config.ability_class.admin_group_name
         I18n.t('hyrax.admin.admin_sets.form_participant_table.admin_users')
       else
         agent_id

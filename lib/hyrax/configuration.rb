@@ -918,6 +918,12 @@ module Hyrax
       @search_builder_class ||= Hyrax::DefaultSearchBuilder
     end
 
+    attr_writer :ability_class
+    def ability_class
+      @ability_class ||= "::Ability".safe_constantize if "::Ability".safe_constantize.ancestors.include?(Hyrax::Ability)
+      @ability_class || Hyrax::DefaultAbility
+    end
+
     private
 
     # @param [Symbol, #to_s] model_name - symbol representing the model

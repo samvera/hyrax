@@ -48,7 +48,7 @@ module Hyrax
       case agent_id
       when 'registered'
         I18n.t('hyrax.admin.admin_sets.form_participant_table.registered_users')
-      when ::Ability.admin_group_name
+      when Hyrax.config.ability_class.admin_group_name
         I18n.t('hyrax.admin.admin_sets.form_participant_table.admin_users')
       else
         agent_id
@@ -56,7 +56,7 @@ module Hyrax
     end
 
     def admin_group?
-      agent_type == GROUP && agent_id == ::Ability.admin_group_name
+      agent_type == GROUP && agent_id == Hyrax.config.ability_class.admin_group_name
     end
 
     # @api private

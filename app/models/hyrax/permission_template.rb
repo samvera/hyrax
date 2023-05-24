@@ -192,7 +192,7 @@ module Hyrax
     def read_groups
       (agent_ids_for(access: 'view', agent_type: 'group') +
         agent_ids_for(access: 'deposit', agent_type: 'group')).uniq -
-        [::Ability.registered_group_name, ::Ability.public_group_name]
+        [Hyrax.config.ability_class.registered_group_name, Hyrax.config.ability_class.public_group_name]
     end
 
     ##

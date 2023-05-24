@@ -24,8 +24,9 @@ module Hyrax
         assigns_workflow: false,
         assigns_visibility: false,
         badge_color: "#663333",
-        participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
-                       { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.registered_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
+        participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: Hyrax.config.ability_class.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
+                       { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: Hyrax.config.ability_class.registered_group_name,
+                         access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
       }.freeze
 
       USER_COLLECTION_MACHINE_ID = Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
@@ -42,8 +43,9 @@ module Hyrax
         assigns_workflow: false,
         assigns_visibility: false,
         badge_color: "#705070",
-        participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
-                       { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.registered_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
+        participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: Hyrax.config.ability_class.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
+                       { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: Hyrax.config.ability_class.registered_group_name,
+                         access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
       }.freeze
 
       ADMIN_SET_MACHINE_ID = Hyrax::CollectionType::ADMIN_SET_MACHINE_ID
@@ -60,8 +62,8 @@ module Hyrax
         assigns_workflow: true,
         assigns_visibility: true,
         badge_color: "#405060",
-        participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
-                       { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
+        participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: Hyrax.config.ability_class.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
+                       { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: Hyrax.config.ability_class.admin_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
       }.freeze
 
       # @api public
@@ -120,10 +122,10 @@ module Hyrax
       def self.add_default_participants(collection_type_id)
         return unless collection_type_id
         default_participants = [{  agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE,
-                                   agent_id: ::Ability.admin_group_name,
+                                   agent_id: Hyrax.config.ability_class.admin_group_name,
                                    access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
                                 { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE,
-                                  agent_id: ::Ability.registered_group_name,
+                                  agent_id: Hyrax.config.ability_class.registered_group_name,
                                   access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
         add_participants(collection_type_id, default_participants)
       end

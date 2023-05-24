@@ -214,7 +214,7 @@ module Hyrax
     end
 
     def admin_group_name
-      ::Ability.admin_group_name
+      Hyrax.config.ability_class.admin_group_name
     end
 
     def create_workflows_for(permission_template:)
@@ -251,7 +251,7 @@ module Hyrax
 
     # Give registered users deposit access to default admin set
     def create_default_access_for(permission_template:, workflow:)
-      permission_template.access_grants.create(agent_type: 'group', agent_id: ::Ability.registered_group_name, access: Hyrax::PermissionTemplateAccess::DEPOSIT)
+      permission_template.access_grants.create(agent_type: 'group', agent_id: Hyrax.config.ability_class.registered_group_name, access: Hyrax::PermissionTemplateAccess::DEPOSIT)
       deposit = Sipity::Role[Hyrax::RoleRegistry::DEPOSITING]
       workflow.update_responsibilities(role: deposit, agents: Hyrax::Group.new('registered'))
     end

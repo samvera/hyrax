@@ -37,8 +37,8 @@ module Hyrax
 
       def collection_ids_for_deposit
         Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability: current_ability,
-                                                                      exclude_groups: [::Ability.registered_group_name,
-                                                                                       ::Ability.public_group_name])
+                                                                      exclude_groups: [Hyrax.config.ability_class.registered_group_name,
+                                                                                       Hyrax.config.ability_class.public_group_name])
       end
     end
   end

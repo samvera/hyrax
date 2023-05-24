@@ -16,7 +16,7 @@ module Hyrax
         return search_terms if groups.empty?
         permission_types.each do |type|
           field = solr_field_for(type, 'group')
-          delete_groups = [::Ability.public_group_name, ::Ability.registered_group_name]
+          delete_groups = [Hyrax.config.ability_class.public_group_name, Hyrax.config.ability_class.registered_group_name]
           user_groups = type == 'read' ? groups - delete_groups : groups
           next if user_groups.empty?
           # parens required to properly OR the clauses together:

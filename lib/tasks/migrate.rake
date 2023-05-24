@@ -15,16 +15,16 @@ namespace :hyrax do
 
       AdminSet.all.each do |admin_set|
         permission_template = admin_set.permission_template
-        if permission_template.access_grants.where(agent_type: 'group', agent_id: ::Ability.admin_group_name).none?
+        if permission_template.access_grants.where(agent_type: 'group', agent_id: Hyrax.config.ability_class.admin_group_name).none?
           Hyrax::PermissionTemplateAccess.create!(permission_template: permission_template,
                                                   agent_type: 'group',
-                                                  agent_id: ::Ability.admin_group_name,
+                                                  agent_id: Hyrax.config.ability_class.admin_group_name,
                                                   access: Hyrax::PermissionTemplateAccess::MANAGE)
         end
         permission_template.available_workflows.each do |workflow|
           Sipity::Role.all.each do |role|
             workflow.update_responsibilities(role: role,
-                                             agents: Hyrax::Group.new(::Ability.admin_group_name))
+                                             agents: Hyrax::Group.new(Hyrax.config.ability_class.admin_group_name))
           end
         end
       end

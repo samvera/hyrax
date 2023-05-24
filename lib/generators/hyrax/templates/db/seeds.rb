@@ -39,8 +39,8 @@ def create_collection_type(machine_id, options)
   default_options = {
     nestable: false, discoverable: false, sharable: false, allow_multiple_membership: false,
     require_membership: false, assigns_workflow: false, assigns_visibility: false,
-    participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
-                   { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.registered_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
+    participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: Hyrax.config.ability_class.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
+                   { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: Hyrax.config.ability_class.registered_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
   }
   final_options = default_options.merge(options.except(:title))
   Hyrax::CollectionTypes::CreateService.create_collection_type(machine_id: machine_id, title: options[:title], options: final_options)

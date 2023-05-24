@@ -142,7 +142,7 @@ module Hyrax::User
   end
 
   def ability
-    @ability ||= ::Ability.new(self)
+    @ability ||= Hyrax.config.ability_class.new(self)
   end
 
   def all_user_activity(since = DateTime.current.to_i - 1.day)
