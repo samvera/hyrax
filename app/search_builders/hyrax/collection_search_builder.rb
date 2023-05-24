@@ -8,7 +8,7 @@ module Hyrax
   # @note the default_processor_chain defined by Blacklight::Solr::SearchBuilderBehavior provides many possible points of override
   #
   # Allows :deposit as a valid type
-  class CollectionSearchBuilder < ::SearchBuilder
+  class CollectionSearchBuilder < Hyrax.config.search_builder_class
     include FilterByType
 
     attr_reader :access

@@ -8,7 +8,7 @@ module Hyrax::Forms
 
     self.required_fields = [:title, :creator, :license]
 
-    self.model_class = ::FileSet
+    self.model_class = Hyrax.config.file_set_class
 
     self.terms = [:resource_type, :title, :creator, :contributor, :description,
                   :keyword, :license, :publisher, :date_created, :subject, :language,

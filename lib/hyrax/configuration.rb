@@ -729,7 +729,7 @@ module Hyrax
     ##
     # @return [Class] the configured collection model class
     def collection_class
-      collection_model.safe_constantize
+      collection_model.safe_constantize || Hyrax::DefaultCollection
     end
 
     attr_writer :admin_set_model
@@ -743,7 +743,21 @@ module Hyrax
     ##
     # @return [Class] the configured admin set model class
     def admin_set_class
-      admin_set_model.constantize
+      admin_set_model.safe_constantize || Hyrax::NilAdminSet
+    end
+
+    attr_writer :file_set_model
+    ##
+    # @return [#constantize] a string representation of the file set 
+    #   model
+    def file_set_model
+      @file_set_model ||= '::FileSet'
+    end
+  
+    ##
+    # @return [Class] the configured file set model class
+    def file_set_class
+      file_set_model.safe_constantize || Hyrax::DefaultFileSet
     end
 
     ##
@@ -896,6 +910,12 @@ module Hyrax
     # @see Hyrax::VisibilityWriter
     def visibility_map
       @visibility_map ||= Hyrax::VisibilityMap.instance
+    end
+
+    attr_writer :search_builder_class
+    def search_builder_class
+      @search_builder_class ||= "::SearchBuilder".safe_constantize if "::SearchBuilder".safe_constantize.ancestors.include?(Hydra::AccessControlsEnforcement)
+      @search_builder_class ||= Hyrax::DefaultSearchBuilder
     end
 
     private
