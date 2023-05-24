@@ -2,6 +2,8 @@
 module Hyrax
   module Admin
     class FeaturesController < Flipflop::FeaturesController
+      include Hyrax::ThemedLayoutController
+
       with_themed_layout 'dashboard'
 
       before_action do

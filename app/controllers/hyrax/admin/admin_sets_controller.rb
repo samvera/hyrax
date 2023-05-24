@@ -2,6 +2,7 @@
 module Hyrax
   class Admin::AdminSetsController < ApplicationController
     include Hyrax::CollectionsControllerBehavior
+    include Hyrax::ThemedLayoutController
 
     before_action :authenticate_user!
     load_and_authorize_resource instance_name: :admin_set,

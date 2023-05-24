@@ -3,6 +3,7 @@ module Hyrax
   class MyController < ApplicationController
     include Hydra::Catalog
     include Hyrax::Collections::AcceptsBatches
+    include Hyrax::ThemedLayoutController
 
     # Define filter facets that apply to all repository objects.
     def self.configure_facets

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   class ContentBlocksController < ApplicationController
+    include Hyrax::ThemedLayoutController
+
     load_and_authorize_resource
     with_themed_layout 'dashboard'
 

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   class NotificationsController < ApplicationController
+    include Hyrax::ThemedLayoutController
+
     before_action :authenticate_user!
     with_themed_layout 'dashboard'
 

@@ -15,6 +15,7 @@ module Hyrax
     module StatsBehavior
       extend ActiveSupport::Concern
       included do
+        include Hyrax::ThemedLayoutController
         with_themed_layout 'dashboard'
 
         class_attribute :admin_stats_presenter, :admin_stats_services

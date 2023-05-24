@@ -3,6 +3,8 @@ module Hyrax
   class CollectionsController < ApplicationController
     include CollectionsControllerBehavior
     include BreadcrumbsForCollections
+    include Hyrax::ThemedLayoutController
+
     with_themed_layout :decide_layout
     load_and_authorize_resource except: [:index],
                                 instance_name: :collection,

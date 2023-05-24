@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   class TransfersController < ApplicationController
+    include Hyrax::ThemedLayoutController
+
     before_action :authenticate_user!
     before_action :load_proxy_deposit_request, only: :create
     load_and_authorize_resource :proxy_deposit_request, parent: false, except: :index

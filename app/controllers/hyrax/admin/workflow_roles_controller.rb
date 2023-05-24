@@ -2,6 +2,8 @@
 module Hyrax
   module Admin
     class WorkflowRolesController < ApplicationController
+      include Hyrax::ThemedLayoutController
+
       before_action :require_permissions
       with_themed_layout 'dashboard'
 

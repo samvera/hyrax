@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Hyrax
   class CitationsController < ApplicationController
+    include Hyrax::ThemedLayoutController
     include WorksControllerBehavior
     include DenyAccessOverrideBehavior
     include Breadcrumbs
