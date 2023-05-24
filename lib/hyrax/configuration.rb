@@ -748,12 +748,12 @@ module Hyrax
 
     attr_writer :file_set_model
     ##
-    # @return [#constantize] a string representation of the file set 
+    # @return [#constantize] a string representation of the file set
     #   model
     def file_set_model
       @file_set_model ||= '::FileSet'
     end
-  
+
     ##
     # @return [Class] the configured file set model class
     def file_set_class
