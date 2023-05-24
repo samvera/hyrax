@@ -9,6 +9,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, js: true
 
   before do
     sign_in admin_user
+    Hyrax::SolrQueryService.query_service = Hyrax.query_service
   end
 
   describe 'when both collections support multiple membership' do
