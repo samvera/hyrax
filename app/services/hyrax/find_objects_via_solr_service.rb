@@ -7,7 +7,7 @@ module Hyrax
     class_attribute :solr_query_builder, :solr_service, :query_service
     self.solr_query_builder = Hyrax::SolrQueryService
     self.solr_service = Hyrax::SolrService
-    self.query_service = Hyrax.query_service
+    # self.query_service = Hyrax.query_service
 
     class << self
       # Find objects matching search criteria.
