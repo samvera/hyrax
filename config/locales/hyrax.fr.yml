@@ -549,7 +549,10 @@ fr:
           répondre à votre demande. Si vous rencontrez des erreurs de
           téléchargement depuis le nuage, faites-nous savoir via le
           %{contact_href}.</p>
-        local_upload_html: "<p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>"
+          <p>Les téléchargements sont limités à %{upload_file_limit} fichiers de %{upload_size_limit} Mo chacun.</p>
+        local_upload_html: |
+          <p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>
+          <p>Les téléchargements sont limités à %{upload_file_limit} fichiers de %{upload_size_limit} Mo chacun.</p>
       form_member_of_collections:
         actions:
           remove: Supprimer de la collection
