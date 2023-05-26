@@ -535,7 +535,10 @@ en:
           files within a short period of time, the provider may not be able to
           accommodate your request. If you experience errors uploading from the
           cloud, let us know via the %{contact_href}.</p>
-        local_upload_html: "<p>You can add one or more files to associate with this work.</p>"
+          <p>Uploads are limited to %{upload_file_limit} files, %{upload_size_limit} MB each.</p>
+        local_upload_html: |
+          <p>You can add one or more files to associate with this work.</p>
+          <p>Uploads are limited to %{upload_file_limit} files, %{upload_size_limit} MB each.</p>
       form_member_of_collections:
         actions:
           remove: Remove from collection
