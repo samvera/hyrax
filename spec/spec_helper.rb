@@ -222,7 +222,9 @@ RSpec.configure do |config|
       # trust that clean_repo performed the clean if present
       example.metadata[:clean_repo] ||
       # don't run for adapters other than wings
-      (example.metadata[:valkyrie_adapter].present? && example.metadata[:valkyrie_adapter] != :wings_adapter)
+      (example.metadata[:valkyrie_adapter].present? && example.metadata[:valkyrie_adapter] != :wings_adapter) ||
+      # don't run when running fully valkyrized
+      Hyrax.config.disable_wings
   end
 
   config.append_after(:each, type: :feature) do
