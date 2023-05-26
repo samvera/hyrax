@@ -7,6 +7,8 @@ module Hyrax
                          :monograph
                        when :file_set
                          :hyrax_file_set
+                       when :collection
+                         :hyrax_collection
                        end
 
       if mapped_factory

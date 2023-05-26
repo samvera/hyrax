@@ -17,7 +17,6 @@ FactoryBot.define do
       read_users { [] }
       members { nil }
       access_grants { [] }
-      user { create(:user) }
     end
 
     after(:build) do |collection, evaluator|
