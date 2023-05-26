@@ -4,6 +4,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
   let(:user) { FactoryBot.create(:user) }
 
   before { sign_in(user) }
+  before { Hyrax::SolrQueryService.query_service = Hyrax.query_service }
 
   describe '#update_members' do
     let(:owned_work_1) { FactoryBot.create(:work, user: user) }
