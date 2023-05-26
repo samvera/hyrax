@@ -1290,7 +1290,7 @@ en:
         restore: Restore Previous Version
         restore_from: Restore From
         save: Save Revision
-        save_your_note: You must click &quot;Save Revision&quot; to revert a previous version of this file
+        save_your_note: You must click "Save Revision" to revert a previous version of this file
         upload: Upload New Version
     help:
       header: User Support
