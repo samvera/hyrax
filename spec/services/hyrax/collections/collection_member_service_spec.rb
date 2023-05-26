@@ -7,6 +7,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
   let(:listener) { Hyrax::Specs::SpyListener.new }
 
   before { Hyrax.publisher.subscribe(listener) }
+  before { Hyrax::SolrQueryService.query_service = Hyrax.query_service }
   after { Hyrax.publisher.unsubscribe(listener) }
 
   describe '.member?' do
