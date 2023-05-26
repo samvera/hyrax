@@ -20,4 +20,23 @@ if Hyrax.config.disable_wings
   Valkyrie.config.storage_adapter  = :disk
 
   Valkyrie.config.indexing_adapter = :solr_index
+  Hyrax.config.index_adapter = :solr_index
+
+  # TODO: Refactor this and custom query registration lib/wings/setup.rb
+  custom_queries = [Hyrax::CustomQueries::Navigators::CollectionMembers,
+                    Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator,
+                    Hyrax::CustomQueries::Navigators::ParentCollectionsNavigator,
+                    Hyrax::CustomQueries::Navigators::ChildFileSetsNavigator,
+                    Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator, # deprecated; use ChildFileSetsNavigator
+                    Hyrax::CustomQueries::Navigators::ChildWorksNavigator,
+                    Hyrax::CustomQueries::Navigators::ParentWorkNavigator,
+                    Hyrax::CustomQueries::Navigators::FindFiles,
+                    Hyrax::CustomQueries::FindAccessControl, # override Hyrax::CustomQueries::FindAccessControl
+                    Hyrax::CustomQueries::FindCollectionsByType,
+                    Hyrax::CustomQueries::FindFileMetadata, # override Hyrax::CustomQueries::FindFileMetadata
+                    Hyrax::CustomQueries::FindIdsByModel,
+                    Hyrax::CustomQueries::FindManyByAlternateIds] # override Hyrax::CustomQueries::FindManyByAlternateIds
+  custom_queries.each do |query_handler|
+    Valkyrie.config.metadata_adapter.query_service.custom_queries.register_query_handler(query_handler)
+  end
 end

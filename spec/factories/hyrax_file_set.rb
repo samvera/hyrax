@@ -57,6 +57,12 @@ FactoryBot.define do
       end
     end
 
+    trait :registered do
+      transient do
+        visibility_setting { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
+      end
+    end
+
     trait :with_files do
       transient do
         files { [valkyrie_create(:hyrax_file_metadata), valkyrie_create(:hyrax_file_metadata)] }

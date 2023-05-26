@@ -333,4 +333,6 @@ RSpec.configure do |config|
       hide_const("Wings") # disable_wings=true removes the Wings constant
     end
   end
+
+  config.include Hyrax::ValkyrieFactoryHelpers if Hyrax.config.disable_wings
 end

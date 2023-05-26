@@ -238,6 +238,7 @@ jobs:
       DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test # Hard-coded with data from CircleCI orb, related to https://github.com/samvera-labs/samvera-circleci-orb/issues/42
       KARMA_BROWSER: ChromeHeadlessCustom
       RAILS_ROOT: .internal_test_app
+      SOLR_URL: http://127.0.0.1:8985/solr/hyrax-valkyrie-test # Force to use valkyrie solr core
       SPEC_OPTS: "" # Clear output conflicts between samvera orb executor and ruby orb rspec command
     steps:
       - attach_workspace:
