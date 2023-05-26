@@ -5,6 +5,8 @@ RSpec.describe Hyrax::CollectionMembershipValidator do
   let(:work) { FactoryBot.build(:hyrax_work, :as_collection_member) }
   let(:form) { Hyrax::Forms::ResourceForm(Monograph).new(work) }
 
+  before { Hyrax::SolrQueryService.query_service = Hyrax.query_service }
+
   describe '#validate' do
     it 'is valid' do
       expect { validator.validate(form) }

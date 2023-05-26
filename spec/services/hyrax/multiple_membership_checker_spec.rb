@@ -3,6 +3,8 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
   let(:item) { create(:work, id: 'work-1', user: user) }
   let(:user) { create(:user) }
 
+  before { Hyrax::SolrQueryService.query_service = Hyrax.query_service }
+
   describe '#initialize' do
     subject { described_class.new(item: item) }
 
