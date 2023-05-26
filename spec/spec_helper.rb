@@ -336,7 +336,6 @@ RSpec.configure do |config|
 
   if Hyrax.config.disable_wings
     config.filter_run_excluding valkyrie_adapter: :wings_adapter
-    config.exclude_pattern = "spec/wings/**"
     config.include Hyrax::ValkyrieFactoryHelpers
   end
 end

@@ -284,7 +284,8 @@ jobs:
       - run:
           command: bundle exec rake db:migrate
           working_directory: .internal_test_app
-      - ruby/rspec-test
+      - ruby/rspec-test:
+          include: "spec/abilities/**/*_spec.rb,spec/actors/**/*_spec.rb,spec/authorities/**/*_spec.rb,spec/channels/**/*_spec.rb,spec/config/**/*_spec.rb,spec/controllers/**/*_spec.rb,spec/factory_tests/**/*_spec.rb,spec/features/**/*_spec.rb,spec/forms/**/*_spec.rb,spec/helpers/**/*_spec.rb,spec/hyrax/**/*_spec.rb,spec/indexers/**/*_spec.rb,spec/inputs/**/*_spec.rb,spec/javascripts/**/*_spec.rb,spec/jobs/**/*_spec.rb,spec/lib/**/*_spec.rb,spec/matcher_tests/**/*_spec.rb,spec/models/**/*_spec.rb,spec/presenters/**/*_spec.rb,spec/renderers/**/*_spec.rb,spec/requests/**/*_spec.rb,spec/routing/**/*_spec.rb,spec/search_builders/**/*_spec.rb,spec/services/**/*_spec.rb,spec/strategies/**/*_spec.rb,spec/tasks/**/*_spec.rb,spec/utils/**/*_spec.rb,spec/validators/**/*_spec.rb,spec/valkyrie/**/*_spec.rb,spec/views/**/*_spec.rb"
       - store_artifacts:
           path: Gemfile.lock
           destination: engine-gemfile-lock
