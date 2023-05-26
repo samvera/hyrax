@@ -1306,7 +1306,7 @@ it:
         restore: Ripristina la versione precedente
         restore_from: Ripristina da
         save: Salva revisione
-        save_your_note: Devi fare clic su & quot; Salva revisione & quot; per ripristinare una versione precedente di questo file
+        save_your_note: Devi fare clic su "Salva revisione" per ripristinare una versione precedente di questo file
         upload: Carica nuova versione
     help:
       header: Supporto utente
