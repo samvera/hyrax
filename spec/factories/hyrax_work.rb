@@ -13,6 +13,7 @@ FactoryBot.define do
     end
 
     transient do
+      user               { create(:user) }
       edit_users         { [] }
       edit_groups        { [] }
       read_users         { [] }
@@ -33,6 +34,9 @@ FactoryBot.define do
       work.permission_manager.read_users  = evaluator.read_users
 
       work.member_ids = evaluator.members.map(&:id) if evaluator.members
+
+      work.depositor = evaluator.user.user_key
+      work.permission_manager.edit_users += [evaluator.user.user_key]
     end
 
     after(:create) do |work, evaluator|

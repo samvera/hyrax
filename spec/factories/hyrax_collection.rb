@@ -17,6 +17,11 @@ FactoryBot.define do
       read_users { [] }
       members { nil }
       access_grants { [] }
+      user { create(:user) }
+    end
+
+    after(:build) do |collection, evaluator|
+      collection.depositor = evaluator.user.user_key
     end
 
     after(:create) do |collection, evaluator|
@@ -34,7 +39,7 @@ FactoryBot.define do
         collection.permission_manager.edit_groups = collection.permission_manager.edit_groups.to_a +
                                                     evaluator.edit_groups
         collection.permission_manager.edit_users = collection.permission_manager.edit_users.to_a +
-                                                   evaluator.edit_users
+                                                   evaluator.edit_users + [evaluator.user.user_key]
         collection.permission_manager.read_groups = collection.permission_manager.read_groups.to_a +
                                                     evaluator.read_groups
         collection.permission_manager.read_users = collection.permission_manager.read_users.to_a +

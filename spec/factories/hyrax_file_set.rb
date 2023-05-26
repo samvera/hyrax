@@ -15,6 +15,7 @@ FactoryBot.define do
       read_users         { [] }
       read_groups        { [] }
       with_index         { true }
+      user               { create(:user) }
     end
 
     after(:build) do |file_set, evaluator|
@@ -32,6 +33,9 @@ FactoryBot.define do
       file_set.permission_manager.edit_users  = evaluator.edit_users
       file_set.permission_manager.read_users  = evaluator.read_users
       file_set.permission_manager.read_users  = evaluator.read_groups
+
+      file_set.depositor = evaluator.user.user_key
+      file_set.permission_manager.edit_users += [evaluator.user.user_key]
     end
 
     after(:create) do |file_set, evaluator|
