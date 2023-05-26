@@ -6,9 +6,7 @@ Fixes #issuenumber ; refs #issuenumber
 
 Present tense short summary (50 characters or less)
 
-### Testing
-
-Guidance for testing, such as acceptance criteria or new user interface behaviors:
+### Guidance for testing, such as acceptance criteria or new user interface behaviors:
 *
 *
 *
