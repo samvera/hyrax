@@ -36,8 +36,12 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     include Hyrax::WorksControllerBehavior # rubocop:disable RSpec/DescribedClass
 
     self.curation_concern_type = Hyrax::Test::SimpleWork
-    self.search_builder_class  = Wings::WorkSearchBuilder(Hyrax::Test::SimpleWork)
-    self.work_form_service     = Hyrax::FormFactory.new
+    self.search_builder_class = if Hyrax.config.disable_wings
+                                  Hyrax::WorkSearchBuilder
+                                else
+                                  Wings::WorkSearchBuilder(Hyrax::Test::SimpleWork)
+                                end
+    self.work_form_service = Hyrax::FormFactory.new
   end
 
   shared_context 'with a logged in user' do

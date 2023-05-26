@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'wings/valkyrie/query_service'
+require 'wings/valkyrie/query_service' unless Hyrax.config.disable_wings
 
 RSpec.describe Hyrax::Actors::FileActor do
   include ActionDispatch::TestProcess
