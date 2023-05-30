@@ -548,7 +548,10 @@ it:
           periodo di tempo, il provider di cloud potrebbe non essere in grado di
           accogliere la tua richiesta. Se si verificano errori di caricamento
           dalla nube, fateci sapere tramite %{contact_href}.</p>
-        local_upload_html: "<p>È possibile aggiungere uno o più file da associare a questo lavoro.</p>"
+          <p>I caricamenti sono limitati a %{upload_file_limit} file, %{upload_size_limit} MB ciascuno.</p>
+        local_upload_html: |
+          <p>È possibile aggiungere uno o più file da associare a questo lavoro.</p>
+          <p>I caricamenti sono limitati a %{upload_file_limit} file, %{upload_size_limit} MB ciascuno.</p>
       form_member_of_collections:
         actions:
           remove: Rimuovi dalla raccolta
@@ -1306,7 +1309,7 @@ it:
         restore: Ripristina la versione precedente
         restore_from: Ripristina da
         save: Salva revisione
-        save_your_note: Devi fare clic su & quot; Salva revisione & quot; per ripristinare una versione precedente di questo file
+        save_your_note: Devi fare clic su "Salva revisione" per ripristinare una versione precedente di questo file
         upload: Carica nuova versione
     help:
       header: Supporto utente
