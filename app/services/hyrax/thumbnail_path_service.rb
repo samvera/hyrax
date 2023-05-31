@@ -28,7 +28,8 @@ module Hyrax
       end
 
       def fetch_thumbnail(object)
-        return object if object.thumbnail_id == object.id
+        return object if object.thumbnail_id == object.id ||
+                         object.try(:file_ids)&.detect { |fid| fid == object.thumbnail_id }
         Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: object.thumbnail_id)
       rescue Valkyrie::Persistence::ObjectNotFoundError, Hyrax::ObjectNotFoundError
         Hyrax.logger.error("Couldn't find thumbnail #{object.thumbnail_id} for #{object.id}")
@@ -53,12 +54,19 @@ module Hyrax
       # @return true if there a file on disk for this object, otherwise false
       # @param [FileSet] thumb - the object that is the thumbnail
       def thumbnail?(thumb)
-        File.exist?(thumbnail_filepath(thumb))
+        File.exist?(thumbnail_filepath(thumb)) ||
+          (thumb.is_a?(Hyrax::Resource) && file_in_storage?(thumb))
       end
 
       # @param [FileSet] thumb - the object that is the thumbnail
       def thumbnail_filepath(thumb)
         Hyrax::DerivativePath.derivative_path_for_reference(thumb, 'thumbnail')
+      end
+
+      def file_in_storage?(thumb)
+        Hyrax.custom_queries.find_thumbnail(file_set: thumb)
+      rescue Valkyrie::StorageAdapter::FileNotFound, Valkyrie::Persistence::ObjectNotFoundError
+        false
       end
     end
   end

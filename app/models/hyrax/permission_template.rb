@@ -204,7 +204,7 @@ module Hyrax
       interpreted_read_groups = read_groups
 
       if interpret_visibility
-        visibilities = Hyrax::VisibilityMap.instance
+        visibilities = Hyrax.config.visibility_map
         interpreted_read_groups -= visibilities.deletions_for(visibility: collection.visibility)
         interpreted_read_groups += visibilities.additions_for(visibility: collection.visibility)
       end

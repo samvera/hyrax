@@ -11,7 +11,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     allow(view).to receive(:curation_concern).and_return(work)
     assign(:form, form)
     allow(controller).to receive(:action_name).and_return(controller_action)
-    allow(controller).to receive(:repository).and_return(controller_class.new.repository)
+    allow(controller).to receive(:repository).and_return(controller_class.new.blacklight_config.repository)
     allow(controller).to receive(:blacklight_config).and_return(controller_class.new.blacklight_config)
     allow(controller).to receive(:controller_name).and_return('batch_uploads')
 

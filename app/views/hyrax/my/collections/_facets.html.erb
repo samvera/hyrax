@@ -1,7 +1,9 @@
 <% # main container for facets/limits menu -%>
-<% if has_facet_values?(facet_field_names, @response) %>
-  <div class="list-filters" role="group">
-    <span class="list-filters-label"><%= t("hyrax.dashboard.my.facet_label.collections") %></span>
-    <%= render_facet_partials(facet_field_names, response: @response) %>
-  </div>
+<% facets = capture do %>
+  <%= render Blacklight::FacetComponent.with_collection(blacklight_config.facet_fields_in_group(nil), response: @response, component: Hyrax::DropdownFacetFieldComponent)%>
 <% end %>
+
+<div class="list-filters" role="group">
+  <span class="list-filters-label"><%= t("hyrax.dashboard.my.facet_label.collections") %></span>
+  <%= facets %>
+</div>

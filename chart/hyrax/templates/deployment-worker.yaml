@@ -9,7 +9,7 @@ spec:
   replicas: {{ .Values.worker.replicaCount }}
   selector:
     matchLabels:
-      {{- include "hyrax.selectorLabels" . | nindent 6 }}
+      {{- include "hyrax.workerSelectorLabels" . | nindent 6 }}
   template:
     metadata:
     {{- with .Values.podAnnotations }}
@@ -17,7 +17,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       labels:
-        {{- include "hyrax.selectorLabels" . | nindent 8 }}
+        {{- include "hyrax.workerSelectorLabels" . | nindent 8 }}
     spec:
       initContainers:
         - name: db-wait

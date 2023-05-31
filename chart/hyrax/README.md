@@ -11,6 +11,11 @@ production-ready setup for Hyrax applications. By default it deploys:
   - Solr (in a cloud configuration, including Apache Zookeeper)
   - Redis
 
+## Minimum requirements
+
+- Kubernetes 1.21
+- Helm 3
+
 ## A base Hyrax deployment
 
 Because Hyrax is a [Rails Engine][engine]---not a stand-alone application---

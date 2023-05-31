@@ -6,7 +6,7 @@
 
 <div class="row">
   <div class="col-12 col-sm-4">
-    <%= render media_display_partial(curation_concern.to_presenter), file_set: curation_concern.to_presenter %>
+    <%= render media_display_partial(@presenter.solr_document), file_set: @presenter.solr_document %>
   </div>
   <div class="col-12 col-sm-8">
     <div class="card tabs">
@@ -33,7 +33,7 @@
             <h2><%= t('.descriptions') %></h2>
             <%= render "form" %>
           </div>
-          <%= render "permission", file_set: curation_concern %>
+          <%= render "permission", file_set: curation_concern, form_object: @form %>
           <%= render "versioning", file_set: curation_concern %>
         </div>
       </div>

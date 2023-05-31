@@ -9,7 +9,7 @@
                   hyrax.download_path(file_set),
                   target: :_blank,
                   id: "file_download",
-                  data: { label: file_set.id } %>
+                  data: { label: file_set.id, work_id: @presenter.id, collection_ids: @presenter.member_of_collection_ids } %>
     </div>
 <% else %>
     <div>

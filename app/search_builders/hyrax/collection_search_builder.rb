@@ -37,6 +37,7 @@ module Hyrax
     # This overrides the default 'relevance' sort.
     def add_sorting_to_solr(solr_parameters)
       return if solr_parameters[:q]
+      solr_parameters[:sort] ||= sort
       solr_parameters[:sort] ||= "#{sort_field} asc"
     end
 

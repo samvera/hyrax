@@ -9,7 +9,7 @@ module Hyrax
       # to be used as a the banner for the collection.
       #
       class SaveCollectionBanner
-        include Dry::Transaction::Operation
+        include Dry::Monads[:result]
 
         ##
         # @param [Hyrax::ChangeSet] change_set

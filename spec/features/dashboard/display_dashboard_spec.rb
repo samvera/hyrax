@@ -10,6 +10,9 @@ RSpec.describe "The dashboard as viewed by a regular user", type: :feature do
       expect(page).to have_content "User Activity"
       expect(page).to have_content "User Notifications"
 
+      # displays the breadcrumbs
+      expect(page).to have_css '.breadcrumb'
+
       within '.sidebar' do
         expect(page).to have_link "Works"
         expect(page).to have_link "Collections"

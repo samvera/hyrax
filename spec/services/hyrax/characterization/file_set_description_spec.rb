@@ -7,7 +7,11 @@ RSpec.describe Hyrax::Characterization::FileSetDescription, valkyrie_adapter: :t
   let(:file) { Rack::Test::UploadedFile.new('spec/fixtures/world.png', ctype) }
   let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, file_ids: file_ids) }
   let(:file_ids) { [] }
-  let(:original_file) { Hyrax.persister.save(resource: Hyrax::FileMetadata.new(label: file.original_filename, original_filename: file.original_filename, mime_type: file.content_type)) }
+  let(:original_file) do
+    Hyrax.persister.save(resource: Hyrax::FileMetadata.new(label: file.original_filename,
+                                                           original_filename: file.original_filename,
+                                                           mime_type: file.content_type))
+  end
 
   describe '#mime_type' do
     context 'before the file set is saved' do
@@ -42,7 +46,10 @@ RSpec.describe Hyrax::Characterization::FileSetDescription, valkyrie_adapter: :t
       let(:other_file) { Rack::Test::UploadedFile.new('spec/fixtures/1.5mb-avatar.jpg', other_ctype) }
 
       let(:custom_file) do
-        resource = Hyrax::FileMetadata.for(file: other_file).new(type: custom_type)
+        resource = Hyrax::FileMetadata.new(label: other_file.original_filename,
+                                           original_filename: other_file.original_filename,
+                                           mime_type: other_file.content_type)
+        resource.type = custom_type
         Hyrax.persister.save(resource: resource)
       end
 

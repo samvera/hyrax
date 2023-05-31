@@ -393,6 +393,11 @@ module Hyrax
       @banner_image ||= 'https://user-images.githubusercontent.com/101482/29949206-ffa60d2c-8e67-11e7-988d-4910b8787d56.jpg'
     end
 
+    attr_writer :breadcrumb_builder
+    def breadcrumb_builder
+      @breadcrumb_builder ||= Hyrax::BootstrapBreadcrumbsBuilder
+    end
+
     ##
     # @return [Boolean]
     def disable_wings
@@ -611,9 +616,10 @@ module Hyrax
       @persistent_hostpath ||= "http://localhost/files/"
     end
 
+    attr_accessor :redis_connection
     attr_writer :redis_namespace
     def redis_namespace
-      @redis_namespace ||= "hyrax"
+      @redis_namespace ||= ENV.fetch("HYRAX_REDIS_NAMESPACE", "hyrax")
     end
 
     attr_writer :libreoffice_path
@@ -846,6 +852,11 @@ module Hyrax
       @solr_select_path ||= ActiveFedora.solr_config.fetch(:select_path, 'select')
     end
 
+    attr_writer :solr_default_method
+    def solr_default_method
+      @solr_default_method ||= :post
+    end
+
     attr_writer :identifier_registrars
     def identifier_registrars
       @identifier_registrars ||= {}
@@ -873,6 +884,17 @@ module Hyrax
     # @see Hyrax::DerivativeService
     def derivative_services
       @derivative_services ||= [Hyrax::FileSetDerivativesService]
+    end
+
+    attr_writer :visibility_map
+    # A mapping from visibility string values to permissions; the default and
+    # reference implementation is provided by {Hyrax::VisibilityMap}.
+    #
+    # @return [Hyrax::VisibilityMap]
+    # @see Hyrax::VisibilityReader
+    # @see Hyrax::VisibilityWriter
+    def visibility_map
+      @visibility_map ||= Hyrax::VisibilityMap.instance
     end
 
     private
