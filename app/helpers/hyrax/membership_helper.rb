@@ -24,8 +24,7 @@ module Hyrax
       existing_collections_array.map do |collection|
         { id: collection.id.to_s,
           label: collection.title.first,
-          path: url_for(collection)
-        }
+          path: url_for(collection) }
       end.to_json
     end
 
