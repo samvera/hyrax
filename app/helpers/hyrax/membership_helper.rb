@@ -21,11 +21,11 @@ module Hyrax
       resource = resource.model if resource.respond_to?(:model)
 
       existing_collections_array = Hyrax.custom_queries.find_collections_for(resource: resource) + add_collection_from_params
-      existing_collections_array.map do |collection| {
-        id: collection.id.to_s,
-        label: collection.title.first,
-        path: url_for(collection)
-      }
+      existing_collections_array.map do |collection|
+        { id: collection.id.to_s,
+          label: collection.title.first,
+          path: url_for(collection)
+        }
       end.to_json
     end
 
