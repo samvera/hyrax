@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Hyrax
   module ValkyrieFactoryHelpers
+    # rubocop:disable Metrics/MethodLength
     def create(factory_name, *traits_and_overrides, &block)
       mapped_factory = case factory_name
                        when :generic_work, :work
@@ -19,5 +20,6 @@ module Hyrax
         super(factory_name, *traits_and_overrides, &block)
       end
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end
