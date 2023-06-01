@@ -12,7 +12,7 @@ RSpec.describe Hyrax::FileSetSearchBuilder do
     before { subject.filter_models(solr_params) }
 
     it 'adds FileSet to query' do
-      expect(solr_params[:fq].first).to include('{!terms f=has_model_ssim}FileSet')
+      expect(solr_params[:fq].first).to include('{!terms f=has_model_ssim}FileSet,Hyrax::FileSet')
     end
   end
 
