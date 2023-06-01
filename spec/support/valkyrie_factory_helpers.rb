@@ -10,7 +10,7 @@ module Hyrax
                        when :collection
                          :hyrax_collection
                        when :admin_set
-                          :hyrax_admin_set
+                         :hyrax_admin_set
                        end
 
       if mapped_factory
