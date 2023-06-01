@@ -39,7 +39,8 @@ module Hyrax
     end
 
     def file_set_parent(file_set_id)
-      file_set = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: file_set_id)
+      file_set = Hyrax.query_service.find_by(id: Valkyrie::ID.new(file_set_id))
+      file_set ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: file_set_id)
       @parent ||=
         case file_set
         when Hyrax::Resource
