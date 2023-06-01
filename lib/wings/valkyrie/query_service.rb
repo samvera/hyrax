@@ -101,10 +101,11 @@ module Wings
       #
       # @return [Valkyrie::Resource]
       # @raise [Valkyrie::Persistence::ObjectNotFoundError]
-      def find_by_alternate_identifier(alternate_identifier:, use_valkyrie: true)
+      def find_by_alternate_identifier(alternate_identifier:)
         raise(ArgumentError, 'id must be a Valkyrie::ID') unless
           alternate_identifier.respond_to?(:to_str)
 
+        use_valkyrie = Hyrax.config.use_valkyrie?
         af_object = ActiveFedora::Base.find(alternate_identifier.to_s)
 
         use_valkyrie ? resource_factory.to_resource(object: af_object) : af_object
