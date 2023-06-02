@@ -39,18 +39,19 @@ module Hyrax
       delegate :count, to: :relation
 
       def relation
+        return Hyrax::ValkyrieWorkRelation.new if Hyrax.config.use_valkyrie?
         Hyrax::WorkRelation.new
       end
 
       private
 
       def where_access_is(access_level)
-        # this is doing things in Fedora, and eventually throws an error on a method that only exists in fedora. Needs to be valkyrized.
+        # returns all works where the access level is public
+        # Hydra.config.permissions.read.group = 'read_group_ssim'
         if Hyrax.config.use_valkyrie?
-          []
-        else
-          relation.where Hydra.config.permissions.read.group => access_level
+          Hyrax.custom_queries.find_by_read_group(relation, access_level)
         end
+        relation.where Hydra.config.permissions.read.group => access_level
       end
 
       def date_format
