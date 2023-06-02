@@ -45,7 +45,12 @@ module Hyrax
       private
 
       def where_access_is(access_level)
-        relation.where Hydra.config.permissions.read.group => access_level
+        # this is doing things in Fedora, and eventually throws an error on a method that only exists in fedora. Needs to be valkyrized.
+        if Hyrax.config.use_valkyrie?
+          []
+        else
+          relation.where Hydra.config.permissions.read.group => access_level
+        end
       end
 
       def date_format
