@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+# TODO: update all of the override comments to have details
+# OVERRIDE:
 module Hyrax
   class DownloadsController < ApplicationController
     include Hydra::Controller::DownloadBehavior
@@ -16,6 +19,14 @@ module Hyrax
       when ActiveFedora::File
         # For original files that are stored in fedora
         super
+      when Valkyrie::StorageAdapter::File
+        if asset.new_record
+          render_404
+        else
+          # binding.pry
+          # TODO: the method below is returning "NoMethodError: undefined method `modified_date'"
+          send_content
+        end
       when String
         # For derivatives stored on the local file system
         send_local_content
@@ -24,12 +35,47 @@ module Hyrax
       end
     end
 
+    protected
+
+    # OVERRIDE
+    def asset
+      @asset ||= if Hyrax.config.use_valkyrie?
+                   Hyrax.query_service.find_by(id: Valkyrie::ID.new(params[asset_param_key]))
+                 else
+                   ActiveFedora::Base.find(params[asset_param_key])
+                 end
+    end
+
+    # OVERRIDE mime_type_for
+    def content_head
+      response.headers['Content-Length'] = file.size
+      head :ok, content_type: mime_type_for(file.id)
+    end
+
+    # OVERRIDE mime_type_for
+    def prepare_file_headers
+      send_file_headers! content_options
+      response.headers['Content-Type'] = mime_type_for(file.id)
+      response.headers['Content-Length'] ||= file.size.to_s
+      # Prevent Rack::ETag from calculating a digest over body
+      response.headers['Last-Modified'] = asset.modified_date.utc.strftime("%a, %d %b %Y %T GMT")
+      self.content_type = mime_type_for(file.id)
+    end
+
+    # OVERRIDE remove original_file reference
+    def file_name
+      fname = params[:filename] || (asset.respond_to?(:label) && asset.label) || file.id
+      fname = CGI.unescape(fname) if Rails.version >= '6.0'
+      fname
+    end
+
     private
 
     # Override the Hydra::Controller::DownloadBehavior#content_options so that
     # we have an attachement rather than 'inline'
+    # OVERRIDE mime_type_for
     def content_options
-      super.merge(disposition: 'attachment')
+      { disposition: 'attachment', type: mime_type_for(file.id), filename: file_name }
     end
 
     # Override this method if you want to change the options sent when downloading
@@ -39,7 +85,7 @@ module Hyrax
     end
 
     def file_set_parent(file_set_id)
-      file_set = Hyrax.query_service.find_by(id: Valkyrie::ID.new(file_set_id))
+      file_set = asset
       file_set ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: file_set_id)
       @parent ||=
         case file_set
@@ -83,8 +129,13 @@ module Hyrax
                                else
                                  DownloadsController.default_content_path
                                end
-      association = dereference_file(default_file_reference)
-      association&.reader
+
+      if Hyrax.config.use_valkyrie?
+        Hyrax.custom_queries.find_file_metadata_by(id: asset.file_ids&.first&.id).file
+      else
+        association = dereference_file(default_file_reference)
+        association&.reader
+      end
     end
 
     def mime_type_for(file)
