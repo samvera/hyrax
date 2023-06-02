@@ -30,7 +30,7 @@ module Hyrax
 
     def add_collection_from_params
       # new valkyrie works need the collection from params when depositing directly into an existing collection
-      return [Hyrax.metadata_adapter.query_service.find_by(id: Valkyrie::ID.new(controller.params[:add_works_to_collection]))] if Valkyrie
+      return [Hyrax.metadata_adapter.query_service.find_by(id: Valkyrie::ID.new(controller.params[:add_works_to_collection]))] if Hyrax.config.use_valkyrie?
 
       [::Collection.find(@controller.params[:add_works_to_collection])]
     end
