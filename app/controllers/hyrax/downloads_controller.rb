@@ -2,6 +2,7 @@
 
 # TODO: update all of the override comments to have details
 # OVERRIDE:
+
 module Hyrax
   class DownloadsController < ApplicationController
     include Hydra::Controller::DownloadBehavior
@@ -62,7 +63,8 @@ module Hyrax
       response.headers['Content-Type'] = get_mime_type(use_valkyrie: Hyrax.config.use_valkyrie?, file: file)
       response.headers['Content-Length'] ||= file.size.to_s
       # Prevent Rack::ETag from calculating a digest over body
-      response.headers['Last-Modified'] = asset.modified_date.utc.strftime("%a, %d %b %Y %T GMT")
+      # OVERRIDE: use "date_modified" which is defined on the asset, instead of "modified_date" which is defined in active-triples by way of active fedora
+      response.headers['Last-Modified'] = asset.date_modified.utc.strftime("%a, %d %b %Y %T GMT")
       self.content_type = get_mime_type(use_valkyrie: Hyrax.config.use_valkyrie?, file: file)
     end
 
