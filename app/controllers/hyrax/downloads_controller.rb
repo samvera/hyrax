@@ -68,7 +68,10 @@ module Hyrax
 
     # OVERRIDE remove original_file reference
     def file_name
-      fname = params[:filename] || (asset.respond_to?(:label) && asset.label) || file.id
+      fname = params[:filename] ||
+              (file.respond_to?(:original_name) && file.original_name) ||
+              (asset.respond_to?(:label) && asset.label) ||
+              file.id
       fname = CGI.unescape(fname) if Rails.version >= '6.0'
       fname
     end
