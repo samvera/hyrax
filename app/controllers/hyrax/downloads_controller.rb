@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-
-# TODO: update all of the override comments to have details
-# OVERRIDE:
+# OVERRIDE hydra-head v12.1.0: update several methods from Hydra::Controller::DownloadBehavior so that we can download files backed by active fedora AND valkyrie
 
 module Hyrax
   class DownloadsController < ApplicationController
@@ -21,11 +19,11 @@ module Hyrax
         # For original files that are stored in fedora
         super
       when Valkyrie::StorageAdapter::File
+        # account for valkyrized files
+        # new_record? (which is called in "super" above) exists on active fedora files, but not valkyrized files
         if asset.new_record
           render_404
         else
-          # binding.pry
-          # TODO: the method below is returning "NoMethodError: undefined method `modified_date'"
           send_content
         end
       when String
@@ -42,7 +40,7 @@ module Hyrax
       use_valkyrie ? mime_type_for(file.id) : file.mime_type
     end
 
-    # OVERRIDE
+    # OVERRIDE hydra-head v12.1.0: find valkyrie backed files
     def asset
       @asset ||= if Hyrax.config.use_valkyrie?
                    Hyrax.query_service.find_by(id: Valkyrie::ID.new(params[asset_param_key]))
@@ -51,26 +49,26 @@ module Hyrax
                  end
     end
 
-    # OVERRIDE mime_type_for
     def content_head
       response.headers['Content-Length'] = file.size
+      # OVERRIDE hydra-head v12.1.0: use #get_mime_type
       head :ok, content_type: get_mime_type(use_valkyrie: Hyrax.config.use_valkyrie?, file: file)
     end
 
-    # OVERRIDE mime_type_for
     def prepare_file_headers
       send_file_headers! content_options
+      # OVERRIDE hydra-head v12.1.0: use #get_mime_type
       response.headers['Content-Type'] = get_mime_type(use_valkyrie: Hyrax.config.use_valkyrie?, file: file)
       response.headers['Content-Length'] ||= file.size.to_s
       # Prevent Rack::ETag from calculating a digest over body
-      # OVERRIDE: use "date_modified" which is defined on the asset, instead of "modified_date" which is defined in active-triples by way of active fedora
+      # OVERRIDE hydra-head v12.1.0: use "date_modified" which is defined on the asset, instead of "modified_date" which is defined in active-triples by way of active fedora
       response.headers['Last-Modified'] = asset.date_modified.utc.strftime("%a, %d %b %Y %T GMT")
       self.content_type = get_mime_type(use_valkyrie: Hyrax.config.use_valkyrie?, file: file)
     end
 
-    # OVERRIDE remove original_file reference
     def file_name
       fname = params[:filename] ||
+              # OVERRIDE hydra-head v12.1.0: confirm the file responds to "original_name" before calling it
               (file.respond_to?(:original_name) && file.original_name) ||
               (asset.respond_to?(:label) && asset.label) ||
               file.id
@@ -81,8 +79,8 @@ module Hyrax
     private
 
     # Override the Hydra::Controller::DownloadBehavior#content_options so that
-    # we have an attachement rather than 'inline'
-    # OVERRIDE mime_type_for
+    # we have an attachment rather than 'inline'
+    # OVERRIDE hydra-head v12.1.0: use #get_mime_type
     def content_options
       { disposition: 'attachment', type: get_mime_type(use_valkyrie: Hyrax.config.use_valkyrie?, file: file), filename: file_name }
     end
