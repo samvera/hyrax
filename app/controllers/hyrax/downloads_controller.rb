@@ -37,6 +37,10 @@ module Hyrax
 
     protected
 
+    def get_mime_type(use_valkyrie:, file:)
+      use_valkyrie ? mime_type_for(file.id) : file.mime_type
+    end
+
     # OVERRIDE
     def asset
       @asset ||= if Hyrax.config.use_valkyrie?
@@ -49,17 +53,17 @@ module Hyrax
     # OVERRIDE mime_type_for
     def content_head
       response.headers['Content-Length'] = file.size
-      head :ok, content_type: mime_type_for(file.id)
+      head :ok, content_type: get_mime_type(use_valkyrie: Hyrax.config.use_valkyrie?, file: file)
     end
 
     # OVERRIDE mime_type_for
     def prepare_file_headers
       send_file_headers! content_options
-      response.headers['Content-Type'] = mime_type_for(file.id)
+      response.headers['Content-Type'] = get_mime_type(use_valkyrie: Hyrax.config.use_valkyrie?, file: file)
       response.headers['Content-Length'] ||= file.size.to_s
       # Prevent Rack::ETag from calculating a digest over body
       response.headers['Last-Modified'] = asset.modified_date.utc.strftime("%a, %d %b %Y %T GMT")
-      self.content_type = mime_type_for(file.id)
+      self.content_type = get_mime_type(use_valkyrie: Hyrax.config.use_valkyrie?, file: file)
     end
 
     # OVERRIDE remove original_file reference
@@ -75,7 +79,7 @@ module Hyrax
     # we have an attachement rather than 'inline'
     # OVERRIDE mime_type_for
     def content_options
-      { disposition: 'attachment', type: mime_type_for(file.id), filename: file_name }
+      { disposition: 'attachment', type: get_mime_type(use_valkyrie: Hyrax.config.use_valkyrie?, file: file), filename: file_name }
     end
 
     # Override this method if you want to change the options sent when downloading
