@@ -5,15 +5,15 @@ Our goal is to provide a practical, reusable reference environment for applicati
 
 The [Hyrax Engine Development](#hyrax-engine-development) is further along than the [Docker Image for Hyrax-based Applications](#docker-image-for-hyrax-based-applications) which is further along than [Deploying to Production](#deploying-to-production).
 
-There are two options for development environments to run: 
+There are two options for development environments to run:
 
 - [Dassie](#dassie-internal-test-app-with-activefedora) is the default internal test app that will run an ActiveFedora-based Hyrax web application using Fedora 4 as the backend storage. See [Troubleshooting Dassie](#troubleshooting-dassie) if you encounter any issues.
 - [Koppie](#koppie-internal-test-app-with-valkyrie-connector-to-postgres) is a newer internal test app that is a Valkyrie-based Hyrax web application that runs with PostGres as backend storage. It does not run ActiveFedora or use Fedora 4. See [Troubleshooting Koppie](#troubleshooting-koppie) if you encounter any issues.
 
 <!-- NOTE: This title is referenced in the top-level README.md. Keep that in mind if you change it. -->
-## Hyrax Engine Development 
+## Hyrax Engine Development
 
-We support a `docker-compose`-based development environment for folks working on
+We support a `docker compose`-based development environment for folks working on
 the Hyrax engine. This environment is substantially more like a Hyrax production
 setup than the older `fedora_wrapper`/`solr_wrapper` approach.
 
@@ -24,8 +24,8 @@ First, make sure you have installed [Docker](https://www.docker.com/).  Then clo
 Within your cloned repository, tell Docker to get started installing your development environment:
 
 ```sh
-docker-compose build
-docker-compose up
+docker compose build
+docker compose up
 ```
 
 This starts containers for:
@@ -40,24 +40,24 @@ This starts containers for:
 
 It also runs database migrations. This will also bring up a development application on `http://localhost:3000`.
 
-To stop the containers for the Hyrax-based application, type <kbd>Ctrl</kbd>+<kbd>c</kbd>. To restart the containers you need only run `docker-compose up`.
+To stop the containers for the Hyrax-based application, type <kbd>Ctrl</kbd>+<kbd>c</kbd>. To restart the containers you need only run `docker compose up`.
 
 _**Note:** Starting and stopping Docker in this way will preserve your data between restarts._
 
 #### Code Changes and Testing
 
-With `docker-compose up` running, any changes you make to your cloned Hyrax code-base should show up in `http://localhost:3000`; There may be cases where you need to restart your test application (e.g. stop the containers and start them up again).
+With `docker compose up` running, any changes you make to your cloned Hyrax code-base should show up in `http://localhost:3000`; There may be cases where you need to restart your test application (e.g. stop the containers and start them up again).
 
 Any changes you make to Hyrax should be tested. You can run the full test suite using the following command:
 
 ```sh
-docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec"
+docker compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec"
 ```
 
 Let's break down the above command:
 
 <dl>
-<dt><code>docker-compose exec</code></dt>
+<dt><code>docker compose exec</code></dt>
 <dd>Tell docker to run the following:</dd>
 <dt><code>-w /app/samvera/hyrax-engine</code></dt>
 <dd>In the working directory "/app/samvera/hyrax-engine" (e.g. your cloned Hyrax repository)</dd>
@@ -86,13 +86,13 @@ bind mount to `/app/samvera/hyrax-webapp`, and your local development copy of Hy
 What does this structure mean? Let's look at an example. The following command will list the rake tasks for the Hyrax-based application running in Docker:
 
 ```sh
-docker-compose exec -w /app/samvera/hyrax-webapp app sh -c "bundle exec rake -T"
+docker compose exec -w /app/samvera/hyrax-webapp app sh -c "bundle exec rake -T"
 ```
 
 And this command lists the rake tasks for the Hyrax engine that is in Docker:
 
 ```sh
-docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rake -T"
+docker compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rake -T"
 ```
 
 In the two examples, note the difference in the `-w` switch. In the first case, it's referencing the Hyrax-based application. In the latter case, it's referencing the Hyrax engine.
@@ -101,7 +101,7 @@ In the two examples, note the difference in the `-w` switch. In the first case, 
 
 If you are interested in running Hyrax in debug mode, this requires a somewhat different approach than running Hyrax bare-metal.  You need to use `docker attach` to debug the running docker instance.
 
-1. With `docker-compose up` running open a new Terminal session.
+1. With `docker compose up` running open a new Terminal session.
 2. In that new Terminal session, using `docker container ls` find the "CONTAINER ID" for the `hyrax-engine-dev`.
 3. With the "CONTAINER ID", run `docker attach <CONTAINER ID>`.
 
@@ -111,7 +111,7 @@ This advice comes from [Debugging Rails App With Docker Compose: How to use Byeb
 
 ##### Bad Address SOLR
 
-With `docker-compose up` running, if you see the following, then there may be issues with file permissions:
+With `docker compose up` running, if you see the following, then there may be issues with file permissions:
 
 ```
 db_migrate_1  | waiting for solr:8983
@@ -125,15 +125,15 @@ Executing /opt/docker-solr/scripts/precreate-core hyrax_test /opt/solr/server/co
 cp: cannot create directory '/var/solr/data/hyrax_test': Permission denied
 ```
 
-The solution that appears to work is to `docker-compose down --volumes`; This will tear down the docker instance, and remove the volumes.  You can then run `docker-compose up` to get back to work.  _**Note:** the `--volumes` switch will remove all custom data._
+The solution that appears to work is to `docker compose down --volumes`; This will tear down the docker instance, and remove the volumes.  You can then run `docker compose up` to get back to work.  _**Note:** the `--volumes` switch will remove all custom data._
 
 ##### Errors building the Docker image
 
-If you encounter errors running `docker-compose build`, try running `bundle update` in `./hyrax` as well as within `./hyrax/.dassie`. That can help clear up the problem of a failure to build a particular gem.
+If you encounter errors running `docker compose build`, try running `bundle update` in `./hyrax` as well as within `./hyrax/.dassie`. That can help clear up the problem of a failure to build a particular gem.
 
 ##### Containers do not all start
 
-If any of the services fail to start on `docker-compose up`, try clearing out any `Gemfile.lock` files that might exist in `./hyrax` or `./hyrax/.dassie` and run `docker-compose build` again, then `docker-compose up` again.
+If any of the services fail to start on `docker compose up`, try clearing out any `Gemfile.lock` files that might exist in `./hyrax` or `./hyrax/.dassie` and run `docker compose build` again, then `docker compose up` again.
 
 ### Koppie Internal Test App with Valkyrie Connector to Postgres
 
@@ -191,7 +191,7 @@ We publish several Hyrax images to the [GitHub container registry][ghcr] under
 the [Samvera organization][samvera-packages].  To build them:
 
 ```sh
-export HYRAX_VERSION=v4.0.0.rc1 # or desired version
+export HYRAX_VERSION=v4.0.0 # or desired version
 git checkout hyrax-$HYRAX_VERSION
 
 docker build --target hyrax-base --tag ghcr.io/samvera/hyrax/hyrax-base:$(git rev-parse HEAD) .

@@ -546,7 +546,10 @@ zh:
           <p>您可以添加一个或多个文件与该工作相关联。</p>
           <p>请注意如果您在短时间内上传了大量文件, 云提供商可能不能满足您的请求。
            如果您上传中遇到问题，请用%{contact_href}报告。</p>
-        local_upload_html: "<p>您可以添加一个或多个文件与该工作相关联。</p>"
+          <p>上传限制为 %{upload_file_limit} 个文件，每个文件 %{upload_size_limit} MB。</p>
+        local_upload_html: |
+          <p>您可以添加一个或多个文件与该工作相关联。</p>
+          <p>上传限制为 %{upload_file_limit} 个文件，每个文件 %{upload_size_limit} MB。</p>
       form_member_of_collections:
         actions:
           remove: 从收藏中删除

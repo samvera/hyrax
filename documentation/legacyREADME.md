@@ -50,7 +50,7 @@ The Samvera community is here to help. Please see our [support guide](../.github
 # Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
-v4.0.0.rc1__. If you are looking for instructions on installing a different
+v4.0.0__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -129,7 +129,7 @@ Note here that the following commands assume you're setting up Hyrax in a develo
 
 First, you'll need a working Ruby installation. You can install this via your operating system's package manager -- you are likely to get farther with OSX, Linux, or UNIX than Windows but your mileage may vary -- but we recommend using a Ruby version manager such as [RVM](https://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv).
 
-Hyrax supports Ruby 2.5, 2.6, and 2.7. When starting a new project, we recommend using the latest Ruby 2.7 version.
+Hyrax supports Ruby 2.7, 3.0, 3.1 and 3.2. When starting a new project, we recommend using the latest Ruby 3.2 version.
 
 ## Redis
 
@@ -139,11 +139,11 @@ Starting up Redis will depend on your operating system, and may in fact already 
 
 ## Rails
 
-Hyrax requires Rails 5. We recommend the latest Rails 5.2 release.
+Hyrax requires Rails 6. We recommend the latest Rails 6.1 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 5.2.6
+gem install rails -v 6.1.7.3
 ```
 
 ### JavaScript runtime
@@ -159,7 +159,7 @@ NOTE: The steps need to be done in order to create a new Hyrax based app.
 Generate a new Rails application using the template.
 
 ```
-rails _6.1.7.3_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/hyrax-v4.0.0.rc1/template.rb
+rails _6.1.7.3_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/hyrax-v4.0.0/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:

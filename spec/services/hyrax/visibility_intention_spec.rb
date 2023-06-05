@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::VisibilityIntention do
-  subject(:intention) { described_class.new(attributes) }
+  subject(:intention) { described_class.new(**attributes) }
   let(:attributes)    { {} }
 
   describe '#embargo_params' do

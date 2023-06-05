@@ -8,7 +8,7 @@ module Hyrax
     class AdministrativeSetForm < Valkyrie::ChangeSet
       ##
       # @api private
-      AdminSetMembersPopulator = lambda do |_options|
+      AdminSetMembersPopulator = lambda do |**_options|
         self.member_ids =
           if model.new_record
             []

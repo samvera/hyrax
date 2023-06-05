@@ -44,7 +44,7 @@ module Hyrax
     end
 
     def visibility_map
-      Hyrax::VisibilityMap.instance
+      Hyrax.config.visibility_map
     end
   end
 end

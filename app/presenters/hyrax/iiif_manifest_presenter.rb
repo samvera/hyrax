@@ -77,7 +77,7 @@ module Hyrax
       metadata_fields.map do |field_name|
         {
           'label' => I18n.t("simple_form.labels.defaults.#{field_name}"),
-          'value' => Array(self[field_name]).map { |value| scrub(value.to_s) }
+          'value' => Array(send(field_name)).map { |value| scrub(value.to_s) }
         }
       end
     end
