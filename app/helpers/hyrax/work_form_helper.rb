@@ -202,7 +202,13 @@ module Hyrax
     # @param form [Hyrax::Forms::WorkForm] or Hyrax::ChangeSet
     # @return [String] specific error message
     def full_collections_errors(form:)
-      form.full_error(:collections) || form.full_error(:member_of_collection_ids)
+
+    def has_form_errors?
+      @form&.errors&.any?
+    end
+
+    def dashboard_flash_messages
+      has_form_errors? ? { notice: 'alert-success', alert: 'alert-warning' } : { notice: 'alert-success', error: 'alert-danger', alert: 'alert-warning' }
     end
   end
 end
