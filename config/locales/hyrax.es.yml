@@ -548,7 +548,10 @@ es:
           de tiempo, el proveedor en la nube podría no ser capaz de resolver la
           petición. Si se experimentan errores durante la carga, por favor,
           comuníquese con nosotros a través de %{contact_href}.</p>
-        local_upload_html: "<p>Puede agregar uno o más archivos para asociar con esta obra.</p>"
+          <p>Las cargas están limitadas a %{upload_file_limit} archivos, %{upload_size_limit} MB cada uno.</p>
+        local_upload_html: |
+          <p>Puede agregar uno o más archivos para asociar con esta obra.</p>
+          <p>Las cargas están limitadas a %{upload_file_limit} archivos, %{upload_size_limit} MB cada uno.</p>
       form_member_of_collections:
         actions:
           remove: Eliminar de la colección
