@@ -62,7 +62,7 @@ RSpec.describe Hyrax::DashboardHelperBehavior, type: :helper do
     generic_types_mapping = {
       'GenericWork' => 'Work',
       'Collection' => 'Collection',
-      'FileSet' => 'FileSet',
+      'FileSet' => 'FileSet'
     }
 
     # deposited by the first user
