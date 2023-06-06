@@ -200,8 +200,12 @@ module Hyrax
     # This helper retrieves errors based on form type.
     #
     # @param form [Hyrax::Forms::WorkForm] or Hyrax::ChangeSet
-    # @return [String] specific error message
+    # @return [String] specific error message(s)
     def full_collections_errors(form:)
+      error_messages = []
+      form.errors.messages.each_value { |v| error_messages << v.first }
+      error_messages.join("; ")
+    end
 
     def has_form_errors?
       @form&.errors&.any?
