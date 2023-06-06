@@ -207,12 +207,12 @@ module Hyrax
       error_messages.join("; ")
     end
 
-    def has_form_errors?
+    def form_errors?
       @form&.errors&.any?
     end
 
     def dashboard_flash_messages
-      has_form_errors? ? { notice: 'alert-success', alert: 'alert-warning' } : { notice: 'alert-success', error: 'alert-danger', alert: 'alert-warning' }
+      form_errors? ? { notice: 'alert-success', alert: 'alert-warning' } : { notice: 'alert-success', error: 'alert-danger', alert: 'alert-warning' }
     end
   end
 end
