@@ -50,8 +50,9 @@ module Hyrax
         # Hydra.config.permissions.read.group = 'read_group_ssim'
         if Hyrax.config.use_valkyrie?
           Hyrax.custom_queries.find_by_read_group(relation, access_level)
+        else
+          relation.where Hydra.config.permissions.read.group => access_level
         end
-        relation.where Hydra.config.permissions.read.group => access_level
       end
 
       def date_format
