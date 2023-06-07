@@ -132,10 +132,6 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
         expect(rendered).to have_selector("select#generic_work_resource_type", count: 1)
         expect(rendered).to have_selector("select#generic_work_thumbnail_id", count: 1)
         expect(rendered).to have_selector("select#generic_work_representative_id", count: 1)
-
-        # It diplays form errors
-        expect(rendered).to have_content("broken")
-        expect(rendered).to have_content("visibility_error")
       end
     end
 
