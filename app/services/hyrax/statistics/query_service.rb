@@ -47,9 +47,11 @@ module Hyrax
 
       def where_access_is(access_level)
         # returns all works where the access level is public
-        # Hydra.config.permissions.read.group = 'read_group_ssim'
         if Hyrax.config.use_valkyrie?
-          Hyrax.custom_queries.find_by_read_group(relation, access_level)
+          Hyrax.custom_queries.find_models_by_access(mode: 'read',
+                                                     models: relation.allowable_types,
+                                                     group: true,
+                                                     agent: access_level)
         else
           relation.where Hydra.config.permissions.read.group => access_level
         end
