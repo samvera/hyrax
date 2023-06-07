@@ -99,7 +99,7 @@ module Hyrax
     end
 
     ##
-    # @param form [Hyrax::Forms::WorkForm]
+    # @param form [Hyrax::Forms::WorkForm] or Hyrax::ChangeSet
     # @return [String] specific error message(s)
     def form_errors(form:)
       error_messages = []
