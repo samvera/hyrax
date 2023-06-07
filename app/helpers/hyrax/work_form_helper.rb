@@ -204,7 +204,7 @@ module Hyrax
     def full_collections_errors(form:)
       error_messages = []
       form.errors.messages.each_value { |v| error_messages << v.first }
-      error_messages.join("; ")
+      error_messages.join('; ')
     end
 
     def form_errors?
