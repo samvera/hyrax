@@ -1,4 +1,4 @@
-<% dashboard_flash_messages.each do |type, flash_dom_class| %>
+<% flash_message_types(@form).each do |type, flash_dom_class| %>
   <% if flash[type].present? %>
     <div class="alert <%= flash_dom_class %> alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -8,7 +8,7 @@
   <% end %>
 <% end %>
 
-<% if form_errors? %>
+<% if @form&.errors&.any? %>
   <div class="alert alert-danger alert-dismissable" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <%= @form.errors.full_messages_for(:base).send(SimpleForm.error_method) %>
