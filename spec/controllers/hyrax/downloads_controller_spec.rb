@@ -8,7 +8,7 @@ RSpec.describe Hyrax::DownloadsController, valkyrie_adapter: :test_adapter, stor
     let(:original_file) { File.open(file_path) }
     let(:user) { FactoryBot.create(:user) }
 
-    let(:original_file_use)  { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
+    let(:original_file_use) { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
     let(:original_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: original_file_use, file_identifier: "disk://#{file_path}") }
     let(:file_set) do
       if Hyrax.config.use_valkyrie?
