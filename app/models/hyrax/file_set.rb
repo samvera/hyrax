@@ -53,7 +53,7 @@ module Hyrax
 
     ##
     # @return [Valkyrie::ID]
-    def representative_id=(input)
+    def representative_id=(_input)
       # saving a file set using valkyrie would err because this method didn't exist.
       Rails.logger.warn('This is not a valid method for file sets')
       id
