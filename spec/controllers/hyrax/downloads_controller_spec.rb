@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::DownloadsController do
+
+RSpec.describe Hyrax::DownloadsController, valkyrie_adapter: :test_adapter, storage_adapter: :test_disk do
   routes { Hyrax::Engine.routes }
 
   describe '#show' do
@@ -7,11 +8,17 @@ RSpec.describe Hyrax::DownloadsController do
     let(:original_file) { File.open(file_path) }
     let(:user) { FactoryBot.create(:user) }
 
+    let(:original_file_use)  { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
+    let(:original_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: original_file_use, file_identifier: "disk://#{file_path}") }
     let(:file_set) do
       if Hyrax.config.use_valkyrie?
-        FactoryBot.valkyrie_create(:hyrax_file_set, :in_work, edit_users: [user], visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
+        FactoryBot.valkyrie_create(:hyrax_file_set,
+          :in_work,
+          files: [original_file_metadata],
+          edit_users: [user],
+          visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
       else
-        FactoryBot.create(:file_with_work, user: user, content: original_file)
+        create(:file_with_work, user: user, content: original_file)
       end
     end
 
@@ -26,7 +33,8 @@ RSpec.describe Hyrax::DownloadsController do
 
       before do
         sign_in another_user
-        allow_any_instance_of(Hyrax::DownloadsController).to receive(:workflow_restriction?).and_return(true)
+        allow(subject).to receive(:authorize!).and_return(true)
+        allow(subject).to receive(:workflow_restriction?).and_return(true)
       end
 
       it 'returns :unauthorized status with image content' do
@@ -40,6 +48,8 @@ RSpec.describe Hyrax::DownloadsController do
       context "and the unauthorized image exists" do
         before do
           allow(File).to receive(:exist?).and_return(true)
+          allow(subject).to receive(:authorize!).and_return(false)
+          allow(subject).to receive(:workflow_restriction?).and_return(true)
         end
 
         it 'returns :unauthorized status with image content' do
@@ -51,26 +61,32 @@ RSpec.describe Hyrax::DownloadsController do
     end
 
     context "when the user has access" do
+      let(:original_file_use)  { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
+      let(:thumbnail_use)      { Hyrax::FileMetadata::Use::THUMBNAIL }
+      let(:file_path) { fixture_path + '/image.png' }
+      let(:original_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: original_file_use, file_identifier: "disk://#{file_path}") }
+      let(:thumbnail_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: thumbnail_use, file_identifier: "disk://#{file_path}") }
+      let(:original_file) { File.open(file_path) }
+      let(:file_set) do
+        if Hyrax.config.use_valkyrie?
+          FactoryBot.valkyrie_create(:hyrax_file_set,
+            :in_work,
+            files: [original_file_metadata, thumbnail_file_metadata],
+            edit_users: [user],
+            visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
+        else
+          create(:file_with_work, user: user, content: original_file)
+        end
+      end
+
       before do
         sign_in user
-        allow_any_instance_of(Hyrax::DownloadsController).to receive(:workflow_restriction?).and_return(false)
       end
 
       context 'with original file' do
-        let(:original_file_use)  { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
-        let(:thumbnail_use)      { Hyrax::FileMetadata::Use::THUMBNAIL }
-        let(:file_path) { fixture_path + '/image.png' }
-        let(:original_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: original_file_use, file_identifier: "disk://#{file_path}") }
-        let(:thumbnail_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: thumbnail_use, file_identifier: "disk://#{file_path}") }
-        let(:original_file) { File.open(file_path) }
-
-        let(:file_set) do
-          if Hyrax.config.use_valkyrie?
-            FactoryBot.valkyrie_create(:hyrax_file_set, :in_work, files: [original_file_metadata, thumbnail_file_metadata], edit_users: [user],
-                                                                  visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
-          else
-            create(:file_with_work, user: user, content: original_file)
-          end
+        before do
+          allow(subject).to receive(:authorize!).and_return(true)
+          allow(subject).to receive(:workflow_restriction?).and_return(false)
         end
 
         it 'sends the original file' do
@@ -81,6 +97,7 @@ RSpec.describe Hyrax::DownloadsController do
 
       context 'when restricted by workflow' do
         before do
+          allow(subject).to receive(:authorize!).and_return(true)
           allow(subject).to receive(:workflow_restriction?).and_return(true)
         end
 
@@ -106,6 +123,7 @@ RSpec.describe Hyrax::DownloadsController do
 
           let(:file_set) do
             if Hyrax.config.use_valkyrie?
+              allow(subject).to receive(:authorize_download!).and_return(true)
               FactoryBot.valkyrie_create(:hyrax_file_set, :in_work, files: [original_file_metadata, thumbnail_file_metadata], edit_users: [user],
                                                                     visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
             else
@@ -179,22 +197,32 @@ RSpec.describe Hyrax::DownloadsController do
             end
           end
         end
+      end
+    end
 
-        context "that isn't persisted" do
-          it "raises an error if the requested file does not exist" do
-            expect do
-              get :show, params: { id: file_set.to_param, file: 'thumbnail' }
-            end.to raise_error Hyrax::ObjectNotFoundError
-          end
-        end
+    context "that isn't persisted" do
+      before do
+        allow(subject).to receive(:authorize!).and_return(true)
+        allow(subject).to receive(:workflow_restriction?).and_return(false)
       end
 
-      context 'no association' do
-        it "raises an error if the requested association does not exist" do
-          expect do
-            get :show, params: { id: file_set, file: 'non-existant' }
-          end.to raise_error Hyrax::ObjectNotFoundError
-        end
+      it "raises an error if the requested file does not exist" do
+        expect do
+          get :show, params: { id: file_set.to_param, file: 'thumbnail' }
+        end.to raise_error Hyrax::ObjectNotFoundError
+      end
+    end
+
+    context 'no association' do
+      before do
+        allow(subject).to receive(:authorize!).and_return(true)
+        allow(subject).to receive(:workflow_restriction?).and_return(false)
+      end
+
+      it "raises an error if the requested association does not exist" do
+        expect do
+          get :show, params: { id: file_set, file: 'non-existant' }
+        end.to raise_error Hyrax::ObjectNotFoundError
       end
     end
   end

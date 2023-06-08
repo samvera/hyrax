@@ -333,4 +333,13 @@ RSpec.configure do |config|
       hide_const("Wings") # disable_wings=true removes the Wings constant
     end
   end
+
+  # Prepend this before block to ensure that it runs before other before blocks like clean_repo
+  config.prepend_before(:example, :storage_adapter) do |example|
+    adapter_name = example.metadata[:storage_adapter]
+
+    allow(Hyrax)
+      .to receive(:storage_adapter)
+      .and_return(Valkyrie::StorageAdapter.find(adapter_name))
+  end
 end
