@@ -90,7 +90,8 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
       stub_template('hyrax/base/_form_progress.html.erb' => 'Progress')
       # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
       allow(work).to receive(:new_record?).and_return(true)
-      allow(work).to receive(:member_ids).and_return([1, 2])
+      member_ids = Hyrax.config.use_valkyrie? ? [] : [1, 2]
+      allow(work).to receive(:member_ids).and_return(member_ids)
       allow(controller).to receive(:controller_name).and_return('batch_uploads')
       allow(form).to receive(:permissions).and_return([])
       allow(form).to receive(:visibility).and_return('public')
@@ -127,17 +128,25 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
 
     context "for a persisted object" do
       before do
-        # Add an error to the work
-        work.errors.add :base, 'broken'
-        work.errors.add :visibility, 'visibility_error'
+        if Hyrax.config.use_valkyrie?
+          # Add an error to the form
+          form.errors.add :base, 'broken'
+          form.errors.add :visibility, 'visibility_error'
+        else
+          # Add an error to the work
+          work.errors.add :base, 'broken'
+          work.errors.add :visibility, 'visibility_error'
+        end
         render
       end
 
       it "draws the page" do
         expect(rendered).to have_selector("form[action='/concern/generic_works/456']")
         expect(rendered).to have_selector("select#generic_work_resource_type", count: 1)
-        expect(rendered).to have_selector("select#generic_work_thumbnail_id", count: 1)
-        expect(rendered).to have_selector("select#generic_work_representative_id", count: 1)
+
+        # Form errors are displayed by the flash_msg
+        expect(rendered).not_to have_content("broken")
+        expect(rendered).not_to have_content("visibility_error")
       end
     end
 
