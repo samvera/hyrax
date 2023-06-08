@@ -78,7 +78,13 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
   context 'with a legacy GenericWork' do
     let(:work) { stub_model(GenericWork, id: '456') }
     let(:ability) { double }
-    let(:form) { Hyrax::GenericWorkForm.new(work, ability, controller) }
+    let(:form) do
+      if Hyrax.config.use_valkyrie?
+        GenericWorkForm.new(work)
+      else
+        Hyrax::GenericWorkForm.new(work, ability, controller)
+      end
+    end
 
     before do
       stub_template('hyrax/base/_form_progress.html.erb' => 'Progress')
