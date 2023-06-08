@@ -17,10 +17,11 @@ module Hyrax
     end
 
     def count
+      Hyrax.query_service.custom_queries.find_count_by(models: allowable_types)
     end
 
     def where(hash)
-      Hyrax.metadata_adapter.query_service.find_references_by(resource: hash.values.first, property: hash.keys.first)
+      Hyrax.query_service.find_references_by(resource: hash.values.first, property: hash.keys.first)
     end
 
     # class DummyModel
