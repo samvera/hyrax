@@ -143,7 +143,9 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
       it "draws the page" do
         expect(rendered).to have_selector("form[action='/concern/generic_works/456']")
         expect(rendered).to have_selector("select#generic_work_resource_type", count: 1)
+      end
 
+      it 'does not display the form errors within the form' do
         # Form errors are displayed by the flash_msg
         expect(rendered).not_to have_content("broken")
         expect(rendered).not_to have_content("visibility_error")
