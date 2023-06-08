@@ -4,9 +4,14 @@
         <!-- The table listing the files available for upload/download -->
         <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
         <% if Hyrax.config.browse_everything? %>
-          <%= t('hyrax.base.form_files.local_upload_browse_everything_html', contact_href: link_to(t("hyrax.upload.alert.contact_href_text"), hyrax.contact_form_index_path)) %>
+          <%= t('hyrax.base.form_files.local_upload_browse_everything_html',
+                contact_href: link_to(t("hyrax.upload.alert.contact_href_text"), hyrax.contact_form_index_path),
+                upload_file_limit: Hyrax.config.uploader[:maxNumberOfFiles],
+                upload_size_limit: Hyrax.config.uploader[:maxFileSize] / 1.megabytes) %>
         <% else %>
-          <%= t('hyrax.base.form_files.local_upload_html') %>
+          <%= t('hyrax.base.form_files.local_upload_html',
+                upload_file_limit: Hyrax.config.uploader[:maxNumberOfFiles],
+                upload_size_limit: Hyrax.config.uploader[:maxFileSize] / 1.megabytes) %>
         <% end %>
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="fileupload-buttonbar">
