@@ -102,9 +102,7 @@ module Hyrax
     # @param form [Hyrax::Forms::WorkForm] or Hyrax::ChangeSet
     # @return [String] specific error message(s)
     def form_errors(form:)
-      error_messages = []
-      form.errors.messages.each_value { |v| error_messages << v.first }
-      error_messages.join('; ')
+      form.errors.messages.values.flatten.join('; ')
     end
 
     def flash_message_types(model = nil)
