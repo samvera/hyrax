@@ -79,11 +79,9 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     let(:work) { stub_model(GenericWork, id: '456') }
     let(:ability) { double }
     let(:form) do
-      if Hyrax.config.use_valkyrie?
-        GenericWorkForm.new(work)
-      else
-        Hyrax::GenericWorkForm.new(work, ability, controller)
-      end
+      Hyrax::GenericWorkForm.new(work, ability, controller)
+    rescue NameError
+      GenericWorkForm.new(work)
     end
 
     before do
