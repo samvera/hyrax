@@ -90,6 +90,9 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
       stub_template('hyrax/base/_form_progress.html.erb' => 'Progress')
       # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
       allow(work).to receive(:new_record?).and_return(true)
+      # using [1, 2] as member_ids for valkyrie failed because those are not valkyrie ids.
+      # using ['1', '2'] also failed because the valkyrie created id's were not found in
+      # Valkyrie::Persistence::Memory::MetadataAdapter#cache
       member_ids = Hyrax.config.use_valkyrie? ? [] : [1, 2]
       allow(work).to receive(:member_ids).and_return(member_ids)
       allow(controller).to receive(:controller_name).and_return('batch_uploads')
@@ -129,11 +132,10 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     context "for a persisted object" do
       before do
         if Hyrax.config.use_valkyrie?
-          # Add an error to the form
+          # #update_valkyrie_work bases the errors on the form, not the work
           form.errors.add :base, 'broken'
           form.errors.add :visibility, 'visibility_error'
         else
-          # Add an error to the work
           work.errors.add :base, 'broken'
           work.errors.add :visibility, 'visibility_error'
         end
@@ -143,6 +145,11 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
       it "draws the page" do
         expect(rendered).to have_selector("form[action='/concern/generic_works/456']")
         expect(rendered).to have_selector("select#generic_work_resource_type", count: 1)
+        unless Hyrax.config.use_valkyrie?
+          # TODO: try to pass `member_ids` above with values so these two assertions apply
+          expect(rendered).to have_selector("select#generic_work_thumbnail_id", count: 1)
+          expect(rendered).to have_selector("select#generic_work_representative_id", count: 1)
+        end
       end
 
       it 'does not display the form errors within the form' do
