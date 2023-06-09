@@ -4,16 +4,6 @@
                               'param-key' => @form.model_name.param_key },
                       multipart: true
                     } do |f| %>
-  <% if f.object.errors.any? %>
-    <div class="alert alert-danger alert-dismissable" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <%= f.object.errors.full_messages_for(:base).send(SimpleForm.error_method) %>
-      <%= render 'form_in_works_error', f: f %>
-      <%= render 'form_ordered_members_error', f: f %>
-      <%= render 'form_collections_error', f: f %>
-      <%= render 'form_visibility_error', f: f %>
-    </div>
-  <% end %>
   <% if Flipflop.batch_upload? && !f.object.persisted? %>
     <% provide :metadata_tab do %>
       <p class="switch-upload-type"><%= t('.batch_upload_hint') %> <%= link_to t('.batch_link'), hyrax.new_batch_upload_path(payload_concern: @form.model.class) %></p>
