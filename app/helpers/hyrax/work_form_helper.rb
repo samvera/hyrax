@@ -97,20 +97,5 @@ module Hyrax
         hash[presenter.title_or_label] = presenter.id
       end
     end
-
-    ##
-    # @param form [Hyrax::Forms::WorkForm] or Hyrax::ChangeSet
-    # @return [String] specific error message(s)
-    def form_errors(form:)
-      form.errors.messages.values.flatten.join('; ')
-    end
-
-    def flash_message_types(model = nil)
-      if model&.errors&.any?
-        { notice: 'alert-success', alert: 'alert-warning' }
-      else
-        { notice: 'alert-success', error: 'alert-danger', alert: 'alert-warning' }
-      end
-    end
   end
 end
