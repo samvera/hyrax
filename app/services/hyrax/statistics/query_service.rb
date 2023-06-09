@@ -7,15 +7,20 @@ module Hyrax
       # @param [DateTime] end_datetime ending date time for range query
       def find_by_date_created(start_datetime, end_datetime = nil)
         return [] if start_datetime.blank? # no date just return nothing
-        relation.where(build_date_query(start_datetime, end_datetime))
+        if Hyrax.config.use_valkyrie?
+          return Hyrax.query_service.custom_queries.find_by_date_range(start_datetime: start_datetime,
+                                                                       end_datetime: end_datetime,
+                                                                       models: relation.allowable_types).map(&:id).to_a
+        end
+        relation.where(build_date_query(start_datetime, end_datetime)).map(&:id).to_a
       end
 
       def find_registered_in_date_range(start_datetime, end_datetime = nil)
-        find_by_date_created(start_datetime, end_datetime).merge(where_registered)
+        find_by_date_created(start_datetime, end_datetime) & where_registered.map(&:id).to_a
       end
 
       def find_public_in_date_range(start_datetime, end_datetime = nil)
-        find_by_date_created(start_datetime, end_datetime).merge(where_public)
+        find_by_date_created(start_datetime, end_datetime) & where_public.map(&:id).to_a
       end
 
       def where_public
