@@ -35,12 +35,16 @@ module Hyrax
       end
     end
 
+    def pairs
+      @pairs ||= id.split('').each_slice(2).map(&:join)
+    end
+
     def pair_directory
-      id.split('').each_slice(2).map(&:join)[0..-2]
+      pairs[0..-2]
     end
 
     def pair_path
-      (pair_directory + [id[-2..-1]]).join('/')
+      (pair_directory + pairs[-1..-1]).join('/')
     end
 
     private
