@@ -7,6 +7,6 @@ Valkyrie::StorageAdapter.register(
 )
 
 Valkyrie::StorageAdapter.register(
-  Valkyrie::Storage::Disk.new(base_path: Hyrax.config.derivatives_path),
+  Valkyrie::Storage::Disk.new(base_path: Hyrax.config.derivatives_path, path_generator: Hyrax::DerivativeBucketedStorage),
   :derivatives_disk
 )
