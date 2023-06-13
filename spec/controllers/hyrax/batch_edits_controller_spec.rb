@@ -263,7 +263,13 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
         expect(work2.lease.lease_expiration_date).to eq release_date.to_s
 
         expect(work3.visibility).to eq 'restricted'
-        expect(work3.lease).to be_nil
+        if Hyrax.config.use_valkyrie?
+          expect(work3.lease).to be_nil
+        else
+          expect(work3.lease.visibility_during_lease).to be_nil
+          expect(work3.lease.visibility_after_lease).to be_nil
+          expect(work3.lease.lease_expiration_date).to be_nil
+        end
       end
 
       it 'creates embargoes' do
@@ -287,7 +293,13 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
         expect(work2.embargo.embargo_release_date).to eq release_date.to_s
 
         expect(work3.visibility).to eq 'restricted'
-        expect(work3.embargo).to be_nil
+        if Hyrax.config.use_valkyrie?
+          expect(work3.embargo).to be_nil
+        else
+          expect(work3.embargo.visibility_during_embargo).to be_nil
+          expect(work3.embargo.visibility_after_embargo).to be_nil
+          expect(work3.embargo.embargo_release_date).to be_nil
+        end
       end
 
       context 'with roles' do
