@@ -2,11 +2,12 @@
 RSpec.describe Hyrax::Analytics do
   before do
     ENV['GOOGLE_ANALYTICS_ID'] = 'UA-XXXXXXXX'
-    ENV['GOOGLE_OAUTH_APP_NAME'] = "My App Name"
-    ENV['GOOGLE_OAUTH_APP_VERSION'] = "0.0.1"
-    ENV['GOOGLE_OAUTH_PRIVATE_KEY_PATH'] = "/tmp/privkey.p12"
-    ENV['GOOGLE_OAUTH_PRIVATE_KEY_SECRET'] = "s00pers3kr1t"
-    ENV['GOOGLE_OAUTH_CLIENT_EMAIL'] = "oauth@example.org"
+    ENV['GOOGLE_OAUTH_APP_NAME'] = 'My App Name'
+    ENV['GOOGLE_OAUTH_APP_VERSION'] = '0.0.1'
+    ENV['GOOGLE_OAUTH_PRIVATE_KEY_PATH'] = '/tmp/privkey.p12'
+    ENV['GOOGLE_OAUTH_PRIVATE_KEY_VALUE'] = ''
+    ENV['GOOGLE_OAUTH_PRIVATE_KEY_SECRET'] = 's00pers3kr1t'
+    ENV['GOOGLE_OAUTH_CLIENT_EMAIL'] = 'oauth@example.org'
 
     described_class.send(:remove_instance_variable, :@config) if described_class.send(:instance_variable_defined?, :@config)
   end
@@ -23,6 +24,7 @@ RSpec.describe Hyrax::Analytics do
         expect(config.analytics_id).to eql 'UA-XXXXXXXX'
         expect(config.app_name).to eql 'My App Name'
         expect(config.app_version).to eql '0.0.1'
+        expect(config.privkey_value).to be_nil
         expect(config.privkey_path).to eql '/tmp/privkey.p12'
         expect(config.privkey_secret).to eql 's00pers3kr1t'
         expect(config.client_email).to eql 'oauth@example.org'
@@ -35,6 +37,7 @@ RSpec.describe Hyrax::Analytics do
           analytics:
             app_name: My App Name
             app_version: 0.0.1
+            privkey_value:
             privkey_path: /tmp/privkey.p12
             privkey_secret: s00pers3kr1t
             client_email: oauth@example.org
@@ -45,6 +48,7 @@ RSpec.describe Hyrax::Analytics do
         Hyrax.config.google_analytics_id = "UA-XXXXXXXX"
         expect(config.app_name).to eql 'My App Name'
         expect(config.app_version).to eql '0.0.1'
+        expect(config.privkey_value).to be_nil
         expect(config.privkey_path).to eql '/tmp/privkey.p12'
         expect(config.privkey_secret).to eql 's00pers3kr1t'
         expect(config.client_email).to eql 'oauth@example.org'
@@ -79,7 +83,7 @@ RSpec.describe Hyrax::Analytics do
   describe "#profile" do
     subject { described_class.profile }
 
-    context "when the private key file is missing" do
+    context "when the private key file and private key value are missing" do
       it "raises an error" do
         expect { subject }.to raise_error RuntimeError, "Private key file for Google analytics was expected at '/tmp/privkey.p12', but no file was found."
       end
