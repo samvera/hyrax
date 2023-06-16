@@ -13,13 +13,16 @@ Present tense short summary (50 characters or less)
 
 ### Type of change (for release notes)
 
-- [ ] Major Changes (Potentially breaking changes)
-- [ ] New Features
-- [ ] Deprecations
-- [ ] Bug Fixes
-- [ ] Valkyrie Progress
-- [ ] Documentation
-- [ ] Containerization
+Add an appropriate `notes-*` label to the PR (or indicate here) that classifies this change.
+
+Choose from:
+- `notes-major` Major Changes (Potentially breaking changes)
+- `notes-minor` New Features that are backward compatible
+- `notes-deprecation` Deprecations
+- `notes-bugfix` Bug Fixes
+- `notes-valkyrie` Valkyrie Progress
+- `notes-docs` Documentation
+- `notes-container` Containerization related (Docker, Helm, etc)
 
 ### Detailed Description
 
