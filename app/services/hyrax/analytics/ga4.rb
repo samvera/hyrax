@@ -153,19 +153,19 @@ module Hyrax
         # The number of events by day for an action
         def daily_events(action, date = default_date_range)
           date = date.split(",")
-          EventsDaily.summary(profile, date[0], date[1], action)
+          Hyrax::Analytics::Google::EventsDaily.summary(profile, date[0], date[1], action)
         end
 
         # The number of events by day for an action and ID
         def daily_events_for_id(id, action, date = default_date_range)
           date = date.split(",")
-          EventsDaily.by_id(profile, date[0], date[1], id, action)
+          Hyrax::Analytics::Google::EventsDaily.by_id(profile, date[0], date[1], id, action)
         end
 
         # A list of events sorted by highest event count
         def top_events(action, date = default_date_range)
           date = date.split(",")
-          Events.send('list', profile, date[0], date[1], action)
+          Hyrax::Analytics::Google::Events.send('list', profile, date[0], date[1], action)
         end
 
         def unique_visitors(date = default_date_range); end
@@ -174,27 +174,27 @@ module Hyrax
 
         def new_visitors(period = 'month', date = default_date_range)
           date = date_period(period, date)
-          Visits.new_visits(profile, date[0], date[1])
+          Hyrax::Analytics::Google::Visits.new_visits(profile, date[0], date[1])
         end
 
         def new_visits_by_day(date = default_date_range, _period = 'day')
           date = date.split(",")
-          VisitsDaily.new_visits(profile, date[0], date[1])
+          Hyrax::Analytics::Google::VisitsDaily.new_visits(profile, date[0], date[1])
         end
 
         def returning_visitors(period = 'month', date = default_date_range)
           date = date_period(period, date)
-          Visits.return_visits(profile, date[0], date[1])
+          Hyrax::Analytics::Visits.return_visits(profile, date[0], date[1])
         end
 
         def returning_visits_by_day(date = default_date_range, _period = 'day')
           date = date.split(",")
-          VisitsDaily.return_visits(profile, date[0], date[1])
+          Hyrax::Analytics::Google::VisitsDaily.return_visits(profile, date[0], date[1])
         end
 
         def total_visitors(period = 'month', date = default_date_range)
           date = date_period(period, date)
-          Visits.total_visits(profile, date[0], date[1])
+          Hyrax::Analytics::Google::Visits.total_visits(profile, date[0], date[1])
         end
       end
       # rubocop:enable Metrics/BlockLength
