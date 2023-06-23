@@ -16,7 +16,7 @@ module Hyrax
     def member_of_collections_json(resource)
       # this is where we return for dassie
       return resource.member_of_collections_json if
-      resource.respond_to?(:member_of_collections_json)
+        resource.respond_to?(:member_of_collections_json)
 
       resource = resource.model if resource.respond_to?(:model)
 
