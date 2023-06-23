@@ -2,6 +2,8 @@
 # You can manually fill in these values or use the ENV variables.
 #
 analytics:
+  ga4:
+    analytics_id: <%= ENV['GOOGLE_ANALYTICS_ID'] %>
   google:
     analytics_id: <%= ENV['GOOGLE_ANALYTICS_ID'] %>
     app_name: <%= ENV['GOOGLE_OAUTH_APP_NAME'] %>

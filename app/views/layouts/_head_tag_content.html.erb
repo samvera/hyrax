@@ -26,9 +26,12 @@ signed in %>
 <%= render 'shared/appearance_styles' %>
 
 <% if Hyrax.config.analytics? %>
-  <% if Hyrax.config.analytics_provider == 'google' %>
+  <% case Hyrax.config.analytics_provider %>
+  <% when 'ga4' %>
+    <%= render partial: 'shared/ga4', formats: [:html] %>
+  <% when 'google' %>
     <%= render partial: 'shared/ga', formats: [:html]  %>
-  <% elsif Hyrax.config.analytics_provider == 'matomo' %>
+  <% when 'matomo' %>
     <%= render partial: 'shared/matomo', formats: [:html] %>
   <% end %>
 <% end %>
