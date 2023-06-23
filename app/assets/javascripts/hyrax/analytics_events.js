@@ -55,7 +55,7 @@ class GA4TagTracker {
   trackEvent(category, action, name) {
     gtag('event', action, {
       'category': category,
-      'name': name
+      'label': name
     });
   }
 
