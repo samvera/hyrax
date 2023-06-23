@@ -148,6 +148,7 @@ YAML
             analytics_id: UA-XXXXXXXX
             app_name: My App Name
             app_version: 0.0.1
+            privkey_value:
             privkey_path: /tmp/privkey.p12
             privkey_secret: s00pers3kr1t
             client_email: oauth@example.org
