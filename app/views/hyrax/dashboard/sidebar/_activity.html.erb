@@ -33,7 +33,7 @@
     <% end %>
   <% end %>
 
-  <% if current_ability.can_create_any_work? && Hyrax.config.analytics? %>
+  <% if current_ability.can_create_any_work? && Hyrax.config.analytics? && Hyrax.config.analytics_provider != 'ga4' %>
     <li class="nav-item">
       <%= menu.collapsable_section t('hyrax.admin.sidebar.analytics'),
                                         icon_class: "fa fa-pie-chart",

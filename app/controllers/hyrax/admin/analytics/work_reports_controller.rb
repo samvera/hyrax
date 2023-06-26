@@ -6,7 +6,7 @@ module Hyrax
         include Hyrax::BreadcrumbsForWorksAnalytics
 
         def index
-          return unless Hyrax.config.analytics?
+          return unless Hyrax.config.analytics? && Hyrax.config.analytics_provider != 'ga4'
 
           @accessible_works ||= accessible_works
           @accessible_file_sets ||= accessible_file_sets

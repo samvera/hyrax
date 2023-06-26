@@ -1,5 +1,5 @@
 <div class="form-actions">
-  <% if Hyrax.config.analytics? %>
+  <% if Hyrax.config.analytics? && Hyrax.config.analytics_provider != 'ga4' %>
     <% # turbolinks needs to be turned off or the page will use the cache and the %>
     <% # analytics graph will not show unless the page is refreshed. %>
     <%= link_to t('.analytics'), @presenter.stats_path, id: 'stats', class: 'btn btn-secondary', data: { turbolinks: false } %>
