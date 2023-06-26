@@ -2,7 +2,7 @@
   <h1><%= t("hyrax.dashboard.title") %></h1>
 <% end %>
 
-<% if Hyrax.config.analytics? %>
+<% if Hyrax.config.analytics? && Hyrax.config.analytics_provider != 'ga4' %>
 <div class="row">
   <div class="col-md-12">
     <div class="panel panel-default">
