@@ -45,7 +45,7 @@ further details.
 ### Reporting Issues
 
 * Make sure you have a [GitHub account](https://github.com/signup/free)
-* Submit a [Github issue](https://github.com/samvera/{{library}}/issues/) by:
+* Submit a [Github issue](https://github.com/samvera/hyrax/issues/) by:
   * Clearly describing the issue
     * Provide a descriptive summary
     * Explain the expected behavior

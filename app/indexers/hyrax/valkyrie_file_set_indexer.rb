@@ -9,7 +9,7 @@ module Hyrax
     include Hyrax::VisibilityIndexer
     include Hyrax::ThumbnailIndexer
     include Hyrax::Indexer(:core_metadata)
-    include Hyrax::Indexer(:basic_metadata)
+    include Hyrax::Indexer(:file_set_metadata)
 
     def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
       super.tap do |solr_doc| # rubocop:disable Metrics/BlockLength
@@ -23,7 +23,7 @@ module Hyrax
         solr_doc['hasRelatedImage_ssim']         = resource.thumbnail_id.to_s
 
         # Add in metadata from the original file.
-        file_metadata = original_file
+        file_metadata = Hyrax::FileSetFileService.new(file_set: resource).original_file
         return solr_doc unless file_metadata
 
         # Label is the actual file name. It's not editable by the user.
@@ -98,12 +98,6 @@ module Hyrax
     end
 
     private
-
-    def original_file
-      Hyrax.custom_queries.find_original_file(file_set: resource)
-    rescue Valkyrie::Persistence::ObjectNotFoundError
-      Hyrax.custom_queries.find_files(file_set: resource).first
-    end
 
     def file_format(file)
       if file.mime_type.present? && file.format_label.present?

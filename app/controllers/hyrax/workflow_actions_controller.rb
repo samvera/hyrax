@@ -9,7 +9,8 @@ module Hyrax
     #   @return [Hyrax::Resource]
     attr_reader :curation_concern
 
-    load_resource class: Hyrax::Resource, instance_name: :curation_concern
+    resource_klass = Hyrax.config.use_valkyrie? ? Hyrax::Resource : ActiveFedora::Base
+    load_resource class: resource_klass, instance_name: :curation_concern
     before_action :authenticate_user!
 
     def update
@@ -39,7 +40,7 @@ module Hyrax
 
     def after_update_response
       respond_to do |wants|
-        wants.html { redirect_to [main_app, curation_concern], notice: "The #{curation_concern.human_readable_type} has been updated." }
+        wants.html { redirect_to [main_app, curation_concern], notice: "The #{curation_concern.class.human_readable_type} has been updated." }
         wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, curation_concern]) }
       end
     end

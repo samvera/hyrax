@@ -35,6 +35,7 @@ module Hyrax
 
     # Cast to a SolrDocument by querying from Solr
     def to_presenter
+      Deprecation.warn "Method #to_presenter will be removed in Hyrax 5.0. Use Hyrax::FileSetsController#presenter.solr_document or `@presenter.solr_document` from a view instead."
       Blacklight::SearchService.new(config: CatalogController.blacklight_config).fetch(id).last
     end
   end

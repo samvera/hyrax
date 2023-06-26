@@ -11,9 +11,9 @@ module Hyrax
     #   +EmbargoesControllerBehavior+.
     class WorkEmbargoForm < Hyrax::ChangeSet
       property :embargo, form: Hyrax::Forms::Embargo, populator: :embargo_populator, prepopulator: :embargo_populator
-      property :embargo_release_date, virtual: true, prepopulator: ->(_opts) { self.embargo_release_date = model.embargo&.embargo_release_date }
-      property :visibility_after_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_after_embargo = model.embargo&.visibility_after_embargo }
-      property :visibility_during_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_during_embargo = model.embargo&.visibility_during_embargo }
+      property :embargo_release_date, virtual: true, prepopulator: proc { |_opts| self.embargo_release_date = model.embargo&.embargo_release_date }
+      property :visibility_after_embargo, virtual: true, prepopulator: proc { |_opts| self.visibility_after_embargo = model.embargo&.visibility_after_embargo }
+      property :visibility_during_embargo, virtual: true, prepopulator: proc { |_opts| self.visibility_during_embargo = model.embargo&.visibility_during_embargo }
 
       def embargo_populator(**)
         self.embargo = Hyrax::EmbargoManager.embargo_for(resource: model)

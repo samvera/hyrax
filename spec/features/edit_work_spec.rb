@@ -36,7 +36,7 @@ RSpec.describe 'Editing a work', type: :feature do
   context 'when the user changes permissions' do
     let(:work) { create(:private_work, user: user, admin_set: default_admin_set) }
 
-    it 'confirms copying permissions to files using Hyrax layout and shows updated value', with_nested_reindexing: true do
+    it 'confirms copying permissions to files using Hyrax layout and shows updated value' do
       # e.g. /concern/generic_works/jq085k20z/edit
       visit edit_hyrax_generic_work_path(work)
       choose('generic_work_visibility_open')

@@ -147,7 +147,7 @@ module Hyrax
           Hyrax::CollectionTypeParticipant.create!(hyrax_collection_type_id: collection_type_id, agent_type: p.fetch(:agent_type), agent_id: p.fetch(:agent_id), access: p.fetch(:access))
         end
       rescue InvalidParticipantError => error
-        Rails.logger.error "Participants not created for collection type " \
+        Hyrax.logger.error "Participants not created for collection type " \
                            " #{collection_type_id}: #{error.message}"
         raise error
       end

@@ -13,7 +13,7 @@ RSpec.describe Sipity do
 
     it 'will raise an exception if it cannot convert the given object' do
       expect { described_class.Agent(double) }
-        .to raise_error(PowerConverter::ConversionError)
+        .to raise_error(Sipity::ConversionError)
     end
   end
 
@@ -90,7 +90,7 @@ RSpec.describe Sipity do
 
     it 'will raise an error if it cannot convert' do
       expect { described_class.Entity(nil) }
-        .to raise_error PowerConverter::ConversionError
+        .to raise_error Sipity::ConversionError
     end
   end
 
@@ -120,7 +120,7 @@ RSpec.describe Sipity do
     end
 
     it 'does not convert an arbitrary object' do
-      expect { described_class.Role(double) }.to raise_error(PowerConverter::ConversionError)
+      expect { described_class.Role(double) }.to raise_error(Sipity::ConversionError)
     end
   end
 
@@ -184,7 +184,7 @@ RSpec.describe Sipity do
 
     it 'will attempt convert a string based on scope' do
       expect { described_class.WorkflowState('missing', workflow) }
-        .to raise_error(PowerConverter::ConversionError)
+        .to raise_error(Sipity::ConversionError)
     end
   end
 end

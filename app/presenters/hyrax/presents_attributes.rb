@@ -15,7 +15,7 @@ module Hyrax
     # @option options [String] :work_type name of work type class (e.g., "GenericWork")
     def attribute_to_html(field, options = {})
       unless respond_to?(field)
-        Rails.logger.warn("#{self.class} attempted to render #{field}, but no method exists with that name.")
+        Hyrax.logger.warn("#{self.class} attempted to render #{field}, but no method exists with that name.")
         return
       end
 

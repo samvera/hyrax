@@ -7,9 +7,11 @@ module Hyrax
     class << self
       # @return [Fixnum, nil] the id of the event, or `nil` on failure(?!)
       def create(action, timestamp)
-        event_id = instance.incr("events:latest_id")
-        instance.hmset("events:#{event_id}", "action", action, "timestamp", timestamp)
-        event_id
+        instance.then do |redis|
+          event_id = redis.incr("events:latest_id")
+          redis.hmset("events:#{event_id}", "action", action, "timestamp", timestamp)
+          event_id
+        end
       rescue Redis::CommandError => e
         logger.error("unable to create event: #{e}")
         nil
@@ -23,12 +25,16 @@ module Hyrax
       #
       # @return [Redis]
       def instance
-        if Redis.current.is_a? Redis::Namespace
-          Redis.current.namespace = namespace
+        connection = Hyrax.config.redis_connection || Redis.current
+
+        if connection.is_a? Redis::Namespace
+          connection.namespace = namespace
+          connection
+        elsif connection == Redis.current
+          Redis.current = Redis::Namespace.new(namespace, redis: connection)
         else
-          Redis.current = Redis::Namespace.new(namespace, redis: Redis.current)
+          connection
         end
-        Redis.current
       end
 
       ##
@@ -44,11 +50,13 @@ module Hyrax
     #
     # @return [Enumerable<Hash<Symbol, String>>]
     def fetch(size)
-      RedisEventStore.instance.lrange(@key, 0, size).map do |event_id|
-        {
-          action: RedisEventStore.instance.hget("events:#{event_id}", "action"),
-          timestamp: RedisEventStore.instance.hget("events:#{event_id}", "timestamp")
-        }
+      Hyrax::RedisEventStore.instance.then do |redis|
+        redis.lrange(@key, 0, size).map do |event_id|
+          {
+            action: redis.hget("events:#{event_id}", "action"),
+            timestamp: redis.hget("events:#{event_id}", "timestamp")
+          }
+        end
       end
     rescue Redis::CommandError, Redis::CannotConnectError
       RedisEventStore.logger.error("unable to fetch event: #{@key}")
@@ -62,7 +70,7 @@ module Hyrax
     #
     # @return [Integer, nil] the value successfully pushed; or `nil` on failure(!?)
     def push(value)
-      RedisEventStore.instance.lpush(@key, value)
+      Hyrax::RedisEventStore.instance.then { |r| r.lpush(@key, value) }
     rescue Redis::CommandError, Redis::CannotConnectError
       RedisEventStore.logger.error("unable to push event: #{@key}")
       nil

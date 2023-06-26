@@ -40,7 +40,7 @@ module Hyrax
         expected_user_id = env.user.id
         files.each do |file|
           if file.user_id != expected_user_id
-            Rails.logger.error "User #{env.user.user_key} attempted to ingest uploaded_file #{file.id}, but it belongs to a different user"
+            Hyrax.logger.error "User #{env.user.user_key} attempted to ingest uploaded_file #{file.id}, but it belongs to a different user"
             return false
           end
         end
@@ -50,7 +50,7 @@ module Hyrax
       # @return [TrueClass]
       def attach_files(files, curation_concern, attributes)
         return true if files.blank?
-        AttachFilesToWorkJob.perform_later(curation_concern, files, attributes.to_h.symbolize_keys)
+        AttachFilesToWorkJob.perform_later(curation_concern, files, **attributes.to_h.symbolize_keys)
         true
       end
 

@@ -62,7 +62,7 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
         before { SpyAction.fail = true }
 
         it "calls the method and does not save the object" do
-          expect(Rails.logger)
+          expect(Hyrax.logger)
             .to receive(:error)
             .with("Not all workflow methods were successful, so not saving (#{work.id})")
 
@@ -97,10 +97,10 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
       end
 
       it "logs an error" do
-        expect(Rails.logger)
+        expect(Hyrax.logger)
           .to receive(:error)
           .with("Expected 'SpyAction' to respond to 'call', but it didn't, so not running workflow callback")
-        expect(Rails.logger)
+        expect(Hyrax.logger)
           .to receive(:error)
           .with("Not all workflow methods were successful, so not saving (#{work.id})")
 
@@ -110,10 +110,10 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
 
     context "when the notification doesn't exist" do
       it "logs an error" do
-        expect(Rails.logger)
+        expect(Hyrax.logger)
           .to receive(:error)
           .with("Unable to find 'SpyAction', so not running workflow callback")
-        expect(Rails.logger)
+        expect(Hyrax.logger)
           .to receive(:error)
           .with("Not all workflow methods were successful, so not saving (#{work.id})")
 

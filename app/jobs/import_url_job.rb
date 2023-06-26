@@ -77,7 +77,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
   def copy_remote_file(name)
     filename = File.basename(name)
     dir = Dir.mktmpdir
-    Rails.logger.debug("ImportUrlJob: Copying <#{uri}> to #{dir}")
+    Hyrax.logger.debug("ImportUrlJob: Copying <#{uri}> to #{dir}")
 
     File.open(File.join(dir, filename), 'wb') do |f|
       write_file(f)
@@ -85,7 +85,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
     rescue StandardError => e
       send_error(e.message)
     end
-    Rails.logger.debug("ImportUrlJob: Closing #{File.join(dir, filename)}")
+    Hyrax.logger.debug("ImportUrlJob: Closing #{File.join(dir, filename)}")
   end
 
   ##

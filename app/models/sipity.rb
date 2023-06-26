@@ -57,32 +57,32 @@ module Sipity
   # @return [Sipity::Entity]
   # rubocop:disable Naming/MethodName, Metrics/CyclomaticComplexity, Metrics/MethodLength
   def Entity(input, &block) # rubocop:disable Metrics/AbcSize
-    Rails.logger.debug("Trying to make an Entity for #{input.inspect}")
+    Hyrax.logger.debug("Trying to make an Entity for #{input.inspect}")
 
     result = case input
              when Sipity::Entity
                input
              when URI::GID, GlobalID
-               Rails.logger.debug("Entity() got a GID, searching by proxy")
+               Hyrax.logger.debug("Entity() got a GID, searching by proxy")
                Entity.find_by(proxy_for_global_id: input.to_s)
              when SolrDocument
-               Rails.logger.debug("Entity() got a SolrDocument, retrying on #{input.to_model}")
+               Hyrax.logger.debug("Entity() got a SolrDocument, retrying on #{input.to_model}")
                Entity(input.to_model)
              when Draper::Decorator
-               Rails.logger.debug("Entity() got a Decorator, retrying on #{input.model}")
+               Hyrax.logger.debug("Entity() got a Decorator, retrying on #{input.model}")
                Entity(input.model)
              when Sipity::Comment
-               Rails.logger.debug("Entity() got a Comment, retrying on #{input.entity}")
+               Hyrax.logger.debug("Entity() got a Comment, retrying on #{input.entity}")
                Entity(input.entity)
              when Valkyrie::Resource
-               Rails.logger.debug("Entity() got a Resource, retrying on #{Hyrax::GlobalID(input)}")
+               Hyrax.logger.debug("Entity() got a Resource, retrying on #{Hyrax::GlobalID(input)}")
                Entity(Hyrax::GlobalID(input))
              else
-               Rails.logger.debug("Entity() got something else, testing #to_global_id")
+               Hyrax.logger.debug("Entity() got something else, testing #to_global_id")
                Entity(input.to_global_id) if input.respond_to?(:to_global_id)
              end
 
-    Rails.logger.debug("Entity(): attempting conversion on #{result}")
+    Hyrax.logger.debug("Entity(): attempting conversion on #{result}")
     handle_conversion(input, result, :to_sipity_entity, &block)
   rescue URI::GID::MissingModelIdError
     Entity(nil)
@@ -105,9 +105,32 @@ module Sipity
   module_function :Role
 
   ##
+  # Cast an object to a Workflow id
+  # rubocop:disable Metrics/MethodLength
+  def WorkflowId(input, &block) # rubocop:disable Naming/MethodName
+    result = case input
+             when Sipity::Workflow
+               input.id
+             when Integer
+               input
+             when String
+               input.to_i
+             else
+               if input.respond_to?(workflow_id)
+                 input.workflow_id
+               else
+                 WorkflowId(Entity(input))
+               end
+             end
+    handle_conversion(input, result, :to_workflow_id, &block)
+  end
+  module_function :WorkflowId
+  # rubocop:enable Metrics/MethodLength
+
+  ##
   # Cast an object to a WorkflowAction in a given workflow
   def WorkflowAction(input, workflow, &block) # rubocop:disable Naming/MethodName
-    workflow_id = PowerConverter.convert_to_sipity_workflow_id(workflow)
+    workflow_id = WorkflowId(workflow)
 
     result = case input
              when WorkflowAction
@@ -138,11 +161,9 @@ module Sipity
   # A parent error class for all workflow errors caused by bad state
   class StateError < RuntimeError; end
 
-  class ConversionError < PowerConverter::ConversionError
-    def initialize(value, **options)
-      options[:scope] ||= nil
-      options[:to]    ||= nil
-      super(value, options)
+  class ConversionError < RuntimeError
+    def initialize(value)
+      super("Unable to convert #{value.inspect}")
     end
   end
 

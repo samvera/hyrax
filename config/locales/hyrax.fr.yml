@@ -549,7 +549,10 @@ fr:
           répondre à votre demande. Si vous rencontrez des erreurs de
           téléchargement depuis le nuage, faites-nous savoir via le
           %{contact_href}.</p>
-        local_upload_html: "<p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>"
+          <p>Les téléchargements sont limités à %{upload_file_limit} fichiers de %{upload_size_limit} Mo chacun.</p>
+        local_upload_html: |
+          <p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>
+          <p>Les téléchargements sont limités à %{upload_file_limit} fichiers de %{upload_size_limit} Mo chacun.</p>
       form_member_of_collections:
         actions:
           remove: Supprimer de la collection
@@ -563,7 +566,7 @@ fr:
           actions: action
           title: Titre de la collection
       form_permission:
-        visibility: Visibilité <small> Qui devrait être en mesure d’afficher ou de télécharger ce contenu? </ Small>
+        visibility: Visibilité <small> Qui devrait être en mesure d’afficher ou de télécharger ce contenu? </small>
       form_permission_under_embargo:
         help_html: "<strong>Ce travail est sous embargo.</strong> Vous pouvez modifier les paramètres de l'embargo ici, ou vous pouvez visiter le %{edit_link} pour le désactiver."
         legend_html: Visibilité <small>Qui devrait pouvoir afficher ou télécharger ce contenu?</small>
@@ -595,13 +598,14 @@ fr:
         depositor: Déposant
         directions: Indépendamment des paramètres de visibilité pour ce travail, vous pouvez également le partager avec d'autres utilisateurs et groupes.
         group: Groupe
-        permissions_save_note_html: Les autorisations ne sont <strong> pas </ strong> enregistrées tant que le & quot; Enregistrer & quot; bouton est enfoncé en bas de la page.
+        permissions_save_note_html: Les autorisations ne sont <strong> pas </strong> enregistrées tant que le & quot; Enregistrer & quot; bouton est enfoncé en bas de la page.
         use_add_button: Utilisez le bouton Ajouter pour donner accès à un %{account_label} à la fois (il sera ajouté à la liste ci-dessous). Sélectionnez l'utilisateur, par son nom ou par %{account_label} \. Ensuite, sélectionnez le niveau d'accès que vous souhaitez accorder et cliquez sur Ajouter ce %{account_label} pour terminer l'ajout de l'autorisation.
       form_thumbnail:
         help_html: Sélectionnez le fichier à utiliser comme vignette pour ce travail.
         legend_html: La vignette
       form_visibility_component:
         visibility: Visibilité
+        subtitle_html: <small>Qui devrait être en mesure d’afficher ou de télécharger ce contenu?</small>
       inspect_work:
         back_to: Retour à
         entity_id: ID d'entité
@@ -1410,14 +1414,14 @@ fr:
       count:
         collections:
           collections_listing: Liste des collections
-          in_repo: "<strong> Collections %{total_count} </ strong> dans le référentiel"
-          you_manage: "<strong> collections %{total_count} </ strong> que vous pouvez gérer dans le référentiel"
-          you_own: "<strong> collections %{total_count} </ strong> que vous possédez dans le référentiel"
+          in_repo: "<strong> Collections %{total_count} </strong> dans le référentiel"
+          you_manage: "<strong> collections %{total_count} </strong> que vous pouvez gérer dans le référentiel"
+          you_own: "<strong> collections %{total_count} </strong> que vous possédez dans le référentiel"
         works:
-          in_repo: "<strong> %{total_count} fonctionne </ strong> dans le référentiel"
+          in_repo: "<strong> %{total_count} fonctionne </strong> dans le référentiel"
           works_listing: Liste des travaux
-          you_manage: "<strong> %{total_count} fonctionne </ strong> vous pouvez gérer dans le référentiel"
-          you_own: "<strong> %{total_count} fonctionne </ strong> que vous possédez dans le référentiel"
+          you_manage: "<strong> %{total_count} fonctionne </strong> vous pouvez gérer dans le référentiel"
+          you_own: "<strong> %{total_count} fonctionne </strong> que vous possédez dans le référentiel"
       sort_and_per_page:
         number_of_results_to_display_per_page: Nombre de résultats à afficher par page
     nav_safety:

@@ -5,26 +5,6 @@ module Hyrax
     # A query service handling nested collection queries.
     module NestedCollectionQueryService
       ##
-      # @api private
-      #
-      # an encapsulation of a collection's nesting index attributes
-      class NestingAttributes
-        attr_accessor :parents, :pathnames, :ancestors, :depth, :id
-
-        def initialize(id:, scope:)
-          query_builder = Hyrax::CollectionSearchBuilder.new(scope).where(id: id.to_s)
-          query = Hyrax::Collections::NestedCollectionQueryService.clean_lucene_error(builder: query_builder)
-          response = scope.repository.search(query)
-          collection_doc = response.documents.first
-          @id = id.to_s
-          @parents = collection_doc[Samvera::NestingIndexer.configuration.solr_field_name_for_storing_parent_ids]
-          @pathnames = collection_doc[Samvera::NestingIndexer.configuration.solr_field_name_for_storing_pathnames]
-          @ancestors = collection_doc[Samvera::NestingIndexer.configuration.solr_field_name_for_storing_ancestors]
-          @depth = collection_doc[Samvera::NestingIndexer.configuration.solr_field_name_for_deepest_nested_depth]
-        end
-      end
-
-      ##
       # @api public
       #
       # What possible collections can be nested within the given parent collection?
@@ -71,8 +51,7 @@ module Hyrax
       def self.parent_collections(child:, scope:, page: 1)
         return [] unless nestable?(collection: child)
         query_builder = Hyrax::NestedCollectionsParentSearchBuilder.new(scope: scope, child: child, page: page)
-        query = clean_lucene_error(builder: query_builder)
-        scope.repository.search(query)
+        scope.blacklight_config.repository.search(query_builder.query)
       end
 
       ##
@@ -86,38 +65,17 @@ module Hyrax
       #   id is in the response. Useful for validation.
       # @param nest_direction [Symbol] :as_child or :as_parent
       def self.query_solr(collection:, access:, scope:, limit_to_id:, nest_direction:)
-        nesting_attributes = NestingAttributes.new(id: collection.id.to_s, scope: scope)
         query_builder = Hyrax::Dashboard::NestedCollectionsSearchBuilder.new(
           access: access,
           collection: collection,
           scope: scope,
-          nesting_attributes: nesting_attributes,
           nest_direction: nest_direction
         )
 
         query_builder.where(id: limit_to_id.to_s) if limit_to_id
-        query = clean_lucene_error(builder: query_builder)
-        scope.repository.search(query)
+        scope.blacklight_config.repository.search(query_builder.query)
       end
       private_class_method :query_solr
-
-      ##
-      # @api private
-      #
-      # clean query for +{!lucene}+ error
-      #
-      # @param builder [SearchBuilder]
-      # @return [Blacklight::Solr::Request] cleaned and functional query
-      def self.clean_lucene_error(builder:)
-        # TODO: Need to investigate further to understand why these particular queries
-        # using the where cause fail when others in the app apparently work
-        #
-        # Perhaps see <https://github.com/projectblacklight/blacklight/blob/064302f73eee4baae4d2abf863c68317d3efb5b7/lib/blacklight/solr/search_builder_behavior.rb#L84-L102>.
-        # This can be averted by using #with in at least some cases?
-        query = builder.query.to_hash
-        query['q'] = query['q'].gsub('{!lucene}', '') if query.key?('q')
-        query
-      end
 
       ##
       # @api public
@@ -143,73 +101,6 @@ module Hyrax
         return false if available_child_collections(parent: parent, scope: scope, limit_to_id: child.id.to_s).none?
         true
       end
-
-      # @api public
-      #
-      # Does the nesting depth fall within defined limit?
-      #
-      # @param parent [::Collection]
-      # @param child [nil, ::Collection] will be nil if we are nesting a new
-      #   collection under the parent
-      # @param scope [Object] Typically a controller object that responds
-      #   to +repository+, +can?+, +blacklight_config+, +current_ability+
-      #
-      # @return [Boolean] true if the parent can nest the child; false otherwise
-      def self.valid_combined_nesting_depth?(parent:, child: nil, scope:)
-        # We limit the total depth of collections to the size specified in the samvera-nesting_indexer configuration.
-        child_depth = child_nesting_depth(child: child, scope: scope)
-        parent_depth = parent_nesting_depth(parent: parent, scope: scope)
-        return false if parent_depth + child_depth > Samvera::NestingIndexer.configuration.maximum_nesting_depth
-        true
-      end
-
-      # @api private
-      #
-      # Get the child collection's nesting depth
-      #
-      # @param child [::Collection]
-      # @return [Fixnum] the largest number of collections in a path nested
-      #   under this collection (including this collection)
-      def self.child_nesting_depth(child:, scope:)
-        return 1 unless child
-        # The nesting depth of a child collection is found by finding the largest nesting depth
-        # among all collections and works which have the child collection in the paths, and
-        # subtracting the nesting depth of the child collection itself.
-        # => 1) First we find all the collections with this child in the path, sort the results in descending order, and take the first result.
-        # note: We need to include works in this search. They are included in the depth validations in
-        # the indexer, so we do NOT use collection search builder here.
-        builder = Hyrax::SearchBuilder.new(scope).with({
-                                                         q: "#{Samvera::NestingIndexer.configuration.solr_field_name_for_storing_pathnames}:/.*#{child.id}.*/",
-                                                         sort: "#{Samvera::NestingIndexer.configuration.solr_field_name_for_deepest_nested_depth} desc"
-                                                       })
-        builder.rows = 1
-        query = clean_lucene_error(builder: builder)
-        response = scope.repository.search(query).documents.first
-
-        # Now we have the largest nesting depth for all paths containing this collection
-        descendant_depth = response[Samvera::NestingIndexer.configuration.solr_field_name_for_deepest_nested_depth]
-
-        # => 2) Then we get the stored depth of the child collection itself to eliminate the collections above this one from our count, and add 1 to add back in this collection itself
-        child_depth = NestingAttributes.new(id: child.id.to_s, scope: scope).depth
-        nesting_depth = descendant_depth - child_depth + 1
-
-        # this should always be positive, but just being safe
-        nesting_depth.positive? ? nesting_depth : 1
-      end
-      private_class_method :child_nesting_depth
-
-      # @api private
-      #
-      # Get the parent collection's nesting depth
-      #
-      # @param parent [::Collection]
-      # @return [Fixnum] the largest number of collections above
-      #   this collection (includes this collection)
-      def self.parent_nesting_depth(parent:, scope:)
-        return 1 if parent.nil?
-        NestingAttributes.new(id: parent.id.to_s, scope: scope).depth
-      end
-      private_class_method :parent_nesting_depth
 
       # @api private
       #

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'faraday/multipart'
+
 module Wings
   module Valkyrie
     ##
@@ -67,13 +69,14 @@ module Wings
 
         reader = RDF::Reader.for(content_type: response.headers['content-type'])
         version_graph = RDF::Graph.new << reader.new(response.body)
+        query = { predicate: RDF::Vocab::Fcrepo4.hasVersion }
 
-        version_graph.query(predicate: RDF::Vocab::Fcrepo4.hasVersion).objects.map do |uri|
+        version_graph.query(query).objects.map do |uri|
           timestamp =
             version_graph.query([uri, RDF::Vocab::Fcrepo4.created, :created])
                          .first_object
                          .object
-          Version.new(cast_to_valkyrie_id(uri.to_s), timestamp, self)
+          Version.new(id: cast_to_valkyrie_id(uri.to_s), created: timestamp, adapter: self)
         end.sort
       end
 
@@ -86,13 +89,17 @@ module Wings
       # this implementation uses an orderable {#version_token}. in practice
       # the token is the fcrepo created date for the version, as extracted from
       # the versions graph.
-      Version = Struct.new(:id, :version_token, :adapter) do
+      Version = Struct.new("Version", :id, :created, :adapter, keyword_init: true) do
         include Comparable
 
         ##
         # @return [#read]
         def io
           adapter.find_by(id: id)
+        end
+
+        def version_token
+          created
         end
 
         def <=>(other)

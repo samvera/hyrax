@@ -55,7 +55,7 @@ module Hyrax
           workflow_actions_scope.arel_table[:id].in(
             workflow_state_actions_scope.arel_table.project(
               workflow_state_actions_scope.arel_table[:workflow_action_id]
-            ).where(workflow_state_actions_scope.arel.constraints.reduce)
+            ).where(workflow_state_actions_scope.arel.constraints.reduce(:+))
           )
         )
       end
@@ -307,7 +307,7 @@ module Hyrax
 
         entity_specific_scope = scope_processing_workflow_roles_for_user_and_entity_specific(user: user, entity: entity)
         Sipity::WorkflowRole.where(
-          workflow_scope.arel.constraints.reduce.or(entity_specific_scope.arel.constraints.reduce)
+          workflow_scope.arel.constraints.reduce(:+).or(entity_specific_scope.arel.constraints.reduce(:+))
         )
       end
 
@@ -358,7 +358,7 @@ module Hyrax
                 agent_scope.arel_table.project(
                   agent_scope.arel_table[:id]
                 ).where(
-                  agent_scope.arel.constraints.reduce.and(entity_responsibilities[:entity_id].eq(entity.id))
+                  agent_scope.arel.constraints.reduce(:+).and(entity_responsibilities[:entity_id].eq(entity.id))
                 )
               )
             )
@@ -399,7 +399,7 @@ module Hyrax
               ).where(
                 permissions.arel_table[:workflow_role_id].in(
                   role_scope.arel_table.project(role_scope.arel_table[:id]).where(
-                    role_scope.arel.constraints.reduce
+                    role_scope.arel.constraints.reduce(:+)
                   )
                 )
               )
@@ -441,7 +441,7 @@ module Hyrax
       # @return [ActiveRecord::Relation<Sipity::WorkflowAction>]
       def scope_workflow_actions_available_for_current_state(entity:)
         workflow_actions_for_current_state = scope_workflow_actions_for_current_state(entity: entity)
-        Sipity::WorkflowAction.where(workflow_actions_for_current_state.arel.constraints.reduce)
+        Sipity::WorkflowAction.where(workflow_actions_for_current_state.arel.constraints.reduce(:+))
       end
     end
   end

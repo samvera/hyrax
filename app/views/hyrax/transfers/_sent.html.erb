@@ -32,7 +32,7 @@
           <td><%= req.sender_comment %></td>
         </tr>
       <% else %>
-          <% Rails.logger.error "A proxy request has no receiver: #{req.inspect}" %>
+          <% Hyrax.logger.error "A proxy request has no receiver: #{req.inspect}" %>
       <% end %>
     <% end %>
   </tbody>
