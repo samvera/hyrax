@@ -9,7 +9,7 @@ module Hyrax
       if options[:verbose]
         stdout_logger = Logger.new(STDOUT)
         stdout_logger.level = Logger::INFO
-        Rails.logger.extend(ActiveSupport::Logger.broadcast(stdout_logger))
+        Hyrax.logger.extend(ActiveSupport::Logger.broadcast(stdout_logger))
       end
       @logging = options[:logging]
       @delay_secs = options[:delay_secs].to_f
@@ -84,6 +84,8 @@ module Hyrax
     rescue StandardError => exception
       log_message fail_message
       log_message "Last exception #{exception}"
+      # Without returning false, we return the results of log_message; which is true.
+      false
     end
 
     def date_since_last_cache(user)
@@ -145,7 +147,7 @@ module Hyrax
     end
 
     def log_message(message)
-      Rails.logger.info "#{self.class}: #{message}" if @logging
+      Hyrax.logger.info "#{self.class}: #{message}" if @logging
     end
 
     def retry_options

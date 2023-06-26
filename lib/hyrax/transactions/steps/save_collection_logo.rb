@@ -9,7 +9,7 @@ module Hyrax
       # to be used as logo(s) for the collection.
       #
       class SaveCollectionLogo
-        include Dry::Transaction::Operation
+        include Dry::Monads[:result]
 
         ##
         # @param [Hyrax::ChangeSet] change_set

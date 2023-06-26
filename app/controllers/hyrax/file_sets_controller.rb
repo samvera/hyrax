@@ -13,6 +13,7 @@ module Hyrax
     before_action do
       blacklight_config.track_search_session = false
     end
+    before_action :presenter
 
     # provides the help_text view method
     helper PermissionsHelper
@@ -170,6 +171,7 @@ module Hyrax
       respond_to do |wants|
         wants.html do
           initialize_edit_form
+          # TODO: return a valuable error message
           flash[:error] = "There was a problem processing your request."
           render 'edit', status: :unprocessable_entity
         end
@@ -194,7 +196,14 @@ module Hyrax
     def initialize_edit_form
       guard_for_workflow_restriction_on!(parent: parent)
 
-      @version_list = Hyrax::VersionListPresenter.for(file_set: @file_set)
+      case file_set
+      when Hyrax::Resource
+        @form = Hyrax::Forms::ResourceForm.for(file_set)
+        @form.prepopulate!
+      else
+        @form = form_class.new(file_set)
+      end
+      @version_list = Hyrax::VersionListPresenter.for(file_set: file_set)
       @groups = current_user.groups
     end
 
@@ -235,7 +244,7 @@ module Hyrax
     end
 
     def single_item_search_service
-      Hyrax::SearchService.new(config: blacklight_config, user_params: params.except(:q, :page), scope: self, search_builder_class: search_builder_class)
+      Hyrax::SearchService.new(config: blacklight_config, user_params: params.except(:q, :page), scope: self, search_builder_class: blacklight_config.search_builder_class)
     end
 
     def wants_to_revert?

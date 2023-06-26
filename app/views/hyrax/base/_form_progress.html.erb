@@ -19,7 +19,7 @@
     </div>
 
     <div class="set-access-controls list-group-item">
-      <%= render 'form_visibility_component', f: f %>
+      <%= render 'form_visibility_component', f: f, save_work: true %>
     </div>
     <% if Flipflop.proxy_deposit? && current_user.can_make_deposits_for.any? %>
         <div class="list-group-item">

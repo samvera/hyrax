@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/file_sets/_permission.html.erb', type: :view do
   let(:file_set) { stub_model(FileSet) }
+  let(:form_object) { Hyrax::Forms::FileSetEditForm.new(file_set) }
 
   before do
     stub_template "hyrax/file_sets/_permission_form.html.erb" => 'a form'
-    render 'hyrax/file_sets/permission', file_set: file_set
+    render 'hyrax/file_sets/permission', file_set: file_set, form_object: form_object
   end
 
   context "without additional users" do

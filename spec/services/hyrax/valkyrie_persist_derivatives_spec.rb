@@ -1,48 +1,78 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::ValkyriePersistDerivatives do
+RSpec.describe Hyrax::ValkyriePersistDerivatives, valkyrie_adapter: :test_adapter do
+  let(:fits_response) { IO.read('spec/fixtures/png_fits.xml') }
+
   before do
-    allow(Hyrax.config).to receive(:derivatives_path).and_return('/app/samvera/hyrax-webapp/derivatives/')
-  end
+    allow(Hyrax.config)
+      .to receive(:derivatives_path)
+      .and_return('/app/samvera/hyrax-webapp/derivatives/')
 
-  describe '.fileset_id_from_path' do
-    let(:path) { "/app/samvera/hyrax-webapp/derivatives/95/93/tv/12/3-thumbnail.jpeg" }
-
-    subject { described_class.fileset_id_from_path(path) }
-
-    it 'returns the correct ID' do
-      expect(subject).to eq "9593tv123"
-    end
+    # stub out characterization to avoid system calls. It's important some
+    # amount of characterization happens so listeners fire.
+    allow(Hydra::FileCharacterization).to receive(:characterize).and_return(fits_response)
   end
 
   describe '.call' do
     let(:directives) do
-      { url: 'file:///app/samvera/hyrax-webapp/derivatives/95/93/tv/12/3-thumbnail.jpeg' }
+      { url: "file:///app/samvera/hyrax-webapp/derivatives/#{id}-thumbnail.jpeg" }
     end
-    let(:fileset) { double("FileSet") }
-    let(:id) { "9593tv123" }
-    let(:stream) { StringIO.new }
-    let(:tmpfile) { double("Tempfile") }
-
-    before do
-      allow(Tempfile).to receive(:new).and_return(tmpfile)
-      allow(tmpfile).to receive(:write).with ""
-      allow(Hyrax.config.derivatives_storage_adapter).to receive(:upload)
-      allow(Hyrax.metadata_adapter.query_service).to receive(:find_by).and_return(fileset)
-    end
-
-    subject { described_class.call(stream, directives) }
+    let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+    let(:id) { file_set.id }
+    let(:stream) { StringIO.new('moomin') }
 
     it 'uploads the processed file' do
-      expect(Tempfile).to receive(:new).with(id, encoding: 'ascii-8bit')
-      allow(Hyrax.metadata_adapter.query_service).to receive(:find_by).with(id: id).and_return(fileset)
-      expect(Hyrax.config.derivatives_storage_adapter).to(
-        receive(:upload).with(
-          file: tmpfile,
-          original_filename: '/app/samvera/hyrax-webapp/derivatives/95/93/tv/12/3-thumbnail.jpeg',
-          resource: fileset
-        )
-      )
-      subject
+      expect { described_class.call(stream, directives) }
+        .to change { Hyrax.custom_queries.find_files(file_set: file_set) }
+        .from(be_empty)
+    end
+  end
+
+  describe '.fileset_for_directives' do
+    context 'with ActiveFedora style id' do
+      let(:directives) do
+        { url: 'file:///app/samvera/hyrax-webapp/derivatives/95/93/tv/12/3-thumbnail.jpeg' }
+      end
+
+      it 'extracts the id' do
+        expect(Hyrax.metadata_adapter.query_service)
+          .to receive(:find_by).with(id: '9593tv123')
+        described_class.fileset_for_directives(directives)
+      end
+    end
+
+    context 'with Valkyrie style id' do
+      let(:directives) do
+        { url: 'file:///app/samvera/hyrax-webapp/derivatives/48/fc/01/a7/-e/df/3-/4e/d5/-a/d9/5-/32/71/3f/40/ea/ed-thumbnail.jpeg' }
+      end
+
+      it 'extracts the id' do
+        expect(Hyrax.metadata_adapter.query_service)
+          .to receive(:find_by).with(id: '48fc01a7-edf3-4ed5-ad95-32713f40eaed')
+        described_class.fileset_for_directives(directives)
+      end
+    end
+
+    context 'with many file extensions' do
+      let(:directives) do
+        { url: 'file:///app/samvera/hyrax-webapp/derivatives/48/fc/01/a7/-e/df/3-/4e/d5/-a/d9/5-/32/71/3f/40/ea/ed-thumbnail.svg.jp2.jpeg' }
+      end
+
+      it 'extracts the id' do
+        expect(Hyrax.metadata_adapter.query_service)
+          .to receive(:find_by).with(id: '48fc01a7-edf3-4ed5-ad95-32713f40eaed')
+        described_class.fileset_for_directives(directives)
+      end
+    end
+
+    context 'with unknown style id' do
+      let(:directives) do
+        { url: 'file:///app/samvera/hyrax-webapp/derivatives/what.jpeg' }
+      end
+
+      it 'raises an error' do
+        expect { described_class.fileset_for_directives(directives) }
+          .to raise_error(/Could not extract fileset id from path/)
+      end
     end
   end
 end

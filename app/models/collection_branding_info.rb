@@ -1,18 +1,7 @@
 # frozen_string_literal: true
 class CollectionBrandingInfo < ApplicationRecord
-  def initialize(collection_id:,
-                 filename:,
-                 role:,
-                 alt_txt: "",
-                 target_url: "")
-
-    super()
-    self.collection_id = collection_id
-    self.role = role
-    self.alt_text = alt_txt
-    self.target_url = target_url
-    self.local_path = File.join(role, filename)
-  end
+  attr_accessor :filename, :alt_txt
+  after_initialize :set_collection_attributes
 
   def save(file_location, upload_file = true)
     filename = File.split(local_path).last
@@ -51,6 +40,11 @@ class CollectionBrandingInfo < ApplicationRecord
   end
 
   private
+
+  def set_collection_attributes
+    self.alt_text ||= alt_txt || ''
+    self.local_path ||= File.join(role, filename)
+  end
 
   def storage
     Hyrax.config.branding_storage_adapter

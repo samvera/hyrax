@@ -52,7 +52,7 @@ class CharacterizeJob < Hyrax::ApplicationJob
     reset_title = file_set.title.first == file_set.label
 
     characterization_service.run(file_set.characterization_proxy, filepath)
-    Rails.logger.debug "Ran characterization on #{file_set.characterization_proxy.id} (#{file_set.characterization_proxy.mime_type})"
+    Hyrax.logger.debug "Ran characterization on #{file_set.characterization_proxy.id} (#{file_set.characterization_proxy.mime_type})"
     file_set.characterization_proxy.alpha_channels = channels(filepath) if file_set.image? && Hyrax.config.iiif_image_server?
     file_set.characterization_proxy.save!
 
@@ -65,8 +65,9 @@ class CharacterizeJob < Hyrax::ApplicationJob
     # mod time. This is done in the versioning code.
     file_set.date_modified = Hyrax::TimeService.time_in_utc if file_set.characterization_proxy.original_checksum.first != previous_checksum
 
-    # set title to label if that's how it was before this characterization
-    file_set.title = [file_set.characterization_proxy.original_name.force_encoding("UTF-8")] if reset_title
+    file_set.characterization_proxy.original_name.force_encoding("UTF-8")
+    # set title to label (i.e. file name, `original_name`) if that's how it was before this characterization
+    file_set.title = [file_set.characterization_proxy.original_name] if reset_title
     # always set the label to the original_name
     file_set.label = file_set.characterization_proxy.original_name
 

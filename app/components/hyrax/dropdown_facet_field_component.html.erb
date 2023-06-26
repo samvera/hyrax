@@ -1,0 +1,21 @@
+<fieldset class="btn-group">
+  <legend class="sr-only"><%= @facet_field.label %></legend>
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="<%= @facet_field.key.parameterize %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" aria-controls="<%= @facet_field.key.parameterize + '-dropdown-options' %>">
+    <%= @facet_field.label %>
+  </button>
+  <ul class="dropdown-menu" id="<%= @facet_field.key.parameterize + '-dropdown-options' %>">
+    <% facet_item_presenters.each do |item| -%>
+      <li class="dropdown-item">
+        <%= render Blacklight::FacetItemComponent.new(facet_item: item, wrapping_element: nil) %>
+      </li>
+    <% end %>
+
+    <% if @facet_field.modal_path %>
+      <li class="dropdown-item more_facets">
+        <%= link_to t("more_#{@facet_field.key}_html", scope: 'blacklight.search.facets', default: :more_html, field_name: @facet_field.label),
+          @facet_field.modal_path,
+          data: { blacklight_modal: 'trigger' } %>
+      </li>
+    <% end %>
+  </ul>
+</fieldset>

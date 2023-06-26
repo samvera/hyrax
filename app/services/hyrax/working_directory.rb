@@ -16,7 +16,7 @@ module Hyrax
         repository_file = Hydra::PCDM::File.find(repository_file_id)
         working_path = full_filename(id, repository_file.original_name)
         if File.exist?(working_path)
-          Rails.logger.debug "#{repository_file.original_name} already exists in the working directory at #{working_path}"
+          Hyrax.logger.debug "#{repository_file.original_name} already exists in the working directory at #{working_path}"
           return working_path
         end
         copy_repository_resource_to_working_directory(repository_file, id)
@@ -26,7 +26,7 @@ module Hyrax
       # @param [String] id the identifier of the FileSet
       # @return [String] path of the working file
       def copy_repository_resource_to_working_directory(file, id)
-        Rails.logger.debug "Loading #{file.original_name} (#{file.id}) from the repository to the working directory"
+        Hyrax.logger.debug "Loading #{file.original_name} (#{file.id}) from the repository to the working directory"
         copy_stream_to_working_directory(id, file.original_name, StringIO.new(file.content))
       end
 
@@ -38,7 +38,7 @@ module Hyrax
       # @return [String] path of the working file
       def copy_stream_to_working_directory(id, name, stream)
         working_path = full_filename(id, name)
-        Rails.logger.debug "Writing #{name} to the working directory at #{working_path}"
+        Hyrax.logger.debug "Writing #{name} to the working directory at #{working_path}"
         FileUtils.mkdir_p(File.dirname(working_path))
         IO.copy_stream(stream, working_path)
         working_path

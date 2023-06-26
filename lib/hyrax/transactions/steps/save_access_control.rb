@@ -16,12 +16,28 @@ module Hyrax
         # @param [Valkyrie::Resource] obj
         #
         # @return [Dry::Monads::Result]
-        def call(obj)
+        def call(obj, permissions_params: [])
           return Success(obj) unless obj.respond_to?(:permission_manager)
+
           acl = obj.permission_manager&.acl
+          # Translate step args into Hyrax::Permission objects before saving
+          Array(permissions_params).each do |param|
+            permission = param_to_permission(obj, param)
+            acl << permission if permission
+          end
+
           acl&.save || (return Failure[:failed_to_save_acl, acl])
 
           Success(obj)
+        end
+
+        private
+
+        def param_to_permission(obj, param)
+          return nil unless param["access"] && param["type"] && param["name"]
+          mode = param["access"].to_sym
+          agent = param["type"] == "group" ? "group/#{param['name']}" : param["name"]
+          Hyrax::Permission.new(access_to: obj.id, mode: mode, agent: agent)
         end
       end
     end

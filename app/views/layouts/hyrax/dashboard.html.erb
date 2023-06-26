@@ -16,7 +16,7 @@
         <%= render 'hyrax/dashboard/sidebar' %>
       </div>
       <div class="main-content maximized<%= " admin-stats" if request.fullpath.include? '/admin/stats' %>">
-        <%= render_breadcrumbs builder: Hyrax::BootstrapBreadcrumbsBuilder %>
+        <%= render_breadcrumbs builder: Hyrax.config.breadcrumb_builder %>
         <%= render '/flash_msg' %>
         <% if content_for?(:page_header) %>
           <div class="row">

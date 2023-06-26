@@ -73,14 +73,14 @@ RSpec.describe Hyrax::Workflow::NotificationService do
         Object.send(:remove_const, :ConfirmationOfSubmittedToUlraCommittee)
       end
       it "logs an error" do
-        expect(Rails.logger).to receive(:error).with("Expected 'ConfirmationOfSubmittedToUlraCommittee' to respond to 'send_notification', but it didn't, so not sending notification")
+        expect(Hyrax.logger).to receive(:error).with("Expected 'ConfirmationOfSubmittedToUlraCommittee' to respond to 'send_notification', but it didn't, so not sending notification")
         subject
       end
     end
 
     context "when the notification doesn't exist" do
       it "logs an error" do
-        expect(Rails.logger).to receive(:error).with("Unable to find 'ConfirmationOfSubmittedToUlraCommittee', so not sending notification")
+        expect(Hyrax.logger).to receive(:error).with("Unable to find 'ConfirmationOfSubmittedToUlraCommittee', so not sending notification")
         subject
       end
     end

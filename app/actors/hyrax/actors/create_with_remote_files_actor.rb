@@ -62,7 +62,7 @@ module Hyrax
             # Escape any space characters, so that this is a legal URI
             uri = URI.parse(Addressable::URI.escape(file_info[:url]))
             unless self.class.validate_remote_url(uri)
-              Rails.logger.error "User #{user.user_key} attempted to ingest file from url #{file_info[:url]}, which doesn't pass validation"
+              Hyrax.logger.error "User #{user.user_key} attempted to ingest file from url #{file_info[:url]}, which doesn't pass validation"
               return false
             end
             auth_header = file_info.fetch(:auth_header, {})
@@ -84,7 +84,7 @@ module Hyrax
               path.start_with?(dir) && path.length > dir.length
             end
           else
-            Rails.logger.debug "Assuming #{uri.scheme} uri is valid without a serious attempt to validate: #{uri}"
+            Hyrax.logger.debug "Assuming #{uri.scheme} uri is valid without a serious attempt to validate: #{uri}"
             true
           end
         end

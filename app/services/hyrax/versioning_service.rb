@@ -1,7 +1,80 @@
 # frozen_string_literal: true
 
 module Hyrax
+  ##
+  # Provides methods for dealing with versions of files across both ActiveFedora
+  # and Valkyrie.
+  #
+  # Note that many of the methods pertaining to version creation are currently
+  # implemented as static methods.
   class VersioningService
+    ##
+    # @!attribute [rw] resource
+    #   @return [ActiveFedora::File | Hyrax::FileMetadata | NilClass]
+    attr_accessor :resource
+
+    ##
+    # @!attribute [r] storage_adapter
+    #   @return [#supports?]
+    attr_reader :storage_adapter
+
+    ##
+    # @param resource [ActiveFedora::File | Hyrax::FileMetadata | NilClass]
+    def initialize(resource:, storage_adapter: Hyrax.storage_adapter)
+      @storage_adapter = storage_adapter
+      self.resource = resource
+    end
+
+    ##
+    # Returns an array of versions for the resource associated with this
+    # Hyrax::VersioningService.
+    #
+    # If the resource is nil, or if it is a Hyrax::FileMetadata and versioning
+    # is not supported in the storage adapter, an empty array will be returned.
+    def versions
+      if resource.nil?
+        []
+      elsif resource.is_a?(Hyrax::FileMetadata)
+        if storage_adapter.try(:"supports?", :versions)
+          storage_adapter.find_versions(id: resource.file_identifier).to_a
+        else
+          []
+        end
+      else
+        resource.versions.all.to_a
+      end
+    end
+
+    ##
+    # Returns the latest version of the file associated with this
+    # Hyrax::VersioningService.
+    def latest_version
+      versions.last
+    end
+
+    ##
+    # Returns the file ID of the latest version of the file associated with this
+    # Hyrax::VersioningService, or the ID of the file resource itself if no
+    # latest version is defined.
+    #
+    # If the resource is nil, this method returns an empty string.
+    def versioned_file_id
+      latest = latest_version
+      if latest
+        if latest.respond_to?(:id)
+          latest.id
+        else
+          Hyrax.config.translate_uri_to_id.call(latest.uri)
+        end
+      elsif resource.nil?
+        ""
+      elsif resource.is_a?(Hyrax::FileMetadata)
+        resource.file_identifier
+      else
+        resource.id
+      end
+    end
+
     class << self
       # Make a version and record the version committer
       # @param [ActiveFedora::File | Hyrax::FileMetadata] content
@@ -11,19 +84,14 @@ module Hyrax
         perform_create(content, user, use_valkyrie)
       end
 
-      # @param [ActiveFedora::File | Hyrax::FileMetadata] content
+      # @param [ActiveFedora::File | Hyrax::FileMetadata] file
       def latest_version_of(file)
-        file.versions.last
+        Hyrax::VersioningService.new(resource: file).latest_version
       end
 
-      # @param [ActiveFedora::File | Hyrax::FileMetadata] content
+      # @param [ActiveFedora::File | Hyrax::FileMetadata] file
       def versioned_file_id(file)
-        versions = file.versions.all
-        if versions.present?
-          Hyrax.config.translate_uri_to_id.call(versions.last.uri)
-        else
-          file.id
-        end
+        Hyrax::VersioningService.new(resource: file).versioned_file_id
       end
 
       # Record the version committer of the last version
@@ -42,7 +110,7 @@ module Hyrax
       def perform_create(content, user, use_valkyrie)
         use_valkyrie ? perform_create_through_valkyrie(content, user) : perform_create_through_active_fedora(content, user)
       rescue NotImplementedError
-        Rails.logger.warn "Declining to create a Version for #{content}; #{self} doesn't support versioning with use_valkyrie: #{use_valkyrie}"
+        Hyrax.logger.warn "Declining to create a Version for #{content}; #{self} doesn't support versioning with use_valkyrie: #{use_valkyrie}"
       end
 
       def perform_create_through_active_fedora(content, user)

@@ -104,7 +104,7 @@ Hyrax = {
         // On the edit work page
         new PermissionsControl($("#share"), 'tmpl-work-grant');
         // On the edit fileset page
-        new PermissionsControl($("#permission"), 'tmpl-file-set-grant');
+        new PermissionsControl($("#permission"), 'tmpl-file-set-grant', { with_visibility_component: true });
         // On the batch edit page
         new PermissionsControl($("#form_permissions"), 'tmpl-work-grant');
         // On the edit collection page

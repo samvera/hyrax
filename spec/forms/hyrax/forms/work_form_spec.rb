@@ -226,7 +226,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
       after  { form.class.required_fields -= [bad_term] }
 
       it 'logs a warning' do
-        expect(Rails.logger).to receive(:warn).with(/#{bad_term}/)
+        expect(Hyrax.logger).to receive(:warn).with(/#{bad_term}/)
         form.primary_terms
       end
 

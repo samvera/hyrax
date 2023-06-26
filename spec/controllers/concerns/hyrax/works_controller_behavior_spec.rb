@@ -123,6 +123,17 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         end
       end
 
+      context 'when granting additional permissions' do
+        let(:create_params) { { title: 'comet in moominland', permissions_attributes: { "0" => { type: 'person', access: 'read', name: 'foo@bar.com' } } } }
+
+        it 'saves the visibility' do
+          post :create, params: { test_simple_work: create_params }
+
+          expect(Hyrax::AccessControlList(assigns[:curation_concern]).permissions)
+            .to include(have_attributes(mode: :read, agent: 'foo@bar.com'))
+        end
+      end
+
       context 'when adding a collection' do
         let(:collection) { FactoryBot.valkyrie_create(:pcdm_collection) }
 
@@ -563,6 +574,17 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
 
           expect(Hyrax::AccessControlList(assigns[:curation_concern]).permissions)
             .to include(have_attributes(mode: :read, agent: 'group/public'))
+        end
+      end
+
+      context 'and granting additional permissions' do
+        let(:update_params) { { title: 'comet in moominland', permissions_attributes: { "0" => { type: 'person', access: 'read', name: 'foo@bar.com' } } } }
+
+        it 'saves the visibility' do
+          post :update, params: { id: id, test_simple_work: update_params }
+
+          expect(Hyrax::AccessControlList(assigns[:curation_concern]).permissions)
+            .to include(have_attributes(mode: :read, agent: 'foo@bar.com'))
         end
       end
 

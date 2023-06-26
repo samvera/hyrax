@@ -368,7 +368,8 @@ RSpec.describe HyraxHelper, type: :helper do
     let(:repository) { double }
 
     before do
-      allow(controller).to receive(:repository).and_return(repository)
+      allow(controller).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
+      allow(controller.blacklight_config).to receive(:repository).and_return(repository)
       allow(solr_doc).to receive(:[]).with("title_tesim").and_return(["Collection of Awesomeness"])
       allow(bad_solr_doc).to receive(:[]).with("title_tesim").and_return(nil)
       allow(repository).to receive(:find).with("abcd12345").and_return(solr_response)

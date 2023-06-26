@@ -83,12 +83,12 @@ RSpec.describe ImportUrlJob do
       context 'when the FileSet has an existing label' do
         let(:label) { "example.tif" }
         before do
-          allow(Rails.logger).to receive(:debug)
+          allow(Hyrax.logger).to receive(:debug)
         end
         it 'uses the FileSet label' do
           described_class.perform_now(file_set, operation)
           tmp_file_path = Rails.root.join(tmpdir, label)
-          expect(Rails.logger).to have_received(:debug).with("ImportUrlJob: Closing #{tmp_file_path}")
+          expect(Hyrax.logger).to have_received(:debug).with("ImportUrlJob: Closing #{tmp_file_path}")
           expect(File.exist?(tmp_file_path.to_s)).to be true
         end
       end

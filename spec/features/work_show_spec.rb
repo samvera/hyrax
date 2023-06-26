@@ -2,6 +2,10 @@
 RSpec.describe "work show view" do
   include Selectors::Dashboard
 
+  before do
+    allow(Hyrax::Analytics.config).to receive(:analytics_id).and_return('UA-XXXXXXXX')
+  end
+
   let(:work_path) { "/concern/generic_works/#{work.id}" }
   let(:app_host) { Capybara.app_host || 'http://www.example.com' }
 

@@ -27,7 +27,7 @@ RSpec.describe Hyrax::CustomQueries::Navigators::FindFiles, valkyrie_adapter: :t
 
   describe '#find_original_file' do
     context 'when original file exists' do
-      let(:original_file) { FactoryBot.valkyrie_create(:hyrax_file_metadata) }
+      let(:original_file) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: :original_file) }
       let(:fileset) { FactoryBot.valkyrie_create(:hyrax_file_set, files: [original_file]) }
 
       it 'returns file metadata resource' do
@@ -59,7 +59,7 @@ RSpec.describe Hyrax::CustomQueries::Navigators::FindFiles, valkyrie_adapter: :t
       let(:fileset) { FactoryBot.valkyrie_create(:hyrax_file_set, files: [extracted_text]) }
 
       let(:extracted_text) do
-        FactoryBot.valkyrie_create(:hyrax_file_metadata, type: Hyrax::FileMetadata::Use::EXTRACTED_TEXT)
+        FactoryBot.valkyrie_create(:hyrax_file_metadata, use: :extracted_file)
       end
 
       it 'returns file metadata resource' do
@@ -91,7 +91,7 @@ RSpec.describe Hyrax::CustomQueries::Navigators::FindFiles, valkyrie_adapter: :t
       let(:fileset) { FactoryBot.valkyrie_create(:hyrax_file_set, files: [thumbnail], thumbnail: thumbnail) }
 
       let(:thumbnail) do
-        FactoryBot.valkyrie_create(:hyrax_file_metadata, type: Hyrax::FileMetadata::Use::THUMBNAIL)
+        FactoryBot.valkyrie_create(:hyrax_file_metadata, use: :thumbnail_file)
       end
 
       it 'returns file metadata resource' do

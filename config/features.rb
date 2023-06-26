@@ -47,5 +47,5 @@ Flipflop.configure do
           default: false,
           description: "Put the system into read-only mode. Deposits, edits, approvals and anything that makes a change to the data will be disabled."
 rescue Flipflop::StrategyError, Flipflop::FeatureError => err
-  Rails.logger.warn "Ignoring #{err}: #{err.message}"
+  Hyrax.logger.warn "Ignoring #{err}: #{err.message}"
 end

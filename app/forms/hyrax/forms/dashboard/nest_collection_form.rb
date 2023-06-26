@@ -38,7 +38,6 @@ module Hyrax
         validates :parent, presence: true
         validates :child, presence: true
         validate :parent_and_child_can_be_nested
-        validate :nesting_within_maximum_depth
 
         def save
           return false unless valid?
@@ -83,12 +82,11 @@ module Hyrax
         # rerouting to new_dashboard_collection_path to add the new collection as
         # a child. Since we don't yet have a child collection, the valid? option can't be used here.
         def validate_add
-          if nestable?(parent)
-            nesting_within_maximum_depth
-          else
+          unless nestable?(parent)
             errors.add(:parent, :cannot_have_child_nested)
-            false
+            return false
           end
+          true
         end
 
         def remove
@@ -103,17 +101,6 @@ module Hyrax
         private
 
         attr_accessor :query_service, :persistence_service, :context, :collection
-
-        # ideally we would love to be able to eliminate collections which exceed the
-        # maximum nesting depth from the lists of available collections, but the queries
-        # needed to make the determination are too expensive to do for every possible
-        # collection, so we only test for this situation prior to saving the new
-        # relationship.
-        def nesting_within_maximum_depth
-          return true if query_service.valid_combined_nesting_depth?(parent: parent, child: child, scope: context)
-          errors.add(:collection, :exceeds_maximum_nesting_depth)
-          false
-        end
 
         def parent_and_child_can_be_nested
           if nestable?(parent) && nestable?(child)

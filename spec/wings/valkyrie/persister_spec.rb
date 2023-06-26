@@ -189,6 +189,11 @@ RSpec.describe Wings::Valkyrie::Persister do
         expect(persister.save(resource: resource)).to be_persisted
       end
 
+      it "can save a resource repeatedly" do
+        saved = persister.save(resource: resource)
+        expect(persister.save(resource: saved)).to be_persisted
+      end
+
       it "recalls the file id" do
         expect(persister.save(resource: resource))
           .to have_attributes(file_identifier: file.id)

@@ -5,6 +5,9 @@ RSpec.describe Hyrax::IiifManifestPresenter do
   subject(:presenter) { described_class.new(work) }
   let(:work) { build(:monograph) }
 
+  it { is_expected.to respond_to :hostname }
+  it { is_expected.to respond_to :ability }
+
   describe 'manifest generation' do
     let(:builder_service) { Hyrax::ManifestBuilderService.new }
 
@@ -48,6 +51,9 @@ RSpec.describe Hyrax::IiifManifestPresenter do
     subject(:presenter) { described_class.new(solr_doc) }
     let(:solr_doc) { SolrDocument.new(file_set.to_solr) }
     let(:file_set) { create(:file_set, :image) }
+
+    it { is_expected.to respond_to :hostname }
+    it { is_expected.to respond_to :ability }
 
     describe '#display_image' do
       it 'gives a IIIFManifest::DisplayImage' do

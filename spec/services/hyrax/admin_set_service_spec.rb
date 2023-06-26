@@ -3,7 +3,7 @@ RSpec.describe Hyrax::AdminSetService do
   let(:controller) { ::CatalogController.new }
   let(:context) do
     double(current_ability: Ability.new(user),
-           repository: controller.repository,
+           repository: controller.blacklight_config.repository,
            blacklight_config: controller.blacklight_config,
            search_state_class: nil)
   end

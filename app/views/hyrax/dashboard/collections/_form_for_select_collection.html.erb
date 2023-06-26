@@ -14,7 +14,7 @@
                 <p><%= t("hyrax.collection.select_form.select_heading") %></p>
               
                 <% if @add_works_to_collection.present? %>
-                  <%= text_field_tag 'member_of_collection_label', @add_works_to_collection_label, size: '90', disabled: true %>
+                  <%= text_field_tag 'member_of_collection_label', @add_works_to_collection_label, disabled: true %>
                   <%= hidden_field_tag 'member_of_collection_ids', @add_works_to_collection %>
                 <% else %>
                   <%= text_field_tag 'member_of_collection_ids', nil,

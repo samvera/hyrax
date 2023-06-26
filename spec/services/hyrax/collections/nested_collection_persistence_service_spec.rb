@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Collections::NestedCollectionPersistenceService, with_nested_reindexing: true do
+RSpec.describe Hyrax::Collections::NestedCollectionPersistenceService do
   let(:parent) { FactoryBot.valkyrie_create(:hyrax_collection) }
   let(:child) { FactoryBot.valkyrie_create(:hyrax_collection) }
 

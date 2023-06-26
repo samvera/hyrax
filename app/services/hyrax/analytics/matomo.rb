@@ -11,20 +11,21 @@ module Hyrax
         # Loads configuration options from config/analytics.yml. Expected structure:
         # `analytics:`
         # `  matomo:`
-        # `    base_url: <%= ENV['MATOMOT_BASE_URL']`
-        # `    site_id: <%= ENV['MATOMOT_SITE_ID']`
-        # `    auth_token: <%= ENV['MATOMOT_AUTH_TOKEN']`
+        # `    base_url: <%= ENV['MATOMO_BASE_URL']`
+        # `    site_id: <%= ENV['MATOMO_SITE_ID']`
+        # `    auth_token: <%= ENV['MATOMO_AUTH_TOKEN']`
         # @return [Config]
         def config
           @config ||= Config.load_from_yaml
         end
 
         class Config
+          # TODO: test matomo and see if it needs any of the updates from https://github.com/samvera/hyrax/pull/6063
           def self.load_from_yaml
             filename = Rails.root.join('config', 'analytics.yml')
             yaml = YAML.safe_load(ERB.new(File.read(filename)).result)
             unless yaml
-              Rails.logger.error("Unable to fetch any keys from #{filename}.")
+              Hyrax.logger.error("Unable to fetch any keys from #{filename}.")
               return new({})
             end
             new yaml.fetch('analytics')&.fetch('matomo')

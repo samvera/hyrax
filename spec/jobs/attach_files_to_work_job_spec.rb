@@ -93,7 +93,7 @@ RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
 
       it "overrides the work's visibility", perform_enqueued: [described_class, IngestJob] do
         expect(CharacterizeJob).to receive(:perform_later).twice
-        described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2], attributes)
+        described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2], **attributes)
         generic_work.reload
         expect(generic_work.file_sets.count).to eq 2
         expect(generic_work.file_sets.find { |fs| fs.label == uploaded_file1.file.filename }.visibility).to eq 'open'
