@@ -135,6 +135,43 @@ RSpec.describe Hyrax::EmbargoManager do
     end
   end
 
+  describe '#nullify' do
+    context 'with no embargo' do
+      it 'is a no-op' do
+        expect { manager.nullify }
+          .not_to change { resource.embargo }
+      end
+    end
+
+    context 'with expired embargo' do
+      include_context 'with expired embargo'
+
+      it 'ensures the embargo release date is set to nil' do
+        expect(resource.embargo.embargo_release_date).to_not eq nil
+        manager.nullify
+        expect(resource.embargo.embargo_release_date).to eq nil
+      end
+    end
+
+    context 'when under embargo' do
+      include_context 'when under embargo'
+
+      it 'is a no-op' do
+        expect { manager.nullify }
+          .not_to change { resource.embargo.embargo_release_date }
+      end
+    end
+
+    context 'when under embargo and force' do
+      include_context 'when under embargo'
+
+      it 'ensures the releasee date is nil' do
+        manager.nullify(force: true)
+        expect(resource.embargo.embargo_release_date).to eq nil
+      end
+    end
+  end
+
   describe '#release' do
     context 'with no embargo' do
       it 'is a no-op' do
@@ -169,6 +206,15 @@ RSpec.describe Hyrax::EmbargoManager do
       it 'is a no-op' do
         expect { manager.release }
           .not_to change { resource.visibility }
+      end
+    end
+
+    context 'when under embargo and force' do
+      include_context 'when under embargo'
+
+      it 'ensures the post-embargo visibility is set' do
+        manager.release(force: true)
+        expect(resource.visibility).to eq manager.embargo.visibility_after_embargo
       end
     end
   end
