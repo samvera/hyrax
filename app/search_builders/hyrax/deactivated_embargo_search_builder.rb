@@ -5,7 +5,7 @@ module Hyrax
 
     def with_deactivated_embargos(solr_params)
       solr_params[:fq] ||= []
-      solr_params[:fq] = 'embargo_release_date_dtsi:[* TO *]'
+      solr_params[:fq] = 'embargo_history_ssim:*'
     end
   end
 end

@@ -119,6 +119,23 @@ module Hyrax
       end
     end
 
+    # Deactivates the embargo and logs a message to the embargo_history property
+    def deactivate!
+      binding.pry
+      embargo_state = embargo.active? ? 'active' : 'expired'
+      embargo_record = embargo_history_message(
+        embargo_state,
+        Date.today,
+        DateTime.parse(embargo.embargo_release_date),
+        embargo.visibility_during_embargo,
+        embargo.visibility_after_embargo
+      )
+
+      nullify(force: true)
+      release(force: true)
+      embargo.embargo_history += [embargo_record]
+    end
+
     ##
     # Copies and applies the embargo to a new (target) resource.
     #
@@ -213,5 +230,13 @@ module Hyrax
     def core_attribute_keys
       [:visibility_after_embargo, :visibility_during_embargo, :embargo_release_date]
     end
+
+    protected
+
+      # Create the log message used when deactivating an embargo
+      def embargo_history_message(state, deactivate_date, release_date, visibility_during, visibility_after)
+        I18n.t 'hydra.embargo.history_message', state: state, deactivate_date: deactivate_date, release_date: release_date,
+          visibility_during: visibility_during, visibility_after: visibility_after
+      end
   end
 end

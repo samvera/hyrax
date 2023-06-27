@@ -16,8 +16,7 @@ module Hyrax
         when Valkyrie::Resource
           embargo_manager = Hyrax::EmbargoManager.new(resource: work)
           return if embargo_manager.embargo.embargo_release_date.blank?
-          embargo_manager.nullify(force: true)
-          embargo_manager.release(force: true)
+          embargo_manager.deactivate!
           Hyrax::AccessControlList(work).save
         else
           work.embargo_visibility! # If the embargo has lapsed, update the current visibility.
