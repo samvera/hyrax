@@ -17,6 +17,7 @@ module Hyrax
   #    - "Enforced" means the object's visibility matches the pre-release
   #      visibility of the embargo; i.e. the embargo has been applied,
   #      but not released.
+  #      "Deactivate" means that the existing embargo will be removed
   #
   # Note that an resource may be `#under_embargo?` even if the embargo is not
   # be `#enforced?` (in this case, the application should seek to apply the
@@ -121,7 +122,6 @@ module Hyrax
 
     # Deactivates the embargo and logs a message to the embargo_history property
     def deactivate!
-      binding.pry
       embargo_state = embargo.active? ? 'active' : 'expired'
       embargo_record = embargo_history_message(
         embargo_state,
