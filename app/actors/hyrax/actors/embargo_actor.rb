@@ -18,7 +18,8 @@ module Hyrax
           return if embargo_manager.embargo.embargo_release_date.blank?
 
           embargo_manager.deactivate!
-          Hyrax.persister.save(resource: work.embargo)
+          work.embargo = Hyrax.persister.save(resource: work.embargo)
+          work = Hyrax.persister.save(resource: embargo_manager.resource)
           Hyrax::AccessControlList(work).save
         else
           work.embargo_visibility! # If the embargo has lapsed, update the current visibility.
