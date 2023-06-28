@@ -107,7 +107,6 @@ module Hyrax
       "#{resource.id}/files/#{resource.original_file_id}"
     end
 
-
     def file_format(file)
       if file.mime_type.present? && file.format_label.present?
         "#{file.mime_type.split('/').last} (#{file.format_label.join(', ')})"

@@ -25,7 +25,7 @@ module Hyrax
         solr_doc['depositor_tesim'] = [resource.depositor]
         solr_doc['hasRelatedMediaFragment_ssim'] = [resource.representative_id.to_s]
         solr_doc['hasRelatedImage_ssim'] = [resource.thumbnail_id.to_s]
-        solr_doc['hasFormat_ssim']   = resource.rendering_ids.map(&:to_s) if resource.rendering_ids.present?
+        solr_doc['hasFormat_ssim'] = resource.rendering_ids.map(&:to_s) if resource.rendering_ids.present?
         index_embargo(solr_doc)
         index_lease(solr_doc)
       end
