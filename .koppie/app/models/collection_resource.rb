@@ -27,5 +27,6 @@ class CollectionResource < Hyrax::PcdmCollection
   # * add Valkyrie attributes to this class
   # * update form and indexer to process the attributes
   #
+  include Hyrax::Schema(:basic_metadata)
   include Hyrax::Schema(:collection_resource)
 end
