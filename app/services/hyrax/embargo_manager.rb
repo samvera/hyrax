@@ -169,7 +169,8 @@ module Hyrax
     ##
     # @return [Boolean]
     def enforced?
-      embargo.visibility_during_embargo.to_s == resource.visibility
+      embargo.embargo_release_date.present? &&
+        (embargo.visibility_during_embargo.to_s == resource.visibility)
     end
 
     ##
