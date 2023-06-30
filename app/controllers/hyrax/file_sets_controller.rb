@@ -171,6 +171,7 @@ module Hyrax
       respond_to do |wants|
         wants.html do
           initialize_edit_form
+          # TODO: return a valuable error message
           flash[:error] = "There was a problem processing your request."
           render 'edit', status: :unprocessable_entity
         end

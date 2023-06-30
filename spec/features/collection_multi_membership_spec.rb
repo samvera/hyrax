@@ -125,7 +125,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, js: true
 
           err_message = "Error: You have specified more than one of the same single-membership collection type " \
                         "(type: Single-membership 1, collections: #{old_collection.title.first} and #{new_collection.title.first})"
-          expect(page).to have_selector '.help-block', text: err_message
+          expect(page).to have_selector '.alert', text: err_message
         end
 
         it "from the collection's show page Add to collection" do
