@@ -8,7 +8,7 @@
       </audio>
       <%= link_to t('hyrax.file_set.show.downloadable_content.audio_link'),
                   hyrax.download_path(file_set),
-                  data: { label: file_set.id },
+                  data: { label: file_set.id, work_id: @presenter.id, collection_ids: @presenter.member_of_collection_ids },
                   target: :_blank,
                   id: "file_download" %>
     </div>

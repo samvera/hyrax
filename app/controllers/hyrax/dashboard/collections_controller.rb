@@ -513,7 +513,7 @@ module Hyrax
             form.prepopulate!
             form
           else
-            form_class.new(@collection, current_ability, repository)
+            form_class.new(@collection, current_ability, blacklight_config.repository)
           end
       end
 

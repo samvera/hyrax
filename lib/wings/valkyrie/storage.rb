@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'faraday/multipart'
+
 module Wings
   module Valkyrie
     ##
@@ -67,8 +69,9 @@ module Wings
 
         reader = RDF::Reader.for(content_type: response.headers['content-type'])
         version_graph = RDF::Graph.new << reader.new(response.body)
+        query = { predicate: RDF::Vocab::Fcrepo4.hasVersion }
 
-        version_graph.query(predicate: RDF::Vocab::Fcrepo4.hasVersion).objects.map do |uri|
+        version_graph.query(query).objects.map do |uri|
           timestamp =
             version_graph.query([uri, RDF::Vocab::Fcrepo4.created, :created])
                          .first_object

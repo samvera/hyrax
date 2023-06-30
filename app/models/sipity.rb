@@ -105,9 +105,32 @@ module Sipity
   module_function :Role
 
   ##
+  # Cast an object to a Workflow id
+  # rubocop:disable Metrics/MethodLength
+  def WorkflowId(input, &block) # rubocop:disable Naming/MethodName
+    result = case input
+             when Sipity::Workflow
+               input.id
+             when Integer
+               input
+             when String
+               input.to_i
+             else
+               if input.respond_to?(workflow_id)
+                 input.workflow_id
+               else
+                 WorkflowId(Entity(input))
+               end
+             end
+    handle_conversion(input, result, :to_workflow_id, &block)
+  end
+  module_function :WorkflowId
+  # rubocop:enable Metrics/MethodLength
+
+  ##
   # Cast an object to a WorkflowAction in a given workflow
   def WorkflowAction(input, workflow, &block) # rubocop:disable Naming/MethodName
-    workflow_id = PowerConverter.convert_to_sipity_workflow_id(workflow)
+    workflow_id = WorkflowId(workflow)
 
     result = case input
              when WorkflowAction
@@ -138,11 +161,9 @@ module Sipity
   # A parent error class for all workflow errors caused by bad state
   class StateError < RuntimeError; end
 
-  class ConversionError < PowerConverter::ConversionError
-    def initialize(value, **options)
-      options[:scope] ||= nil
-      options[:to]    ||= nil
-      super(value, options)
+  class ConversionError < RuntimeError
+    def initialize(value)
+      super("Unable to convert #{value.inspect}")
     end
   end
 

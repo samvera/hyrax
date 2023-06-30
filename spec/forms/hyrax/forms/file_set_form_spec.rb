@@ -26,7 +26,7 @@ RSpec.describe Hyrax::Forms::FileSetForm do
   describe '.required_fields' do
     it 'lists the fields tagged required' do
       expect(described_class.required_fields)
-        .to contain_exactly(:title, :creator, :license)
+        .to contain_exactly(:title, :creator)
     end
   end
 

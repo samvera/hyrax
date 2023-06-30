@@ -18,7 +18,7 @@ module Hyrax
       end
 
       def repository
-        config.repository
+        config.blacklight_config.repository
       end
 
       def config
