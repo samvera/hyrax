@@ -105,6 +105,12 @@ module Hyrax
       current_ability.can?(:edit, id) || current_ability.can?(:destroy, id) || current_ability.can?(:download, id)
     end
 
+    ##
+    # @return [Array<String>]
+    def show_partials
+      ['show_details']
+    end
+
     private
 
     def link_presenter_class

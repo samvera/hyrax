@@ -107,6 +107,7 @@ module Hyrax
     def with_generic_type(generic_type: 'Work')
       # TODO: Generic type was originally stored as `sim`.  Since it is never multi-valued, it is moving to being stored
       #       as `si`.  Until a migration is created to correct existing solr docs, this query searches in both fields.
+      #       @see https://github.com/samvera/hyrax/issues/6086
       field_pairs = { generic_type_si: generic_type, generic_type_sim: generic_type }
       type_query = construct_query_for_pairs(field_pairs, ' OR ', 'field')
       @query += [type_query]

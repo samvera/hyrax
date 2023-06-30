@@ -1,4 +1,4 @@
-ARG RUBY_VERSION=2.7.7
+ARG RUBY_VERSION=3.2.1
 
 # Replace with official jemalloc package in alpine 3.17
 FROM ruby:$RUBY_VERSION-alpine3.16 as builder
@@ -61,8 +61,6 @@ ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nu
 
 
 FROM hyrax-base as hyrax-worker-base
-
-ENV MALLOC_ARENA_MAX=2
 
 USER root
 RUN apk --no-cache add bash \

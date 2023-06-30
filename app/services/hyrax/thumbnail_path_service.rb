@@ -30,6 +30,11 @@ module Hyrax
       def fetch_thumbnail(object)
         return object if object.thumbnail_id == object.id ||
                          object.try(:file_ids)&.detect { |fid| fid == object.thumbnail_id }
+        begin
+          return Hyrax.query_service.find_by(id: object.thumbnail_id)
+        rescue
+          nil
+        end
         Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: object.thumbnail_id)
       rescue Valkyrie::Persistence::ObjectNotFoundError, Hyrax::ObjectNotFoundError
         Hyrax.logger.error("Couldn't find thumbnail #{object.thumbnail_id} for #{object.id}")

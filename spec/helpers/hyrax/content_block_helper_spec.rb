@@ -5,7 +5,7 @@ RSpec.describe Hyrax::ContentBlockHelper, type: :helper do
   describe '#displayable_content_block' do
     let(:options) { {} }
 
-    subject { helper.displayable_content_block(content_block, options) }
+    subject { helper.displayable_content_block(content_block, **options) }
 
     it 'is defined' do
       expect(helper).to respond_to(:displayable_content_block)

@@ -45,13 +45,13 @@ RSpec.describe Hyrax::FileSetHelper do
 
     it "renders a partial" do
       expect(helper).to receive(:render)
-        .with('hyrax/file_sets/media_display/image', file_set: file_set)
+        .with('hyrax/file_sets/media_display/image', { file_set: file_set })
       helper.media_display(file_set)
     end
 
     it "takes options" do
       expect(helper).to receive(:render)
-        .with('hyrax/file_sets/media_display/image', file_set: file_set, transcript_id: '123')
+        .with('hyrax/file_sets/media_display/image', { file_set: file_set, transcript_id: '123' })
       helper.media_display(file_set, transcript_id: '123')
     end
   end
