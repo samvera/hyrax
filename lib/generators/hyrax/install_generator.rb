@@ -174,6 +174,12 @@ module Hyrax
       generate 'hyrax:riiif' unless options[:'skip-riiif']
     end
 
+    def universalviewer_files
+      copy_file 'package.json', 'package.json'
+      copy_file 'uv.html', 'public/uv.html'
+      copy_file 'uv_config.json', 'public/uv_config.json'
+    end
+
     # Blacklight::Controller will by default add an after_action filter to discard all flash messages on xhr requests.
     # This has caused problems when we perform a post-redirect-get cycle using xhr and turbolinks.
     # This injector will modify the generated ApplicationController to skip this action.

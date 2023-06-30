@@ -1,0 +1,11 @@
+{
+  "name": "hyrax",
+  "private": true,
+  "repository": "git@github.com:samvera/hyrax.git",
+  "scripts": {
+    "install-uv": "yarn install --modules-folder ./public/uv"
+  },
+  "dependencies": {
+    "universalviewer": "^3.0.16"
+  }
+}
