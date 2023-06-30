@@ -102,7 +102,7 @@ module Hyrax
 
     private
 
-    # Convert Valkarie Original File Pointer to versioned url sysntax expected by the iiif_presenter
+    # Convert Valkyrie Original File Pointer to versioned url syntax expected by the iiif_presenter
     def original_file_id
       "#{resource.id}/files/#{resource.original_file_id}"
     end
