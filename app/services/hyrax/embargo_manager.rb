@@ -164,19 +164,23 @@ module Hyrax
     ##
     # Drop the embargo by setting its release date to `nil`.
     #
+    # @param force [boolean] force the nullify even when the embargo period is current
+    #
     # @return [void]
-    def nullify
-      return unless under_embargo?
+    def nullify(force: false)
+      return false if !force && under_embargo?
       embargo.embargo_release_date = nil
     end
 
     ##
-    # Sets the visibility of the resource to the embargo's visibility condition.
-    # no-op if the embargo period is current.
+    # Sets the visibility of the resource to the embargo's after embargo visibility.
+    # no-op if the embargo period is current and the force flag is false.
+    #
+    # @param force [boolean] force the release even when the embargo period is current
     #
     # @return [Boolean] truthy if the embargo has been applied
-    def release
-      return false if under_embargo?
+    def release(force: false)
+      return false if !force && under_embargo?
       return true if embargo.visibility_after_embargo.nil?
 
       resource.visibility = embargo.visibility_after_embargo

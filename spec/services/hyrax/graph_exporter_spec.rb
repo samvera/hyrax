@@ -39,7 +39,7 @@ RSpec.describe Hyrax::GraphExporter do
 
       it 'includes each nested resources once' do
         resource_fragments = work.created.map { |ts| ts.rdf_subject.fragment }
-        time_spans = service.fetch.query(predicate: RDF.type, object: RDF::Vocab::EDM.TimeSpan).subjects
+        time_spans = service.fetch.query({ predicate: RDF.type, object: RDF::Vocab::EDM.TimeSpan }).subjects
 
         expect(time_spans.map(&:fragment)).to contain_exactly(*resource_fragments)
       end

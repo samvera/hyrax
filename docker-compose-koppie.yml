@@ -104,7 +104,6 @@ services:
 
   postgres:
     image: postgres:latest
-    restart: always
     env_file:
       - .koppie/.env
     ports:

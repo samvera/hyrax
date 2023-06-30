@@ -542,8 +542,15 @@ pt-BR:
         add_folder: Adicionar pasta
         cancel_upload: Cancelar upload
         dropzone: Largue os arquivos aqui.
-        local_upload_browse_everything_html: "<p>Você pode associar um ou mais arquivos a esta obra. Associe arquivos de seu sistema local ou um provedor de nuvem.</p> <p>Note que se você carregar uma grande quantidade de arquivos dentro de um curto período de tempo, o fornecedor de nuvem pode não ser capaz de acomodar a sua solicitação. Se você tiver algum erro ao carregar da nuvem, avise-nos através do %{contact_href}.<p>"
-        local_upload_html: "<p>Você pode acrescentar um ou mais arquivos para associar a esta obra.</p>"
+        local_upload_browse_everything_html: |
+          <p>Você pode associar um ou mais arquivos a esta obra. Associe arquivos de seu sistema local ou um provedor de nuvem.</p>
+          <p>Note que se você carregar uma grande quantidade de arquivos dentro de um curto período de tempo, 
+          o fornecedor de nuvem pode não ser capaz de acomodar a sua solicitação. Se você tiver algum erro ao carregar 
+          da nuvem, avise-nos através do %{contact_href}.<p>
+          <p>Os uploads são limitados a %{upload_file_limit} arquivos, %{upload_size_limit} MB cada.</p>
+        local_upload_html: |
+          <p>Você pode acrescentar um ou mais arquivos para associar a esta obra.</p>
+          <p>Os uploads são limitados a %{upload_file_limit} arquivos, %{upload_size_limit} MB cada.</p>
       form_member_of_collections:
         actions:
           remove: Remover da coleção
@@ -1405,14 +1412,14 @@ pt-BR:
       count:
         collections:
           collections_listing: Listagem de coleções
-          in_repo: "<strong> coleções %{total_count} </ strong> no repositório"
-          you_manage: "<strong> %{total_count} coleções</ strong> que você pode curatelar no repositório"
-          you_own: "<strong> %{total_count} coleções </ strong> que você possui no repositório"
+          in_repo: "<strong> coleções %{total_count} </strong> no repositório"
+          you_manage: "<strong> %{total_count} coleções</strong> que você pode curatelar no repositório"
+          you_own: "<strong> %{total_count} coleções </strong> que você possui no repositório"
         works:
-          in_repo: "<strong> %{total_count} obras </ strong> no repositório"
+          in_repo: "<strong> %{total_count} obras </strong> no repositório"
           works_listing: Lista de obras
-          you_manage: "<strong> %{total_count} obras </ strong> que você pode curatelar no repositório"
-          you_own: "<strong> %{total_count} obras </ strong> que você possui no repositório"
+          you_manage: "<strong> %{total_count} obras </strong> que você pode curatelar no repositório"
+          you_own: "<strong> %{total_count} obras </strong> que você possui no repositório"
       sort_and_per_page:
         number_of_results_to_display_per_page: Número de resultados a serem exibidos por página
     nav_safety:
