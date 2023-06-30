@@ -43,7 +43,7 @@ module Hyrax
     # Terms is the list of fields displayed by
     # app/views/collections/_show_descriptions.html.erb
     def self.terms
-      [:total_items, :size, :resource_type, :creator, :contributor, :keyword, :license, :publisher, :date_created, :subject,
+      [:total_items, :alternative_title, :size, :resource_type, :creator, :contributor, :keyword, :license, :publisher, :date_created, :subject,
        :language, :identifier, :based_near, :related_url]
     end
 

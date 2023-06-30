@@ -1,0 +1,130 @@
+# This is the metadata used for `Hyrax::FileSet`s.` It is similar to
+# `basic_metadata.yaml`, but not exactly the same.
+#
+# Terms which are already present in `core_metadata.yaml` are not repeated here.
+attributes:
+  # Required attributes:
+  creator:
+    type: string
+    multiple: true
+    form:
+      required: true
+      primary: true
+    index_keys:
+      - "creator_tesim"
+  license:
+    type: string
+    multiple: true
+    form:
+      required: false
+      primary: true
+
+  # Other attributes:
+  abstract:
+    type: string
+    multiple: true
+  # form:
+  #   primary: false
+  # missing: access_right
+  # missing: alternative_title
+  based_near:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "based_near_sim"
+      - "based_near_tesim"
+  # missing: bibliograpic_citation
+  contributor:
+    type: string
+    multiple: true
+    form:
+      primary: false
+  # required: creator
+  date_created:
+    type: date_time
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "date_created_tesim"
+  description:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "description_tesim"
+  identifier:
+    type: string
+    multiple: true
+    form:
+      primary: false
+  # missing: import_url
+  keyword:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "keyword_sim"
+      - "keyword_tesim"
+  # missing: publisher
+  label:
+    type: string
+  # form:
+  #   primary: false
+  language:
+    type: string
+    multiple: true
+    form:
+      primary: false
+  # required: license
+  publisher:
+    type: string
+    multiple: true
+    form:
+      primary: false
+  related_url:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "related_url_tesim"
+  relative_path:
+    type: string
+  resource_type:
+    type: string
+    multiple: true
+  # form:
+  #   primary: false
+    index_keys:
+      - "resource_type_sim"
+      - "resource_type_tesim"
+  rights_notes:
+    type: string
+    multiple: true
+  # form:
+  #   primary: false
+  rights_statement:
+    type: string
+    multiple: true
+  # form:
+  #   primary: true
+    index_keys:
+      - "rights_statement_tesim"
+  source:
+    type: string
+    multiple: true
+  # form:
+  #   primary: false
+  subject:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "subject_sim"
+      - "subject_tesim"

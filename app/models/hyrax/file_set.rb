@@ -31,7 +31,7 @@ module Hyrax
   # @see https://wiki.duraspace.org/display/samvera/Hydra%3A%3AWorks+Shared+Modeling
   class FileSet < Hyrax::Resource
     include Hyrax::Schema(:core_metadata)
-    include Hyrax::Schema(:basic_metadata)
+    include Hyrax::Schema(:file_set_metadata)
 
     def self.model_name(name_class: Hyrax::Name)
       @_model_name ||= name_class.new(self, nil, 'FileSet')
@@ -48,6 +48,14 @@ module Hyrax
     ##
     # @return [Valkyrie::ID]
     def representative_id
+      id
+    end
+
+    ##
+    # @return [Valkyrie::ID]
+    def representative_id=(_input)
+      # saving a file set using valkyrie would err because this method didn't exist.
+      Rails.logger.warn('This is not a valid method for file sets')
       id
     end
 

@@ -7,20 +7,6 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.to_global_id.to_s) }
   end
 
-  describe '.collection_type_settings_methods' do
-    it 'lists collection settings methods' do # deprecated
-      expect(described_class.collection_type_settings_methods)
-        .to include(:nestable?, :discoverable?, :brandable?)
-    end
-  end
-
-  describe '#collection_type_settings_methods' do
-    it 'lists collection settings methods' do # deprecated
-      expect(collection_type.collection_type_settings_methods)
-        .to include(:nestable?, :discoverable?, :brandable?)
-    end
-  end
-
   describe '.settings_attributes' do
     it 'lists collection settings methods' do
       expect(described_class.settings_attributes)
@@ -203,7 +189,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     end
   end
 
-  describe "collections?", :clean_repo do
+  describe "collections.any?", :clean_repo do
     let(:collection_type) { FactoryBot.create(:collection_type) }
 
     it 'returns true if there are any collections of this collection type' do

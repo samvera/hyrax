@@ -25,6 +25,6 @@ end
 
 RSpec::Matchers.define :have_collections do
   match do |actual|
-    actual&.collections?
+    actual&.collections&.any?
   end
 end

@@ -67,7 +67,7 @@ module Hyrax
     attribute :label, ::Valkyrie::Types::Set
     attribute :original_filename, ::Valkyrie::Types::String
     attribute :mime_type, ::Valkyrie::Types::String.default(GENERIC_MIME_TYPE)
-    attribute :type, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE])
+    attribute :type, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE].freeze) # Use += to add types, not <<
 
     # attributes set by fits
     attribute :format_label, ::Valkyrie::Types::Set
@@ -126,15 +126,6 @@ module Hyrax
 
     # attributes set by fits for video
     attribute :aspect_ratio, ::Valkyrie::Types::Set
-
-    # @param [ActionDispatch::Http::UploadedFile] file
-    # @deprecated Use #new instead; for removal in 4.0.0
-    def self.for(file:)
-      Deprecation.warn "#{self.class}##{__method__} is deprecated; use #new instead."
-      new(label: file.original_filename,
-          original_filename: file.original_filename,
-          mime_type: file.content_type)
-    end
 
     ##
     # @return [Boolean]

@@ -9,7 +9,7 @@ module Hyrax
     include Hyrax::VisibilityIndexer
     include Hyrax::ThumbnailIndexer
     include Hyrax::Indexer(:core_metadata)
-    include Hyrax::Indexer(:basic_metadata)
+    include Hyrax::Indexer(:file_set_metadata)
 
     def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
       super.tap do |solr_doc| # rubocop:disable Metrics/BlockLength
@@ -17,7 +17,7 @@ module Hyrax
 
         # Metadata from the FileSet
         solr_doc['file_ids_ssim']                = resource.file_ids&.map(&:to_s)
-        solr_doc['original_file_id_ssi']         = resource.original_file_id.to_s
+        solr_doc['original_file_id_ssi']         = original_file_id
         solr_doc['extracted_text_id_ssi']        = resource.extracted_text_id.to_s
         solr_doc['hasRelatedMediaFragment_ssim'] = resource.representative_id.to_s
         solr_doc['hasRelatedImage_ssim']         = resource.thumbnail_id.to_s
@@ -56,10 +56,13 @@ module Hyrax
 
         solr_doc['height_tesim']            = file_metadata.height if file_metadata.height.present? # image, video
         solr_doc['width_tesim']             = file_metadata.width if file_metadata.width.present? # image, video
+        solr_doc['height_is']               = Integer(file_metadata.height.first) if file_metadata.height.present?
+        solr_doc['width_is']                = Integer(file_metadata.width.first) if file_metadata.width.present?
 
         # attributes set by fits for audio files
         solr_doc['bit_depth_tesim']         = file_metadata.bit_depth if file_metadata.bit_depth.present?
         solr_doc['channels_tesim']          = file_metadata.channels if file_metadata.channels.present?
+        solr_doc['alpha_channels_ssi']      = file_metadata.channels.first if file_metadata.channels.present?
         solr_doc['data_format_tesim']       = file_metadata.data_format if file_metadata.data_format.present?
         solr_doc['offset_tesim']            = file_metadata.offset if file_metadata.offset.present?
 
@@ -98,6 +101,11 @@ module Hyrax
     end
 
     private
+
+    # Convert Valkyrie Original File Pointer to versioned url syntax expected by the iiif_presenter
+    def original_file_id
+      "#{resource.id}/files/#{resource.original_file_id}"
+    end
 
     def file_format(file)
       if file.mime_type.present? && file.format_label.present?

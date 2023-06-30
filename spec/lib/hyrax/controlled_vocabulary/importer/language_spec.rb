@@ -5,9 +5,7 @@ RSpec.describe Hyrax::ControlledVocabulary::Importer::Language do
   before do
     allow(Hyrax.logger).to receive(:extend)
     allow(Hyrax::ControlledVocabulary::Importer::Downloader).to receive(:fetch)
-    allow(instance).to receive(:system) do
-      allow($CHILD_STATUS).to receive(:success?).and_return(true)
-    end
+    allow(instance).to receive(:extract)
   end
 
   let(:instance) { described_class.new }

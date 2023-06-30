@@ -65,7 +65,7 @@ RSpec.describe Hyrax::Forms::AdminSetForm do
   describe '#select_files' do
     subject { form.select_files }
 
-    let(:repository) { Hyrax::CollectionsController.new.repository }
+    let(:repository) { Hyrax::CollectionsController.new.blacklight_config.repository }
 
     context 'without any works/files attached' do
       let(:model) { create(:admin_set) }

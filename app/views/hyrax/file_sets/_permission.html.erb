@@ -1,5 +1,5 @@
   <div id="permissions_display" class="tab-pane">
-    <%= simple_form_for [main_app, file_set],
+    <%= simple_form_for [main_app, form_object],
                         html: { multipart: true,
                                 id: 'permission',
                                 data: { param_key: file_set.model_name.param_key },

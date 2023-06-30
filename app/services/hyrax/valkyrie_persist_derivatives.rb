@@ -25,11 +25,13 @@ module Hyrax
       # responds to #path -- here we only have a StringIO, so some
       # transformation is in order
       tmpfile = Tempfile.new(file_set.id, encoding: 'ascii-8bit')
-      tmpfile.write stream.read
+      stream.rewind
+      output = tmpfile.write(stream.read)
+      tmpfile.flush
+      raise 'blank file detected' if output.zero?
 
       filename = filename(directives)
       Hyrax.logger.debug "Uploading thumbnail for FileSet #{file_set.id} as #{filename}"
-
       uploader.upload(
         io: tmpfile,
         filename: filename,
