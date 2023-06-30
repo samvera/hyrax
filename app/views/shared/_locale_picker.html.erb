@@ -6,8 +6,11 @@
     <div id="language-dropdown-menu" class="dropdown-menu" role="menu">
         <div role="presentation" class="dropdown-header"><%= t('hyrax.toolbar.language_switch') %></div>
         <div role="presentation" class="dropdown-divider"></div>
-        <% available_translations.each do |language, label| %>
-            <%= link_to label, "?locale=#{language}", class: 'dropdown-item', role: 'menuitem', lang: language, tabindex: '-1', data: { locale: language } %>
-        <% end %>
+
+        <div id="pager">
+          <% available_translations.each do |language, label| %>
+            <%= link_to label, "?locale=#{language}&tag=#{request.params[:tag]}##{request.params[:tag]}", class: 'dropdown-item', role: 'menuitem', lang: language, tabindex: '-1', data: { locale: language } %>
+          <% end %>
+        </div>
     </div>
 </li>

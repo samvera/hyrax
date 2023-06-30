@@ -2,17 +2,17 @@
 <div class="card tabs">
   <ul class="nav nav-tabs" role="tablist">
     <li id="announcement-nav-item" class="nav-item">
-      <a href="#announcement_text" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm">
+      <a onclick="changeLocale('announcement_text', <% request.params[:tag] %>)" href="#announcement_text" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm">
         <%= t(:'hyrax.content_blocks.tabs.announcement_text') %>
       </a>
     </li>
     <li id="marketing-nav-item" class="nav-item">
-      <a href="#marketing" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
+      <a onclick="changeLocale('marketing', <% request.params[:tag] %>)" href="#marketing" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
         <%= t(:'hyrax.content_blocks.tabs.marketing_text') %>
       </a>
     </li>
     <li id="researcher-nav-item" class="nav-item">
-      <a href="#researcher" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
+      <a onclick="changeLocale('researcher', <% request.params[:tag] %>)" href="#researcher" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
         <%= t(:'hyrax.content_blocks.tabs.featured_researcher') %>
       </a>
     </li>

@@ -3,22 +3,22 @@
 
   <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
-      <a href="#about" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm">
+      <a onclick="changeLocale('about', <% request.params[:tag] %>)" href="#about" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm">
         <%= t(:'hyrax.pages.tabs.about_page') %>
       </a>
     </li>
     <li class="nav-item">
-      <a href="#help" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
+      <a onclick="changeLocale('help', <% request.params[:tag] %>)" href="#help" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
         <%= t(:'hyrax.pages.tabs.help_page') %>
       </a>
     </li>
     <li class="nav-item">
-      <a href="#agreement" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
+      <a onclick="changeLocale('agreement', <% request.params[:tag] %>)" href="#agreement" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
         <%= t(:'hyrax.pages.tabs.agreement_page') %>
       </a>
     </li>
     <li class="nav-item">
-      <a href="#terms" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
+      <a onclick="changeLocale('terms', <% request.params[:tag] %>)" href="#terms" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
         <%= t(:'hyrax.pages.tabs.terms_page') %>
       </a>
     </li>

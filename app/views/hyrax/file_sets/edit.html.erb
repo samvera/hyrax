@@ -12,17 +12,17 @@
     <div class="card tabs">
       <ul class="nav nav-tabs" role="tablist">
         <li id="edit_descriptions_link" class="nav-item">
-          <a href="#descriptions_display" data-toggle="tab" class="nav-link active nav-safety-confirm">
+          <a onclick="changeLocale('descriptions_display', <% request.params[:tag] %>)" href="#descriptions_display" data-toggle="tab" class="nav-link active nav-safety-confirm">
             <i class="fa fa-tags" aria-hidden="true"></i> <%= t('.descriptions') %>
           </a>
         </li>
         <li id="edit_versioning_link" class="nav-item">
-          <a href="#versioning_display" data-toggle="tab" class="nav-link nav-safety-confirm">
+          <a onclick="changeLocale('versioning_display', <% request.params[:tag] %>)" href="#versioning_display" data-toggle="tab" class="nav-link nav-safety-confirm">
             <i class="fa fa-sitemap" aria-hidden="true"></i> <%= t('.versions') %>
           </a>
         </li>
         <li id="edit_permissions_link" class="nav-item">
-          <a href="#permissions_display" data-toggle="tab" class="nav-link nav-safety-confirm">
+          <a onclick="changeLocale('permissions_display', <% request.params[:tag] %>)" href="#permissions_display" data-toggle="tab" class="nav-link nav-safety-confirm">
             <i class="fa fa-key" aria-hidden="true"></i> <%= t('.permissions') %>
           </a>
         </li>

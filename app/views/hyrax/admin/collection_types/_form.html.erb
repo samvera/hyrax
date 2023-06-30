@@ -2,17 +2,17 @@
 <div class="card tabs" id="collection-types-controls">
   <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
-      <a href="#metadata" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.metadata') %></a>
+      <a onclick="changeLocale('metadata', <% request.params[:tag] %>)" href="#metadata" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.metadata') %></a>
     </li>
     <% if @form.persisted? %>
       <li class="nav-item">
-        <a href="#settings" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.settings') %></a>
+        <a onclick="changeLocale('settings', <% request.params[:tag] %>)" href="#settings" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.settings') %></a>
       </li>
       <li class="nav-item">
-        <a href="#participants" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.participants') %></a>
+        <a onclick="changeLocale('participants', <% request.params[:tag] %>)" href="#participants" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.participants') %></a>
       </li>
       <li class="nav-item">
-        <a href="#appearance" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.appearance') %></a>
+        <a onclick="changeLocale('appearance', <% request.params[:tag] %>)" href="#appearance" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.appearance') %></a>
       </li>
     <% end %>
   </ul>
