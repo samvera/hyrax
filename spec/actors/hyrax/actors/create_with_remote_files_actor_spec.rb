@@ -55,7 +55,7 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
     it "preserves the encoded parameters in the URIs" do
       expect(ImportUrlJob).to receive(:perform_later).with(FileSet, Hyrax::Operation, {}).twice
       expect(actor.create(environment)).to be true
-      expect(::FileSet).to have_received(:new).with(import_url: "https://dl.dropbox.com/fake/file?param1=%28example%29&param2=%5Bexample2%5D", label: "filepicker-demo.txt.txt")
+      expect(::FileSet).to have_received(:new).with({ import_url: "https://dl.dropbox.com/fake/file?param1=%28example%29&param2=%5Bexample2%5D", label: "filepicker-demo.txt.txt" })
     end
   end
 
@@ -72,7 +72,7 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
     end
 
     it "attaches files" do
-      expect(ImportUrlJob).to receive(:perform_later).with(FileSet, Hyrax::Operation, 'Authorization' => 'Bearer access-token').twice
+      expect(ImportUrlJob).to receive(:perform_later).with(FileSet, Hyrax::Operation, { 'Authorization' => 'Bearer access-token' }).twice
       expect(actor.create(environment)).to be true
     end
   end

@@ -15,7 +15,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
   before { sign_in(user) }
 
   its(:blacklight_config) { is_expected.to be_a(Blacklight::Configuration) }
-  its(:repository) { is_expected.to be_a(Blacklight::Solr::Repository) }
+  its('blacklight_config.repository') { is_expected.to be_a(Blacklight::Solr::Repository) }
 
   let(:form_class_base) do
     Class.new do

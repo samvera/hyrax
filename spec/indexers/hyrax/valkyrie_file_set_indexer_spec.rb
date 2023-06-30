@@ -151,7 +151,7 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
 
       # from FileSet metadata
       expect(subject['file_ids_ssim']).to match_array [mock_file.id.to_s, mock_text.id.to_s, mock_thumbnail.id.to_s]
-      expect(subject['original_file_id_ssi']).to eq mock_file.id.to_s
+      expect(subject['original_file_id_ssi']).to eq "#{fileset_id}/files/#{mock_file.id}"
       expect(subject['extracted_text_id_ssi']).to eq mock_text.id.to_s
       expect(subject['hasRelatedMediaFragment_ssim']).to eq fileset_id
       expect(subject['hasRelatedImage_ssim']).to eq mock_thumbnail.id.to_s
@@ -236,7 +236,7 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
       # end
 
       it "does not have version info indexed" do
-        expect(subject['original_file_id_ssi']).to eq file_set.original_file_id.to_s
+        expect(subject['original_file_id_ssi']).to eq "#{file_set.id}/files/#{file_set.original_file_id}"
       end
     end
   end

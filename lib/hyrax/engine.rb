@@ -87,7 +87,6 @@ module Hyrax
     end
 
     initializer 'requires' do
-      require 'power_converters'
       require 'wings' unless Hyrax.config.disable_wings
     end
 
@@ -108,6 +107,8 @@ module Hyrax
 
         ActiveFedora::Base.translate_uri_to_id = c.translate_uri_to_id
         ActiveFedora::Base.translate_id_to_uri = c.translate_id_to_uri
+        ActiveFedora::File.translate_uri_to_id = c.translate_uri_to_id
+        ActiveFedora::File.translate_id_to_uri = c.translate_id_to_uri
 
         ::Noid::Rails.config.template = c.noid_template
         ::Noid::Rails.config.minter_class = c.noid_minter_class

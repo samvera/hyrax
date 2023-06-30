@@ -16,7 +16,7 @@ attributes:
     type: string
     multiple: true
     form:
-      required: true
+      required: false
       primary: true
 
   # Other attributes:

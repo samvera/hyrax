@@ -38,7 +38,7 @@ class Hyrax::ValkyrieUpload
     streamfile = storage_adapter.upload(file: io, original_filename: filename, resource: file_set)
     file_metadata = Hyrax::FileMetadata(streamfile)
     file_metadata.file_set_id = file_set.id
-    file_metadata.type << use
+    file_metadata.type += [use]
 
     if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE
       # Set file set label.

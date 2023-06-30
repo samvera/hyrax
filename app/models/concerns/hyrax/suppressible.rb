@@ -22,13 +22,5 @@ module Hyrax
     def suppressed?
       Hyrax::ResourceStatus.new(resource: self).inactive?
     end
-
-    ##
-    # @deprecated Use `Sipity::Entity(entity)` instead.
-    def to_sipity_entity
-      Deprecation.warn "Use `Sipity::Entity(entity)` instead."
-      raise "Can't create an entity until the model has been persisted" unless persisted?
-      @sipity_entity ||= Sipity::Entity(to_global_id)
-    end
   end
 end

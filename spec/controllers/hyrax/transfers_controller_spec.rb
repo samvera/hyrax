@@ -156,6 +156,18 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
           expect(user.can_receive_deposits_from).to include(another_user)
         end
+        context "already received sticky proxy" do
+          before do
+            user.can_receive_deposits_from << another_user
+          end
+          it "handles sticky requests and does not add another user" do
+            put :accept, params: { id: user.proxy_deposit_requests.first, sticky: true }
+            expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
+            expect(flash[:notice]).to eq("Transfer complete")
+            expect(assigns[:proxy_deposit_request].status).to eq('accepted')
+            expect(user.can_receive_deposits_from.to_a.count(another_user)).to eq 1
+          end
+        end
       end
 
       context "accepting one that isn't mine" do

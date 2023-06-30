@@ -33,7 +33,9 @@ RSpec.describe Hyrax::Admin::StrategiesController do
 
       it "is successful" do
         patch :update, params: { feature_id: feature.id, id: strategy }
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.admin_features_path(locale: 'en')
+
+        expect(response.location)
+          .to include Hyrax::Engine.routes.url_helpers.admin_features_path(locale: 'en')
       end
     end
   end

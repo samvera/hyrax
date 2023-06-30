@@ -35,6 +35,18 @@ module Hyrax
       end
     end
 
+    def pairs
+      @pairs ||= id.split('').each_slice(2).map(&:join)
+    end
+
+    def pair_directory
+      pairs[0..-2]
+    end
+
+    def pair_path
+      (pair_directory + pairs[-1..-1]).join('/')
+    end
+
     private
 
     # @return [String] Returns the root path where derivatives will be generated into.
@@ -45,10 +57,6 @@ module Hyrax
     # @return <Pathname> Full prefix of the path for object.
     def path_prefix
       Pathname.new(Hyrax.config.derivatives_path).join(pair_path)
-    end
-
-    def pair_path
-      id.split('').each_slice(2).map(&:join).join('/')
     end
 
     def file_name

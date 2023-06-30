@@ -5,8 +5,8 @@ module Hyrax
   class CollectionMembershipValidator < ActiveModel::Validator
     ##
     # @param multiple_membership_checker
-    def initialize(multiple_membership_checker: Hyrax::MultipleMembershipChecker, **options)
-      @multiple_membership_checker = multiple_membership_checker
+    def initialize(options = {})
+      @multiple_membership_checker = options[:multiple_membership_checker] || Hyrax::MultipleMembershipChecker
       super(options)
     end
 

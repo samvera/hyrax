@@ -141,7 +141,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.before :suite do
-    Hyrax::RedisEventStore.instance.redis.flushdb
+    Hyrax::RedisEventStore.instance.then(&:flushdb)
     DatabaseCleaner.clean_with(:truncation)
     # Noid minting causes extra LDP requests which slow the test suite.
     Hyrax.config.enable_noids = false
@@ -258,8 +258,7 @@ RSpec.configure do |config|
 
   config.before(:example, :clean_repo) do
     clean_active_fedora_repository unless Hyrax.config.disable_wings
-
-    Hyrax::RedisEventStore.instance.redis.flushdb
+    Hyrax::RedisEventStore.instance.then(&:flushdb)
     # Not needed to clean the Solr core used by ActiveFedora since
     # clean_active_fedora_repository will wipe that core
     Hyrax::SolrService.wipe! if Hyrax.config.query_index_from_valkyrie
@@ -333,5 +332,14 @@ RSpec.configure do |config|
       allow(Hyrax.config).to receive(:disable_wings).and_return(true)
       hide_const("Wings") # disable_wings=true removes the Wings constant
     end
+  end
+
+  # Prepend this before block to ensure that it runs before other before blocks like clean_repo
+  config.prepend_before(:example, :storage_adapter) do |example|
+    adapter_name = example.metadata[:storage_adapter]
+
+    allow(Hyrax)
+      .to receive(:storage_adapter)
+      .and_return(Valkyrie::StorageAdapter.find(adapter_name))
   end
 end

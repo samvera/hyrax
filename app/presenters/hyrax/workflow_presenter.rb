@@ -44,7 +44,7 @@ module Hyrax
 
     def sipity_entity
       Sipity::Entity(solr_document)
-    rescue PowerConverter::ConversionError
+    rescue Sipity::ConversionError
       nil
     end
   end

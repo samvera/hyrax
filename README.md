@@ -16,19 +16,13 @@ Jump in: [![Samvera Community Slack](https://img.shields.io/badge/samvera-slack-
 ## Table of Contents
 
 * [What is Hyrax?](#what-is-hyrax)
-* [Feature Documentation](#feature-documentation)
-* [Support Policies](#support-policies)
-* [Help](#help)
-* [Working with Hyrax](#working-with-hyrax)
-  * [Developing the Hyrax Engine](#developing-the-hyrax-engine)
-    * [Contributing](#contributing)
-    * [Release process](#release-process)
-  * [Developing your Hyrax\-based Application](#developing-your-hyrax-based-application)
-  * [Deploying your Hyrax\-based Application to production](#deploying-your-hyrax-based-application-to-production)
+* [Getting Help and Asking Questions](#getting-help-and-asking-questions)
+* [How to Run the Code](#how-to-run-the-code)
+* [Contribute](#contribute)
+* [Release Process](#release-process)
+* [Deploy](#deploy)
 * [Acknowledgments](#acknowledgments)
 * [License](#license)
-
-<aside>Table of contents created by <a href="https://github.com/ekalinin/github-markdown-toc.go">gh-md-toc</a></aside>
 
 ## What is Hyrax?
 
@@ -44,104 +38,37 @@ Hyrax offers the ability to:
 * Enable/disable optional features via an administrative dashboard
 * And more (https://hyrax.samvera.org/about/)
 
-## Feature Documentation
+## Getting Help and Asking Questions
 
-* List of features: [Feature Matrix](https://github.com/samvera/hyrax/wiki/Feature-matrix)
-* Configuration and enabling features: [Hyrax Management Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide)
-* Walk-through on using features: [Hyrax Feature Guides](https://samvera.github.io/intro-to.html)
-* [Entity Relationship Diagram](./artifacts/entity-relationship-diagram.pdf)
-* For general information about Hyrax: [Hyrax Site](https://hyrax.samvera.org/)
-* A note about [versions of Hyrax](./documentation/note-about-versions.md)
+More detailed documentation about Hyrax is available on the [Hyrax Github Wiki](https://github.com/samvera/hyrax/wiki) but if you have questions or need help, please email the [Samvera community tech list](https://samvera.atlassian.net/wiki/spaces/samvera/pages/1171226735/Samvera+Community+Email+Lists#Samvera-Tech-(15-20-messages-per-week-on-average)) or stop by the #dev channel in the [Samvera community Slack team](https://samvera.atlassian.net/wiki/spaces/samvera/pages/405211682/Getting+Started+in+the+Samvera+Community#Join-the-Samvera-Slack-workspace). You can also get in touch with the [Hyrax Maintenance Working Group](https://samvera.atlassian.net/wiki/spaces/samvera/pages/496632295/Hyrax+Maintenance+Working+Group), including the Hyrax Product Owner and Hyrax Tech Lead.
 
-## Support Policies
+[Reporting Issues](./.github/SUPPORT.md)
 
-* Hyrax 3.x supports the latest browser versions for Chrome, Firefox, Edge, and Safari.
+## How to Run the Code
 
-## Help
+[Run Hyrax Locally Using Docker](./CONTAINERS.md)
 
-The Samvera community is here to help. Please see our [support guide](./.github/SUPPORT.md).
+Hyrax can also work running prerequisite dependencies separately. The following describe ways to do this:
+* [Developing Your Hyrax-based Application](./documentation/developing-your-hyrax-based-app.md)
+* [Development setup using Engine Cart and Solr Fedora wrapper](https://github.com/samvera/hyrax/wiki/Development-setup-using-Engine-Cart-and-Solr---Fedora-wrapper)
 
-## Working with Hyrax
+## Contribute
 
-There are two primary Hyrax development concerns:
+We'd love to accept your contributions. Please see our [guide to contributing to Hyrax](./.github/CONTRIBUTING.md).
 
-1. Developing the Hyrax engine
-2. Developing your Hyrax-based Application
+[Installing Analytics](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide#installing-analytics)
 
-### Developing the Hyrax Engine
-
-This is where you work on the code-base that will be used by yours and other Hyrax-based applications.  We recommend using [Docker and Hyrax's engine development containers](./CONTAINERS.md).
-
-<aside>
-    <p><em><strong>Note:</em></strong> This is not the only path for Hyrax-engine development.  In the past, <a href="./documentation/legacyREADME.md">we documented extensive steps</a> to install the various dependencies for Hyrax-engine development. There is also a <a href="https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide#quick-start-for-hyrax-development">Quick Start for Hyrax engine development</a> that outlines steps for working on the Hyrax engine.</p>
-    <p>By moving to Docker, we are encoding the documentation steps for standing up a Hyrax-engine development environment.</p>
-</aside>
-
-### Installing Analytics
-
-Hyrax supports your choice of either Google Analytics or Matomo.  To enable analytics tracking and reporting features, follow the directions below.
-
-Enable Analytics Features
-
-Analytics can be enabled and configured using environment variables. Set HYRAX_ANALYTICS to true, set either 'google' or 'matomo' for  HYRAX_ANALYTICS_PROVIDER, and set the date you would like reporting to start (ANALYTICS_START_DATE).
-
-```
-HYRAX_ANALYTICS=true
-HYRAX_ANALYTICS_PROVIDER=google
-ANALYTICS_START_DATE=2021-08-21
-```
-
-If using google, you'll also need the following ENV variables:
-
-```
-GOOGLE_ANALYTICS_ID=UA-111111-1  # Universal ID (Currently Hyrax Analytics only works with Univeral (UA) accounts)
-GOOGLE_OAUTH_APP_NAME=
-GOOGLE_OAUTHAPP_VERSION=
-GOOGLE_OAUTH_PRIVATE_KEY_PATH= # store the .p12 file in the root of your application
-GOOGLE_OAUTH_PRIVATE_KEY_SECRET=
-GOOGLE_OAUTH_CLIENT_EMAIL=
-```
-
-Add these ENV variables if using Matomo:
-
-```
-MATOMO_SITE_ID=
-MATOMO_BASE_URL=
-MATOMO_AUTH_TOKEN=
-```
-
-#### Analytics Features
-
-Once analytics is enabled, Hyrax will automatically install the JS tracking code.  Page views and downloads of a file set are recorded and sent to the selected analytics provider.  Admin users will have access to an expanded dashboard with details about how many vistors viewed a page, and how many visitors downloaded a file.  Easily find the top works by views, and most popular file downloads!
-
-#### Contributing
-
-We'd love to accept your contributions.  Please see our guide to [contributing to Hyrax](./.github/CONTRIBUTING.md).
-
-Here are possible ways to help:
-
-* The Hyrax user interface is translated into a number of languages, and many of these translations come from Google Translate. If you are a native or fluent speaker of a non-English language, your help improving these translations are most welcome. (Hyrax currently supports English, Spanish, Chinese, Italian, German, French, and Portuguese.)
-  * Do you see English in the application where you would expect to see one of the languages above? If so, [file an issue](https://github.com/samvera/hyrax/issues/new) and suggest a translation, please.
-* [Contribute a user story](https://github.com/samvera/hyrax/issues/new).
-* Help us improve [Hyrax's test coverage](https://coveralls.io/r/samvera/hyrax) or [documentation coverage](https://inch-ci.org/github/samvera/hyrax).
-* Refactor away [code smells](https://codeclimate.com/github/samvera/hyrax).
-
-#### Release process
+## Release Process
 
 See the [release management process](https://github.com/samvera/hyrax/wiki/Release-management-process).
 
-### Developing your Hyrax-based Application
+We also have a [Maintenance Policy](./documentation/MAINTENANCE.md).
 
-For those familiar with Rails, this is where you create your own application (via `rails new`) and add Hyrax as a gem to your `Gemfile`.  Your Hyrax-based application is the place for you to create features specific to your Hyrax-based application.
-
-For more information, see [our documentation on developing your Hyrax-based application](./documentation/developing-your-hyrax-based-app.md).
-
-### Deploying your Hyrax-based Application to production
+## Deploy
 
 Steps to deploy a Hyrax-based application to production will vary depending on your particular ecosystem but here are some methods and things to consider:
-
- * [Samvera Community Knowledge Base: Running in Production](https://samvera.github.io/service-stack.html)
- * [Helm Chart](./CONTAINERS.md#deploying-to-production) (for cloud-based Kubernetes-style deployments)
+* [Hyrax Management Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide) (provides guidance for things to keep in mind in production environments)
+* [Helm Chart to deploy Hyrax-based application](./CONTAINERS.md#deploying-to-production) (for cloud-based Kubernetes-style deployments)
 
 ## Acknowledgments
 

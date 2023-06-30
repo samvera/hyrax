@@ -30,7 +30,7 @@ RSpec.describe Hyrax::My::CollectionsController, type: :controller do
   end
 
   describe "#search_builder_class" do
-    subject { controller.search_builder_class }
+    subject { controller.blacklight_config.search_builder_class }
 
     it { is_expected.to eq Hyrax::My::CollectionsSearchBuilder }
   end

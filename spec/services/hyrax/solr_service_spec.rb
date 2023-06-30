@@ -91,9 +91,14 @@ RSpec.describe Hyrax::SolrService do
       allow(described_class).to receive(:instance).and_return(double("instance", conn: mock_conn))
     end
 
-    it "defaults to HTTP GET method" do
-      expect(mock_conn).to receive(:get).with('select', params: { rows: 2, q: 'querytext', qt: 'standard' }).and_return(stub_result)
+    it "defaults to HTTP POST method" do
+      expect(mock_conn).to receive(:post).with('select', data: { rows: 2, q: 'querytext', qt: 'standard' }).and_return(stub_result)
       described_class.query('querytext', rows: 2)
+    end
+
+    it "allows callers to specify HTTP GET method" do
+      expect(mock_conn).to receive(:get).with('select', params: { rows: 2, q: 'querytext', qt: 'standard' }).and_return(stub_result)
+      described_class.query('querytext', rows: 2, method: :get)
     end
 
     it "allows callers to specify HTTP POST method" do
@@ -109,14 +114,14 @@ RSpec.describe Hyrax::SolrService do
     end
 
     it "wraps the solr response documents in Solr hits" do
-      expect(mock_conn).to receive(:get).with('select', params: { rows: 2, q: 'querytext', qt: 'standard' }).and_return(stub_result)
+      expect(mock_conn).to receive(:post).with('select', data: { rows: 2, q: 'querytext', qt: 'standard' }).and_return(stub_result)
       result = described_class.query('querytext', rows: 2)
       expect(result.size).to eq 1
       expect(result.first.id).to eq 'x'
     end
 
     it "warns about not passing rows" do
-      allow(mock_conn).to receive(:get).and_return(stub_result)
+      allow(mock_conn).to receive(:post).and_return(stub_result)
       expect(Hyrax.logger).to receive(:warn).with(/^Calling Hyrax::SolrService\.get without passing an explicit value for ':rows' is not recommended/)
       described_class.query('querytext')
     end
@@ -127,7 +132,7 @@ RSpec.describe Hyrax::SolrService do
       let(:doc) { { 'id' => 'valkyrie-x' } }
 
       it "uses valkyrie solr based on config query_index_from_valkyrie" do
-        expect(mock_conn).to receive(:get).with('select', params: { q: 'querytext' }).and_return(stub_result)
+        expect(mock_conn).to receive(:post).with('select', data: { q: 'querytext' }).and_return(stub_result)
 
         result = service.query('querytext')
         expect(result.first.id).to eq 'valkyrie-x'
@@ -249,7 +254,7 @@ RSpec.describe Hyrax::SolrService do
     let(:stub_result) { { 'response' => { 'numFound' => '2' } } }
 
     it "calls solr" do
-      expect(mock_conn).to receive(:get).with('select', params: { rows: 0, q: 'querytext', qt: 'standard' }).and_return(stub_result)
+      expect(mock_conn).to receive(:post).with('select', data: { rows: 0, q: 'querytext', qt: 'standard' }).and_return(stub_result)
       allow(described_class).to receive(:instance).and_return(double("instance", conn: mock_conn))
       expect(described_class.count('querytext')).to eq 2
     end
@@ -258,7 +263,7 @@ RSpec.describe Hyrax::SolrService do
       subject(:service) { described_class.new(use_valkyrie: true) }
 
       it "uses valkyrie solr based on config query_index_from_valkyrie" do
-        expect(mock_conn).to receive(:get).with('select', params: { rows: 0, q: 'querytext' }).and_return(stub_result)
+        expect(mock_conn).to receive(:post).with('select', data: { rows: 0, q: 'querytext' }).and_return(stub_result)
         expect(service.count('querytext')).to eq 2
       end
     end

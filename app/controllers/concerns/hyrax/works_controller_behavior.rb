@@ -13,6 +13,7 @@ module Hyrax
 
       before_action do
         blacklight_config.track_search_session = false
+        blacklight_config.search_builder_class = search_builder_class
       end
 
       class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class
@@ -369,10 +370,15 @@ module Hyrax
       end
     end
 
+    def format_error_messages(errors)
+      # the error may already be a string
+      errors.respond_to?(:messages) ? errors.messages.values.flatten.join("\n") : errors
+    end
+
     def after_create_error(errors, original_input_params_for_form = nil)
       respond_to do |wants|
         wants.html do
-          flash[:error] = errors.to_s
+          flash[:error] = format_error_messages(errors)
           rebuild_form(original_input_params_for_form) if original_input_params_for_form.present?
           render 'new', status: :unprocessable_entity
         end
@@ -401,7 +407,7 @@ module Hyrax
     def after_update_error(errors)
       respond_to do |wants|
         wants.html do
-          flash[:error] = errors.to_s
+          flash[:error] = format_error_messages(errors)
           build_form unless @form.is_a? Hyrax::ChangeSet
           render 'edit', status: :unprocessable_entity
         end
