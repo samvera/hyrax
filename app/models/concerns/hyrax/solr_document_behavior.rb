@@ -59,7 +59,7 @@ module Hyrax
     ##
     # @return [Boolean]
     def file_set?
-      hydra_model == ::FileSet
+      hydra_model == ::FileSet || hydra_model == Hyrax::FileSet
     end
 
     ##
