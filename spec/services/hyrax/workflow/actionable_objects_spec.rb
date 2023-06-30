@@ -86,6 +86,21 @@ RSpec.describe Hyrax::Workflow::ActionableObjects do
           expect(service.map(&:id)).to contain_exactly(*objects.map(&:id))
         end
 
+        it 'supports pagination' do
+          service.per_page = 2
+          service.page = 1
+          expect(service.map(&:id)).to contain_exactly(*objects[0..1].map(&:id))
+          service.page = 2
+          expect(service.map(&:id)).to contain_exactly(*objects[2..2].map(&:id))
+        end
+
+        it 'supports filtering by state' do
+          service.workflow_state_filter = 'needs_attention'
+          expect(service.map(&:id)).to contain_exactly(*objects.map(&:id))
+          service.workflow_state_filter = 'nope'
+          expect(service.map(&:id)).to be_empty
+        end
+
         it 'includes the workflow states' do
           expect(service.map(&:workflow_state))
             .to contain_exactly('needs_attention',
