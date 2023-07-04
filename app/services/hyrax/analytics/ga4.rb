@@ -86,11 +86,11 @@ module Hyrax
             private_key = File.read(config.privkey_path)
           end
           Signet::OAuth2::Client.new token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
-            audience: 'https://accounts.google.com/o/oauth2/token',
-            scope: scope,
-            issuer: config.client_email,
-            signing_key: OpenSSL::PKCS12.new(private_key, config.privkey_secret).key,
-            sub: config.client_email
+                                     audience: 'https://accounts.google.com/o/oauth2/token',
+                                     scope: scope,
+                                     issuer: config.client_email,
+                                     signing_key: OpenSSL::PKCS12.new(private_key, config.privkey_secret).key,
+                                     sub: config.client_email
         end
 
         # Return a user object linked to a Google Analytics account
