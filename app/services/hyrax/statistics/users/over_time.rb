@@ -26,7 +26,9 @@ module Hyrax
         end
 
         def point(date_string)
-          relation.where(query(date_string)).count
+          # convert the User::ActiveRecord_Relation to an array so that ".size" returns a number,
+          # instead of a hash of { user_id: size }
+          relation.where(query(date_string)).to_a.size
         end
       end
     end

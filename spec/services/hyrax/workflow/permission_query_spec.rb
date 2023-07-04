@@ -53,9 +53,9 @@ module Hyrax
         expect(described_class.authorized_for_processing?(user: user, entity: entity, action: action)).to be_falsey, message
       end
 
-      def expect_entities_for(user:, entities:)
+      def expect_entities_for(user:, entities:, page: 1, per_page: 1)
         entities = Array.wrap(entities).map { |entity| Sipity::Entity(entity) }
-        expect(described_class.scope_entities_for_the_user(user: user)).to eq(entities)
+        expect(described_class.scope_entities_for_the_user(user: user, page: page, per_page: per_page)).to eq(entities)
       end
 
       describe 'entity_responsibilities' do
@@ -73,6 +73,36 @@ module Hyrax
       describe 'workflow_roles' do
         it 'is a Sipity::WorkflowRole.arel_table' do
           expect(described_class.workflow_roles).to be_an_instance_of Arel::Table
+        end
+      end
+
+      describe 'scope_entities_for_the_user' do
+        context 'with multiple entities in different states' do
+          let(:sipity_entity2) do
+            Sipity::Entity.create!(proxy_for_global_id: 'gid://internal/Mock/2',
+                                   workflow: sipity_workflow,
+                                   workflow_state: Sipity::WorkflowState('forwarded', sipity_workflow))
+          end
+
+          before do
+            # Give reviewing_user permission to all workflow states
+            PermissionGenerator.call(roles: 'reviewing', workflow: sipity_workflow, agents: reviewing_user)
+            PermissionGenerator.call(roles: 'completing', workflow: sipity_workflow, agents: reviewing_user)
+          end
+
+          it 'filters entities by provided workflow states' do
+            # Not filtered by workflow state
+            both_entities = Array.wrap([sipity_entity, sipity_entity2]).map { |entity| Sipity::Entity(entity) }
+            expect(described_class.scope_entities_for_the_user(user: reviewing_user, workflow_state_filter: nil)).to eq(both_entities)
+            # filtered by a workflow state
+            initial_entities = Array.wrap([sipity_entity]).map { |entity| Sipity::Entity(entity) }
+            expect(described_class.scope_entities_for_the_user(user: reviewing_user, workflow_state_filter: 'initial')).to eq(initial_entities)
+            # Negated filtered by a workflow state
+            forwarded_entities = Array.wrap([sipity_entity2]).map { |entity| Sipity::Entity(entity) }
+            expect(described_class.scope_entities_for_the_user(user: reviewing_user, workflow_state_filter: '!initial')).to eq(forwarded_entities)
+            # filtered directly by forwarded workflow state
+            expect(described_class.scope_entities_for_the_user(user: reviewing_user, workflow_state_filter: 'forwarded')).to eq(forwarded_entities)
+          end
         end
       end
 
@@ -126,6 +156,42 @@ module Hyrax
 
           expect_entities_for(user: reviewing_user, entities: [])
           expect_entities_for(user: completing_user, entities: [sipity_entity])
+        end
+
+        context 'with multiple entities' do
+          let(:sipity_entity2) do
+            Sipity::Entity.create!(proxy_for_global_id: 'gid://internal/Mock/2',
+                                   workflow: sipity_workflow,
+                                   workflow_state: Sipity::WorkflowState('initial', sipity_workflow))
+          end
+
+          it 'will fullfil the battery of tests (of which they are nested because setup is expensive)' do
+            expect_agents_for(entity: sipity_entity, role: 'reviewing', agents: [reviewing_user, reviewing_group])
+            expect_agents_for(entity: sipity_entity, role: 'completing', agents: [completing_user])
+            expect_agents_for(entity: sipity_entity2, role: 'reviewing', agents: [reviewing_user, reviewing_group])
+            expect_agents_for(entity: sipity_entity2, role: 'completing', agents: [completing_user])
+
+            expect_actions_for(user: reviewing_user, entity: sipity_entity, actions: ['forward'])
+            expect_actions_for(user: reviewing_group_member, entity: sipity_entity, actions: ['forward'])
+            expect_actions_for(user: completing_user, entity: sipity_entity, actions: [])
+            expect_actions_for(user: reviewing_user, entity: sipity_entity, actions: ['forward'])
+            expect_actions_for(user: reviewing_group_member, entity: sipity_entity2, actions: ['forward'])
+            expect_actions_for(user: completing_user, entity: sipity_entity2, actions: [])
+
+            expect_users_for(users: reviewing_user, entity: sipity_entity, roles: 'reviewing')
+            expect_users_for(users: completing_user, entity: sipity_entity, roles: 'completing')
+
+            expect_entities_for(user: reviewing_user, entities: [sipity_entity])
+            expect_entities_for(user: completing_user, entities: [])
+            # Test paging of entities query
+            expect_entities_for(user: reviewing_user, entities: [sipity_entity], page: 1, per_page: 1)
+            expect_entities_for(user: reviewing_user, entities: [sipity_entity2], page: 2, per_page: 1)
+            expect_entities_for(user: reviewing_user, entities: [sipity_entity, sipity_entity2], page: 1, per_page: 2)
+            expect_entities_for(user: completing_user, entities: [])
+
+            expect_roles_for(entity: sipity_entity, roles: ['reviewing', 'completing'])
+            expect_roles_for(entity: sipity_entity2, roles: ['reviewing', 'completing'])
+          end
         end
       end
 
