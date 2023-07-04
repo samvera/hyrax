@@ -31,7 +31,7 @@ module Hyrax
             filename = Rails.root.join('config', 'analytics.yml')
             yaml = YAML.safe_load(ERB.new(File.read(filename)).result)
             unless yaml
-              Rails.logger.error("Unable to fetch any keys from #{filename}.")
+              Hyrax.logger.error("Unable to fetch any keys from #{filename}.")
               return new({})
             end
             config = yaml.fetch('analytics')&.fetch('google', nil)
@@ -55,7 +55,6 @@ module Hyrax
           # @return [Boolean] are all the required values present?
           def valid?
             return false unless @config['privkey_value'].present? || @config['privkey_path'].present?
-
             REQUIRED_KEYS.all? { |required| @config[required].present? }
           end
 
@@ -87,11 +86,11 @@ module Hyrax
             private_key = File.read(config.privkey_path)
           end
           Signet::OAuth2::Client.new token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
-                                     audience: 'https://accounts.google.com/o/oauth2/token',
-                                     scope: scope,
-                                     issuer: config.client_email,
-                                     signing_key: OpenSSL::PKCS12.new(private_key, config.privkey_secret).key,
-                                     sub: config.client_email
+            audience: 'https://accounts.google.com/o/oauth2/token',
+            scope: scope,
+            issuer: config.client_email,
+            signing_key: OpenSSL::PKCS12.new(private_key, config.privkey_secret).key,
+            sub: config.client_email
         end
 
         # Return a user object linked to a Google Analytics account
@@ -209,4 +208,3 @@ module Hyrax
     # rubocop:enable Metrics/ModuleLength
   end
 end
-# rubocop:enable Metrics/ModuleLength
