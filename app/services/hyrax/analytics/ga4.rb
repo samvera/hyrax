@@ -129,7 +129,7 @@ module Hyrax
 
           [start_date, end_date]
         end
-        
+
         # rubocop:enable Metrics/MethodLength
         def keyword_conversion(date)
           case date
