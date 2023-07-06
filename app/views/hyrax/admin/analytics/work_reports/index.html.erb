@@ -9,7 +9,7 @@
     <div class="work-reports">
 
     <div class="card">
-    <% if Hyrax.config.analytics? %>
+    <% if Hyrax.config.analytics? && Hyrax.config.analytics_provider != 'ga4' %>
       <% if current_user.ability.admin? %>
         <div class="card-header"><b><%= @works_count %> <%= t('.works') %></b> <%= t('.repo_summary') %> <b><%= @pageviews.all if @pageviews %> <%= t('.views') %></b> <%= t('.and') %> <b><%= @downloads.all if @downloads %> <%= t('.downloads') %></b>.</div>
       <% else %>

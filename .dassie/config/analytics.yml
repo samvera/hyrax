@@ -1,4 +1,6 @@
 analytics:
+  ga4:
+    analytics_id: <%= ENV['GOOGLE_ANALYTICS_ID'] %>
   google:
     analytics_id: <%= ENV['GOOGLE_ANALYTICS_ID'] %>
     app_name: <%= ENV['GOOGLE_OAUTH_APP_NAME'] %>

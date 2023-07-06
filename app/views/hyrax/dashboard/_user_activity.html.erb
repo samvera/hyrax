@@ -3,7 +3,7 @@
     <%= t('.title') %>
   </div>
   <div class="card-body d-flex justify-content-center">
-    <% if Hyrax.config.analytics? %>
+    <% if Hyrax.config.analytics? && Hyrax.config.analytics_provider != 'ga4' %>
       <%= render 'user_activity_graph' %>
 
       <!-- FIXME: This is like embedded a card in a card...seems odd -->
