@@ -12,7 +12,7 @@ RUN curl -sL https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemall
 FROM ruby:$RUBY_VERSION-alpine3.16 as hyrax-base
 
 ARG DATABASE_APK_PACKAGE="postgresql-dev"
-ARG EXTRA_APK_PACKAGES="git"
+ARG EXTRA_APK_PACKAGES="git libxml2-dev"
 ARG RUBYGEMS_VERSION=""
 
 RUN apk --no-cache upgrade && \
@@ -56,6 +56,7 @@ ARG APP_PATH=.
 ARG BUNDLE_WITHOUT="development test"
 
 ONBUILD COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
+ONBUILD COPY --chown=1001:101 $APP_PATH/vendor/engines/bulkrax /app/samvera/hyrax-webapp/vendor/engines/bulkrax
 ONBUILD RUN bundle install --jobs "$(nproc)"
 ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
@@ -88,6 +89,7 @@ ARG APP_PATH=.
 ARG BUNDLE_WITHOUT="development test"
 
 ONBUILD COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
+ONBUILD COPY --chown=1001:101 $APP_PATH/vendor/engines/bulkrax /app/samvera/hyrax-webapp/vendor/engines/bulkrax
 ONBUILD RUN bundle install --jobs "$(nproc)"
 ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
@@ -101,6 +103,10 @@ ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
 
 COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
+COPY --chown=1001:101 $APP_PATH/vendor/engines/bulkrax /app/samvera/hyrax-webapp/vendor/engines/bulkrax
+
+RUN git config --global --add safe.directory /usr/local/bundle/cache/bundler/git/bagit-0488399790189d58909c94b1c3ab11f0216d6a2a
+RUN git config --global --add safe.directory /usr/local/bundle/bundler/gems/bagit-94c2ba74b8a5
 
 RUN bundle -v && \
   bundle install --jobs "$(nproc)" && \
@@ -118,5 +124,9 @@ ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
 
 COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
+COPY --chown=1001:101 $APP_PATH/vendor/engines/bulkrax /app/samvera/hyrax-webapp/vendor/engines/bulkrax
+
+RUN git config --global --add safe.directory /usr/local/bundle/cache/bundler/git/bagit-0488399790189d58909c94b1c3ab11f0216d6a2a
+RUN git config --global --add safe.directory /usr/local/bundle/bundler/gems/bagit-94c2ba74b8a5
 
 RUN bundle install --jobs "$(nproc)"

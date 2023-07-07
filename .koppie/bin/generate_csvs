@@ -1,0 +1,85 @@
+#!/usr/bin/env ruby
+
+require 'csv'
+require 'faker'
+
+# got by running: `Bulkrax::ValkyrieObjectFactory.schema_properties(GenericWork)`
+csv_header = %w[
+  source_identifier
+  model
+  rights_statement
+  license
+  resource_type
+  title
+  abstract
+  access_right
+  alternative_title
+  bibliographic_citation
+  contributor
+  creator
+  date_created
+  description
+  identifier
+  import_url
+  keyword
+  publisher
+  label
+  language
+  related_url
+  rights_notes
+  subject
+]
+csv_rows = 10_000
+num_of_csvs = 10
+
+num_of_csvs.times do |i|
+  CSV.open("/app/samvera/hyrax-webapp/tmp/imports/importer_#{i}.csv", 'wb') do |csv|
+    csv << csv_header
+    csv_rows.times do |_index|
+      csv << [
+        Faker::Number.number(digits: 4),
+        'GenericWork',
+        'http://rightsstatements.org/vocab/CNE/1.0/',
+        'https://creativecommons.org/licenses/by-nc/4.0/',
+        'Book',
+        Faker::Book.title,
+        Faker::Lorem.paragraph,
+        Faker::Lorem.sentence,
+        Faker::Lorem.word,
+        Faker::Lorem.sentence,
+        Faker::Lorem.word,
+        Faker::Lorem.word,
+        Faker::Lorem.word,
+        Faker::Lorem.paragraph,
+        Faker::Lorem.word,
+        Faker::Lorem.word,
+        Faker::Lorem.word,
+        Faker::Lorem.word,
+        Faker::Lorem.word,
+        Faker::Lorem.word,
+        Faker::Lorem.word,
+        Faker::Lorem.paragraph,
+        Faker::Lorem.sentence
+      ]
+    end
+  end
+end
+
+10.times do |i|
+  imp = Bulkrax::Importer.create(
+    name: "Batch #{i}",
+    admin_set_id: Hyrax.query_service.find_all_of_model(model: Hyrax::AdministrativeSet).to_a.first.id.to_s,
+    user_id: User.find_by(email: 'admin@example.com').id,
+    frequency: 'PT0S',
+    parser_klass: 'Bulkrax::CsvParser',
+    parser_fields: {
+      'visibility'=>'open',
+      'rights_statement'=>'',
+      'override_rights_statement'=>'0',
+      'file_style'=>'Specify a Path on the Server',
+      'import_file_path'=>"tmp/imports/importer_#{i}.csv",
+      'update_files'=>false
+    }
+  )
+  Bulkrax::ImporterJob.perform_later(imp.id)
+end

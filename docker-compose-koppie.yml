@@ -6,10 +6,11 @@ services:
       context: .
       target: hyrax-engine-dev
       args:
-        - EXTRA_APK_PACKAGES=git less chromium
+        - EXTRA_APK_PACKAGES=git less chromium libxml2-dev
         - APP_PATH=.koppie
     image: ghcr.io/samvera/koppie
     command: sh -l -c 'bundle && yarn && bundle exec puma -v -b tcp://0.0.0.0:3000'
+    # command: tail -f /dev/null
     stdin_open: true
     tty: true
     user: root
@@ -36,6 +37,7 @@ services:
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
       - rails-public:/app/samvera/hyrax-webapp/public
       - rails-tmp:/app/samvera/hyrax-webapp/tmp
+      - import-tmp:/app/samvera/hyrax-webapp/tmp/imports
     networks:
       - koppie
 
@@ -46,7 +48,7 @@ services:
       args:
         - APP_PATH=.koppie
     image: ghcr.io/samvera/koppie-worker
-    command: sh -l -c 'bundle && bundle exec sidekiq'
+    command: sh -l -c 'bundle && bundle exec sidekiq -c 20'
     user: root
     env_file:
       - .koppie/.env
@@ -64,6 +66,7 @@ services:
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
       - sidekiq-public:/app/samvera/hyrax-webapp/public
       - sidekiq-tmp:/app/samvera/hyrax-webapp/tmp
+      - import-tmp:/app/samvera/hyrax-webapp/tmp/imports
     networks:
       - koppie
 
@@ -72,7 +75,7 @@ services:
       context: .
       target: hyrax-engine-dev
       args:
-        - EXTRA_APK_PACKAGES=git less
+        - EXTRA_APK_PACKAGES=git less libxml2-dev
         - APP_PATH=.koppie
     image: ghcr.io/samvera/koppie
     user: root
@@ -150,6 +153,7 @@ volumes:
   hyrax-uploads:
   rails-public:
   rails-tmp:
+  import-tmp:
   redis:
   sidekiq-public:
   sidekiq-tmp:

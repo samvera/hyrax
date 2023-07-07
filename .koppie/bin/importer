@@ -1,0 +1,146 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative '../config/environment'
+
+require 'slop'
+
+def main(opts = {})
+  check_required_params
+
+  update = opts[:importer_id].present?
+  port = opts[:port].presence
+  url = build_url(opts.delete(:importer_id), opts.delete(:url), port)
+
+  headers = { 'Content-Type' => 'application/json' }
+  headers['Authorization'] = "Token: #{opts.delete(:auth_token)}"
+  params = build_params(opts)
+
+  logger.info("POST to #{url} - PARAMS #{params}")
+
+  conn = Faraday.new(
+    url: url,
+    headers: headers
+  )
+
+  response = if update
+               conn.put do |request|
+                 request.body = params.to_json
+               end
+             else
+               conn.post do |request|
+                 request.body = params.to_json
+               end
+             end
+
+  puts "#{response.status} - #{response.body.truncate(200)}"
+end
+
+def check_required_params
+  if opts[:importer_id].blank? && invalid?(opts)
+    puts 'Missing required parameters'
+    help
+  end
+
+  if opts[:auth_token].blank? # rubocop:disable Style/GuardClause
+    puts 'Missing Authentication Token --auth_token'
+    exit
+  end
+end
+
+def invalid?(opts)
+  required_params.each do |p|
+    return true if opts[p.to_sym].blank?
+  end
+  return false
+end
+
+def required_params
+  Bulkrax.api_definition['bulkrax']['importer'].map { |key, value| key if value['required'] == true }.compact
+end
+
+def build_params(opts = {})
+  params = {}
+  params[:commit] = opts.delete(:commit)
+  parser_fields = {
+    metadata_file_name: opts.delete(:metadata_file_name),
+    metadata_format: opts.delete(:metadata_format),
+    rights_statement: opts.delete(:rights_statement),
+    override_rights_statement: opts.delete(:override_rights_statement),
+    import_file_path: opts.delete(:import_file_path),
+    metadata_prefix: opts.delete(:metadata_prefix),
+    set: opts.delete(:set),
+    collection_name: opts.delete(:collection_name)
+  }.compact
+  params[:importer] = opts.compact
+  params[:importer][:user_id] = opts.delete(:user_id)
+  params[:importer][:admin_set_id] = opts.delete(:admin_set_id)
+  params[:importer][:parser_fields] = parser_fields || {}
+  return params.compact
+end
+
+def build_url(importer_id, url, port = nil)
+  if url.nil?
+    protocol = Rails.application.config.force_ssl ? 'https://' : 'http://'
+    host = Rails.application.config.action_mailer.default_url_options[:host]
+    url = "#{protocol}#{host}"
+    url = "#{url}:#{port}" if port
+  end
+  path = Bulkrax::Engine.routes.url_helpers.polymorphic_path(Bulkrax::Importer)
+  url = File.join(url, path)
+  url = File.join(url, importer_id) if importer_id
+  return url
+end
+
+def logger
+  Rails.logger
+end
+
+def version
+  puts "Bulkrax #{Bulkrax::VERSION}"
+  puts "Slop #{Slop::VERSION}"
+end
+
+# Format the help for the CLI
+def help
+  puts 'CREATE:'
+  puts '  bin/importer --name "My Import" --parser_klass Bulkrax::CsvParser --commit "Create and Import" --import_file_path /data/tmp/import.csv --auth_token 12345'
+  puts 'UPDATE:'
+  puts '  bin/importer --importer_id 1 --commit "Update and Re-Import (update metadata only)" --import_file_path /data/tmp/import.csv --auth_token 12345'
+  puts 'PARAMETERS:'
+  Bulkrax.api_definition['bulkrax']['importer'].each_pair do |key, value|
+    next if key == 'parser_fields'
+    puts "  --#{key}"
+    value.each_pair do |k, v|
+      next if k == 'contained_in'
+      puts "    #{k}: #{v}"
+    end
+  end
+  puts '  --url'
+  puts "    Repository URL"
+  exit
+end
+
+# Setup the options
+options = Slop.parse do |o|
+  o.on '--version', 'Print the version' do
+    version
+    exit
+  end
+
+  o.on '--help', 'Print help' do
+    help
+    exit
+  end
+
+  Bulkrax.api_definition['bulkrax']['importer'].each_pair do |key, value|
+    if value['required'].blank?
+      o.string "--#{key}", value['definition'], default: nil
+    else
+      o.string "--#{key}", value['definition']
+    end
+  end
+  o.string '--url', 'Repository URL'
+end
+
+main(options.to_hash)

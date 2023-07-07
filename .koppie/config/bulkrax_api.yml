@@ -1,0 +1,86 @@
+bulkrax:
+  importer:
+    importer_id:
+      definition: 'The ID of the Importer. Used for Update only. CLI only.'
+    name: 
+      definition: 'Name for the Importer'
+      required: true
+    admin_set_id:
+      definition: 'AdminSet ID. If not supplied the default AdminSet is used.'
+    parser_fields:
+      definition: 'Contains additional information which varies depending on the parser. Some is required.'
+      type: container
+    rights_statement: 
+      definition: 'Supply a URI from the application rights statements'
+      valid_values: <%= Hyrax.config.rights_statement_service_class.new.select_active_options.map(&:last) %>
+      contained_in: parser_fields
+    override_rights_statement:
+      definition: 'Override any existing rights statements: 1 for yes | 0 for no'
+      valid_values: 
+        - 0
+        - 1
+      contained_in: parser_fields
+    import_file_path:
+      definition: 'Path to the import file - required for CSV and BagIt only'
+      required:
+        - 'Bulkrax::BagitParser'
+        - 'Bulkrax::CsvParser'
+      contained_in: parser_fields
+    selected_files:
+      definition: 'Used by browse everything to retrieve files from cloud URLs'
+    metadata_file_name:
+      definition: 'Filename used for metadata files - required for BagIt only'
+      required: 
+        - 'Bulkrax::BagitParser'
+      contained_in: parser_fields
+    metadata_format:
+      definition: 'RDF or CSV - required for BagIt only'
+      required:
+        - 'Bulkrax::BagitParser'
+      valid_values: 
+        - 'Bulkrax::RdfEntry'
+        - 'Bulkrax::CsvEntry'
+      contained_in: parser_fields
+    set:
+      definition: 'The OAI setSpec - required for OAI only'
+      required:
+        - 'Bulkrax::OaiParser'
+      contained_in: parser_fields
+    collection_name:
+      definition: 'The OAI setName - required for required for OAI only'
+      required:
+        - 'Bulkrax::OaiParser'
+      contained_in: parser_fields
+    parser_klass:
+      definition: 'Parser name eg. Bulkrax::CsvParser'
+      required: true
+      valid_values: <%= Bulkrax.parsers.map {|p|p[:class_name]} %>
+    limit:
+      definition: 'Number of records to import; blank for all'
+    frequency:
+      definition: ISO 8601 Durations <%= Bulkrax::Importer.frequency_enums.map(&:first).join('; ') %>
+      valid_values: <%= Bulkrax::Importer.frequency_enums.map(&:last) %>
+    field_mapping:
+      definition: 'See bulkrax/lib/bulkrax.rb for further information'
+    user_id:
+      definition: 'ID of the User creating the Importer. If not supplied, the batch_user will be used.'
+    base_url:
+      definition: 'Base URL for the Endpoint - required for OAI Only'
+      required:
+        - 'Bulkrax::OaiParser'
+    commit:
+      definition: 'Commit Message, Bulkrax uses commit messages to decide what action to take.'
+      required: true
+      valid_values:
+        - "Create"
+        - "Create and Import"
+        - "Update Importer"
+        - "Update and Re-Import (update metadata and replace files)"
+        - "Update and Harvest Updated Items', 'Update and Re-Harvest All Items"
+        - "Update and Re-Import (update metadata only)"
+        - "Update and Import (importer has not yet been run)"
+    auth_token:
+      definition: 'Authentication token. Required for JSON requests only.'
+      required: true
+    port:
+      definition: 'Port to use in http request. Defaults to 80. May need to set to 3000 when running in the development environment'

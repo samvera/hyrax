@@ -331,3 +331,38 @@ custom_queries.each do |handler|
 end
 
 ActiveFedora.init(solr_config_path: Rails.root.join('config', 'solr.yml'))
+
+# set bulkrax default work type to first curation_concern if it isn't already set
+if Bulkrax.default_work_type.blank?
+  Bulkrax.default_work_type = Hyrax.config.curation_concerns.first.to_s
+end
+
+# class BulkraxTransactionContainer
+#   extend Dry::Container::Mixin
+
+#   namespace "work_resource" do |ops|
+#     ops.register "create_with_bulk_behavior" do
+#       steps = Hyrax::Transactions::WorkCreate::DEFAULT_STEPS.dup
+#       steps[steps.index("work_resource.add_file_sets")] = "work_resource.add_bulkrax_files"
+
+#       Hyrax::Transactions::WorkCreate.new(steps: steps)
+#     end
+
+#     ops.register "update_with_bulk_behavior" do
+#       steps = Hyrax::Transactions::WorkUpdate::DEFAULT_STEPS.dup
+#       steps[steps.index("work_resource.add_file_sets")] = "work_resource.add_bulkrax_files"
+
+#       Hyrax::Transactions::WorkUpdate.new(steps: steps)
+#     end
+
+#     ops.register "add_file_sets" do
+#       Hyrax::Transactions::Steps::AddFileSets.new(handler: InlineUploadHandler)
+#     end
+
+#     ops.register "add_bulkrax_files" do
+#       Bulkrax::Transactions::Steps::AddFiles.new
+#     end
+#   end
+# end
+
+# Hyrax::Transactions::Container.merge(BulkraxTransactionContainer)

@@ -49,3 +49,6 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'solr_wrapper', '>= 0.3'
 end
+
+gem 'bagit', git: 'https://github.com/phigrofi/bagit.git', branch: :master
+gem 'bulkrax', path: 'vendor/engines/bulkrax'
