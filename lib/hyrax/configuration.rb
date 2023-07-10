@@ -105,11 +105,22 @@ module Hyrax
 
     # @!group Analytics
 
+    # This value determines whether to collect analytics or not
     attr_writer :analytics
     attr_reader :analytics
     def analytics?
       @analytics ||=
         ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS', false))
+    end
+
+    # This value determines whether to show reports on the dashboard, work and collection report pages
+    # With Google: it's dependent on the GOOGLE_OAUTH_XXX values
+    # With Matomo: TODO
+    attr_writer :analytics_reporting
+    attr_reader :analytics_reporting
+    def analytics_reporting?
+      @analytics_reporting ||=
+        ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS_REPORTING', false))
     end
 
     # Currently supports 'google' or 'matomo'
