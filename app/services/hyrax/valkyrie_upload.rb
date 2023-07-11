@@ -38,7 +38,7 @@ class Hyrax::ValkyrieUpload
     streamfile = storage_adapter.upload(file: io, original_filename: filename, resource: file_set)
     file_metadata = Hyrax::FileMetadata(streamfile)
     file_metadata.file_set_id = file_set.id
-    file_metadata.type += [use]
+    file_metadata.pcdm_use = [use]
 
     if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE
       # Set file set label.
@@ -50,6 +50,7 @@ class Hyrax::ValkyrieUpload
     end
 
     saved_metadata = Hyrax.persister.save(resource: file_metadata)
+    saved_metadata.original_filename = filename if saved_metadata.original_filename.blank?
     Hyrax.publisher.publish("object.file.uploaded", metadata: saved_metadata)
 
     add_file_to_file_set(file_set: file_set,
@@ -83,7 +84,7 @@ class Hyrax::ValkyrieUpload
   #   the file to add
   # @return [void]
   def set_file_use_ids(file_set, file_metadata)
-    file_metadata.type.each do |type|
+    file_metadata.pcdm_use.each do |type|
       case type
       when Hyrax::FileMetadata::Use::ORIGINAL_FILE
         file_set.original_file_id = file_metadata.id

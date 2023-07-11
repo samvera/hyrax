@@ -141,10 +141,17 @@ module Wings
         members = Array.wrap(converted_attrs.delete(:members))
         files = converted_attrs.delete(:files)
         af_object.attributes = converted_attrs
+        af_object.extracted_text = create_extrated_text(af_object) if resource.attributes[:extracted_text_id].present?
         members.empty? ? af_object.try(:ordered_members)&.clear : af_object.try(:ordered_members=, members)
         af_object.try(:members)&.replace(members)
         af_object.files.build_or_set(files) if files
       end
+    end
+
+    def create_extrated_text(af_object)
+      pcdm_et_file = af_object.extracted_text.presence || af_object.create_extracted_text
+      pcdm_et_file.content = Hyrax.query_service.find_by(id: resource.attributes[:extracted_text_id]).content
+      pcdm_et_file
     end
 
     # Add attributes from resource which aren't AF properties into af_object

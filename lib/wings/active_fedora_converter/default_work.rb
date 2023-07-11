@@ -118,7 +118,7 @@ module Wings
         end
 
         def to_rdf_representation
-          "Wings(#{valkyrie_class})"
+          "Wings(#{valkyrie_class})" unless valkyrie_class&.to_s&.include?('Wings(')
         end
         alias inspect to_rdf_representation
         alias to_s inspect

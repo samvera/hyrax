@@ -22,21 +22,21 @@ module Hyrax
       file_set = fileset_for_directives(directives)
 
       # Valkyrie storage adapters will typically expect an IO-like object that
-      # responds to #path -- here we only have a StringIO, so some
-      # transformation is in order
+      # responds to #rewind and #read so we have created a StringIO
       tmpfile = Tempfile.new(file_set.id, encoding: 'ascii-8bit')
+      stream = StringIO.new(stream) if stream.is_a?(String)
       stream.rewind
       output = tmpfile.write(stream.read)
       tmpfile.flush
       raise 'blank file detected' if output.zero?
 
       filename = filename(directives)
-      Hyrax.logger.debug "Uploading thumbnail for FileSet #{file_set.id} as #{filename}"
+      Hyrax.logger.debug "Uploading derivative for FileSet #{file_set.id} as #{filename}"
       uploader.upload(
         io: tmpfile,
         filename: filename,
         file_set: file_set,
-        use: Hyrax::FileMetadata::Use::THUMBNAIL
+        use: file_metadata(directives)
       )
     end
 
@@ -58,6 +58,14 @@ module Hyrax
 
     def self.filename(directives)
       URI(directives.fetch(:url)).path.split('/').last
+    end
+
+    def self.file_metadata(directives)
+      if directives.key?(:container)
+        "Hyrax::FileMetadata::Use::#{directives[:container].upcase}".constantize
+      else
+        Hyrax::FileMetadata::Use::THUMBNAIL
+      end
     end
   end
 end
