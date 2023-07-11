@@ -35,7 +35,7 @@ module Hyrax
     include Hyrax::WithEvents
 
     attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
-    attribute :embargo,       Hyrax::Embargo.optional
+    attribute :embargo_id,    Valkyrie::Types::ID
     attribute :lease,         Hyrax::Lease.optional
 
     delegate :edit_groups, :edit_groups=,
@@ -101,6 +101,19 @@ module Hyrax
 
     def visibility
       visibility_reader.read
+    end
+
+    def embargo=(value)
+      return unless value.is_a? Hyrax::Embargo
+
+      @embargo = value
+      self.embargo_id = @embargo.id
+    end
+
+    def embargo
+      @embargo ||= if embargo_id.presence
+                     Hyrax.query_service.find_by(id: embargo_id)
+                   end
     end
 
     protected
