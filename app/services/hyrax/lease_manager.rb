@@ -89,7 +89,7 @@ module Hyrax
       if resource[:lease_id].present?
         Hyrax.query_service.find_by(id: resource[:lease_id])
       else
-        Lease.new
+        Hyrax.persister.save(resource: Lease.new)
       end
     end
 

@@ -44,7 +44,7 @@ module Hyrax
     end
 
     def index_embargo(doc)
-      if resource.embargo.active?
+      if resource.embargo&.active?
         doc['embargo_release_date_dtsi'] = resource.embargo.embargo_release_date&.to_datetime
         doc['visibility_after_embargo_ssim'] = resource.embargo.visibility_after_embargo
         doc['visibility_during_embargo_ssim'] = resource.embargo.visibility_during_embargo
@@ -56,7 +56,7 @@ module Hyrax
     end
 
     def index_lease(doc)
-      if resource.lease.active?
+      if resource.lease&.active?
         doc['lease_expiration_date_dtsi'] = resource.lease.lease_expiration_date&.to_datetime
         doc['visibility_after_lease_ssim'] = resource.lease.visibility_after_lease
         doc['visibility_during_lease_ssim'] = resource.lease.visibility_during_lease
