@@ -176,7 +176,11 @@ module Hyrax
     ##
     # @return [Hyrax::Embargo]
     def embargo
-      resource.embargo || Embargo.new
+      if resource[:embargo_id].present?
+        Hyrax.query_service.find_by(id: resource[:embargo_id])
+      else
+        Embargo.new
+      end
     end
 
     ##
