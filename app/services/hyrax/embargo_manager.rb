@@ -176,11 +176,7 @@ module Hyrax
     ##
     # @return [Hyrax::Embargo]
     def embargo
-      if resource[:embargo_id].present?
-        @embargo ||= Hyrax.query_service.find_by(id: resource[:embargo_id])
-      else
-        Hyrax.persister.save(resource: Embargo.new)
-      end
+      resource.embargo || Embargo.new
     end
 
     ##

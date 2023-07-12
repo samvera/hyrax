@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 FactoryBot.define do
   factory :hyrax_embargo, class: "Hyrax::Embargo" do
-    embargo_release_date      { Time.zone.today + 10 }
+    embargo_release_date      { (Time.zone.today + 10).to_s }
     visibility_after_embargo  { 'open' }
     visibility_during_embargo { 'authenticated' }
 
