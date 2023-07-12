@@ -106,7 +106,7 @@ module Hyrax
     def embargo=(value)
       raise TypeError "can't convert #{value.class} into Hyrax::Embargo" unless value.is_a? Hyrax::Embargo
 
-      @embargo = Hyrax.persister.save(resource: value)
+      @embargo = value
       self.embargo_id = @embargo.id
     end
 
@@ -117,7 +117,7 @@ module Hyrax
     def lease=(value)
       raise TypeError "can't convert #{value.class} into Hyrax::Lease" unless value.is_a? Hyrax::Lease
 
-      @lease = Hyrax.persister.save(resource: value)
+      @lease = value
       self.lease_id = @lease.id
     end
 

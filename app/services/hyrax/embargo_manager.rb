@@ -145,7 +145,7 @@ module Hyrax
     def copy_embargo_to(target:)
       return false unless under_embargo?
 
-      target.embargo = Embargo.new(clone_attributes)
+      target.embargo = Hyrax.persister.save(resource: Embargo.new(clone_attributes))
       self.class.apply_embargo_for(resource: target)
     end
 
@@ -177,9 +177,9 @@ module Hyrax
     # @return [Hyrax::Embargo]
     def embargo
       if resource[:embargo_id].present?
-        Hyrax.query_service.find_by(id: resource[:embargo_id])
+        @embargo ||= Hyrax.query_service.find_by(id: resource[:embargo_id])
       else
-        Embargo.new
+        Hyrax.persister.save(resource: Embargo.new)
       end
     end
 

@@ -33,6 +33,8 @@ module Hyrax
           begin
             new_collections = changed_collection_membership(change_set)
             unsaved = change_set.sync
+            unsaved.embargo = @persister.save(resource: unsaved.embargo) if unsaved.embargo.present?
+            unsaved.lease = @persister.save(resource: unsaved.lease) if unsaved.lease.present?
             saved = @persister.save(resource: unsaved)
           rescue StandardError => err
             return Failure(["Failed save on #{change_set}\n\t#{err.message}", change_set.resource])
