@@ -6,7 +6,9 @@ FactoryBot.define do
     visibility_during_lease { 'open' }
 
     to_create do |instance|
-      Valkyrie.config.metadata_adapter.persister.save(resource: instance)
+      saved_instance = Valkyrie.config.metadata_adapter.persister.save(resource: instance)
+      instance.id = saved_instance.id
+      saved_instance
     end
 
     trait :expired do
