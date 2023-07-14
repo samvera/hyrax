@@ -2,6 +2,7 @@
 module Hyrax
   class BatchUploadsController < ApplicationController
     include Hydra::Controller::ControllerBehavior
+    include Hyrax::ThemedLayoutController
     include Hyrax::WorksControllerBehavior
 
     # Gives the class of the form.

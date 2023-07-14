@@ -8,6 +8,7 @@ module Hyrax
     include Blacklight::AccessControls::Catalog
 
     included do
+      include Hyrax::ThemedLayoutController
       with_themed_layout :decide_layout
       copy_blacklight_config_from(::CatalogController)
 

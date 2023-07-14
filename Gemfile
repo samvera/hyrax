@@ -3,6 +3,8 @@ source 'https://rubygems.org'
 # Please see hyrax.gemspec for dependency information.
 gemspec
 
+gem 'hydra-head', git: 'https://github.com/samvera/hydra-head.git', branch: 'zeitwerk'
+
 group :development, :test do
   gem 'benchmark-ips'
   gem 'easy_translate'

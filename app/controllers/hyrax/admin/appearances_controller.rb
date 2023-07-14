@@ -2,6 +2,8 @@
 module Hyrax
   module Admin
     class AppearancesController < ApplicationController
+      include Hyrax::ThemedLayoutController
+
       before_action :require_permissions
       with_themed_layout 'dashboard'
       class_attribute :form_class

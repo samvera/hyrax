@@ -4,6 +4,7 @@ module Hyrax
     include FileSetHelper
     include Hyrax::Breadcrumbs
     include Hyrax::Collections::AcceptsBatches
+    include Hyrax::ThemedLayoutController
 
     before_action :build_breadcrumbs, only: :edit
     before_action :filter_docs_with_access!, only: [:edit, :update, :destroy_collection]

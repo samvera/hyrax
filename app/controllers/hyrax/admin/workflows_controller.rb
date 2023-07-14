@@ -2,6 +2,8 @@
 module Hyrax
   # Presents a list of works in workflow
   class Admin::WorkflowsController < ApplicationController
+    include Hyrax::ThemedLayoutController
+
     before_action :ensure_authorized!
     with_themed_layout 'dashboard'
     class_attribute :deposited_workflow_state_name

@@ -18,6 +18,7 @@ module Hyrax
     extend ActiveSupport::Autoload
 
     autoload :AclIndexListener
+    autoload :ActiveFedoraAclIndexListener
     autoload :BatchNotificationListener
     autoload :FileMetadataListener
     autoload :FileSetLifecycleListener

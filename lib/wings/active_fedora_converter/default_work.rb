@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Wings
   class ActiveFedoraConverter
     def self.apply_properties(klass, schema)

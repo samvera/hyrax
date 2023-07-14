@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   class Admin::CollectionTypesController < ApplicationController
+    include Hyrax::ThemedLayoutController
+
     before_action do
       authorize! :manage, :collection_types
     end

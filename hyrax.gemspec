@@ -30,7 +30,7 @@ SUMMARY
   # NOTE: rails does not follow sem-ver conventions, it's
   # minor version releases can include breaking changes; see
   # http://guides.rubyonrails.org/maintenance_policy.html
-  spec.add_dependency 'rails', '~> 6.0'
+  spec.add_dependency 'rails', '>= 6.0', '< 7.1'
 
   spec.add_dependency 'active-fedora', '~> 14.0'
   spec.add_dependency 'almond-rails', '~> 0.1'

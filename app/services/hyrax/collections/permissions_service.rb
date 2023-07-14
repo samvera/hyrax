@@ -182,8 +182,8 @@ module Hyrax
       # @return [Boolean] true if the user has permission to view the admin show page for the collection
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       def self.can_view_admin_show_for_collection?(collection_id:, ability:)
-        exclude_groups = [::Ability.registered_group_name,
-                          ::Ability.public_group_name]
+        exclude_groups = [Hyrax.config.ability_class.registered_group_name,
+                          Hyrax.config.ability_class.public_group_name]
         manage_access_to_collection?(collection_id: collection_id, ability: ability) ||
           deposit_access_to_collection?(collection_id: collection_id, ability: ability, exclude_groups: exclude_groups) ||
           view_access_to_collection?(collection_id: collection_id, ability: ability, exclude_groups: exclude_groups)

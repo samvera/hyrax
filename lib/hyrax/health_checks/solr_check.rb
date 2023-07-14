@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Hyrax
   module HealthChecks
     class SolrCheck < OkComputer::Check

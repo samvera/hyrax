@@ -7,7 +7,7 @@ module Hyrax
   #   ActiveFedora::SolrQueryBuilder.
   class SolrQueryService < ::SearchBuilder # rubocop:disable Metrics/ClassLength
     class_attribute :query_service
-    self.query_service = Hyrax.query_service
+    # self.query_service = Hyrax.query_service
 
     attr_reader :query, :solr_service
 
@@ -57,7 +57,7 @@ module Hyrax
     def get_objects(use_valkyrie: Hyrax.config.use_valkyrie?)
       ids = get_ids
       return ids.map { |id| ActiveFedora::Base.find(id) } unless use_valkyrie
-      query_service.find_many_by_ids(ids: ids)
+      (query_service || Hyrax.query_service).find_many_by_ids(ids: ids)
     end
 
     ##

@@ -3,6 +3,7 @@ module Hyrax
   class DashboardController < ApplicationController
     include Blacklight::Base
     include Hyrax::Breadcrumbs
+    include Hyrax::ThemedLayoutController
     with_themed_layout 'dashboard'
     before_action :authenticate_user!
     before_action :build_breadcrumbs, only: [:show]

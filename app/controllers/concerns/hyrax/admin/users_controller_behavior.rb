@@ -5,6 +5,7 @@ module Hyrax
       extend ActiveSupport::Concern
       include Blacklight::SearchContext
       included do
+        include Hyrax::ThemedLayoutController
         before_action :ensure_admin!
         with_themed_layout 'dashboard'
       end

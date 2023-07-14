@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-# Add an endpoint at `/healthz` if `OkComputer` is installed.
-#   - `healthz` functions as a basic liveness check;
-#   - `healthz/{status_name}` checks a specific registered status;
-#   - `healthz/all` compiles all registered checks.
-#
-# To install these checks by default, add `gem 'okcomputer'` to your
-# application's `Gemfile`.
-#
-# @see https://github.com/sportngin/okcomputer/
-begin
-  OkComputer.mount_at = 'healthz'
-
+Rails.application.config.to_prepare do
+  # Add an endpoint at `/healthz` if `OkComputer` is installed.
+  #   - `healthz` functions as a basic liveness check;
+  #   - `healthz/{status_name}` checks a specific registered status;
+  #   - `healthz/all` compiles all registered checks.
+  #
+  # To install these checks by default, add `gem 'okcomputer'` to your
+  # application's `Gemfile`.
+  #
+  # @see https://github.com/sportngin/okcomputer/
   require 'hyrax/health_checks'
+
+  OkComputer.mount_at = 'healthz'
 
   OkComputer::Registry.register 'solr', Hyrax::HealthChecks::SolrCheck.new
   OkComputer::Registry.register 'migrations', OkComputer::ActiveRecordMigrationsCheck.new
@@ -30,5 +30,5 @@ rescue NameError => err
   Hyrax.logger.info 'OkComputer not installed. ' \
                     'Skipping health endpoint at `/healthz`. ' \
                     'Add `gem "OkComputer"` to your Gemfile if you want to ' \
-                    'install default health checks.'
+                   'install default health checks.'
 end

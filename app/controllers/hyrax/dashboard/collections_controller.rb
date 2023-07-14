@@ -5,6 +5,7 @@ module Hyrax
     class CollectionsController < Hyrax::My::CollectionsController
       include Blacklight::AccessControls::Catalog
       include Blacklight::Base
+      include Hyrax::ThemedLayoutController
 
       configure_blacklight do |config|
         config.search_builder_class = Hyrax::Dashboard::CollectionsSearchBuilder

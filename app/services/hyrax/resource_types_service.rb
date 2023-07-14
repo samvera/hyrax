@@ -2,7 +2,12 @@
 module Hyrax
   module ResourceTypesService
     mattr_accessor :authority
-    self.authority = Qa::Authorities::Local.subauthority_for('resource_types')
+
+    begin
+      self.authority = Qa::Authorities::Local.subauthority_for('resource_types')
+    rescue Qa::ConfigDirectoryNotFound => e
+      Rails.logger.error e.message
+    end
 
     def self.select_options
       authority.all.map do |element|

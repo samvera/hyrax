@@ -54,7 +54,7 @@ module Hyrax
       private
 
       def current_ability
-        @current_ability ||= ::Ability.new(user)
+        @current_ability ||= Hyrax.config.ability_class.new(user)
       end
 
       # @return [Hash<String, Array>] a list of properties to set on the work. Keys must be strings in order for them to correctly merge with the values from arkivio (in `@item`)

@@ -4,6 +4,8 @@ module Hyrax
     module Analytics
       class AnalyticsController < ApplicationController
         include Hyrax::SingularSubresourceController
+        include Hyrax::ThemedLayoutController
+
         before_action :set_months
         before_action :set_date_range
         before_action :set_document, only: [:show]

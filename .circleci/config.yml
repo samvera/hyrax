@@ -187,6 +187,31 @@ jobs:
 
 workflows:
   version: 2
+  ruby3-2-rails7:
+    jobs:
+      - bundle:
+          ruby_version: "3.2.2"
+          rails_version: "7.0.4.3"
+          bundler_version: "2.4.8"
+      - build:
+          ruby_version: "3.2.2"
+          rails_version: "7.0.4.3"
+          bundler_version: "2.4.8"
+          requires:
+            - bundle
+      - test:
+          name: "ruby3-2"
+          ruby_version: "3.2.2"
+          bundler_version: "2.4.8"
+          requires:
+            - build
+      - test:
+          name: "ruby3-2-valkyrie"
+          ruby_version: "3.2.2"
+          bundler_version: "2.4.8"
+          hyrax_valkyrie: "true"
+          requires:
+            - build
   ruby3-2:
     jobs:
       - bundle:

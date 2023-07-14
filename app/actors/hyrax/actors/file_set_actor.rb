@@ -108,7 +108,7 @@ module Hyrax
       private
 
       def ability
-        @ability ||= ::Ability.new(user)
+        @ability ||= Hyrax.config.ability_class.new(user)
       end
 
       # @param file_set [FileSet]

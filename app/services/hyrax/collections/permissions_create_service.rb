@@ -89,7 +89,7 @@ module Hyrax
         #
         # @return [String] a string representation of the admin group name
         def admin_group_name
-          ::Ability.admin_group_name
+          Hyrax.config.ability_class.admin_group_name
         end
       end
     end
