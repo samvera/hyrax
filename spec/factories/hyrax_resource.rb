@@ -9,7 +9,7 @@ FactoryBot.define do
     end
 
     trait :under_lease do
-      association :lease, factory: :hyrax_lease
+      lease_id { FactoryBot.create(:hyrax_lease).id }
     end
   end
 end

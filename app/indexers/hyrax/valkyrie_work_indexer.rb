@@ -53,7 +53,7 @@ module Hyrax
     end
 
     def index_lease(doc)
-      if Hyrax::LeaseManager.new(resource: resource).under_lease?
+      if resource.lease&.active?
         doc['lease_expiration_date_dtsi'] = resource.lease.lease_expiration_date&.to_datetime
         doc['visibility_after_lease_ssim'] = resource.lease.visibility_after_lease
         doc['visibility_during_lease_ssim'] = resource.lease.visibility_during_lease
