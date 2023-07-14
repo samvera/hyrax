@@ -31,9 +31,7 @@ RSpec.describe Hyrax::Resource do
     subject(:resource) { described_class.new(lease: lease) }
     let(:lease)        { FactoryBot.build(:hyrax_lease) }
 
-    it 'saves the lease id' do
-      resource.lease = Hyrax.persister.save(resource: lease)
-
+    it 'saves the lease' do
       expect(Hyrax.persister.save(resource: resource).lease)
         .to have_attributes(lease_expiration_date: lease.lease_expiration_date)
     end

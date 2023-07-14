@@ -36,7 +36,7 @@ module Hyrax
 
     attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
     attribute :embargo_id,    Valkyrie::Types::ID
-    attribute :lease_id,      Valkyrie::Types::ID
+    attribute :lease,         Hyrax::Lease.optional
 
     delegate :edit_groups, :edit_groups=,
              :edit_users,  :edit_users=,
@@ -112,17 +112,6 @@ module Hyrax
 
     def embargo
       @embargo ||= (Hyrax.query_service.find_by(id: embargo_id) if embargo_id.present?)
-    end
-
-    def lease=(value)
-      raise TypeError "can't convert #{value.class} into Hyrax::Lease" unless value.is_a? Hyrax::Lease
-
-      @lease = value
-      self.lease_id = @lease.id
-    end
-
-    def lease
-      @lease ||= (Hyrax.query_service.find_by(id: lease_id) if lease_id.present?)
     end
 
     protected
