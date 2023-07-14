@@ -129,8 +129,8 @@ RSpec.describe Hyrax::EmbargoManager do
         expect(manager.embargo)
           .to have_attributes visibility_after_embargo: 'open',
                               visibility_during_embargo: 'authenticated',
-                              embargo_release_date: an_instance_of(Date),
-                              embargo_history: be_empty
+                              embargo_release_date: an_instance_of(String),
+                              embargo_history: match_array([])
       end
     end
   end
