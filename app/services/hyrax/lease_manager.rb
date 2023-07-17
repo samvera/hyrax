@@ -86,7 +86,11 @@ module Hyrax
     ##
     # @return [Hyrax::Lease]
     def lease
-      resource.lease || Lease.new
+      if resource[:lease_id].present?
+        Hyrax.query_service.find_by(id: resource[:lease_id])
+      else
+        Hyrax.persister.save(resource: Lease.new)
+      end
     end
 
     ##
