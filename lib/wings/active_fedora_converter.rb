@@ -138,8 +138,7 @@ module Wings
         add_file_attributes(af_object)
       else
         converted_attrs = normal_attributes
-        members = Array.wrap(converted_attrs.delete(:members))
-        files = converted_attrs.delete(:files)
+        members = Array.wrap(converted_attrs.delete(:members)) && files = converted_attrs.delete(:files)
         af_object.attributes = converted_attrs
         af_object.extracted_text = create_extrated_text(af_object) if resource.attributes[:extracted_text_id].present?
         members.empty? ? af_object.try(:ordered_members)&.clear : af_object.try(:ordered_members=, members)
