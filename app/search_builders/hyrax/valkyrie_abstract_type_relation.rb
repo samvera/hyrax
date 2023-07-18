@@ -2,9 +2,8 @@
 
 module Hyrax
   class ValkyrieAbstractTypeRelation
-    def initialize(allowable_types: nil, **opts)
+    def initialize(allowable_types: nil, _opts: {})
       @allowable_types = allowable_types
-      # super(DummyModel, opts)
     end
 
     def allowable_types
@@ -23,12 +22,5 @@ module Hyrax
     def where(hash)
       Hyrax.query_service.find_references_by(resource: hash.values.first, property: hash.keys.first)
     end
-
-    # class DummyModel
-
-    #   # def self.delegated_attributes
-    #   # end
-    # end
-
   end
 end
