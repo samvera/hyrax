@@ -69,7 +69,11 @@ module Hyrax
     ##
     # @api public
     def to_global_id
-      URI::GID.build app: GlobalID.app, model_name: model_name.name, model_id: @id
+      if Hyrax.config.use_valkyrie?
+        URI::GID.build app: GlobalID.app, model_name: Hyrax::ValkyrieGlobalIdProxy.to_s, model_id: @id
+      else
+        URI::GID.build app: GlobalID.app, model_name: model_name.name, model_id: @id
+      end
     end
   end
 end
