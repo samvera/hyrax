@@ -17,7 +17,7 @@ module Hyrax
   #    - "Enforced" means the object's visibility matches the pre-release
   #      visibility of the embargo; i.e. the embargo has been applied,
   #      but not released.
-  #      "Deactivate" means that the existing embargo will be removed
+  #    - "Deactivate" means that the existing embargo will be removed
   #
   # Note that an resource may be `#under_embargo?` even if the embargo is not
   # be `#enforced?` (in this case, the application should seek to apply the
