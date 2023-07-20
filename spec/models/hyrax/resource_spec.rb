@@ -19,7 +19,9 @@ RSpec.describe Hyrax::Resource do
     subject(:resource) { described_class.new(embargo: embargo) }
     let(:embargo)      { FactoryBot.build(:hyrax_embargo) }
 
-    it 'saves the embargo' do
+    it 'saves the embargo id' do
+      resource.embargo = Hyrax.persister.save(resource: embargo)
+
       expect(Hyrax.persister.save(resource: resource).embargo)
         .to have_attributes(embargo_release_date: embargo.embargo_release_date)
     end
