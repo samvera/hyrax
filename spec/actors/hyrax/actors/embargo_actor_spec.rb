@@ -6,8 +6,9 @@ RSpec.describe Hyrax::Actors::EmbargoActor do
 
   describe "#destroy" do
     let(:work) do
-      FactoryBot.valkyrie_create(:hyrax_resource, :under_embargo)
+      FactoryBot.valkyrie_create(:hyrax_resource, embargo: embargo)
     end
+    let(:embargo) { FactoryBot.create(:hyrax_embargo) }
 
     before do
       work.visibility = authenticated_vis
@@ -33,14 +34,14 @@ RSpec.describe Hyrax::Actors::EmbargoActor do
         FactoryBot.valkyrie_create(:hyrax_resource, embargo: embargo)
       end
 
-      let(:embargo) { FactoryBot.build(:hyrax_embargo) }
+      let(:embargo) { FactoryBot.create(:hyrax_embargo) }
       let(:embargo_manager) { Hyrax::EmbargoManager.new(resource: work) }
       let(:embargo_release_date) { work.embargo.embargo_release_date }
 
       before do
         allow(Hyrax::TimeService)
           .to receive(:time_in_utc)
-          .and_return(embargo_release_date + 1)
+          .and_return(embargo_release_date.to_datetime + 1)
         expect(embargo_manager.under_embargo?).to eq false
       end
 

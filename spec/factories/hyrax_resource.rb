@@ -5,7 +5,7 @@
 FactoryBot.define do
   factory :hyrax_resource, class: "Hyrax::Resource" do
     trait :under_embargo do
-      association :embargo, factory: :hyrax_embargo
+      embargo_id { FactoryBot.create(:hyrax_embargo).id }
     end
 
     trait :under_lease do
