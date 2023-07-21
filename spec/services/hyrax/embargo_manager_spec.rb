@@ -10,7 +10,7 @@ RSpec.describe Hyrax::EmbargoManager do
 
   shared_context 'with expired embargo' do
     let(:resource) { FactoryBot.build(:hyrax_resource, embargo: embargo) }
-    let(:embargo)  { FactoryBot.build(:hyrax_embargo, :expired) }
+    let(:embargo)  { FactoryBot.create(:hyrax_embargo, :expired) }
   end
 
   describe '#apply' do
