@@ -17,7 +17,7 @@ RSpec.describe Hyrax::Resource do
 
   describe '#embargo' do
     subject(:resource) { described_class.new(embargo: embargo) }
-    let(:embargo)      { FactoryBot.build(:hyrax_embargo) }
+    let(:embargo)      { FactoryBot.create(:hyrax_embargo) }
 
     it 'saves the embargo id' do
       resource.embargo = Hyrax.persister.save(resource: embargo)
@@ -33,8 +33,10 @@ RSpec.describe Hyrax::Resource do
     let(:lease)        { FactoryBot.build(:hyrax_lease) }
 
     it 'saves the lease' do
+      expiration_date = Hyrax.config.use_valkyrie? ? lease.lease_expiration_date.to_s : lease.lease_expiration_date
+
       expect(Hyrax.persister.save(resource: resource).lease)
-        .to have_attributes(lease_expiration_date: lease.lease_expiration_date)
+        .to have_attributes(lease_expiration_date: expiration_date)
     end
   end
 
