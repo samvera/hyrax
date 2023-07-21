@@ -5,10 +5,9 @@ RSpec.describe Hyrax::Actors::EmbargoActor do
   let(:public_vis) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
 
   describe '#destroy' do
-    let(:work) { FactoryBot.valkyrie_create(:hyrax_resource, embargo: embargo) }
-    let(:embargo) { FactoryBot.create(:hyrax_embargo) }
-
     context 'on a Valkyrie backed model', if: Hyrax.config.use_valkyrie? do
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_resource, embargo: embargo) }
+      let(:embargo) { FactoryBot.create(:hyrax_embargo) }
       let(:embargo_manager) { Hyrax::EmbargoManager.new(resource: work) }
       let(:active_embargo_release_date) { work.embargo.embargo_release_date }
 
@@ -43,6 +42,20 @@ RSpec.describe Hyrax::Actors::EmbargoActor do
           .to change { work.visibility }
           .from(authenticated_vis)
           .to public_vis
+      end
+
+      context 'with an expired embargo' do
+        let(:work) { valkyrie_create(:hyrax_resource, embargo: expired_embargo) }
+        let(:expired_embargo) { create(:hyrax_embargo, :expired) }
+        let(:embargo_manager) { Hyrax::EmbargoManager.new(resource: work) }
+        let(:embargo_release_date) { work.embargo.embargo_release_date }
+
+        it 'removes the embargo' do
+          expect { actor.destroy }
+            .to change { work.embargo.embargo_release_date }
+            .from(embargo_release_date)
+            .to nil
+        end
       end
     end
 
