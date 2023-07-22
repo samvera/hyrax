@@ -27,7 +27,6 @@ FactoryBot.define do
     title { ["Test title"] }
 
     after(:build) do |work, evaluator|
-      byebug
       work.apply_depositor_metadata(evaluator.user.user_key) if work.try(:apply_depositor_metadata, evaluator.user.user_key)
     end
 
