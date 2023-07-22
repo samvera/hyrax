@@ -26,7 +26,7 @@ module Hyrax
       # @param start_datetime [DateTime]
       # @param end_datetime [DateTime]
       def find_by_date_range(start_datetime:, end_datetime: nil, models: nil)
-        end_datetime = DateTime.now if end_datetime.blank?
+        end_datetime = 1.second.since(Time.zone.now) if end_datetime.blank?
         if models.present?
           query_service.run_query(find_models_by_date_range_query, start_datetime.to_s, end_datetime.to_s, models)
         else

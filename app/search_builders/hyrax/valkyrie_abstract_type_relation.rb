@@ -22,5 +22,16 @@ module Hyrax
     def where(hash)
       Hyrax.query_service.find_references_by(resource: hash.values.first, property: hash.keys.first)
     end
+
+    def ==(other)
+      case other
+      when Relation
+        other.where_values == where_values
+      when Array
+        to_a == other
+      end
+    end
+
+    delegate :inspect, to: :to_a
   end
 end

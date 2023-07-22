@@ -91,6 +91,10 @@ module Hyrax
       false
     end
 
+    def ==(other)
+      attributes.except(:created_at, :updated_at) == other.attributes.except(:created_at, :updated_at)
+    end
+
     def permission_manager
       @permission_manager ||= Hyrax::PermissionManager.new(resource: self)
     end
