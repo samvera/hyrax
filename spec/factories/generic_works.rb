@@ -27,7 +27,8 @@ FactoryBot.define do
     title { ["Test title"] }
 
     after(:build) do |work, evaluator|
-      work.apply_depositor_metadata(evaluator.user.user_key) if work.try(:apply_depositor_metadata)
+      byebug
+      work.apply_depositor_metadata(evaluator.user.user_key) if work.try(:apply_depositor_metadata, evaluator.user.user_key)
     end
 
     factory :public_generic_work, aliases: [:public_work], traits: [:public]
