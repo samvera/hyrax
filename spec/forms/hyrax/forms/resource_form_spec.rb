@@ -446,7 +446,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
             .to have_attributes(embargo_release_date: Date.tomorrow.to_s,
                                 visibility_after_embargo: "open",
                                 visibility_during_embargo: "restricted")
-          end
+        end
       end
 
       it 'sets visibility to "during" value' do
