@@ -106,7 +106,6 @@ module Hyrax
     def embargo=(value)
       raise TypeError "can't convert #{value.class} into Hyrax::Embargo" unless value.is_a? Hyrax::Embargo
 
-      value.embargo_release_date = value.embargo_release_date.to_datetime if value.embargo_release_date.class == String
       @embargo = value
       self.embargo_id = @embargo.id
     end
