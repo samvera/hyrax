@@ -214,42 +214,6 @@ workflows:
           hyrax_valkyrie: "true"
           requires:
             - build
-  ruby3-1:
-    jobs:
-      - bundle:
-          ruby_version: "3.1.4"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
-      - build:
-          ruby_version: "3.1.4"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
-          requires:
-            - bundle
-      - test:
-          name: "ruby3-1"
-          ruby_version: "3.1.4"
-          bundler_version: "2.4.8"
-          requires:
-            - build
-  ruby3-0:
-    jobs:
-      - bundle:
-          ruby_version: "3.0.6"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
-      - build:
-          ruby_version: "3.0.6"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
-          requires:
-            - bundle
-      - test:
-          name: "ruby3-0"
-          ruby_version: "3.0.6"
-          bundler_version: "2.4.8"
-          requires:
-            - build
   ruby2-7:
     jobs:
       - bundle:
