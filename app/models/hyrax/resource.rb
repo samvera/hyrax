@@ -35,8 +35,8 @@ module Hyrax
     include Hyrax::WithEvents
 
     attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
-    attribute :embargo,       Hyrax::Embargo.optional
-    attribute :lease_id, Valkyrie::Types::ID
+    attribute :embargo_id,    Valkyrie::Types::ID
+    attribute :lease_id,      Valkyrie::Types::ID
 
     delegate :edit_groups, :edit_groups=,
              :edit_users,  :edit_users=,
@@ -111,7 +111,20 @@ module Hyrax
     end
 
     def lease
-      @lease ||= (Hyrax.query_service.find_by(id: lease_id) if lease_id.present?)
+      return @lease if @lease
+      @lease = Hyrax.query_service.find_by(id: lease_id) if lease_id.present?
+    end
+
+    def embargo=(value)
+      raise TypeError "can't convert #{value.class} into Hyrax::Embargo" unless value.is_a? Hyrax::Embargo
+
+      @embargo = value
+      self.embargo_id = @embargo.id
+    end
+
+    def embargo
+      return @embargo if @embargo
+      @embargo = Hyrax.query_service.find_by(id: embargo_id) if embargo_id.present?
     end
 
     protected
