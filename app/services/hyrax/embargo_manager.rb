@@ -17,6 +17,7 @@ module Hyrax
   #    - "Enforced" means the object's visibility matches the pre-release
   #      visibility of the embargo; i.e. the embargo has been applied,
   #      but not released.
+  #    - "Deactivate" means that the existing embargo will be removed
   #
   # Note that an resource may be `#under_embargo?` even if the embargo is not
   # be `#enforced?` (in this case, the application should seek to apply the
@@ -119,6 +120,22 @@ module Hyrax
       end
     end
 
+    # Deactivates the embargo and logs a message to the embargo_history property
+    def deactivate!
+      embargo_state = embargo.active? ? 'active' : 'expired'
+      embargo_record = embargo_history_message(
+        embargo_state,
+        Time.zone.today,
+        DateTime.parse(embargo.embargo_release_date),
+        embargo.visibility_during_embargo,
+        embargo.visibility_after_embargo
+      )
+
+      nullify(force: true)
+      release(force: true)
+      embargo.embargo_history += [embargo_record]
+    end
+
     ##
     # Copies and applies the embargo to a new (target) resource.
     #
@@ -128,7 +145,7 @@ module Hyrax
     def copy_embargo_to(target:)
       return false unless under_embargo?
 
-      target.embargo = Embargo.new(clone_attributes)
+      target.embargo = Hyrax.persister.save(resource: Embargo.new(clone_attributes))
       self.class.apply_embargo_for(resource: target)
     end
 
@@ -152,7 +169,8 @@ module Hyrax
     ##
     # @return [Boolean]
     def enforced?
-      embargo.visibility_during_embargo.to_s == resource.visibility
+      embargo.embargo_release_date.present? &&
+        (embargo.visibility_during_embargo.to_s == resource.visibility)
     end
 
     ##
@@ -212,6 +230,18 @@ module Hyrax
 
     def core_attribute_keys
       [:visibility_after_embargo, :visibility_during_embargo, :embargo_release_date]
+    end
+
+    protected
+
+    # Create the log message used when deactivating an embargo
+    def embargo_history_message(state, deactivate_date, release_date, visibility_during, visibility_after)
+      I18n.t 'hydra.embargo.history_message',
+              state: state,
+              deactivate_date: deactivate_date,
+              release_date: release_date,
+              visibility_during: visibility_during,
+              visibility_after: visibility_after
     end
   end
 end
