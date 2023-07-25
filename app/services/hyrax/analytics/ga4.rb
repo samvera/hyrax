@@ -1,20 +1,24 @@
 # frozen_string_literal: true
+
 require 'oauth2'
 require 'signet/oauth_2/client'
 
-# rubocop:disable Metrics/ModuleLength
 module Hyrax
   module Analytics
+    # rubocop:disable Metrics/ModuleLength
     module Ga4
       extend ActiveSupport::Concern
       # rubocop:disable Metrics/BlockLength
       class_methods do
-        # Loads configuration options from config/analytics.yml. Expected structure:
+        # Loads configuration options from config/analytics.yml. You only need PRIVATE_KEY_PATH or
+        # PRIVATE_KEY_VALUE. VALUE takes precedence.
+        # Expected structure:
         # `analytics:`
         # `  ga4:`
         # `    app_name: <%= ENV['GOOGLE_OAUTH_APP_NAME']`
         # `    app_version: <%= ENV['GOOGLE_OAUTH_APP_VERSION']`
         # `    privkey_path: <%= ENV['GOOGLE_OAUTH_PRIVATE_KEY_PATH']`
+        # `    privkey_value: <%= ENV['GOOGLE_OAUTH_PRIVATE_KEY_VALUE']`
         # `    privkey_secret: <%= ENV['GOOGLE_OAUTH_PRIVATE_KEY_SECRET']`
         # `    client_email: <%= ENV['GOOGLE_OAUTH_CLIENT_EMAIL']`
         # @return [Config]
@@ -41,7 +45,8 @@ module Hyrax
             new config
           end
 
-          REQUIRED_KEYS = %w[analytics_id app_name app_version privkey_path privkey_secret client_email].freeze
+          KEYS = %w[analytics_id app_name app_version privkey_path privkey_value privkey_secret client_email].freeze
+          REQUIRED_KEYS = %w[analytics_id app_name app_version privkey_secret client_email].freeze
 
           def initialize(config)
             @config = config
@@ -49,18 +54,15 @@ module Hyrax
 
           # @return [Boolean] are all the required values present?
           def valid?
-            config_keys = @config.keys
-            REQUIRED_KEYS.all? { |required| config_keys.include?(required) }
+            return false unless @config['privkey_value'].present? || @config['privkey_path'].present?
+            REQUIRED_KEYS.all? { |required| @config[required].present? }
           end
 
-          REQUIRED_KEYS.each do |key|
-            class_eval %{ def #{key};  @config.fetch('#{key}'); end }
-          end
-
-          # This method allows setting the analytics id in the initializer
-          # @deprecated set the analytics id in either ENV['GOOGLE_ANALYTICS_ID'] or config/analytics.yaml
-          def analytics_id=(value)
-            @config['analytics_id'] = value
+          KEYS.each do |key|
+            # rubocop:disable Style/EvalWithLocation
+            class_eval %{ def #{key}; @config.fetch('#{key}'); end }
+            class_eval %{ def #{key}=(value); @config['#{key}'] = value; end }
+            # rubocop:enable Style/EvalWithLocation
           end
         end
 
@@ -77,8 +79,12 @@ module Hyrax
         end
 
         def auth_client(scope)
-          raise "Private key file for Google analytics was expected at '#{config.privkey_path}', but no file was found." unless File.exist?(config.privkey_path)
-          private_key = File.read(config.privkey_path)
+          private_key = Base64.decode64(config.privkey_value) if config.privkey_value.present?
+          if private_key.blank?
+            raise "Private key file for Google analytics was expected at '#{config.privkey_path}', but no file was found." unless File.exist?(config.privkey_path)
+
+            private_key = File.read(config.privkey_path)
+          end
           Signet::OAuth2::Client.new token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
                                      audience: 'https://accounts.google.com/o/oauth2/token',
                                      scope: scope,
@@ -123,8 +129,8 @@ module Hyrax
 
           [start_date, end_date]
         end
-        # rubocop:enabl e Metrics/MethodLength
 
+        # rubocop:enable Metrics/MethodLength
         def keyword_conversion(date)
           case date
           when "last12"
@@ -199,6 +205,6 @@ module Hyrax
       end
       # rubocop:enable Metrics/BlockLength
     end
+    # rubocop:enable Metrics/ModuleLength
   end
 end
-# rubocop:enable Metrics/ModuleLength
