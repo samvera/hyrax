@@ -29,6 +29,7 @@ module Hyrax
         # @return [Dry::Monads::Result] `Success(work)` if the change_set is
         #   applied and the resource is saved;
         #   `Failure([#to_s, change_set.resource])`, otherwise.
+        # rubocop:disable Metrics/MethodLength
         def call(change_set, user: nil)
           begin
             new_collections = changed_collection_membership(change_set)
@@ -52,6 +53,7 @@ module Hyrax
           publish_changes(resource: saved, user: user, new: unsaved.new_record, new_collections: new_collections)
           Success(saved)
         end
+        # rubocop:enable Metrics/MethodLength
 
         private
 
