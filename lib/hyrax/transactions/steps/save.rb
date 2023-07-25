@@ -36,7 +36,7 @@ module Hyrax
             unsaved = change_set.sync
             if unsaved.embargo.present?
               unsaved.embargo.embargo_release_date = unsaved.embargo.embargo_release_date.to_datetime
-              unsaved.embargo = @persister.save(resource: unsaved.embargo) if unsaved.embargo.present?
+              unsaved.embargo = @persister.save(resource: unsaved.embargo)
             end
             saved = @persister.save(resource: unsaved)
           rescue StandardError => err
