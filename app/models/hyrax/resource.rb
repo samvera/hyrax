@@ -111,7 +111,8 @@ module Hyrax
     end
 
     def embargo
-      @embargo ||= Hyrax.query_service.find_by(id: embargo_id) if embargo_id.present?
+      return @embargo if @embargo
+      @embargo = Hyrax.query_service.find_by(id: embargo_id) if embargo_id.present?
     end
 
     protected
