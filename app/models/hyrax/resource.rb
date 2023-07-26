@@ -123,7 +123,8 @@ module Hyrax
     end
 
     def lease
-      @lease ||= (Hyrax.query_service.find_by(id: lease_id) if lease_id.present?)
+      return @lease if @lease
+      @lease = Hyrax.query_service.find_by(id: lease_id) if lease_id.present?
     end
 
     protected
