@@ -25,7 +25,6 @@ module Hyrax
         expect(counter_metric).not_to be_valid
         expect(counter_metric.errors[:date]).to include("can't be blank")
       end
-
     end
   end
 end
