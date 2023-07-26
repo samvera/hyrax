@@ -7,14 +7,14 @@ module Hyrax
   #
   # The lease terminology used here is as follows:
   #
-  #    - "Release Date" is the day an lease is scheduled to be released.
-  #    - "Under Lease" means the lease is "active"; i.e. that its release
+  #    - "Expiration Date" is the day a lease is scheduled to expire.
+  #    - "Under Lease" means the lease is "active"; i.e. that its expiration
   #       date is today or later.
-  #    - "Applied" means the lease's pre-release visibility has been set on
+  #    - "Applied" means the lease's pre-expiration visibility has been set on
   #      the resource.
-  #    - "Released" means the lease's post-release visibility has been set on
+  #    - "Released" means the lease's post-expiration visibility has been set on
   #      the resource.
-  #    - "Enforced" means the object's visibility matches the pre-release
+  #    - "Enforced" means the object's visibility matches the pre-expiration
   #      visibility of the lease; i.e. the lease has been applied,
   #      but not released.
   #    - "Deactivate" means that the existing lease will be removed
