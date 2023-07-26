@@ -11,7 +11,7 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
   end
 
   describe "find_by_date_created" do
-    let!(:work) { valkyrie_create(:generic_work) }
+    let!(:work) { create(:generic_work) }
 
     subject { service.find_by_date_created(start_date, end_date) }
 

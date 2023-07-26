@@ -7,7 +7,7 @@ module Hyrax
       # @param [DateTime] end_datetime ending date time for range query
       def find_by_date_created(start_datetime, end_datetime = nil)
         return [] if start_datetime.blank? # no date just return nothing
-        if Hyrax.config.use_valkyrie? && !Object.const_defined?("Wings")
+        if non_wings_valkyire?
           return Hyrax.query_service.custom_queries.find_by_date_range(start_datetime: start_datetime,
                                                                        end_datetime: end_datetime,
                                                                        models: relation.allowable_types).to_a
@@ -44,7 +44,7 @@ module Hyrax
       delegate :count, to: :relation
 
       def relation
-        return Hyrax::ValkyrieWorkRelation.new if Hyrax.config.use_valkyrie? && !Object.const_defined?("Wings")
+        return Hyrax::ValkyrieWorkRelation.new if non_wings_valkyire?
         Hyrax::WorkRelation.new
       end
 
@@ -52,7 +52,7 @@ module Hyrax
 
       def where_access_is(access_level)
         # returns all works where the access level is public
-        if Hyrax.config.use_valkyrie? && !Object.const_defined?("Wings")
+        if non_wings_valkyire?
           Hyrax.custom_queries.find_models_by_access(mode: 'read',
                                                      models: relation.allowable_types,
                                                      group: true,
@@ -60,6 +60,10 @@ module Hyrax
         else
           relation.where Hydra.config.permissions.read.group => access_level
         end
+      end
+
+      def non_wings_valkyire?
+        Hyrax.config.use_valkyrie? && (!defined?(Wings) || (defined?(Wings) && Hyrax.config.disable_wings))
       end
 
       def date_format
