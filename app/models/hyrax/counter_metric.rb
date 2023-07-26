@@ -2,5 +2,6 @@
 
 module Hyrax
   class CounterMetric < ApplicationRecord
+    validates :work_id, :date, presence: true
   end
 end
