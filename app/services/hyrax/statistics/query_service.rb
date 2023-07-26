@@ -44,7 +44,7 @@ module Hyrax
       delegate :count, to: :relation
 
       def relation
-        return Hyrax::ValkyrieWorkRelation.new if Hyrax.config.use_valkyrie?
+        return Hyrax::ValkyrieWorkRelation.new if Hyrax.config.use_valkyrie? && !Object.const_defined?("Wings")
         Hyrax::WorkRelation.new
       end
 
