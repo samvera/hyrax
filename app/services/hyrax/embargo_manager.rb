@@ -126,13 +126,13 @@ module Hyrax
       embargo_record = embargo_history_message(
         embargo_state,
         Time.zone.today,
-        DateTime.parse(embargo.embargo_release_date),
+        embargo.embargo_release_date,
         embargo.visibility_during_embargo,
         embargo.visibility_after_embargo
       )
 
-      nullify(force: true)
       release(force: true)
+      nullify(force: true)
       embargo.embargo_history += [embargo_record]
     end
 
@@ -180,14 +180,17 @@ module Hyrax
     end
 
     ##
-    # Drop the embargo by setting its release date to `nil`.
+    # Drop the embargo by setting its release date and visibility settings to `nil`.
     #
     # @param force [boolean] force the nullify even when the embargo period is current
     #
     # @return [void]
     def nullify(force: false)
       return false if !force && under_embargo?
+
       embargo.embargo_release_date = nil
+      embargo.visibility_during_embargo = nil
+      embargo.visibility_after_embargo = nil
     end
 
     ##
