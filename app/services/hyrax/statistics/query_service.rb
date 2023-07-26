@@ -7,7 +7,7 @@ module Hyrax
       # @param [DateTime] end_datetime ending date time for range query
       def find_by_date_created(start_datetime, end_datetime = nil)
         return [] if start_datetime.blank? # no date just return nothing
-        if Hyrax.config.use_valkyrie?
+        if Hyrax.config.use_valkyrie? && !Object.const_defined?("Wings")
           return Hyrax.query_service.custom_queries.find_by_date_range(start_datetime: start_datetime,
                                                                        end_datetime: end_datetime,
                                                                        models: relation.allowable_types).to_a
@@ -52,7 +52,7 @@ module Hyrax
 
       def where_access_is(access_level)
         # returns all works where the access level is public
-        if Hyrax.config.use_valkyrie?
+        if Hyrax.config.use_valkyrie? && !Object.const_defined?("Wings")
           Hyrax.custom_queries.find_models_by_access(mode: 'read',
                                                      models: relation.allowable_types,
                                                      group: true,
