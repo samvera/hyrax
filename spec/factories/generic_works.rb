@@ -48,7 +48,7 @@ FactoryBot.define do
 
     factory :registered_generic_work do
       read_groups { ["registered"] }
-      visibility { Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED }
+      # visibility { Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED }
     end
 
     factory :work_with_one_file do
