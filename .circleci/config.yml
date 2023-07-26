@@ -111,7 +111,6 @@ jobs:
           - project/*
           - project/**/*
 
-
   test:
     parameters:
       ruby_version:
