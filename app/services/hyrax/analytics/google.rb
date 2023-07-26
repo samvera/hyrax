@@ -31,7 +31,7 @@ module Hyrax
             filename = Rails.root.join('config', 'analytics.yml')
             yaml = YAML.safe_load(ERB.new(File.read(filename)).result)
             unless yaml
-              Rails.logger.error("Unable to fetch any keys from #{filename}.")
+              Hyrax.logger.error("Unable to fetch any keys from #{filename}.")
               return new({})
             end
             config = yaml.fetch('analytics')&.fetch('google', nil)
@@ -55,7 +55,6 @@ module Hyrax
           # @return [Boolean] are all the required values present?
           def valid?
             return false unless @config['privkey_value'].present? || @config['privkey_path'].present?
-
             REQUIRED_KEYS.all? { |required| @config[required].present? }
           end
 
@@ -209,4 +208,3 @@ module Hyrax
     # rubocop:enable Metrics/ModuleLength
   end
 end
-# rubocop:enable Metrics/ModuleLength

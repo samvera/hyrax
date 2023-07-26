@@ -63,7 +63,7 @@ RSpec.describe Hyrax::Analytics do
       end
 
       it "is not valid" do
-        expect(Rails.logger).to receive(:error)
+        expect(Hyrax.logger).to receive(:error)
           .with(starting_with("Unable to fetch any keys from"))
         expect(config).not_to be_valid
       end
