@@ -3,7 +3,7 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
   let(:service) { described_class.new }
 
   describe "#count" do
-    let!(:work) { valkyrie_create(:generic_work) }
+    let!(:work) { create(:generic_work) }
 
     subject { service.count }
 
@@ -40,7 +40,7 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
   describe "where_registered" do
     subject { service.where_registered.to_a }
 
-    let!(:work) { valkyrie_create(:generic_work, read_groups: read_groups) }
+    let!(:work) { create(:generic_work, read_groups: read_groups) }
 
     context "when file is private" do
       let(:read_groups) { ["private"] }
@@ -64,7 +64,7 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
   describe "where_public" do
     subject { service.where_public.to_a }
 
-    let!(:work) { valkyrie_create(:generic_work, read_groups: read_groups) }
+    let!(:work) { create(:generic_work, read_groups: read_groups) }
 
     context "when file is private" do
       let(:read_groups) { ["private"] }
