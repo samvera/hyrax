@@ -90,7 +90,7 @@ RSpec.describe Hyrax::LeaseManager do
         expect(manager.lease)
           .to have_attributes visibility_after_lease: 'authenticated',
                               visibility_during_lease: 'open',
-                              lease_expiration_date: an_instance_of(String),
+                              lease_expiration_date: an_instance_of(DateTime),
                               lease_history: be_empty
       end
     end

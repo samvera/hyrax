@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 FactoryBot.define do
   factory :hyrax_lease, class: "Hyrax::Lease" do
-    lease_expiration_date   { Time.zone.today + 10 }
+    lease_expiration_date   { (Time.zone.today + 10).to_datetime }
     visibility_after_lease  { 'authenticated' }
     visibility_during_lease { 'open' }
 
@@ -12,7 +12,7 @@ FactoryBot.define do
     end
 
     trait :expired do
-      lease_expiration_date { Time.zone.today - 1 }
+      lease_expiration_date { (Time.zone.today - 1).to_datetime }
     end
   end
 end
