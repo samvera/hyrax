@@ -7,8 +7,9 @@ RSpec.describe Hyrax::Actors::LeaseActor do
 
   describe "#destroy" do
     let(:work) do
-      FactoryBot.valkyrie_create(:hyrax_resource, :under_lease)
+      FactoryBot.valkyrie_create(:hyrax_resource, :lease: lease)
     end
+    let(:lease) { FactoryBot.create(:hyrax_lease) }
 
     before do
       work.visibility = public_vis
@@ -33,12 +34,12 @@ RSpec.describe Hyrax::Actors::LeaseActor do
         FactoryBot.valkyrie_create(:hyrax_resource, lease: lease)
       end
 
-      let(:lease) { FactoryBot.build(:hyrax_lease) }
+      let(:lease) { FactoryBot.create(:hyrax_lease) }
 
       before do
         allow(Hyrax::TimeService)
           .to receive(:time_in_utc)
-          .and_return(work.lease.lease_expiration_date + 1)
+          .and_return(work.lease.lease_expiration_date.to_datetime + 1)
       end
 
       it "leaves the lease in place" do

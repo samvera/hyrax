@@ -39,7 +39,7 @@ module Hyrax
               unsaved.embargo = @persister.save(resource: unsaved.embargo)
             end
             if unsaved.lease.present?
-              unsaved.lease.lease_release_date = unsaved.lease.lease_release_date&.to_datetime
+              unsaved.lease.lease_expiration_date = unsaved.lease.lease_expiration_date&.to_datetime
               unsaved.lease = @persister.save(resource: unsaved.lease)
             end
             saved = @persister.save(resource: unsaved)

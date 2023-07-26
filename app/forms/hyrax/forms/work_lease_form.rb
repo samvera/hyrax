@@ -11,6 +11,7 @@ module Hyrax
     #   +LeasesControllerBehavior+.
     class WorkLeaseForm < Hyrax::ChangeSet
       property :lease, form: Hyrax::Forms::Lease, populator: :lease_populator, prepopulator: :lease_populator
+      property :lease_history, virtual: true, prepopulator: proc { |_opts| self.lease_history = model.lease&.lease_history }
       property :lease_expiration_date, virtual: true, prepopulator: proc { |_opts| self.lease_expiration_date = model.lease&.lease_expiration_date }
       property :visibility_after_lease, virtual: true, prepopulator: proc { |_opts| self.visibility_after_lease = model.lease&.visibility_after_lease }
       property :visibility_during_lease, virtual: true, prepopulator: proc { |_opts| self.visibility_during_lease = model.lease&.visibility_during_lease }

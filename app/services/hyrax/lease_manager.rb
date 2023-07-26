@@ -4,6 +4,21 @@ module Hyrax
   ##
   # Provides utilities for managing the lifecycle of an `Hyrax::Lease` on a
   # `Hyrax::Resource`.
+  #
+  # The lease terminology used here is as follows:
+  #
+  #    - "Release Date" is the day an lease is scheduled to be released.
+  #    - "Under Lease" means the lease is "active"; i.e. that its release
+  #       date is today or later.
+  #    - "Applied" means the lease's pre-release visibility has been set on
+  #      the resource.
+  #    - "Released" means the lease's post-release visibility has been set on
+  #      the resource.
+  #    - "Enforced" means the object's visibility matches the pre-release
+  #      visibility of the lease; i.e. the lease has been applied,
+  #      but not released.
+  #    - "Deactivate" means that the existing lease will be removed
+  #
   class LeaseManager
     ##
     # @!attribute [rw] resource
@@ -49,6 +64,23 @@ module Hyrax
       end
     end
 
+    # Deactivates the lease and logs a message to the lease_history property
+    def deactivate!
+      lease_state = lease.active? ? 'active' : 'expired'
+      lease_record = lease_history_message(
+        lease_state,
+        Time.zone.today,
+        lease.lease_expiration_date,
+        lease.visibility_during_lease,
+        lease.visibility_after_lease
+      )
+
+      release(force: true)
+      nullify(force: true)
+      # TODO(alishaevn): why isn't this working?
+      lease.lease_history += [lease_record]
+    end
+
     ##
     # Copies and applies the lease to a new (target) resource.
     #
@@ -58,7 +90,7 @@ module Hyrax
     def copy_lease_to(target:)
       return false unless under_lease?
 
-      target.lease = Lease.new(clone_attributes)
+      target.lease = Hyrax.persister.save(resource:Lease.new(clone_attributes))
       self.class.apply_lease_for(resource: target)
     end
 
@@ -80,7 +112,8 @@ module Hyrax
     ##
     # @return [Boolean]
     def enforced?
-      lease.visibility_during_lease.to_s == resource.visibility
+      lease.lease_expiration_date.present? &&
+        lease.visibility_during_lease.to_s == resource.visibility
     end
 
     ##
@@ -94,18 +127,28 @@ module Hyrax
     end
 
     ##
-    # Drop the lease by setting its release date to `nil`.
+    # Drop the lease by setting its release date and visibility settings to `nil`.
     #
+    # @param force [boolean] force the nullify even when the lease period is current
     # @return [void]
-    def nullify
-      return unless under_lease?
+    def nullify(force: false)
+      return false if !force && under_lease?
+
+      # TODO(alishaevn): why isn't this working?
       lease.lease_expiration_date = nil
+      lease.visibility_during_lease = nil
+      lease.visibility_after_lease = nil
     end
 
     ##
+    # Sets the visibility of the resource to the lease's after lease visibility.
+    # no-op if the lease period is current and the force flag is false.
+    #
+    # @param force [boolean] force the release even when the lease period is current
+    #
     # @return [Boolean]
-    def release
-      return false if under_lease?
+    def release(force: false)
+      return false if !force && under_lease?
       return true if lease.visibility_after_lease.nil?
 
       resource.visibility = lease.visibility_after_lease
@@ -134,6 +177,18 @@ module Hyrax
 
     def core_attribute_keys
       [:visibility_after_lease, :visibility_during_lease, :lease_expiration_date]
+    end
+
+    protected
+
+    # Create the log message used when deactivating a lease
+    def lease_history_message(state, deactivate_date, expiration_date, visibility_during, visibility_after)
+      I18n.t 'hydra.lease.history_message',
+              state: state,
+              deactivate_date: deactivate_date,
+              expiration_date: expiration_date,
+              visibility_during: visibility_during,
+              visibility_after: visibility_after
     end
   end
 end
