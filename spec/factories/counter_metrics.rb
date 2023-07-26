@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :counter_metric do
+  factory :counter_metric, class: "Hyrax::CounterMetric" do
     worktype { "Generic Work" }
     resource_type { "Book" }
     work_id { "12345678" }
