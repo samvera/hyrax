@@ -90,7 +90,7 @@ module Hyrax
     def copy_lease_to(target:)
       return false unless under_lease?
 
-      target.lease = Hyrax.persister.save(resource:Lease.new(clone_attributes))
+      target.lease = Hyrax.persister.save(resource: Lease.new(clone_attributes))
       self.class.apply_lease_for(resource: target)
     end
 
