@@ -37,7 +37,7 @@
           data: { behavior: 'unfeature' },
           class: presenter.display_feature_link? ? 'btn btn-default collapse' : 'btn btn-default' %>
     <% end %>
-    <% if Hyrax.config.analytics? && Hyrax.config.analytics_provider != 'ga4' %>
+    <% if Hyrax.config.analytics_reporting? && Hyrax.config.analytics_provider != 'ga4' %>
       <%= link_to t(".analytics"), presenter.stats_path, id: 'stats', class: 'btn btn-default' %>
     <% end %>
   </div>
