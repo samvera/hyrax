@@ -20,6 +20,8 @@ module Hyrax
     require 'qa'
     require 'tinymce-rails'
     require 'valkyrie'
+    require 'cancancan'
+    require 'blacklight'
 
     require 'hydra/derivatives'
     require 'hyrax/active_fedora_dummy_model'
