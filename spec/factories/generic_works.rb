@@ -33,7 +33,6 @@ FactoryBot.define do
     factory :public_generic_work, aliases: [:public_work], traits: [:public]
 
     trait :public do
-      read_groups { ["open"] }
       visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
     end
 
@@ -48,7 +47,6 @@ FactoryBot.define do
 
     factory :registered_generic_work do
       read_groups { ["registered"] }
-      # visibility { Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED }
     end
 
     factory :work_with_one_file do
