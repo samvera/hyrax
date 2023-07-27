@@ -28,21 +28,21 @@ module Hyrax
     ##
     # execute the query using a GET request
     # @return [Hash] the results returned from solr for the current query
-    def get
-      solr_service.get(build)
+    def get(**args)
+      solr_service.get(build, **args)
     end
 
     ##
     # execute the solr query and return results
     # @return [Hash] the results returned from solr for the current query
-    def query_result
-      solr_service.query_result(build)
+    def query_result(**args)
+      solr_service.query_result(build, **args)
     end
 
     ##
     # @return [Enumerable<SolrDocument>]
-    def solr_documents
-      query_result['response']['docs'].map { |doc| self.class.document_model.new(doc) }
+    def solr_documents(**args)
+      query_result(**args)['response']['docs'].map { |doc| self.class.document_model.new(doc) }
     end
 
     ##

@@ -149,6 +149,8 @@ RSpec.configure do |config|
     User.group_service = TestHydraGroupService.new
     # Set a geonames username; doesn't need to be real.
     Hyrax.config.geonames_username = 'hyrax-test'
+    # Initialize query_service class attribute by calling to avoid it sometimes being set to test_adapter
+    Hyrax::SolrQueryService.query_service
     # disable analytics except for specs which will have proper api mocks
   end
 

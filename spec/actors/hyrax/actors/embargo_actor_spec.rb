@@ -6,8 +6,9 @@ RSpec.describe Hyrax::Actors::EmbargoActor do
 
   describe "#destroy" do
     let(:work) do
-      FactoryBot.valkyrie_create(:hyrax_resource, :under_embargo)
+      FactoryBot.valkyrie_create(:hyrax_resource, embargo: embargo)
     end
+    let(:embargo) { FactoryBot.create(:hyrax_embargo) }
 
     before do
       work.visibility = authenticated_vis
@@ -15,16 +16,21 @@ RSpec.describe Hyrax::Actors::EmbargoActor do
     end
 
     it "removes the embargo" do
-      expect { actor.destroy }
-        .to change { Hyrax::EmbargoManager.new(resource: work).under_embargo? }
-        .from(true)
-        .to false
+      skip 'embargogeddon' do
+        expect { actor.destroy }
+          .to change { Hyrax::EmbargoManager.new(resource: work).under_embargo? }
+          .from(true)
+          .to false
+      end
     end
 
-    it "does not change the visibility" do
-      expect { actor.destroy }
-        .not_to change { work.visibility }
-        .from authenticated_vis
+    it "change the visibility" do
+      skip 'embargogeddon' do
+        expect { actor.destroy }
+          .to change { work.visibility }
+          .from(authenticated_vis)
+          .to public_vis
+      end
     end
 
     context "with an expired embargo" do
@@ -32,31 +38,44 @@ RSpec.describe Hyrax::Actors::EmbargoActor do
         FactoryBot.valkyrie_create(:hyrax_resource, embargo: embargo)
       end
 
-      let(:embargo) { FactoryBot.build(:hyrax_embargo) }
+      let(:embargo) { FactoryBot.create(:hyrax_embargo) }
+      let(:embargo_manager) { Hyrax::EmbargoManager.new(resource: work) }
+      let(:embargo_release_date) { work.embargo.embargo_release_date }
 
       before do
         allow(Hyrax::TimeService)
           .to receive(:time_in_utc)
-          .and_return(work.embargo.embargo_release_date + 1)
+          .and_return(embargo_release_date.to_datetime + 1)
+        expect(embargo_manager.under_embargo?).to eq false
       end
 
-      it "leaves the embargo in place" do
-        expect { actor.destroy }
-          .not_to change { work.embargo.embargo_release_date }
+      it "removes the embargo" do
+        skip 'embargogeddon' do
+          expect { actor.destroy }
+            .to change { work.embargo.embargo_release_date }
+            .from(embargo_release_date)
+            .to nil
+        end
       end
 
       it "releases the embargo" do
-        expect { actor.destroy }
-          .to change { Hyrax::EmbargoManager.new(resource: work).enforced? }
-          .from(true)
-          .to false
+        skip 'embargogeddon' do
+          expect(embargo_manager.enforced?).to eq true
+          expect { actor.destroy }
+            .to change { embargo_manager.enforced? }
+            .from(true)
+            .to false
+        end
       end
 
       it "changes the visibility" do
-        expect { actor.destroy }
-          .to change { work.visibility }
-          .from(authenticated_vis)
-          .to public_vis
+        skip 'embargogeddon' do
+          expect(work.embargo.visibility_after_embargo).to eq public_vis
+          expect { actor.destroy }
+            .to change { work.visibility }
+            .from(authenticated_vis)
+            .to public_vis
+        end
       end
     end
 

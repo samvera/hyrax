@@ -25,6 +25,7 @@ module Hyrax
         solr_doc['depositor_tesim'] = [resource.depositor]
         solr_doc['hasRelatedMediaFragment_ssim'] = [resource.representative_id.to_s]
         solr_doc['hasRelatedImage_ssim'] = [resource.thumbnail_id.to_s]
+        solr_doc['hasFormat_ssim'] = resource.rendering_ids.map(&:to_s) if resource.rendering_ids.present?
         index_embargo(solr_doc)
         index_lease(solr_doc)
       end
@@ -43,11 +44,14 @@ module Hyrax
     end
 
     def index_embargo(doc)
-      if Hyrax::EmbargoManager.new(resource: resource).under_embargo?
+      if resource.embargo&.active?
         doc['embargo_release_date_dtsi'] = resource.embargo.embargo_release_date&.to_datetime
         doc['visibility_after_embargo_ssim'] = resource.embargo.visibility_after_embargo
         doc['visibility_during_embargo_ssim'] = resource.embargo.visibility_during_embargo
+      else
+        doc['embargo_history_ssim'] = resource&.embargo&.embargo_history
       end
+
       doc
     end
 
