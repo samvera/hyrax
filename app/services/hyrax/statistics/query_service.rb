@@ -7,20 +7,15 @@ module Hyrax
       # @param [DateTime] end_datetime ending date time for range query
       def find_by_date_created(start_datetime, end_datetime = nil)
         return [] if start_datetime.blank? # no date just return nothing
-        if non_wings_valkyire?
-          return Hyrax.query_service.custom_queries.find_by_date_range(start_datetime: start_datetime,
-                                                                       end_datetime: end_datetime,
-                                                                       models: relation.allowable_types).to_a
-        end
-        relation.where(build_date_query(start_datetime, end_datetime)).to_a
+        relation.where(build_date_query(start_datetime, end_datetime))
       end
 
       def find_registered_in_date_range(start_datetime, end_datetime = nil)
-        find_by_date_created(start_datetime, end_datetime) & where_registered.to_a
+        find_by_date_created(start_datetime, end_datetime).merge(where_registered)
       end
 
       def find_public_in_date_range(start_datetime, end_datetime = nil)
-        find_by_date_created(start_datetime, end_datetime) & where_public.to_a
+        find_by_date_created(start_datetime, end_datetime).merge(where_public)
       end
 
       def where_public
@@ -44,26 +39,13 @@ module Hyrax
       delegate :count, to: :relation
 
       def relation
-        return Hyrax::ValkyrieWorkRelation.new if non_wings_valkyire?
         Hyrax::WorkRelation.new
       end
 
       private
 
       def where_access_is(access_level)
-        # returns all works where the access level is public
-        if non_wings_valkyire?
-          Hyrax.custom_queries.find_models_by_access(mode: 'read',
-                                                     models: relation.allowable_types,
-                                                     group: true,
-                                                     agent: access_level)
-        else
-          relation.where Hydra.config.permissions.read.group => access_level
-        end
-      end
-
-      def non_wings_valkyire?
-        Hyrax.config.use_valkyrie? && (!defined?(Wings) || (defined?(Wings) && Hyrax.config.disable_wings))
+        relation.where Hydra.config.permissions.read.group => access_level
       end
 
       def date_format
