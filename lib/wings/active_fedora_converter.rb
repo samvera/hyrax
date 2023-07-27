@@ -168,8 +168,8 @@ module Wings
     def add_file_attributes(af_object)
       af_object.metadata_node.attributes = normal_attributes
       af_object.original_name = resource.original_filename
-      new_type = (resource.type - af_object.metadata_node.type.to_a).first
-      af_object.metadata_node.type = new_type if new_type
+      new_type = (resource.type - af_object.metadata_node.pcdm_use.to_a).first
+      af_object.metadata_node.pcdm_use = new_type if new_type
       af_object.mime_type = resource.mime_type
     end
   end
