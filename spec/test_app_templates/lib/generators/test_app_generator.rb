@@ -6,7 +6,7 @@ class TestAppGenerator < Rails::Generators::Base
   source_root File.expand_path('../../../../spec/test_app_templates/', __FILE__)
 
   def install_turbolinks
-    gem 'turbolinks', '5.2.1'
+    gem 'turbolinks', '~> 5'
 
     Bundler.with_clean_env do
       run "bundle install"
