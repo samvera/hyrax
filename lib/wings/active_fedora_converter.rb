@@ -137,14 +137,19 @@ module Wings
       when ActiveFedora::File
         add_file_attributes(af_object)
       else
-        converted_attrs = normal_attributes
-        members = Array.wrap(converted_attrs.delete(:members)) && files = converted_attrs.delete(:files)
-        af_object.attributes = converted_attrs
-        af_object.extracted_text = create_extrated_text(af_object) if resource.attributes[:extracted_text_id].present?
-        members.empty? ? af_object.try(:ordered_members)&.clear : af_object.try(:ordered_members=, members)
-        af_object.try(:members)&.replace(members)
-        af_object.files.build_or_set(files) if files
+        parse_attributes(af_object)
       end
+    end
+
+    def parse_attributes(af_object)
+      converted_attrs = normal_attributes
+      members = Array.wrap(converted_attrs.delete(:members))
+      files = converted_attrs.delete(:files)
+      af_object.attributes = converted_attrs
+      af_object.extracted_text = create_extrated_text(af_object) if resource.attributes[:extracted_text_id].present?
+      members.empty? ? af_object.try(:ordered_members)&.clear : af_object.try(:ordered_members=, members)
+      af_object.try(:members)&.replace(members)
+      af_object.files.build_or_set(files) if files
     end
 
     def create_extrated_text(af_object)
