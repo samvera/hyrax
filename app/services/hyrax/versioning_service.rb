@@ -32,7 +32,6 @@ module Hyrax
     # If the resource is nil, or if it is a Hyrax::FileMetadata and versioning
     # is not supported in the storage adapter, an empty array will be returned.
     def versions
-      byebug
       if resource.nil?
         []
       elsif resource.is_a?(Hyrax::FileMetadata)
