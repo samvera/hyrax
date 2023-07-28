@@ -40,7 +40,7 @@ module Hyrax
       end
 
       def query_service
-        Hyrax::Statistics::QueryService.new
+        Hyrax::Statistics::ValkyrieQueryService.new
       end
 
       # How many points are in this data set
