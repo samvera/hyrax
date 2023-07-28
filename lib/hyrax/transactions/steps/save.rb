@@ -29,6 +29,7 @@ module Hyrax
         # @return [Dry::Monads::Result] `Success(work)` if the change_set is
         #   applied and the resource is saved;
         #   `Failure([#to_s, change_set.resource])`, otherwise.
+        # rubocop:disable Metrics/MethodLength
         def call(change_set, user: nil)
           begin
             valid_future_date?(change_set.lease, 'lease_expiration_date') if change_set.lease
@@ -51,13 +52,13 @@ module Hyrax
           publish_changes(resource: saved, user: user, new: unsaved.new_record, new_collections: new_collections)
           Success(saved)
         end
+        # rubocop:disable Metrics/MethodLength
 
         def valid_future_date?(item, attribute)
-          raise StandardError.new 'Must be a future date' if item.fields[attribute] < Time.zone.now
+          raise StandardError, "#{item.model} must use a future date" if item.fields[attribute] < Time.zone.now
         end
 
         def save_leases_and_embargoes(unsaved)
-          binding.pry
           if unsaved.embargo.present?
             unsaved.embargo.embargo_release_date = unsaved.embargo.embargo_release_date&.to_datetime
             unsaved.embargo = @persister.save(resource: unsaved.embargo)
