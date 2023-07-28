@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
+RSpec.describe Hyrax::Actors::InterpretVisibilityActor, unless: Hyrax.config.use_valkyrie? do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
   let(:curation_concern) { GenericWork.new }

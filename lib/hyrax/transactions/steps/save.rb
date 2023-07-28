@@ -31,9 +31,11 @@ module Hyrax
         #   `Failure([#to_s, change_set.resource])`, otherwise.
         def call(change_set, user: nil)
           begin
+            valid_future_date?(change_set.lease, 'lease_expiration_date') if change_set.lease
+            valid_future_date?(change_set.embargo, 'embargo_release_date') if change_set.embargo
             new_collections = changed_collection_membership(change_set)
             unsaved = change_set.sync
-            update_embargoes_and_leases(unsaved)
+            save_leases_and_embargoes(unsaved)
             saved = @persister.save(resource: unsaved)
           rescue StandardError => err
             return Failure(["Failed save on #{change_set}\n\t#{err.message}", change_set.resource])
@@ -50,7 +52,12 @@ module Hyrax
           Success(saved)
         end
 
-        def update_embargoes_and_leases(unsaved)
+        def valid_future_date?(item, attribute)
+          raise StandardError.new 'Must be a future date' if item.fields[attribute] < Time.zone.now
+        end
+
+        def save_leases_and_embargoes(unsaved)
+          binding.pry
           if unsaved.embargo.present?
             unsaved.embargo.embargo_release_date = unsaved.embargo.embargo_release_date&.to_datetime
             unsaved.embargo = @persister.save(resource: unsaved.embargo)
