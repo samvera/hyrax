@@ -325,7 +325,10 @@ custom_queries = [Hyrax::CustomQueries::Navigators::CollectionMembers,
                   Hyrax::CustomQueries::FindCollectionsByType,
                   Hyrax::CustomQueries::FindFileMetadata,
                   Hyrax::CustomQueries::FindIdsByModel,
-                  Hyrax::CustomQueries::FindManyByAlternateIds]
+                  Hyrax::CustomQueries::FindManyByAlternateIds,
+                  Hyrax::CustomQueries::FindModelsByAccess,
+                  Hyrax::CustomQueries::FindCountBy,
+                  Hyrax::CustomQueries::FindByDateRange]
 custom_queries.each do |handler|
   Hyrax.query_service.custom_queries.register_query_handler(handler)
 end
