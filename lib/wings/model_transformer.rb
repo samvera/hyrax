@@ -34,7 +34,7 @@ module Wings
     #
     # @param pcdm_object [ActiveFedora::Base]
     #
-    # @return [::Valkyrie::Resource] a resource mirroiring `pcdm_object`
+    # @return [::Valkyrie::Resource] a resource mirroring `pcdm_object`
     def self.for(pcdm_object)
       new(pcdm_object: pcdm_object).build
     end
@@ -53,7 +53,10 @@ module Wings
       attrs = attributes.tap { |hash| hash[:new_record] = pcdm_object.new_record? }
       attrs[:alternate_ids] = [::Valkyrie::ID.new(pcdm_object.id)] if pcdm_object.id
 
-      klass.new(**attrs).tap { |resource| ensure_current_permissions(resource) }
+      klass.new(**attrs).tap do |resource|
+        resource.lease = pcdm_object.lease&.valkyrie_resource if pcdm_object.respond_to?(:lease)
+        ensure_current_permissions(resource)
+      end
     end
 
     def ensure_current_permissions(resource)
