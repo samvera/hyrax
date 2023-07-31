@@ -32,8 +32,8 @@ module Hyrax
         # rubocop:disable Metrics/MethodLength
         def call(change_set, user: nil)
           begin
-            valid_future_date?(change_set.lease, 'lease_expiration_date') if change_set.lease
-            valid_future_date?(change_set.embargo, 'embargo_release_date') if change_set.embargo
+            valid_future_date?(change_set.lease, 'lease_expiration_date') if change_set.respond_to?(:lease) && change_set.lease
+            valid_future_date?(change_set.embargo, 'embargo_release_date') if change_set.respond_to?(:embargo) && change_set.embargo
             new_collections = changed_collection_membership(change_set)
             unsaved = change_set.sync
             save_leases_and_embargoes(unsaved)
