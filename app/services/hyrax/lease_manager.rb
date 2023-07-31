@@ -130,7 +130,6 @@ module Hyrax
     def nullify(force: false)
       return false if !force && under_lease?
 
-      # TODO(alishaevn): why isn't this working?
       lease.lease_expiration_date = nil
       lease.visibility_during_lease = nil
       lease.visibility_after_lease = nil
