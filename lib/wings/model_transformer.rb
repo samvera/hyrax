@@ -54,7 +54,7 @@ module Wings
       attrs[:alternate_ids] = [::Valkyrie::ID.new(pcdm_object.id)] if pcdm_object.id
 
       klass.new(**attrs).tap do |resource|
-        resource.lease = pcdm_object.lease&.valkyrie_resource if pcdm_object.respond_to?(:lease)
+        resource.lease = pcdm_object.lease&.valkyrie_resource if pcdm_object.respond_to?(:lease) && pcdm_object.lease
         ensure_current_permissions(resource)
       end
     end
