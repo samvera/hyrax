@@ -43,6 +43,7 @@ module Wings
     # Builds a `Valkyrie::Resource` equivalent to the `pcdm_object`
     #
     # @return [::Valkyrie::Resource] a resource mirroring `pcdm_object`
+    # rubocop:disable Metrics/AbcSize
     def build
       klass = cache.fetch(pcdm_object.class) do
         OrmConverter.to_valkyrie_resource_class(klass: pcdm_object.class)
@@ -57,6 +58,7 @@ module Wings
         resource.lease = pcdm_object.lease&.valkyrie_resource if pcdm_object.respond_to?(:lease) && pcdm_object.lease
         ensure_current_permissions(resource)
       end
+      # rubocop:enable Metrics/AbcSize
     end
 
     def ensure_current_permissions(resource)
