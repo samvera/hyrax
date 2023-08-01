@@ -33,7 +33,8 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
         expect(work.errors.full_messages).to eq(converted_work.errors.full_messages)
       end
     end
-    context 'with an invalid FileSet object' do
+    context 'with an invalid FileSet object', unless: Hyrax.config.use_valkyrie? do
+      # valkyrie backed resources do not respond to `valid?`.
       it 'round trip converts to an FileSet object this is also invalid' do
         file_set = ::FileSet.new(lease_expiration_date: 1.day.ago)
         expect(file_set).not_to be_valid
