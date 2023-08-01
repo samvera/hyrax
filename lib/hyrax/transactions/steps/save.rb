@@ -29,11 +29,12 @@ module Hyrax
         # @return [Dry::Monads::Result] `Success(work)` if the change_set is
         #   applied and the resource is saved;
         #   `Failure([#to_s, change_set.resource])`, otherwise.
-        # rubocop:disable Metrics/MethodLength
+        # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
         def call(change_set, user: nil)
           begin
             if change_set.respond_to?(:lease) && change_set.lease
               valid_future_date?(change_set.lease, 'lease_expiration_date')
+              # account for all members and levels
               add_lease_to_file_set(change_set) if change_set.model.member_ids.present?
             end
             valid_future_date?(change_set.embargo, 'embargo_release_date') if change_set.respond_to?(:embargo) && change_set.embargo
@@ -56,7 +57,7 @@ module Hyrax
           publish_changes(resource: saved, user: user, new: unsaved.new_record, new_collections: new_collections)
           Success(saved)
         end
-        # rubocop:disable Metrics/MethodLength
+        # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
         private
 
@@ -75,7 +76,10 @@ module Hyrax
           unsaved.lease = @persister.save(resource: unsaved.lease)
         end
 
+        # rubocop:disable Metrics/AbcSize
         def add_lease_to_file_set(change_set)
+          # use recursion to make sure that the change_set that applies to the member is getting
+          # saved and published/indexed
           change_set.model.member_ids.each do |member|
             fs = Hyrax.query_service.find_by(id: member.id)
             lease_updates = change_set.lease.instance_variable_get(:@_changes).values.select { |v| v }.any?
@@ -88,10 +92,12 @@ module Hyrax
             else
               work_lease_manager = Hyrax::LeaseManager.new(resource: change_set.model)
               work_lease_manager.copy_lease_to(target: fs)
-              fs = Hyrax.persister.save(resource: fs)
+              # confirm tomorrow if the assignment below is in fact useless
+              fs = Hyrax.persister.save(resource: fs) # rubocop:disable Lint/UselessAssignment
             end
           end
         end
+        # rubocop:enable Metrics/AbcSize
 
         ##
         # @param [Hyrax::ChangeSet] change_set
