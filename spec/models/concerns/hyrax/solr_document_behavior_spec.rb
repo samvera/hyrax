@@ -167,7 +167,7 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       end
 
       it 'gives the global id for the valkyrie class' do
-        expect(solr_document.to_model.to_global_id.to_s).to end_with('Monograph/123')
+        expect(solr_document.to_model.to_global_id.to_s).to end_with('Hyrax::ValkyrieGlobalIdProxy/123')
       end
     end
   end

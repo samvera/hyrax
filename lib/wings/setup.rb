@@ -102,7 +102,10 @@ custom_queries = [Hyrax::CustomQueries::Navigators::CollectionMembers,
                   Wings::CustomQueries::FindCollectionsByType,
                   Wings::CustomQueries::FindFileMetadata, # override Hyrax::CustomQueries::FindFileMetadata
                   Wings::CustomQueries::FindIdsByModel,
-                  Wings::CustomQueries::FindManyByAlternateIds] # override Hyrax::CustomQueries::FindManyByAlternateIds
+                  Wings::CustomQueries::FindManyByAlternateIds,
+                  Hyrax::CustomQueries::FindModelsByAccess,
+                  Hyrax::CustomQueries::FindCountBy,
+                  Hyrax::CustomQueries::FindByDateRange] # override Hyrax::CustomQueries::FindManyByAlternateIds
 custom_queries.each do |query_handler|
   Valkyrie.config.metadata_adapter.query_service.custom_queries.register_query_handler(query_handler)
 end

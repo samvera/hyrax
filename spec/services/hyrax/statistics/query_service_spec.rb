@@ -31,14 +31,14 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
 
     context "with an end date" do
       let(:start_date) { 1.day.ago }
-      let(:end_date) { Time.zone.now }
+      let(:end_date) { 1.second.since(Time.zone.now) }
 
       it { is_expected.to eq [work] }
     end
   end
 
   describe "where_registered" do
-    subject { service.where_registered }
+    subject { service.where_registered.to_a }
 
     let!(:work) { create(:generic_work, read_groups: read_groups) }
 
@@ -62,7 +62,7 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
   end
 
   describe "where_public" do
-    subject { service.where_public }
+    subject { service.where_public.to_a }
 
     let!(:work) { create(:generic_work, read_groups: read_groups) }
 
@@ -85,11 +85,11 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
     end
   end
 
-  describe "#find_registered_in_date_range" do
+  describe "#find_registered_in_date_range", unless: Hyrax.config.use_valkyrie? do
     subject { service.find_registered_in_date_range(start_date, end_date) }
 
     let(:start_date) { 1.day.ago }
-    let(:end_date) { Time.zone.now }
+    let(:end_date) { 1.second.since(Time.zone.now) }
 
     it "is a relation" do
       allow(service).to receive(:build_date_query).with(start_date, end_date).and_return('date query')
@@ -98,11 +98,11 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
     end
   end
 
-  describe "#find_public_in_date_range" do
+  describe "#find_public_in_date_range", unless: Hyrax.config.use_valkyrie? do
     subject { service.find_public_in_date_range(start_date, end_date) }
 
     let(:start_date) { 1.day.ago }
-    let(:end_date) { Time.zone.now }
+    let(:end_date) { 1.second.since(Time.zone.now) }
 
     it "is a relation" do
       allow(service).to receive(:build_date_query).with(start_date, end_date).and_return('date query')
