@@ -130,6 +130,7 @@ module Wings
 
     ##
     # apply attributes to the ActiveFedora model
+    # rubocop:disable Metrics/MethodLength
     def apply_attributes_to_model(af_object)
       case af_object
       when Hydra::AccessControl
@@ -153,6 +154,7 @@ module Wings
         af_object.files.build_or_set(files) if files
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     # Add attributes from resource which aren't AF properties into af_object
     def add_access_control_attributes(af_object)
