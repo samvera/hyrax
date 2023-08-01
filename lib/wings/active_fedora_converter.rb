@@ -141,6 +141,11 @@ module Wings
         members = Array.wrap(converted_attrs.delete(:members))
         files = converted_attrs.delete(:files)
         af_object.attributes = converted_attrs
+        # af_object.lease.class has the same name as resource.lease.class; however, each class has a different object_id
+        # so a type mismatch happens. the code below coerces the one object into the other
+        # TODO(alishaevn): fix this!
+        resource_lease = af_object.reflections.fetch(:lease).klass.new(resource.lease.attributes.except(:internal_resource, :created_at, :updated_at, :new_record))
+        af_object.lease = resource_lease
         members.empty? ? af_object.try(:ordered_members)&.clear : af_object.try(:ordered_members=, members)
         af_object.try(:members)&.replace(members)
         af_object.files.build_or_set(files) if files
