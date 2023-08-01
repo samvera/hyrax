@@ -58,7 +58,7 @@ module Hyrax
         end
 
         def query_service
-          Hyrax::Statistics::QueryService.new
+          Hyrax::Statistics::ValkyrieQueryService.new
         end
       end
     end

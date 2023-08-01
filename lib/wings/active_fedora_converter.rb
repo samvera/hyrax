@@ -93,7 +93,7 @@ module Wings
     # then the id hasn't been minted and shouldn't yet be set.
     # @return [String]
     def id
-      return resource[:id].to_s if resource[:id]&.is_a?(::Valkyrie::ID) && resource[:id].present?
+      return resource[:id].to_s if resource[:id].present? && resource[:id]&.is_a?(::Valkyrie::ID)
       return "" unless resource.respond_to?(:alternate_ids)
 
       resource.alternate_ids.first.to_s
