@@ -32,9 +32,13 @@ module Hyrax
         # rubocop:disable Metrics/MethodLength
         def call(change_set, user: nil)
           begin
-            valid_future_date?(change_set.lease, 'lease_expiration_date') if change_set.respond_to?(:lease) && change_set.lease
+            if change_set.respond_to?(:lease) && change_set.lease
+              valid_future_date?(change_set.lease, 'lease_expiration_date')
+              add_lease_to_file_set(change_set) if change_set.model.member_ids.present?
+            end
             valid_future_date?(change_set.embargo, 'embargo_release_date') if change_set.respond_to?(:embargo) && change_set.embargo
             new_collections = changed_collection_membership(change_set)
+
             unsaved = change_set.sync
             save_leases_and_embargoes(unsaved)
             saved = @persister.save(resource: unsaved)
@@ -54,6 +58,8 @@ module Hyrax
         end
         # rubocop:disable Metrics/MethodLength
 
+        private
+
         def valid_future_date?(item, attribute)
           raise StandardError, "#{item.model} must use a future date" if item.fields[attribute] < Time.zone.now
         end
@@ -69,7 +75,23 @@ module Hyrax
           unsaved.lease = @persister.save(resource: unsaved.lease)
         end
 
-        private
+        def add_lease_to_file_set(change_set)
+          change_set.model.member_ids.each do |member|
+            fs = Hyrax.query_service.find_by(id: member.id)
+            lease_updates = change_set.lease.instance_variable_get(:@_changes).values.select { |v| v }.any?
+
+            if fs.lease && lease_updates
+              fs.lease.lease_expiration_date = change_set.lease.fields['lease_expiration_date']
+              fs.lease.visibility_during_lease = change_set.lease.fields['visibility_during_lease']
+              fs.lease.visibility_after_lease = change_set.lease.fields['visibility_after_lease']
+              fs.lease = Hyrax.persister.save(resource: fs.lease)
+            else
+              work_lease_manager = Hyrax::LeaseManager.new(resource: change_set.model)
+              work_lease_manager.copy_lease_to(target: fs)
+              fs = Hyrax.persister.save(resource: fs)
+            end
+          end
+        end
 
         ##
         # @param [Hyrax::ChangeSet] change_set
