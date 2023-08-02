@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Actors::LeaseActor do
 
   describe "#destroy" do
     let(:work) do
-      FactoryBot.valkyrie_create(:hyrax_resource, :lease: lease)
+      FactoryBot.valkyrie_create(:hyrax_resource, lease: lease)
     end
     let(:lease) { FactoryBot.create(:hyrax_lease) }
 
