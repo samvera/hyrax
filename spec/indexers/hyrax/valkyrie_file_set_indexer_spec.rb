@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::ValkyrieFileSetIndexer do
+RSpec.describe Hyrax::ValkyrieFileSetIndexer, if: Hyrax.config.use_valkyrie? do
   include Hyrax::FactoryHelpers
 
   let(:fileset_id) { 'fs1' }
@@ -266,6 +266,31 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
         allow(mock_file).to receive(:format_label).and_return(['Portable Network Graphics'])
       end
       it { is_expected.to eq ['Portable Network Graphics'] }
+    end
+  end
+
+  describe '#index_lease' do
+    before do
+      allow(file_set).to receive(:lease).and_return(lease)
+    end
+
+    context 'with a valid lease' do
+      let(:lease) { FactoryBot.create(:hyrax_lease) }
+
+      xit 'sets the lease expiration date and visibility settings' do
+        # wip
+
+        expect(subject['lease_expiration_date_dtsi']).to eq lease.lease_expiration_date
+        expect(subject['visibility_after_lease_ssim']).to eq lease.lease_expiration_date
+        expect(subject['visibility_during_lease_ssim']).to eq lease.lease_expiration_date
+      end
+    end
+
+    context 'with an expired lease' do
+      let(:lease) { FactoryBot.create(:hyrax_lease, :expired) }
+
+      xit 'sets the lease expiration date and visibility settings' do
+      end
     end
   end
 end
