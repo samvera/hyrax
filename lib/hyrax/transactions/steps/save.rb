@@ -75,7 +75,7 @@ module Hyrax
           unsaved.lease = @persister.save(resource: unsaved.lease)
         end
 
-        # rubocop:disable Metrics/AbcSize
+        # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         def add_lease_to_members(change_set)
           # TODO: account for all members and levels, ref: #6131
           # use recursion to ensure the change_set that applies to the member is getting saved and published/indexed
@@ -103,7 +103,7 @@ module Hyrax
             @publisher.publish('object.metadata.updated', object: item, user: user)
           end
         end
-        # rubocop:enable Metrics/AbcSize
+        # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
         ##
         # @param [Hyrax::ChangeSet] change_set
