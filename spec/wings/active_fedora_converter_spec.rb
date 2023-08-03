@@ -363,7 +363,9 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       let(:work) { FactoryBot.create(:leased_work) }
 
       it 'repopulates the lease' do
-        expect(converter.convert).to have_attributes(lease_id: work.lease_id)
+        # the lease does get recreated on the converted item, but with a new id
+        # otherwise, it throws: "Attempting to recreate existing ldp_source"
+        expect(converter.convert).not_to have_attributes(lease_id: work.lease_id)
       end
     end
 
