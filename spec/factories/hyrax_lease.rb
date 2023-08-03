@@ -12,7 +12,7 @@ FactoryBot.define do
     end
 
     trait :expired do
-      lease_expiration_date { (Time.zone.today - 1).to_datetime }
+      lease_expiration_date { (Time.zone.today - 2).to_datetime }
     end
   end
 end
