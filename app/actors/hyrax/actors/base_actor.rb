@@ -71,7 +71,8 @@ module Hyrax
       def save(env, use_valkyrie: false)
         return env.curation_concern.save unless use_valkyrie
 
-        resource = valkyrie_save(resource: env.curation_concern.valkyrie_resource)
+        # don't run validations again on the converted object if they've already passed
+        resource = valkyrie_save(resource: env.curation_concern.valkyrie_resource, valid: env.curation_concern.save)
 
         # we need to manually set the id and reload, because the actor stack requires
         # `env.curation_concern` to be the exact same instance throughout.
@@ -115,9 +116,9 @@ module Hyrax
         attributes.select { |_, v| v.respond_to?(:select) && !v.respond_to?(:read) }
       end
 
-      def valkyrie_save(resource:)
+      def valkyrie_save(resource:, valid:)
         permissions = resource.permission_manager.acl.permissions
-        resource    = Hyrax.persister.save(resource: resource)
+        resource    = Hyrax.persister.save(resource: resource, valid: valid)
 
         resource.permission_manager.acl.permissions = permissions
         resource.permission_manager.acl.save

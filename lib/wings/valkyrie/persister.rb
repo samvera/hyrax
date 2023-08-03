@@ -23,7 +23,7 @@ module Wings
       # Persists a resource using ActiveFedora
       # @param [Valkyrie::Resource] resource
       # @return [Valkyrie::Resource] the persisted/updated resource
-      def save(resource:)
+      def save(resource:, valid: true)
         af_object = resource_factory.from_resource(resource: resource)
 
         check_lock_tokens(af_object: af_object, resource: resource)
@@ -31,9 +31,8 @@ module Wings
         # the #save! api differs between ActiveFedora::Base and ActiveFedora::File objects,
         # if we get a falsey response, we expect we have a File that has failed to save due
         # to empty content
-        # we disable validation on the Active Fedora object
-        # because we've already done validation as a Valkyrie object
-        af_object.save!(validate: false) ||
+        # we disable validation on the Active Fedora object, only if validations have already been run and passed
+        af_object.save!(validate: !valid) ||
           raise(FailedSaveError.new("#{af_object.class}#save! returned non-true. It might be missing required content.", obj: af_object))
 
         resource_factory.to_resource(object: af_object)
