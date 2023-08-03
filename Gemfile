@@ -5,6 +5,7 @@ gemspec
 
 group :development, :test do
   gem 'benchmark-ips'
+  gem 'bootsnap', require: false
   gem 'easy_translate'
   gem 'i18n-tasks'
   gem 'okcomputer'
