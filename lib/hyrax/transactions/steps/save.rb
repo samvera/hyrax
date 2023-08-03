@@ -93,7 +93,6 @@ module Hyrax
             else
               work_lease_manager = Hyrax::LeaseManager.new(resource: change_set.model)
               work_lease_manager.copy_lease_to(target: item)
-              # confirm tomorrow if the assignment below is in fact useless
               item = Hyrax.persister.save(resource: item) # rubocop:disable Lint/UselessAssignment
             end
 
