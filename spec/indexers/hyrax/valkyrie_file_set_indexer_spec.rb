@@ -239,6 +239,32 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer, if: Hyrax.config.use_valkyrie? do
         expect(subject['original_file_id_ssi']).to eq "#{file_set.id}/files/#{file_set.original_file_id}"
       end
     end
+
+    context 'with a valid lease' do
+      let(:lease) { FactoryBot.create(:hyrax_lease) }
+
+      before { allow(file_set).to receive(:lease_id).and_return(lease.id) }
+
+      it 'sets the lease expiration date and visibility settings' do
+        expect(subject['lease_expiration_date_dtsi']).to eq lease.lease_expiration_date
+        expect(subject['visibility_after_lease_ssim']).to eq lease.visibility_after_lease
+        expect(subject['visibility_during_lease_ssim']).to eq lease.visibility_during_lease
+        expect(subject['lease_history_ssim']).to be nil
+      end
+    end
+
+    context 'with an expired lease' do
+      let(:lease) { FactoryBot.create(:hyrax_lease, :expired) }
+
+      before { allow(file_set).to receive(:lease_id).and_return(lease.id) }
+
+      it 'sets the lease expiration date and visibility settings' do
+        expect(subject['lease_expiration_date_dtsi']).to be nil
+        expect(subject['visibility_after_lease_ssim']).to be nil
+        expect(subject['visibility_during_lease_ssim']).to be nil
+        expect(subject['lease_history_ssim']).to eq lease.lease_history
+      end
+    end
   end
 
   describe '#file_format' do
@@ -266,31 +292,6 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer, if: Hyrax.config.use_valkyrie? do
         allow(mock_file).to receive(:format_label).and_return(['Portable Network Graphics'])
       end
       it { is_expected.to eq ['Portable Network Graphics'] }
-    end
-  end
-
-  describe '#index_lease' do
-    before do
-      allow(file_set).to receive(:lease).and_return(lease)
-    end
-
-    context 'with a valid lease' do
-      let(:lease) { FactoryBot.create(:hyrax_lease) }
-
-      xit 'sets the lease expiration date and visibility settings' do
-        # wip
-
-        expect(subject['lease_expiration_date_dtsi']).to eq lease.lease_expiration_date
-        expect(subject['visibility_after_lease_ssim']).to eq lease.lease_expiration_date
-        expect(subject['visibility_during_lease_ssim']).to eq lease.lease_expiration_date
-      end
-    end
-
-    context 'with an expired lease' do
-      let(:lease) { FactoryBot.create(:hyrax_lease, :expired) }
-
-      xit 'sets the lease expiration date and visibility settings' do
-      end
     end
   end
 end
