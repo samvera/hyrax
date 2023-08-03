@@ -77,7 +77,6 @@ module Hyrax
 
       release(force: true)
       nullify(force: true)
-      # TODO(alishaevn): why isn't this working?
       lease.lease_history += [lease_record]
     end
 
