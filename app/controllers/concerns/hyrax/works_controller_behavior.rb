@@ -180,6 +180,7 @@ module Hyrax
 
     ##
     # @return [#errors]
+    # rubocop:disable Metrics/MethodLength
     def create_valkyrie_work
       form = build_form
       # fallback to an empty array to avoid: # NoMethodError: undefined method `has_key?' for nil:NilClass
@@ -199,6 +200,7 @@ module Hyrax
       @curation_concern = result.value_or { return after_create_error(transaction_err_msg(result)) }
       after_create_response
     end
+    # rubocop:enable Metrics/MethodLength
 
     def update_valkyrie_work
       form = build_form
