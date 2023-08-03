@@ -56,11 +56,10 @@ RSpec.describe Hyrax::GenericWorksController do
     describe 'failed create', :clean_repo do
       before { post :create, params: { generic_work: {}, format: :json } }
       it "returns 422 and the errors" do
-        resource = assigns[:curation_concern].respond_to?(:errors) ? assigns[:curation_concern] : assigns[:form]
-
         expect(response.code).to eq "422"
 
         # TODO: adjust Hyrax::WorksControllerBehavior#form_err_msg to return the same type of message that Hyrax::WorksControllerBehavior#create does
+        # resource = assigns[:curation_concern].respond_to?(:errors) ? assigns[:curation_concern] : assigns[:form]
         # so that the below expectation applies
         # expect(response).to respond_unprocessable_entity(errors: resource.errors.messages.as_json)
       end
