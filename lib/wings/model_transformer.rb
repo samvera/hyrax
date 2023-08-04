@@ -34,7 +34,7 @@ module Wings
     #
     # @param pcdm_object [ActiveFedora::Base]
     #
-    # @return [::Valkyrie::Resource] a resource mirroiring `pcdm_object`
+    # @return [::Valkyrie::Resource] a resource mirroring `pcdm_object`
     def self.for(pcdm_object)
       new(pcdm_object: pcdm_object).build
     end
@@ -43,6 +43,7 @@ module Wings
     # Builds a `Valkyrie::Resource` equivalent to the `pcdm_object`
     #
     # @return [::Valkyrie::Resource] a resource mirroring `pcdm_object`
+    # rubocop:disable Metrics/AbcSize
     def build
       klass = cache.fetch(pcdm_object.class) do
         OrmConverter.to_valkyrie_resource_class(klass: pcdm_object.class)
@@ -159,7 +160,6 @@ module Wings
     def append_embargo(attrs)
       return unless pcdm_object.try(:embargo)
       embargo_attrs = pcdm_object.embargo.attributes.symbolize_keys
-      embargo_attrs[:embargo_history] = embargo_attrs[:embargo_history].to_a
       embargo_attrs[:id] = ::Valkyrie::ID.new(embargo_attrs[:id]) if embargo_attrs[:id]
 
       attrs[:embargo] = Hyrax::Embargo.new(**embargo_attrs)
@@ -168,7 +168,6 @@ module Wings
     def append_lease(attrs)
       return unless pcdm_object.try(:lease)
       lease_attrs = pcdm_object.lease.attributes.symbolize_keys
-      lease_attrs[:lease_history] = lease_attrs[:embargo_history].to_a
       lease_attrs[:id] = ::Valkyrie::ID.new(lease_attrs[:id]) if lease_attrs[:id]
 
       attrs[:lease] = Hyrax::Lease.new(**lease_attrs)

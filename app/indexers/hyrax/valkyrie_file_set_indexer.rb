@@ -22,7 +22,9 @@ module Hyrax
         solr_doc['hasRelatedMediaFragment_ssim'] = resource.representative_id.to_s
         solr_doc['hasRelatedImage_ssim']         = resource.thumbnail_id.to_s
 
+        index_lease(solr_doc)
         index_embargo(solr_doc)
+
         # Add in metadata from the original file.
         file_metadata = Hyrax::FileSetFileService.new(file_set: resource).original_file
         return solr_doc unless file_metadata
@@ -116,6 +118,18 @@ module Hyrax
       elsif file.format_label.present?
         file.format_label
       end
+    end
+
+    def index_lease(doc)
+      if resource.lease&.active?
+        doc['lease_expiration_date_dtsi'] = resource.lease.lease_expiration_date&.to_datetime
+        doc['visibility_after_lease_ssim'] = resource.lease.visibility_after_lease
+        doc['visibility_during_lease_ssim'] = resource.lease.visibility_during_lease
+      else
+        doc['lease_history_ssim'] = resource&.lease&.lease_history
+      end
+
+      doc
     end
   end
 
