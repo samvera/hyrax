@@ -3,7 +3,7 @@
 module Hyrax
   ##
   # Indexes Hyrax::FileSet objects
-  class ValkyrieFileSetIndexer < Hyrax::ValkyrieIndexer
+  class ValkyrieFileSetIndexer < Hyrax::ValkyrieIndexer # rubocop:disable Metrics/ClassLength
     include Hyrax::ResourceIndexer
     include Hyrax::PermissionIndexer
     include Hyrax::VisibilityIndexer
