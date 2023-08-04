@@ -63,8 +63,11 @@ module Hyrax
           .release!
       end
 
+      # Creates or updates an existing lease on a member to match the lease on the parent work
+      # @param [Array<Valkyrie::Resource>] members
+      # @param [Hyrax::Work] work
       # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-      def add_or_update_lease_on_members(members, work)
+      def create_or_update_lease_on_members(members, work)
         # TODO: account for all members and levels, not just file sets. ref: #6131
 
         members.each do |member|

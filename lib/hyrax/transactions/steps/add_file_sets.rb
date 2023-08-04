@@ -30,7 +30,7 @@ module Hyrax
                 Hyrax.query_service.find_by(id: member) if Hyrax.query_service.find_by(id: member).is_a? Hyrax::FileSet
               end
 
-              Hyrax::LeaseManager.add_or_update_lease_on_members(file_sets, obj)
+              Hyrax::LeaseManager.create_or_update_lease_on_members(file_sets, obj)
             end
 
             Success(obj)
