@@ -17,10 +17,11 @@ RSpec.describe Hyrax::Actors::EmbargoActor do
       end
 
       it 'removes the embargo' do
-        expect { actor.destroy }
-          .to change { embargo_manager.under_embargo? }
-          .from(true)
-          .to false
+        actor.destroy
+
+        expect(work.embargo.embargo_release_date).to eq nil
+        expect(work.embargo.visibility_after_embargo).to eq nil
+        expect(work.embargo.visibility_during_embargo).to eq nil
       end
 
       it 'releases the embargo' do
