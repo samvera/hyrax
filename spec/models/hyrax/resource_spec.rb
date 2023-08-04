@@ -35,7 +35,7 @@ RSpec.describe Hyrax::Resource do
       resource.lease = Hyrax.persister.save(resource: lease)
 
       expect(Hyrax.persister.save(resource: resource).lease)
-        .to have_attributes(lease_expiration_date: expiration_date)
+        .to have_attributes(lease_expiration_date: lease.lease_expiration_date)
     end
   end
 
