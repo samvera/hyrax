@@ -22,6 +22,7 @@ module Hyrax
         solr_doc['hasRelatedMediaFragment_ssim'] = resource.representative_id.to_s
         solr_doc['hasRelatedImage_ssim']         = resource.thumbnail_id.to_s
 
+        index_embargo(solr_doc)
         # Add in metadata from the original file.
         file_metadata = Hyrax::FileSetFileService.new(file_set: resource).original_file
         return solr_doc unless file_metadata
@@ -116,5 +117,17 @@ module Hyrax
         file.format_label
       end
     end
+  end
+
+  def index_embargo(doc)
+    if resource.embargo&.active?
+      doc['embargo_release_date_dtsi'] = resource.embargo.embargo_release_date&.to_datetime
+      doc['visibility_after_embargo_ssim'] = resource.embargo.visibility_after_embargo
+      doc['visibility_during_embargo_ssim'] = resource.embargo.visibility_during_embargo
+    else
+      doc['embargo_history_ssim'] = resource&.embargo&.embargo_history
+    end
+
+    doc
   end
 end
