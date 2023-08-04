@@ -192,7 +192,7 @@ module Hyrax
     # @raise [RuntimeError] if admin set cannot be persisted
     def create!
       admin_set.creator = [creating_user.user_key] if creating_user
-      updated_admin_set = Hyrax.persister.save(resource: admin_set, perform_af_validation: true).tap do |result|
+      updated_admin_set = Hyrax.persister.save(resource: admin_set).tap do |result|
         if result
           ActiveRecord::Base.transaction do
             permission_template = PermissionTemplate.find_by(source_id: result.id.to_s) ||
