@@ -21,7 +21,6 @@ RSpec.describe Hyrax::Resource do
 
     it 'saves the embargo id' do
       resource.embargo = Hyrax.persister.save(resource: embargo)
-      release_date = Hyrax.config.use_valkyrie? ? embargo.embargo_release_date : embargo.embargo_release_date.to_datetime
 
       expect(Hyrax.persister.save(resource: resource).embargo)
         .to have_attributes(embargo_release_date: embargo.embargo_release_date)

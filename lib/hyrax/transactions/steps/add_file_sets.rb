@@ -29,8 +29,8 @@ module Hyrax
               Hyrax.query_service.find_by(id: member) if Hyrax.query_service.find_by(id: member).is_a? Hyrax::FileSet
             end
 
-            Hyrax::LeaseManager.create_or_update_lease_on_members(file_sets, obj)if obj.lease
-            Hyrax::EmbargoManager.create_or_update_embargo_on_members(file_sets, obj)if obj.embargo
+            Hyrax::LeaseManager.create_or_update_lease_on_members(file_sets, obj) if obj.lease
+            Hyrax::EmbargoManager.create_or_update_embargo_on_members(file_sets, obj) if obj.embargo
             Success(obj)
           else
             Failure[:failed_to_attach_file_sets, uploaded_files]

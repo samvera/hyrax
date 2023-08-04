@@ -75,7 +75,7 @@ module Hyrax
   #   resource.visibility # => 'open'
   #   manager.enforced? => false
   #
-  class EmbargoManager
+  class EmbargoManager # robocop:disable Metrics/ClassLength
     ##
     # @!attribute [rw] resource
     #   @return [Hyrax::Resource]
