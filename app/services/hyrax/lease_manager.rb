@@ -19,7 +19,7 @@ module Hyrax
   #      but not released.
   #    - "Deactivate" means that the existing lease will be removed
   #
-  class LeaseManager
+  class LeaseManager # rubocop:disable Metrics/ClassLength
     ##
     # @!attribute [rw] resource
     #   @return [Hyrax::Resource]
@@ -62,6 +62,32 @@ module Hyrax
         new(resource: resource, query_service: query_service)
           .release!
       end
+
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      def add_or_update_lease_on_members(members, work)
+        # TODO: account for all members and levels, not just file sets. ref: #6131
+
+        members.each do |member|
+          member_lease_needs_updating = work.lease.updated_at > member.lease&.updated_at if member.lease
+
+          if member.lease && member_lease_needs_updating
+            member.lease.lease_expiration_date = work.lease['lease_expiration_date']
+            member.lease.visibility_during_lease = work.lease['visibility_during_lease']
+            member.lease.visibility_after_lease = work.lease['visibility_after_lease']
+            member.lease = Hyrax.persister.save(resource: member.lease)
+          else
+            work_lease_manager = Hyrax::LeaseManager.new(resource: work)
+            work_lease_manager.copy_lease_to(target: member)
+            member = Hyrax.persister.save(resource: member)
+          end
+
+          user ||= ::User.find_by_user_key(member.depositor)
+          # the line below works in that it indexes the file set with the necessary lease properties
+          # I do not know however if this is the best event_id to pass
+          Hyrax.publisher.publish('object.metadata.updated', object: member, user: user)
+        end
+      end
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
     end
 
     # Deactivates the lease and logs a message to the lease_history property
@@ -172,8 +198,6 @@ module Hyrax
     def core_attribute_keys
       [:visibility_after_lease, :visibility_during_lease, :lease_expiration_date]
     end
-
-    protected
 
     # Create the log message used when deactivating a lease
     def lease_history_message(state, deactivate_date, expiration_date, visibility_during, visibility_after)

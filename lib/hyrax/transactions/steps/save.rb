@@ -32,15 +32,12 @@ module Hyrax
         # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
         def call(change_set, user: nil)
           begin
-            if change_set.respond_to?(:lease) && change_set.lease
-              valid_future_date?(change_set.lease, 'lease_expiration_date')
-              add_lease_to_members(change_set) if change_set.model.member_ids&.present?
-            end
+            valid_future_date?(change_set.lease, 'lease_expiration_date') if change_set.respond_to?(:lease) && change_set.lease
             valid_future_date?(change_set.embargo, 'embargo_release_date') if change_set.respond_to?(:embargo) && change_set.embargo
             new_collections = changed_collection_membership(change_set)
 
             unsaved = change_set.sync
-            save_leases_and_embargoes(unsaved)
+            save_lease_or_embargo(unsaved)
             saved = @persister.save(resource: unsaved)
           rescue StandardError => err
             return Failure(["Failed save on #{change_set}\n\t#{err.message}", change_set.resource])
@@ -64,7 +61,7 @@ module Hyrax
           raise StandardError, "#{item.model} must use a future date" if item.fields[attribute] < Time.zone.now
         end
 
-        def save_leases_and_embargoes(unsaved)
+        def save_lease_or_embargo(unsaved)
           if unsaved.embargo.present?
             unsaved.embargo.embargo_release_date = unsaved.embargo.embargo_release_date&.to_datetime
             unsaved.embargo = @persister.save(resource: unsaved.embargo)
@@ -74,35 +71,6 @@ module Hyrax
           unsaved.lease.lease_expiration_date = unsaved.lease.lease_expiration_date&.to_datetime
           unsaved.lease = @persister.save(resource: unsaved.lease)
         end
-
-        # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-        def add_lease_to_members(change_set)
-          # TODO: account for all members and levels, ref: #6131
-          # use recursion to ensure the change_set that applies to the member is getting saved and published/indexed
-          change_set.model.member_ids&.each do |member|
-            item = Hyrax.query_service.find_by(id: member.id)
-            next unless item.is_a? Hyrax::FileSet
-
-            lease_updates = change_set.lease.instance_variable_get(:@_changes).values.select { |v| v }.any?
-
-            if item.lease && lease_updates
-              item.lease.lease_expiration_date = change_set.lease.fields['lease_expiration_date']
-              item.lease.visibility_during_lease = change_set.lease.fields['visibility_during_lease']
-              item.lease.visibility_after_lease = change_set.lease.fields['visibility_after_lease']
-              item.lease = Hyrax.persister.save(resource: item.lease)
-            else
-              work_lease_manager = Hyrax::LeaseManager.new(resource: change_set.model)
-              work_lease_manager.copy_lease_to(target: item)
-              item = Hyrax.persister.save(resource: item) # rubocop:disable Lint/UselessAssignment
-            end
-
-            user ||= ::User.find_by_user_key(item.depositor)
-            # the line below works in that it indexes the file set with the necessary lease properties
-            # I do not know however if this is the best event_id to pass
-            @publisher.publish('object.metadata.updated', object: item, user: user)
-          end
-        end
-        # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
         ##
         # @param [Hyrax::ChangeSet] change_set

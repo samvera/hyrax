@@ -25,6 +25,14 @@ module Hyrax
         # @return [Dry::Monads::Result]
         def call(obj, uploaded_files: [], file_set_params: [])
           if @handler.new(work: obj).add(files: uploaded_files, file_set_params: file_set_params).attach
+            if obj.lease
+              file_sets = obj.member_ids.map do |member|
+                Hyrax.query_service.find_by(id: member) if Hyrax.query_service.find_by(id: member).is_a? Hyrax::FileSet
+              end
+
+              Hyrax::LeaseManager.add_or_update_lease_on_members(file_sets, obj)
+            end
+
             Success(obj)
           else
             Failure[:failed_to_attach_file_sets, uploaded_files]
