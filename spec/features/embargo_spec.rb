@@ -19,9 +19,7 @@ RSpec.describe 'embargo' do
       click_button 'Save'
 
       # chosen embargo date is on the show page
-      skip 'embargogeddon' do
-        expect(page).to have_content(future_date.to_formatted_s(:standard))
-      end
+      expect(page).to have_content(future_date.to_formatted_s(:standard))
 
       click_link 'Edit'
       click_link 'Embargo Management Page'

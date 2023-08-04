@@ -109,9 +109,7 @@ RSpec.describe Hyrax::EmbargoManager do
 
       before { resource.visibility = embargo.visibility_during_embargo }
 
-      skip 'embargogeddon' do
-        it { is_expected.to be_enforced }
-      end
+      it { is_expected.to be_enforced }
     end
   end
 
@@ -128,13 +126,11 @@ RSpec.describe Hyrax::EmbargoManager do
       end
 
       it 'has embargo attributes' do
-        skip 'embargogeddon' do
-          expect(manager.embargo)
-            .to have_attributes visibility_after_embargo: 'open',
-                                visibility_during_embargo: 'authenticated',
-                                embargo_release_date: an_instance_of(String),
-                                embargo_history: match_array([])
-        end
+        expect(manager.embargo)
+          .to have_attributes visibility_after_embargo: 'open',
+                              visibility_during_embargo: 'authenticated',
+                              embargo_release_date: an_instance_of(String),
+                              embargo_history: match_array([])
       end
     end
   end
@@ -150,12 +146,10 @@ RSpec.describe Hyrax::EmbargoManager do
     context 'with expired embargo' do
       include_context 'with expired embargo'
 
-      skip 'embargogeddon' do
-        it 'ensures the embargo release date is set to nil' do
-          expect(resource.embargo.embargo_release_date).to_not eq nil
-          manager.nullify
-          expect(resource.embargo.embargo_release_date).to eq nil
-        end
+      it 'ensures the embargo release date is set to nil' do
+        expect(resource.embargo.embargo_release_date).to_not eq nil
+        manager.nullify
+        expect(resource.embargo.embargo_release_date).to eq nil
       end
     end
 
@@ -192,21 +186,17 @@ RSpec.describe Hyrax::EmbargoManager do
       it 'ensures the post-embargo visibility is set' do
         manager.release
 
-        skip 'embargogeddon' do
-          expect(resource.visibility).to eq embargo.visibility_after_embargo
-        end
+        expect(resource.visibility).to eq embargo.visibility_after_embargo
       end
 
       context 'and embargo was applied' do
         before { resource.visibility = embargo.visibility_during_embargo }
 
         it 'ensures the post-embargo visibility is set' do
-          skip 'embargogeddon' do
-            expect { manager.release }
-              .to change { resource.visibility }
-              .from(embargo.visibility_during_embargo)
-              .to embargo.visibility_after_embargo
-          end
+          expect { manager.release }
+            .to change { resource.visibility }
+            .from(embargo.visibility_during_embargo)
+            .to embargo.visibility_after_embargo
         end
       end
     end

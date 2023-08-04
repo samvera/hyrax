@@ -141,9 +141,7 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
       let(:work) { FactoryBot.build(:embargoed_work) }
 
       it 'has the correct embargo details' do
-        skip 'embargogeddon' do
-          expect(factory.build.embargo).to have_attributes work.embargo.attributes.symbolize_keys
-        end
+        expect(factory.build.embargo).to have_attributes work.embargo.attributes.symbolize_keys
       end
     end
 
@@ -153,9 +151,7 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
       it 'has the correct embargo id' do
         work.embargo.save
 
-        skip 'embargogeddon' do
-          expect(subject.build.embargo.id.id).to eq work.embargo.id
-        end
+        expect(subject.build.embargo.id.id).to eq work.embargo.id
       end
     end
 
