@@ -130,6 +130,7 @@ module Wings
 
     ##
     # apply attributes to the ActiveFedora model
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
     def apply_attributes_to_model(af_object)
       case af_object
       when Hydra::AccessControl
@@ -141,11 +142,20 @@ module Wings
         members = Array.wrap(converted_attrs.delete(:members))
         files = converted_attrs.delete(:files)
         af_object.attributes = converted_attrs
+        if resource.try(:lease) && af_object.reflections.include?(:lease)
+          # TODO(#6134): af_object.lease.class has the same name as resource.lease.class; however, each class has a different object_id
+          # so a type mismatch happens. the code below coerces the one object into the other
+          unless af_object.lease&.id
+            resource_lease_dup = af_object.reflections.fetch(:lease).klass.new(resource.lease.attributes.except(:id, :internal_resource, :created_at, :updated_at, :new_record))
+            af_object.lease = resource_lease_dup
+          end
+        end
         members.empty? ? af_object.try(:ordered_members)&.clear : af_object.try(:ordered_members=, members)
         af_object.try(:members)&.replace(members)
         af_object.files.build_or_set(files) if files
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
 
     # Add attributes from resource which aren't AF properties into af_object
     def add_access_control_attributes(af_object)
