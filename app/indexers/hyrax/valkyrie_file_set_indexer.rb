@@ -131,17 +131,17 @@ module Hyrax
 
       doc
     end
-  end
 
-  def index_embargo(doc)
-    if resource.embargo&.active?
-      doc['embargo_release_date_dtsi'] = resource.embargo.embargo_release_date&.to_datetime
-      doc['visibility_after_embargo_ssim'] = resource.embargo.visibility_after_embargo
-      doc['visibility_during_embargo_ssim'] = resource.embargo.visibility_during_embargo
-    else
-      doc['embargo_history_ssim'] = resource&.embargo&.embargo_history
+    def index_embargo(doc)
+      if resource.embargo&.active?
+        doc['embargo_release_date_dtsi'] = resource.embargo.embargo_release_date&.to_datetime
+        doc['visibility_after_embargo_ssim'] = resource.embargo.visibility_after_embargo
+        doc['visibility_during_embargo_ssim'] = resource.embargo.visibility_during_embargo
+      else
+        doc['embargo_history_ssim'] = resource&.embargo&.embargo_history
+      end
+
+      doc
     end
-
-    doc
   end
 end
