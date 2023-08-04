@@ -180,15 +180,18 @@ module Hyrax
 
     ##
     # @return [#errors]
+    # rubocop:disable Metrics/MethodLength
     def create_valkyrie_work
       form = build_form
-      return after_create_error(form_err_msg(form)) unless form.validate(params[hash_key_for_curation_concern])
+      # fallback to an empty hash to avoid: # NoMethodError: undefined method `has_key?` for nil:NilClass
+      original_input_params_for_form = params[hash_key_for_curation_concern] ? params[hash_key_for_curation_concern] : {}
+      return after_create_error(form_err_msg(form), original_input_params_for_form) unless form.validate(original_input_params_for_form)
 
       result =
         transactions['change_set.create_work']
         .with_step_args(
           'work_resource.add_to_parent' => { parent_id: params[:parent_id], user: current_user },
-          'work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: params[hash_key_for_curation_concern][:file_set] },
+          'work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: original_input_params_for_form[:file_set] },
           'change_set.set_user_as_depositor' => { user: current_user },
           'work_resource.change_depositor' => { user: ::User.find_by_user_key(form.on_behalf_of) },
           'work_resource.save_acl' => { permissions_params: form.input_params["permissions"] }
@@ -197,6 +200,7 @@ module Hyrax
       @curation_concern = result.value_or { return after_create_error(transaction_err_msg(result)) }
       after_create_response
     end
+    # rubocop:enable Metrics/MethodLength
 
     def update_valkyrie_work
       form = build_form
