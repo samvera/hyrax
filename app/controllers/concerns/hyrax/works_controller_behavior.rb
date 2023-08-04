@@ -183,7 +183,7 @@ module Hyrax
     # rubocop:disable Metrics/MethodLength
     def create_valkyrie_work
       form = build_form
-      # fallback to an empty array to avoid: # NoMethodError: undefined method `has_key?' for nil:NilClass
+      # fallback to an empty hash to avoid: # NoMethodError: undefined method `has_key?` for nil:NilClass
       original_input_params_for_form = params[hash_key_for_curation_concern] ? params[hash_key_for_curation_concern] : {}
       return after_create_error(form_err_msg(form), original_input_params_for_form) unless form.validate(original_input_params_for_form)
 
