@@ -292,7 +292,8 @@ RSpec.describe Hyrax::AdminSetCreateService do
         let(:admin_set) { FactoryBot.build(:invalid_hyrax_admin_set) } # Missing title
 
         it 'will not call the workflow_importer' do
-          expect { service.create! }.to raise_error(ActiveRecord::RecordNotFound)
+          expect { service.create! }.to raise_error(RuntimeError)
+          expect(workflow_importer).not_to have_received(:call)
         end
       end
     end
