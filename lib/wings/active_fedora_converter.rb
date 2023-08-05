@@ -164,7 +164,7 @@ module Wings
       af_object.mime_type = resource.mime_type
     end
 
-    def perform_lease_conversion((af_object:, resource:))
+    def perform_lease_conversion(af_object:, resource:)
       # TODO(#6134): af_object.lease.class has the same name as resource.lease.class; however, each class has a different object_id
       # so a type mismatch happens. the code below coerces the one object into the other
       unless af_object.lease&.id
@@ -173,7 +173,7 @@ module Wings
       end
     end
 
-    def perform_embargo_conversion((af_object:, resource:))
+    def perform_embargo_conversion(af_object:, resource:)
       # TODO(#6134): af_object.embargo.class has the same name as resource.embargo.class; however, each class has a different object_id
       # so a type mismatch happens. the code below coerces the one object into the other
       unless af_object.embargo&.id
