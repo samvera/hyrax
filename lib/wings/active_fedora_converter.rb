@@ -18,7 +18,7 @@ module Wings
   #
   # @note the `Valkyrie::Resource` object passed to this class **must** have an
   #   `#internal_resource` mapping it to an `ActiveFedora::Base` class.
-  class ActiveFedoraConverter
+  class ActiveFedoraConverter # rubocop:disable Metrics/ClassLength
     ##
     # Accesses the Class implemented for handling resource attributes
     # @return [Class]
@@ -130,6 +130,7 @@ module Wings
 
     ##
     # apply attributes to the ActiveFedora model
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
     def apply_attributes_to_model(af_object)
       case af_object
       when Hydra::AccessControl
@@ -148,6 +149,7 @@ module Wings
         af_object.files.build_or_set(files) if files
       end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
     # Add attributes from resource which aren't AF properties into af_object
     def add_access_control_attributes(af_object)
@@ -167,19 +169,19 @@ module Wings
     def perform_lease_conversion(af_object:, resource:)
       # TODO(#6134): af_object.lease.class has the same name as resource.lease.class; however, each class has a different object_id
       # so a type mismatch happens. the code below coerces the one object into the other
-      unless af_object.lease&.id
-        resource_lease_dup = af_object.reflections.fetch(:lease).klass.new(resource.lease.attributes.except(:id, :internal_resource, :created_at, :updated_at, :new_record))
-        af_object.lease = resource_lease_dup
-      end
+      return if af_object.lease&.id
+
+      resource_lease_dup = af_object.reflections.fetch(:lease).klass.new(resource.lease.attributes.except(:id, :internal_resource, :created_at, :updated_at, :new_record))
+      af_object.lease = resource_lease_dup
     end
 
     def perform_embargo_conversion(af_object:, resource:)
       # TODO(#6134): af_object.embargo.class has the same name as resource.embargo.class; however, each class has a different object_id
       # so a type mismatch happens. the code below coerces the one object into the other
-      unless af_object.embargo&.id
-        resource_embargo_dup = af_object.reflections.fetch(:embargo).klass.new(resource.embargo.attributes.except(:id, :internal_resource, :created_at, :updated_at, :new_record))
-        af_object.embargo = resource_embargo_dup
-      end
+      return if af_object.embargo&.id
+
+      resource_embargo_dup = af_object.reflections.fetch(:embargo).klass.new(resource.embargo.attributes.except(:id, :internal_resource, :created_at, :updated_at, :new_record))
+      af_object.embargo = resource_embargo_dup
     end
   end
 end
