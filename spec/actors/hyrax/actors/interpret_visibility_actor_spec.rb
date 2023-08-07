@@ -125,13 +125,11 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor, unless: Hyrax.config.use
         let(:date) { Time.zone.today + 2 }
 
         it 'interprets and apply embargo and lease visibility settings' do
-          skip 'embargogeddon' do
-            subject.create(env)
-            expect(curation_concern.visibility_during_embargo).to eq 'authenticated'
-            expect(curation_concern.visibility_after_embargo).to eq 'open'
-            expect(curation_concern.visibility).to eq 'authenticated'
-            expect(curation_concern.reload).to be_under_embargo
-          end
+          subject.create(env)
+          expect(curation_concern.visibility_during_embargo).to eq 'authenticated'
+          expect(curation_concern.visibility_after_embargo).to eq 'open'
+          expect(curation_concern.visibility).to eq 'authenticated'
+          expect(curation_concern.reload).to be_under_embargo
         end
       end
 

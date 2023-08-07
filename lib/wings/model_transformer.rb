@@ -56,9 +56,9 @@ module Wings
 
       klass.new(**attrs).tap do |resource|
         resource.lease = pcdm_object.lease&.valkyrie_resource if pcdm_object.respond_to?(:lease) && pcdm_object.lease
+        resource.embargo = pcdm_object.embargo&.valkyrie_resource if pcdm_object.respond_to?(:embargo) && pcdm_object.embargo
         ensure_current_permissions(resource)
       end
-      # rubocop:enable Metrics/AbcSize
     end
 
     def ensure_current_permissions(resource)

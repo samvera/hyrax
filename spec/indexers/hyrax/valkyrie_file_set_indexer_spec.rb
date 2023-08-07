@@ -240,6 +240,32 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer, if: Hyrax.config.use_valkyrie? do
       end
     end
 
+    context 'with a valid embargo' do
+      let(:embargo) { FactoryBot.create(:hyrax_embargo) }
+
+      before { allow(file_set).to receive(:embargo_id).and_return(embargo.id) }
+
+      it 'sets the embargo expiration date and visibility settings' do
+        expect(subject['embargo_release_date_dtsi']).to eq embargo.embargo_release_date
+        expect(subject['visibility_after_embargo_ssim']).to eq embargo.visibility_after_embargo
+        expect(subject['visibility_during_embargo_ssim']).to eq embargo.visibility_during_embargo
+        expect(subject['embargo_history_ssim']).to be nil
+      end
+    end
+
+    context 'with an expired embargo' do
+      let(:embargo) { FactoryBot.create(:hyrax_embargo, :expired) }
+
+      before { allow(file_set).to receive(:embargo_id).and_return(embargo.id) }
+
+      it 'sets the embargo expiration date and visibility settings' do
+        expect(subject['embargo_release_date_dtsi']).to be nil
+        expect(subject['visibility_after_embargo_ssim']).to be nil
+        expect(subject['visibility_during_embargo_ssim']).to be nil
+        expect(subject['embargo_history_ssim']).to eq embargo.embargo_history
+      end
+    end
+
     context 'with a valid lease' do
       let(:lease) { FactoryBot.create(:hyrax_lease) }
 

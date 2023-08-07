@@ -75,7 +75,7 @@ module Hyrax
   #   resource.visibility # => 'open'
   #   manager.enforced? => false
   #
-  class EmbargoManager
+  class EmbargoManager # rubocop:disable Metrics/ClassLength
     ##
     # @!attribute [rw] resource
     #   @return [Hyrax::Resource]
@@ -118,6 +118,35 @@ module Hyrax
         new(resource: resource, query_service: query_service)
           .release!
       end
+
+      # Creates or updates an existing embargo on a member to match the embargo on the parent work
+      # @param [Array<Valkyrie::Resource>] members
+      # @param [Hyrax::Work] work
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      def create_or_update_embargo_on_members(members, work)
+        # TODO: account for all members and levels, not just file sets. ref: #6131
+
+        members.each do |member|
+          member_embargo_needs_updating = work.embargo.updated_at > member.embargo&.updated_at if member.embargo
+
+          if member.embargo && member_embargo_needs_updating
+            member.embargo.embargo_release_date = work.embargo['embargo_release_date']
+            member.embargo.visibility_during_embargo = work.embargo['visibility_during_embargo']
+            member.embargo.visibility_after_embargo = work.embargo['visibility_after_embargo']
+            member.embargo = Hyrax.persister.save(resource: member.embargo)
+          else
+            work_embargo_manager = Hyrax::EmbargoManager.new(resource: work)
+            work_embargo_manager.copy_embargo_to(target: member)
+            member = Hyrax.persister.save(resource: member)
+          end
+
+          user ||= ::User.find_by_user_key(member.depositor)
+          # the line below works in that it indexes the file set with the necessary lease properties
+          # I do not know however if this is the best event_id to pass
+          Hyrax.publisher.publish('object.metadata.updated', object: member, user: user)
+        end
+      end
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
     end
 
     # Deactivates the embargo and logs a message to the embargo_history property
