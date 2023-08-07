@@ -10,7 +10,7 @@ RSpec.describe Hyrax::LeaseManager do
 
   shared_context 'with expired lease' do
     let(:resource) { FactoryBot.build(:hyrax_resource, lease: lease) }
-    let(:lease)    { FactoryBot.build(:hyrax_lease, :expired) }
+    let(:lease)    { FactoryBot.create(:hyrax_lease, :expired) }
   end
 
   describe '#apply' do
@@ -90,7 +90,7 @@ RSpec.describe Hyrax::LeaseManager do
         expect(manager.lease)
           .to have_attributes visibility_after_lease: 'authenticated',
                               visibility_during_lease: 'open',
-                              lease_expiration_date: an_instance_of(Date),
+                              lease_expiration_date: an_instance_of(DateTime),
                               lease_history: be_empty
       end
     end

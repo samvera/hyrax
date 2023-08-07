@@ -3,7 +3,7 @@
 module Hyrax
   ##
   # Indexes Hyrax::FileSet objects
-  class ValkyrieFileSetIndexer < Hyrax::ValkyrieIndexer
+  class ValkyrieFileSetIndexer < Hyrax::ValkyrieIndexer # rubocop:disable Metrics/ClassLength
     include Hyrax::ResourceIndexer
     include Hyrax::PermissionIndexer
     include Hyrax::VisibilityIndexer
@@ -21,6 +21,9 @@ module Hyrax
         solr_doc['extracted_text_id_ssi']        = resource.extracted_text_id.to_s
         solr_doc['hasRelatedMediaFragment_ssim'] = resource.representative_id.to_s
         solr_doc['hasRelatedImage_ssim']         = resource.thumbnail_id.to_s
+
+        index_lease(solr_doc)
+        index_embargo(solr_doc)
 
         # Add in metadata from the original file.
         file_metadata = Hyrax::FileSetFileService.new(file_set: resource).original_file
@@ -115,6 +118,30 @@ module Hyrax
       elsif file.format_label.present?
         file.format_label
       end
+    end
+
+    def index_lease(doc)
+      if resource.lease&.active?
+        doc['lease_expiration_date_dtsi'] = resource.lease.lease_expiration_date&.to_datetime
+        doc['visibility_after_lease_ssim'] = resource.lease.visibility_after_lease
+        doc['visibility_during_lease_ssim'] = resource.lease.visibility_during_lease
+      else
+        doc['lease_history_ssim'] = resource&.lease&.lease_history
+      end
+
+      doc
+    end
+
+    def index_embargo(doc)
+      if resource.embargo&.active?
+        doc['embargo_release_date_dtsi'] = resource.embargo.embargo_release_date&.to_datetime
+        doc['visibility_after_embargo_ssim'] = resource.embargo.visibility_after_embargo
+        doc['visibility_during_embargo_ssim'] = resource.embargo.visibility_during_embargo
+      else
+        doc['embargo_history_ssim'] = resource&.embargo&.embargo_history
+      end
+
+      doc
     end
   end
 end

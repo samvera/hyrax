@@ -18,7 +18,7 @@ module Wings
   #
   # @note the `Valkyrie::Resource` object passed to this class **must** have an
   #   `#internal_resource` mapping it to an `ActiveFedora::Base` class.
-  class ActiveFedoraConverter
+  class ActiveFedoraConverter # rubocop:disable Metrics/ClassLength
     ##
     # Accesses the Class implemented for handling resource attributes
     # @return [Class]
@@ -130,6 +130,7 @@ module Wings
 
     ##
     # apply attributes to the ActiveFedora model
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
     def apply_attributes_to_model(af_object)
       case af_object
       when Hydra::AccessControl
@@ -140,6 +141,7 @@ module Wings
         parse_attributes(af_object)
       end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
     def parse_attributes(af_object)
       converted_attrs = normal_attributes
@@ -147,6 +149,8 @@ module Wings
       files = converted_attrs.delete(:files)
       af_object.attributes = converted_attrs
       af_object.extracted_text = create_extrated_text(af_object) if resource.attributes[:extracted_text_id].present?
+      perform_lease_conversion(af_object: af_object, resource: resource) if resource.try(:lease) && af_object.reflections.include?(:lease)
+      perform_embargo_conversion(af_object: af_object, resource: resource) if resource.try(:embargo) && af_object.reflections.include?(:embargo)
       members.empty? ? af_object.try(:ordered_members)&.clear : af_object.try(:ordered_members=, members)
       af_object.try(:members)&.replace(members)
       af_object.files.build_or_set(files) if files
@@ -171,6 +175,24 @@ module Wings
       new_type = (resource.pcdm_use - af_object.metadata_node.type.to_a).first
       af_object.metadata_node.type = new_type if new_type
       af_object.mime_type = resource.mime_type
+    end
+
+    def perform_lease_conversion(af_object:, resource:)
+      # TODO(#6134): af_object.lease.class has the same name as resource.lease.class; however, each class has a different object_id
+      # so a type mismatch happens. the code below coerces the one object into the other
+      return if af_object.lease&.id
+
+      resource_lease_dup = af_object.reflections.fetch(:lease).klass.new(resource.lease.attributes.except(:id, :internal_resource, :created_at, :updated_at, :new_record))
+      af_object.lease = resource_lease_dup
+    end
+
+    def perform_embargo_conversion(af_object:, resource:)
+      # TODO(#6134): af_object.embargo.class has the same name as resource.embargo.class; however, each class has a different object_id
+      # so a type mismatch happens. the code below coerces the one object into the other
+      return if af_object.embargo&.id
+
+      resource_embargo_dup = af_object.reflections.fetch(:embargo).klass.new(resource.embargo.attributes.except(:id, :internal_resource, :created_at, :updated_at, :new_record))
+      af_object.embargo = resource_embargo_dup
     end
   end
 end

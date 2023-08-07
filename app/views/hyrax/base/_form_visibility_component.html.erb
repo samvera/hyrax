@@ -39,7 +39,7 @@
               <div class="form-inline">
                 <%= f.input :visibility_during_embargo, wrapper: :inline, collection: visibility_options(:restrict), include_blank: false %>
                 <%= t('hyrax.works.form.visibility_until') %>
-                <%= f.date_field :embargo_release_date, wrapper: :inline, value: f.object.embargo_release_date || Date.tomorrow, class: 'datepicker form-control' %>
+                <%= f.date_field :embargo_release_date, wrapper: :inline, value: f.object.embargo_release_date&.to_date || Date.tomorrow, class: 'datepicker form-control' %>
                 <%= f.input :visibility_after_embargo, wrapper: :inline, collection: visibility_options(:loosen), include_blank: false %>
               </div>
             </div>
@@ -55,7 +55,7 @@
               <div class="form-inline">
                 <%= f.input :visibility_during_lease, wrapper: :inline, collection: visibility_options(:loosen), include_blank: false %>
                 <%= t('hyrax.works.form.visibility_until') %>
-                <%= f.date_field :lease_expiration_date, wrapper: :inline, value: f.object.lease_expiration_date || Date.tomorrow, class: 'datepicker form-control' %>
+                <%= f.date_field :lease_expiration_date, wrapper: :inline, value: f.object.lease_expiration_date&.to_date || Date.tomorrow, class: 'datepicker form-control' %>
                 <%= f.input :visibility_after_lease, wrapper: :inline, collection: visibility_options(:restrict), include_blank: false %>
               </div>
             </div>
