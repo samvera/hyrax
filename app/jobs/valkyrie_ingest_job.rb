@@ -25,7 +25,6 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
   def ingest(file:, pcdm_use:)
     file_set_uri = Valkyrie::ID.new(file.file_set_uri)
     file_set = Hyrax.query_service.find_by(id: file_set_uri)
-
     updated_metadata = upload_file(
       file: file,
       file_set: file_set,
