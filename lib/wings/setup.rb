@@ -71,7 +71,7 @@ module ActiveFedora
       end
 
       def pcdm_use=(value)
-        type = value
+        self.type = value
       end
     end
   end
