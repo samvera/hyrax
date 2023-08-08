@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 FactoryBot.define do
   factory :hyrax_embargo, class: "Hyrax::Embargo" do
-    embargo_release_date      { (Time.zone.today + 10).to_s }
+    embargo_release_date      { (Time.zone.today + 10).to_datetime }
     visibility_after_embargo  { 'open' }
     visibility_during_embargo { 'authenticated' }
 
@@ -12,7 +12,7 @@ FactoryBot.define do
     end
 
     trait :expired do
-      embargo_release_date { Time.zone.today - 1 }
+      embargo_release_date { (Time.zone.today - 1).to_datetime }
     end
   end
 end

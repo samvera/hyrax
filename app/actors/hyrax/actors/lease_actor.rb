@@ -15,8 +15,11 @@ module Hyrax
         case work
         when Valkyrie::Resource
           lease_manager = Hyrax::LeaseManager.new(resource: work)
-          lease_manager.release && Hyrax::AccessControlList(work).save
-          lease_manager.nullify
+          return if lease_manager.lease.lease_expiration_date.blank?
+
+          lease_manager.deactivate!
+          work.lease = Hyrax.persister.save(resource: lease_manager.lease)
+          Hyrax::AccessControlList(work).save
         else
           work.lease_visibility! # If the lease has lapsed, update the current visibility.
           work.deactivate_lease!

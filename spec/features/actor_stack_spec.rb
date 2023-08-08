@@ -130,9 +130,7 @@ RSpec.describe Hyrax::DefaultMiddlewareStack, :clean_repo do
         expect(work.embargo_release_date).to be_falsey
         actor.create(env)
 
-        skip 'maybe embargogeddon....maybe not?' do
-          expect(work.class.find(work.id).embargo_release_date).to be_present
-        end
+        expect(work.class.find(work.id).embargo_release_date).to be_present
       end
 
       context 'and the embargo date is in the past' do
