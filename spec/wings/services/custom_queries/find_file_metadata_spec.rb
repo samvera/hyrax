@@ -170,7 +170,7 @@ RSpec.describe Wings::CustomQueries::FindFileMetadata, :clean_repo do
         file_set = af_file_set.valkyrie_resource
         file_set = Wings::Works::AddFileToFileSet.call(file_set: file_set, file: pdf_file, type: original_file_use)
         file_set = Wings::Works::AddFileToFileSet.call(file_set: file_set, file: image_file, type: thumbnail_use)
-        file_set = Wings::Works::AddFileToFileSet.call(file_set: file_set, file: text_file, type: extracted_text_use)
+        Wings::Works::AddFileToFileSet.call(file_set: file_set, file: text_file, type: extracted_text_use)
       end
 
       context 'and use_valkyrie is false' do
