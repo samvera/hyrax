@@ -158,7 +158,7 @@ module Wings
 
     def create_extrated_text(af_object)
       pcdm_et_file = af_object.extracted_text.presence || af_object.create_extracted_text
-      pcdm_et_file.content = Hyrax.query_service.find_by(id: resource.attributes[:extracted_text_id]).content
+      pcdm_et_file.content = Hyrax.custom_queries.find_many_file_metadata_by_use(resource: resource, use: Hyrax::FileMetadata::Use::EXTRACTED_TEXT).first&.content
       pcdm_et_file
     end
 

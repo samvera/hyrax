@@ -168,7 +168,7 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer, if: Hyrax.config.use_valkyrie? do
 
       expect(subject['file_format_tesim']).to eq 'jpeg (JPEG Image)'
       expect(subject['file_format_sim']).to eq 'jpeg (JPEG Image)'
-      expect(subject['file_size_lts']).to eq mock_file.size[0]
+      expect(subject['file_size_lts']).to eq mock_file.recorded_size[0]
       expect(subject['type_tesim']).to eq ['http://pcdm.org/use#OriginalFile']
 
       # attributes set by fits
