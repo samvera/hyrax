@@ -49,7 +49,10 @@ module Hyrax
     # @return [Hyrax::PcdmCollection | ::Collection] an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)
     # @raise [ActiveRecord::RecordNotFound] if record matching gid is not found
     def self.for(collection:)
-      find_by_gid!(collection.collection_type_gid)
+      gid = collection.collection_type_gid
+      gid = gid.first if gid.is_a?(Enumerable)
+
+      find_by_gid!(gid)
     end
 
     # Find the collection type associated with the Global Identifier (gid)
