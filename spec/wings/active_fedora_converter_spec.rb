@@ -347,7 +347,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
         end
 
         it 'converts pcdm use URIs as types' do
-          expect { resource.type = custom_type }
+          expect { resource.pcdm_use = custom_type }
             .to change { converter.convert.metadata_node.type }
             .to contain_exactly(custom_type)
         end

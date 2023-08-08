@@ -39,6 +39,7 @@ class Hyrax::ValkyrieUpload
     file_metadata = Hyrax::FileMetadata(streamfile)
     file_metadata.file_set_id = file_set.id
     file_metadata.pcdm_use = [use]
+    file_metadata.recorded_size = [io.size]
 
     if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE
       # Set file set label.

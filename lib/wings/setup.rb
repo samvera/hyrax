@@ -36,6 +36,7 @@ module ActiveFedora
     alias eql? ==
 
     def self.supports_property?(property)
+      return true if ['pcdm_use'].include?(property.to_s)
       properties.key?(property.to_s)
     end
 
@@ -45,6 +46,14 @@ module ActiveFedora
 
     def self.default_sort_params
       ["system_create_dtsi asc"]
+    end
+
+    def pcdm_use
+      metadata.type
+    end
+
+    def pcdm_use=(value)
+      metadata.type = value
     end
   end
 
