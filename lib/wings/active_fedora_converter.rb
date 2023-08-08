@@ -170,7 +170,10 @@ module Wings
 
     # for files, add attributes to metadata_node, plus some other work
     def add_file_attributes(af_object)
-      af_object.metadata_node.attributes = normal_attributes
+      converted_attrs = normal_attributes
+      pcdm_use = converted_attrs.delete(:pcdm_use)
+      af_object.metadata_node.attributes = converted_attrs
+      af_object.pcdm_use = pcdm_use.first if pcdm_use.present? && pcdm_use.first.present?
       af_object.original_name = resource.original_filename
       new_type = (resource.pcdm_use - af_object.metadata_node.type.to_a).first
       af_object.metadata_node.type = new_type if new_type

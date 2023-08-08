@@ -65,6 +65,14 @@ module ActiveFedora
       def changed_attributes
         super.except(:file_hash)
       end
+
+      def pcdm_use
+        type
+      end
+
+      def pcdm_use=(value)
+        type = value
+      end
     end
   end
 
