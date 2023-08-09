@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 module Wings
   ##
   # Transforms ActiveFedora models or objects into Valkyrie::Resource models or
@@ -57,8 +58,22 @@ module Wings
       klass.new(**attrs).tap do |resource|
         resource.lease = pcdm_object.lease&.valkyrie_resource if pcdm_object.respond_to?(:lease) && pcdm_object.lease
         resource.embargo = pcdm_object.embargo&.valkyrie_resource if pcdm_object.respond_to?(:embargo) && pcdm_object.embargo
+        check_size(resource)
+        check_pcdm_use(resource)
         ensure_current_permissions(resource)
       end
+    end
+
+    def check_size(resource)
+      return unless resource.respond_to?(:recorded_size) && pcdm_object.respond_to?(:size)
+      resource.recorded_size = [pcdm_object.size.to_i]
+    end
+
+    def check_pcdm_use(resource)
+      return unless resource.respond_to?(:pcdm_use) &&
+                    pcdm_object.respond_to?(:metadata_node) &&
+                    pcdm_object&.metadata_node&.respond_to?(:type)
+      resource.pcdm_use = pcdm_object.metadata_node.type.to_a
     end
 
     def ensure_current_permissions(resource)
@@ -189,3 +204,4 @@ module Wings
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
