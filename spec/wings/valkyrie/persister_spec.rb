@@ -222,7 +222,7 @@ RSpec.describe Wings::Valkyrie::Persister do
   context "When passing a Valkyrie::Resource that was never an ActiveFedora::Base" do
     before do
       class CustomResource < Hyrax::Resource
-        attribute :title
+        attribute :title, ::Valkyrie::Types::Set
         attribute :author
         attribute :member_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
         attribute :nested_resource

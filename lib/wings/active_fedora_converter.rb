@@ -120,7 +120,7 @@ module Wings
                        value
                      elsif property[:multiple]
                        Array.wrap(value)
-                     elsif Array.wrap(value).length < 2
+                     elsif Array.wrap(value).length < 2 || !property.multiple?
                        Array.wrap(value).first
                      else
                        value

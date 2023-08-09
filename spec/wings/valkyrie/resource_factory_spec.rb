@@ -48,21 +48,21 @@ RSpec.describe Wings::Valkyrie::ResourceFactory do
 
         it 'returns an ActiveFedora::Base with the existing file' do
           expect(factory.from_resource(resource: resource))
-            .to have_attributes(file_identifier: contain_exactly(file.id))
+            .to have_attributes(file_identifier: file.id)
         end
 
         it 'still resolves for a missing identifier' do
           resource = Hyrax::FileMetadata.new(file_identifier: 'disk://made-up.png')
 
           expect(factory.from_resource(resource: resource))
-            .to have_attributes(file_identifier: contain_exactly('disk://made-up.png'))
+            .to have_attributes(file_identifier: 'disk://made-up.png')
         end
 
         it 'still resolves for a missing adapter' do
           resource = Hyrax::FileMetadata.new(file_identifier: 'unknown://uh-oh.png')
 
           expect(factory.from_resource(resource: resource))
-            .to have_attributes(file_identifier: contain_exactly('unknown://uh-oh.png'))
+            .to have_attributes(file_identifier: 'unknown://uh-oh.png')
         end
       end
     end

@@ -92,7 +92,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
 
         it 'refers to the correct file id' do
           expect(converter.convert)
-            .to have_attributes(file_identifier: contain_exactly(file.id))
+            .to have_attributes(file_identifier: file.id)
         end
 
         it 'round trips' do
@@ -132,7 +132,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
 
       it 'converts arbitrary metadata' do
         expect(converter.convert)
-          .to have_attributes(title: ['comet in moominland'], distant_relation: ['Snufkin'])
+          .to have_attributes(title: ['comet in moominland'], distant_relation: 'Snufkin')
       end
 
       it 'supports indexing' do

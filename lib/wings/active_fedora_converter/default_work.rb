@@ -66,7 +66,7 @@ module Wings
       ##
       # @return [Boolean]
       def multiple?
-        @key.respond_to?(:rule) && (@key.rule&.options&.dig(:args)&.include?(Array) || @key.rule&.options&.dig(:args)&.include?(Set))
+        @key.respond_to?(:rule) && (@key.rule&.options&.dig(:args)&.include?(Array) || @key.rule&.options&.dig(:args)&.include?(Set)) || false
       end
 
       ##
