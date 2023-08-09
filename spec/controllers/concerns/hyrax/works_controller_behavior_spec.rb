@@ -155,7 +155,8 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         it "grants edit access to the manage users" do
           post :create, params: { test_simple_work: create_params }
 
-          expect(assigns[:curation_concern].edit_users).to include(admin_set_user)
+          expect(assigns[:curation_concern].edit_users.to_a)
+            .to include(admin_set_user.user_key)
         end
       end
 
