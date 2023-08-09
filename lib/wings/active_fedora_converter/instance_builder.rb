@@ -31,8 +31,8 @@ module Wings
           # convert to a generic/generated FileMetadataNode class with
           # properties matching the source class
           Wings::ActiveFedoraConverter::FileMetadataNode(resource.class)
-                                      .new(file_identifier: Array(resource.file_identifier)
-            .map(&:to_s))
+                                      .new(file_identifier: Array.wrap(resource.file_identifier)
+            .map(&:to_s).first)
         elsif converter.id.present?
           converter.active_fedora_class.find(converter.id)
         else

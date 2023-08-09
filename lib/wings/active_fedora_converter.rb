@@ -118,7 +118,7 @@ module Wings
         property = active_fedora_class.properties[attr.to_s]
         hash[attr] = if property.nil?
                        value
-                     elsif property.multiple?
+                     elsif property[:multiple]
                        Array.wrap(value)
                      elsif Array.wrap(value).length < 2
                        Array.wrap(value).first
