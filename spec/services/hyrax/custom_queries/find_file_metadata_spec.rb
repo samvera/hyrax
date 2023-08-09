@@ -114,7 +114,7 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata, valkyrie_adapter: :test_a
         result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: requested_use)
         expect(result.size).to eq 1
         expect(result.first).to be_a Hyrax::FileMetadata
-        expect(result.first.type.first).to eq requested_use
+        expect(result.first.pcdm_use.first).to eq requested_use
       end
     end
 

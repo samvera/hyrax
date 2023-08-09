@@ -18,7 +18,6 @@ module Hyrax
                        "with id #{file.id}. Initializing a new one")
 
     FileMetadata.new(file_identifier: file.id,
-                     alternative_ids: [file.id],
                      original_filename: File.basename(file.io))
   end
 
@@ -67,11 +66,11 @@ module Hyrax
     attribute :label, ::Valkyrie::Types::Set
     attribute :original_filename, ::Valkyrie::Types::String
     attribute :mime_type, ::Valkyrie::Types::String.default(GENERIC_MIME_TYPE)
-    attribute :type, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE].freeze) # Use += to add types, not <<
+    attribute :pcdm_use, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE].freeze) # Use += to add pcdm_uses, not <<
 
     # attributes set by fits
     attribute :format_label, ::Valkyrie::Types::Set
-    attribute :size, ::Valkyrie::Types::Set
+    attribute :recorded_size, ::Valkyrie::Types::Set
     attribute :well_formed, ::Valkyrie::Types::Set
     attribute :valid, ::Valkyrie::Types::Set
     attribute :date_created, ::Valkyrie::Types::Set
@@ -130,19 +129,19 @@ module Hyrax
     ##
     # @return [Boolean]
     def original_file?
-      type.include?(Use::ORIGINAL_FILE)
+      pcdm_use.include?(Use::ORIGINAL_FILE)
     end
 
     ##
     # @return [Boolean]
     def thumbnail_file?
-      type.include?(Use::THUMBNAIL)
+      pcdm_use.include?(Use::THUMBNAIL)
     end
 
     ##
     # @return [Boolean]
     def extracted_file?
-      type.include?(Use::EXTRACTED_TEXT)
+      pcdm_use.include?(Use::EXTRACTED_TEXT)
     end
 
     def title
@@ -154,7 +153,7 @@ module Hyrax
     end
 
     def valid?
-      file.valid?(size: size.first, digests: { sha256: checksum&.first&.sha256 })
+      file.valid?(size: recorded_size.first, digests: { sha256: checksum&.first&.sha256 })
     end
 
     ##
