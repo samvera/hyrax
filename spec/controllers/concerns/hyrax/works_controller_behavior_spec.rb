@@ -134,6 +134,31 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         end
       end
 
+      context 'when setting an admin set' do
+        let(:admin_set_user) { FactoryBot.create(:user) }
+
+        let(:admin_set) do
+          FactoryBot.valkyrie_create(:hyrax_admin_set, :with_permission_template, user: admin_set_user)
+        end
+
+        let(:create_params) do
+          { title: 'comet in moominland',
+            admin_set_id: admin_set.id }
+        end
+
+        it "sets the admin set" do
+          post :create, params: { test_simple_work: create_params }
+
+          expect(assigns[:curation_concern].admin_set_id).to eq admin_set.id
+        end
+
+        it "grants edit access to the manage users" do
+          post :create, params: { test_simple_work: create_params }
+
+          expect(assigns[:curation_concern].edit_users).to include(admin_set_user)
+        end
+      end
+
       context 'when adding a collection' do
         let(:collection) { FactoryBot.valkyrie_create(:pcdm_collection) }
 
