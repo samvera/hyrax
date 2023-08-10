@@ -119,6 +119,7 @@ end
 ActiveJob::Base.queue_adapter = :test
 
 def clean_active_fedora_repository
+  return if Hyrax.config.disable_wings
   ActiveFedora::Cleaner.clean!
   # The JS is executed in a different thread, so that other thread
   # may think the root path has already been created:
