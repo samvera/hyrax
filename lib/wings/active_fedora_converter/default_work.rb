@@ -27,7 +27,7 @@ module Wings
       #
       # @return [void] apply the property
       def apply(klass)
-        return if klass.properties.keys.include?(name) ||
+        return if klass.properties.keys.include?(name.to_s) ||
                   klass.protected_property_name?(name)
         klass.send(definition_method, name, options)
       end
@@ -98,6 +98,7 @@ module Wings
       include Hyrax::Noid
       include Hyrax::Permissions
       include Hydra::AccessControls::Embargoable
+      include Hyrax::CoreMetadata
       property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: "Wings::ActiveFedoraConverter::NestedResource"
 
       validates :lease_expiration_date, 'hydra/future_date': true, on: :create
