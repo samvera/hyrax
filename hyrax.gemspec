@@ -17,7 +17,7 @@ SUMMARY
 
   spec.homepage      = "http://github.com/samvera/hyrax"
 
-  spec.files         = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR).select { |f| File.dirname(f) !~ %r{\A"?spec\/?} }
+  spec.files         = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR).select { |f| File.dirname(f) !~ %r{\A"?spec\/?} && f != 'bin/rails' }
   spec.executables   = spec.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   spec.name          = "hyrax"
   spec.require_paths = ["lib"]
