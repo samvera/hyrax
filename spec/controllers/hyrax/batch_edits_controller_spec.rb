@@ -306,31 +306,32 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
   describe "#destroy_collection" do
     context 'with ActiveFedora objects' do
       let(:collection1) do
-        create(:public_collection_lw, title: ["My First Collection"],
-                                      description: ["My incredibly detailed description of the collection"],
-                                      user: user)
+        FactoryBot.valkyrie_create(:hyrax_collection,
+                                   :public,
+                                   title: ["My First Collection"],
+                                   user: user)
       end
 
       let(:collection2) do
-        create(:public_collection_lw, title: ["My Other Collection"],
-                                      description: ["My incredibly detailed description of the other collection"],
-                                      user: user)
+        FactoryBot.valkyrie_create(:hyrax_collection,
+                                   :public,
+                                   title: ["My Other Collection"],
+                                   user: user)
       end
 
-      let!(:work1) { create(:work, title: ["First of the Assets"], member_of_collections: [collection1], user: user) }
-      let(:work2)  { create(:work, title: ["Second of the Assets"], user: user) }
+      let!(:work1) { FactoryBot.valkyrie_create(:hyrax_work, title: ["First of the Assets"], member_of_collection_ids: [collection1.id], depositor: user.user_key) }
 
       context 'when user has edit access' do
         before do
-          controller.batch = [collection1.id, collection2.id]
-          allow(controller).to receive(:can?).with(:edit, collection1.id).and_return(true)
-          allow(controller).to receive(:can?).with(:edit, collection2.id).and_return(true)
+          controller.batch = [collection1.id.to_s, collection2.id.to_s]
+          allow(controller).to receive(:can?).with(:edit, collection1.id.to_s).and_return(true)
+          allow(controller).to receive(:can?).with(:edit, collection2.id.to_s).and_return(true)
         end
 
         it "deletes collections with and without works in it" do
           delete :destroy_collection, params: { update_type: "delete_all" }
-          expect { Collection.find(collection1.id) }.to raise_error(Ldp::Gone)
-          expect { Collection.find(collection2.id) }.to raise_error(Ldp::Gone)
+          expect { Collection.find(collection1.id.to_s) }.to raise_error(Ldp::Gone)
+          expect { Collection.find(collection2.id.to_s) }.to raise_error(Ldp::Gone)
         end
       end
 
@@ -338,9 +339,10 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
         let(:user2) { create(:user) }
 
         let(:collection3) do
-          create(:public_collection_lw, title: ["User2's Collection"],
-                                        description: ["Collection created by user2"],
-                                        user: user2)
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     :public,
+                                     title: ["User2's Collection"],
+                                     user: user2)
         end
 
         before do
@@ -353,15 +355,15 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
         it "fails to delete collections when user does not have edit access" do
           delete :destroy_collection, params: { update_type: "delete_all" }
-          expect(Collection.exists?(collection1.id)).to eq true
-          expect(Collection.exists?(collection2.id)).to eq true
+          expect(Collection.exists?(collection1.id.to_s)).to eq true
+          expect(Collection.exists?(collection2.id.to_s)).to eq true
         end
 
         it "deletes collections where user has edit access, failing to delete those where user does not have edit access" do
           delete :destroy_collection, params: { update_type: "delete_all" }
-          expect(Collection.exists?(collection1.id)).to eq true
-          expect(Collection.exists?(collection2.id)).to eq true
-          expect { Collection.find(collection3.id) }.to raise_error(Ldp::Gone)
+          expect(Collection.exists?(collection1.id.to_s)).to eq true
+          expect(Collection.exists?(collection2.id.to_s)).to eq true
+          expect { Collection.find(collection3.id.to_s) }.to raise_error(Ldp::Gone)
         end
       end
     end
