@@ -207,7 +207,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       let(:form_class) do
         Hyrax.config.use_valkyrie? ? Hyrax::Forms::ResourceBatchEditForm : Hyrax::Forms::BatchEditForm
       end
-      let(:param_key) { form_class.model_name.param_key }
+      let(:param_key) { form_class.model_class.model_name.param_key }
 
       let(:work1) { Hyrax.query_service.find_by(id: one.id) }
       let(:work2) { Hyrax.query_service.find_by(id: two.id) }

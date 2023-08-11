@@ -61,7 +61,7 @@ module Hyrax
     end
 
     def valkyrie_update_document(obj)
-      form = Hyrax::Forms::ResourceBatchEditForm.new(obj, current_ability, nil)
+      form = form_class.new(obj, current_ability, nil)
       return unless form.validate(params[form_class.model_class.model_name.param_key])
       result = transactions['change_set.update_work']
                .with_step_args('work_resource.save_acl' => { permissions_params: form.input_params["permissions"] })
@@ -121,7 +121,7 @@ module Hyrax
     end
 
     def work_params(extra_params = {})
-      work_params = params[form_class.model_name.param_key] || ActionController::Parameters.new
+      work_params = params[form_class.model_class.model_name.param_key] || ActionController::Parameters.new
       form_class.model_attributes(work_params.merge(extra_params))
     end
 
