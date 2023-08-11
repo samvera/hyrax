@@ -204,6 +204,11 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
         FactoryBot.valkyrie_create(:monograph, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'])
       end
 
+      let(:form_class) do
+        Hyrax.config.use_valkyrie? ? Hyrax::Forms::ResourceBatchEditForm : Hyrax::Forms::BatchEditForm
+      end
+      let(:param_key) { form_class.model_name.param_key }
+
       let(:work1) { Hyrax.query_service.find_by(id: one.id) }
       let(:work2) { Hyrax.query_service.find_by(id: two.id) }
       let(:work3) { Hyrax.query_service.find_by(id: three.id) }
@@ -222,7 +227,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       end
 
       it "updates the records" do
-        put :update, params: { update_type: "update", monograph: { subject: ["zzz"] } }
+        put :update, params: { update_type: "update", "#{param_key}": { subject: ["zzz"] } }
         expect(response).to be_redirect
         expect(work1.subject).to eq ["zzz"]
         expect(work2.subject).to eq ["zzz"]
@@ -230,7 +235,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       end
 
       it "updates permissions" do
-        put :update, params: { update_type: "update", monograph: { visibility: "authenticated" } }
+        put :update, params: { update_type: "update", "#{param_key}": { visibility: "authenticated" } }
         expect(response).to be_redirect
 
         expect(work1.visibility).to eq "authenticated"
@@ -242,7 +247,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       it 'creates leases' do
         put :update, params: { update_type: "update",
-                               monograph: { visibility: "lease", lease_expiration_date: release_date, visibility_during_lease: 'open', visibility_after_lease: 'restricted' } }
+                               "#{param_key}": { visibility: "lease", lease_expiration_date: release_date, visibility_during_lease: 'open', visibility_after_lease: 'restricted' } }
         expect(response).to be_redirect
 
         expect(work1.visibility).to eq "open"
@@ -266,7 +271,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       it 'creates embargoes' do
         put :update, params: { update_type: "update",
-                               monograph: { visibility: "embargo", embargo_release_date: release_date, visibility_during_embargo: 'authenticated', visibility_after_embargo: 'open' } }
+                               "#{param_key}": { visibility: "embargo", embargo_release_date: release_date, visibility_during_embargo: 'authenticated', visibility_after_embargo: 'open' } }
         expect(response).to be_redirect
 
         expect(work1.visibility).to eq "authenticated"
@@ -290,7 +295,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       context 'with roles' do
         it 'updates roles' do
-          put :update, params: { update_type: "update", monograph: { permissions_attributes: { "0" => { type: 'person', access: 'read', name: 'foo@bar.com' } } } }
+          put :update, params: { update_type: "update", "#{param_key}": { permissions_attributes: { "0" => { type: 'person', access: 'read', name: 'foo@bar.com' } } } }
           expect(response).to be_redirect
 
           expect(work1.read_users.to_a).to include "foo@bar.com"

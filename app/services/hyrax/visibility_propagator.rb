@@ -10,7 +10,7 @@ module Hyrax
     # @return [#propagate]
     def self.for(source:)
       case source
-      when Hyrax::WorkBehavior # ActiveFedora
+      when ActiveFedora::Base # ActiveFedora
         FileSetVisibilityPropagator.new(source: source)
       when Hyrax::Resource # Valkyrie
         ResourceVisibilityPropagator.new(source: source)
