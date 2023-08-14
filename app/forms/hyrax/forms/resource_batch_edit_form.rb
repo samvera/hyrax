@@ -63,6 +63,13 @@ module Hyrax
       end
       # rubocop:enable Metrics/MethodLength
 
+      # @param name [Symbol]
+      # @return [Symbol]
+      # @note Added for ActiveModel compatibility.
+      def column_for_attribute(name)
+        name
+      end
+
       private
 
       # override this method if you need to initialize more complex RDF assertions (b-nodes)
