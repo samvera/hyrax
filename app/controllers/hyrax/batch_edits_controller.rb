@@ -64,7 +64,7 @@ module Hyrax
       form = form_class.new(obj, current_ability, nil)
       return unless form.validate(params[form_class.model_class.model_name.param_key])
 
-      cleanu_form_fields form
+      cleanup_form_fields form
 
       result = transactions['change_set.update_work']
                .with_step_args('work_resource.save_acl' => { permissions_params: form.input_params["permissions"] })
@@ -157,7 +157,7 @@ module Hyrax
 
     # Clean up form fields
     # @param form Hyrax::Froms::ResourceBatchEditForm
-    def cleanu_form_fields(form)
+    def cleanup_form_fields(form)
       form.lease = nil if form.lease && form.lease.fields['lease_expiration_date'].nil?
       form.embargo = nil if form.embargo && form.embargo.fields['embargo_release_date'].nil?
       form.fields.keys.each do |k|
