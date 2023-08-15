@@ -63,6 +63,9 @@ module Hyrax
     def valkyrie_update_document(obj)
       form = form_class.new(obj, current_ability, nil)
       return unless form.validate(params[form_class.model_class.model_name.param_key])
+
+      cleanu_form_fields form
+
       result = transactions['change_set.update_work']
                .with_step_args('work_resource.save_acl' => { permissions_params: form.input_params["permissions"] })
                .call(form)
@@ -149,6 +152,16 @@ module Hyrax
         redirect_to hyrax.url_for(controller: params[:return_controller], only_path: true)
       else
         redirect_to hyrax.dashboard_path
+      end
+    end
+
+    # Clean up form fields
+    # @param form Hyrax::Froms::ResourceBatchEditForm
+    def cleanu_form_fields(form)
+      form.lease = nil if form.lease && form.lease.fields['lease_expiration_date'].nil?
+      form.embargo = nil if form.embargo && form.embargo.fields['embargo_release_date'].nil?
+      form.fields.keys.each do |k|
+        form.fields[k] = nil if form.fields[k].is_a?(Array) && form.fields[k].blank?
       end
     end
   end
