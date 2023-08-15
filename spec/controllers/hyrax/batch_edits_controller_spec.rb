@@ -177,7 +177,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       context 'with roles' do
         it 'updates roles' do
-          put :update, params: { update_type: "update", generic_work: { permissions_attributes: [{ type: 'person', access: 'read', name: 'foo@bar.com' }] } }
+          put :update, params: { update_type: "update", generic_work: { permissions_attributes: { "0" => { type: 'person', access: 'read', name: 'foo@bar.com' } } } }
           expect(response).to be_redirect
 
           work1 = GenericWork.find(one.id)
