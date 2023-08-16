@@ -15,7 +15,7 @@ FactoryBot.define do
           .new(resource: file_metadata)
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
-      file_metadata.type = Hyrax::FileMetadata::Use.uri_for(use: evaluator.use) if evaluator.use
+      file_metadata.pcdm_use = Hyrax::FileMetadata::Use.uri_for(use: evaluator.use) if evaluator.use
     end
 
     after(:create) do |file_metadata, evaluator|

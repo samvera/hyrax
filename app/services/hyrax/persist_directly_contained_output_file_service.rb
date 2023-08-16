@@ -24,10 +24,32 @@ module Hyrax
     # @option directives [String] url URI for the parent object.
     def self.retrieve_file_set(directives)
       uri = URI(directives.fetch(:url))
-      raise ArgumentError, "#{uri} is not an http(s) uri" unless uri.is_a?(URI::HTTP)
-      Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: Hyrax::Base.uri_to_id(uri.to_s), use_valkyrie: false)
+      if uri.is_a?(URI::HTTP)
+        Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: Hyrax::Base.uri_to_id(uri.to_s), use_valkyrie: false)
+      else
+        raise ArgumentError, "#{uri} is not an file/http(s) uri" unless uri.is_a?(URI::File)
+
+        fileset_for_directives(directives)
+      end
     end
     private_class_method :retrieve_file_set
+
+    # The filepath will look something like
+    # /app/samvera/hyrax-webapp/derivatives/95/93/tv/12/3-thumbnail.jpeg and
+    # we want to extract the FileSet id, which in this case would be 9593tv123
+    #
+    # @param [String] path
+    # @return [Hyrax::FileSet]
+    def self.fileset_for_directives(directives)
+      path = URI(directives.fetch(:url)).path
+      id = path.sub(Hyrax.config.derivatives_path.to_s, "")
+               .delete('/')
+               .match(/^(.*)-\w*(\.\w+)*$/) { |m| m[1] }
+      raise "Could not extract fileset id from path #{path}" unless id
+
+      Hyrax.metadata_adapter.query_service.find_by(id: id)
+    end
+    private_class_method :fileset_for_directives
 
     # Override this implementation if you need a remote file from a different location
     # @param file_set [FileSet] the container of the remote file

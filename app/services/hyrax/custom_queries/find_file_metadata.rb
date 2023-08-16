@@ -67,7 +67,7 @@ module Hyrax
         return [] unless resource.try(:file_ids)
 
         results = find_many_file_metadata_by_ids(ids: resource.file_ids)
-        results.select { |fm| fm.type.include?(use) }
+        results.select { |fm| fm.pcdm_use.include?(use) }
       end
     end
   end

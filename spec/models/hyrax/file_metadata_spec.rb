@@ -52,7 +52,7 @@ RSpec.describe Hyrax::FileMetadata do
       .to have_attributes(id: 'test_id',
                           format_label: contain_exactly('test_format_label'),
                           label: contain_exactly('world.png'),
-                          type: contain_exactly(described_class::Use::ORIGINAL_FILE))
+                          pcdm_use: contain_exactly(described_class::Use::ORIGINAL_FILE))
   end
 
   context 'when saved with a file' do
@@ -82,7 +82,7 @@ RSpec.describe Hyrax::FileMetadata do
   describe '#original_file?' do
     context 'when use says file is the original file' do
       before do
-        file_metadata.type = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri]
+        file_metadata.pcdm_use = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri]
       end
 
       it { is_expected.to be_original_file }
@@ -90,7 +90,7 @@ RSpec.describe Hyrax::FileMetadata do
 
     context 'when use does not say file is the original file' do
       before do
-        file_metadata.type = [described_class::Use::THUMBNAIL, pcdm_file_uri]
+        file_metadata.pcdm_use = [described_class::Use::THUMBNAIL, pcdm_file_uri]
       end
 
       it { is_expected.not_to be_original_file }
@@ -100,7 +100,7 @@ RSpec.describe Hyrax::FileMetadata do
   describe '#thumbnail_file?' do
     context 'when use says file is the thumbnail file' do
       before do
-        file_metadata.type = [described_class::Use::THUMBNAIL, pcdm_file_uri]
+        file_metadata.pcdm_use = [described_class::Use::THUMBNAIL, pcdm_file_uri]
       end
 
       it { is_expected.to be_thumbnail_file }
@@ -108,7 +108,7 @@ RSpec.describe Hyrax::FileMetadata do
 
     context 'when use does not say file is the thumbnail file' do
       before do
-        file_metadata.type = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri]
+        file_metadata.pcdm_use = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri]
       end
 
       it { is_expected.not_to be_thumbnail_file }
@@ -118,7 +118,7 @@ RSpec.describe Hyrax::FileMetadata do
   describe '#extracted_file?' do
     context 'when use says file is the extracted file' do
       before do
-        file_metadata.type = [described_class::Use::EXTRACTED_TEXT, pcdm_file_uri]
+        file_metadata.pcdm_use = [described_class::Use::EXTRACTED_TEXT, pcdm_file_uri]
       end
 
       it { is_expected.to be_extracted_file }
@@ -126,7 +126,7 @@ RSpec.describe Hyrax::FileMetadata do
 
     context 'when use does not say file is the extracted file' do
       before do
-        file_metadata.type = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri]
+        file_metadata.pcdm_use = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri]
       end
 
       it { is_expected.not_to be_extracted_file }

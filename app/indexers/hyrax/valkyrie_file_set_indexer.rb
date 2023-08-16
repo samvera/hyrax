@@ -39,12 +39,13 @@ module Hyrax
 
         solr_doc['file_format_tesim']       = file_format(file_metadata)
         solr_doc['file_format_sim']         = file_format(file_metadata)
-        solr_doc['file_size_lts']           = file_metadata.size[0]
-        solr_doc['type_tesim']              = file_metadata.type.map(&:to_s) if file_metadata.type.present?
+        solr_doc['file_size_lts']           = file_metadata.recorded_size[0]
+        solr_doc['type_tesim']              = file_metadata.pcdm_use.map(&:to_s) if file_metadata.pcdm_use.present?
+        solr_doc['pcdm_use_tesim'] = file_metadata.pcdm_use.map(&:to_s) if file_metadata.pcdm_use.present?
 
         # attributes set by fits
         solr_doc['format_label_tesim']      = file_metadata.format_label if file_metadata.format_label.present?
-        solr_doc['size_tesim']              = file_metadata.size if file_metadata.size.present?
+        solr_doc['size_tesim']              = file_metadata.recorded_size if file_metadata.recorded_size.present?
         solr_doc['well_formed_tesim']       = file_metadata.well_formed if file_metadata.well_formed.present?
         solr_doc['valid_tesim']             = file_metadata.valid if file_metadata.valid.present?
         solr_doc['fits_version_tesim']      = file_metadata.fits_version if file_metadata.fits_version.present?

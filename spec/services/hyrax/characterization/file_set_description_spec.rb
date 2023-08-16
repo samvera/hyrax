@@ -49,7 +49,7 @@ RSpec.describe Hyrax::Characterization::FileSetDescription, valkyrie_adapter: :t
         resource = Hyrax::FileMetadata.new(label: other_file.original_filename,
                                            original_filename: other_file.original_filename,
                                            mime_type: other_file.content_type)
-        resource.type = custom_type
+        resource.pcdm_use = custom_type
         Hyrax.persister.save(resource: resource)
       end
 

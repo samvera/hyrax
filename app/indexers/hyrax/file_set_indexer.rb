@@ -30,6 +30,7 @@ module Hyrax
         solr_doc['original_checksum_tesim'] = object.original_checksum
         solr_doc['alpha_channels_ssi']      = object.alpha_channels
         solr_doc['original_file_id_ssi']    = original_file_id
+        solr_doc['extracted_text_id_ssi']   = extracted_text_id
         solr_doc['generic_type_si'] = 'FileSet'
       end
     end
@@ -44,6 +45,11 @@ module Hyrax
     def original_file_id
       return unless object.original_file
       Hyrax::VersioningService.versioned_file_id object.original_file
+    end
+
+    def extracted_text_id
+      return unless object.extracted_text
+      Hyrax::VersioningService.versioned_file_id object.extracted_text
     end
 
     def file_format
