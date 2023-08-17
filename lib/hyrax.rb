@@ -20,7 +20,6 @@ require 'hyrax/version'
 require 'hyrax/inflections'
 require 'hyrax/name'
 require 'hyrax/valkyrie_can_can_adapter'
-require 'kaminari_route_prefix'
 require 'valkyrie/indexing_adapter'
 require 'valkyrie/indexing/solr/indexing_adapter'
 require 'valkyrie/indexing/null_indexing_adapter'
@@ -80,7 +79,7 @@ module Hyrax
   ##
   # @return [Logger]
   def self.logger
-    @logger ||= Valkyrie.logger
+    config.logger
   end
 
   def self.primary_work_type

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require 'hyrax/role_registry'
-require 'samvera/nesting_indexer'
 
 module Hyrax
   ##
@@ -65,11 +64,23 @@ module Hyrax
       @registered_concerns = []
       @role_registry = Hyrax::RoleRegistry.new
       @default_active_workflow_name = DEFAULT_ACTIVE_WORKFLOW_NAME
-      @nested_relationship_reindexer = default_nested_relationship_reindexer
     end
 
     DEFAULT_ACTIVE_WORKFLOW_NAME = 'default'
     private_constant :DEFAULT_ACTIVE_WORKFLOW_NAME
+
+    # Set the default logger for Hyrax.
+    attr_writer :logger
+
+    ##
+    # @return [Logger]
+    def logger
+      @logger ||= if defined?(Rails)
+                    Rails.logger
+                  else
+                    Valkyrie.logger
+                  end
+    end
 
     # @api public
     # When an admin set is created, we need to activate a workflow.
@@ -382,6 +393,11 @@ module Hyrax
       @banner_image ||= 'https://user-images.githubusercontent.com/101482/29949206-ffa60d2c-8e67-11e7-988d-4910b8787d56.jpg'
     end
 
+    attr_writer :breadcrumb_builder
+    def breadcrumb_builder
+      @breadcrumb_builder ||= Hyrax::BootstrapBreadcrumbsBuilder
+    end
+
     ##
     # @return [Boolean]
     def disable_wings
@@ -600,9 +616,10 @@ module Hyrax
       @persistent_hostpath ||= "http://localhost/files/"
     end
 
+    attr_accessor :redis_connection
     attr_writer :redis_namespace
     def redis_namespace
-      @redis_namespace ||= "hyrax"
+      @redis_namespace ||= ENV.fetch("HYRAX_REDIS_NAMESPACE", "hyrax")
     end
 
     attr_writer :libreoffice_path
@@ -643,7 +660,7 @@ module Hyrax
       # overriding the value in0 their config unless it's already
       # flipped to false
       if ENV.fetch('SERVER_SOFTWARE', '').match(/Apache.*Phusion_Passenger/).present?
-        Rails.logger.warn('Cannot enable realtime notifications atop Passenger + Apache. Coercing `Hyrax.config.realtime_notifications` to `false`. Set this value to `false` in config/initializers/hyrax.rb to stop seeing this warning.') unless @realtime_notifications == false
+        Hyrax.logger.warn('Cannot enable realtime notifications atop Passenger + Apache. Coercing `Hyrax.config.realtime_notifications` to `false`. Set this value to `false` in config/initializers/hyrax.rb to stop seeing this warning.') unless @realtime_notifications == false
         @realtime_notifications = false
       end
       return @realtime_notifications unless @realtime_notifications.nil?
@@ -827,23 +844,17 @@ module Hyrax
 
     attr_writer :uploader
     def uploader
-      @uploader ||= if Rails.env.development?
-                      # use sequential uploads in development to avoid database locking problems with sqlite3.
-                      default_uploader_config.merge(limitConcurrentUploads: 1, sequentialUploads: true)
-                    else
-                      default_uploader_config
-                    end
-    end
-
-    attr_accessor :nested_relationship_reindexer
-
-    def default_nested_relationship_reindexer
-      ->(id:, extent:) { Samvera::NestingIndexer.reindex_relationships(id: id, extent: extent) }
+      @uploader ||= default_uploader_config
     end
 
     attr_writer :solr_select_path
     def solr_select_path
       @solr_select_path ||= ActiveFedora.solr_config.fetch(:select_path, 'select')
+    end
+
+    attr_writer :solr_default_method
+    def solr_default_method
+      @solr_default_method ||= :post
     end
 
     attr_writer :identifier_registrars
@@ -863,6 +874,27 @@ module Hyrax
     # @return [Array<Integer>]
     def range_for_number_of_results_to_display_per_page
       @range_for_number_of_results_to_display_per_page ||= [10, 20, 50, 100]
+    end
+
+    attr_writer :derivative_services
+    # The registered candidate derivative services.  In the array, the first `valid?` candidate will
+    # handle the derivative generation.
+    #
+    # @return [Array] of objects that conform to Hyrax::DerivativeService interface.
+    # @see Hyrax::DerivativeService
+    def derivative_services
+      @derivative_services ||= [Hyrax::FileSetDerivativesService]
+    end
+
+    attr_writer :visibility_map
+    # A mapping from visibility string values to permissions; the default and
+    # reference implementation is provided by {Hyrax::VisibilityMap}.
+    #
+    # @return [Hyrax::VisibilityMap]
+    # @see Hyrax::VisibilityReader
+    # @see Hyrax::VisibilityWriter
+    def visibility_map
+      @visibility_map ||= Hyrax::VisibilityMap.instance
     end
 
     private

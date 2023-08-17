@@ -2,16 +2,16 @@ name: Trigger Nurax build
 on:
   workflow_dispatch:
   push:
+    branches:
+      - 'main'
 
 jobs:
   trigger:
     runs-on: ubuntu-latest
     steps:
-    - uses: peter-evans/repository-dispatch@v1
+    - uses: peter-evans/repository-dispatch@v2.1.1
       with:
          token: ${{ secrets.NURAX_ACCESS_TOKEN }}
          event-type: push
-         repository: curationexperts/nurax
+         repository: samvera-labs/nurax
          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
-
-

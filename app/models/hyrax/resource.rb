@@ -35,8 +35,8 @@ module Hyrax
     include Hyrax::WithEvents
 
     attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
-    attribute :embargo,       Hyrax::Embargo.optional
-    attribute :lease,         Hyrax::Lease.optional
+    attribute :embargo_id,    Valkyrie::Types::ID
+    attribute :lease_id,      Valkyrie::Types::ID
 
     delegate :edit_groups, :edit_groups=,
              :edit_users,  :edit_users=,
@@ -91,6 +91,10 @@ module Hyrax
       false
     end
 
+    def ==(other)
+      attributes.except(:created_at, :updated_at) == other.attributes.except(:created_at, :updated_at)
+    end
+
     def permission_manager
       @permission_manager ||= Hyrax::PermissionManager.new(resource: self)
     end
@@ -101,6 +105,30 @@ module Hyrax
 
     def visibility
       visibility_reader.read
+    end
+
+    def embargo=(value)
+      raise TypeError "can't convert #{value.class} into Hyrax::Embargo" unless value.is_a? Hyrax::Embargo
+
+      @embargo = value
+      self.embargo_id = @embargo.id
+    end
+
+    def embargo
+      return @embargo if @embargo
+      @embargo = Hyrax.query_service.find_by(id: embargo_id) if embargo_id.present?
+    end
+
+    def lease=(value)
+      raise TypeError "can't convert #{value.class} into Hyrax::Lease" unless value.is_a? Hyrax::Lease
+
+      @lease = value
+      self.lease_id = @lease.id
+    end
+
+    def lease
+      return @lease if @lease
+      @lease = Hyrax.query_service.find_by(id: lease_id) if lease_id.present?
     end
 
     protected

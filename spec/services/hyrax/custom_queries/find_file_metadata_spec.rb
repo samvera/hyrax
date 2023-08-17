@@ -101,22 +101,20 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata, valkyrie_adapter: :test_a
   end
 
   describe '.find_file_metadata_by_use' do
-    let!(:of_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, type: original_file_use) }
-    let!(:et_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, type: extracted_text_use) }
-    let!(:th_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, type: thumbnail_use) }
+    let!(:of_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: :original_file) }
+    let!(:et_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: :extracted_file) }
+    let!(:th_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: :thumbnail_file) }
 
-    let(:original_file_use)  { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
-    let(:extracted_text_use) { Hyrax::FileMetadata::Use::EXTRACTED_TEXT }
-    let(:thumbnail_use)      { Hyrax::FileMetadata::Use::THUMBNAIL }
+    let(:requested_use) { Hyrax::FileMetadata::Use.uri_for(use: :extracted_file) }
 
     context 'when file set has files of the requested use' do
       let!(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, files: [of_file_metadata, et_file_metadata, th_file_metadata]) }
 
       it 'returns Hyrax::FileMetadata resources matching use' do
-        result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: extracted_text_use)
+        result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: requested_use)
         expect(result.size).to eq 1
         expect(result.first).to be_a Hyrax::FileMetadata
-        expect(result.first.type.first).to eq extracted_text_use
+        expect(result.first.pcdm_use.first).to eq requested_use
       end
     end
 
@@ -124,7 +122,7 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata, valkyrie_adapter: :test_a
       let!(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, files: [of_file_metadata, th_file_metadata]) }
 
       it 'result is empty' do
-        result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: extracted_text_use)
+        result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: requested_use)
         expect(result).to be_empty
       end
     end
@@ -132,7 +130,7 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata, valkyrie_adapter: :test_a
     context 'when file set has no files' do
       let!(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
       it 'result is empty' do
-        result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: original_file_use)
+        result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: requested_use)
         expect(result).to be_empty
       end
     end

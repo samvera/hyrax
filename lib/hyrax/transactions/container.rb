@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require "dry/transaction"
-require "dry/transaction/operation"
 
 module Hyrax
   module Transactions
@@ -33,6 +31,7 @@ module Hyrax
       require 'hyrax/transactions/steps/add_to_collections'
       require 'hyrax/transactions/steps/add_to_parent'
       require 'hyrax/transactions/steps/apply_collection_type_permissions'
+      require 'hyrax/transactions/steps/apply_permission_template'
       require 'hyrax/transactions/steps/change_depositor'
       require 'hyrax/transactions/steps/check_for_empty_admin_set'
       require 'hyrax/transactions/steps/delete_access_control'
@@ -203,6 +202,10 @@ module Hyrax
 
         ops.register 'add_to_parent' do
           Steps::AddToParent.new
+        end
+
+        ops.register 'apply_permission_template' do
+          Steps::ApplyPermissionTemplate.new
         end
 
         ops.register 'change_depositor' do

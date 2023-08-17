@@ -97,115 +97,17 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
         end
       end
     end
-
-    context 'with_nesting_attributes' do
-      let(:collection_type) { FactoryBot.create(:collection_type) }
-      let(:current_ability) { instance_double(Ability, admin?: true) }
-      let(:scope) { FakeSearchBuilderScope.new(current_ability: current_ability) }
-      let(:solr_doc) { Hyrax::SolrService.get("id:#{col.id}")["response"]["docs"].first }
-      let(:nesting_attributes) do
-        Hyrax::Collections::NestedCollectionQueryService::NestingAttributes.new(id: col.id, scope: scope)
-      end
-
-      context 'without additional permissions' do
-        let(:col) do
-          build(:collection_lw, id: 'Collection123',
-                                collection_type_gid: collection_type.to_global_id.to_s,
-                                with_nesting_attributes: { ancestors: ['Parent_1'],
-                                                           parent_ids: ['Parent_1'],
-                                                           pathnames: ['Parent_1/Collection123'],
-                                                           depth: 2 })
-        end
-
-        it 'will persist a queryable solr document with the given attributes' do
-          expect(nesting_attributes.id).to eq('Collection123')
-          expect(nesting_attributes.parents).to eq(['Parent_1'])
-          expect(nesting_attributes.pathnames).to eq(['Parent_1/Collection123'])
-          expect(nesting_attributes.ancestors).to eq(['Parent_1'])
-          expect(nesting_attributes.depth).to eq(2)
-          expect(solr_doc["id"]).to eq col.id
-          expect(solr_doc["has_model_ssim"].first).to eq "Collection"
-          expect(solr_doc["edit_access_person_ssim"]).to include(col.depositor)
-        end
-      end
-
-      context ' and with_permission_template' do
-        let(:col) do
-          build(:collection_lw, id: 'Collection123',
-                                collection_type_gid: collection_type.to_global_id.to_s,
-                                with_nesting_attributes: { ancestors: ['Parent_1'],
-                                                           parent_ids: ['Parent_1'],
-                                                           pathnames: ['Parent_1/Collection123'],
-                                                           depth: 2 },
-                                with_permission_template: { manage_users: [user_mgr],
-                                                            deposit_users: [user_dep],
-                                                            view_users: [user_vw] })
-        end
-
-        it 'will persist a queryable solr document with the given attributes' do
-          expect(nesting_attributes.id).to eq('Collection123')
-          expect(nesting_attributes.parents).to eq(['Parent_1'])
-          expect(nesting_attributes.pathnames).to eq(['Parent_1/Collection123'])
-          expect(nesting_attributes.ancestors).to eq(['Parent_1'])
-          expect(nesting_attributes.depth).to eq(2)
-          expect(solr_doc["id"]).to eq col.id
-          expect(solr_doc["has_model_ssim"].first).to eq "Collection"
-          expect(solr_doc["edit_access_person_ssim"]).to include(col.depositor, user_mgr.user_key)
-          expect(solr_doc["read_access_person_ssim"]).to include(user_dep.user_key, user_vw.user_key)
-        end
-      end
-
-      context 'and with_permission_template and with_solr_document' do
-        let(:col) do
-          build(:collection_lw, id: 'Collection123',
-                                collection_type_gid: collection_type.to_global_id.to_s,
-                                with_nesting_attributes: { ancestors: ['Parent_1'],
-                                                           parent_ids: ['Parent_1'],
-                                                           pathnames: ['Parent_1/Collection123'],
-                                                           depth: 2 },
-                                with_permission_template: { manage_users: [user_mgr],
-                                                            deposit_users: [user_dep],
-                                                            view_users: [user_vw] },
-                                with_solr_document: true)
-        end
-
-        it 'will persist a queryable solr document with the given attributes' do
-          expect(nesting_attributes.id).to eq('Collection123')
-          expect(nesting_attributes.parents).to eq(['Parent_1'])
-          expect(nesting_attributes.pathnames).to eq(['Parent_1/Collection123'])
-          expect(nesting_attributes.ancestors).to eq(['Parent_1'])
-          expect(nesting_attributes.depth).to eq(2)
-          expect(solr_doc["id"]).to eq col.id
-          expect(solr_doc["has_model_ssim"].first).to eq "Collection"
-          expect(solr_doc["edit_access_person_ssim"]).to include(col.depositor, user_mgr.user_key)
-          expect(solr_doc["read_access_person_ssim"]).to include(user_dep.user_key, user_vw.user_key)
-        end
-      end
-    end
   end
 
   describe 'create' do
     # collection_type_settings and collection_type_gid are tested by `build` and are the same for `build` and `create`
     # with_solr_document is tested by build
     # with_permission_template is tested by build except that the permission template is always created for `create`
-    # with_nested_attributes not supported for create
 
     context 'with_permission_template' do
       it 'will create a permission template and access even when it is the default value of false' do
         expect { create(:collection_lw) }.to change { Hyrax::PermissionTemplate.count }.by(1)
         expect { create(:collection_lw) }.to change { Hyrax::PermissionTemplateAccess.count }.by(1)
-      end
-    end
-
-    context 'when including nesting indexing', with_nested_reindexing: true do
-      # Nested indexing requires that the user's permissions be saved
-      # on the Fedora object... if simply in local memory, they are
-      # lost when the adapter pulls the object from Fedora to reindex.
-      let(:user) { create(:user) }
-      let(:collection) { create(:collection_lw, user: user) }
-
-      it 'will authorize the creating user' do
-        expect(user.can?(:edit, collection)).to be true
       end
     end
   end

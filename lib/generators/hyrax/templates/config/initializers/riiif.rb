@@ -14,11 +14,21 @@ ActiveSupport::Reloader.to_prepare do
     { height: doc['height_is'], width: doc['width_is'], format: doc['mime_type_ssi'], channels: doc['alpha_channels_ssi'] }
   end
 
-  Riiif::Image.file_resolver.id_to_uri = lambda do |id|
-    Hyrax::Base.id_to_uri(CGI.unescape(id)).tap do |url|
-      Rails.logger.info "Riiif resolved #{id} to #{url}"
-    end
-  end
+  Riiif::Image.file_resolver.id_to_uri = if Hyrax.config.use_valkyrie?
+                                           # Use Valkyrie adapter to make sure file is available locally. Riiif will just open it then
+                                           # id comes in with the format "FILE_SET_ID/files/FILE_ID"
+                                           lambda do |id|
+                                             file_metadata = Hyrax.query_service.find_by(id: id.split('/').last)
+                                             file = Hyrax.storage_adapter.find_by(id: file_metadata.file_identifier)
+                                             file.disk_path.to_s
+                                           end
+                                         else
+                                           lambda do |id|
+                                             Hyrax::Base.id_to_uri(CGI.unescape(id)).tap do |url|
+                                               Rails.logger.info "Riiif resolved #{id} to #{url}"
+                                             end
+                                           end
+                                         end
 
   Riiif::Image.authorization_service = Hyrax::IiifAuthorizationService
 

@@ -2,16 +2,22 @@ name: Trigger Nurax build
 on:
   workflow_dispatch:
   release:
+    types: [released]
 
 jobs:
   trigger:
     runs-on: ubuntu-latest
     steps:
-    - uses: peter-evans/repository-dispatch@v1
+    - id: latest-release
+      uses: pozetroninc/github-action-get-latest-release@v0.7.0
+      with:
+        repository: ${{ github.repository }}
+        token: ${{ github.token }}
+        excludes: prerelease, draft
+    - uses: peter-evans/repository-dispatch@v2.1.1
+      if: ${{ steps.latest-release.outputs.release == github.ref_name }}
       with:
          token: ${{ secrets.NURAX_ACCESS_TOKEN }}
          event-type: release
-         repository: curationexperts/nurax
+         repository: samvera-labs/nurax
          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
-
-

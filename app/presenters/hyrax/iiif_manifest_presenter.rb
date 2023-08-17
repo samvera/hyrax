@@ -48,9 +48,15 @@ module Hyrax
     end
 
     ##
+    # @return [String]
+    def hostname
+      @hostname || 'localhost'
+    end
+
+    ##
     # @return [Boolean]
     def file_set?
-      model.try(:file_set?) || Array(model[:has_model_ssim]).include?('FileSet')
+      model.try(:file_set?) || Array(model[:has_model_ssim]).include?('FileSet') || Array(model[:has_model_ssim]).include?('Hyrax::FileSet')
     end
 
     ##
@@ -71,7 +77,7 @@ module Hyrax
       metadata_fields.map do |field_name|
         {
           'label' => I18n.t("simple_form.labels.defaults.#{field_name}"),
-          'value' => Array(self[field_name]).map { |value| scrub(value.to_s) }
+          'value' => Array(send(field_name)).map { |value| scrub(value.to_s) }
         }
       end
     end
@@ -87,12 +93,8 @@ module Hyrax
     ##
     # @return [Array<#to_s>]
     def member_ids
-      case model
-      when Valkyrie::Resource
-        Array(model.try(:member_ids))
-      else
-        Hyrax::SolrDocument::OrderedMembers.decorate(model).ordered_member_ids
-      end
+      m = model.is_a?(::SolrDocument) ? model.hydra_model : model.class
+      m < Hyrax::Resource ? Array(model.member_ids) : Hyrax::SolrDocument::OrderedMembers.decorate(model).ordered_member_ids
     end
 
     ##
@@ -209,6 +211,14 @@ module Hyrax
                iiif_endpoint: iiif_endpoint(latest_file_id, base_url: hostname))
       end
 
+      ##
+      # @return [#can?]
+      def ability
+        @ability ||= NullAbility.new
+      end
+
+      ##
+      # @return [String]
       def hostname
         @hostname || 'localhost'
       end
@@ -221,10 +231,6 @@ module Hyrax
     end
 
     private
-
-    def hostname
-      @hostname || 'localhost'
-    end
 
     def metadata_fields
       Hyrax.config.iiif_metadata_fields

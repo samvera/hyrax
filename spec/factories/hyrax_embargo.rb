@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 FactoryBot.define do
   factory :hyrax_embargo, class: "Hyrax::Embargo" do
-    embargo_release_date      { Time.zone.today + 10 }
+    embargo_release_date      { (Time.zone.today + 10).to_datetime }
     visibility_after_embargo  { 'open' }
     visibility_during_embargo { 'authenticated' }
 
     to_create do |instance|
-      Valkyrie.config.metadata_adapter.persister.save(resource: instance)
+      saved_instance = Valkyrie.config.metadata_adapter.persister.save(resource: instance)
+      instance.id = saved_instance.id
+      saved_instance
     end
 
     trait :expired do
-      embargo_release_date { Time.zone.today - 1 }
+      embargo_release_date { (Time.zone.today - 1).to_datetime }
     end
   end
 end

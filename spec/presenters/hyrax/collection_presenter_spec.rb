@@ -30,7 +30,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     subject { described_class.terms }
 
     it do
-      is_expected.to eq [:total_items, :size, :resource_type, :creator,
+      is_expected.to eq [:total_items, :alternative_title, :size, :resource_type, :creator,
                          :contributor, :keyword, :license, :publisher,
                          :date_created, :subject, :language, :identifier,
                          :based_near, :related_url]

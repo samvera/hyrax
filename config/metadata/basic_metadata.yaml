@@ -113,6 +113,8 @@ attributes:
     multiple: true
     form:
       primary: true
+    index_keys:
+      - "rights_statement_tesim"
   source:
     type: string
     multiple: true

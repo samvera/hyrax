@@ -19,6 +19,14 @@ module Hyrax
         index_document[:member_of_collection_ids_ssim] = resource.member_of_collection_ids.map(&:to_s)
         index_document[:depositor_ssim] = [resource.depositor]
         index_document[:depositor_tesim] = [resource.depositor]
+        # add all attributes that should be indexed for collections here
+        tesim_and_ssim_attributes = ['abstract', 'access_right', 'alternative_title', 'based_near',
+                                     'bibliographic_citation', 'contributor', 'identifier', 'import_url', 'publisher', 'label',
+                                     'language', 'license', 'publisher', 'rights_notes', 'rights_statement', 'source', 'subject']
+        tesim_and_ssim_attributes.each do |attribute|
+          index_document["#{attribute}_ssim"] = resource[attribute.to_s]
+          index_document["#{attribute}_tesim"] = resource[attribute.to_s]
+        end
       end
     end
   end

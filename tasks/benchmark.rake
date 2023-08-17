@@ -51,6 +51,6 @@ namespace :wings do
 
   def setup_logger
     $VERBOSE = nil unless ENV['RUBY_LOUD']
-    Rails.logger.level = ENV.fetch('BM_LOG_LEVEL', :error)
+    Hyrax.logger.level = ENV.fetch('BM_LOG_LEVEL', :error)
   end
 end

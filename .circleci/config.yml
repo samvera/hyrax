@@ -2,22 +2,25 @@ version: 2.1
 orbs:
   samvera: samvera/circleci-orb@1
   browser-tools: circleci/browser-tools@1.3
+  ruby: circleci/ruby@2
+  node: circleci/node@5
+
 jobs:
   bundle:
     parameters:
       ruby_version:
         type: string
-        default: 2.7.6
+        default: 2.7.8
       bundler_version:
         type: string
-        default: 2.3.13
+        default: 2.4.15
       rails_version:
         type: string
-        default: 6.1.6.1
+        default: 6.1.7.4
     executor:
       name: 'samvera/ruby'
       ruby_version: << parameters.ruby_version >>
-    resource_class: medium+
+    resource_class: medium
     environment:
       RAILS_VERSION: << parameters.rails_version >>
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
@@ -44,8 +47,8 @@ jobs:
       - restore_cache:
           name: Restore rubocop cache
           keys:
-            - v1-ruby<< parameters.ruby_version >>-bundle{{ checksum "Gemfile.lock" }}
-            - v1-ruby<< parameters.ruby_version >>
+            - v1-rubocop-ruby<< parameters.ruby_version >>-bundle{{ checksum "Gemfile.lock" }}
+            - v1-rubocop-ruby<< parameters.ruby_version >>
             - v1
 
       - run:
@@ -54,9 +57,9 @@ jobs:
 
       - save_cache:
           name: Save rubocop cache
-          key: v1-ruby<< parameters.ruby_version >>-bundle{{ checksum "Gemfile.lock" }}
+          key: v1-rubocop-ruby<< parameters.ruby_version >>-bundle{{ checksum "Gemfile.lock" }}
           paths:
-            - ~/.cache
+            - ~/.cache/rubocop_cache
 
       - persist_to_workspace:
           root: ~/
@@ -68,17 +71,18 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.7.6
+        default: 2.7.8
       bundler_version:
         type: string
-        default: 2.3.13
+        default: 2.4.15
       rails_version:
         type: string
-        default: 6.1.6.1
+        default: 6.1.7.4
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
-    resource_class: medium+
+      solr_version: 8.11-slim
+    resource_class: medium
     environment:
       RAILS_VERSION: << parameters.rails_version >>
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
@@ -92,6 +96,15 @@ jobs:
       - samvera/bundle:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
+      - run:
+          name: Generate .internal_test_app/Gemfile.lock
+          command: bundle lock
+          working_directory: .internal_test_app
+      - ruby/install-deps:
+          app-dir: .internal_test_app
+      - node/install-packages:
+          pkg-manager: yarn
+          app-dir: .internal_test_app
       - persist_to_workspace:
           root: ~/
           paths:
@@ -102,16 +115,17 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.7.6
+        default: 2.7.8
       bundler_version:
         type: string
-        default: 2.3.13
+        default: 2.4.15
       hyrax_valkyrie:
         type: string
         default: "false"
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
+      solr_version: 8.11-slim
     resource_class: medium+
     parallelism: 10
     environment:
@@ -120,6 +134,7 @@ jobs:
       DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test # Hard-coded with data from CircleCI orb, related to https://github.com/samvera-labs/samvera-circleci-orb/issues/42
       KARMA_BROWSER: ChromeHeadlessCustom
       RAILS_ROOT: .internal_test_app
+      SPEC_OPTS: "" # Clear output conflicts between samvera orb executor and ruby orb rspec command
     steps:
       - attach_workspace:
           at: ~/
@@ -127,17 +142,25 @@ jobs:
           name: Install system dependencies
           command: |
             sudo apt-get update
-            sudo apt-get install imagemagick librsvg2-bin
+            sudo apt-get install imagemagick librsvg2-bin lsof
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - run:
+          name: Check Chrome install
           command: |
             google-chrome --version
             chromedriver --version
-          name: Check Chrome install
+      - restore_cache:
+          keys:
+            - engine-node-v1-{{ checksum "package.json" }}
+      # Call yarn directly for hyrax engine; node orb demands a lockfile to use caching
       - run:
-          name: Yarn install
+          name: Yarn Install (engine)
           command: yarn install
+      - save_cache:
+          key: engine-node-v1-{{ checksum "package.json" }}
+          paths:
+            - node_modules
       - samvera/install_solr_core:
           solr_config_path: .internal_test_app/solr/conf
       - samvera/install_solr_core:
@@ -147,56 +170,72 @@ jobs:
       - samvera/bundle:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
+      # Ensure gems needed by the test app are installed
+      - ruby/install-deps:
+          app-dir: .internal_test_app
+      - node/install-packages:
+          pkg-manager: yarn
+          app-dir: .internal_test_app
       - run:
-          command: bundle exec rake app:db:migrate
-      - samvera/parallel_rspec
+          command: bundle exec rake db:migrate
+          working_directory: .internal_test_app
+      - ruby/rspec-test
+      - store_artifacts:
+          path: Gemfile.lock
+          destination: engine-gemfile-lock
+      - store_artifacts:
+          path: .internal_test_app/Gemfile.lock
+          destination: webapp-gemfile-lock
 
-# Trigger a workflow on the nurax repository that will deploy the most recent hyrax gem code to https://nurax-dev.curationexperts.com/
-  deploy:
-    docker:
-      - image: ubuntu
-    steps:
-      - run:
-          name: Install curl
-          command: apt-get update && apt-get install -y curl
-      - run:
-          name: "Trigger Nurax deploy"
-          command: |
-            curl -X POST https://circleci.com/api/v2/project/gh/curationexperts/nurax/pipeline \
-            --header "Circle-Token: $NURAX_CIRCLECI_TOKEN" \
-            --header 'Accept: text/plain'    \
-            --header 'Content-Type: application/json'
 workflows:
   version: 2
-  ruby2-7-6:
+  ruby3-2:
     jobs:
       - bundle:
-          ruby_version: "2.7.6"
-          rails_version: "6.1.6.1"
-          bundler_version: "2.3.13"
+          ruby_version: "3.2.2"
+          rails_version: "6.1.7.4"
+          bundler_version: "2.4.15"
       - build:
-          ruby_version: "2.7.6"
-          rails_version: "6.1.6.1"
-          bundler_version: "2.3.13"
+          ruby_version: "3.2.2"
+          rails_version: "6.1.7.4"
+          bundler_version: "2.4.15"
           requires:
             - bundle
       - test:
-          name: "ruby2-7-6"
-          ruby_version: "2.7.6"
-          bundler_version: "2.3.13"
+          name: "ruby3-2"
+          ruby_version: "3.2.2"
+          bundler_version: "2.4.15"
           requires:
             - build
       - test:
-          name: "ruby2-7-6-valkyrie"
-          ruby_version: "2.7.6"
-          bundler_version: "2.3.13"
+          name: "ruby3-2-valkyrie"
+          ruby_version: "3.2.2"
+          bundler_version: "2.4.15"
           hyrax_valkyrie: "true"
           requires:
             - build
-  nurax-dev_deploy:
+  ruby2-7:
     jobs:
-      - deploy:
-          filters:
-            branches:
-              only:
-                - main
+      - bundle:
+          ruby_version: "2.7.8"
+          rails_version: "6.1.7.4"
+          bundler_version: "2.4.15"
+      - build:
+          ruby_version: "2.7.8"
+          rails_version: "6.1.7.4"
+          bundler_version: "2.4.15"
+          requires:
+            - bundle
+      - test:
+          name: "ruby2-7"
+          ruby_version: "2.7.8"
+          bundler_version: "2.4.15"
+          requires:
+            - build
+      - test:
+          name: "ruby2-7-valkyrie"
+          ruby_version: "2.7.8"
+          bundler_version: "2.4.15"
+          hyrax_valkyrie: "true"
+          requires:
+            - build

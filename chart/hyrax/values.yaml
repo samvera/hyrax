@@ -22,6 +22,7 @@ loadSolrConfigSet: true
 #   ignored if `solr.enabled` is true
 solrExistingSecret: ""
 externalSolrHost: ""
+externalSolrPort: ""
 externalSolrUser: ""
 externalSolrPassword: ""
 externalSolrCollection: "hyrax"
@@ -64,6 +65,10 @@ extraEnvFrom: []
 # stdin: true
 # tty: true
 extraContainerConfiguration: []
+
+## @param extraDeploy Array of extra objects to deploy with the release (evaluated as a template)
+##
+extraDeploy: []
 
 # an existing volume containing a Hyrax-based application
 # must be a ReadWriteMany volume if worker is enabled
@@ -228,10 +233,9 @@ memcached:
 
 minio:
   enabled: false
-  accessKey:
-    password: hyrax-access-key
-  secretKey:
-    password: hyrax-secret-key
+  auth:
+    rootUser: hyrax-access-key
+    rootPassword: hyrax-secret-key
   persistence:
     enabled: false
   # defaultBuckets: bucketOne;bucketTwo
@@ -241,15 +245,18 @@ postgresql:
   image:
     repository: bitnami/postgresql
     tag: 12.3.0
-  postgresqlUsername: hyrax
-  postgresqlPassword: hyrax_pass
-  postgresqlDatabase: hyrax
-  servicePort: 5432
-  # cpu: 1000m
-  # memory: 1Gi
-  # persistence:
-  #   size: 10Gi
-
+  auth:
+    database: hyrax
+    password: hyrax_pass
+    username: hyrax
+  primary:
+    service:
+      ports:
+        postgresql: 5432
+  readReplicas:
+    service:
+      ports:
+        postgresql: 5432
 
 ## Nginx proxy is used to keep puma from having to serve static assets
 ## and to act as an auth proxy for Cantelope
@@ -390,14 +397,15 @@ nginx:
 
 redis:
   enabled: true
-  password: mysecret
+  auth:
+    password: mysecret
 
 solr:
   enabled: true
   image:
     repository: bitnami/solr
     tag: 8.11.1
-  authentication:
+  auth:
     enabled: true
     adminUsername: admin
     adminPassword: admin

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::ValkyrieFileSetIndexer do
+RSpec.describe Hyrax::ValkyrieFileSetIndexer, if: Hyrax.config.use_valkyrie? do
   include Hyrax::FactoryHelpers
 
   let(:fileset_id) { 'fs1' }
   let(:file_set) do
     Hyrax::FileSet.new(
       id: fileset_id,
-      file_ids: [mock_file.id, mock_text.id],
+      file_ids: [mock_file.id, mock_text.id, mock_thumbnail.id],
       original_file_id: mock_file.id,
       thumbnail_id: mock_thumbnail.id,
       extracted_text_id: mock_text.id,
@@ -37,6 +37,7 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
 
   let(:metadata_attrs) do
     {
+      id: SecureRandom.uuid,
       file_identifier: 'VALFILEID1',
       alternate_ids: ['AFFILEID1'],
       file_set_id: fileset_id,
@@ -124,8 +125,9 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
     before do
       allow(file_set).to receive(:persisted?).and_return(true)
       allow(file_set).to receive(:label).and_return('CastoriaAd.tiff')
-      allow(Hyrax::ThumbnailPathService).to receive(:call).and_return('/downloads/foo12345?file=thumbnail')
       allow(Hyrax.custom_queries).to receive(:find_original_file).with(file_set: file_set).and_return(mock_file)
+      allow(Hyrax.custom_queries).to receive(:find_file_metadata_by).with(id: file_set.original_file_id).and_return(mock_file)
+      allow(Hyrax.custom_queries).to receive(:find_thumbnail).with(file_set: file_set).and_return(mock_thumbnail)
       allow(mock_file).to receive(:file_name).and_return(file_name)
     end
     subject { indexer.generate_solr_document }
@@ -148,14 +150,14 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
       expect(subject['subject_tesim']).to eq ['Family life']
 
       # from FileSet metadata
-      expect(subject['file_ids_ssim']).to match_array [mock_file.id.to_s, mock_text.id.to_s]
-      expect(subject['original_file_id_ssi']).to eq mock_file.id.to_s
+      expect(subject['file_ids_ssim']).to match_array [mock_file.id.to_s, mock_text.id.to_s, mock_thumbnail.id.to_s]
+      expect(subject['original_file_id_ssi']).to eq "#{fileset_id}/files/#{mock_file.id}"
       expect(subject['extracted_text_id_ssi']).to eq mock_text.id.to_s
       expect(subject['hasRelatedMediaFragment_ssim']).to eq fileset_id
       expect(subject['hasRelatedImage_ssim']).to eq mock_thumbnail.id.to_s
 
       # from ThumbnailIndexer
-      expect(subject['thumbnail_path_ss']).to eq '/downloads/foo12345?file=thumbnail'
+      expect(subject['thumbnail_path_ss']).to eq "/downloads/#{file_set.id}?file=thumbnail"
 
       # from FileMetadata
       expect(subject['original_file_alternate_ids_tesim']).to eq mock_file['alternate_ids']
@@ -166,7 +168,7 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
 
       expect(subject['file_format_tesim']).to eq 'jpeg (JPEG Image)'
       expect(subject['file_format_sim']).to eq 'jpeg (JPEG Image)'
-      expect(subject['file_size_lts']).to eq mock_file.size[0]
+      expect(subject['file_size_lts']).to eq mock_file.recorded_size[0]
       expect(subject['type_tesim']).to eq ['http://pcdm.org/use#OriginalFile']
 
       # attributes set by fits
@@ -234,7 +236,59 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
       # end
 
       it "does not have version info indexed" do
-        expect(subject['original_file_id_ssi']).to eq file_set.original_file_id
+        expect(subject['original_file_id_ssi']).to eq "#{file_set.id}/files/#{file_set.original_file_id}"
+      end
+    end
+
+    context 'with a valid embargo' do
+      let(:embargo) { FactoryBot.create(:hyrax_embargo) }
+
+      before { allow(file_set).to receive(:embargo_id).and_return(embargo.id) }
+
+      it 'sets the embargo expiration date and visibility settings' do
+        expect(subject['embargo_release_date_dtsi']).to eq embargo.embargo_release_date
+        expect(subject['visibility_after_embargo_ssim']).to eq embargo.visibility_after_embargo
+        expect(subject['visibility_during_embargo_ssim']).to eq embargo.visibility_during_embargo
+        expect(subject['embargo_history_ssim']).to be nil
+      end
+    end
+
+    context 'with an expired embargo' do
+      let(:embargo) { FactoryBot.create(:hyrax_embargo, :expired) }
+
+      before { allow(file_set).to receive(:embargo_id).and_return(embargo.id) }
+
+      it 'sets the embargo expiration date and visibility settings' do
+        expect(subject['embargo_release_date_dtsi']).to be nil
+        expect(subject['visibility_after_embargo_ssim']).to be nil
+        expect(subject['visibility_during_embargo_ssim']).to be nil
+        expect(subject['embargo_history_ssim']).to eq embargo.embargo_history
+      end
+    end
+
+    context 'with a valid lease' do
+      let(:lease) { FactoryBot.create(:hyrax_lease) }
+
+      before { allow(file_set).to receive(:lease_id).and_return(lease.id) }
+
+      it 'sets the lease expiration date and visibility settings' do
+        expect(subject['lease_expiration_date_dtsi']).to eq lease.lease_expiration_date
+        expect(subject['visibility_after_lease_ssim']).to eq lease.visibility_after_lease
+        expect(subject['visibility_during_lease_ssim']).to eq lease.visibility_during_lease
+        expect(subject['lease_history_ssim']).to be nil
+      end
+    end
+
+    context 'with an expired lease' do
+      let(:lease) { FactoryBot.create(:hyrax_lease, :expired) }
+
+      before { allow(file_set).to receive(:lease_id).and_return(lease.id) }
+
+      it 'sets the lease expiration date and visibility settings' do
+        expect(subject['lease_expiration_date_dtsi']).to be nil
+        expect(subject['visibility_after_lease_ssim']).to be nil
+        expect(subject['visibility_during_lease_ssim']).to be nil
+        expect(subject['lease_history_ssim']).to eq lease.lease_history
       end
     end
   end

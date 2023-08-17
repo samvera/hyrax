@@ -459,6 +459,14 @@ en:
       workflows:
         index:
           header: Review Submissions
+          heading:
+            work: Work
+            depositor: Depositor
+            submission_date: Submission Date
+            status: status
+          works_published: "<strong>%{total_count} works</strong> published"
+          works_under_review: "<strong>%{total_count} works</strong> under review"
+          works_listing: Works listing
           tabs:
             published: Published
             under_review: Under Review
@@ -535,7 +543,10 @@ en:
           files within a short period of time, the provider may not be able to
           accommodate your request. If you experience errors uploading from the
           cloud, let us know via the %{contact_href}.</p>
-        local_upload_html: "<p>You can add one or more files to associate with this work.</p>"
+          <p>Uploads are limited to %{upload_file_limit} files, %{upload_size_limit} MB each.</p>
+        local_upload_html: |
+          <p>You can add one or more files to associate with this work.</p>
+          <p>Uploads are limited to %{upload_file_limit} files, %{upload_size_limit} MB each.</p>
       form_member_of_collections:
         actions:
           remove: Remove from collection
@@ -588,6 +599,7 @@ en:
         legend_html: Thumbnail
       form_visibility_component:
         visibility: Visibility
+        subtitle_html: <small>Who should be able to view or download this content?</small>
       inspect_work:
         back_to: Back to
         entity_id: Entity ID
@@ -1289,7 +1301,7 @@ en:
         restore: Restore Previous Version
         restore_from: Restore From
         save: Save Revision
-        save_your_note: You must click &quot;Save Revision&quot; to revert a previous version of this file
+        save_your_note: You must click "Save Revision" to revert a previous version of this file
         upload: Upload New Version
     help:
       header: User Support

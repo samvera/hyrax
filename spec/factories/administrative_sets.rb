@@ -33,6 +33,15 @@ FactoryBot.define do
     end
   end
 
+  trait :with_permission_template do
+    with_permission_template { true }
+    access_grants do
+      [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+         agent_id: user.user_key,
+         access: Hyrax::PermissionTemplateAccess::MANAGE }]
+    end
+  end
+
   factory :invalid_hyrax_admin_set, class: 'Hyrax::AdministrativeSet' do
     # Title is required.  Without title, the admin set is invalid.
   end

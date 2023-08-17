@@ -33,9 +33,17 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
         expect(work.errors.full_messages).to eq(converted_work.errors.full_messages)
       end
     end
-    context 'with an invalid FileSet object' do
+
+    context 'with an invalid FileSet object', unless: Hyrax.config.use_valkyrie? do
+      # valkyrie backed resources do not respond to `valid?`.
+      let(:expired_lease) { Hydra::AccessControls::Lease.new(lease_expiration_date: (Time.zone.today - 2).to_datetime) }
+      let(:file_set) { ::FileSet.new }
+
+      before do
+        allow(file_set).to receive(:lease).and_return(expired_lease)
+      end
+
       it 'round trip converts to an FileSet object this is also invalid' do
-        file_set = ::FileSet.new(lease_expiration_date: 1.day.ago)
         expect(file_set).not_to be_valid
         converted_file_set = described_class.new(resource: file_set.valkyrie_resource).convert
         expect(converted_file_set).not_to be_valid
@@ -339,7 +347,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
         end
 
         it 'converts pcdm use URIs as types' do
-          expect { resource.type = custom_type }
+          expect { resource.pcdm_use = custom_type }
             .to change { converter.convert.metadata_node.type }
             .to contain_exactly(custom_type)
         end

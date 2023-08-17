@@ -15,7 +15,7 @@ module Hyrax
     # Removes a single embargo
     def destroy
       Hyrax::Actors::EmbargoActor.new(curation_concern).destroy
-      flash[:notice] = embargo_history(curation_concern)
+      flash[:notice] = embargo_history(curation_concern).last
       if curation_concern.work? && work_has_file_set_members?(curation_concern)
         redirect_to confirm_permission_path
       else

@@ -61,7 +61,7 @@ module Hyrax
       ids.each do |id|
         id = id.to_s
         indx = results.index { |doc| id == doc['id'] }
-        raise(ArgumentError, "Could not find an indexed document for id: #{id}") if
+        raise(Hyrax::ObjectNotFoundError, "Could not find an indexed document for id: #{id}") if
           indx.nil?
         hash = results.delete_at(indx)
         yield presenter_for(document: ::SolrDocument.new(hash), ability: ability)

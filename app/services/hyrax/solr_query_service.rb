@@ -26,21 +26,29 @@ module Hyrax
     end
 
     ##
+    # execute the query using a GET request
     # @return [Hash] the results returned from solr for the current query
-    def get
-      solr_service.get(build)
+    def get(**args)
+      solr_service.get(build, **args)
+    end
+
+    ##
+    # execute the solr query and return results
+    # @return [Hash] the results returned from solr for the current query
+    def query_result(**args)
+      solr_service.query_result(build, **args)
     end
 
     ##
     # @return [Enumerable<SolrDocument>]
-    def solr_documents
-      get['response']['docs'].map { |doc| self.class.document_model.new(doc) }
+    def solr_documents(**args)
+      query_result(**args)['response']['docs'].map { |doc| self.class.document_model.new(doc) }
     end
 
     ##
     # @return [Array<String>] ids of documents matching the current query
     def get_ids # rubocop:disable Naming/AccessorMethodName
-      results = get
+      results = query_result
       results['response']['docs'].map { |doc| doc['id'] }
     end
 
@@ -99,6 +107,7 @@ module Hyrax
     def with_generic_type(generic_type: 'Work')
       # TODO: Generic type was originally stored as `sim`.  Since it is never multi-valued, it is moving to being stored
       #       as `si`.  Until a migration is created to correct existing solr docs, this query searches in both fields.
+      #       @see https://github.com/samvera/hyrax/issues/6086
       field_pairs = { generic_type_si: generic_type, generic_type_sim: generic_type }
       type_query = construct_query_for_pairs(field_pairs, ' OR ', 'field')
       @query += [type_query]

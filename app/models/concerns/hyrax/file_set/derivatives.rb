@@ -43,8 +43,9 @@ module Hyrax
         #          # ./spec/jobs/create_derivatives_job_spec.rb:7:in `block (2 levels) in <top (required)>'
         #
         Hydra::Derivatives.source_file_service = Hyrax::LocalFileService
-        Hydra::Derivatives.output_file_service = Hyrax::PersistDerivatives
-        Hydra::Derivatives::FullTextExtract.output_file_service = Hyrax::PersistDirectlyContainedOutputFileService
+        Hydra::Derivatives.output_file_service = Hyrax::ValkyriePersistDerivatives
+        # Hydra::Derivatives::FullTextExtract.output_file_service = Hyrax::PersistDirectlyContainedOutputFileService
+        Hydra::Derivatives::FullTextExtract.output_file_service = Hyrax::ValkyriePersistDerivatives
         before_destroy :cleanup_derivatives
         # This completely overrides the version in Hydra::Works so that we
         # read and write to a local file. It's important that characterization runs

@@ -11,11 +11,15 @@ module Hyrax
     #     # other WorkForm-like configuration here
     #   end
     #
+    # @note The returned class will extend +Hyrax::Forms::PcdmObjectForm+, not
+    #   only +Hyrax::Forms::ResourceForm+. This is for backwards‐compatibility
+    #   with existing Hyrax instances and satisfies the expected general use
+    #   case (building forms for various PCDM object classes), but is *not*
+    #   necessarily suitable for other kinds of Hyrax resource, like
+    #   +Hyrax::FileSet+s.
     def self.ResourceForm(work_class)
-      Class.new(Hyrax::Forms::ResourceForm) do
+      Class.new(Hyrax::Forms::PcdmObjectForm) do
         self.model_class = work_class
-
-        include Hyrax::FormFields(:core_metadata)
 
         ##
         # @return [String]
@@ -29,11 +33,11 @@ module Hyrax
     ##
     # @api public
     #
-    # This form wraps `Hyrax::ChangeSet` in the `HydraEditor::Form` interface.
+    # This form wraps +Hyrax::ChangeSet+ in the +HydraEditor::Form+ interface.
     class ResourceForm < Hyrax::ChangeSet # rubocop:disable Metrics/ClassLength
       ##
       # @api private
-      InWorksPrepopulator = lambda do |_options|
+      InWorksPrepopulator = proc do |_options|
         self.in_works_ids =
           if persisted?
             Hyrax.query_service
@@ -52,7 +56,7 @@ module Hyrax
       #   with `etag`-driven, application-side lock checks. for non-wings adapters
       #   we want to move away from application side lock validation and rely
       #   on the adapter/database features instead.
-      LockKeyPrepopulator = lambda do |_options|
+      LockKeyPrepopulator = proc do |_options|
         if Hyrax.config.disable_wings || !Hyrax.metadata_adapter.is_a?(Wings::Valkyrie::MetadataAdapter)
           Hyrax.logger.info "trying to prepopulate a lock token for " \
                             "#{self.class.inspect}, but optimistic locking isn't " \
@@ -69,45 +73,33 @@ module Hyrax
       property :human_readable_type, writable: false
 
       property :depositor
-      property :on_behalf_of
-      property :proxy_depositor
 
       property :visibility, default: VisibilityIntention::PRIVATE, populator: :visibility_populator
 
       property :date_modified, readable: false
       property :date_uploaded, readable: false
-      property :agreement_accepted, virtual: true, default: false, prepopulator: ->(_opts) { self.agreement_accepted = !model.new_record }
+      property :agreement_accepted, virtual: true, default: false, prepopulator: proc { |_opts| self.agreement_accepted = !model.new_record }
 
       collection(:permissions,
                  virtual: true,
                  default: [],
                  form: Hyrax::Forms::Permission,
                  populator: :permission_populator,
-                 prepopulator: ->(_opts) { self.permissions = Hyrax::AccessControl.for(resource: model).permissions })
+                 prepopulator: proc { |_opts| self.permissions = Hyrax::AccessControl.for(resource: model).permissions })
 
       property :embargo, form: Hyrax::Forms::Embargo, populator: :embargo_populator
       property :lease, form: Hyrax::Forms::Lease, populator: :lease_populator
 
       # virtual properties for embargo/lease;
-      property :embargo_release_date, virtual: true, prepopulator: ->(_opts) { self.embargo_release_date = model.embargo&.embargo_release_date }
-      property :visibility_after_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_after_embargo = model.embargo&.visibility_after_embargo }
-      property :visibility_during_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_during_embargo = model.embargo&.visibility_during_embargo }
+      property :embargo_release_date, virtual: true, prepopulator: proc { |_opts| self.embargo_release_date = model.embargo&.embargo_release_date }
+      property :visibility_after_embargo, virtual: true, prepopulator: proc { |_opts| self.visibility_after_embargo = model.embargo&.visibility_after_embargo }
+      property :visibility_during_embargo, virtual: true, prepopulator: proc { |_opts| self.visibility_during_embargo = model.embargo&.visibility_during_embargo }
 
-      property :lease_expiration_date, virtual: true,  prepopulator: ->(_opts) { self.lease_expiration_date = model.lease&.lease_expiration_date }
-      property :visibility_after_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_after_lease = model.lease&.visibility_after_lease }
-      property :visibility_during_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_during_lease = model.lease&.visibility_during_lease }
+      property :lease_expiration_date, virtual: true,  prepopulator: proc { |_opts| self.lease_expiration_date = model.lease&.lease_expiration_date }
+      property :visibility_after_lease, virtual: true, prepopulator: proc { |_opts| self.visibility_after_lease = model.lease&.visibility_after_lease }
+      property :visibility_during_lease, virtual: true, prepopulator: proc { |_opts| self.visibility_during_lease = model.lease&.visibility_during_lease }
 
-      # pcdm relationships
-      property :admin_set_id, prepopulator: ->(_opts) { self.admin_set_id = Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s }
       property :in_works_ids, virtual: true, prepopulator: InWorksPrepopulator
-      property :member_ids, default: [], type: Valkyrie::Types::Array
-      property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array
-      property :member_of_collections_attributes, virtual: true, populator: :in_collections_populator
-      validates_with CollectionMembershipValidator
-
-      property :representative_id, type: Valkyrie::Types::String
-      property :thumbnail_id, type: Valkyrie::Types::String
-      property :rendering_ids, default: [], type: Valkyrie::Types::Array
 
       # provide a lock token for optimistic locking; we name this `version` for
       # backwards compatibility
@@ -118,10 +110,6 @@ module Hyrax
       #
       # @see https://github.com/samvera/valkyrie/wiki/Optimistic-Locking
       property :version, virtual: true, prepopulator: LockKeyPrepopulator
-
-      # backs the child work search element;
-      # @todo: look for a way for the view template not to depend on this
-      property :find_child_work, default: nil, virtual: true
 
       class << self
         ##
@@ -143,6 +131,7 @@ module Hyrax
           when Hyrax::PcdmCollection
             Hyrax::Forms::PcdmCollectionForm.new(resource)
           else
+            # NOTE: This will create a +Hyrax::Forms::PcdmObjectForm+.
             Hyrax::Forms::ResourceForm(resource.class).new(resource)
           end
         end
@@ -217,20 +206,6 @@ module Hyrax
 
       def lease_populator(**)
         self.lease = Hyrax::LeaseManager.lease_for(resource: model)
-      end
-
-      def in_collections_populator(fragment:, **_options)
-        adds = []
-        deletes = []
-        fragment.each do |_, h|
-          if h["_destroy"] == "true"
-            deletes << Valkyrie::ID.new(h["id"])
-          else
-            adds << Valkyrie::ID.new(h["id"])
-          end
-        end
-
-        self.member_of_collection_ids = ((member_of_collection_ids + adds) - deletes).uniq
       end
 
       # https://trailblazer.to/2.1/docs/reform.html#reform-populators-populator-collections

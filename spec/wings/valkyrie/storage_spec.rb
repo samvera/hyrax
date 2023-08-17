@@ -60,7 +60,7 @@ RSpec.describe Wings::Valkyrie::Storage, :clean_repo do
         .to have_attributes original_filename: file.original_filename,
                             mime_type: 'image/png',
                             file_identifier: upload.id,
-                            size: [file.size]
+                            recorded_size: [file.size]
     end
 
     it 'can find content from its metadata node ' do

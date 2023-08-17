@@ -120,7 +120,7 @@ module Hyrax
         primary = (required_fields & terms)
 
         (required_fields - primary).each do |missing|
-          Rails.logger.warn("The form field #{missing} is configured as a " \
+          Hyrax.logger.warn("The form field #{missing} is configured as a " \
                             'required field, but not as a term. This can lead ' \
                             'to unexpected behavior. Did you forget to add it ' \
                             "to `#{self.class}#terms`?")
@@ -158,7 +158,7 @@ module Hyrax
       # In particular we are discarding any access grant parameters for works that
       # are going into a mediated deposit workflow.
       def self.sanitize_params(form_params)
-        admin_set_id = form_params[:admin_set_id]
+        admin_set_id = Array(form_params[:admin_set_id]).first
         return super if admin_set_id && workflow_for(admin_set_id: admin_set_id).allows_access_grant?
         params_without_permissions = permitted_params.reject { |arg| arg.respond_to?(:key?) && arg.key?(:permissions_attributes) }
         form_params.permit(*params_without_permissions)

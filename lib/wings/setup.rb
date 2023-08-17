@@ -36,6 +36,7 @@ module ActiveFedora
     alias eql? ==
 
     def self.supports_property?(property)
+      return true if ['pcdm_use'].include?(property.to_s)
       properties.key?(property.to_s)
     end
 
@@ -46,6 +47,14 @@ module ActiveFedora
     def self.default_sort_params
       ["system_create_dtsi asc"]
     end
+
+    def pcdm_use
+      metadata.type
+    end
+
+    def pcdm_use=(value)
+      metadata.type = value
+    end
   end
 
   module WithMetadata
@@ -55,6 +64,14 @@ module ActiveFedora
       #   the data store. always drop it from changed attributes.
       def changed_attributes
         super.except(:file_hash)
+      end
+
+      def pcdm_use
+        type
+      end
+
+      def pcdm_use=(value)
+        self.type = value
       end
     end
   end
@@ -102,7 +119,10 @@ custom_queries = [Hyrax::CustomQueries::Navigators::CollectionMembers,
                   Wings::CustomQueries::FindCollectionsByType,
                   Wings::CustomQueries::FindFileMetadata, # override Hyrax::CustomQueries::FindFileMetadata
                   Wings::CustomQueries::FindIdsByModel,
-                  Wings::CustomQueries::FindManyByAlternateIds] # override Hyrax::CustomQueries::FindManyByAlternateIds
+                  Wings::CustomQueries::FindManyByAlternateIds,
+                  Hyrax::CustomQueries::FindModelsByAccess,
+                  Hyrax::CustomQueries::FindCountBy,
+                  Hyrax::CustomQueries::FindByDateRange] # override Hyrax::CustomQueries::FindManyByAlternateIds
 custom_queries.each do |query_handler|
   Valkyrie.config.metadata_adapter.query_service.custom_queries.register_query_handler(query_handler)
 end

@@ -39,7 +39,7 @@ module Hyrax
     def find_field_partial(field_name)
       ["#{collection_path}/show_fields/_#{field_name}", "records/show_fields/_#{field_name}",
        "#{collection_path}/show_fields/_default", "records/show_fields/_default"].find do |partial|
-        Rails.logger.debug "Looking for show field partial #{partial}"
+        Hyrax.logger.debug "Looking for show field partial #{partial}"
         return partial.sub(/\/_/, '/') if partial_exists?(partial)
       end
     end

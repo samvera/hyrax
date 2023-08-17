@@ -20,6 +20,8 @@ module Hyrax
     require 'qa'
     require 'tinymce-rails'
     require 'valkyrie'
+    require 'cancancan'
+    require 'blacklight'
 
     require 'hydra/derivatives'
     require 'hyrax/active_fedora_dummy_model'
@@ -68,7 +70,7 @@ module Hyrax
 
       can_persist = can_connect && begin
         Hyrax.config.persist_registered_roles!
-        Rails.logger.info("Hyrax::Engine.after_initialize - persisting registered roles!")
+        Hyrax.logger.info("Hyrax::Engine.after_initialize - persisting registered roles!")
         true
                                    rescue ActiveRecord::StatementInvalid
                                      false
@@ -78,7 +80,7 @@ module Hyrax
         message = "Hyrax::Engine.after_initialize - unable to persist registered roles.\n"
         message += "It is expected during the application installation - during integration tests, rails install.\n"
         message += "It is UNEXPECTED if you are booting up a Hyrax powered application via `rails server'"
-        Rails.logger.info(message)
+        Hyrax.logger.info(message)
       end
 
       # Force CatalogController to use our SearchState class, which has an important
@@ -87,7 +89,6 @@ module Hyrax
     end
 
     initializer 'requires' do
-      require 'power_converters'
       require 'wings' unless Hyrax.config.disable_wings
     end
 
@@ -108,6 +109,8 @@ module Hyrax
 
         ActiveFedora::Base.translate_uri_to_id = c.translate_uri_to_id
         ActiveFedora::Base.translate_id_to_uri = c.translate_id_to_uri
+        ActiveFedora::File.translate_uri_to_id = c.translate_uri_to_id
+        ActiveFedora::File.translate_id_to_uri = c.translate_id_to_uri
 
         ::Noid::Rails.config.template = c.noid_template
         ::Noid::Rails.config.minter_class = c.noid_minter_class

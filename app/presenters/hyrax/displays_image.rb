@@ -69,7 +69,7 @@ module Hyrax
           result = original_file_id
 
           if result.blank?
-            Rails.logger.warn "original_file_id for #{id} not found, falling back to Fedora."
+            Hyrax.logger.warn "original_file_id for #{id} not found, falling back to Fedora."
             result = Hyrax::VersioningService.versioned_file_id ::FileSet.find(id).original_file
           end
 

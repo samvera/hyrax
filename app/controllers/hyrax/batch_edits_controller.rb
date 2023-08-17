@@ -52,7 +52,7 @@ module Hyrax
     def update_document(obj)
       interpret_visiblity_params(obj)
       obj.attributes = work_params(admin_set_id: obj.admin_set_id).except(*visibility_params)
-      obj.date_modified = Time.current.ctime
+      obj.date_modified = TimeService.time_in_utc
 
       InheritPermissionsJob.perform_now(obj)
       VisibilityCopyJob.perform_now(obj)

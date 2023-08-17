@@ -13,11 +13,12 @@ module Hyrax
       file.is_a?(Valkyrie::Resource)
 
     Hyrax.custom_queries.find_file_metadata_by(id: file.id)
-  rescue Hyrax::ObjectNotFoundError, Ldp::BadRequest
+  rescue Hyrax::ObjectNotFoundError, Ldp::BadRequest, Valkyrie::Persistence::ObjectNotFoundError
     Hyrax.logger.debug('Could not find an existing metadata node for file ' \
                        "with id #{file.id}. Initializing a new one")
 
-    FileMetadata.new(file_identifier: file.id, alternative_ids: [file.id])
+    FileMetadata.new(file_identifier: file.id,
+                     original_filename: File.basename(file.io))
   end
 
   class FileMetadata < Valkyrie::Resource
@@ -65,11 +66,11 @@ module Hyrax
     attribute :label, ::Valkyrie::Types::Set
     attribute :original_filename, ::Valkyrie::Types::String
     attribute :mime_type, ::Valkyrie::Types::String.default(GENERIC_MIME_TYPE)
-    attribute :type, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE].freeze)
+    attribute :pcdm_use, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE].freeze) # Use += to add pcdm_uses, not <<
 
     # attributes set by fits
     attribute :format_label, ::Valkyrie::Types::Set
-    attribute :size, ::Valkyrie::Types::Set
+    attribute :recorded_size, ::Valkyrie::Types::Set
     attribute :well_formed, ::Valkyrie::Types::Set
     attribute :valid, ::Valkyrie::Types::Set
     attribute :date_created, ::Valkyrie::Types::Set
@@ -125,31 +126,22 @@ module Hyrax
     # attributes set by fits for video
     attribute :aspect_ratio, ::Valkyrie::Types::Set
 
-    # @param [ActionDispatch::Http::UploadedFile] file
-    # @deprecated Use #new instead; for removal in 4.0.0
-    def self.for(file:)
-      Deprecation.warn "#{self.class}##{__method__} is deprecated; use #new instead."
-      new(label: file.original_filename,
-          original_filename: file.original_filename,
-          mime_type: file.content_type)
-    end
-
     ##
     # @return [Boolean]
     def original_file?
-      type.include?(Use::ORIGINAL_FILE)
+      pcdm_use.include?(Use::ORIGINAL_FILE)
     end
 
     ##
     # @return [Boolean]
     def thumbnail_file?
-      type.include?(Use::THUMBNAIL)
+      pcdm_use.include?(Use::THUMBNAIL)
     end
 
     ##
     # @return [Boolean]
     def extracted_file?
-      type.include?(Use::EXTRACTED_TEXT)
+      pcdm_use.include?(Use::EXTRACTED_TEXT)
     end
 
     def title
@@ -161,7 +153,7 @@ module Hyrax
     end
 
     def valid?
-      file.valid?(size: size.first, digests: { sha256: checksum&.first&.sha256 })
+      file.valid?(size: recorded_size.first, digests: { sha256: checksum&.first&.sha256 })
     end
 
     ##

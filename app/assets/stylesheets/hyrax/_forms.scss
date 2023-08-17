@@ -38,6 +38,10 @@ legend small {
   margin-top: 1em;
 }
 
+.select2-container .select2-choice > .select2-chosen {
+  max-width: 26em;
+}
+
 form {
   .form-group {
     align-items: center;

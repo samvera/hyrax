@@ -5,8 +5,6 @@ class CatalogController < ApplicationController
 
   # This filter applies the hydra access controls
   before_action :enforce_show_permissions, only: :show
-  # Allow all search options when in read-only mode
-  skip_before_action :check_read_only
 
   def self.uploaded_field
     "system_create_dtsi"
@@ -21,7 +19,7 @@ class CatalogController < ApplicationController
 
     # Because too many times on Samvera tech people raise a problem regarding a failed query to SOLR.
     # Often, it's because they inadvertently exceeded the character limit of a GET request.
-    config.http_method = :post
+    config.http_method = Hyrax.config.solr_default_method
 
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
     config.default_solr_params = {

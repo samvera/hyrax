@@ -21,13 +21,13 @@ FactoryBot.define do
     end
 
     after(:create) do |work, _evaluator|
-      work.save! if work.member_of_collections.present?
+      work.save! if work.try(:member_of_collections) && work.member_of_collections.present?
     end
 
     title { ["Test title"] }
 
     after(:build) do |work, evaluator|
-      work.apply_depositor_metadata(evaluator.user.user_key)
+      work.apply_depositor_metadata(evaluator.user.user_key) if work.try(:apply_depositor_metadata, evaluator.user.user_key)
     end
 
     factory :public_generic_work, aliases: [:public_work], traits: [:public]

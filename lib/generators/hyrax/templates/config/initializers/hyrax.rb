@@ -22,6 +22,9 @@ Hyrax.config do |config|
   # avoid clashes if you plan to use the default (dct:hasFormat) for other relations.
   # config.rendering_predicate = ::RDF::DC.hasFormat
 
+  # Configure the Logger for the Hyrax application; by default it is the Rails.logger.
+  # config.logger = Rails.logger
+
   # Email recipient of messages sent via the contact form
   # config.contact_email = "repo-admin@example.org"
 
@@ -165,6 +168,10 @@ Hyrax.config do |config|
   #  config.upload_path = ->() { Rails.root + 'tmp' + 'uploads' }
   #  config.cache_path = ->() { Rails.root + 'tmp' + 'uploads' + 'cache' }
 
+  # The registered candidate derivative services.  In the array, the first `valid?` candidate will
+  # handle the derivative generation.
+  # config.derivative_services = [Hyrax::FileSetDerivativesService]
+
   # Location on local file system where derivatives will be stored
   # If you use a multi-server architecture, this MUST be a shared volume
   # config.derivatives_path = Rails.root.join('tmp', 'derivatives')
@@ -256,7 +263,7 @@ Hyrax.config do |config|
     if defined? BrowseEverything
       config.browse_everything = BrowseEverything.config
     else
-      Rails.logger.warn "BrowseEverything is not installed"
+      Hyrax.logger.warn "BrowseEverything is not installed"
     end
   rescue Errno::ENOENT
     config.browse_everything = nil

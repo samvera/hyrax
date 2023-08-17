@@ -7,8 +7,9 @@ RSpec.describe Hyrax::Actors::LeaseActor do
 
   describe "#destroy" do
     let(:work) do
-      FactoryBot.valkyrie_create(:hyrax_resource, :under_lease)
+      FactoryBot.valkyrie_create(:hyrax_resource, lease: lease)
     end
+    let(:lease) { FactoryBot.create(:hyrax_lease) }
 
     before do
       work.visibility = public_vis
@@ -16,15 +17,23 @@ RSpec.describe Hyrax::Actors::LeaseActor do
     end
 
     it "removes the lease" do
+      actor.destroy
+
+      expect(work.lease.lease_expiration_date).to eq nil
+      expect(work.lease.visibility_after_lease).to eq nil
+      expect(work.lease.visibility_during_lease).to eq nil
+    end
+
+    it "releases the lease" do
       expect { actor.destroy }
         .to change { Hyrax::LeaseManager.new(resource: work).under_lease? }
         .from(true)
         .to false
     end
 
-    it "does not change the visibility" do
+    it "changes the visibility" do
       expect { actor.destroy }
-        .not_to change { work.visibility }
+        .to change { work.visibility }
         .from public_vis
     end
 
@@ -33,17 +42,20 @@ RSpec.describe Hyrax::Actors::LeaseActor do
         FactoryBot.valkyrie_create(:hyrax_resource, lease: lease)
       end
 
-      let(:lease) { FactoryBot.build(:hyrax_lease) }
+      let(:lease) { FactoryBot.create(:hyrax_lease, :expired) }
 
       before do
         allow(Hyrax::TimeService)
           .to receive(:time_in_utc)
-          .and_return(work.lease.lease_expiration_date + 1)
+          .and_return(work.lease.lease_expiration_date.to_datetime + 1)
       end
 
-      it "leaves the lease in place" do
-        expect { actor.destroy }
-          .not_to change { work.lease.lease_expiration_date }
+      it "removes the lease" do
+        actor.destroy
+
+        expect(work.lease.lease_expiration_date).to eq nil
+        expect(work.lease.visibility_after_lease).to eq nil
+        expect(work.lease.visibility_during_lease).to eq nil
       end
 
       it "releases the lease" do
@@ -105,7 +117,7 @@ RSpec.describe Hyrax::Actors::LeaseActor do
       let(:leased_work) { create(:leased_work, with_lease_attributes: lease_attributes) }
       let(:subject) { described_class.new(leased_work) }
 
-      it 'destroys and reindexes the new permission appropriately in solr', with_nested_reindexing: true do
+      it 'destroys and reindexes the new permission appropriately in solr' do
         allow(leased_work.lease).to receive(:active?).and_return false
         subject.destroy
         expect(::SolrDocument.find(leased_work.id)[:visibility_ssi]).to eq(authenticated_vis)

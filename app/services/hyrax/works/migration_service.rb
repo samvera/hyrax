@@ -10,13 +10,13 @@ module Hyrax
       #   and the original data cleaned up.
       def self.migrate_predicate(predicate_from, predicate_to, works_to_update = ActiveFedora::Base.all)
         migrated = 0
-        Rails.logger.info "*** Migrating #{predicate_from} to #{predicate_to} in #{works_to_update.count} works"
+        Hyrax.logger.info "*** Migrating #{predicate_from} to #{predicate_to} in #{works_to_update.count} works"
         works_to_update.each do |work|
           next unless work.ldp_source.content.include?(predicate_from.to_s)
           migrate_data(predicate_from, predicate_to, work)
           migrated += 1
         end
-        Rails.logger.info "--- Migration Complete (#{migrated} migrated)"
+        Hyrax.logger.info "--- Migration Complete (#{migrated} migrated)"
       end
 
       # @api private
@@ -27,7 +27,7 @@ module Hyrax
         orm.value(predicate_from).each { |val| orm.graph.insert([orm.resource.subject_uri, predicate_to, val.to_s]) }
         orm.graph.delete([orm.resource.subject_uri, predicate_from, nil])
         orm.save
-        Rails.logger.info " Data migrated from #{predicate_from} to #{predicate_to} - id: #{work.id}"
+        Hyrax.logger.info " Data migrated from #{predicate_from} to #{predicate_to} - id: #{work.id}"
       end
     end
   end

@@ -86,7 +86,7 @@ module Hyrax
       doc = permissions_doc(id)
       return [] if doc.nil?
       groups = Array(doc[self.class.read_group_field]) + Array(doc[self.class.edit_group_field])
-      Rails.logger.debug("[CANCAN] download_groups: #{groups.inspect}")
+      Hyrax.logger.debug("[CANCAN] download_groups: #{groups.inspect}")
       groups
     end
 
@@ -95,7 +95,7 @@ module Hyrax
       doc = permissions_doc(id)
       return [] if doc.nil?
       users = Array(doc[self.class.read_user_field]) + Array(doc[self.class.edit_user_field])
-      Rails.logger.debug("[CANCAN] download_users: #{users.inspect}")
+      Hyrax.logger.debug("[CANCAN] download_users: #{users.inspect}")
       users
     end
 
@@ -414,7 +414,7 @@ module Hyrax
     # @param document_id [String] the id of the document.
     def user_is_depositor?(document_id)
       doc = Hyrax::SolrService.search_by_id(document_id, fl: 'depositor_ssim')
-      current_user.user_key == doc.fetch('depositor_ssim').first
+      current_user.user_key == doc['depositor_ssim']&.first
     end
 
     def curation_concerns_models

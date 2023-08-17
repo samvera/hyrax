@@ -23,7 +23,6 @@ module Hyrax
       add_breadcrumb t(:'hyrax.controls.home'), root_path
       add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.transfers.new.header'), hyrax.new_work_transfer_path
-      @work = Hyrax::WorkRelation.new.find(params[:id])
     end
 
     def create
@@ -31,7 +30,6 @@ module Hyrax
       if @proxy_deposit_request.save
         redirect_to hyrax.transfers_path, notice: "Transfer request created"
       else
-        @work = Hyrax::WorkRelation.new.find(params[:id])
         render :new
       end
     end
@@ -47,7 +45,10 @@ module Hyrax
     # any existing edit permissions on the work.
     def accept
       @proxy_deposit_request.transfer!(params[:reset])
-      current_user.can_receive_deposits_from << @proxy_deposit_request.sending_user if params[:sticky]
+      if params[:sticky]
+        current_user.can_receive_deposits_from << @proxy_deposit_request.sending_user unless
+                current_user.can_receive_deposits_from.include? @proxy_deposit_request.sending_user
+      end
       redirect_to hyrax.transfers_path, notice: "Transfer complete"
     end
 

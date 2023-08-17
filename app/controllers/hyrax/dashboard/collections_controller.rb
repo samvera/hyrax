@@ -165,7 +165,7 @@ module Hyrax
           end
         end
       rescue StandardError => err
-        Rails.logger.error(err)
+        Hyrax.logger.error(err)
         after_destroy_error(params[:id])
       end
 
@@ -219,8 +219,6 @@ module Hyrax
         process_branding
 
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless Hyrax::CollectionType.for(collection: @collection).discoverable?
-        # we don't have to reindex the full graph when updating collection
-        @collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
         if @collection.update(collection_params.except(:members))
           after_update_response
         else
@@ -484,7 +482,7 @@ module Hyrax
           params[:destination_collection_id]
         flash[:notice] = "Successfully moved #{batch.count} files to #{destination_title} Collection."
       rescue StandardError => err
-        Rails.logger.error(err)
+        Hyrax.logger.error(err)
         destination_title =
           Hyrax.query_service.find_by(id: params[:destination_collection_id]).title.first ||
           destination_id
@@ -515,7 +513,7 @@ module Hyrax
             form.prepopulate!
             form
           else
-            form_class.new(@collection, current_ability, repository)
+            form_class.new(@collection, current_ability, blacklight_config.repository)
           end
       end
 

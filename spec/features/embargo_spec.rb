@@ -6,8 +6,8 @@ RSpec.describe 'embargo' do
     sign_in user
   end
   describe 'creating an embargoed object' do
-    let(:future_date) { 5.days.from_now }
-    let(:later_future_date) { 10.days.from_now }
+    let(:future_date) { Time.zone.today + 5 }
+    let(:later_future_date) { Time.zone.today + 10 }
 
     it 'can be created, displayed and updated', :clean_repo, :workflow do
       visit '/concern/generic_works/new'
@@ -19,18 +19,18 @@ RSpec.describe 'embargo' do
       click_button 'Save'
 
       # chosen embargo date is on the show page
-      expect(page).to have_content(future_date.to_date.to_formatted_s(:standard))
+      expect(page).to have_content(future_date.to_formatted_s(:standard))
 
       click_link 'Edit'
       click_link 'Embargo Management Page'
 
       expect(page).to have_content('This Generic Work is under embargo.')
-      expect(page).to have_xpath("//input[@name='generic_work[embargo_release_date]' and @value='#{future_date.to_datetime.iso8601}']") # current embargo date is pre-populated in edit field
+      expect(page).to have_xpath("//input[@name='generic_work[embargo_release_date]' and @value='#{future_date}']") # current embargo date is pre-populated in edit field
 
       fill_in 'until', with: later_future_date.to_s
 
       click_button 'Update Embargo'
-      expect(page).to have_content(later_future_date.to_date.to_formatted_s(:standard))
+      expect(page).to have_content(later_future_date.to_formatted_s(:standard))
 
       click_link 'Edit'
       fill_in 'Title', with: 'Embargo test CHANGED'
@@ -63,13 +63,13 @@ RSpec.describe 'embargo' do
                          description: ["A description"],
                          with_permission_template: {})
     end
-    let(:future_date) { 5.days.from_now }
-    let(:later_future_date) { 10.days.from_now }
-    let(:invalid_future_date) { 185.days.from_now } # More than 6 months
+    let(:future_date) { Time.zone.today + 5 }
+    let(:later_future_date) { Time.zone.today + 10 }
+    let(:invalid_future_date) { Time.zone.today + 185 } # More than 6 months
     let(:admin) { create(:admin) }
     let(:work) do
       create(:work, title: ['embargoed work1'],
-                    embargo_release_date: future_date.to_datetime.iso8601,
+                    embargo_release_date: future_date,
                     visibility_after_embargo: 'open',
                     visibility_during_embargo: 'restricted',
                     admin_set_id: my_admin_set.id,
@@ -83,12 +83,12 @@ RSpec.describe 'embargo' do
       click_link 'Embargo Management Page'
 
       expect(page).to have_content('This Generic Work is under embargo.')
-      expect(page).to have_xpath("//input[@name='generic_work[embargo_release_date]' and @value='#{future_date.to_datetime.iso8601}']") # current embargo date is pre-populated in edit field
+      expect(page).to have_xpath("//input[@name='generic_work[embargo_release_date]' and @value='#{future_date}']") # current embargo date is pre-populated in edit field
 
       fill_in 'until', with: later_future_date.to_s
 
       click_button 'Update Embargo'
-      expect(page).to have_content(later_future_date.to_date.to_formatted_s(:standard))
+      expect(page).to have_content(later_future_date.to_formatted_s(:standard))
       expect(page).to have_content(my_admin_set.title.first)
     end
 
@@ -99,7 +99,7 @@ RSpec.describe 'embargo' do
       click_link 'Embargo Management Page'
 
       expect(page).to have_content('This Generic Work is under embargo.')
-      expect(page).to have_xpath("//input[@name='generic_work[embargo_release_date]' and @value='#{future_date.to_datetime.iso8601}']") # current embargo date is pre-populated in edit field
+      expect(page).to have_xpath("//input[@name='generic_work[embargo_release_date]' and @value='#{future_date}']") # current embargo date is pre-populated in edit field
 
       fill_in 'until', with: invalid_future_date.to_s
 

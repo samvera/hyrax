@@ -189,6 +189,11 @@ RSpec.describe Wings::Valkyrie::Persister do
         expect(persister.save(resource: resource)).to be_persisted
       end
 
+      it "can save a resource repeatedly" do
+        saved = persister.save(resource: resource)
+        expect(persister.save(resource: saved)).to be_persisted
+      end
+
       it "recalls the file id" do
         expect(persister.save(resource: resource))
           .to have_attributes(file_identifier: file.id)
@@ -196,7 +201,7 @@ RSpec.describe Wings::Valkyrie::Persister do
 
       it "uses OriginalFile as type by default" do
         expect(persister.save(resource: resource))
-          .to have_attributes(type: contain_exactly(RDF::URI("http://pcdm.org/use#OriginalFile")))
+          .to have_attributes(pcdm_use: contain_exactly(RDF::URI("http://pcdm.org/use#OriginalFile")))
       end
 
       it "saves file metadata attributes" do

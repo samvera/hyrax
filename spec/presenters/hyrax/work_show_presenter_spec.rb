@@ -384,6 +384,15 @@ RSpec.describe Hyrax::WorkShowPresenter do
       end
     end
 
+    context 'has an unindexed representative' do
+      it 'has a nil presenter' do
+        expect(presenter).to receive(:member_presenters)
+          .with([obj.members[0].id])
+          .and_raise Hyrax::ObjectNotFoundError
+        expect(presenter.representative_presenter).to be_nil
+      end
+    end
+
     context 'when it is its own representative' do
       let(:obj) { create(:work) }
 
@@ -450,7 +459,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
     context "with a field that doesn't exist" do
       it "logs a warning" do
-        expect(Rails.logger).to receive(:warn).with('Hyrax::WorkShowPresenter attempted to render restrictions, but no method exists with that name.')
+        expect(Hyrax.logger).to receive(:warn).with('Hyrax::WorkShowPresenter attempted to render restrictions, but no method exists with that name.')
         presenter.attribute_to_html(:restrictions)
       end
     end

@@ -60,11 +60,11 @@ module Hyrax
         klass = begin
                   class_name.constantize
                 rescue NameError
-                  Rails.logger.error "Unable to find '#{class_name}', so not sending notification"
+                  Hyrax.logger.error "Unable to find '#{class_name}', so not sending notification"
                   return nil
                 end
         return klass if klass.respond_to?(:send_notification)
-        Rails.logger.error "Expected '#{class_name}' to respond to 'send_notification', but it didn't, so not sending notification"
+        Hyrax.logger.error "Expected '#{class_name}' to respond to 'send_notification', but it didn't, so not sending notification"
         nil
       end
     end
