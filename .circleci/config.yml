@@ -293,17 +293,19 @@ workflows:
   dassie:
     jobs:
       - kaniko-build:
+          name: "dassie-build"
           ruby_version: "3.2.2"
           hyrax_app: "dassie"
       - hyrax-test:
           ruby_version: "3.2.2"
           hyrax_app: "dassie"
           requires:
-            - kaniko-build
+            - dassie-build
 
   koppie:
     jobs:
       - kaniko-build:
+          name: "koppie-build"
           ruby_version: "3.2.2"
           hyrax_app: "koppie"
 
