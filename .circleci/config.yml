@@ -14,10 +14,28 @@ jobs:
     environment:
       RUBY_VERSION: << parameters.ruby_version >>
     docker:
-      - image: gcr.io/kaniko-project/executor:debug
+      - image: gcr.io/kaniko-project/executor:v1.14.0-debug
         entrypoint: ""
     steps:
       - checkout
+      - run:
+          name: Configure GHCR credentials
+          command: |
+             cat > /kaniko/.docker/config.json \<<- JSON
+             {
+               "auths": {
+                 "ghcr.io": {
+                   "auth": "$(echo -n $GHCR_USER:$GHCR_TOKEN | base64)"
+                 }
+               }
+             }
+             JSON
+      - run:
+          name: debug
+          command: pwd
+      - run:
+          name: debug-2
+          command: ls $(pwd)/bin
       - run:
           name: Build and Push image
           command: |
