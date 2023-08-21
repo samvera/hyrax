@@ -1,4 +1,4 @@
-class CreateHyraxCounterMetrics < ActiveRecord::Migration[6.0]
+class CreateHyraxCounterMetrics < ActiveRecord::Migration[5.2]
   def change
     create_table :hyrax_counter_metrics do |t|
       t.string :worktype
