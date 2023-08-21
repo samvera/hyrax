@@ -6,8 +6,11 @@ orbs:
   node: circleci/node@5
 
 jobs:
-  kaniko-dassie:
+  kaniko-build:
     parameters:
+      hyrax_app:
+        type: string
+        default: dassie
       ruby_version:
         type: string
         default: 3.2.2
@@ -36,7 +39,7 @@ jobs:
                 --context "git://github.com/samvera/hyrax#refs/heads/${CIRCLE_BRANCH}#${CIRCLE_SHA1}" \
                 --target "hyrax-engine-dev" \
                 --build-arg RUBY_VERSION=$RUBY_VERSION \
-                --destination "ghcr.io/samvera/hyrax/dassie:${CIRCLE_SHA1}-ruby${RUBY_VERSION}"
+                --destination "ghcr.io/samvera/hyrax/<< parameters.hyrax_app >>:${CIRCLE_SHA1}-ruby${RUBY_VERSION}"
 
   bundle:
     parameters:
@@ -223,8 +226,9 @@ workflows:
   version: 2
   dassie:
     jobs:
-      - kaniko-dassie:
+      - kaniko-build:
           ruby_version: "3.2.2"
+          hyrax_app: "dassie"
 
   ruby3-2:
     jobs:
