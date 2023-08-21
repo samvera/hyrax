@@ -31,17 +31,11 @@ jobs:
              }
              JSON
       - run:
-          name: debug
-          command: pwd
-      - run:
-          name: debug-2
-          command: ls $(pwd)/bin
-      - run:
           name: Build and Push image
           command: |
             /kaniko/executor \
-                --context "$(pwd)" \
-                --dockerfile "$(pwd)/Dockerfile" \
+                --context "dir://$(pwd)" \
+                --target "hyrax-engine-dev" \
                 --build-arg RUBY_VERSION=$RUBY_VERSION \
                 --destination "ghcr.io/samvera/hyrax/dassie:${CIRCLE_SHA1}-ruby${RUBY_VERSION}"
 
