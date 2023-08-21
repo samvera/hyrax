@@ -5,6 +5,47 @@ orbs:
   ruby: circleci/ruby@2
   node: circleci/node@5
 
+executors:
+  hyrax:
+    parameters:
+      fcrepo_version:
+        type: string
+        default: '4.7.5'
+      hyrax_app:
+        type: string
+        default: 'dassie'
+      postgres_version:
+        type: string
+        default: '9.6'
+      redis_version:
+        type: string
+        default: '6.2'
+      ruby_type:
+        type: string
+        default: 'ruby'
+      ruby_version:
+        type: string
+        default: '2.5.5'
+      solr_port:
+        type: string
+        default: '8985'
+      solr_version:
+        type: string
+        default: 'slim'
+    docker:
+      - image: "ghcr.io/samvera/hyrax/<< parameters.hyrax_app >>-dev:<< pipeline.git.revision >>"
+      - image: samvera/fcrepo4:<< parameters.fcrepo_version >>
+        environment:
+          CATALINA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC"
+      - image: zookeeper:3.4
+      - image: solr:<< parameters.solr_version >>
+        environment:
+          VERBOSE: yes
+          SECURITY_JSON: '{"authentication":{"blockUnknown": false, "class":"solr.BasicAuthPlugin", "credentials":{"solr":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c="}, "realm":"My Solr users", "forwardCredentials": false}, "authorization":{ "class":"solr.RuleBasedAuthorizationPlugin", "permissions":[{"name":"security-edit", "role":"admin"}], "user-role":{"solr":"admin"}}}'
+        command: sh -c "server/scripts/cloud-scripts/zkcli.sh -zkhost localhost:2181 -cmd put /security.json \"${SECURITY_JSON}\" && solr-fg -cloud -noprompt  -p << parameters.solr_port >> -z localhost:2181"
+      - image: redis:<< parameters.redis_version >>
+      - image: cimg/postgres:<< parameters.postgres_version >>
+
 jobs:
   kaniko-build:
     parameters:
@@ -39,7 +80,32 @@ jobs:
                 --target "hyrax-engine-dev" \
                 --build-arg RUBY_VERSION=<< parameters.ruby_version >> \
                 --build-arg APP_PATH=.<< parameters.hyrax_app >> \
-                --destination "ghcr.io/samvera/hyrax/<< parameters.hyrax_app >>:${CIRCLE_SHA1::8}"
+                --build-arg EXTRA_APK_PACKAGES="git bash chromium" \
+                --destination "ghcr.io/samvera/hyrax/<< parameters.hyrax_app >>-dev:${CIRCLE_SHA1}"
+
+  hyrax-test:
+    parameters:
+      hyrax_app:
+        type: string
+        default: dassie
+      ruby_version:
+        type: string
+        default: 3.2.2
+    executor:
+      name: hyrax
+      hyrax_app: << parameters.hyrax_app >>
+      ruby_version: << parameters.ruby_version >>
+    resource_class: medium+
+    parallelism: 10
+    environment:
+      HYRAX_VALKYRIE: true
+      VALKYRIE_SOLR_PORT: 8985
+      DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test # Hard-coded with data from CircleCI orb, related to https://github.com/samvera-labs/samvera-circleci-orb/issues/42
+      KARMA_BROWSER: ChromeHeadlessCustom
+      RAILS_ROOT: .internal_test_app
+      SPEC_OPTS: "" # Clear output conflicts between samvera orb executor and ruby orb rspec command
+    steps:
+      - ruby/rspec-test
 
   bundle:
     parameters:
@@ -229,6 +295,11 @@ workflows:
       - kaniko-build:
           ruby_version: "3.2.2"
           hyrax_app: "dassie"
+      - hyrax-test:
+          ruby_version: "3.2.2"
+          hyrax_app: "dassie"
+          requires:
+            - kaniko-build
 
   koppie:
     jobs:
