@@ -1,4 +1,4 @@
-class AddFieldsToCounterMetric < ActiveRecord::Migration[6.1]
+class AddFieldsToCounterMetric < ActiveRecord::Migration[5.2]
   def change
     add_column :hyrax_counter_metrics, :title, :string
     add_column :hyrax_counter_metrics, :year_of_publication, :integer, index: true

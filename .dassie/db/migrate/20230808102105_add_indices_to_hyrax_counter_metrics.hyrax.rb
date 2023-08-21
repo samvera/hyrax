@@ -1,4 +1,4 @@
-class AddIndicesToHyraxCounterMetrics < ActiveRecord::Migration[6.0]
+class AddIndicesToHyraxCounterMetrics < ActiveRecord::Migration[5.2]
   def change
     add_index :hyrax_counter_metrics, :worktype
     add_index :hyrax_counter_metrics, :resource_type
