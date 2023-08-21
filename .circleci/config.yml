@@ -22,13 +22,13 @@ jobs:
           name: Configure GHCR credentials
           command: |
             cat << JSON > /kaniko/config.json
-            {
-              "auths": {
-                "docker.pkg.github.com": {
-                  "auth": "$(echo -n :${{ secrets.GHCR_TOKEN }} | base64)"
+              {
+                "auths": {
+                  "docker.pkg.github.com": {
+                    "auth": "$(echo -n :${{ secrets.GHCR_TOKEN }} | base64)"
+                  }
                 }
               }
-            }
             JSON
       - run:
           name: Build and Push image
