@@ -6,6 +6,27 @@ orbs:
   node: circleci/node@5
 
 jobs:
+  kaniko-dassie:
+    parameters:
+      ruby_version:
+        type: string
+        default: 3.2.2
+    environment:
+      RUBY_VERSION: << parameters.ruby_version >>
+    docker:
+      - image: gcr.io/kaniko-project/executor:debug
+        entrypoint: ""
+    steps:
+      - checkout
+      - run:
+          name: Build and Push image
+          command: |
+            /kaniko/executor \
+                --context "$(pwd)" \
+                --dockerfile "$(pwd)/Dockerfile" \
+                --build-arg RUBY_VERSION=$RUBY_VERSION \
+                --destination "ghcr.io/samvera/hyrax/dassie:${CIRCLE_SHA1}-ruby${RUBY_VERSION}"
+
   bundle:
     parameters:
       ruby_version:
@@ -189,6 +210,11 @@ jobs:
 
 workflows:
   version: 2
+  dassie:
+    jobs:
+      - kaniko-dassie:
+          ruby_version: "3.2.2"
+
   ruby3-2:
     jobs:
       - bundle:
