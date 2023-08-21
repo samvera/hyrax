@@ -17,7 +17,6 @@ jobs:
       - image: gcr.io/kaniko-project/executor:v1.14.0-debug
         entrypoint: ""
     steps:
-      - checkout
       - run:
           name: Configure GHCR credentials
           command: |
@@ -34,7 +33,7 @@ jobs:
           name: Build and Push image
           command: |
             /kaniko/executor \
-                --context "dir://$(pwd)" \
+                --context "git://github.com/samvera/hyrax#refs/heads/${CIRCLE_BRANCH}#${CIRCLE_SHA1}" \
                 --target "hyrax-engine-dev" \
                 --build-arg RUBY_VERSION=$RUBY_VERSION \
                 --destination "ghcr.io/samvera/hyrax/dassie:${CIRCLE_SHA1}-ruby${RUBY_VERSION}"
