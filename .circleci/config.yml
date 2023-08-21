@@ -14,8 +14,6 @@ jobs:
       ruby_version:
         type: string
         default: 3.2.2
-    environment:
-      RUBY_VERSION: << parameters.ruby_version >>
     docker:
       - image: gcr.io/kaniko-project/executor:v1.14.0-debug
         entrypoint: ""
@@ -36,10 +34,12 @@ jobs:
           name: Build and Push image
           command: |
             /kaniko/executor \
+                --cache=true \
                 --context "git://github.com/samvera/hyrax#refs/heads/${CIRCLE_BRANCH}#${CIRCLE_SHA1}" \
                 --target "hyrax-engine-dev" \
-                --build-arg RUBY_VERSION=$RUBY_VERSION \
-                --destination "ghcr.io/samvera/hyrax/<< parameters.hyrax_app >>:${CIRCLE_SHA1}-ruby${RUBY_VERSION}"
+                --build-arg RUBY_VERSION=<< parameters.ruby_version >> \
+                --build-arg APP_PATH=.<< parameters.hyrax_app >> \
+                --destination "ghcr.io/samvera/hyrax/<< parameters.hyrax_app >>:${CIRCLE_SHA1::8}"
 
   bundle:
     parameters:
@@ -229,6 +229,12 @@ workflows:
       - kaniko-build:
           ruby_version: "3.2.2"
           hyrax_app: "dassie"
+
+  koppie:
+    jobs:
+      - kaniko-build:
+          ruby_version: "3.2.2"
+          hyrax_app: "koppie"
 
   ruby3-2:
     jobs:
