@@ -7,6 +7,9 @@ Dockerfile
 
 *.rdb
 
+.circleci/*
+.github/*
+
 artifacts/*
 coverage/*
 chart/*
