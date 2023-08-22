@@ -102,10 +102,10 @@ jobs:
       VALKYRIE_SOLR_PORT: 8985
       DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test # Hard-coded with data from CircleCI orb, related to https://github.com/samvera-labs/samvera-circleci-orb/issues/42
       KARMA_BROWSER: ChromeHeadlessCustom
-      RAILS_ROOT: .internal_test_app
-      SPEC_OPTS: "" # Clear output conflicts between samvera orb executor and ruby orb rspec command
     steps:
-      - ruby/rspec-test
+      - ruby/rspec-test:
+          app-dir: /app/samvera/hyrax-engine
+
 
   bundle:
     parameters:
