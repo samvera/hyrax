@@ -34,13 +34,14 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
 
   ##
   # @api private
-  def initialize(metadata:, # rubocop:disable Metrics/ParameterLists
-                 file:,
-                 characterizer: Hydra::FileCharacterization,
-                 parser_mapping: Hydra::Works::Characterization.mapper,
-                 parser: Hydra::Works::Characterization::FitsDocument.new,
-                 ch12n_tool: :fits
-                )
+  def initialize( # rubocop:disable Metrics/ParameterLists
+    metadata:,
+    file:,
+    characterizer: Hydra::FileCharacterization,
+    parser_mapping: Hydra::Works::Characterization.mapper,
+    parser: Hydra::Works::Characterization::FitsDocument.new,
+    ch12n_tool: :fits
+  )
     @characterizer = characterizer
     @metadata      = metadata
     @source        = file
