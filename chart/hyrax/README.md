@@ -35,28 +35,30 @@ production environments.
 
 The chart populates the following environment variables:
 
-| Variable          | Description                    | Condition              |
-|-------------------|--------------------------------|------------------------|
-| DB_PASSWORD       | Postgresql password            | n/a                    |
-| DB_PORT           | Postgresql service port        | n/a                    |
-| DB_HOST           | Postgresql hostname            | n/a                    |
-| DB_USERNAME       | Postgresql username            | n/a                    |
-| MEMCACHED_HOST    | Memcached host                 | `memcached.enabled`    |
-| RACK_ENV          | app environment ('production') | n/a                    |
-| RAILS_ENV         | app environment ('production') | n/a                    |
-| REDIS_HOST        | Redis service host             | `redis.enabled`        |
-| FCREPO_BASE_PATH  | Fedora Commons root path       | n/a                    |
-| FCREPO_HOST       | Fedora Commons host            | n/a                    |
-| FCREPO_PORT       | Fedora Commons port            | n/a                    |
-| FCREPO_REST_PATH  | Fedora Commons REST endpoint   | n/a                    |
-| SKIP_HYRAX_ENGINE_SEED   | Flag to load Hyrax engine seed file | n/a                    |
-| SOLR_ADMIN_USER   | Solr user for basic auth       | n/a                    |
-| SOLR_ADMIN_PASSWORD | Solr password for basic auth | n/a                    |
-| SOLR_COLLECTION_NAME | The name of the solr collection to use | n/a         |
+| Variable          | Description                    | Condition                                |
+|-------------------|--------------------------------|------------------------------------------|
+| CH12N_TOOL        | Tool for characterization      | `fits.enabled` or `externalFits.enabled` |
+| DB_PASSWORD       | Postgresql password            | n/a                                      |
+| DB_PORT           | Postgresql service port        | n/a                                      |
+| DB_HOST           | Postgresql hostname            | n/a                                      |
+| DB_USERNAME       | Postgresql username            | n/a                                      |
+| MEMCACHED_HOST    | Memcached host                 | `memcached.enabled`                      |
+| RACK_ENV          | app environment ('production') | n/a                                      |
+| RAILS_ENV         | app environment ('production') | n/a                                      |
+| REDIS_HOST        | Redis service host             | `redis.enabled`                          |
+| FCREPO_BASE_PATH  | Fedora Commons root path       | n/a                                      |
+| FCREPO_HOST       | Fedora Commons host            | n/a                                      |
+| FCREPO_PORT       | Fedora Commons port            | n/a                                      |
+| FCREPO_REST_PATH  | Fedora Commons REST endpoint   | n/a                                      |
+| FITS_SERVLET_URL  | URL for FITS servlet           | `fits.enabled` or `externalFits.enabled` |
+| SKIP_HYRAX_ENGINE_SEED   | Flag to load Hyrax engine seed file | n/a                          |
+| SOLR_ADMIN_USER   | Solr user for basic auth       | n/a                                      |
+| SOLR_ADMIN_PASSWORD | Solr password for basic auth | n/a                                      |
+| SOLR_COLLECTION_NAME | The name of the solr collection to use | n/a                           |
 | SOLR_CONFIGSET_NAME | The name of the solr configset to use for config management tasks | n/a |
-| SOLR_HOST         | Solr service host              | n/a                    |
-| SOLR_PORT         | Solr service port              | n/a                    |
-| SOLR_URL          | Solr service full URL          | n/a                    |
+| SOLR_HOST         | Solr service host              | n/a                                      |
+| SOLR_PORT         | Solr service port              | n/a                                      |
+| SOLR_URL          | Solr service full URL          | n/a                                      |
 
 ## With an external SolrCloud
 
@@ -97,8 +99,8 @@ various Java components far out weighs the processing time of those components.
 
 To enable fits as a service:
 
-  - `fits.enabled`: true
-  - make sure config/initializers/hyrax.rb has `config.characterization_options = { ch12n_tool: :fits_servlet }`
+  - ``fits.enabled: true` or `externalFits.enabled: true` and specify the
+    existing `externalFits.hostname`
 
 ## For DevOps:
 
