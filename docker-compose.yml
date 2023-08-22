@@ -120,6 +120,13 @@ services:
     networks:
       - hyrax
 
+  fits:
+    image: harvardlts/fitsservlet_container:1.5.0
+    ports:
+      - 8080
+    networks:
+      - hyrax
+
   memcached:
     image: bitnami/memcached
     ports:

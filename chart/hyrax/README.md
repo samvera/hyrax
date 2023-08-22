@@ -89,6 +89,17 @@ To use an existing or external `fcrepo` instance, use the chart values:
   - `fcrepo.enabled`: false
   - `externalFcrepoHost`: "myfedora.hostname.example.com"
 
+
+# Optional Fits Service
+
+Running fits as a servlet will result in much faster fits responses. This is because the loading cost of the
+various Java components far out weighs the processing time of those components.
+
+To enable fits as a service:
+
+  - `fits.enabled`: true
+  - make sure config/initializers/hyrax.rb has `config.characterization_options = { ch12n_tool: :fits_servlet }`
+
 ## For DevOps:
 
 For those interested in trying out or contributing to this Chart, it's helpful
