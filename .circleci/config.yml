@@ -31,7 +31,14 @@ executors:
         default: '8985'
       solr_version:
         type: string
-        default: 'slim'
+        default: '8.11-slim'
+    environment:
+      RAILS_ENV: test
+      RACK_ENV: test
+      FCREPO_PORT: 8080
+      POSTGRES_DB: circle_test
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_USER: postgres
     docker:
       - image: "ghcr.io/samvera/hyrax/<< parameters.hyrax_app >>-dev:<< pipeline.git.revision >>"
       - image: samvera/fcrepo4:<< parameters.fcrepo_version >>
@@ -98,14 +105,23 @@ jobs:
     resource_class: medium+
     parallelism: 10
     environment:
+      DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test
+      HUB_URL: http://localhost:4444/wd/hub
       HYRAX_VALKYRIE: true
+      IN_DOCKER: true
+      VALKYRIE_SOLR_CORE: hydra-test
       VALKYRIE_SOLR_PORT: 8985
-      DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test # Hard-coded with data from CircleCI orb, related to https://github.com/samvera-labs/samvera-circleci-orb/issues/42
-      KARMA_BROWSER: ChromeHeadlessCustom
     steps:
+      - run:
+          name: Create solr core
+          command: |
+            cd /app/samvera/hyrax-webapp/solr/conf
+            zip -1 -r solr_conf.zip ./*
+            db-wait.sh localhost:8985 # wait for solr to be available before hitting the API
+            curl -H "Content-type:application/octet-stream" --data-binary @solr_conf.zip "http://solr:SolrRocks@127.0.0.1:8985/solr/admin/configs?action=UPLOAD&name=solrconfig"
+            curl -H 'Content-type: application/json' http://solr:SolrRocks@127.0.0.1:8985/api/collections/ -d '{create: {name: hydra-test, config: solrconfig, numShards: 1}}'
       - ruby/rspec-test:
           app-dir: /app/samvera/hyrax-engine
-
 
   bundle:
     parameters:
