@@ -8,7 +8,6 @@ module Hyrax
     include Hyrax::BreadcrumbsForWorks
     self.curation_concern_type = ::GenericWork
 
-    # Use this line if you want to use a custom presenter
-    self.show_presenter = Hyrax::GenericWorkPresenter
+    self.work_form_service = Hyrax::FormFactory.new
   end
 end
