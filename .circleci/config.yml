@@ -102,7 +102,7 @@ jobs:
       name: hyrax
       hyrax_app: << parameters.hyrax_app >>
       ruby_version: << parameters.ruby_version >>
-    resource_class: medium+
+    resource_class: xlarge
     parallelism: 10
     environment:
       DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test
