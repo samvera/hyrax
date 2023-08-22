@@ -7,17 +7,14 @@ module Hyrax
     # manages workflow accordingly.
     class WorkflowListener
       ##
-      # @note respects class attribute configuration at
-      #   {Hyrax::Actors::InitializeWorkflowActor.workflow_factory}, but falls
-      #   back on {Hyrax::Workflow::WorkflowFactory} to prepare for removal of
-      #   Actors
-      # @return [#create] default: {Hyrax::Workflow::WorkflowFactory}
-      def factory
-        if defined?(Hyrax::Actors::InitializeWorkflowActor)
-          Hyrax::Actors::InitializeWorkflowActor.workflow_factory
-        else
-          Hyrax::Workflow::WorkflowFactory
-        end
+      # @!attribute [rw] factory
+      #   @return [#create]
+      attr_accessor :factory
+
+      ##
+      # @param [#create] factory
+      def initialize(factory: Hyrax::Workflow::WorkflowFactory)
+        @factory = factory
       end
 
       ##
