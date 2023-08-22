@@ -37,7 +37,7 @@ data:
   {{- if .Values.fits.enabled }}
   FITS_SERVLET_URL: http://{{ template "hyrax.fits.host" . }}:{{ .Values.fits.servicePort | default 8080 }}{{ .Values.fits.subPath | default "/fits" }}
   {{- else if .Values.externalFits.enabled }}
-  FITS_SERVLET_URL: {{ .Values.externalFits.hostname }}
+  FITS_SERVLET_URL: {{ .Values.externalFits.url }}
   {{- end }}
   REDIS_PROVIDER: SIDEKIQ_REDIS_URL
   {{- if .Values.minio.enabled }}

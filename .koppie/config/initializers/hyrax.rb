@@ -7,7 +7,6 @@ Hyrax.config do |config|
 
   config.disable_wings = true # not needed if ENV includes HYRAX_SKIP_WINGS=true
 
-  # use the fits servlet
   config.characterization_options = { ch12n_tool: ENV.fetch('CH12N_TOOL', 'fits').to_sym }
 
   # Register roles that are expected by your implementation.
