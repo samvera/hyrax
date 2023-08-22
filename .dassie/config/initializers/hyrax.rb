@@ -18,7 +18,6 @@ Hyrax.config do |config|
   config.work_requires_files = false
   config.citations = true
 
-  # use the fits servlet
   config.characterization_options = { ch12n_tool: ENV.fetch('CH12N_TOOL', 'fits').to_sym }
 
   # Returns a URL that resolves to an image provided by a IIIF image server

@@ -100,7 +100,7 @@ various Java components far out weighs the processing time of those components.
 To enable fits as a service:
 
   - ``fits.enabled: true` or `externalFits.enabled: true` and specify the
-    existing `externalFits.hostname`
+    existing `externalFits.url`
 
 ## For DevOps:
 

@@ -232,7 +232,7 @@ fcrepo:
 #   ignored if `fits.enabled` is true
 externalFits:
   enabled: false
-  hostname: ""
+  url: "" # existing FITS servlet endpoint
 
 fits:
   enabled: true
