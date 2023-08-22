@@ -52,7 +52,7 @@ class Hyrax::ValkyrieUpload
 
     saved_metadata = Hyrax.persister.save(resource: file_metadata)
     saved_metadata.original_filename = filename if saved_metadata.original_filename.blank?
-    Hyrax.publisher.publish("object.file.uploaded", metadata: saved_metadata)
+    Hyrax.publisher.publish("file.uploaded", metadata: saved_metadata)
 
     add_file_to_file_set(file_set: file_set,
                          file_metadata: saved_metadata,
