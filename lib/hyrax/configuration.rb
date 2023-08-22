@@ -518,6 +518,13 @@ module Hyrax
       @characterization_proxy ||= :original_file
     end
 
+    ##
+    # Options to pass to the characterization service
+    # @!attribute [rw] characterization_options
+    #  @return [Hash] of options like {ch12n_tool: :fits_servlet}
+    attr_accessor :characterization_options
+
+
     # Attributes for the lock manager which ensures a single process/thread is mutating a ore:Aggregation at once.
     # @!attribute [w] lock_retry_count
     #   How many times to retry to acquire the lock before raising UnableToAcquireLockError

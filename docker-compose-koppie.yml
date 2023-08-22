@@ -115,6 +115,13 @@ services:
     networks:
       - koppie
 
+  fits:
+    image: harvardlts/fitsservlet_container:1.5.0
+    ports:
+      - 8080
+    networks:
+      - koppie
+
   memcached:
     image: bitnami/memcached
     ports:

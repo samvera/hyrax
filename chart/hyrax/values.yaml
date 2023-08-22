@@ -228,6 +228,15 @@ fcrepo:
       repository: bitnami/postgresql
       tag: 12.3.0
 
+# configuration for an external/existing fits service;
+#   ignored if `fits.enabled` is true
+externalFitsHost: ""
+
+fits:
+  enabled: true
+  servicePort: 8080
+  subPath: /fits
+
 memcached:
   enabled: false
 
