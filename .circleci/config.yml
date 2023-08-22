@@ -76,11 +76,11 @@ jobs:
           command: |
             /kaniko/executor \
                 --cache=true \
+                --build-arg "EXTRA_APK_PACKAGES=git bash chromium" \
+                --build-arg "APP_PATH=.<< parameters.hyrax_app >>" \
+                --build-arg "RUBY_VERSION=<< parameters.ruby_version >>" \
                 --context "git://github.com/samvera/hyrax#refs/heads/${CIRCLE_BRANCH}#${CIRCLE_SHA1}" \
                 --target "hyrax-engine-dev" \
-                --build-arg RUBY_VERSION=<< parameters.ruby_version >> \
-                --build-arg APP_PATH=.<< parameters.hyrax_app >> \
-                --build-arg EXTRA_APK_PACKAGES="git bash chromium" \
                 --destination "ghcr.io/samvera/hyrax/<< parameters.hyrax_app >>-dev:${CIRCLE_SHA1}"
 
   hyrax-test:
@@ -105,18 +105,6 @@ jobs:
       RAILS_ROOT: .internal_test_app
       SPEC_OPTS: "" # Clear output conflicts between samvera orb executor and ruby orb rspec command
     steps:
-      - run:
-          name: Configure GHCR credentials
-          command: |
-             cat > /kaniko/.docker/config.json \<<- JSON
-             {
-               "auths": {
-                 "ghcr.io": {
-                   "auth": "$(echo -n $GHCR_USER:$GHCR_TOKEN | base64)"
-                 }
-               }
-             }
-             JSON
       - ruby/rspec-test
 
   bundle:
