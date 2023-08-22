@@ -8,6 +8,11 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
+  {{- if (or .Values.fits.enabled .Values.externalFits.enabled}}
+  CH12N_TOOL: "fits_servlet"
+  {{- else }}
+  CH12N_TOOL: "fits"
+  {{- end }}
   DB_HOST: {{ template "hyrax.postgresql.host" . }}
   DB_PORT: "5432"
   DB_USERNAME: {{ template "hyrax.postgresql.database" . }}
@@ -29,7 +34,11 @@ data:
   FCREPO_BASE_PATH: {{ .Values.fcrepoBasePathOverride | default (printf "/%s" (include "hyrax.fullname" .)) | quote }}
   FCREPO_PORT: {{ .Values.fcrepo.servicePort | default 8080 | quote }}
   FCREPO_REST_PATH: {{ .Values.fcrepo.restPath | default "rest" }}
+  {{- if .Values.fits.enabled }}
   FITS_SERVLET_URL: http://{{ template "hyrax.fits.host" . }}:{{ .Values.fits.servicePort | default 8080 }}{{ .Values.fits.subPath | default "/fits" }}
+  {{- else if .Values.externalFits.enabled }}
+  FITS_SERVLET_URL: {{ .Values.externalFits.hostname }}
+  {{- end }}
   REDIS_PROVIDER: SIDEKIQ_REDIS_URL
   {{- if .Values.minio.enabled }}
   MINIO_ENDPOINT: {{ template "hyrax.minio.fullname" . }}

@@ -230,7 +230,9 @@ fcrepo:
 
 # configuration for an external/existing fits service;
 #   ignored if `fits.enabled` is true
-externalFitsHost: ""
+externalFits:
+  enabled: false
+  hostname: ""
 
 fits:
   enabled: true
