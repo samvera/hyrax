@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'wings/valkyrie/query_service'
 
-RSpec.describe Hyrax::Actors::FileActor do
+RSpec.describe Hyrax::Actors::FileActor, :active_fedora do
   include ActionDispatch::TestProcess
   include Hyrax::FactoryHelpers
 
