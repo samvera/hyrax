@@ -106,7 +106,7 @@ jobs:
       hyrax_app: << parameters.hyrax_app >>
       ruby_version: << parameters.ruby_version >>
     resource_class: xlarge
-    parallelism: 10
+    parallelism: 12
     environment:
       CHROME_HEADLESS_MODE: true
       DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test
