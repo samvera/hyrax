@@ -41,6 +41,9 @@ executors:
       POSTGRES_USER: postgres
     docker:
       - image: "ghcr.io/samvera/hyrax/<< parameters.hyrax_app >>-dev:<< pipeline.git.revision >>"
+      - image: seleniarm/standalone-chromium:114.0
+        environment:
+          START_XVFB: "false"
       - image: samvera/fcrepo4:<< parameters.fcrepo_version >>
         environment:
           CATALINA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC"
@@ -83,7 +86,7 @@ jobs:
           command: |
             /kaniko/executor \
                 --cache=true \
-                --build-arg "EXTRA_APK_PACKAGES=git bash chromium" \
+                --build-arg "EXTRA_APK_PACKAGES=git bash" \
                 --build-arg "APP_PATH=.<< parameters.hyrax_app >>" \
                 --build-arg "RUBY_VERSION=<< parameters.ruby_version >>" \
                 --context "git://github.com/samvera/hyrax#refs/heads/${CIRCLE_BRANCH}#${CIRCLE_SHA1}" \
@@ -105,6 +108,7 @@ jobs:
     resource_class: xlarge
     parallelism: 10
     environment:
+      CHROME_HEADLESS_MODE: true
       DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test
       HUB_URL: http://localhost:4444/wd/hub
       HYRAX_VALKYRIE: true
