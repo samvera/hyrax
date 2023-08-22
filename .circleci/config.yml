@@ -108,7 +108,7 @@ jobs:
       name: hyrax
       hyrax_app: << parameters.hyrax_app >>
       ruby_version: << parameters.ruby_version >>
-    resource_class: xlarge
+    resource_class: medium+
     parallelism: 12
     environment:
       CHROME_HEADLESS_MODE: true
