@@ -3,7 +3,7 @@ require 'wings_helper'
 require 'wings/hydra/works/services/add_file_to_file_set'
 require 'wings/services/custom_queries/find_file_metadata'
 
-RSpec.describe Wings::CustomQueries::FindFileMetadata, :clean_repo do
+RSpec.describe Wings::CustomQueries::FindFileMetadata, :active_fedora, :clean_repo do
   subject(:query_handler) { described_class.new(query_service: query_service) }
   let(:query_service) { Hyrax.query_service }
   let(:af_file_id1) { 'file1' }

@@ -2,7 +2,7 @@
 require 'wings_helper'
 require 'wings/services/custom_queries/find_collections_by_type'
 
-RSpec.describe Wings::CustomQueries::FindCollectionsByType, :clean_repo do
+RSpec.describe Wings::CustomQueries::FindCollectionsByType, :active_fedora, :clean_repo do
   subject(:query_handler) { described_class.new(query_service: query_service) }
   let(:collection_type)   { FactoryBot.create(:collection_type) }
   let(:type_gid)          { collection_type.to_global_id }
