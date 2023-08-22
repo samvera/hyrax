@@ -21,7 +21,7 @@ Capybara.save_path = ENV['CI'] ? "/tmp/test-results" : Rails.root.join('tmp', 'c
 
 if ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
   args = %w[disable-gpu no-sandbox whitelisted-ips window-size=1400,1400]
-  args.push('headless') if ActiveModel::Type::Boolean.new.cast(ENV['CHROME_HEADLESS_MODE'])
+  args.push('headless=new') if ActiveModel::Type::Boolean.new.cast(ENV['CHROME_HEADLESS_MODE'])
 
   options = Selenium::WebDriver::Options.chrome("goog:chromeOptions" => { args: args })
 
