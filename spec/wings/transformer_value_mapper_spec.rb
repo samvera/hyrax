@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'wings/transformer_value_mapper'
 
-RSpec.describe Wings::TransformerValueMapper do
+RSpec.describe Wings::TransformerValueMapper, :active_fedora do
   subject(:mapper) { described_class.for(value) }
   let(:value)      { 'a value' }
   let(:uri)        { RDF::URI('http://example.com/moomin') }

@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'wings'
 
-RSpec.describe Wings::Valkyrie::ResourceFactory do
+RSpec.describe Wings::Valkyrie::ResourceFactory, :active_fedora do
   subject(:factory) { described_class.new(adapter: adapter) }
   let(:adapter)     { Valkyrie::Persistence::Memory::MetadataAdapter.new }
   let(:work)        { GenericWork.new }

@@ -2,7 +2,7 @@
 require 'wings_helper'
 require 'wings/hydra/works/services/add_file_to_file_set'
 
-RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
+RSpec.describe Wings::Works::AddFileToFileSet, :active_fedora, :clean_repo do
   let(:af_file_set)             { create(:file_set, id: 'fileset_id') }
   let!(:file_set)               { af_file_set.valkyrie_resource }
 
