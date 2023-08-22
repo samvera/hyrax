@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
+RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor, :active_fedora do
   let(:ability) { ::Ability.new(depositor) }
   let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
