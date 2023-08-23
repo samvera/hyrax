@@ -43,7 +43,9 @@ executors:
       - image: "ghcr.io/samvera/hyrax/<< parameters.hyrax_app >>-dev:<< pipeline.git.revision >>"
       - image: seleniarm/standalone-chromium:114.0
         environment:
+          SE_NODE_SESSION_TIMEOUT: 1200
           START_XVFB: "false"
+
       - image: samvera/fcrepo4:<< parameters.fcrepo_version >>
         environment:
           CATALINA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC"
@@ -108,7 +110,7 @@ jobs:
       name: hyrax
       hyrax_app: << parameters.hyrax_app >>
       ruby_version: << parameters.ruby_version >>
-    resource_class: medium+
+    resource_class: large
     parallelism: 12
     environment:
       CHROME_HEADLESS_MODE: true
