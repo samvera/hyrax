@@ -17,34 +17,60 @@ RSpec.describe Hyrax::EditPermissionsService do
   # build collections for testing
   # my_user has no manage rights to admin_set
   let(:admin_set) do
-    FactoryBot.create(:adminset_lw,
-                      id: 'default_admin_set',
-                      user: coll_creator,
-                      with_permission_template: { manage_users: [mgr1], view_users: [vw1] })
+    FactoryBot.valkyrie_create(:hyrax_admin_set,
+                               :with_permission_template,
+                               user: coll_creator,
+                               access_grants: [{ access: Hyrax::PermissionTemplateAccess::MANAGE,
+                                                 agent_id: mgr1.user_key,
+                                                 agent_type: Hyrax::PermissionTemplateAccess::USER },
+                                               { access: Hyrax::PermissionTemplateAccess::VIEW,
+                                                 agent_id: vw1.user_key,
+                                                 agent_type: Hyrax::PermissionTemplateAccess::USER }])
   end
+
+  let(:sharable_type) { FactoryBot.create(:collection_type, :sharable) }
+  let(:nonsharable_type) { FactoryBot.create(:collection_type, :not_sharable) }
+
   # my_user has manage rights to this collection
   let(:sharable_coll1) do
-    FactoryBot.create(:collection_lw,
-                      id: 'sharable_coll1',
-                      user: coll_creator,
-                      collection_type_settings: [:sharable],
-                      with_permission_template: { manage_users: [mgr2, my_user], view_users: [vw2] })
+    FactoryBot.valkyrie_create(:hyrax_collection,
+                               user: coll_creator,
+                               collection_type_gid: sharable_type.to_global_id.to_s,
+                               access_grants: [{ access: Hyrax::PermissionTemplateAccess::MANAGE,
+                                                 agent_id: mgr2.user_key,
+                                                 agent_type: Hyrax::PermissionTemplateAccess::USER },
+                                               { access: Hyrax::PermissionTemplateAccess::MANAGE,
+                                                 agent_id: my_user.user_key,
+                                                 agent_type: Hyrax::PermissionTemplateAccess::USER },
+                                               { access: Hyrax::PermissionTemplateAccess::VIEW,
+                                                 agent_id: vw2.user_key,
+                                                 agent_type: Hyrax::PermissionTemplateAccess::USER }])
   end
+
   # my_user has no manage rights to this collection
   let(:sharable_coll2) do
-    FactoryBot.create(:collection_lw,
-                      id: 'sharable_coll2',
-                      user: coll_creator,
-                      collection_type_settings: [:sharable],
-                      with_permission_template: { manage_users: [mgr3], view_users: [vw3] })
+    FactoryBot.valkyrie_create(:hyrax_collection,
+                               user: coll_creator,
+                               collection_type_gid: sharable_type.to_global_id.to_s,
+                               access_grants: [{ access: Hyrax::PermissionTemplateAccess::MANAGE,
+                                                 agent_id: mgr3.user_key,
+                                                 agent_type: Hyrax::PermissionTemplateAccess::USER },
+                                               { access: Hyrax::PermissionTemplateAccess::VIEW,
+                                                 agent_id: vw3.user_key,
+                                                 agent_type: Hyrax::PermissionTemplateAccess::USER }])
   end
+
   # non-sharable collections do not impact the permissions of the works
   let(:nonsharable_collection) do
-    FactoryBot.create(:collection_lw,
-                      id: 'nonsharable_coll',
-                      user: coll_creator,
-                      collection_type_settings: [:not_sharable],
-                      with_permission_template: { manage_users: [mgr4], view_users: [vw4] })
+    FactoryBot.valkyrie_create(:hyrax_collection,
+                               user: coll_creator,
+                               collection_type_gid: nonsharable_type.to_global_id.to_s,
+                               access_grants: [{ access: Hyrax::PermissionTemplateAccess::MANAGE,
+                                                 agent_id: mgr4.user_key,
+                                                 agent_type: Hyrax::PermissionTemplateAccess::USER },
+                                               { access: Hyrax::PermissionTemplateAccess::VIEW,
+                                                 agent_id: vw4.user_key,
+                                                 agent_type: Hyrax::PermissionTemplateAccess::USER }])
   end
 
   # @note: We are using multiple collections only in order to test the complex situations
@@ -53,7 +79,7 @@ RSpec.describe Hyrax::EditPermissionsService do
   # However, since we don't know which work's permissions were actually inherited from a
   # sharable collection, we have to assume they all need to be restricted.
   # build work for testing:
-  let(:generic_work) do
+  let(:work) do
     FactoryBot.valkyrie_create(:hyrax_work,
                                depositor: my_user.user_key,
                                edit_users: [mgr2, mgr3, mgr4, mgr5],
@@ -63,7 +89,7 @@ RSpec.describe Hyrax::EditPermissionsService do
                                admin_set_id: admin_set.id)
   end
 
-  subject(:work_permission_service) { described_class.new(object: generic_work, ability: ability) }
+  subject(:work_permission_service) { described_class.new(object: work, ability: ability) }
 
   # defined for expectations
   let(:admin_set_manager) { Hash[id: admin_set.id, name: mgr1.user_key] }
