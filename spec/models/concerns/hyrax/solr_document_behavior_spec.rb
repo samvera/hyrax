@@ -28,7 +28,7 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       end
     end
 
-    context 'with a Wings model name' do
+    context 'with a Wings model name', :active_fedora do
       let(:solr_hash) { { 'has_model_ssim' => 'Wings(Monograph)' } }
 
       it 'gives an appropriate generated ActiveFedora class' do
@@ -66,18 +66,13 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       end
 
       context 'using non-wings adapter', valkyrie_adapter: :test_adapter do
-        before do
-          allow(Hyrax.config).to receive(:disable_wings).and_return(true)
-          hide_const("Wings")
-        end
-
         it 'does not call Wings' do
           expect(solr_document.hydra_model).to eq Monograph
         end
       end
     end
 
-    context 'with a Wings model name' do
+    context 'with a Wings model name', :active_fedora do
       let(:solr_hash) { { 'has_model_ssim' => 'Wings(Monograph)' } }
 
       it 'gives an appropriate generated ActiveFedora class' do
@@ -159,7 +154,7 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       end
     end
 
-    context 'with a Wings model name' do
+    context 'with a Wings model name', :active_fedora do
       let(:solr_hash) { { 'has_model_ssim' => 'Wings(Monograph)', 'id' => '123' } }
 
       it 'gives the original valkyrie class' do
