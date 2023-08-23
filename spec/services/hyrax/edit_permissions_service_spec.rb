@@ -3,48 +3,48 @@ RSpec.describe Hyrax::EditPermissionsService do
   let(:my_user) { FactoryBot.create(:user) }
   let(:ability) { Ability.new(my_user) }
   # build users for testing
-  let(:mgr1) { FactoryBot.build(:user) }
-  let(:mgr2) { FactoryBot.build(:user) }
-  let(:mgr3) { FactoryBot.build(:user) }
-  let(:mgr4) { FactoryBot.build(:user) }
-  let(:mgr5) { FactoryBot.build(:user) }
-  let(:vw1) { FactoryBot.build(:user) }
-  let(:vw2) { FactoryBot.build(:user) }
-  let(:vw3) { FactoryBot.build(:user) }
-  let(:vw4) { FactoryBot.build(:user) }
-  let(:coll_creator) { FactoryBot.build(:user) }
+  let(:mgr1) { FactoryBot.create(:user) }
+  let(:mgr2) { FactoryBot.create(:user) }
+  let(:mgr3) { FactoryBot.create(:user) }
+  let(:mgr4) { FactoryBot.create(:user) }
+  let(:mgr5) { FactoryBot.create(:user) }
+  let(:vw1) { FactoryBot.create(:user) }
+  let(:vw2) { FactoryBot.create(:user) }
+  let(:vw3) { FactoryBot.create(:user) }
+  let(:vw4) { FactoryBot.create(:user) }
+  let(:coll_creator) { FactoryBot.create(:user) }
 
   # build collections for testing
   # my_user has no manage rights to admin_set
   let(:admin_set) do
-    FactoryBot.build(:adminset_lw,
-                     id: 'default_admin_set',
-                     user: coll_creator,
-                     with_permission_template: { manage_users: [mgr1], view_users: [vw1] })
+    FactoryBot.create(:adminset_lw,
+                      id: 'default_admin_set',
+                      user: coll_creator,
+                      with_permission_template: { manage_users: [mgr1], view_users: [vw1] })
   end
   # my_user has manage rights to this collection
   let(:sharable_coll1) do
-    FactoryBot.build(:collection_lw,
-                     id: 'sharable_coll1',
-                     user: coll_creator,
-                     collection_type_settings: [:sharable],
-                     with_permission_template: { manage_users: [mgr2, my_user], view_users: [vw2] })
+    FactoryBot.create(:collection_lw,
+                      id: 'sharable_coll1',
+                      user: coll_creator,
+                      collection_type_settings: [:sharable],
+                      with_permission_template: { manage_users: [mgr2, my_user], view_users: [vw2] })
   end
   # my_user has no manage rights to this collection
   let(:sharable_coll2) do
-    FactoryBot.build(:collection_lw,
-                     id: 'sharable_coll2',
-                     user: coll_creator,
-                     collection_type_settings: [:sharable],
-                     with_permission_template: { manage_users: [mgr3], view_users: [vw3] })
+    FactoryBot.create(:collection_lw,
+                      id: 'sharable_coll2',
+                      user: coll_creator,
+                      collection_type_settings: [:sharable],
+                      with_permission_template: { manage_users: [mgr3], view_users: [vw3] })
   end
   # non-sharable collections do not impact the permissions of the works
   let(:nonsharable_collection) do
-    FactoryBot.build(:collection_lw,
-                     id: 'nonsharable_coll',
-                     user: coll_creator,
-                     collection_type_settings: [:not_sharable],
-                     with_permission_template: { manage_users: [mgr4], view_users: [vw4] })
+    FactoryBot.create(:collection_lw,
+                      id: 'nonsharable_coll',
+                      user: coll_creator,
+                      collection_type_settings: [:not_sharable],
+                      with_permission_template: { manage_users: [mgr4], view_users: [vw4] })
   end
 
   # @note: We are using multiple collections only in order to test the complex situations
@@ -54,13 +54,13 @@ RSpec.describe Hyrax::EditPermissionsService do
   # sharable collection, we have to assume they all need to be restricted.
   # build work for testing:
   let(:generic_work) do
-    FactoryBot.build(:generic_work,
-                     user: my_user,
-                     edit_users: [mgr2, mgr3, mgr4, mgr5],
-                     read_users: [vw2, vw3, vw4],
-                     visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
-                     member_of_collections: [sharable_coll1, sharable_coll2, nonsharable_collection],
-                     admin_set: admin_set)
+    FactoryBot.valkyrie_create(:hyrax_work,
+                               depositor: my_user.user_key,
+                               edit_users: [mgr2, mgr3, mgr4, mgr5],
+                               read_users: [vw2, vw3, vw4],
+                               visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
+                               member_of_collection_ids: [sharable_coll1.id, sharable_coll2.id, nonsharable_collection.id],
+                               admin_set_id: admin_set.id)
   end
 
   subject(:work_permission_service) { described_class.new(object: generic_work, ability: ability) }
@@ -75,13 +75,6 @@ RSpec.describe Hyrax::EditPermissionsService do
   let(:sharable_coll2_viewer) { Hash[id: sharable_coll2.id, name: vw3.user_key] }
   let(:nonsharable_coll_manager) { Hash[id: nonsharable_collection.id, name: mgr4.user_key] }
   let(:nonsharable_coll_creator) { Hash[id: nonsharable_collection.id, name: coll_creator.user_key] }
-
-  before do
-    allow(ActiveFedora::Base).to receive(:find).with(admin_set.id).and_return(admin_set)
-    allow(ActiveFedora::Base).to receive(:find).with(sharable_coll1.id).and_return(sharable_coll1)
-    allow(ActiveFedora::Base).to receive(:find).with(sharable_coll2.id).and_return(sharable_coll2)
-    allow(ActiveFedora::Base).to receive(:find).with(nonsharable_collection.id).and_return(nonsharable_collection)
-  end
 
   describe '#initialize' do
     it 'responds to #depositor and #unauthorized_collection_managers' do
