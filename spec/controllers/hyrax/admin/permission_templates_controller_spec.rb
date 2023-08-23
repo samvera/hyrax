@@ -67,6 +67,24 @@ RSpec.describe Hyrax::Admin::PermissionTemplatesController do
         expect(response).to redirect_to(hyrax.edit_dashboard_collection_path(permission_template.source_id, locale: 'en', anchor: 'sharing'))
         expect(flash[:notice]).to eq(I18n.t('sharing', scope: 'hyrax.dashboard.collections.form.permission_update_notices'))
       end
+
+      context "with embargo date" do
+        let(:release_date) { '2023-09-30' }
+
+        before do
+          permission_template.update(release_date: release_date)
+        end
+
+        it "is successful with embargo date intact" do
+          expect(controller).to receive(:authorize!).with(:update, Hyrax::PermissionTemplate)
+          expect(form).to receive(:update).with(ActionController::Parameters.new(form_attributes).permit!).and_return(updated: true, content_tab: 'sharing')
+          put :update, params: input_params
+          expect(response).to redirect_to(hyrax.edit_dashboard_collection_path(permission_template.source_id, locale: 'en', anchor: 'sharing'))
+
+          updated = Hyrax::PermissionTemplate.find_by(id: permission_template.id)
+          expect(updated.release_date.strftime('%Y-%m-%d')).to eq(release_date)
+        end
+      end
     end
   end
 end

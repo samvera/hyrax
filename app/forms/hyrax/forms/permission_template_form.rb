@@ -266,6 +266,8 @@ module Hyrax
       # rubocop:disable Metrics/CyclomaticComplexity
       # rubocop:disable Metrics/PerceivedComplexity
       def permission_template_update_params
+        return attributes unless attributes.key?(:release_varies) || attributes.key?(:release_embargo)
+
         filtered_attributes = attributes.except(:release_varies, :release_embargo)
         # If 'varies' before date option selected, then set release_period='before' and save release_date as-is
         if attributes[:release_varies] == Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE

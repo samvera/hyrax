@@ -598,5 +598,22 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
         ).permit!
       end
     end
+
+    context "update params for workflow role with no :release_varies and :release_embargo keys" do
+      let(:user_bob) { FactoryBot.create(:user, email: "bob@example.com") }
+      let(:input_params) do
+        ActionController::Parameters.new(agent_type: "user",
+                                         agent_id: user_bob.user_key,
+                                         access: "view").permit!
+      end
+
+      it "should not change" do
+        expect(subject).to eq ActionController::Parameters.new(
+          agent_type: "user",
+          agent_id: user_bob.user_key,
+          access: "view"
+        ).permit!
+      end
+    end
   end
 end
