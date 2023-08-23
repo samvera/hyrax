@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Forms::WorkForm do
+RSpec.describe Hyrax::Forms::WorkForm, :active_fedora do
   let(:work) { GenericWork.new }
   let(:form) { described_class.new(work, nil, controller) }
   let(:works) { [GenericWork.new, FileSet.new, GenericWork.new] }
