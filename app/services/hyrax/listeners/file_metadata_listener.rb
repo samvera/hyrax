@@ -35,10 +35,10 @@ module Hyrax
       end
 
       ##
-      # Called when 'object.file.uploaded' event is published
+      # Called when 'file.uploaded' event is published
       # @param [Dry::Events::Event] event
       # @return [void]
-      def on_object_file_uploaded(event)
+      def on_file_uploaded(event)
         # Run characterization
         Hyrax.config
              .characterization_service

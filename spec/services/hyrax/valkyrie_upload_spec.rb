@@ -58,7 +58,7 @@ RSpec.describe Hyrax::ValkyrieUpload do
         io: upload.uploader.file.to_file,
         user: upload.user
       )
-      expect(listener.object_file_uploaded.map(&:payload))
+      expect(listener.file_uploaded.map(&:payload))
         .to contain_exactly(match(metadata: have_attributes(id: an_instance_of(Valkyrie::ID),
                                                             original_filename: upload.file.filename)))
 
