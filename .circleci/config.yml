@@ -116,6 +116,7 @@ jobs:
       HUB_URL: http://localhost:4444/wd/hub
       HYRAX_VALKYRIE: << parameters.hyrax_valkyrie >>
       IN_DOCKER: true
+      SOLR_URL: http://127.0.0.1:8985/solr/hydra-test
       VALKYRIE_SOLR_CORE: hydra-test
       VALKYRIE_SOLR_PORT: 8985
     steps:
