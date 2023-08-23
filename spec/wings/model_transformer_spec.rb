@@ -2,7 +2,7 @@
 require 'wings_helper'
 require 'wings/model_transformer'
 
-RSpec.describe Wings::ModelTransformer, :clean_repo do
+RSpec.describe Wings::ModelTransformer, :active_fedora, :clean_repo do
   subject(:factory) { described_class.new(pcdm_object: pcdm_object) }
   let(:pcdm_object) { work }
   let(:adapter)     { Valkyrie::MetadataAdapter.find(:memory) }

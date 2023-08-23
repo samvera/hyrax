@@ -60,11 +60,30 @@ module Hyrax
       obj.save
     end
 
+    def valkyrie_update_document(obj)
+      form = form_class.new(obj, current_ability, nil)
+      return unless form.validate(params[form_class.model_class.model_name.param_key])
+
+      cleanup_form_fields form
+
+      result = transactions['change_set.update_work']
+               .with_step_args('work_resource.save_acl' => { permissions_params: form.input_params["permissions"] })
+               .call(form)
+      obj = result.value!
+
+      InheritPermissionsJob.perform_now(obj)
+      VisibilityCopyJob.perform_now(obj)
+    end
+
     def update
       case params["update_type"]
       when "update"
         batch.each do |doc_id|
-          update_document(Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: doc_id, use_valkyrie: false))
+          if Hyrax.config.use_valkyrie?
+            valkyrie_update_document(Hyrax.query_service.find_by(id: doc_id))
+          else
+            update_document(Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: doc_id, use_valkyrie: false))
+          end
         end
         flash[:notice] = "Batch update complete"
         after_update
@@ -97,7 +116,7 @@ module Hyrax
     end
 
     def form_class
-      Forms::BatchEditForm
+      Hyrax.config.use_valkyrie? ? Forms::ResourceBatchEditForm : Forms::BatchEditForm
     end
 
     def terms
@@ -105,7 +124,7 @@ module Hyrax
     end
 
     def work_params(extra_params = {})
-      work_params = params[form_class.model_name.param_key] || ActionController::Parameters.new
+      work_params = params[form_class.model_class.model_name.param_key] || ActionController::Parameters.new
       form_class.model_attributes(work_params.merge(extra_params))
     end
 
@@ -133,6 +152,16 @@ module Hyrax
         redirect_to hyrax.url_for(controller: params[:return_controller], only_path: true)
       else
         redirect_to hyrax.dashboard_path
+      end
+    end
+
+    # Clean up form fields
+    # @param form Hyrax::Froms::ResourceBatchEditForm
+    def cleanup_form_fields(form)
+      form.lease = nil if form.lease && form.lease.fields['lease_expiration_date'].nil?
+      form.embargo = nil if form.embargo && form.embargo.fields['embargo_release_date'].nil?
+      form.fields.keys.each do |k|
+        form.fields[k] = nil if form.fields[k].is_a?(Array) && form.fields[k].blank?
       end
     end
   end

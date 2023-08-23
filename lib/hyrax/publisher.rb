@@ -137,6 +137,10 @@ module Hyrax
     #     a system user.
     register_event('file.metadata.updated')
 
+    # @since 5.0.0
+    # @macro a_registered_event
+    register_event('file.uploaded')
+
     # @since 3.0.0
     # @macro a_registered_event
     register_event('file.set.audited')
@@ -190,10 +194,6 @@ module Hyrax
     #     properties (`#member_of_ids`, `#member_of_collection_ids`, and
     #     `#member_ids`)
     register_event('object.metadata.updated')
-
-    # @since 3.2.0
-    # @macro a_registered_event
-    register_event('object.file.uploaded')
 
     ##
     # @return Array[Object] the listeners Hyrax subscribes by default.

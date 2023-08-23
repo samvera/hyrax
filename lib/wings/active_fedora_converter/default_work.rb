@@ -137,6 +137,10 @@ module Wings
         false
       end
 
+      def file_sets
+        members.select(&:file_set?)
+      end
+
       def indexing_service
         Hyrax::ValkyrieIndexer.for(resource: valkyrie_resource)
       end

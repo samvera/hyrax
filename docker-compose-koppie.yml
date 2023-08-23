@@ -90,7 +90,9 @@ services:
       - koppie
 
   chrome:
-    image: selenium/standalone-chrome:3.141
+    image: seleniarm/standalone-chromium:114.0
+    environment:
+      - START_XVFB=false
     logging:
       driver: none
     volumes:

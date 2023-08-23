@@ -3,7 +3,7 @@ require 'wings_helper'
 require 'valkyrie/specs/shared_specs'
 require 'wings'
 
-RSpec.describe Wings::Valkyrie::Persister do
+RSpec.describe Wings::Valkyrie::Persister, :active_fedora do
   subject(:persister) { described_class.new(adapter: adapter) }
   let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
   let(:query_service) { adapter.query_service }

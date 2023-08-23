@@ -85,15 +85,17 @@ services:
       - hyrax
 
   chrome:
-    image: selenium/standalone-chrome:3.141
+    image: seleniarm/standalone-chromium:114.0
+    environment:
+      - START_XVFB=false
     logging:
       driver: none
     volumes:
       - /dev/shm:/dev/shm
     shm_size: 2G
     ports:
-      - "4444:4444"
-      - "5959:5900"
+      - "4445:4444"
+      - "5960:5900"
     networks:
       - hyrax
 

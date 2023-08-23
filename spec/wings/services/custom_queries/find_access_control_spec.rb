@@ -2,7 +2,7 @@
 require 'wings_helper'
 require 'wings/services/custom_queries/find_access_control'
 
-RSpec.describe Wings::CustomQueries::FindAccessControl do
+RSpec.describe Wings::CustomQueries::FindAccessControl, :active_fedora do
   subject(:query_handler) { described_class.new(query_service: query_service) }
   let(:adapter)           { Valkyrie::MetadataAdapter.find(:wings_adapter) }
   let(:persister)         { adapter.persister }
