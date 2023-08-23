@@ -322,31 +322,6 @@ workflows:
           requires:
             - dassie-build
 
-  ruby3-2:
-    jobs:
-      - bundle:
-          ruby_version: "3.2.2"
-          rails_version: "6.1.7.4"
-          bundler_version: "2.4.15"
-      - build:
-          ruby_version: "3.2.2"
-          rails_version: "6.1.7.4"
-          bundler_version: "2.4.15"
-          requires:
-            - bundle
-      - test:
-          name: "ruby3-2"
-          ruby_version: "3.2.2"
-          bundler_version: "2.4.15"
-          requires:
-            - build
-      - test:
-          name: "ruby3-2-valkyrie"
-          ruby_version: "3.2.2"
-          bundler_version: "2.4.15"
-          hyrax_valkyrie: "true"
-          requires:
-            - build
   ruby2-7:
     jobs:
       - bundle:
