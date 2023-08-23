@@ -15,6 +15,11 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
     new(metadata: metadata, file: file, **options).characterize
     saved = Hyrax.persister.save(resource: metadata)
     Hyrax.publisher.publish('file.metadata.updated', metadata: saved, user: user)
+
+    Hyrax.publisher.publish('file.characterized',
+                            file_set: Hyrax.query_service.find_by(id: saved.file_set_id),
+                            file_id: saved.id.to_s,
+                            path_hint: saved.file_identifier.to_s)
   end
 
   ##
