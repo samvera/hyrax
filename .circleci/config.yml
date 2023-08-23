@@ -120,6 +120,9 @@ jobs:
       VALKYRIE_SOLR_PORT: 8985
     steps:
       - run:
+          name: yarn
+          command: cd /app/samvera/hyrax-engine && yarn
+      - run:
           name: Create solr core
           command: |
             cd /app/samvera/hyrax-webapp/solr/conf
