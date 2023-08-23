@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
-  {{- if (or .Values.fits.enabled .Values.externalFits.enabled}}
+  {{- if (or .Values.fits.enabled .Values.externalFits.enabled) }}
   CH12N_TOOL: "fits_servlet"
   {{- else }}
   CH12N_TOOL: "fits"
