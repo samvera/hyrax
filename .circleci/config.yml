@@ -119,6 +119,7 @@ jobs:
       HYRAX_VALKYRIE: << parameters.hyrax_valkyrie >>
       IN_DOCKER: true
       KARMA_BROWSER: remote-chromium
+      SOLR_URL: http://127.0.0.1:8985/solr/hydra-test
       VALKYRIE_SOLR_CORE: valkyrie-test
       VALKYRIE_SOLR_PORT: 8985
     steps:
