@@ -98,6 +98,9 @@ jobs:
       hyrax_app:
         type: string
         default: dassie
+      hyrax_valkyrie:
+        type: string
+        default: "false"
       ruby_version:
         type: string
         default: 3.2.2
@@ -111,7 +114,7 @@ jobs:
       CHROME_HEADLESS_MODE: true
       DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test
       HUB_URL: http://localhost:4444/wd/hub
-      HYRAX_VALKYRIE: true
+      HYRAX_VALKYRIE: << parameters.hyrax_valkyrie >>
       IN_DOCKER: true
       VALKYRIE_SOLR_CORE: hydra-test
       VALKYRIE_SOLR_PORT: 8985
@@ -317,8 +320,16 @@ workflows:
           ruby_version: "3.2.2"
           hyrax_app: "dassie"
       - hyrax-test:
+          name: "dassie-test"
           ruby_version: "3.2.2"
           hyrax_app: "dassie"
+          requires:
+            - dassie-build
+      - hyrax-test:
+          name: "dassie-valkyrie-test"
+          ruby_version: "3.2.2"
+          hyrax_app: "dassie"
+          hyrax_valkyrie: "1"
           requires:
             - dassie-build
 
