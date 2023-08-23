@@ -118,6 +118,7 @@ jobs:
       HUB_URL: http://localhost:4444/wd/hub
       HYRAX_VALKYRIE: << parameters.hyrax_valkyrie >>
       IN_DOCKER: true
+      KARMA_BROWSER: ChromiumHeadlessCustom
       VALKYRIE_SOLR_CORE: valkyrie-test
       VALKYRIE_SOLR_PORT: 8985
     steps:
