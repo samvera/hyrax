@@ -18,7 +18,10 @@ RSpec.describe Hyrax::Characterization::ValkyrieCharacterizationService do
                                    original_filename: 'test_world.png')
     end
 
-    before { Hyrax.publisher.subscribe(listener) }
+    before do
+      Hyrax.publisher.subscribe(listener)
+      metadata.file_set_id = file_set.id
+    end
     after { Hyrax.publisher.unsubscribe(listener) }
 
     describe '#run' do
