@@ -22,8 +22,8 @@ dependencies:
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: redis
-    version: 17.8.7
-    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+    version: 17.16.0
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: redis.enabled
   - name: solr
     version: 7.2.1
