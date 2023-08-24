@@ -14,8 +14,8 @@ dependencies:
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: memcached.enabled
   - name: minio
-    version: 12.1.14
-    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+    version: 12.8.0
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: minio.enabled
   - name: postgresql
     version: 12.2.5
