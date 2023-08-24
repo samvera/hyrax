@@ -4,7 +4,7 @@ module Hyrax
     class FileManagerForm < Valkyrie::ChangeSet
       property :thumbnail_id
       property :representative_id
-      delegate :to_s, to: :model
+      delegate :to_s, :id, to: :model
       attr_reader :current_ability, :request
 
       ##
@@ -12,7 +12,7 @@ module Hyrax
       # @param ability [::Ability] the current ability
       # @param member_factory [Class] the member_presenter factory object to use
       #   when constructing presenters
-      def initialize(model, ability, member_factory: MemberPresenterFactory)
+      def initialize(model, ability, member_factory: nil)
         super(model)
         @current_ability = ability
         @request = nil
@@ -34,7 +34,16 @@ module Hyrax
       private
 
       def member_presenter_factory
-        @member_factory.new(model, current_ability)
+        member_factory.new(model, current_ability)
+      end
+
+      def member_factory
+        @member_factory ||=
+          if model.is_a?(ActiveFedora::Base)
+            MemberPresenterFactory
+          else
+            ValkyrieMemberPresenterFactory
+          end
       end
     end
   end

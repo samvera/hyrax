@@ -95,7 +95,7 @@ RSpec.describe "hyrax/base/file_manager.html.erb" do
       Hyrax::Forms::FileManagerForm.new(parent, nil)
     end
 
-    let(:file_set) { 
+    let(:file_set) { Hyrax.query_service.find_members(resource: parent).first }
 
     before do
       assign(:form, form)

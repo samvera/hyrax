@@ -2,10 +2,10 @@
                 id: "sortable",
                 class: "list-unstyled grid d-flex flex-wrap clearfix",
                 data: {
-                  id: @form.id,
+                  id: @form.id.to_s,
                   "class-name" => @form.model_name.plural,
                   "singular-class-name" => @form.model_name.singular,
-                  version: @form.version
+                  "sort_property" => @form.is_a?(Valkyrie::ChangeSet) ? "member_ids" : "ordered_member_ids"
                 } do %>
   <% @form.member_presenters.each do |member| %>
     <%= render "file_manager_member", node: member %>

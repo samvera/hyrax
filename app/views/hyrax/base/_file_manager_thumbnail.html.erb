@@ -1,1 +1,5 @@
-<%= document_presenter(node)&.thumbnail&.thumbnail_tag({ class: 'thumbnail-inner mw-100' }, {}) %>
+<% if node.is_a?(Valkyrie::ChangeSet) %>
+  <%= document_presenter(SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: node).to_solr))&.thumbnail&.thumbnail_tag({ class: 'thumbnail-inner mw-100' }, {}) %>
+<% else %>
+  <%= document_presenter(node)&.thumbnail&.thumbnail_tag({ class: 'thumbnail-inner mw-100' }, {}) %>
+<% end %>
