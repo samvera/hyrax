@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 module Hyrax
   module Forms
-    class FileManagerForm
-      include HydraEditor::Form
-      self.terms = []
-      delegate :id, :thumbnail_id, :representative_id, :to_s, to: :model
+    class FileManagerForm < Valkyrie::ChangeSet
+      property :thumbnail_id
+      property :representative_id
+      delegate :to_s, to: :model
       attr_reader :current_ability, :request
 
       ##
@@ -12,11 +12,17 @@ module Hyrax
       # @param ability [::Ability] the current ability
       # @param member_factory [Class] the member_presenter factory object to use
       #   when constructing presenters
-      def initialize(work, ability, member_factory: MemberPresenterFactory)
-        super(work)
+      def initialize(model, ability, member_factory: MemberPresenterFactory)
+        super(model)
         @current_ability = ability
         @request = nil
         @member_factory = member_factory
+      end
+
+      # This ChangeSet takes either a Valkyrie object or an ActiveFedora object - ActiveFedora
+      # objects don't respond to #column_for_attribute, so define it here.
+      def column_for_attribute(name)
+        name
       end
 
       def version
