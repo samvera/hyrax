@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 RSpec.describe InheritPermissionsJob do
   let(:user) { FactoryBot.create(:user) }
-  let(:work) { FactoryBot.create(:work_with_one_file, user: user) }
 
-  context "when using a legacy AF resource" do
+  context "when using a legacy AF resource", :active_fedora do
+    let(:work) { FactoryBot.create(:work_with_one_file, user: user) }
+
     before do
       work.permissions.build(name: name, type: type, access: access)
       work.save
