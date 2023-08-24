@@ -2,7 +2,7 @@
 RSpec.describe Hyrax::GrantReadToMembersJob, perform_enqueued: [Hyrax::GrantReadToMembersJob] do
   let(:depositor) { FactoryBot.create(:user) }
 
-  context "when using active fedora" do
+  context "when using active fedora", :active_fedora do
     let(:work) { FactoryBot.create(:work_with_files) }
 
     it 'loops over FileSet IDs, spawning a job for each' do
