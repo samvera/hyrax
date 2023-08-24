@@ -30,8 +30,8 @@ dependencies:
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: solr.enabled
   - name: nginx
-    version: 13.2.30
-    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+    version: 15.2.0
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: nginx.enabled
   - name: fits
     version: 0.1.0
