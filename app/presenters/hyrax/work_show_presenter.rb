@@ -252,6 +252,11 @@ module Hyrax
       Hyrax::ChildTypes.for(parent: solr_document.hydra_model).to_a
     end
 
+    # @return [Boolean]
+    def valkyrie_presenter?
+      solr_document.hydra_model < Valkyrie::Resource
+    end
+
     private
 
     # list of item ids to display is based on ordered_ids
@@ -298,7 +303,7 @@ module Hyrax
 
     def member_presenter_factory
       @member_presenter_factory ||=
-        if solr_document.hydra_model < Valkyrie::Resource
+        if valkyrie_presenter?
           PcdmMemberPresenterFactory.new(solr_document, current_ability)
         else
           self.class

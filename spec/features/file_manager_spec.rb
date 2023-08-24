@@ -21,13 +21,16 @@ RSpec.describe "file manager" do
     expect(page).to have_selector "input[name='file_set[title][]'][type='text'][value='#{file_set.title.first}']"
 
     # has a link to edit each file set
-    expect(page).to have_selector("a[href='/concern/file_sets/#{file_set.id}']")
+    expect(page).to have_selector("a[href='/concern/parent/#{work.id}/file_sets/#{file_set.id}']")
 
     # has a link back to parent
-    expect(page).to have_link work.to_s, href: hyrax_monograph_path(id: work.id, locale: :en)
+    expect(page).to have_link work.title.first, href: hyrax_monograph_path(id: work.id, locale: :en)
 
     # renders a form for each member
     expect(page).to have_selector("#sortable form", count: work.member_ids.length)
+
+    # Defines the order property
+    expect(page).to have_selector("#sortable[data-sort-property='member_ids']")
 
     # renders an input for titles
     expect(page).to have_selector("input[name='file_set[title][]']")

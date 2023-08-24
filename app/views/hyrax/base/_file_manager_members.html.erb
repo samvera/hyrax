@@ -5,7 +5,7 @@
                   id: @form.id.to_s,
                   "class-name" => @form.model_name.plural,
                   "singular-class-name" => @form.model_name.singular,
-                  "sort_property" => (@form.solr_document.hydra_model < Valkyrie::Resource) ? "member_ids" : "ordered_member_ids"
+                  "sort_property" => @form.valkyrie_presenter? ? "member_ids" : "ordered_member_ids"
                 } do %>
   <% @form.member_presenters.each do |member| %>
     <%= render "file_manager_member", node: member %>
