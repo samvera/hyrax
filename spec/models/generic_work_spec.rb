@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe GenericWork do
+RSpec.describe GenericWork, :active_fedora do
   it 'has a title' do
     subject.title = ['foo']
     expect(subject.title).to eq ['foo']

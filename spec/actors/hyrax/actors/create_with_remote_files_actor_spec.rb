@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
+RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor, :active_fedora do
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:actor) { stack.build(terminator) }
   let(:stack) do

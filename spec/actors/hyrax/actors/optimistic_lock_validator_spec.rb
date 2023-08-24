@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Actors::OptimisticLockValidator do
+RSpec.describe Hyrax::Actors::OptimisticLockValidator, :active_fedora do
   let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
   let(:ability) { ::Ability.new(depositor) }
 

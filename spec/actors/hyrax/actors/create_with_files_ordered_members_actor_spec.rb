@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Actors::CreateWithFilesOrderedMembersActor do
+RSpec.describe Hyrax::Actors::CreateWithFilesOrderedMembersActor, :active_fedora do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
   let(:work) { create(:generic_work, user: user) }

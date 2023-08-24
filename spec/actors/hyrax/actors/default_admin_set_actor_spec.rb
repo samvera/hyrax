@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
+RSpec.describe Hyrax::Actors::DefaultAdminSetActor, :active_fedora do
   let(:depositor) { build(:user) }
   let(:depositor_ability) { ::Ability.new(depositor) }
   let(:work) { build(:generic_work) }

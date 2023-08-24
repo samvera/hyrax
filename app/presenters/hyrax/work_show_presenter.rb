@@ -190,16 +190,6 @@ module Hyrax
       paginated_item_list(page_array: authorized_item_ids)
     end
 
-    ##
-    # @deprecated use `#member_presenters(ids)` instead
-    #
-    # @param [Array<String>] ids a list of ids to build presenters for
-    # @return [Array<presenter_class>] presenters for the array of ids (not filtered by class)
-    def member_presenters_for(an_array_of_ids)
-      Deprecation.warn("Use `#member_presenters` instead.")
-      member_presenters(an_array_of_ids)
-    end
-
     # @return [Integer] total number of pages of viewable items
     def total_pages
       (total_items.to_f / rows_from_params.to_f).ceil

@@ -1,6 +1,6 @@
 
 <%  array_of_ids = presenter.list_of_item_ids_to_display %>
-<%  members = presenter.member_presenters_for(array_of_ids) %>
+<%  members = presenter.member_presenters(array_of_ids) %>
 <% if members.present? %>
   <table class="table table-striped related-files">
     <thead>
