@@ -33,3 +33,7 @@ dependencies:
     version: 13.2.30
     repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: nginx.enabled
+  - name: fits
+    version: 0.1.0
+    repository:  https://samvera-labs.github.io/fits-charts
+    condition: fits.enabled

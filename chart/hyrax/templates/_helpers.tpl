@@ -86,6 +86,23 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end }}
 {{- end -}}
 
+
+{{/*
+Create default fully qualified service names.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "hyrax.fits.fullname" -}}
+{{- printf "%s-%s" .Release.Name "fits" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "hyrax.fits.host" -}}
+{{- if .Values.fits.enabled }}
+{{- include "hyrax.fits.fullname" . }}
+{{- else }}
+{{- .Values.externalFitsHost | default "NO_FITS_HOST_DEFINED" }}
+{{- end }}
+{{- end -}}
+
 {{- define "hyrax.memcached.fullname" -}}
 {{- printf "%s-%s" .Release.Name "memcached" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
