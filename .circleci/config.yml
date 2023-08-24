@@ -165,3 +165,16 @@ workflows:
           hyrax_valkyrie: "1"
           requires:
             - dassie-build
+
+  koppie:
+    jobs:
+      - kaniko-build:
+          name: "koppie-build"
+          ruby_version: "3.2.2"
+          hyrax_app: "koppie"
+      - hyrax-test:
+          name: "koppie-test"
+          ruby_version: "3.2.2"
+          hyrax_app: "koppie"
+          requires:
+            - koppie-build
