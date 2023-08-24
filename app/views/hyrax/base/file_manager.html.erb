@@ -5,7 +5,7 @@
   </li>
 </ul>
 
-<% if !@form.member_presenters.empty? %>
+<% if !@form.member_presenters.blank? %>
   <div class="row" data-action="file-manager">
     <div class="col-lg-3" id="file-manager-tools">
       <h2><%= t('.toolbar') %></h2>
