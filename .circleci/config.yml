@@ -88,7 +88,7 @@ jobs:
           command: |
             /kaniko/executor \
                 --cache=true \
-                --build-arg "EXTRA_APK_PACKAGES=git bash chromium" \
+                --build-arg "EXTRA_APK_PACKAGES=git bash" \
                 --build-arg "APP_PATH=.<< parameters.hyrax_app >>" \
                 --build-arg "RUBY_VERSION=<< parameters.ruby_version >>" \
                 --context "git://github.com/samvera/hyrax#refs/heads/${CIRCLE_BRANCH}#${CIRCLE_SHA1}" \
@@ -118,7 +118,7 @@ jobs:
       HUB_URL: http://localhost:4444/wd/hub
       HYRAX_VALKYRIE: << parameters.hyrax_valkyrie >>
       IN_DOCKER: true
-      KARMA_BROWSER: ChromiumHeadlessCustom
+      KARMA_BROWSER: remote-chromium
       VALKYRIE_SOLR_CORE: valkyrie-test
       VALKYRIE_SOLR_PORT: 8985
     steps:
