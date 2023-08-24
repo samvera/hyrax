@@ -25,7 +25,7 @@ SUMMARY
   spec.license       = 'Apache-2.0'
   spec.metadata      = { "rubygems_mfa_required" => "true" }
 
-  spec.required_ruby_version = '>= 2.7'
+  spec.required_ruby_version = '>= 3.2'
 
   # NOTE: rails does not follow sem-ver conventions, it's
   # minor version releases can include breaking changes; see

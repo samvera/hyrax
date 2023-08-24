@@ -11,7 +11,7 @@ module Hyrax
         return true unless target.try(:depositor)
 
         model = target.try(:model) || target # get the model if target is a ChangeSet
-        model.edit_users = model.edit_users.to_a + Array.wrap(target.depositor) # += works in Ruby 2.6+
+        model.edit_users += Array.wrap(target.depositor)
         model.try(:permission_manager)&.acl&.save
 
         # If there are a lot of members, granting access to each could take a
