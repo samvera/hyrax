@@ -26,8 +26,8 @@ dependencies:
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: redis.enabled
   - name: solr
-    version: 7.2.1
-    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+    version: 8.0.0
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: solr.enabled
   - name: nginx
     version: 13.2.30
