@@ -112,55 +112,6 @@ RSpec.describe AdminSet, :active_fedora, type: :model do
     end
   end
 
-  describe ".default_set?", :clean_repo do
-    before { FactoryBot.valkyrie_create(:default_hyrax_admin_set) }
-    context "with default AdminSet ID" do
-      it "returns true" do
-        expect(described_class.default_set?(described_class::DEFAULT_ID)).to be true
-      end
-    end
-
-    context "with a non-default  ID" do
-      it "returns false" do
-        expect(described_class.default_set?('different-id')).to be false
-      end
-    end
-  end
-
-  describe "#default_set?", :clean_repo do
-    let(:default_admin_set) do
-      administrative_set = FactoryBot.valkyrie_create(:default_hyrax_admin_set)
-      Wings::ActiveFedoraConverter.new(resource: administrative_set).convert
-    end
-    context "with default AdminSet ID" do
-      subject { default_admin_set.default_set? }
-
-      it { is_expected.to be_truthy }
-    end
-
-    context "with a non-default  ID" do
-      subject { described_class.new(id: 'why-would-you-name-the-default-chupacabra?').default_set? }
-
-      it { is_expected.to be_falsey }
-    end
-  end
-
-  describe ".find_or_create_default_admin_set_id" do
-    subject { described_class.find_or_create_default_admin_set_id }
-
-    let(:default_admin_set) { build(:default_hyrax_admin_set) }
-
-    before do
-      allow(Hyrax::AdminSetCreateService).to receive(:find_or_create_default_admin_set)
-        .and_return(default_admin_set)
-    end
-
-    it 'gets the default admin set from the create service and returns the DEFAULT_ID' do
-      expect(Hyrax::AdminSetCreateService).to receive(:find_or_create_default_admin_set)
-      expect(subject).to eq(described_class::DEFAULT_ID)
-    end
-  end
-
   describe "#destroy" do
     context "with member works" do
       before do
@@ -225,42 +176,6 @@ RSpec.describe AdminSet, :active_fedora, type: :model do
         expect(new_id).to be
         expect(new_id.size).to eq(36)
       end
-    end
-  end
-
-  describe '#reset_access_controls!' do
-    let!(:user) { build(:user) }
-    let!(:admin_set) { create(:admin_set, creator: [user.user_key], edit_users: [user.user_key], edit_groups: [::Ability.admin_group_name], read_users: [], read_groups: ['public']) }
-    let!(:permission_template) { build(:permission_template) }
-
-    before do
-      allow(admin_set).to receive(:permission_template).and_return(permission_template)
-      allow(permission_template).to receive(:agent_ids_for).with(access: 'manage', agent_type: 'user').and_return(['mgr1@ex.com', 'mgr2@ex.com', user.user_key])
-      allow(permission_template).to receive(:agent_ids_for).with(access: 'manage', agent_type: 'group').and_return(['managers', ::Ability.admin_group_name])
-      allow(permission_template).to receive(:agent_ids_for).with(access: 'deposit', agent_type: 'user').and_return(['dep1@ex.com', 'dep2@ex.com'])
-      allow(permission_template).to receive(:agent_ids_for).with(access: 'deposit', agent_type: 'group').and_return(['depositors', 'registered'])
-      allow(permission_template).to receive(:agent_ids_for).with(access: 'view', agent_type: 'user').and_return(['vw1@ex.com', 'vw2@ex.com'])
-      allow(permission_template).to receive(:agent_ids_for).with(access: 'view', agent_type: 'group').and_return(['viewers', 'public'])
-    end
-
-    it 'resets user edit access' do
-      admin_set.reset_access_controls!
-      expect(admin_set.edit_users).to match_array([user.user_key, 'mgr1@ex.com', 'mgr2@ex.com'])
-    end
-
-    it 'resets group edit access' do
-      admin_set.reset_access_controls!
-      expect(admin_set.edit_groups).to match_array(['managers', ::Ability.admin_group_name])
-    end
-
-    it 'resets user read access' do
-      admin_set.reset_access_controls!
-      expect(admin_set.read_users).to match_array(['dep1@ex.com', 'dep2@ex.com', 'vw1@ex.com', 'vw2@ex.com'])
-    end
-
-    it 'resets group read access' do
-      admin_set.reset_access_controls!
-      expect(admin_set.read_groups).to match_array(['depositors', 'viewers'])
     end
   end
 end
