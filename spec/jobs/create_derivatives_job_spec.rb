@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe CreateDerivativesJob do
+RSpec.describe CreateDerivativesJob, :active_fedora do
   around do |example|
     ffmpeg_enabled = Hyrax.config.enable_ffmpeg
     Hyrax.config.enable_ffmpeg = true

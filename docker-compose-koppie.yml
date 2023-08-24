@@ -149,6 +149,10 @@ services:
     volumes:
       - solr_home:/var/solr/data:cached
       - .koppie/solr/conf:/opt/solr/server/configsets/hyraxconf
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 524288
     networks:
       - koppie
 

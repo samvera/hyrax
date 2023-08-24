@@ -1,15 +1,10 @@
-ARG RUBY_VERSION=3.2.1
+ARG ALPINE_VERSION=3.18
+ARG RUBY_VERSION=3.2.2
 
-# Replace with official jemalloc package in alpine 3.17
-FROM ruby:$RUBY_VERSION-alpine3.16 as builder
-RUN apk add build-base curl
-RUN curl -sL https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2 | tar -xj && \
-    cd jemalloc-5.3.0 && \
-    ./configure && \
-    make && \
-    make install
+FROM ruby:$RUBY_VERSION-alpine$ALPINE_VERSION as builder
+RUN apk add build-base curl jemalloc
 
-FROM ruby:$RUBY_VERSION-alpine3.16 as hyrax-base
+FROM ruby:$RUBY_VERSION-alpine$ALPINE_VERSION as hyrax-base
 
 ARG DATABASE_APK_PACKAGE="postgresql-dev"
 ARG EXTRA_APK_PACKAGES="git"
@@ -43,7 +38,7 @@ ENV PATH="/app/samvera:$PATH"
 ENV RAILS_ROOT="/app/samvera/hyrax-webapp"
 ENV RAILS_SERVE_STATIC_FILES="1"
 
-COPY --from=builder /usr/local/lib/libjemalloc.so.2 /usr/local/lib/
+COPY --from=builder /usr/lib/libjemalloc.so.2 /usr/local/lib/
 ENV LD_PRELOAD="/usr/local/lib/libjemalloc.so.2"
 
 ENTRYPOINT ["hyrax-entrypoint.sh"]
