@@ -47,14 +47,14 @@ module Hyrax
     #   we recommend making sparing use of this feature.
     #
     # @overload member_presenters
-    #   @return [Enumerator<FileSetPresenter, WorkShowPresenter>]
+    #   @return [Array<FileSetPresenter, WorkShowPresenter>]
     #   @raise [ArgumentError] if an unindexed id is passed
     # @overload member_presenters
     #   @param [Array<#to_s>] ids
-    #   @return [Enumerator<FileSetPresenter, WorkShowPresenter>]
+    #   @return [Array<FileSetPresenter, WorkShowPresenter>]
     #   @raise [ArgumentError] if an unindexed id is passed
     def member_presenters(ids = object.member_ids)
-      return enum_for(:member_presenters, ids) unless block_given?
+      return enum_for(:member_presenters, ids).to_a unless block_given?
 
       results = query_docs(ids: ids)
 

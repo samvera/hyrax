@@ -214,8 +214,8 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#work_presenters" do
-    let(:obj) { create(:work_with_file_and_work) }
-    let(:attributes) { obj.to_solr }
+    let(:obj) { FactoryBot.valkyrie_create(:hyrax_work, :with_file_and_work) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: obj).to_solr) }
 
     it "filters out members that are file sets" do
       expect(presenter.work_presenters.count).to eq 1
@@ -224,15 +224,15 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#member_count" do
-    let(:obj) { FactoryBot.create(:work_with_file_and_work) }
-    let(:attributes) { obj.to_solr }
+    let(:obj) { FactoryBot.valkyrie_create(:hyrax_work, :with_file_and_work) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: obj).to_solr) }
 
     it "returns the member count" do
       expect(presenter.member_count).to eq 2
     end
 
     context "with empty members" do
-      let(:obj) { FactoryBot.create(:work) }
+      let(:obj) { FactoryBot.valkyrie_create(:hyrax_work) }
 
       it "returns 0" do
         expect(presenter.member_count).to eq 0
@@ -241,8 +241,8 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#member_presenters" do
-    let(:obj) { create(:work_with_file_and_work) }
-    let(:attributes) { obj.to_solr }
+    let(:obj) { FactoryBot.valkyrie_create(:hyrax_work, :with_file_and_work) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: obj).to_solr) }
 
     it "returns appropriate classes for each" do
       expect(presenter.member_presenters.count).to eq 2
