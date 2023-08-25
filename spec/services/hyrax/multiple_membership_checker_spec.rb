@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
-  let(:item) { create(:work, id: 'work-1', user: user) }
-  let(:user) { create(:user) }
+  let(:item) { FactoryBot.valkyrie_create(:hyrax_work, depositor: user.user_key) }
+  let(:user) { FactoryBot.create(:user) }
 
   describe '#initialize' do
-    subject { described_class.new(item: item) }
-
     it 'exposes an attr_reader' do
-      expect(subject.item).to eq item
+      expect(described_class.new(item: item)).to have_attributes(item: item)
     end
   end
 
@@ -17,7 +15,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
     let(:checker) { described_class.new(item: item) }
     let(:collection_ids) { ['foobar'] }
     let(:included) { false }
-    let!(:collection_type) { create(:collection_type, title: 'Greedy', allow_multiple_membership: false) }
+    let!(:collection_type) { FactoryBot.create(:collection_type, title: 'Greedy', allow_multiple_membership: false) }
     let(:collection_types) { [collection_type] }
     let(:collection_type_gids) { [collection_type.to_global_id] }
 
@@ -65,23 +63,24 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
       context 'and multiple single-membership collections of the same type exist' do
         let(:collection1) do
-          create(:collection_lw, id: 'collection1', title: ['Foo'],
-                                 collection_type: collection_type,
-                                 with_solr_document: true)
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Foo'],
+                                     collection_type_gid: collection_type.to_global_id.to_s)
         end
+
         let(:collection2) do
-          create(:collection_lw, id: 'collection2', title: ['Bar'],
-                                 collection_type: collection_type,
-                                 with_solr_document: true)
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Bar'],
+                                     collection_type_gid: collection_type.to_global_id.to_s)
         end
 
         before do
           Hyrax.publisher.publish('object.metadata.updated',
-                                  object: item.valkyrie_resource, user: user)
+                                  object: item, user: user)
           Hyrax.publisher.publish('object.metadata.updated',
-                                  object: collection1.valkyrie_resource, user: user)
+                                  object: collection1, user: user)
           Hyrax.publisher.publish('object.metadata.updated',
-                                  object: collection2.valkyrie_resource, user: user)
+                                  object: collection2, user: user)
         end
 
         context 'and only one is in the list' do
@@ -105,15 +104,29 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
       end
 
       context 'and multiple single-membership collection instances of different types exist' do
-        let!(:collection_type_2) { create(:collection_type, title: 'Doc', allow_multiple_membership: false) }
-        let(:collection1) { create(:collection_lw, title: ['Foo'], collection_type: collection_type, with_solr_document: true) }
-        let(:collection2) { create(:collection_lw, title: ['Bar'], collection_type: collection_type, with_solr_document: true) }
-        let(:collection3) { create(:collection_lw, title: ['Baz'], collection_type: collection_type_2, with_solr_document: true) }
+        let!(:collection_type_2) { FactoryBot.create(:collection_type, title: 'Doc', allow_multiple_membership: false) }
+        let(:collection1) do
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Foo'],
+                                     collection_type_gid: collection_type.to_global_id.to_s)
+        end
+
+        let(:collection2) do
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Bar'],
+                                     collection_type_gid: collection_type.to_global_id.to_s)
+        end
+
+        let(:collection3) do
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Baz'],
+                                     collection_type_gid: collection_type_2.to_global_id.to_s)
+        end
 
         before do
-          Hyrax.publisher.publish('object.metadata.updated', object: collection1.valkyrie_resource, user: user)
-          Hyrax.publisher.publish('object.metadata.updated', object: collection2.valkyrie_resource, user: user)
-          Hyrax.publisher.publish('object.metadata.updated', object: collection3.valkyrie_resource, user: user)
+          Hyrax.publisher.publish('object.metadata.updated', object: collection1, user: user)
+          Hyrax.publisher.publish('object.metadata.updated', object: collection2, user: user)
+          Hyrax.publisher.publish('object.metadata.updated', object: collection3, user: user)
         end
 
         context 'and collections of both types are passed in' do
@@ -143,9 +156,18 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
       let(:included) { true }
 
       context 'and multiple single-membership collections of the same type exist' do
-        let(:collection1) { create(:collection_lw, id: 'collection1', title: ['Foo'], collection_type: collection_type, with_solr_document: true) }
-        let(:collection2) { create(:collection_lw, id: 'collection2', title: ['Bar'], collection_type: collection_type, with_solr_document: true) }
-        let(:item_2) { create(:work, id: 'work-2', user: user) }
+        let(:collection1) do
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Foo'],
+                                     collection_type_gid: collection_type.to_global_id.to_s)
+        end
+
+        let(:collection2) do
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Bar'],
+                                     collection_type_gid: collection_type.to_global_id.to_s)
+        end
+        let(:item_2) { FactoryBot.valkyrie_create(:hyrax_work, depositor: user.user_key) }
 
         context 'and only one is in the list' do
           let(:collections) { [collection1] }
@@ -154,12 +176,12 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
           context 'and the member is already in the other single membership collection' do
             before do
               [item, item_2].each do |work|
-                work.member_of_collections << collection2
-                work.save!
-                Hyrax.publisher.publish('object.metadata.updated', object: work.valkyrie_resource, user: user)
+                work.member_of_collection_ids << collection2.id
+                Hyrax.persister.save(resource: work)
+                Hyrax.publisher.publish('object.metadata.updated', object: work, user: user)
               end
-              Hyrax.publisher.publish('object.metadata.updated', object: collection1.valkyrie_resource, user: user)
-              Hyrax.publisher.publish('object.metadata.updated', object: collection2.valkyrie_resource, user: user)
+              Hyrax.publisher.publish('object.metadata.updated', object: collection1, user: user)
+              Hyrax.publisher.publish('object.metadata.updated', object: collection2, user: user)
             end
 
             it 'returns an error' do
@@ -170,14 +192,13 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
           context 'and the member is not already in the other single membership collection' do
             before do
-              [item_2].each do |work|
-                work.member_of_collections << collection2
-                work.save!
-                Hyrax.publisher.publish('object.metadata.updated', object: work.valkyrie_resource, user: user)
-              end
-              Hyrax.publisher.publish('object.metadata.updated', object: item.valkyrie_resource, user: user)
-              Hyrax.publisher.publish('object.metadata.updated', object: collection1.valkyrie_resource, user: user)
-              Hyrax.publisher.publish('object.metadata.updated', object: collection2.valkyrie_resource, user: user)
+              item_2.member_of_collection_ids << collection2.id
+              Hyrax.persister.save(resource: item_2)
+              Hyrax.publisher.publish('object.metadata.updated', object: item_2, user: user)
+
+              Hyrax.publisher.publish('object.metadata.updated', object: item, user: user)
+              Hyrax.publisher.publish('object.metadata.updated', object: collection1, user: user)
+              Hyrax.publisher.publish('object.metadata.updated', object: collection2, user: user)
             end
 
             it 'returns nil' do
@@ -189,14 +210,28 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
       context 'and multiple single-membership collection instances of different types exist' do
         let!(:collection_type_2) { create(:collection_type, title: 'Doc', allow_multiple_membership: false) }
-        let(:collection1) { create(:collection_lw, title: ['Foo'], collection_type: collection_type, with_solr_document: true) }
-        let(:collection2) { create(:collection_lw, title: ['Bar'], collection_type: collection_type, with_solr_document: true) }
-        let(:collection3) { create(:collection_lw, title: ['Baz'], collection_type: collection_type_2, with_solr_document: true) }
+        let(:collection1) do
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Foo'],
+                                     collection_type_gid: collection_type.to_global_id.to_s)
+        end
+
+        let(:collection2) do
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Bar'],
+                                     collection_type_gid: collection_type.to_global_id.to_s)
+        end
+
+        let(:collection3) do
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Baz'],
+                                     collection_type_gid: collection_type_2.to_global_id.to_s)
+        end
 
         before do
-          Hyrax.publisher.publish('object.metadata.updated', object: collection1.valkyrie_resource, user: user)
-          Hyrax.publisher.publish('object.metadata.updated', object: collection2.valkyrie_resource, user: user)
-          Hyrax.publisher.publish('object.metadata.updated', object: collection3.valkyrie_resource, user: user)
+          Hyrax.publisher.publish('object.metadata.updated', object: collection1, user: user)
+          Hyrax.publisher.publish('object.metadata.updated', object: collection2, user: user)
+          Hyrax.publisher.publish('object.metadata.updated', object: collection3, user: user)
         end
 
         context 'and collections of both types are passed in' do
@@ -230,26 +265,27 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
     let(:collection_types) { [collection_type] }
     let(:collection_type_gids) { [collection_type.to_global_id] }
 
-    subject(:validation) { checker.validate }
-
     context 'when the item has 0 collections' do
       let(:item) { FactoryBot.build(:hyrax_work) }
+
       it 'returns true' do
-        expect(validation).to be true
+        expect(checker.validate).to be true
       end
     end
 
     context 'when the item has 1 collection' do
       let(:item) { FactoryBot.build(:hyrax_work, :as_collection_member) }
+
       it 'returns true' do
-        expect(validation).to be true
+        expect(checker.validate).to be true
       end
     end
 
     context 'when there are no single-membership collection types' do
       before { allow(Hyrax::CollectionType).to receive(:gids_that_do_not_allow_multiple_membership).and_return([]) }
+
       it 'returns true' do
-        expect(validation).to be true
+        expect(checker.validate).to be true
       end
     end
 
@@ -257,7 +293,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
       let(:item) { FactoryBot.build(:hyrax_work, :as_member_of_multiple_collections) }
       let(:collection_ids) { item.member_of_collection_ids }
       it 'returns true' do
-        expect(validation).to be true
+        expect(checker.validate).to be true
       end
     end
 
@@ -282,7 +318,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
         let(:collection_ids) { [col1.id, col2.id] }
 
         it 'returns true' do
-          expect(validation).to be true
+          expect(checker.validate).to be true
         end
       end
 
@@ -304,7 +340,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
         it 'returns an error' do
           regexp = /#{base_errmsg} \(type: Single Membership 1, collections: (Foo and Bar|Bar and Foo)\)/
-          expect(validation).to match regexp
+          expect(checker.validate).to match regexp
         end
       end
 
@@ -317,7 +353,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
         it 'returns an error' do
           regexp = /#{base_errmsg} \(type: Single Membership 1, collections: (Foo and Bar|Bar and Foo)\)/
-          expect(validation).to match regexp
+          expect(checker.validate).to match regexp
         end
       end
     end
