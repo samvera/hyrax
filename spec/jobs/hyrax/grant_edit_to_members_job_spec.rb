@@ -2,7 +2,7 @@
 RSpec.describe Hyrax::GrantEditToMembersJob do
   let(:depositor) { create(:user) }
 
-  context "when using active fedora" do
+  context "when using active fedora", :active_fedora do
     let(:work) { create(:work) }
     let(:file_set_ids) { ['xyz123abc', 'abc789zyx'] }
 

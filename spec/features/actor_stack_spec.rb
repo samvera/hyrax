@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 # Integration tests for the full midddleware stack
-RSpec.describe Hyrax::DefaultMiddlewareStack, :clean_repo do
+RSpec.describe Hyrax::DefaultMiddlewareStack, :active_fedora, :clean_repo do
   subject(:actor)  { stack.build(Hyrax::Actors::Terminator.new) }
   let(:ability)    { ::Ability.new(user) }
   let(:attributes) { {} }

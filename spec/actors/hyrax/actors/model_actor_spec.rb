@@ -9,7 +9,7 @@ class Hyrax::Actors::MusicalWork
   end
 end
 
-RSpec.describe Hyrax::Actors::ModelActor do
+RSpec.describe Hyrax::Actors::ModelActor, :active_fedora do
   let(:work) { MusicalWork::Cover.new }
   let(:depositor) { create(:user) }
   let(:depositor_ability) { ::Ability.new(depositor) }

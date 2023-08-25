@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::ChangeDepositorService do
-  let!(:depositor) { create(:user) }
-  let!(:receiver) { create(:user) }
+  let!(:depositor) { FactoryBot.create(:user) }
+  let!(:receiver) { FactoryBot.create(:user) }
 
-  context "for Active Fedora objects" do
+  context "for Active Fedora objects", :active_fedora do
     let!(:work) do
       create(:work, title: ['Test work'], user: depositor)
     end
@@ -49,13 +49,13 @@ RSpec.describe Hyrax::ChangeDepositorService do
   end
 
   context "for Valkyrie objects" do
-    let!(:base_work) { valkyrie_create(:hyrax_work, title: ['SoonToBeSomeoneElses'], depositor: depositor.user_key, edit_users: [depositor]) }
+    let!(:base_work) { FactoryBot.valkyrie_create(:hyrax_work, title: ['SoonToBeSomeoneElses'], depositor: depositor.user_key, edit_users: [depositor]) }
     let!(:work_acl) { Hyrax::AccessControlList.new(resource: base_work) }
 
     context "by default, when permissions are not reset" do
       it "changes the depositor and records an original depositor" do
         described_class.call(base_work, receiver, false)
-        work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: base_work.id, use_valkyrie: true)
+        work = Hyrax.query_service.find_by(id: base_work.id)
         expect(work.depositor).to eq receiver.user_key
         expect(work.proxy_depositor).to eq depositor.user_key
         expect(work.edit_users.to_a).to include(receiver.user_key, depositor.user_key)
@@ -66,7 +66,7 @@ RSpec.describe Hyrax::ChangeDepositorService do
     context "when permissions are reset" do
       it "changes the depositor and records an original depositor" do
         described_class.call(base_work, receiver, true)
-        work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: base_work.id, use_valkyrie: true)
+        work = Hyrax.query_service.find_by(id: base_work.id)
         expect(work.depositor).to eq receiver.user_key
         expect(work.proxy_depositor).to eq depositor.user_key
         expect(work.edit_users.to_a).to contain_exactly(receiver.user_key)
@@ -75,7 +75,7 @@ RSpec.describe Hyrax::ChangeDepositorService do
     end
 
     context "when there are filesets" do
-      let!(:base_work) { valkyrie_create(:hyrax_work, :with_member_file_sets, title: ['SoonToBeSomeoneElses'], depositor: depositor.user_key, edit_users: [depositor]) }
+      let!(:base_work) { FactoryBot.valkyrie_create(:hyrax_work, :with_member_file_sets, title: ['SoonToBeSomeoneElses'], depositor: depositor.user_key, edit_users: [depositor]) }
       before do
         Hyrax.custom_queries.find_child_file_sets(resource: base_work).each do |file_set|
           Hyrax::AccessControlList.copy_permissions(source: work_acl, target: file_set)

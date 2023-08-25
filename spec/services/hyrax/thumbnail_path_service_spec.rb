@@ -61,7 +61,7 @@ RSpec.describe Hyrax::ThumbnailPathService do
     end
   end
 
-  context "with a Work" do
+  context "with a Work", :active_fedora do
     context "that has a thumbnail" do
       let(:object)         { GenericWork.new(thumbnail_id: '999') }
       let(:representative) { build(:file_set, id: '999') }

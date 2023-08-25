@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::RevokeEditFromMembersJob do
+RSpec.describe Hyrax::RevokeEditFromMembersJob, :active_fedora do
   let(:depositor) { create(:user) }
 
   context "when using active fedora" do

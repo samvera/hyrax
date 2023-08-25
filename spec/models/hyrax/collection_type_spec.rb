@@ -38,18 +38,6 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     expect(collection_type).not_to assign_visibility
   end
 
-  describe '#gid' do
-    it 'returns the gid when id exists' do
-      collection_type.id = 5
-      expect(collection_type.gid.to_s).to eq "gid://#{GlobalID.app}/#{described_class}/5"
-    end
-
-    it 'returns nil when id is nil' do
-      collection_type.id = nil
-      expect(collection_type.gid).to be_nil
-    end
-  end
-
   describe ".any_nestable?" do
     context "when there is a nestable collection type" do
       let!(:collection_type) { FactoryBot.create(:collection_type, nestable: true) }
@@ -125,10 +113,6 @@ RSpec.describe Hyrax::CollectionType, type: :model do
   describe '.find_by_gid' do
     let(:collection_type) { FactoryBot.create(:collection_type) }
 
-    it 'returns the same collection type the gid exists' do
-      expect(described_class.find_by_gid(collection_type.gid)).to eq collection_type
-    end
-
     it 'returns the same collection type with `#to_global_id`' do
       expect(described_class.find_by_gid(collection_type.to_global_id)).to eq collection_type
     end
@@ -144,10 +128,6 @@ RSpec.describe Hyrax::CollectionType, type: :model do
 
   describe '.find_by_gid!' do
     let(:collection_type) { FactoryBot.create(:collection_type) }
-
-    it 'returns instance of collection type when one with the gid exists' do
-      expect(described_class.find_by_gid(collection_type.gid)).to eq collection_type
-    end
 
     it 'returns the same collection type with `#to_global_id`' do
       expect(described_class.find_by_gid!(collection_type.to_global_id)).to eq collection_type

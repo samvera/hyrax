@@ -4,6 +4,7 @@ export default class SortManager {
     this.sorting_info = {}
     this.initialize_sort()
     this.element.data("current-order", this.order)
+    this.sort_property = this.element.data("sort-property")
     this.save_manager = save_manager
     this.initialize_alpha_sort_button()
   }
@@ -38,9 +39,9 @@ export default class SortManager {
   params() {
     let params = {}
     params[this.singular_class_name] = {
-      "version": this.version,
-      "ordered_member_ids": this.order
+      "version": this.version
     }
+    params[this.singular_class_name][this.sort_property] = this.order
     params["_method"] = "PATCH"
     return params
   }

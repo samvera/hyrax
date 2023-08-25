@@ -42,25 +42,6 @@ class AdminSet < ActiveFedora::Base
   before_destroy :check_if_not_default_set, :check_if_empty
   after_destroy :destroy_permission_template
 
-  def self.default_set?(id)
-    Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
-                     "Instead, use 'Hyrax::AdminSetCreateService.default_admin_set?(id:)'.")
-    Hyrax::AdminSetCreateService.default_admin_set?(id: id)
-  end
-
-  def default_set?
-    Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
-                     "Instead, use 'Hyrax::AdminSetCreateService.default_admin_set?(id:)'.")
-    self.class.default_set?(id)
-  end
-
-  # Creates the default AdminSet and an associated PermissionTemplate with workflow
-  def self.find_or_create_default_admin_set_id
-    Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
-                     "Instead, use 'Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id'.")
-    Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s
-  end
-
   def collection_type_gid
     # allow AdminSet to behave more like a regular Collection
     Hyrax::CollectionType.find_or_create_admin_set_type.to_global_id
@@ -86,17 +67,6 @@ class AdminSet < ActiveFedora::Base
     Sipity::Workflow.find_active_workflow_for(admin_set_id: id)
   end
 
-  ##
-  # @deprecated use PermissionTemplate#reset_access_controls_for instead
-  #
-  # Calculate and update who should have edit access based on who
-  # has "manage" access in the PermissionTemplateAccess
-  def reset_access_controls!
-    Deprecation.warn("reset_access_controls! is deprecated; use PermissionTemplate#reset_access_controls_for instead.")
-
-    permission_template.reset_access_controls_for(collection: self)
-  end
-
   # @api public
   #
   # return an id for the AdminSet.
@@ -120,7 +90,7 @@ class AdminSet < ActiveFedora::Base
   end
 
   def check_if_not_default_set
-    return true unless default_set?
+    return true unless Hyrax::AdminSetCreateService.default_admin_set?(id: id)
     errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_default_set')
     throw :abort
   end
