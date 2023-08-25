@@ -86,6 +86,7 @@ FactoryBot.register_strategy(:valkyrie_create, ValkyrieCreateStrategy)
 FactoryBot.register_strategy(:json, JsonStrategy)
 FactoryBot.definition_file_paths = [File.expand_path("../factories", __FILE__)]
 FactoryBot.find_definitions
+require 'rspec/mocks'
 
 require 'shoulda/matchers'
 require 'shoulda/callback/matchers'
@@ -142,6 +143,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.before :suite do
+    FactoryBot::SyntaxRunner.include RSpec::Mocks::ExampleMethods
     Hyrax::RedisEventStore.instance.then(&:flushdb)
     DatabaseCleaner.clean_with(:truncation)
     # Noid minting causes extra LDP requests which slow the test suite.
