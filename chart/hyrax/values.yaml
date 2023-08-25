@@ -265,6 +265,8 @@ postgresql:
     database: hyrax
     password: hyrax_pass
     username: hyrax
+  containerPorts:
+    postgresql: 5432
   primary:
     service:
       ports:
