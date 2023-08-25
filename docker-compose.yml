@@ -100,10 +100,10 @@ services:
       - hyrax
 
   postgres:
-    image: bitnami/postgresql:14.4.0
-    restart: always
+    image: postgres:latest
     environment:
-      - POSTGRESQL_PASSWORD=hyrax_super
+      - POSTGRES_USER=hyrax_user
+      - POSTGRES_PASSWORD=hyrax_password
       - POSTGRES_DB=hyrax
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
