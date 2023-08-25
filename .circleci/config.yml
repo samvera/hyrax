@@ -16,7 +16,7 @@ executors:
         default: 'dassie'
       postgres_version:
         type: string
-        default: '9.6'
+        default: '14.9'
       redis_version:
         type: string
         default: '6.2'
