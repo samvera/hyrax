@@ -66,6 +66,7 @@ module.exports = function(config) {
     },
 
     // web server port
+    hostname: process.env.KARMA_HOSTNAME || 'localhost', // This is the host the remote browser connects to
     port: 9876,
 
     // enable / disable colors in the output (reporters and logs)
@@ -80,16 +81,14 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://www.npmjs.com/search?q=keywords:karma-launcher
-    browsers: [process.env.KARMA_BROWSER],
+    browsers: [process.env.KARMA_BROWSER || 'ChromiumHeadless'],
 
     customLaunchers: {
-      ChromiumHeadlessCustom: {
-        base: 'ChromiumHeadless',
-        flags: ['--no-sandbox']
-      },
-      ChromeHeadlessCustom: {
-        base: 'ChromeHeadless',
-        flags: ['--no-sandbox']
+      'remote-chromium': {
+        base: 'SeleniumGrid',
+        gridUrl: process.env.HUB_URL || 'http://localhost:4444/wd/hub',
+        browserName: 'chrome',
+        arguments: [ '--headless=new']
       }
     },
 
@@ -99,6 +98,6 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser instances should be started simultaneously
-    concurrency: 4
+    concurrency: 1
   })
 }

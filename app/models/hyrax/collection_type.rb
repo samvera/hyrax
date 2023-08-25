@@ -70,7 +70,7 @@ module Hyrax
     # @see #gid
     # @see Hyrax::MultipleMembershipChecker
     def self.gids_that_do_not_allow_multiple_membership
-      where(allow_multiple_membership: false).map(&:gid)
+      where(allow_multiple_membership: false).map { |c| c.to_global_id.to_s }
     end
 
     # Find the collection type associated with the Global Identifier (gid)
@@ -96,18 +96,6 @@ module Hyrax
     #   (e.g. {#nestable?})
     def self.settings_attributes
       SETTINGS_ATTRIBUTES
-    end
-
-    ##
-    # @deprecation use #to_global_id
-    #
-    # Return the Global Identifier for this collection type.
-    # @return [String, nil] Global Identifier (gid) for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
-    #
-    # @see https://github.com/rails/globalid#usage
-    def gid
-      Deprecation.warn('use #to_global_id.')
-      to_global_id.to_s if id
     end
 
     ##

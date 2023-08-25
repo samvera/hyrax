@@ -8,7 +8,7 @@ services:
       args:
         - EXTRA_APK_PACKAGES=git less chromium
     image: ghcr.io/samvera/dassie
-    command: sh -l -c 'bundle && bundle exec puma -v -b tcp://0.0.0.0:3000'
+    command: sh -c 'bundle && bundle exec puma -v -b tcp://0.0.0.0:3000'
     stdin_open: true
     tty: true
     user: root
@@ -42,7 +42,7 @@ services:
       context: .
       target: hyrax-engine-dev-worker
     image: ghcr.io/samvera/dassie-worker
-    command: sh -l -c 'bundle && bundle exec sidekiq'
+    command: sh -c 'bundle && bundle exec sidekiq'
     user: root
     env_file:
       - .dassie/.env
@@ -73,7 +73,7 @@ services:
     user: root
     env_file:
       - .dassie/.env
-    command: sh -l -c 'bundle && db-migrate-seed.sh'
+    command: sh -c 'bundle && db-migrate-seed.sh'
     depends_on:
       - postgres
     volumes:
@@ -122,6 +122,13 @@ services:
     networks:
       - hyrax
 
+  fits:
+    image: harvardlts/fitsservlet_container:1.5.0
+    ports:
+      - 8080
+    networks:
+      - hyrax
+
   memcached:
     image: bitnami/memcached
     ports:
@@ -147,6 +154,10 @@ services:
     volumes:
       - solr_home:/var/solr/data:cached
       - .dassie/solr/conf:/opt/solr/server/configsets/hyraxconf
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 524288
     networks:
       - hyrax
 

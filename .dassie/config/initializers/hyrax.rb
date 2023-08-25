@@ -18,6 +18,8 @@ Hyrax.config do |config|
   config.work_requires_files = false
   config.citations = true
 
+  config.characterization_options = { ch12n_tool: ENV.fetch('CH12N_TOOL', 'fits').to_sym }
+
   # Returns a URL that resolves to an image provided by a IIIF image server
   config.iiif_image_url_builder = lambda do |file_id, base_url, size, format|
     Riiif::Engine.routes.url_helpers.image_url(file_id, host: base_url, size: size)
@@ -40,7 +42,7 @@ Hyrax.config do |config|
     config.browse_everything = nil
   end
 
-  # config.geonames_username = ''
+  config.geonames_username = ENV['GEONAMES_USERNAME'] || ''
 
   ##
   # Set the system-wide virus scanner

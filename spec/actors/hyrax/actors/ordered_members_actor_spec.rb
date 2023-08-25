@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'redlock'
 
-RSpec.describe Hyrax::Actors::OrderedMembersActor do
+RSpec.describe Hyrax::Actors::OrderedMembersActor, :active_fedora do
   include ActionDispatch::TestProcess
 
   let(:user)          { create(:user) }

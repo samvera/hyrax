@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: samveralabs/dassie
+  repository: ghcr.io/samvera/hyrax/dassie
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -193,7 +193,7 @@ worker:
   enabled: true
   replicaCount: 3
   image:
-    repository: samveralabs/dassie-worker
+    repository: ghcr.io/samvera/hyrax/dassie-worker
     pullPolicy: IfNotPresent
     tag: ""
   extraInitContainers: []
@@ -220,19 +220,35 @@ worker:
 
 fcrepo:
   enabled: true
-  externalDatabaseUsername: "hyrax"
   servicePort: 8080
   postgresql:
     enabled: false
     image:
       repository: bitnami/postgresql
-      tag: 12.3.0
+      tag: 12.11.0-debian-11-r12
+
+# configuration for an external/existing fits service;
+#   ignored if `fits.enabled` is true
+externalFits:
+  enabled: false
+  url: "" # existing FITS servlet endpoint
+
+fits:
+  enabled: true
+  servicePort: 8080
+  subPath: /fits
 
 memcached:
   enabled: false
+  image:
+    repository: bitnami/memcached
+    tag: 1.6.15-debian-11-r12
 
 minio:
   enabled: false
+  image:
+    repository: bitnami/minio
+    tag: 2022.7.4-debian-11-r0
   auth:
     rootUser: hyrax-access-key
     rootPassword: hyrax-secret-key
@@ -244,7 +260,7 @@ postgresql:
   enabled: true
   image:
     repository: bitnami/postgresql
-    tag: 12.3.0
+    tag: 12.11.0-debian-11-r12
   auth:
     database: hyrax
     password: hyrax_pass
@@ -262,12 +278,11 @@ postgresql:
 ## and to act as an auth proxy for Cantelope
 nginx:
   enabled: false
+  image:
+    repository: bitnami/nginx
+    tag: 1.23.0-debian-11-r1
   # The set up below does malicious bot / ip blocking and mounts
-  # vaolumes to allow nginx to server assets and other public directory items
-  # image:
-  #   registry: registry.gitlab.com
-  #   repository: notch8/scripts/bitnami-nginx
-  #   tag: 1.21.5-debian-10-r4
+  # volumes to allow nginx to server assets and other public directory items
   # extraVolumes:
   #   - name: "uploads"
   #     persistentVolumeClaim:
@@ -397,6 +412,9 @@ nginx:
 
 redis:
   enabled: true
+  image:
+    repository: bitnami/redis
+    tag: 7.0.2-debian-11-r7
   auth:
     password: mysecret
 
@@ -404,12 +422,14 @@ solr:
   enabled: true
   image:
     repository: bitnami/solr
-    tag: 8.11.1
+    tag: 8.11.2-debian-11-r4
+  containerPorts:
+    http: 8983
   auth:
     enabled: true
     adminUsername: admin
     adminPassword: admin
-  coreName: hyrax
+  coreNames: hyrax
   collection: hyrax
   cloudBootstrap: true
   cloudEnabled: true
@@ -428,9 +448,11 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 global:
+  # These global postgresql values are used by the fcrepo chart
   postgresql:
-    postgresqlUsername: hyrax
-    postgresqlPassword: hyrax_pass
+    auth:
+      username: hyrax
+      password: hyrax_pass
   # This is th name of the running rails server pod
   hyraxHostName: hyrax
 

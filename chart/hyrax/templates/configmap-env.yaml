@@ -8,8 +8,13 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
+  {{- if (or .Values.fits.enabled .Values.externalFits.enabled) }}
+  CH12N_TOOL: "fits_servlet"
+  {{- else }}
+  CH12N_TOOL: "fits"
+  {{- end }}
   DB_HOST: {{ template "hyrax.postgresql.host" . }}
-  DB_PORT: "5432"
+  DB_PORT: {{ .Values.postgresql.containerPorts.postgresql | default 5432 | quote }}
   DB_USERNAME: {{ template "hyrax.postgresql.database" . }}
   {{- if .Values.memcached.enabled }}
   MEMCACHED_HOST: {{ template "hyrax.memcached.fullname" . }}
@@ -29,6 +34,11 @@ data:
   FCREPO_BASE_PATH: {{ .Values.fcrepoBasePathOverride | default (printf "/%s" (include "hyrax.fullname" .)) | quote }}
   FCREPO_PORT: {{ .Values.fcrepo.servicePort | default 8080 | quote }}
   FCREPO_REST_PATH: {{ .Values.fcrepo.restPath | default "rest" }}
+  {{- if .Values.fits.enabled }}
+  FITS_SERVLET_URL: http://{{ template "hyrax.fits.host" . }}:{{ .Values.fits.servicePort | default 8080 }}{{ .Values.fits.subPath | default "/fits" }}
+  {{- else if .Values.externalFits.enabled }}
+  FITS_SERVLET_URL: {{ .Values.externalFits.url }}
+  {{- end }}
   REDIS_PROVIDER: SIDEKIQ_REDIS_URL
   {{- if .Values.minio.enabled }}
   MINIO_ENDPOINT: {{ template "hyrax.minio.fullname" . }}
@@ -38,5 +48,5 @@ data:
   SOLR_COLLECTION_NAME: {{ template "hyrax.solr.collectionName" . }}
   SOLR_CONFIGSET_NAME: {{ template "hyrax.fullname" . }}
   SOLR_HOST: {{ template "hyrax.solr.host" . }}
-  SOLR_PORT: {{ (include "hyrax.solr.port" .) | quote }}
+  SOLR_PORT: {{ include "hyrax.solr.port" . | quote}}
   SOLR_URL: {{ template "hyrax.solr.url" . }}

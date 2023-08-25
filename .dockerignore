@@ -7,9 +7,15 @@ Dockerfile
 
 *.rdb
 
+.circleci/*
+.github/*
+
 artifacts/*
 coverage/*
 chart/*
 
 Gemfile.lock
 .dassie/Gemfile.lock
+
+node_modules/*
+yarn.lock
