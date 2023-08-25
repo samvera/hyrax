@@ -1,6 +1,8 @@
 # Legacy README
 
-This is a deprecated document that might have some useful information.
+## Deprecated Document
+
+This is a deprecated document that might have some useful information. **It is no longer being updated.**
 
 # Table of Contents
 
