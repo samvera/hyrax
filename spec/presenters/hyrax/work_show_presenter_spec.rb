@@ -127,20 +127,15 @@ RSpec.describe Hyrax::WorkShowPresenter do
   describe '#stats_path' do
     let(:user) { 'sarah' }
     let(:ability) { double "Ability" }
-    let(:work) { build(:generic_work, id: '123abc') }
-    let(:attributes) { work.to_solr }
-
-    before do
-      # https://github.com/samvera/active_fedora/issues/1251
-      allow(work).to receive(:persisted?).and_return(true)
-    end
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
 
     it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work, locale: 'en') }
   end
 
   describe '#itemtype' do
-    let(:work) { build(:generic_work, resource_type: type) }
-    let(:attributes) { work.to_solr }
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work, resource_type: type) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
     let(:ability) { double "Ability" }
 
     subject { presenter.itemtype }
@@ -524,8 +519,8 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#manifest" do
-    let(:work) { create(:work_with_one_file) }
-    let(:solr_document) { SolrDocument.new(work.to_solr) }
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :with_one_file_set) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
 
     describe "#sequence_rendering" do
       subject do
@@ -533,8 +528,14 @@ RSpec.describe Hyrax::WorkShowPresenter do
       end
 
       before do
-        Hydra::Works::AddFileToFileSet.call(work.file_sets.first,
-                                            File.open(fixture_path + '/world.png'), :original_file)
+        # TODO
+        # We think this isn't yet converted to valkyrie
+        # @see https://github.com/samvera/hyrax/blob/50db3c0548a5f4abfeee2f439362ef9dd8acb337/lib/wings/hydra/works/services/add_file_to_file_set.rb#L2
+        Hydra::Works::AddFileToFileSet.call(
+          Hyrax.custom_queries.find_child_file_sets(resource: work).first,
+          File.open(fixture_path + '/world.png'),
+          :original_file
+        )
       end
 
       it "returns a hash containing the rendering information" do
