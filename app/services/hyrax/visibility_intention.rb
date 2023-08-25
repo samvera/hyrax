@@ -86,10 +86,7 @@ module Hyrax
       return true if date.is_a?(Date)
       return true if date.is_a?(Time)
       Date.parse(date)
-      # In Ruby 2.7.x, Date::Error descends from ArgumentError; Once
-      # we stop supporting pre-2.7, we can switch this to the more
-      # narrow Date::Error
-    rescue ArgumentError
+    rescue Date::Error
       false
     end
   end
