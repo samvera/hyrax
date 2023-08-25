@@ -139,7 +139,7 @@ module Wings
         return find_many_by_ids(ids: Array(resource.send(property))) unless model
 
         results = resource.public_send(property).map do |reference|
-          resource_factory.to_resource(object: ::ActiveFedora::Base.find(reference))
+          resource_factory.to_resource(object: ::ActiveFedora::Base.find(reference.to_s))
         end
 
         results.select { |r| r.class.name == model.name }

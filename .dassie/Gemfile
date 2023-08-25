@@ -49,7 +49,8 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gemspec name: 'hyrax', path: ENV.fetch('HYRAX_ENGINE_PATH', '..')
-
+# TODO Rob remove after valk merge
+gem 'valkyrie', github: 'samvera/valkyrie', branch: 'more_flexible_shared_query_spec'
 gem 'bootstrap', '~> 4.0'
 gem 'devise'
 gem 'devise-guests', '~> 0.6'

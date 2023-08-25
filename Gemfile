@@ -13,6 +13,8 @@ group :development, :test do
   gem 'ruby-prof', require: false
   gem "simplecov", require: false
 end
+# TODO Rob remove after valk merge
+gem 'valkyrie', github: 'samvera/valkyrie', branch: 'more_flexible_shared_query_spec'
 
 test_app_path = ENV['RAILS_ROOT'] ||
                 ENV.fetch('ENGINE_CART_DESTINATION', File.expand_path('.internal_test_app', File.dirname(__FILE__)))
