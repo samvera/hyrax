@@ -2,7 +2,7 @@
 require 'redlock'
 require 'hyrax/specs/spy_listener'
 
-RSpec.describe Hyrax::Actors::GenericWorkActor do
+RSpec.describe Hyrax::Actors::GenericWorkActor, :active_fedora do
   include ActionDispatch::TestProcess
   let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
   let(:user) { create(:user) }

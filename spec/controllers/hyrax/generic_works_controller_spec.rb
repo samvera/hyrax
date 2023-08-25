@@ -3,7 +3,7 @@
 # which is included into .internal_test_app/app/controllers/hyrax/generic_works_controller.rb
 require 'hyrax/specs/spy_listener'
 
-RSpec.describe Hyrax::GenericWorksController do
+RSpec.describe Hyrax::GenericWorksController, :active_fedora do
   routes { Rails.application.routes }
   let(:main_app) { Rails.application.routes.url_helpers }
   let(:hyrax) { Hyrax::Engine.routes.url_helpers }

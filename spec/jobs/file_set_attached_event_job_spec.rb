@@ -17,7 +17,7 @@ RSpec.describe FileSetAttachedEventJob do
     allow(Hyrax::TimeService).to receive(:time_in_utc).at_least(:once).and_return(mock_time)
   end
 
-  context 'with a FileSet' do
+  context 'with a FileSet', :active_fedora do
     let(:file_set) { curation_concern.file_sets.first }
     let(:curation_concern) { create(:work_with_one_file, title: ['MacBeth'], user: user) }
 

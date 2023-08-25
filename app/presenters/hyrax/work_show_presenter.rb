@@ -190,16 +190,6 @@ module Hyrax
       paginated_item_list(page_array: authorized_item_ids)
     end
 
-    ##
-    # @deprecated use `#member_presenters(ids)` instead
-    #
-    # @param [Array<String>] ids a list of ids to build presenters for
-    # @return [Array<presenter_class>] presenters for the array of ids (not filtered by class)
-    def member_presenters_for(an_array_of_ids)
-      Deprecation.warn("Use `#member_presenters` instead.")
-      member_presenters(an_array_of_ids)
-    end
-
     # @return [Integer] total number of pages of viewable items
     def total_pages
       (total_items.to_f / rows_from_params.to_f).ceil
@@ -262,6 +252,11 @@ module Hyrax
       Hyrax::ChildTypes.for(parent: solr_document.hydra_model).to_a
     end
 
+    # @return [Boolean]
+    def valkyrie_presenter?
+      solr_document.hydra_model < Valkyrie::Resource
+    end
+
     private
 
     # list of item ids to display is based on ordered_ids
@@ -308,7 +303,7 @@ module Hyrax
 
     def member_presenter_factory
       @member_presenter_factory ||=
-        if solr_document.hydra_model < Valkyrie::Resource
+        if valkyrie_presenter?
           PcdmMemberPresenterFactory.new(solr_document, current_ability)
         else
           self.class

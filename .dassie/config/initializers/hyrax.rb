@@ -42,7 +42,7 @@ Hyrax.config do |config|
     config.browse_everything = nil
   end
 
-  # config.geonames_username = ''
+  config.geonames_username = ENV['GEONAMES_USERNAME'] || ''
 
   ##
   # Set the system-wide virus scanner
