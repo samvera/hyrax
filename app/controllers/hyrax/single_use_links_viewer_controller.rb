@@ -37,6 +37,14 @@ module Hyrax
 
     private
 
+    def send_content
+      if Hyrax.config.use_valkyrie?
+        send_file_contents_valkyrie(@asset)
+      else
+        super
+      end
+    end
+
     def curation_concern
       response, _document_list = search_service.search_results
       response.documents.first
@@ -47,6 +55,12 @@ module Hyrax
     end
 
     def content_options
+      super.tap do |options|
+        options[:disposition] = 'attachment' if action_name == 'download'
+      end
+    end
+
+    def data_options(file_metadata)
       super.tap do |options|
         options[:disposition] = 'attachment' if action_name == 'download'
       end
@@ -66,7 +80,7 @@ module Hyrax
     end
 
     def asset
-      @asset ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: single_use_link.item_id, use_valkyrie: false)
+      @asset ||= Hyrax.query_service.find_by(id: single_use_link.item_id)
     end
 
     def current_ability
@@ -94,7 +108,7 @@ module Hyrax
         return unless single_use_link
 
         @single_use_link = single_use_link
-        can :read, [ActiveFedora::Base, ::SolrDocument] do |obj|
+        can :read, [ActiveFedora::Base, ::SolrDocument, Hyrax::Resource] do |obj|
           single_use_link.valid? && single_use_link.item_id == obj.id && single_use_link.destroy!
         end
       end
