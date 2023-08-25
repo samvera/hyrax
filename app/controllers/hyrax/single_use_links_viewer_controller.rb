@@ -38,7 +38,7 @@ module Hyrax
     private
 
     def send_content
-      if Hyrax.config.use_valkyrie?
+      if @asset.is_a?(Hyrax::FileSet)
         send_file_contents_valkyrie(@asset)
       else
         super
