@@ -10,7 +10,9 @@ module Hyrax
     #
     # @example creating with FactoryBot
     #   work = FactoryBot.valkyrie_create(:hyrax_work, :public, title: ['Comet in Moominland'])
-    class SimpleWork < Hyrax::Work; end
+    class SimpleWork < Hyrax::Work
+      include Hyrax::Schema(:basic_metadata)
+    end
 
     class SimpleWorkLegacy < ActiveFedora::Base
       include WorkBehavior
