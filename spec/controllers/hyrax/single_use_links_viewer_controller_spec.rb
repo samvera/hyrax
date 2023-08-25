@@ -26,7 +26,7 @@ RSpec.describe Hyrax::SingleUseLinksViewerController do
     describe "GET 'download'" do
       let(:expected_content) { disk_file.read }
       it "downloads the file and deletes the link from the database" do
-        expect(controller).to receive(:send_file_headers!).with({ filename: 'image.jp2', disposition: 'attachment', type: 'application/octet-stream' })
+        expect(controller).to receive(:send_file_headers!).with({ filename: 'image.jp2', disposition: 'attachment', type: file_metadata.mime_type })
         get :download, params: { id: download_link_hash }
         expect(response.body).to eq expected_content
         expect(response).to be_successful
