@@ -9,7 +9,7 @@ services:
         - EXTRA_APK_PACKAGES=git less chromium
         - APP_PATH=.koppie
     image: ghcr.io/samvera/koppie
-    command: sh -l -c 'bundle && yarn && bundle exec puma -v -b tcp://0.0.0.0:3000'
+    command: sh -c 'bundle && yarn && bundle exec puma -v -b tcp://0.0.0.0:3000'
     stdin_open: true
     tty: true
     user: root
@@ -46,7 +46,7 @@ services:
       args:
         - APP_PATH=.koppie
     image: ghcr.io/samvera/koppie-worker
-    command: sh -l -c 'bundle && bundle exec sidekiq'
+    command: sh -c 'bundle && bundle exec sidekiq'
     user: root
     env_file:
       - .koppie/.env
@@ -78,7 +78,7 @@ services:
     user: root
     env_file:
       - .koppie/.env
-    command: sh -l -c 'bundle && db-migrate-seed.sh'
+    command: sh -c 'bundle && db-migrate-seed.sh'
     depends_on:
       - postgres
     volumes:
