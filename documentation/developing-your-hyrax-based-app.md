@@ -30,7 +30,7 @@ A Hyrax-based application includes lots of dependencies. We provide a [Docker im
 You can also try [Running Hyrax-based application in local VM](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide#running-hyrax-based-application-in-local-vm) which uses Ubuntu.
 
 This document contains instructions specific to setting up an app with __Hyrax
-v4.0.0.rc1__. If you are looking for instructions on installing a different
+v5.0.0.rc1__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -105,11 +105,11 @@ Starting up Redis will depend on your operating system, and may in fact already 
 
 ## Rails
 
-Hyrax requires Rails 5. We recommend the latest Rails 5.2 release.
+Hyrax requires Rails 6. We recommend the latest Rails 6.1 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 5.2.6
+gem install rails -v 6.1.7.6
 ```
 
 ### JavaScript runtime
@@ -125,7 +125,7 @@ NOTE: The steps need to be done in order to create a new Hyrax based app.
 Generate a new Rails application using the template.
 
 ```
-rails _6.1.7.3_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/hyrax-v4.0.0.rc1/template.rb
+rails _6.1.7.6_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/hyrax-v5.0.0.rc1/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
@@ -223,21 +223,13 @@ You may wish to [customize your work type](https://github.com/samvera/hyrax/wiki
 
 ### Enable notifications
 
-Hyrax 2 uses a WebSocket-based user notifications system, which requires Redis. To enable user notifications, make sure that you have configured ActionCable to use Redis as the adapter in your application's `config/cable.yml`. E.g., for the `development` Rails environment:
+Hyrax 2+ uses a WebSocket-based user notifications system, which requires Redis. To enable user notifications, make sure that you have configured ActionCable to use Redis as the adapter in your application's `config/cable.yml`. E.g., for the `development` Rails environment:
 
 ```yaml
 development:
   adapter: redis
   url: redis://localhost:6379
 ```
-
-Using Rails up to version 5.1.4, ActionCable will not work with the 4.x series of the `redis` gem, so you will also need to pin your application to a 3.x release by adding this to your `Gemfile`:
-
-```ruby
-gem 'redis', '~> 3.0'
-```
-
-And then run `bundle update redis`.
 
 Note that the Hyrax Management Guide contains additional information on [how to configure ActionCable in production environments](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide#notifications).
 
