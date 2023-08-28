@@ -24,4 +24,22 @@ RSpec.describe "Editing a file:", type: :feature do
       expect(page).to have_content "Edit #{file_title}"
     end
   end
+
+  context 'when the user tries to update permissions' do
+    let(:file_set) { create(:file_set, user: user, title: [file_title], read_groups: ['public']) }
+
+    it 'successfully update visibility' do
+      visit edit_hyrax_file_set_path(file_set)
+      click_link 'Permissions'
+
+      expect(find('#file_set_visibility_open').checked?).to be(true)
+
+      find('#file_set_visibility_authenticated').click
+      within "#permission" do
+        click_button 'Save'
+      end
+
+      expect(page).to have_css('span.badge.badge-info', text: 'Institution')
+    end
+  end
 end

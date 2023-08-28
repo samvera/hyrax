@@ -233,6 +233,16 @@ RSpec.describe Hyrax::FileSetsController do
         expect(assigns[:file_set].read_groups).to contain_exactly("group3")
       end
 
+      context 'update visibility' do
+        let(:update_params) { { visibility: 'open' } }
+
+        it 'can make file set public' do
+          patch :update, params: { id: file_set, file_set: update_params }
+
+          expect(assigns[:file_set].read_groups).to contain_exactly('public')
+        end
+      end
+
       context "when there's an error saving" do
         let(:parent) { FactoryBot.create(:work, :public, user: user) }
 
