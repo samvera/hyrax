@@ -119,6 +119,7 @@ externalPostgresql: {}
 #  username:
 #  password:
 #  database:
+#  port:
 
 embargoRelease:
   enabled: true
@@ -265,6 +266,8 @@ postgresql:
     database: hyrax
     password: hyrax_pass
     username: hyrax
+  containerPorts:
+    postgresql: 5432
   primary:
     service:
       ports:
