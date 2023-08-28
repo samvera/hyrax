@@ -182,6 +182,50 @@ module Hyrax
     # Override characterization runner
     attr_accessor :characterization_runner
 
+    attr_writer :derivative_mime_type_mappings
+    ##
+    # Maps mimetypes to create_*_derivatives methods
+    #
+    # @note these used to be set by +Hydra::Works::MimeTypes+ methods injected
+    #   into `FileSet`. for backwards compatibility, those are used as defaults
+    #   if present, but since `FileSet` is an application side model (and slated
+    #   to be removed) we shouldn't count on it providing these methods.
+    #
+    # @see Hyrax::VaDerivativeService
+    def derivative_mime_type_mappings # rubocop:disable Metrics/MethodLength
+      @derivative_mime_type_mappings ||=
+        { audio: ("FileSet".safe_constantize.try(:audio_mime_types) || ['audio/mp3',
+                                                                        'audio/mpeg',
+                                                                        'audio/wav',
+                                                                        'audio/x-wave',
+                                                                        'audio/x-wav',
+                                                                        'audio/ogg']),
+          image: ("FileSet".safe_constantize.try(:image_mime_types) || ['image/png',
+                                                                        'image/jpeg',
+                                                                        'image/jpg',
+                                                                        'image/jp2',
+                                                                        'image/bmp',
+                                                                        'image/gif',
+                                                                        'image/tiff']),
+          office: ("FileSet".safe_constantize.try(:office_mime_types) ||
+                   ['text/rtf',
+                    'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'application/vnd.oasis.opendocument.text',
+                    'application/vnd.ms-excel',
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'application/vnd.ms-powerpoint',
+                    'application/vnd.openxmlformats-officedocument.presentationml.presentation']),
+          pdf: ("FileSet".safe_constantize.try(:pdf_mime_types) || ['application/pdf']),
+          video: ("FileSet".safe_constantize.try(:video_mime_types) || ['video/mpeg',
+                                                                        'video/mp4',
+                                                                        'video/webm',
+                                                                        'video/x-msvideo',
+                                                                        'video/avi',
+                                                                        'video/quicktime',
+                                                                        'application/mxf']) }
+    end
+
     attr_writer :derivative_services
     # The registered candidate derivative services.  In the array, the first `valid?` candidate will
     # handle the derivative generation.
