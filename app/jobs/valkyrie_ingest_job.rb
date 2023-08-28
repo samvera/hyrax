@@ -25,14 +25,12 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
   def ingest(file:, pcdm_use:)
     file_set_uri = Valkyrie::ID.new(file.file_set_uri)
     file_set = Hyrax.query_service.find_by(id: file_set_uri)
-    updated_metadata = upload_file(
+    upload_file(
       file: file,
       file_set: file_set,
       pcdm_use: pcdm_use,
       user: file.user
     )
-
-    ValkyrieCreateDerivativesJob.perform_later(file_set.id.to_s, updated_metadata.id.to_s)
   end
 
   ##

@@ -25,7 +25,7 @@ module Hyrax
         file.rewind
         send_data send_range_valkyrie(file: file), data_options(file_metadata)
       else
-        send_file file.disk_path
+        send_file file.disk_path, data_options(file_metadata).except(:status)
       end
     end
 
