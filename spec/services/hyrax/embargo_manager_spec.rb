@@ -220,6 +220,35 @@ RSpec.describe Hyrax::EmbargoManager do
     end
   end
 
+  describe '#release_embargo_for' do
+    let(:manager) { described_class }
+
+    context 'with an expired embargo' do
+      include_context 'with expired embargo'
+      let!(:vis_after_embargo) { embargo.visibility_after_embargo }
+
+      it 'removes the embargo from the resource' do
+        manager.release_embargo_for(resource: resource)
+
+        # #release will set the visibility correctly on the resource
+        # #nullify however will then set embargo.visibility_after_embargo to be nil
+        expect(resource.visibility).to eq(vis_after_embargo)
+        expect(resource.embargo.embargo_release_date).to be nil
+        expect(resource.embargo.visibility_during_embargo).to be nil
+        expect(resource.embargo.visibility_after_embargo).to be nil
+      end
+    end
+
+    context 'when under embargo' do
+      include_context 'when under embargo'
+
+      it 'is a no-op' do
+        expect { manager.release_embargo_for(resource: resource) }
+          .not_to change { resource.visibility }
+      end
+    end
+  end
+
   describe '#under_embargo?' do
     it { is_expected.not_to be_under_embargo }
 

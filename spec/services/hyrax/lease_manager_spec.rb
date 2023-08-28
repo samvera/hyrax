@@ -134,6 +134,36 @@ RSpec.describe Hyrax::LeaseManager do
     end
   end
 
+
+  describe '#release_lease_for' do
+    let(:manager) { described_class }
+
+    context 'with an expired lease' do
+      include_context 'with expired lease'
+      let!(:vis_after_lease) { lease.visibility_after_lease }
+
+      it 'removes the lease from the resource' do
+        manager.release_lease_for(resource: resource)
+
+        # #release will set the visibility correctly on the resource
+        # #nullify however will then set lease.visibility_after_lease to be nil
+        expect(resource.visibility).to eq(vis_after_lease)
+        expect(resource.lease.lease_expiration_date).to be nil
+        expect(resource.lease.visibility_during_lease).to be nil
+        expect(resource.lease.visibility_after_lease).to be nil
+      end
+    end
+
+    context 'when under lease' do
+      include_context 'when under lease'
+
+      it 'is a no-op' do
+        expect { manager.release_lease_for(resource: resource) }
+          .not_to change { resource.visibility }
+      end
+    end
+  end
+
   describe '#under_lease?' do
     it { is_expected.not_to be_under_lease }
 
