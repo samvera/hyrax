@@ -116,7 +116,11 @@ module Hyrax
         change_set = Hyrax::Forms::ResourceForm.for(file_set)
 
         change_set.validate(attributes) &&
-          transactions['change_set.apply'].call(change_set).value_or { false }
+          transactions['change_set.update_file_set']
+            .with_step_args(
+              'file_set.save_acl' => { permissions_params: change_set.input_params["permissions"] }
+            )
+            .call(change_set).value_or { false }
       else
         file_attributes = form_class.model_attributes(attributes)
         actor.update_metadata(file_attributes)
