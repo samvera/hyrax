@@ -7,12 +7,6 @@ module Hyrax
       record.errors.add(:orcid, 'must be a string of 19 characters, e.g., "0000-0000-0000-0000"') unless ORCID_REGEXP.match?(record.orcid)
     end
 
-    # @deprecated
-    def self.match(string)
-      Deprecation.warn "Use 'Hyrax::OrcidValidator.extract_bare_orcid(from:)'"
-      extract_bare_orcid_from(from: string)
-    end
-
     # @api public
     # @param [String] from
     # @return nil if the given string is not in the Orcid form
