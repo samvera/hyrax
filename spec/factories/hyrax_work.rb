@@ -135,7 +135,7 @@ FactoryBot.define do
 
     trait :with_representative do
       representative_id do
-        file_set = members.find(&:file_set?) ||
+        file_set = members&.find(&:file_set?) ||
                    valkyrie_create(:hyrax_file_set)
         file_set.id
       end
