@@ -342,15 +342,11 @@ RSpec.describe Hyrax::WorkShowPresenter do
     end
 
     context "when some of the members are not file sets" do
-      let(:another_work) { create(:work) }
-
-      before do
-        obj.ordered_members << another_work
-        obj.save!
-      end
+      let(:obj) { FactoryBot.valkyrie_create(:hyrax_work, :with_file_and_work) }
+      let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: obj).to_solr) }
 
       it "filters out members that are not file sets" do
-        expect(presenter.file_set_presenters.map(&:id)).not_to include another_work.id
+        expect(presenter.file_set_presenters.count).to eq 1
       end
     end
   end
