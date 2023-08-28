@@ -41,6 +41,7 @@ module Hyrax
           []
         end
       else
+        return resource.versions if resource.versions.is_a?(Array)
         resource.versions.all.to_a
       end
     end

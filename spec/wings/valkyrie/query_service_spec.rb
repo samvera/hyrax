@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'valkyrie/specs/shared_specs'
 require 'wings'
 
-RSpec.describe Wings::Valkyrie::QueryService, :clean_repo do
+RSpec.describe Wings::Valkyrie::QueryService, :active_fedora, :clean_repo do
   before do
     module Hyrax::Test
       module QueryService

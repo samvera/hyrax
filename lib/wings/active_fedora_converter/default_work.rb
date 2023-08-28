@@ -27,7 +27,7 @@ module Wings
       #
       # @return [void] apply the property
       def apply(klass)
-        return if klass.properties.keys.include?(name) ||
+        return if klass.properties.keys.include?(name.to_s) ||
                   klass.protected_property_name?(name)
         klass.send(definition_method, name, options)
       end
@@ -98,6 +98,7 @@ module Wings
       include Hyrax::Noid
       include Hyrax::Permissions
       include Hydra::AccessControls::Embargoable
+      include Hyrax::CoreMetadata
       property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: "Wings::ActiveFedoraConverter::NestedResource"
 
       validates :lease_expiration_date, 'hydra/future_date': true, on: :create
@@ -118,7 +119,7 @@ module Wings
         end
 
         def to_rdf_representation
-          "Wings(#{valkyrie_class})"
+          "Wings(#{valkyrie_class})" unless valkyrie_class&.to_s&.include?('Wings(')
         end
         alias inspect to_rdf_representation
         alias to_s inspect
@@ -134,6 +135,10 @@ module Wings
       # Override aggressive Hydra::AccessControls validation
       def enforce_future_date_for_lease?
         false
+      end
+
+      def file_sets
+        members.select(&:file_set?)
       end
 
       def indexing_service

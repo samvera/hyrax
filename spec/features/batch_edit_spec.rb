@@ -6,8 +6,8 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
   let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
   let!(:workflow) { create(:workflow, allows_access_grant: true, active: true, permission_template_id: permission_template.id) }
 
-  let!(:work1)       { create(:public_work, admin_set_id: admin_set.id, user: current_user, ordered_members: [file_set]) }
-  let!(:work2)       { create(:public_work, admin_set_id: admin_set.id, user: current_user) }
+  let!(:work1)       { create(:public_work, creator: ["Creator"], admin_set_id: admin_set.id, user: current_user, ordered_members: [file_set]) }
+  let!(:work2)       { create(:public_work, creator: ["Creator"], admin_set_id: admin_set.id, user: current_user) }
   let!(:file_set)    { create(:file_set) }
 
   before do
@@ -77,10 +77,12 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
         batch_edit_expand('permissions_visibility')
         find('#generic_work_visibility_authenticated').click
         find('#permissions_visibility_save').click
+
+        ajax_wait(30)
         # This was `expect(page).to have_content 'Changes Saved'`, however in debugging,
         # the `have_content` check was ignoring the `within` scoping and finding
         # "Changes Saved" for other field areas
-        find('.status', text: 'Changes Saved', wait: 5)
+        find('.status', text: 'Changes Saved')
       end
 
       within "#form_permissions" do
@@ -91,10 +93,12 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
         find('#collapse_permissions_sharing table', text: 'View/Download')
         find('#collapse_permissions_sharing table', text: 'donor')
         find('#permissions_sharing_save').click
+
+        ajax_wait(30)
         # This was `expect(page).to have_content 'Changes Saved'`, however in debugging,
         # the `have_content` check was ignoring the `within` scoping and finding
         # "Changes Saved" for other field areas
-        find('.status', text: 'Changes Saved', wait: 5)
+        find('.status', text: 'Changes Saved')
       end
 
       # Visit work permissions and verify

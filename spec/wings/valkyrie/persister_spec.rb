@@ -3,7 +3,7 @@ require 'wings_helper'
 require 'valkyrie/specs/shared_specs'
 require 'wings'
 
-RSpec.describe Wings::Valkyrie::Persister do
+RSpec.describe Wings::Valkyrie::Persister, :active_fedora do
   subject(:persister) { described_class.new(adapter: adapter) }
   let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
   let(:query_service) { adapter.query_service }
@@ -201,7 +201,7 @@ RSpec.describe Wings::Valkyrie::Persister do
 
       it "uses OriginalFile as type by default" do
         expect(persister.save(resource: resource))
-          .to have_attributes(type: contain_exactly(RDF::URI("http://pcdm.org/use#OriginalFile")))
+          .to have_attributes(pcdm_use: contain_exactly(RDF::URI("http://pcdm.org/use#OriginalFile")))
       end
 
       it "saves file metadata attributes" do

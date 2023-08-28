@@ -2,7 +2,7 @@
 require 'wings_helper'
 require 'wings/hydra/works/services/add_file_to_file_set'
 
-RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
+RSpec.describe Wings::Works::AddFileToFileSet, :active_fedora, :clean_repo do
   let(:af_file_set)             { create(:file_set, id: 'fileset_id') }
   let!(:file_set)               { af_file_set.valkyrie_resource }
 
@@ -67,19 +67,17 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
     let(:transcript_use)   { Valkyrie::Vocab::PCDMUse.Transcript }
     let(:service_file_use) { Valkyrie::Vocab::PCDMUse.ServiceFile }
 
-    subject do
-      updated_file_set = described_class.call(file_set: file_set, file: pdf_file, type: service_file_use)
-      described_class.call(file_set: updated_file_set, file: text_file, type: transcript_use)
-    end
+    let(:updated_file_set) { described_class.call(file_set: file_set, file: pdf_file, type: service_file_use) }
+    let(:transcript_file_set) { described_class.call(file_set: updated_file_set, file: text_file, type: transcript_use) }
+
     it 'adds the given file and applies the specified RDF::URI use to it' do
-      ids = subject.file_ids
+      ids = transcript_file_set.file_ids
       expect(ids.size).to eq 2
       expect(ids.first).to be_a Valkyrie::ID
       expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
-
-      expect(Hyrax.custom_queries.find_many_file_metadata_by_use(resource: subject, use: transcript_use).first.type)
+      expect(Hyrax.custom_queries.find_many_file_metadata_by_use(resource: transcript_file_set, use: transcript_use).first.pcdm_use)
         .to include transcript_use
-      expect(Hyrax.custom_queries.find_many_file_metadata_by_use(resource: subject, use: service_file_use).first.type)
+      expect(Hyrax.custom_queries.find_many_file_metadata_by_use(resource: transcript_file_set, use: service_file_use).first.pcdm_use)
         .to include service_file_use
     end
   end

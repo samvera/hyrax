@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'wings/attribute_transformer'
 
-RSpec.describe Wings::AttributeTransformer do
+RSpec.describe Wings::AttributeTransformer, :active_fedora do
   let(:id)   { 'moomin123' }
   let(:work) { GenericWork.new(id: id, **attributes) }
 

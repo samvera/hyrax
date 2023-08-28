@@ -68,6 +68,8 @@ module Hyrax
       case destination_name
       when 'thumbnail'
         ".#{MIME::Types.type_for('jpg').first.extensions.first}"
+      when 'extracted_text'
+        ".#{MIME::Types.type_for('txt').first.extensions.first}"
       else
         ".#{destination_name}"
       end

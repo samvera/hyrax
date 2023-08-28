@@ -119,6 +119,7 @@ end
 ActiveJob::Base.queue_adapter = :test
 
 def clean_active_fedora_repository
+  return if Hyrax.config.disable_wings
   ActiveFedora::Cleaner.clean!
   # The JS is executed in a different thread, so that other thread
   # may think the root path has already been created:
@@ -258,6 +259,10 @@ RSpec.configure do |config|
 
   config.profile_examples = 10
 
+  config.before(:example, :active_fedora) do
+    skip("Don't test Wings") if Hyrax.config.disable_wings
+  end
+
   config.before(:example, :clean_repo) do
     clean_active_fedora_repository unless Hyrax.config.disable_wings
     Hyrax::RedisEventStore.instance.then(&:flushdb)
@@ -330,7 +335,9 @@ RSpec.configure do |config|
       .to receive(:metadata_adapter)
       .and_return(Valkyrie::MetadataAdapter.find(adapter_name))
 
-    if adapter_name != :wings_adapter
+    if adapter_name == :wings_adapter
+      skip("Don't test Wings when it is dasabled") if Hyrax.config.disable_wings
+    else
       allow(Hyrax.config).to receive(:disable_wings).and_return(true)
       hide_const("Wings") # disable_wings=true removes the Wings constant
     end

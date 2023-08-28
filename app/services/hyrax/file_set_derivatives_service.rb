@@ -75,7 +75,7 @@ module Hyrax
                                                   url: derivative_url('thumbnail'),
                                                   layer: 0
                                                 }])
-      extract_full_text(filename, uri)
+      extract_full_text(filename, derivative_url('extracted_text'))
     end
 
     def create_office_document_derivatives(filename)
@@ -86,7 +86,7 @@ module Hyrax
                                                        url: derivative_url('thumbnail'),
                                                        layer: 0
                                                      }])
-      extract_full_text(filename, uri)
+      extract_full_text(filename, derivative_url('extracted_text'))
     end
 
     def create_audio_derivatives(filename)
@@ -122,6 +122,7 @@ module Hyrax
     # @param [String] uri to the file set (deligated to file_set)
     def extract_full_text(filename, uri)
       return unless Hyrax.config.extract_full_text?
+
       Hydra::Derivatives::FullTextExtract.create(filename,
                                                  outputs: [{ url: uri, container: "extracted_text" }])
     end

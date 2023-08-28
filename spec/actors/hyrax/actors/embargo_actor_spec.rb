@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Actors::EmbargoActor do
+RSpec.describe Hyrax::Actors::EmbargoActor, :active_fedora do
   let(:actor) { described_class.new(work) }
   let(:authenticated_vis) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
   let(:public_vis) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }

@@ -3,10 +3,10 @@ changelog:
     - title: Major Changes (Potentially breaking changes)
       labels:
         - notes-major
-    - title: New Features
+    - title: New Features and Non-breaking Changes
       labels:
         - notes-minor
-    - title: Deprecations
+    - title: Deprecation Notices
       labels:
         - notes-deprecation
     - title: Bug Fixes
@@ -21,6 +21,9 @@ changelog:
     - title: Containerization
       labels:
         - notes-container
+    - title: Tests and CI Process
+      labels:
+        - notes-tests
     - title: Other
       labels:
         - "*"

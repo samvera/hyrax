@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Actors::FileSetOrderedMembersActor do
+RSpec.describe Hyrax::Actors::FileSetOrderedMembersActor, :active_fedora do
   include ActionDispatch::TestProcess
 
   let(:user)          { create(:user) }

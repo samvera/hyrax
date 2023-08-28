@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::Actors::ActiveFedoraToValkyrie do
+RSpec.describe Hyrax::Actors::ActiveFedoraToValkyrie, :active_fedora do
   let(:ability)    { :FAKE_ABILITY }
   let(:attrs)      { {} }
   let(:env)        { Hyrax::Actors::Environment.new(work, ability, attrs) }

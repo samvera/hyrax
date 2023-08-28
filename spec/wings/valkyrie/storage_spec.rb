@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'hyrax/specs/shared_specs/valkyrie_storage_versions'
 require 'valkyrie/specs/shared_specs'
 
-RSpec.describe Wings::Valkyrie::Storage, :clean_repo do
+RSpec.describe Wings::Valkyrie::Storage, :active_fedora, :clean_repo do
   subject(:storage_adapter) { described_class.new }
   let(:file) { fixture_file_upload('/world.png', 'image/png') }
 
@@ -60,7 +60,7 @@ RSpec.describe Wings::Valkyrie::Storage, :clean_repo do
         .to have_attributes original_filename: file.original_filename,
                             mime_type: 'image/png',
                             file_identifier: upload.id,
-                            size: [file.size]
+                            recorded_size: [file.size]
     end
 
     it 'can find content from its metadata node ' do

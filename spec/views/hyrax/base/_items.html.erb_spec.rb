@@ -6,7 +6,7 @@ RSpec.describe 'hyrax/base/_items.html.erb', type: :view do
 
   context 'when children are not present' do
     let(:member_list) { [] }
-    let(:presenter) { double(:presenter, list_of_items_to_display: member_list, member_presenters_for: member_list, id: 'the-id', human_readable_type: 'Thing') }
+    let(:presenter) { double(:presenter, list_of_items_to_display: member_list, member_presenters: member_list, id: 'the-id', human_readable_type: 'Thing') }
 
     before do
       expect(presenter).to receive(:list_of_item_ids_to_display).and_return(member_list)
@@ -40,7 +40,7 @@ RSpec.describe 'hyrax/base/_items.html.erb', type: :view do
       stub_template 'hyrax/base/_member.html.erb' => '<%= member %>'
       expect(Flipflop).to receive(:hide_private_items?).and_return(:flipflop)
       allow(presenter).to receive(:list_of_item_ids_to_display).and_return(member_list)
-      allow(presenter).to receive(:member_presenters_for).with(member_list).and_return(member_list)
+      allow(presenter).to receive(:member_presenters).with(member_list).and_return(member_list)
       allow(presenter).to receive(:ordered_ids).and_return([])
 
       allow(ability).to receive(:can?).with(:read, child1.id).and_return true

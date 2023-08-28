@@ -125,7 +125,7 @@ module Hyrax
     end
 
     def file_manager
-      @form = Forms::FileManagerForm.new(curation_concern, current_ability)
+      @form = presenter
     end
 
     def inspect_work

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::Actors::NullActor do
+RSpec.describe Hyrax::Actors::NullActor, :active_fedora do
   subject(:actor) { described_class.new(spy_actor) }
 
   let(:attributes) { {} }

@@ -2,34 +2,38 @@ apiVersion: v2
 name: hyrax
 description: An open-source, Samvera-powered digital repository system
 type: application
-version: 3.1.0
+version: 3.3.1
 appVersion: 3.3.0
 dependencies:
   - name: fcrepo
-    version: 0.8.0
+    version: 1.0.0
     repository: oci://ghcr.io/samvera
     condition: fcrepo.enabled
   - name: memcached
-    version: 6.3.13
-    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+    version: 6.6.0
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: memcached.enabled
   - name: minio
-    version: 12.1.14
-    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+    version: 12.8.0
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: minio.enabled
   - name: postgresql
-    version: 12.2.5
-    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+    version: 12.9.0
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: redis
-    version: 17.8.7
-    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+    version: 17.16.0
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: redis.enabled
   - name: solr
-    version: 7.2.1
-    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+    version: 8.0.0
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: solr.enabled
   - name: nginx
-    version: 13.2.30
-    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+    version: 15.2.0
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: nginx.enabled
+  - name: fits
+    version: 0.1.0
+    repository:  https://samvera-labs.github.io/fits-charts
+    condition: fits.enabled
