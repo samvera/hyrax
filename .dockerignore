@@ -16,6 +16,7 @@ chart/*
 
 Gemfile.lock
 .dassie/Gemfile.lock
+.koppie/Gemfile.lock
 
 node_modules/*
 yarn.lock
