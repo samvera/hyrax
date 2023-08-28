@@ -24,6 +24,7 @@ module Hyrax
       require 'hyrax/transactions/collection_destroy'
       require 'hyrax/transactions/collection_update'
       require 'hyrax/transactions/file_set_destroy'
+      require 'hyrax/transactions/file_set_update'
       require 'hyrax/transactions/work_create'
       require 'hyrax/transactions/work_destroy'
       require 'hyrax/transactions/work_update'
@@ -112,6 +113,10 @@ module Hyrax
           CollectionUpdate.new
         end
 
+        ops.register 'update_file_set' do
+          FileSetUpdate.new
+        end
+
         ops.register 'update_work' do
           WorkUpdate.new
         end
@@ -132,6 +137,10 @@ module Hyrax
 
         ops.register 'remove_from_work' do
           Steps::RemoveFileSetFromWork.new
+        end
+
+        ops.register 'save_acl' do
+          Steps::SaveAccessControl.new
         end
       end
 
