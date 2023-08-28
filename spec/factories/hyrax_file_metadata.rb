@@ -7,7 +7,6 @@ FactoryBot.define do
     transient do
       use { nil }
       visibility_setting { nil }
-      file { nil }
     end
 
     after(:build) do |file_metadata, evaluator|
