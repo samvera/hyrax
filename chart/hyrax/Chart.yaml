@@ -2,7 +2,7 @@ apiVersion: v2
 name: hyrax
 description: An open-source, Samvera-powered digital repository system
 type: application
-version: 3.3.1
+version: 3.4.0
 appVersion: 3.3.0
 dependencies:
   - name: fcrepo
@@ -35,5 +35,5 @@ dependencies:
     condition: nginx.enabled
   - name: fits
     version: 0.1.0
-    repository:  https://samvera-labs.github.io/fits-charts
+    repository: https://samvera-labs.github.io/fits-charts
     condition: fits.enabled
