@@ -28,7 +28,7 @@ module Hyrax
     # @return [Array<FileSetPresenter, WorkShowPresenter>]
     # @return [Enumerator<FileSetPresenter>]
     def file_set_presenters
-      return enum_for(:file_set_presenters) unless block_given?
+      return enum_for(:file_set_presenters).to_a unless block_given?
 
       results = query_docs(generic_type: "FileSet")
 

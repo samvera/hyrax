@@ -335,11 +335,8 @@ RSpec.describe Hyrax::WorkShowPresenter do
     end
 
     context "solr query" do
-      before do
-        expect(Hyrax::SolrService).to receive(:query).twice.with(anything, hash_including(rows: 10_000)).and_return([])
-      end
-
       it "requests >10 rows" do
+        expect(Hyrax::SolrService).to receive(:post).with(hash_including(rows: 10_000)).and_call_original
         presenter.file_set_presenters
       end
     end
