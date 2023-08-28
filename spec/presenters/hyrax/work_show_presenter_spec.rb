@@ -327,11 +327,11 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#file_set_presenters" do
-    let(:obj) { create(:work_with_ordered_files) }
-    let(:attributes) { obj.to_solr }
+    let(:obj) { FactoryBot.valkyrie_create(:hyrax_work, :with_member_file_sets) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: obj).to_solr) }
 
     it "displays them in order" do
-      expect(presenter.file_set_presenters.map(&:id)).to eq obj.ordered_member_ids
+      expect(presenter.file_set_presenters.map(&:id)).to eq obj.member_ids
     end
 
     context "solr query" do
