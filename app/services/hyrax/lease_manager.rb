@@ -54,8 +54,18 @@ module Hyrax
       end
 
       def release_lease_for(resource:, query_service: Hyrax.query_service)
-        new(resource: resource, query_service: query_service)
-          .release
+        lm = new(resource: resource, query_service: query_service)
+        # We will only continue beyond this point if the lease expiration date for the current resource has passed
+        # If the intention is to release the lease early, then the lease should be deactivated instead
+        return unless lm.release
+
+        lm.nullify
+        if resource.class <= Valkyrie::Resource
+          resource.lease = Hyrax.persister.save(resource: lm.lease)
+        else
+          resource.lease.save!
+          resource.save!
+        end
       end
 
       def release_lease_for!(resource:, query_service: Hyrax.query_service)

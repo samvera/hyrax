@@ -110,8 +110,18 @@ module Hyrax
       end
 
       def release_embargo_for(resource:, query_service: Hyrax.query_service)
-        new(resource: resource, query_service: query_service)
-          .release
+        em = new(resource: resource, query_service: query_service)
+        # We will only continue beyond this point if the embargo release date for the current resource has passed
+        # If the intention is to release the embargo early, then the embargo should be deactivated instead
+        return unless em.release
+
+        em.nullify
+        if resource.class <= Valkyrie::Resource
+          resource.embargo = Hyrax.persister.save(resource: em.embargo)
+        else
+          resource.embargo.save!
+          resource.save!
+        end
       end
 
       def release_embargo_for!(resource:, query_service: Hyrax.query_service)
