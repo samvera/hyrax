@@ -19,12 +19,8 @@ module Hyrax
           CreateDerivativesJob
             .perform_later(file_set, event[:file_id], event[:path_hint])
         else
-          # With valkyrie, file.characterized event is also published for derivatives.
-          # We only need to create derivative for the original file.
-          file_id = event[:file_id]
-          file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: file_id)
-
-          ValkyrieCreateDerivativesJob.perform_later(file_set.id.to_s, file_id) if file_metadata&.original_file?
+          ValkyrieCreateDerivativesJob
+            .perform_later(file_set.id.to_s, event[:file_id])
         end
       end
 
@@ -51,7 +47,9 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_file_uploaded(event)
-        # Run characterization
+        # Run characterization for original file only
+        return unless event[:metadata]&.original_file?
+
         Hyrax.config
              .characterization_service
              .run(metadata: event[:metadata], file: event[:metadata].file)
