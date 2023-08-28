@@ -19,6 +19,7 @@ FactoryBot.define do
       members            { nil }
       visibility_setting { nil }
       with_index         { true }
+      uploaded_files { [] }
     end
 
     after(:build) do |work, evaluator|
@@ -40,6 +41,15 @@ FactoryBot.define do
         Hyrax::VisibilityWriter
           .new(resource: work)
           .assign_access_for(visibility: evaluator.visibility_setting)
+      end
+      if evaluator.uploaded_files.present?
+        Hyrax::WorkUploadsHandler.new(work: work).add(files: evaluator.uploaded_files).attach
+        evaluator.uploaded_files.each do |file|
+          allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
+          # I don't love this - we might want to just run background jobs so
+          # this is more real, but we'd have to stub some things.
+          ValkyrieIngestJob.perform_now(file)
+        end
       end
 
       work.permission_manager.edit_groups = evaluator.edit_groups
