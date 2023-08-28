@@ -119,6 +119,7 @@ externalPostgresql: {}
 #  username:
 #  password:
 #  database:
+#  port:
 
 embargoRelease:
   enabled: true

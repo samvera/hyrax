@@ -147,6 +147,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end }}
 {{- end -}}
 
+{{- define "hyrax.postgresql.port" -}}
+{{- if .Values.postgresql.enabled }}
+{{- .Values.postgresql.containerPorts.postgresql | default 5432 }}
+{{- else }}
+{{- .Values.externalPostgresql.port | default 5432 }}
+{{- end }}
+{{- end -}}
+
 {{- define "hyrax.postgresql.url" -}}
 {{- printf "postgresql://%s:%s@%s/%s?pool=5" ( include "hyrax.postgresql.username" . ) ( include "hyrax.postgresql.password" . ) ( include "hyrax.postgresql.host" . ) ( include "hyrax.postgresql.database" . ) -}}
 {{- end -}}
