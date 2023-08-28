@@ -20,14 +20,7 @@ class CollectionBrandingInfo < ApplicationRecord
   end
 
   def delete(location_path = nil)
-    id = if location_path
-           Deprecation.warn('Passing an explict location path is ' \
-                            'deprecated. Call without arguments instead.')
-           location_path
-         else
-           local_path
-         end
-    storage.delete(id: id)
+    storage.delete(id: local_path)
   end
 
   def find_local_filename(collection_id, role, filename)
