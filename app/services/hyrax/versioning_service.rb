@@ -32,14 +32,10 @@ module Hyrax
     # If the resource is nil, or if it is a Hyrax::FileMetadata and versioning
     # is not supported in the storage adapter, an empty array will be returned.
     def versions
-      if resource.nil?
+      if !supports_multiple_versions?
         []
       elsif resource.is_a?(Hyrax::FileMetadata)
-        if storage_adapter.try(:"supports?", :versions)
-          storage_adapter.find_versions(id: resource.file_identifier).to_a
-        else
-          []
-        end
+        storage_adapter.find_versions(id: resource.file_identifier).to_a
       else
         return resource.versions if resource.versions.is_a?(Array)
         resource.versions.all.to_a
@@ -51,6 +47,16 @@ module Hyrax
     # Hyrax::VersioningService.
     def latest_version
       versions.last
+    end
+
+    ##
+    # Returns whether support for multiple versions exists on this
+    # +Hyrax::VersioningService+.
+    #
+    # Versioning is unsupported on nil resources or on Valkyrie resources when
+    # the configured storage adapter does not advertise versioning support.
+    def supports_multiple_versions?
+      !(resource.nil? || resource.is_a?(Hyrax::FileMetadata) && !storage_adapter.try(:"supports?", :versions))
     end
 
     ##

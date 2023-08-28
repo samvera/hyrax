@@ -9,6 +9,14 @@ RSpec.describe Hyrax::VersioningService do
       Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file, versioning: true)
     end
 
+    describe '#supports_multiple_versions?' do
+      subject do
+        described_class.new(resource: file.original_file).supports_multiple_versions?
+      end
+
+      it { is_expected.to be true }
+    end
+
     describe '#versions' do
       subject do
         described_class.new(resource: file.original_file).versions.map do |v|
@@ -87,6 +95,24 @@ RSpec.describe Hyrax::VersioningService do
       storage_adapter.upload(resource: file_set, file: file, original_filename: file.original_filename)
     end
     let(:file_metadata) { query_service.custom_queries.find_file_metadata_by(id: uploaded.id) }
+
+    describe '#supports_multiple_versions?' do
+      subject do
+        described_class.new(resource: file_metadata).supports_multiple_versions?
+      end
+
+      context 'when versions are unsupported' do
+        before do
+          allow(storage_adapter).to receive(:supports?).and_return(false)
+        end
+
+        it { is_expected.to be false }
+      end
+
+      context 'when versions are supported' do
+        it { is_expected.to be true }
+      end
+    end
 
     describe '#versions' do
       subject { described_class.new(resource: file_metadata).versions.map(&:id) }
