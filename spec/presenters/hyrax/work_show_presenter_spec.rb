@@ -352,16 +352,11 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#representative_presenter" do
-    let(:obj) { create(:work_with_representative_file) }
-    let(:attributes) { obj.to_solr }
+    let(:obj) { FactoryBot.valkyrie_create(:hyrax_work, :with_one_file_set, :with_representative) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: obj).to_solr) }
 
     it "has a representative" do
-      expect(Hyrax::PresenterFactory).to receive(:build_for)
-        .with(ids: [obj.members[0].id],
-              presenter_class: Hyrax::CompositePresenterFactory,
-              presenter_args: [ability, request])
-        .and_return ["abc"]
-      expect(presenter.representative_presenter).to eq("abc")
+      expect(presenter.representative_presenter.solr_document.id).to eq(obj.member_ids.first.to_s)
     end
 
     context 'without a representative' do
