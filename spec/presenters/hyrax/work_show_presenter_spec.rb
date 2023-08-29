@@ -360,7 +360,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     end
 
     context 'without a representative' do
-      let(:obj) { create(:work) }
+      let(:obj) { FactoryBot.valkyrie_create(:hyrax_work) }
 
       it 'has a nil presenter' do
         expect(presenter.representative_presenter).to be_nil
@@ -370,18 +370,18 @@ RSpec.describe Hyrax::WorkShowPresenter do
     context 'has an unindexed representative' do
       it 'has a nil presenter' do
         expect(presenter).to receive(:member_presenters)
-          .with([obj.members[0].id])
+          .with([obj.member_ids[0]])
           .and_raise Hyrax::ObjectNotFoundError
         expect(presenter.representative_presenter).to be_nil
       end
     end
 
     context 'when it is its own representative' do
-      let(:obj) { create(:work) }
+      let(:obj) { FactoryBot.valkyrie_create(:hyrax_work) }
 
       before do
         obj.representative_id = obj.id
-        obj.save
+        Hyrax.persister.save(resource: obj)
       end
 
       it 'has a nil presenter; avoids infinite loop' do
