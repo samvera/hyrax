@@ -511,23 +511,13 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
 
     describe "#sequence_rendering" do
-      subject do
-        presenter.sequence_rendering
-      end
-
-      before do
-        # TODO
-        # We think this isn't yet converted to valkyrie
-        # @see https://github.com/samvera/hyrax/blob/50db3c0548a5f4abfeee2f439362ef9dd8acb337/lib/wings/hydra/works/services/add_file_to_file_set.rb#L2
-        Hydra::Works::AddFileToFileSet.call(
-          Hyrax.custom_queries.find_child_file_sets(resource: work).first,
-          File.open(fixture_path + '/world.png'),
-          :original_file
-        )
+      subject { presenter.sequence_rendering }
+      let(:work) do
+        FactoryBot.valkyrie_create(:hyrax_work, uploaded_files: [FactoryBot.create(:uploaded_file)])
       end
 
       it "returns a hash containing the rendering information" do
-        work.rendering_ids = [work.file_sets.first.id]
+        work.rendering_ids = [work.member_ids.first]
         expect(subject).to be_an Array
       end
     end
