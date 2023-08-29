@@ -12,12 +12,13 @@ module Hyrax
   #       date is today or later.
   #    - "Applied" means the embargo's pre-release visibility has been set on
   #      the resource.
-  #    - "Released" means the embargo's post-release visibility has been set on
-  #      the resource.
   #    - "Enforced" means the object's visibility matches the pre-release
   #      visibility of the embargo; i.e. the embargo has been applied,
   #      but not released.
-  #    - "Deactivate" means that the existing embargo will be removed
+  #    - "Released" means the embargo's post-release visibility has been set on
+  #      the resource.
+  #    - "Deactivate" means that the existing embargo will be removed, even
+  #      if it active.
   #
   # Note that an resource may be `#under_embargo?` even if the embargo is not
   # be `#enforced?` (in this case, the application should seek to apply the
@@ -109,11 +110,25 @@ module Hyrax
           .embargo
       end
 
+      # @return [Boolean]
+      def deactivate_embargo_for(resource:, query_service: Hyrax.query_service)
+        new(resource: resource, query_service: query_service)
+          .deactivate
+      end
+
+      # @return [Boolean]
+      def deactivate_embargo_for!(resource:, query_service: Hyrax.query_service)
+        new(resource: resource, query_service: query_service)
+          .deactivate!
+      end
+
+      # @return [Boolean]
       def release_embargo_for(resource:, query_service: Hyrax.query_service)
         new(resource: resource, query_service: query_service)
           .release
       end
 
+      # @return [Boolean]
       def release_embargo_for!(resource:, query_service: Hyrax.query_service)
         new(resource: resource, query_service: query_service)
           .release!
@@ -149,20 +164,20 @@ module Hyrax
       # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
     end
 
-    # Deactivates the embargo and logs a message to the embargo_history property
-    def deactivate!
-      embargo_state = embargo.active? ? 'active' : 'expired'
-      embargo_record = embargo_history_message(
-        embargo_state,
-        Time.zone.today,
-        embargo.embargo_release_date,
-        embargo.visibility_during_embargo,
-        embargo.visibility_after_embargo
-      )
+    ##
+    # Deactivates the embargo
+    # @return [Boolean]
+    def deactivate
+      release(force: true) &&
+        nullify(force: true)
+    end
 
-      release(force: true)
+    ##
+    # Deactivates the embargo
+    # @return [Boolean]
+    def deactivate!
+      release!(force: true)
       nullify(force: true)
-      embargo.embargo_history += [embargo_record]
     end
 
     ##
@@ -211,15 +226,16 @@ module Hyrax
     ##
     # Drop the embargo by setting its release date and visibility settings to `nil`.
     #
-    # @param force [boolean] force the nullify even when the embargo period is current
+    # @param force [Boolean] force the nullify even when the embargo period is current
     #
-    # @return [void]
+    # @return [Boolean]
     def nullify(force: false)
       return false if !force && under_embargo?
 
       embargo.embargo_release_date = nil
       embargo.visibility_during_embargo = nil
       embargo.visibility_after_embargo = nil
+      true
     end
 
     ##
@@ -231,6 +247,17 @@ module Hyrax
     # @return [Boolean] truthy if the embargo has been applied
     def release(force: false)
       return false if !force && under_embargo?
+
+      embargo_state = embargo.active? ? 'active' : 'expired'
+      history_record = embargo_history_message(
+        embargo_state,
+        Time.zone.today,
+        embargo.embargo_release_date,
+        embargo.visibility_during_embargo,
+        embargo.visibility_after_embargo
+      )
+      embargo.embargo_history += [history_record]
+
       return true if embargo.visibility_after_embargo.nil?
 
       resource.visibility = embargo.visibility_after_embargo
@@ -266,7 +293,7 @@ module Hyrax
 
     protected
 
-    # Create the log message used when deactivating an embargo
+    # Create the log message used when releasing an embargo
     def embargo_history_message(state, deactivate_date, release_date, visibility_during, visibility_after)
       I18n.t 'hydra.embargo.history_message',
               state: state,

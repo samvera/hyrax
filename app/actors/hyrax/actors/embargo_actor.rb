@@ -14,12 +14,9 @@ module Hyrax
       def destroy
         case work
         when Valkyrie::Resource
-          embargo_manager = Hyrax::EmbargoManager.new(resource: work)
-          return if embargo_manager.embargo.embargo_release_date.blank?
-
-          embargo_manager.deactivate!
-          work.embargo = Hyrax.persister.save(resource: embargo_manager.embargo)
-          Hyrax::AccessControlList(work).save
+          Hyrax::EmbargoManager.deactivate_embargo_for(resource: work) &&
+            Hyrax.persister.save(resource: work.embargo) &&
+            Hyrax::AccessControlList(work).save
         else
           work.embargo_visibility! # If the embargo has lapsed, update the current visibility.
           work.deactivate_embargo!
