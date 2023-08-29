@@ -5,8 +5,8 @@ end
 
 RSpec.describe HyraxHelper, type: :helper do
   describe "show_transfer_request_title" do
-    let(:sender) { create(:user) }
-    let(:user) { create(:user) }
+    let(:sender) { FactoryBot.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
 
     context "when work is canceled" do
       let(:request) do
@@ -395,7 +395,14 @@ RSpec.describe HyraxHelper, type: :helper do
       expect(helper.thumbnail_label_for(object: Object.new)).to be_a String
     end
 
-    it 'interoperates with CollectionForm' do
+    it 'interoperates with display objects with #thumbnail_title' do
+      model_or_presenter_or_form = double(thumbnail_title: 'my display thumbnail title')
+
+      expect(helper.thumbnail_label_for(object: model_or_presenter_or_form))
+        .to eq 'my display thumbnail title'
+    end
+
+    it 'interoperates with CollectionForm', :active_fedora do
       collection = ::Collection.new
       collection.thumbnail = ::FileSet.create(title: ["thumbnail"])
 
@@ -406,7 +413,7 @@ RSpec.describe HyraxHelper, type: :helper do
       expect(helper.thumbnail_label_for(object: form)).to eq 'thumbnail'
     end
 
-    it 'interoperates with AdminSetForm' do
+    it 'interoperates with AdminSetForm', :active_fedora do
       admin_set = AdminSet.new
       admin_set.thumbnail = ::FileSet.create(title: ["thumbnail"])
 
