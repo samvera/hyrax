@@ -6,7 +6,8 @@ services:
       context: .
       target: hyrax-engine-dev
       args:
-        - EXTRA_APK_PACKAGES=git less chromium
+        - EXTRA_APK_PACKAGES=git less
+        - BUNDLE_GEMFILE=Gemfile.dassie
     image: ghcr.io/samvera/dassie
     command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
     stdin_open: true
