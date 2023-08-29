@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe JobIoWrapper, type: :model do
+RSpec.describe JobIoWrapper, :active_fedora, type: :model do
   let(:user) { build(:user) }
   let(:path) { fixture_path + '/world.png' }
   let(:file_set_id) { 'bn999672v' }
