@@ -393,16 +393,16 @@ RSpec.describe Hyrax::WorkShowPresenter do
   describe "#download_url" do
     subject { presenter.download_url }
 
-    let(:solr_document) { SolrDocument.new(work.to_solr) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
 
     context "with a representative" do
-      let(:work) { create(:work_with_representative_file) }
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :with_one_file_set, :with_representative) }
 
       it { is_expected.to eq "http://#{request.host}/downloads/#{work.representative_id}" }
     end
 
     context "without a representative" do
-      let(:work) { create(:work) }
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
 
       it { is_expected.to eq '' }
     end
