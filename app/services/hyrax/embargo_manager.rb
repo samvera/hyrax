@@ -251,7 +251,7 @@ module Hyrax
       embargo_state = embargo.active? ? 'active' : 'expired'
       history_record = embargo_history_message(
         embargo_state,
-        Time.zone.today,
+        Hyrax::TimeService.time_in_utc,
         embargo.embargo_release_date,
         embargo.visibility_during_embargo,
         embargo.visibility_after_embargo
