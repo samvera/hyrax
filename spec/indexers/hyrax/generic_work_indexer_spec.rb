@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe GenericWorkIndexer do
+RSpec.describe GenericWorkIndexer, :active_fedora do
   subject(:solr_document) { service.generate_solr_document }
 
   # TODO: file_set_ids returns an empty set unless you persist the work
