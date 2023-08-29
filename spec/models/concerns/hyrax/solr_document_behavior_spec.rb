@@ -177,4 +177,46 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       expect(solr_document.to_s).to eq ''
     end
   end
+
+  describe '#visibility' do
+    context 'when an embargo is enforced' do
+      let(:solr_hash) do
+        { "embargo_release_date_dtsi" => "2023-08-30T00:00:00Z",
+          "visibility_during_embargo_ssim" => "restricted",
+          "visibility_after_embargo_ssim" => "open",
+          "visibility_ssi" => "restricted" }
+      end
+
+      it 'is "embargo"' do
+        expect(solr_document.visibility).to eq "embargo"
+      end
+    end
+
+    context 'when an embargo is released' do
+      let(:solr_hash) do
+        { "embargo_release_date_dtsi" => "2023-08-30T00:00:00Z",
+          "visibility_during_embargo_ssim" => "restricted",
+          "visibility_after_embargo_ssim" => "open",
+          "visibility_ssi" => "authenticated", # expect this to be ignored
+          "read_access_group_ssim" => ["public"] }
+      end
+
+      it 'is based on the read groups and Ability behavior' do
+        expect(solr_document.visibility).to eq "open"
+      end
+    end
+
+    # this is a special case because some of the older Hyrax tests
+    # expected this situation to work. Both ActiveFedora and Valkyrie
+    # actually index the whole embargo structure.
+    context 'when only an embargo date is indexed' do
+      let(:solr_hash) do
+        { "embargo_release_date_dtsi" => "2023-08-30T00:00:00Z"}
+      end
+
+      it 'is "embargo"' do
+        expect(solr_document.visibility).to eq "embargo"
+      end
+    end
+  end
 end

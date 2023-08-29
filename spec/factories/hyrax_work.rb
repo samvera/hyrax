@@ -8,6 +8,20 @@ FactoryBot.define do
       association :embargo, factory: :hyrax_embargo
     end
 
+    trait :with_expired_enforced_embargo do
+      after(:build) do |work, evaluator|
+        work.embargo = FactoryBot.valkyrie_create(:hyrax_embargo, :expired)
+      end
+
+      after(:create) do |work, _evaluator|
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_return(10.days.ago)
+        Hyrax::EmbargoManager.new(resource: work).apply
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_call_original
+
+        work.permission_manager.acl.save
+      end
+    end
+
     trait :under_lease do
       association :lease, factory: :hyrax_lease
     end
