@@ -411,7 +411,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   describe '#page_title' do
     subject { presenter.page_title }
 
-    it { is_expected.to eq 'Generic Work | foo | ID: 888888 | Hyrax' }
+    it { is_expected.to eq "Generic Work | foo | ID: 888888 | #{I18n.t('hyrax.product_name')}" }
   end
 
   describe "#valid_child_concerns" do
