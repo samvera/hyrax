@@ -1,4 +1,4 @@
-# frozen_string_literal: truep
+# frozen_string_literal: true
 RSpec.describe "hyrax_events using Hyrax callbacks", :active_fedora do
   let(:curation_concern) { create(:work) }
   let(:file_set) { create(:file_set) }
