@@ -156,7 +156,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe 'admin users' do
-    let(:user)    { create(:user) }
+    let(:user)    { FactoryBot.create(:user) }
     let(:ability) { Ability.new(user) }
     let(:attributes) do
       {
@@ -449,7 +449,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   context "with workflow" do
-    let(:user) { create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     let(:ability) { Ability.new(user) }
     let(:entity) { instance_double(Sipity::Entity) }
 
@@ -461,7 +461,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   context "with inspect_work" do
-    let(:user) { create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     let(:ability) { Ability.new(user) }
 
     describe "#inspect_work" do
