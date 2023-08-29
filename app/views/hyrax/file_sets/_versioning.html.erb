@@ -1,6 +1,6 @@
 <div id="versioning_display" class="tab-pane">
   <h2><%= t('.header') %></h2>
-  <%= simple_form_for [main_app, curation_concern], html: { multipart: true, class: 'nav-safety' } do |f| %>
+  <% if @version_list.supports_multiple_versions? %><%= simple_form_for [main_app, curation_concern], html: { multipart: true, class: 'nav-safety' } do |f| %>
     <div id="fileuploadVersioning">
       <!-- Redirect browsers with JavaScript disabled to the origin page -->
       <noscript><input type="hidden" name="redirect" value="<%= main_app.root_path %>"/></noscript>
@@ -45,10 +45,10 @@
         <%= t('.upload') %>
       <% end %>
 
-    </div> <!-- fileuploadVersioning -->
-  <% end %>
+    </div> <!-- /fileuploadVersioning -->
+  <% end %><% end %>
 
-  <%= form_for [main_app, curation_concern],
+  <% if !@version_list.empty? %><%= form_for [main_app, curation_concern],
                html: { class: 'edit_file_set_previous_version nav-safety' } do |f| %>
     <h3><%= t('.restore') %></h3>
     <% @version_list.each do |version| %>
@@ -68,7 +68,7 @@
                  type: 'submit' do %>
       <%= t('.save') %>
     <% end %>
-  <% end %>
+  <% end %><% end %>
 
   <%= render 'hyrax/uploads/js_templates_versioning' %>
 
