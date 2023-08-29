@@ -2,11 +2,11 @@
 RSpec.describe Hyrax::PermissionTemplateApplicator do
   subject(:applicator) { described_class.new(template: template) }
   let(:manage_groups)  { ['edit_group_1', 'edit_group_2'] }
-  let(:manage_users)   { ['moomin', 'snork'] }
+  let(:manage_users)   { [FactoryBot.create(:user).user_key, FactoryBot.create(:user).user_key] }
   let(:template)       { :not_a_template }
   let(:view_groups)    { ['read_group_1', 'read_group_2'] }
-  let(:view_users)     { ['snufkin', 'too-ticky'] }
-  let(:work)           { build(:work) }
+  let(:view_users)     { [FactoryBot.create(:user).user_key, FactoryBot.create(:user).user_key] }
+  let(:work)           { FactoryBot.build(:hyrax_work) }
 
   describe '.apply' do
     it 'initializes with template' do
@@ -17,11 +17,11 @@ RSpec.describe Hyrax::PermissionTemplateApplicator do
 
   describe '#apply_to' do
     let(:template) do
-      create(:permission_template,
-             manage_groups: manage_groups,
-             manage_users: manage_users,
-             view_groups: view_groups,
-             view_users: view_users)
+      FactoryBot.create(:permission_template,
+                        manage_groups: manage_groups,
+                        manage_users: manage_users,
+                        view_groups: view_groups,
+                        view_users: view_users)
     end
 
     it 'applies edit groups' do
