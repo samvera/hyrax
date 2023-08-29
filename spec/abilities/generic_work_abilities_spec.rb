@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'cancan/matchers'
 
-RSpec.describe Hyrax::Ability do
+RSpec.describe Hyrax::Ability, :active_fedora do
   subject { Ability.new(current_user) }
 
   let(:generic_work) { create(:private_generic_work, user: creating_user) }
