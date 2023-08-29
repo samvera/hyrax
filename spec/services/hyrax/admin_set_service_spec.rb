@@ -8,24 +8,23 @@ RSpec.describe Hyrax::AdminSetService do
            search_state_class: nil)
   end
   let(:service) { described_class.new(context) }
-  let(:user) { create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   describe "#search_results", :clean_repo do
-    subject { service.search_results(access) }
-
-    let!(:as1) { create(:admin_set, read_groups: ['public'], title: ['foo']) }
-    let!(:as2) { create(:admin_set, read_groups: ['public'], title: ['bar']) }
-    let!(:as3) { create(:admin_set, edit_users: [user.user_key], title: ['baz']) }
+    let!(:as1) { FactoryBot.valkyrie_create(:hyrax_admin_set, read_groups: ['public']) }
+    let!(:as2) { FactoryBot.valkyrie_create(:hyrax_admin_set, read_groups: ['public']) }
+    let!(:as3) { FactoryBot.valkyrie_create(:hyrax_admin_set, edit_users: [user.user_key]) }
 
     before do
-      create(:collection, :public) # this should never be returned.
+      FactoryBot.valkyrie_create(:hyrax_collection, :public) # this should never be returned.
     end
 
     context "with read access" do
       let(:access) { :read }
 
       it "returns three admin sets" do
-        expect(subject.map(&:id)).to match_array [as1.id, as2.id, as3.id]
+        expect(service.search_results(access).map(&:id))
+          .to contain_exactly(as1.id, as2.id, as3.id)
       end
     end
 
@@ -33,7 +32,8 @@ RSpec.describe Hyrax::AdminSetService do
       let(:access) { :edit }
 
       it "returns one admin set" do
-        expect(subject.map(&:id)).to match_array [as3.id]
+        expect(service.search_results(access).map(&:id))
+          .to contain_exactly(as3.id)
       end
     end
   end
