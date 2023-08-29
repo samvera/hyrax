@@ -31,11 +31,11 @@ module Hyrax
 
     def create_derivatives(filename)
       case mime_type
-      when *file_set.class.pdf_mime_types             then create_pdf_derivatives(filename)
-      when *file_set.class.office_document_mime_types then create_office_document_derivatives(filename)
-      when *file_set.class.audio_mime_types           then create_audio_derivatives(filename)
-      when *file_set.class.video_mime_types           then create_video_derivatives(filename)
-      when *file_set.class.image_mime_types           then create_image_derivatives(filename)
+      when *Hyrax.config.derivative_mime_type_mappings[:pdf]    then create_pdf_derivatives(filename)
+      when *Hyrax.config.derivative_mime_type_mappings[:office] then create_office_document_derivatives(filename)
+      when *Hyrax.config.derivative_mime_type_mappings[:audio]  then create_audio_derivatives(filename)
+      when *Hyrax.config.derivative_mime_type_mappings[:video]  then create_video_derivatives(filename)
+      when *Hyrax.config.derivative_mime_type_mappings[:image] then create_image_derivatives(filename)
       end
     end
 

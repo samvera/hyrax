@@ -31,5 +31,9 @@ FactoryBot.define do
         visibility_setting { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
       end
     end
+
+    trait :image do
+      mime_type { 'image/png' }
+    end
   end
 end
