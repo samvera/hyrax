@@ -7,12 +7,13 @@ namespace :hyrax do
 
       count = 0
 
-      Collection.all.each do |collection|
-        next if collection.collection_type_gid == collection.collection_type.to_global_id.to_s
+      Hyrax.query_service.find_all_of_model(model: Hyrax::PcdmCollection).each do |collection|
+        type = Hyrax::CollectionType.find_by_gid(collection.collection_type_gid)
+        next if collection.collection_type_gid == type.to_global_id.to_s
 
-        collection.public_send(:collection_type_gid=, collection.collection_type.to_global_id, force: true)
+        collection.public_send(:collection_type_gid=, type.to_global_id, force: true)
 
-        collection.save &&
+        Hyrax.persister.save(resource: collection) &&
           count += 1
       end
 

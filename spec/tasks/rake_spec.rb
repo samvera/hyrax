@@ -109,18 +109,20 @@ RSpec.describe "Rake tasks" do
         let(:other_collection_type) { FactoryBot.create(:collection_type) }
 
         let(:collections_with_legacy_gids) do
-          [FactoryBot.create(:collection, collection_type_gid: "gid://internal/sometext/#{collection_type.id}"),
-           FactoryBot.create(:collection, collection_type_gid: "gid://internal/sometext/#{other_collection_type.id}")]
+          [FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: "gid://internal/sometext/#{collection_type.id}"),
+           FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: "gid://internal/sometext/#{other_collection_type.id}")]
         end
 
         before do
-          FactoryBot.create_list(:collection, 3, collection_type_gid: collection_type.to_global_id)
-          FactoryBot.create_list(:collection, 3, collection_type_gid: other_collection_type.to_global_id)
+          3.times do
+            FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.to_global_id)
+            FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: other_collection_type.to_global_id)
+          end
         end
 
         it 'updates collections to use standard GlobalId URI' do
           expect { run_task 'hyrax:collections:update_collection_type_global_ids' }
-            .to change { collections_with_legacy_gids.map { |col| col.reload.collection_type_gid } }
+            .to change { collections_with_legacy_gids.map { |col| Hyrax.query_service.find_by(id: col.id).collection_type_gid } }
             .to eq [collection_type.to_global_id.to_s, other_collection_type.to_global_id.to_s]
         end
       end
