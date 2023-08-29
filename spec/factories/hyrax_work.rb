@@ -14,7 +14,7 @@ FactoryBot.define do
     end
 
     trait :with_expired_enforced_embargo do
-      after(:build) do |work, evaluator|
+      after(:build) do |work, _evaluator|
         work.embargo = FactoryBot.valkyrie_create(:hyrax_embargo, :expired)
       end
 

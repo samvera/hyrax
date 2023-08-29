@@ -46,9 +46,9 @@ RSpec.describe Hyrax::EmbargoService, :clean_repo do
       end
 
       it 'does not include the work' do
-      expect(service.assets_under_embargo)
-        .to contain_exactly(have_attributes(id: work_with_embargo_in_effect.id),
-                            have_attributes(id: work_with_expired_enforced_embargo2.id))
+        expect(service.assets_under_embargo)
+          .to contain_exactly(have_attributes(id: work_with_embargo_in_effect.id),
+                              have_attributes(id: work_with_expired_enforced_embargo2.id))
       end
     end
   end

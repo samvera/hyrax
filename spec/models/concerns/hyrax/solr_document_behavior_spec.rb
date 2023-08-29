@@ -211,7 +211,7 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
     # actually index the whole embargo structure.
     context 'when only an embargo date is indexed' do
       let(:solr_hash) do
-        { "embargo_release_date_dtsi" => "2023-08-30T00:00:00Z"}
+        { "embargo_release_date_dtsi" => "2023-08-30T00:00:00Z" }
       end
 
       it 'is "embargo"' do

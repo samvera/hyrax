@@ -21,7 +21,7 @@ RSpec.describe "Rake tasks" do
       expect { run_task 'hyrax:embargo:deactivate_expired' }
         .to change {
           Hyrax.query_service.find_many_by_ids(ids: expired.map(&:id))
-            .map { |work| work.embargo.embargo_history }
+               .map { |work| work.embargo.embargo_history }
         }
         .from(contain_exactly(be_empty, be_empty))
         .to(contain_exactly([start_with('An expired embargo was deactivated')],
@@ -32,7 +32,7 @@ RSpec.describe "Rake tasks" do
       expect { run_task 'hyrax:embargo:deactivate_expired' }
         .to change {
           Hyrax.query_service.find_many_by_ids(ids: expired.map(&:id))
-            .map { |work| work.permission_manager.read_groups.to_a }
+               .map { |work| work.permission_manager.read_groups.to_a }
         }
         .from([contain_exactly('registered'), contain_exactly('registered')])
         .to([include('public'), include('public')])
@@ -42,7 +42,7 @@ RSpec.describe "Rake tasks" do
       expect { run_task 'hyrax:embargo:deactivate_expired' }
         .to change {
           Hyrax.query_service.find_many_by_ids(ids: expired.map(&:id))
-            .map(&:visibility)
+               .map(&:visibility)
         }
         .from(['authenticated', 'authenticated'])
         .to(['open', 'open'])
@@ -52,7 +52,7 @@ RSpec.describe "Rake tasks" do
       expect { run_task 'hyrax:embargo:deactivate_expired' }
         .not_to change {
           Hyrax.query_service.find_many_by_ids(ids: active.map(&:id))
-            .map(&:visibility)
+               .map(&:visibility)
         }
         .from(['authenticated', 'authenticated'])
     end
