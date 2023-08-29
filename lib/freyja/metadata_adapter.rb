@@ -12,7 +12,7 @@ module Freyja
     def query_service
       @query_service ||= Freyja::QueryService.new(
         Valkyrie::Persistence::Postgres::QueryService.new(adapter: self, resource_factory: resource_factory),
-        Hyrax.query_service
+        Valkyrie::MetadataAdapter.adapters[:wings_adapter].query_service
       )
     end
 

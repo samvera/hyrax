@@ -24,7 +24,7 @@ module Wings
       # @param [Valkyrie::Resource] resource
       # @param [Boolean] perform_af_validation
       # @return [Valkyrie::Resource] the persisted/updated resource
-      def save(resource:, perform_af_validation: false)
+      def save(resource:, perform_af_validation: false, external_resource: false)
         af_object = resource_factory.from_resource(resource: resource)
 
         check_lock_tokens(af_object: af_object, resource: resource)

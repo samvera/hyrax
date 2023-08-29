@@ -503,6 +503,14 @@ module Hyrax
     end
     attr_writer :disable_wings
 
+    ##
+    # @return [Boolean]
+    def disable_freyja
+      return @disable_freyja unless @disable_freyja.nil?
+      ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_SKIP_FREYJA', false))
+    end
+    attr_writer :disable_freyja
+
     attr_writer :display_media_download_link
     # @return [Boolean]
     def display_media_download_link?

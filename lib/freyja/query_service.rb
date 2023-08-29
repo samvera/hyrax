@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Freyja
   class QueryService
     attr_reader :services
@@ -20,6 +19,7 @@ module Freyja
     #   services[0].find_references_by(resource: resource, property: property, model: model)
     # end
 
+    # TODO how do the _all methods combine the two sets
     [:find_all,
       :find_all_of_model,
       :find_by,
@@ -33,8 +33,8 @@ module Freyja
       :count_all_of_model].each do |method_name|
       define_method method_name do |*args,**opts|
         result = nil
-        services.each do |s|
-          result = s.send(method_name, *args, **opts)
+        services.each do |service|
+          result = service.send(method_name, *args, **opts)
           return result if result.present? && (!result.respond_to?(:any?) || result.any?)
         rescue Valkyrie::Persistence::ObjectNotFoundError
           next
@@ -51,7 +51,7 @@ module Freyja
     #
     # @return [Valkyrie::Persistence::CustomQueryContainer]
     def custom_queries
-      @custom_queries ||= ::Valkyrie::Persistence::CustomQueryContainer.new(query_service: self)
+      @custom_queries ||= Freyja::CustomQueryContainer.new(query_service: self)
     end
   end
 end
