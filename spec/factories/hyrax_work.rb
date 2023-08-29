@@ -6,6 +6,11 @@ FactoryBot.define do
   factory :hyrax_work, class: 'Hyrax::Test::SimpleWork' do
     trait :under_embargo do
       association :embargo, factory: :hyrax_embargo
+
+      after(:create) do |work, _e|
+        Hyrax::EmbargoManager.new(resource: work).apply
+        work.permission_manager.acl.save
+      end
     end
 
     trait :with_expired_enforced_embargo do
