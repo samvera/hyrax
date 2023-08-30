@@ -19,7 +19,11 @@ class CreateWorkJob < Hyrax::ApplicationJob
     work = model.constantize.new
     current_ability = Ability.new(user)
     env = Hyrax::Actors::Environment.new(work, current_ability, attributes)
-    status = work_actor.create(env)
+    status = if model == ActiveFedora::Base
+               work_actor.create(env)
+             else
+               batch_create_valkyrie_work(work, attributes, user)
+             end
     return operation.success! if status
     operation.fail!(work.errors.full_messages.join(' '))
   end
@@ -28,5 +32,21 @@ class CreateWorkJob < Hyrax::ApplicationJob
 
   def work_actor
     Hyrax::CurationConcern.actor
+  end
+
+  def batch_create_valkyrie_work(work, attributes, user)
+    uploaded_file_ids = attributes.delete(:uploaded_files)
+    files = Hyrax::UploadedFile.find(uploaded_file_ids)
+    work.title = attributes.delete(:title)
+    work.resource_type = attributes.delete(:resource_type)
+    work.visibility = attributes.delete(:visibility)
+    work.depositor = user.user_key
+    work.creator = attributes.delete(:creator)
+    work.rights_statement = [attributes.delete(:rights_statement)]
+    permissions = work.permission_manager.acl.permissions
+    generic_work = Hyrax.persister.save(resource: work)
+    generic_work.permission_manager.acl.permissions = permissions
+    generic_work.permission_manager.acl.save
+    Hyrax::WorkUploadsHandler.new(work: generic_work).add(files: files).attach
   end
 end
