@@ -5,14 +5,13 @@ Rails.application.routes.draw do
         mount BrowseEverything::Engine => '/browse'
 
   mount Blacklight::Engine => '/'
-  
+
   concern :searchable, Blacklight::Routes::Searchable.new
 
   resource :catalog, only: [:index], as: 'catalog', path: '/catalog', controller: 'catalog' do
     concerns :searchable
   end
   devise_for :users
-  mount Hydra::RoleManagement::Engine => '/'
   mount Sidekiq::Web => '/sidekiq'
   mount Qa::Engine => '/authorities'
   mount Hyrax::Engine, at: '/'
