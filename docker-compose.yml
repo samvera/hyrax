@@ -124,7 +124,7 @@ services:
       - hyrax
 
   fits:
-    image: harvardlts/fitsservlet_container:1.5.0
+    image: ghcr.io/samvera/fitsservlet:1.6.0
     ports:
       - 8080
     networks:
