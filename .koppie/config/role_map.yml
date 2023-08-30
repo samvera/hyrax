@@ -1,28 +1,6 @@
-# nurax-pg uses Hydra::RoleManagement for user and role definition.  The following
-# examples show how to perform common setup actions.
-#
-# @see https://github.com/samvera/hydra-role-management
-#
-# Create admin role
-#
-#   admin_role = Role.find_or_create_by(name: 'admin')
-#
-# Create a user
-#
-#   admin_user = User.find_or_create_by(email: 'user@example.com') do |user|
-#     user.password = 'change_me'
-#     user.password_confirmation = 'change_me'
-#     user.confirmed_at = DateTime.now
-#   end
-#   admin_user.roles << admin_role unless admin_user.roles.include?(admin_role)
-#   admin_user.save!(validate: false)
-#
-# You can create non-admin roles and assign users to those roles using a similar pattern.
-#
-# The following roles might be used for testing, so they remain here.  They will not
-# be available for use when logged in through the browser.
-#
 development:
+  admin:
+    - admin@example.com
   archivist:
     - archivist1@example.com
 
@@ -45,4 +23,4 @@ test:
 
 production:
   admin:
-    - systems@curationexperts.com
+    - admin@example.com
