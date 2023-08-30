@@ -35,5 +35,27 @@ FactoryBot.define do
     trait :image do
       mime_type { 'image/png' }
     end
+
+    trait :with_file do
+      transient do
+        file { FactoryBot.create(:uploaded_file) }
+        file_set { FactoryBot.valkyrie_create(:hyrax_file_set) }
+      end
+
+      after(:build) do |file_metadata, evaluator|
+        file_metadata.label = evaluator.file.uploader.filename
+        file_metadata.mime_type = evaluator.file.uploader.content_type
+        file_metadata.original_filename = evaluator.file.uploader.filename
+        file_metadata.recorded_size = evaluator.file.uploader.size
+        file_metadata.file_set_id = evaluator.file_set.id
+      end
+
+      before(:create) do |file_metadata, evaluator|
+        saved = Hyrax.storage_adapter.upload(resource: evaluator.file_set,
+                                             file: evaluator.file.uploader.file,
+                                             original_filename: evaluator.file.uploader.filename)
+        file_metadata.file_identifier = saved.id
+      end
+    end
   end
 end
