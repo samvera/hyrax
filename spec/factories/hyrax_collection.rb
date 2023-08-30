@@ -19,10 +19,14 @@ FactoryBot.define do
       access_grants { [] }
     end
 
+    after(:build) do |collection, evaluator|
+      collection.depositor ||= evaluator.user.user_key
+    end
+
     after(:create) do |collection, evaluator|
       if evaluator.members.present?
         evaluator.members.map do |member|
-          member.member_of_collection_ids += [collection.id]
+          member.membner_of_collection_ids += [collection.id]
           member = Hyrax.persister.save(resource: member)
           Hyrax.index_adapter.save(resource: member) if evaluator.with_index
         end
