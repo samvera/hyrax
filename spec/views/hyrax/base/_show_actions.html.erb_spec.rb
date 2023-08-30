@@ -84,7 +84,11 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
         render 'hyrax/base/show_actions', presenter: presenter
       end
       it "creates a link to add child work" do
-        expect(rendered).to have_link 'Attach Generic Work', href: "/concern/parent/#{presenter.id}/generic_works/new"
+        expect(rendered).to have_button 'Attach Child'
+
+        within('button#dropdown-menu') do
+          expect(rendered).to have_link 'Attach Generic Work', href: "/concern/parent/#{presenter.id}/generic_works/new"
+        end
       end
     end
   end
