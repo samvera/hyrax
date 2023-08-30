@@ -14,7 +14,7 @@ module Hyrax
     end
 
     def message
-      uri = file_set.original_file.uri.to_s
+      uri = checksum_audit_log.checked_uri
       file_title = file_set.title.first
       I18n.t('hyrax.notifications.fixity_check_failure.message', log_date: log_date, file_title: file_title, uri: uri)
     end
