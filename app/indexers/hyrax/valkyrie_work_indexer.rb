@@ -9,7 +9,6 @@ module Hyrax
     include Hyrax::VisibilityIndexer
     include Hyrax::ThumbnailIndexer
     include Hyrax::Indexer(:core_metadata)
-    include Hyrax::Indexer(:basic_metadata)
 
     def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
       super.tap do |solr_doc|

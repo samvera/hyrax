@@ -134,7 +134,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe '#itemtype' do
-    let(:work) { FactoryBot.valkyrie_create(:hyrax_work, resource_type: type) }
+    let(:work) { FactoryBot.valkyrie_create(:monograph, resource_type: type) }
     let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
     let(:ability) { double "Ability" }
 
@@ -152,6 +152,14 @@ RSpec.describe Hyrax::WorkShowPresenter do
       let(:type) { ['Conference Proceeding'] }
 
       it { is_expected.to eq 'http://schema.org/ScholarlyArticle' }
+    end
+
+    context 'when resource_type is not indexed' do
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
+
+      it do
+        is_expected.to eq 'http://schema.org/CreativeWork'
+      end
     end
   end
 
