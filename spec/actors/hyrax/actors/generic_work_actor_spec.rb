@@ -2,7 +2,7 @@
 require 'redlock'
 require 'hyrax/specs/spy_listener'
 
-RSpec.describe Hyrax::Actors::GenericWorkActor, :active_fedora do
+RSpec.describe "Hyrax::Actors::GenericWorkActor", :active_fedora do
   include ActionDispatch::TestProcess
   let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
   let(:user) { create(:user) }
@@ -36,7 +36,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor, :active_fedora do
         middleware.use Hyrax::Actors::CreateWithFilesActor
         middleware.use Hyrax::Actors::AddToWorkActor
         middleware.use Hyrax::Actors::InterpretVisibilityActor
-        middleware.use described_class
+        middleware.use Hyrax::Actors::GenericWorkActor
       end
       stack.build(terminator)
     end
@@ -46,7 +46,11 @@ RSpec.describe Hyrax::Actors::GenericWorkActor, :active_fedora do
     end
 
     context 'failure' do
-      before { allow_any_instance_of(described_class).to receive(:save).and_return(false) }
+      before do
+        allow_any_instance_of(Hyrax::Actors::GenericWorkActor)
+          .to receive(:save)
+          .and_return(false)
+      end
 
       it 'returns false' do
         expect(middleware.create(env)).to be false

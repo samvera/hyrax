@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 require 'wings_helper'
-require 'wings/hydra/works/services/add_file_to_file_set'
 
-RSpec.describe Wings::Works::AddFileToFileSet, :active_fedora, :clean_repo do
+RSpec.describe "Wings::Works::AddFileToFileSet", :active_fedora, :clean_repo do
   let(:af_file_set)             { create(:file_set, id: 'fileset_id') }
   let!(:file_set)               { af_file_set.valkyrie_resource }
 
@@ -26,7 +25,7 @@ RSpec.describe Wings::Works::AddFileToFileSet, :active_fedora, :clean_repo do
 
   context 'when :use is the name of an association type' do
     context 'and requesting original file' do
-      subject { described_class.call(file_set: file_set, file: pdf_file, type: original_file_use) }
+      subject { Wings::Works::AddFileToFileSet.call(file_set: file_set, file: pdf_file, type: original_file_use) }
       it "builds and uses the association's target" do
         id = subject.original_file_id
         expect(id).to be_a Valkyrie::ID
@@ -38,7 +37,7 @@ RSpec.describe Wings::Works::AddFileToFileSet, :active_fedora, :clean_repo do
     end
 
     context 'and requesting extracted text' do
-      subject { described_class.call(file_set: file_set, file: text_file, type: [extracted_text_use]) }
+      subject { Wings::Works::AddFileToFileSet.call(file_set: file_set, file: text_file, type: [extracted_text_use]) }
       it "builds and uses the association's target" do
         id = subject.extracted_text_id
         expect(id).to be_a Valkyrie::ID
@@ -50,7 +49,7 @@ RSpec.describe Wings::Works::AddFileToFileSet, :active_fedora, :clean_repo do
     end
 
     context 'and requesting thumbnail' do
-      subject { described_class.call(file_set: file_set, file: image_file, type: thumbnail_use) }
+      subject { Wings::Works::AddFileToFileSet.call(file_set: file_set, file: image_file, type: thumbnail_use) }
 
       it "builds and uses the association's target" do
         id = subject.thumbnail_id
@@ -67,8 +66,8 @@ RSpec.describe Wings::Works::AddFileToFileSet, :active_fedora, :clean_repo do
     let(:transcript_use)   { Valkyrie::Vocab::PCDMUse.Transcript }
     let(:service_file_use) { Valkyrie::Vocab::PCDMUse.ServiceFile }
 
-    let(:updated_file_set) { described_class.call(file_set: file_set, file: pdf_file, type: service_file_use) }
-    let(:transcript_file_set) { described_class.call(file_set: updated_file_set, file: text_file, type: transcript_use) }
+    let(:updated_file_set) { Wings::Works::AddFileToFileSet.call(file_set: file_set, file: pdf_file, type: service_file_use) }
+    let(:transcript_file_set) { Wings::Works::AddFileToFileSet.call(file_set: updated_file_set, file: text_file, type: transcript_use) }
 
     it 'adds the given file and applies the specified RDF::URI use to it' do
       ids = transcript_file_set.file_ids
@@ -84,7 +83,7 @@ RSpec.describe Wings::Works::AddFileToFileSet, :active_fedora, :clean_repo do
 
   context 'when :versioning => true' do
     let(:versioning) { true }
-    subject { described_class.call(file_set: file_set, file: pdf_file, type: original_file_use, versioning: versioning) }
+    subject { Wings::Works::AddFileToFileSet.call(file_set: file_set, file: pdf_file, type: original_file_use, versioning: versioning) }
     it 'updates the file and creates a version' do
       pending 'Valkyrization of versioning in Hyrax::FileMetadata'
       expect(subject.original_file.versions.all.count).to eq(1)
@@ -93,8 +92,8 @@ RSpec.describe Wings::Works::AddFileToFileSet, :active_fedora, :clean_repo do
 
     context 'and there are already versions' do
       subject do
-        updated_file_set = described_class.call(file_set: file_set, file: pdf_file, type: original_file_use, versioning: versioning)
-        described_class.call(file_set: updated_file_set, file: text_file, type: original_file_use, versioning: versioning)
+        updated_file_set = Wings::Works::AddFileToFileSet.call(file_set: file_set, file: pdf_file, type: original_file_use, versioning: versioning)
+        Wings::Works::AddFileToFileSet.call(file_set: updated_file_set, file: text_file, type: original_file_use, versioning: versioning)
       end
       it 'adds to the version history' do
         pending 'Valkyrization of versioning in Hyrax::FileMetadata'
@@ -107,8 +106,8 @@ RSpec.describe Wings::Works::AddFileToFileSet, :active_fedora, :clean_repo do
   context 'when :versioning => false' do
     let(:versioning) { false }
     subject do
-      updated_file_set = described_class.call(file_set: file_set, file: pdf_file, type: original_file_use, versioning: versioning)
-      described_class.call(file_set: updated_file_set, file: text_file, type: original_file_use, versioning: versioning)
+      updated_file_set = Wings::Works::AddFileToFileSet.call(file_set: file_set, file: pdf_file, type: original_file_use, versioning: versioning)
+      Wings::Works::AddFileToFileSet.call(file_set: updated_file_set, file: text_file, type: original_file_use, versioning: versioning)
     end
     it 'skips creating versions' do
       pending 'Valkyrization of versioning in Hyrax::FileMetadata'
