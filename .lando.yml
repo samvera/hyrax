@@ -1,0 +1,44 @@
+name: hyrax
+services:
+  solr_koppie:
+    type: solr:8.11
+    core: koppie_test
+    config:
+      dir: .koppie/solr/conf
+    portforward: 8984
+  redis:
+    type: redis:6
+    portforward: 6390
+  memcached:
+    type: memcached
+    portforward: 11212
+  postgres:
+    type: postgres:15
+    portforward: 5433
+  postgres_dassie:
+    type: postgres:15
+    portforward: 5434
+  fcrepo:
+    type: compose
+    app_mount: false
+    services:
+      image: ghcr.io/samvera/fcrepo4:4.7.5
+      command: "/fedora-entrypoint.sh"
+      ports:
+        - 8986:8080
+  chrome:
+    type: compose
+    app_mount: false
+    services:
+      image: seleniarm/standalone-chromium:114.0
+      command: "/opt/bin/start-selenium-standalone.sh"
+      environment:
+        - START_XVFB=false
+      logging:
+        driver: none
+      volumes:
+        - /dev/shm:/dev/shm
+      shm_size: 2G
+      user: seluser
+      ports:
+        - "4444:4444"

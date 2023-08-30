@@ -27,7 +27,7 @@ end
 require 'factory_bot'
 
 if ENV['IN_DOCKER']
-  require File.expand_path("config/environment", '../hyrax-webapp')
+  require File.expand_path("config/environment", "./#{ENV['DOCKER_DIR'] || 'hyrax-webapp'}")
   db_config = ActiveRecord::Base.configurations[ENV['RAILS_ENV']]
   ActiveRecord::Tasks::DatabaseTasks.create(db_config)
 

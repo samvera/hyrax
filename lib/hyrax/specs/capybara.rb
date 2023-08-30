@@ -48,7 +48,13 @@ if ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
   Capybara.server_host = '0.0.0.0'
   Capybara.server_port = 3010
 
-  ip = IPSocket.getaddress(Socket.gethostname)
+  if ENV["DOCKER_DIR"]
+    ip = Socket.ip_address_list
+      .find(&:ipv4_private?)
+      .ip_address
+  else
+    ip = IPSocket.getaddress(Socket.gethostname)
+  end
   Capybara.app_host = "http://#{ip}:#{Capybara.server_port}"
 else
   TEST_HOST = 'localhost:3000'.freeze
