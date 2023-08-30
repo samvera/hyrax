@@ -3,7 +3,7 @@ RSpec.describe Hyrax::VersioningService do
   let(:user) { build(:user) }
   let(:file) { create(:file_set) }
 
-  describe 'using ActiveFedora' do
+  describe 'using ActiveFedora', :active_fedora do
     before do
       # Add the original_file (this service creates a version after saving when you call it with versioning: true)
       Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file, versioning: true)
