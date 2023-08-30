@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe IngestLocalFileJob do
+RSpec.describe IngestLocalFileJob, :active_fedora do
   let(:user) { create(:user) }
   let(:path) { File.join(fixture_path, 'world.png') }
   let(:file_set) { FileSet.new }
