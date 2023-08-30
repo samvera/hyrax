@@ -333,16 +333,16 @@ RSpec.configure do |config|
   config.prepend_before(:example, :valkyrie_adapter) do |example|
     adapter_name = example.metadata[:valkyrie_adapter]
 
-    allow(Hyrax)
-      .to receive(:metadata_adapter)
-      .and_return(Valkyrie::MetadataAdapter.find(adapter_name))
-
     if adapter_name == :wings_adapter
       skip("Don't test Wings when it is dasabled") if Hyrax.config.disable_wings
     else
       allow(Hyrax.config).to receive(:disable_wings).and_return(true)
       hide_const("Wings") # disable_wings=true removes the Wings constant
     end
+
+    allow(Hyrax)
+      .to receive(:metadata_adapter)
+      .and_return(Valkyrie::MetadataAdapter.find(adapter_name))
   end
 
   # Prepend this before block to ensure that it runs before other before blocks like clean_repo
