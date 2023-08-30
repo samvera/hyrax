@@ -1,8 +1,8 @@
 # frozen_string_literal: true
-# TODO: this should be merged with work_form_spec.rb
-RSpec.describe Hyrax::GenericWorkForm do
+
+RSpec.describe "Hyrax::GenericWorkForm", :active_fedora do
   let(:work) { GenericWork.new }
-  let(:form) { described_class.new(work, nil, nil) }
+  let(:form) { Hyrax::GenericWorkForm.new(work, nil, nil) }
 
   describe "#required_fields" do
     subject { form.required_fields }
@@ -66,7 +66,7 @@ RSpec.describe Hyrax::GenericWorkForm do
       )
     end
 
-    subject { described_class.model_attributes(params) }
+    subject { Hyrax::GenericWorkForm.model_attributes(params) }
 
     it 'permits parameters' do
       expect(subject['title']).to eq ['foo']

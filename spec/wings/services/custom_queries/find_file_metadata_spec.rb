@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 require 'wings_helper'
-require 'wings/hydra/works/services/add_file_to_file_set'
-require 'wings/services/custom_queries/find_file_metadata'
 
-RSpec.describe Wings::CustomQueries::FindFileMetadata, :active_fedora, :clean_repo do
-  subject(:query_handler) { described_class.new(query_service: query_service) }
+RSpec.describe "Wings::CustomQueries::FindFileMetadata", :active_fedora, :clean_repo do
+  subject(:query_handler) { Wings::CustomQueries::FindFileMetadata.new(query_service: query_service) }
   let(:query_service) { Hyrax.query_service }
   let(:af_file_id1) { 'file1' }
   let(:valk_id1) { ::Valkyrie::ID.new(af_file_id1) }
@@ -21,10 +19,11 @@ RSpec.describe Wings::CustomQueries::FindFileMetadata, :active_fedora, :clean_re
 
   describe '.queries' do
     it 'lists queries' do
-      expect(described_class.queries).to eq [:find_file_metadata_by,
-                                             :find_file_metadata_by_alternate_identifier,
-                                             :find_many_file_metadata_by_ids,
-                                             :find_many_file_metadata_by_use]
+      expect(Wings::CustomQueries::FindFileMetadata.queries)
+        .to eq [:find_file_metadata_by,
+                :find_file_metadata_by_alternate_identifier,
+                :find_many_file_metadata_by_ids,
+                :find_many_file_metadata_by_use]
     end
   end
 
