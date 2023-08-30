@@ -245,15 +245,17 @@ RSpec.configure do |config|
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
+  config.filter_run_excluding(:active_fedora) if Hyrax.config.disable_wings
   config.filter_run_when_matching :focus
 
   config.example_status_persistence_file_path = 'spec/examples.txt'
 
   config.profile_examples = 10
 
-  config.prepend_before(:context, :active_fedora) do
-    skip("Don't test Wings") if Hyrax.config.disable_wings
-  end
+  # Should not be needed if filter_run_excluding(:active_fedora) above correctly avoids running context setup.
+  # config.prepend_before(:context, :active_fedora) do
+  #   skip("Don't test Wings") if Hyrax.config.disable_wings
+  # end
 
   config.before(:example, :clean_repo) do
     clean_active_fedora_repository unless Hyrax.config.disable_wings
