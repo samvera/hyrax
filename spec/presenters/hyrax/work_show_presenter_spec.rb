@@ -127,20 +127,15 @@ RSpec.describe Hyrax::WorkShowPresenter do
   describe '#stats_path' do
     let(:user) { 'sarah' }
     let(:ability) { double "Ability" }
-    let(:work) { build(:generic_work, id: '123abc') }
-    let(:attributes) { work.to_solr }
-
-    before do
-      # https://github.com/samvera/active_fedora/issues/1251
-      allow(work).to receive(:persisted?).and_return(true)
-    end
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
 
     it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work, locale: 'en') }
   end
 
   describe '#itemtype' do
-    let(:work) { build(:generic_work, resource_type: type) }
-    let(:attributes) { work.to_solr }
+    let(:work) { FactoryBot.valkyrie_create(:monograph, resource_type: type) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
     let(:ability) { double "Ability" }
 
     subject { presenter.itemtype }
@@ -158,10 +153,18 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
       it { is_expected.to eq 'http://schema.org/ScholarlyArticle' }
     end
+
+    context 'when resource_type is not indexed' do
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
+
+      it do
+        is_expected.to eq 'http://schema.org/CreativeWork'
+      end
+    end
   end
 
   describe 'admin users' do
-    let(:user)    { create(:user) }
+    let(:user)    { FactoryBot.create(:user) }
     let(:ability) { Ability.new(user) }
     let(:attributes) do
       {
@@ -219,8 +222,8 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#work_presenters" do
-    let(:obj) { create(:work_with_file_and_work) }
-    let(:attributes) { obj.to_solr }
+    let(:obj) { FactoryBot.valkyrie_create(:hyrax_work, :with_file_and_work) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: obj).to_solr) }
 
     it "filters out members that are file sets" do
       expect(presenter.work_presenters.count).to eq 1
@@ -229,15 +232,15 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#member_count" do
-    let(:obj) { FactoryBot.create(:work_with_file_and_work) }
-    let(:attributes) { obj.to_solr }
+    let(:obj) { FactoryBot.valkyrie_create(:hyrax_work, :with_file_and_work) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: obj).to_solr) }
 
     it "returns the member count" do
       expect(presenter.member_count).to eq 2
     end
 
     context "with empty members" do
-      let(:obj) { FactoryBot.create(:work) }
+      let(:obj) { FactoryBot.valkyrie_create(:hyrax_work) }
 
       it "returns 0" do
         expect(presenter.member_count).to eq 0
@@ -246,8 +249,8 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#member_presenters" do
-    let(:obj) { create(:work_with_file_and_work) }
-    let(:attributes) { obj.to_solr }
+    let(:obj) { FactoryBot.valkyrie_create(:hyrax_work, :with_file_and_work) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: obj).to_solr) }
 
     it "returns appropriate classes for each" do
       expect(presenter.member_presenters.count).to eq 2
@@ -332,52 +335,40 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#file_set_presenters" do
-    let(:obj) { create(:work_with_ordered_files) }
-    let(:attributes) { obj.to_solr }
+    let(:obj) { FactoryBot.valkyrie_create(:hyrax_work, :with_member_file_sets) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: obj).to_solr) }
 
     it "displays them in order" do
-      expect(presenter.file_set_presenters.map(&:id)).to eq obj.ordered_member_ids
+      expect(presenter.file_set_presenters.map(&:id)).to eq obj.member_ids
     end
 
     context "solr query" do
-      before do
-        expect(Hyrax::SolrService).to receive(:query).twice.with(anything, hash_including(rows: 10_000)).and_return([])
-      end
-
       it "requests >10 rows" do
+        expect(Hyrax::SolrService).to receive(:post).with(hash_including(rows: 10_000)).and_call_original
         presenter.file_set_presenters
       end
     end
 
     context "when some of the members are not file sets" do
-      let(:another_work) { create(:work) }
-
-      before do
-        obj.ordered_members << another_work
-        obj.save!
-      end
+      let(:obj) { FactoryBot.valkyrie_create(:hyrax_work, :with_file_and_work) }
+      let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: obj).to_solr) }
 
       it "filters out members that are not file sets" do
-        expect(presenter.file_set_presenters.map(&:id)).not_to include another_work.id
+        expect(presenter.file_set_presenters.count).to eq 1
       end
     end
   end
 
   describe "#representative_presenter" do
-    let(:obj) { create(:work_with_representative_file) }
-    let(:attributes) { obj.to_solr }
+    let(:obj) { FactoryBot.valkyrie_create(:hyrax_work, :with_one_file_set, :with_representative) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: obj).to_solr) }
 
     it "has a representative" do
-      expect(Hyrax::PresenterFactory).to receive(:build_for)
-        .with(ids: [obj.members[0].id],
-              presenter_class: Hyrax::CompositePresenterFactory,
-              presenter_args: [ability, request])
-        .and_return ["abc"]
-      expect(presenter.representative_presenter).to eq("abc")
+      expect(presenter.representative_presenter.solr_document.id).to eq(obj.member_ids.first.to_s)
     end
 
     context 'without a representative' do
-      let(:obj) { create(:work) }
+      let(:obj) { FactoryBot.valkyrie_create(:hyrax_work) }
 
       it 'has a nil presenter' do
         expect(presenter.representative_presenter).to be_nil
@@ -387,18 +378,18 @@ RSpec.describe Hyrax::WorkShowPresenter do
     context 'has an unindexed representative' do
       it 'has a nil presenter' do
         expect(presenter).to receive(:member_presenters)
-          .with([obj.members[0].id])
+          .with([obj.member_ids[0]])
           .and_raise Hyrax::ObjectNotFoundError
         expect(presenter.representative_presenter).to be_nil
       end
     end
 
     context 'when it is its own representative' do
-      let(:obj) { create(:work) }
+      let(:obj) { FactoryBot.valkyrie_create(:hyrax_work) }
 
       before do
         obj.representative_id = obj.id
-        obj.save
+        Hyrax.persister.save(resource: obj)
       end
 
       it 'has a nil presenter; avoids infinite loop' do
@@ -410,16 +401,16 @@ RSpec.describe Hyrax::WorkShowPresenter do
   describe "#download_url" do
     subject { presenter.download_url }
 
-    let(:solr_document) { SolrDocument.new(work.to_solr) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
 
     context "with a representative" do
-      let(:work) { create(:work_with_representative_file) }
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :with_one_file_set, :with_representative) }
 
       it { is_expected.to eq "http://#{request.host}/downloads/#{work.representative_id}" }
     end
 
     context "without a representative" do
-      let(:work) { create(:work) }
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
 
       it { is_expected.to eq '' }
     end
@@ -428,7 +419,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   describe '#page_title' do
     subject { presenter.page_title }
 
-    it { is_expected.to eq 'Generic Work | foo | ID: 888888 | Hyrax' }
+    it { is_expected.to eq "Generic Work | foo | ID: 888888 | #{I18n.t('hyrax.product_name')}" }
   end
 
   describe "#valid_child_concerns" do
@@ -466,7 +457,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   context "with workflow" do
-    let(:user) { create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     let(:ability) { Ability.new(user) }
     let(:entity) { instance_double(Sipity::Entity) }
 
@@ -478,7 +469,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   context "with inspect_work" do
-    let(:user) { create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     let(:ability) { Ability.new(user) }
 
     describe "#inspect_work" do
@@ -524,21 +515,17 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#manifest" do
-    let(:work) { create(:work_with_one_file) }
-    let(:solr_document) { SolrDocument.new(work.to_solr) }
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :with_one_file_set) }
+    let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
 
     describe "#sequence_rendering" do
-      subject do
-        presenter.sequence_rendering
-      end
-
-      before do
-        Hydra::Works::AddFileToFileSet.call(work.file_sets.first,
-                                            File.open(fixture_path + '/world.png'), :original_file)
+      subject { presenter.sequence_rendering }
+      let(:work) do
+        FactoryBot.valkyrie_create(:hyrax_work, uploaded_files: [FactoryBot.create(:uploaded_file)])
       end
 
       it "returns a hash containing the rendering information" do
-        work.rendering_ids = [work.file_sets.first.id]
+        work.rendering_ids = [work.member_ids.first]
         expect(subject).to be_an Array
       end
     end
