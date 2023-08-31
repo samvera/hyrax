@@ -3,7 +3,7 @@ RSpec.describe Hyrax::PropagateChangeDepositorJob do
   let(:depositor) { create(:user) }
   let!(:receiver) { create(:user) }
 
-  context "for AF objects" do
+  context "for AF objects", :active_fedora do
     let(:file_set) { create(:file_set) }
     let!(:file) do
       create(:file_set, user: depositor)
