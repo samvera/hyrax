@@ -23,10 +23,10 @@ RSpec.describe Hyrax::UserProfilePresenter do
     end
 
     it "matches only the trophied works" do
-      FactoryBot.create(:work, user: user) # not trophied
+      FactoryBot.valkyrie_create(:hyrax_work, depositor: user.user_key) # not trophied
 
       expect(presenter.trophies.map(&:id))
-        .to match_array [work1.id, work2.id, work3.id]
+        .to contain_exactly(work1.id, work2.id, work3.id)
     end
   end
 end
