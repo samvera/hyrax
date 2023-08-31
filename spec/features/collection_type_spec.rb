@@ -354,7 +354,7 @@ RSpec.describe 'collection_type', type: :feature do
 
     context 'when collections exist of this type' do
       let!(:not_empty_collection_type) { FactoryBot.create(:collection_type, title: 'Not Empty Type', creator_user: admin_user) }
-      let!(:collection1) { FactoryBot.create(:public_collection_lw, user: admin_user, collection_type: not_empty_collection_type) }
+      let!(:collection1) { FactoryBot.valkyrie_create(:hyrax_collection, with_index: true, user: admin_user, collection_type_gid: not_empty_collection_type.to_global_id.to_s) }
 
       let(:deny_delete_modal_text) do
         'You cannot delete this collection type because one or more collections of this type have already been created. ' \
