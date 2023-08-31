@@ -56,6 +56,10 @@ FactoryBot.define do
       work.permission_manager.edit_users  = evaluator.edit_users
       work.permission_manager.read_users  = evaluator.read_users
 
+      # these are both no-ops if an active embargo/lease isn't present
+      Hyrax::EmbargoManager.new(resource: work).apply
+      Hyrax::LeaseManager.new(resource: work).apply
+
       work.permission_manager.acl.save
 
       Hyrax.index_adapter.save(resource: work) if evaluator.with_index
