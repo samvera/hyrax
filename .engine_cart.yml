@@ -1,3 +1,0 @@
-rails_options:
-  - "--database=postgresql"
-  - "--skip-javascript"

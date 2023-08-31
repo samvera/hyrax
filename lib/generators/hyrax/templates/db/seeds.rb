@@ -7,7 +7,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 #
-# To use this file, run the following command in the .internal_test_app:
+# To use this file, run the following command in the test app:
 #   rails generate hyrax:sample_data
 #
 # To re-use this file, you will likely want to clean out the test app content
