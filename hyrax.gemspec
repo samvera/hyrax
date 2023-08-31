@@ -89,10 +89,8 @@ SUMMARY
   spec.add_development_dependency "capybara", '~> 3.29'
   spec.add_development_dependency 'capybara-screenshot', '~> 1.0'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
-  spec.add_development_dependency 'engine_cart', '~> 2.5'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "factory_bot", '~> 4.4'
-  spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
   spec.add_development_dependency 'mida', '~> 0.3'
   spec.add_development_dependency 'okcomputer'
   spec.add_development_dependency 'pg', '~> 1.2'
@@ -108,6 +106,5 @@ SUMMARY
   spec.add_development_dependency 'bixby', '~> 5.0', '>= 5.0.2' # bixby 5 briefly dropped Ruby 2.5
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
-  spec.add_development_dependency 'webdrivers', '~> 4.4'
   spec.add_development_dependency 'webmock'
 end

@@ -16,7 +16,6 @@ require 'simplecov'
 SimpleCov.root(File.expand_path('../..', __FILE__))
 
 SimpleCov.start('rails') do
-  add_filter '/.internal_test_app'
   add_filter '/lib/generators'
   add_filter '/spec'
   add_filter '/tasks'
@@ -26,19 +25,12 @@ end
 
 require 'factory_bot'
 
-if ENV['IN_DOCKER']
-  require File.expand_path("config/environment", '../hyrax-webapp')
-  db_config = ActiveRecord::Base.configurations[ENV['RAILS_ENV']]
-  ActiveRecord::Tasks::DatabaseTasks.create(db_config)
-
-  ActiveRecord::Migrator.migrations_paths = [Pathname.new(ENV['RAILS_ROOT']).join('db', 'migrate').to_s]
-  ActiveRecord::Tasks::DatabaseTasks.migrate
-  ActiveRecord::Base.descendants.each(&:reset_column_information)
-else
-  require 'engine_cart'
-  EngineCart.load_application!
-end
-
+require File.expand_path("config/environment", '../hyrax-webapp')
+db_config = ActiveRecord::Base.configurations[ENV['RAILS_ENV']]
+ActiveRecord::Tasks::DatabaseTasks.create(db_config)
+ActiveRecord::Migrator.migrations_paths = [Pathname.new(ENV['RAILS_ROOT']).join('db', 'migrate').to_s]
+ActiveRecord::Tasks::DatabaseTasks.migrate
+ActiveRecord::Base.descendants.each(&:reset_column_information)
 ActiveRecord::Migration.maintain_test_schema!
 
 require 'active_fedora/cleaner'
