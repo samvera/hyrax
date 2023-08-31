@@ -140,6 +140,18 @@ jobs:
       - image: cimg/ruby:3.2.2
     steps:
       - checkout
+      # Restore Cached Dependencies
+      - restore_cache:
+          keys:
+            - figgy-{{ checksum "Gemfile.lock" }}
+      # Install Bundler
+      - run: gem install bundler -v '2.3.18'
+      # Bundle install dependencies
+      - run: bundle install --path vendor/bundle
+      - save_cache:
+          key: figgy-{{ checksum "Gemfile.lock" }}-{{ checksum "yarn.lock" }}-20230518
+          paths:
+            - ./vendor/bundle
       - run: bundle install
       - ruby/rubocop-check
 
