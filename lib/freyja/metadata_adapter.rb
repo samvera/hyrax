@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
+require_relative 'persister'
 require_relative 'query_service'
+require_relative 'resource_factory'
 
 module Freyja
   class MetadataAdapter
     def persister
-      @persister ||= Valkyrie::Persistence::Postgres::Persister.new(adapter: self)
+      @persister ||= Freyja::Persister.new(adapter: self)
     end
 
     # @return [Class] +Valkyrie::Persistence::Postgres::QueryService+
@@ -26,8 +28,7 @@ module Freyja
 
     # @return [Class] +Valkyrie::Persistence::Postgres::ResourceFactory+
     def resource_factory
-      # TODO rob do we need this to be able to read wings?
-      @resource_factory ||= Valkyrie::Persistence::Postgres::ResourceFactory.new(adapter: self)
+      @resource_factory ||= Freyja::ResourceFactory.new(adapter: self)
     end
   end
 end
