@@ -49,7 +49,7 @@ RSpec.describe Hyrax::My::CollectionsController, :clean_repo, type: :controller 
   end
 
   describe "#search_builder_class" do
-    it 'has a default search builder class'do
+    it 'has a default search builder class' do
       expect(controller.blacklight_config.search_builder_class)
         .to eq Hyrax::My::CollectionsSearchBuilder
     end
