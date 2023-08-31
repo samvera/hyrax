@@ -1,87 +1,76 @@
 # frozen_string_literal: true
 require 'iiif_manifest'
 
-# rubocop:disable RSpec/SubjectStub
 RSpec.describe Hyrax::FileSetPresenter do
   subject(:presenter) { described_class.new(solr_document, ability) }
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:ability) { Ability.new(user) }
-  let(:attributes) { file.to_solr }
+  let(:attributes) { Hyrax::ValkyrieIndexer.for(resource: file_set).to_solr }
+  let(:user) { FactoryBot.create(:admin) }
 
-  let(:file) do
-    build(:file_set,
-          id: '123abc',
-          user: user,
-          title: ["File title"],
-          depositor: user.user_key,
-          label: "filename.tif")
+  let(:file_set) do
+    FactoryBot.valkyrie_create(:hyrax_file_set,
+                               depositor: user.user_key,
+                               edit_users: [user],
+                               label: "filename.tif",
+                               title: ["File title"])
   end
-  let(:user) { create(:admin) }
 
   describe 'stats_path' do
-    before do
-      # https://github.com/samvera/active_fedora/issues/1251
-      allow(file).to receive(:persisted?).and_return(true)
-    end
-    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_file_path(id: file, locale: 'en') }
+    its(:stats_path) { is_expected.to eq Hyrax::Engine.routes.url_helpers.stats_file_path(id: file_set, locale: 'en') }
   end
 
   describe "#to_s" do
-    subject { presenter.to_s }
-
-    it { is_expected.to eq 'File title' }
+    its(:to_s) { is_expected.to eq 'File title' }
   end
 
   describe "#human_readable_type" do
-    subject { presenter.human_readable_type }
-
-    it { is_expected.to eq 'File' }
+    its(:human_readable_type) { is_expected.to eq 'File Set' }
   end
 
   describe "#model_name" do
-    subject { presenter.model_name }
-
-    it { is_expected.to be_kind_of ActiveModel::Name }
+    it do
+      name = subject.model_name
+      require 'pry'; binding.pry
+    end
+    its(:model_name) { is_expected.to be_kind_of ActiveModel::Name }
   end
 
   describe "#to_partial_path" do
-    subject { presenter.to_partial_path }
-
-    it { is_expected.to eq 'file_sets/file_set' }
+    its(:to_partial_path) { is_expected.to eq 'file_sets/file_set' }
   end
 
   describe "office_document?" do
-    subject { presenter.office_document? }
-
-    it { is_expected.to be false }
+    it { is_expected.not_to be_office_document }
   end
 
   describe "#user_can_perform_any_action?" do
-    subject { presenter.user_can_perform_any_action? }
     let(:current_ability) { ability }
 
     it 'is deprecated' do
       expect(Deprecation).to receive(:warn)
-      subject
+
+      presenter.user_can_perform_any_action?
     end
 
     context 'when user can perform at least 1 action' do
       before do
-        expect(current_ability).to receive(:can?).with(:edit, presenter.id).and_return false
-        expect(current_ability).to receive(:can?).with(:destroy, presenter.id).and_return false
-        expect(current_ability).to receive(:can?).with(:download, presenter.id).and_return true
+        expect(ability).to receive(:can?).with(:edit, presenter.id).and_return false
+        expect(ability).to receive(:can?).with(:destroy, presenter.id).and_return false
+        expect(ability).to receive(:can?).with(:download, presenter.id).and_return true
       end
 
-      it { is_expected.to be true }
+      its(:user_can_perform_any_action?) { is_expected.to eq true }
     end
+
     context 'when user cannot perform any action' do
       before do
-        expect(current_ability).to receive(:can?).with(:edit, presenter.id).and_return false
-        expect(current_ability).to receive(:can?).with(:destroy, presenter.id).and_return false
-        expect(current_ability).to receive(:can?).with(:download, presenter.id).and_return false
+        expect(ability).to receive(:can?).with(:edit, presenter.id).and_return false
+        expect(ability).to receive(:can?).with(:destroy, presenter.id).and_return false
+        expect(ability).to receive(:can?).with(:download, presenter.id).and_return false
       end
 
-      it { is_expected.to be false }
+      its(:user_can_perform_any_action?) { is_expected.to eq false }
     end
   end
 
@@ -101,6 +90,7 @@ RSpec.describe Hyrax::FileSetPresenter do
         presenter.send(property)
       end
     end
+
     it { is_expected.to delegate_method(:depositor).to(:solr_document) }
     it { is_expected.to delegate_method(:keyword).to(:solr_document) }
     it { is_expected.to delegate_method(:date_created).to(:solr_document) }
@@ -113,9 +103,13 @@ RSpec.describe Hyrax::FileSetPresenter do
 
   describe '#link_name' do
     context "with a user who can view the file" do
-      before do
-        allow(ability).to receive(:can?).with(:read, "123abc").and_return(true)
+      let(:file_set) do
+        FactoryBot.valkyrie_create(:hyrax_file_set,
+                                   read_users: [user],
+                                   label: "filename.tif",
+                                   title: ["File title"])
       end
+
       it "shows the title" do
         expect(presenter.link_name).to eq 'File title'
         expect(presenter.link_name).not_to eq 'filename.tif'
@@ -123,9 +117,9 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
 
     context "with a user who cannot view the file" do
-      before do
-        allow(ability).to receive(:can?).with(:read, "123abc").and_return(false)
-      end
+      let(:ability) { Ability.new(other_user) }
+      let(:other_user) { FactoryBot.create(:user) }
+
       it "hides the title" do
         expect(presenter.link_name).to eq 'File'
       end
@@ -133,18 +127,18 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe '#tweeter' do
-    subject { presenter.tweeter }
-
     it 'delegates the depositor as the user_key to TwitterPresenter.call' do
-      expect(Hyrax::TwitterPresenter).to receive(:twitter_handle_for).with(user_key: solr_document.depositor)
-      subject
+      expect(Hyrax::TwitterPresenter)
+        .to receive(:twitter_handle_for)
+        .with(user_key: solr_document.depositor)
+        .and_return(:fake_result)
+
+      expect(presenter.tweeter).to eq :fake_result
     end
   end
 
   describe "#event_class" do
-    subject { presenter.event_class }
-
-    it { is_expected.to eq 'FileSet' }
+    its(:event_class) { is_expected.to eq 'FileSet' }
   end
 
   describe '#events' do
@@ -174,26 +168,22 @@ RSpec.describe Hyrax::FileSetPresenter do
 
   describe "characterization" do
     describe "#characterization_metadata" do
-      subject { presenter.characterization_metadata }
-
       it "only has set attributes are in the metadata" do
-        expect(subject[:height]).to be_blank
-        expect(subject[:page_count]).to be_blank
+        expect(presenter.characterization_metadata).not_to have_key(:height)
+        expect(presenter.characterization_metadata).not_to have_key(:page_count)
       end
 
       context "when height is set" do
         let(:attributes) { { height_is: '444' } }
 
-        it "only has set attributes are in the metadata" do
-          expect(subject[:height]).not_to be_blank
-          expect(subject[:page_count]).to be_blank
+        it "has set attributes are in the metadata" do
+          expect(presenter.characterization_metadata[:height]).to eq '444'
+          expect(presenter.characterization_metadata).not_to have_key(:page_count)
         end
       end
     end
 
     describe "#characterized?" do
-      subject { presenter }
-
       it { is_expected.not_to be_characterized }
 
       context "when height is set" do
@@ -210,9 +200,9 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
 
     describe "#label_for_term" do
-      subject { presenter.label_for_term(:titleized_key) }
-
-      it { is_expected.to eq("Titleized Key") }
+      it "titleizes the input" do
+        expect(presenter.label_for_term(:titleized_key)).to eq("Titleized Key")
+      end
     end
 
     describe "with additional characterization metadata" do
@@ -223,31 +213,32 @@ RSpec.describe Hyrax::FileSetPresenter do
         }
       end
 
-      before { allow(presenter).to receive(:additional_characterization_metadata).and_return(additional_metadata) }
-      subject { presenter }
+      # this is a little absurd, but it's not clear to me what the interface is supposed to be
+      # how do i actually inject additional metadata?
+      before { allow(presenter).to receive(:additional_characterization_metadata).and_return(additional_metadata) } # rubocop:disable RSpec/SubjectStub
 
-      specify do
-        expect(subject).to be_characterized
+      it "adds the metadata" do
+        expect(presenter).to be_characterized
         expect(subject.characterization_metadata[:foo]).to contain_exactly("bar")
         expect(subject.characterization_metadata[:fud]).to contain_exactly("bars", "cars")
       end
     end
 
     describe "characterization values" do
-      before { allow(presenter).to receive(:characterization_metadata).and_return(mock_metadata) }
+      before { allow(presenter).to receive(:characterization_metadata).and_return(mock_metadata) } # rubocop:disable RSpec/SubjectStub
 
       context "with a limited set of short values" do
         let(:mock_metadata) { { term: ["asdf", "qwer"] } }
 
         describe "#primary_characterization_values" do
-          subject { presenter.primary_characterization_values(:term) }
-
-          it { is_expected.to contain_exactly("asdf", "qwer") }
+          it "includes the characterization metadata" do
+            expect(presenter.primary_characterization_values(:term))
+              .to contain_exactly("asdf", "qwer")
+          end
         end
-        describe "#secondary_characterization_values" do
-          subject { presenter.secondary_characterization_values(:term) }
 
-          it { is_expected.to be_empty }
+        describe "#secondary_characterization_values" do
+          it("is empty") { expect(presenter.secondary_characterization_values(:term)).to be_empty }
         end
       end
 
@@ -255,14 +246,17 @@ RSpec.describe Hyrax::FileSetPresenter do
         let(:mock_metadata) { { term: ["1", "2", "3", "4", "5", "6", "7", "8"] } }
 
         describe "#primary_characterization_values" do
-          subject { presenter.primary_characterization_values(:term) }
-
-          it { is_expected.to contain_exactly("1", "2", "3", "4", "5") }
+          it "contains the configured number of values" do
+            expect(presenter.primary_characterization_values(:term))
+              .to contain_exactly("1", "2", "3", "4", "5")
+          end
         end
-        describe "#secondary_characterization_values" do
-          subject { presenter.secondary_characterization_values(:term) }
 
-          it { is_expected.to contain_exactly("6", "7", "8") }
+        describe "#secondary_characterization_values" do
+          it "includes the excess" do
+            expect(presenter.secondary_characterization_values(:term))
+              .to contain_exactly("6", "7", "8")
+          end
         end
       end
 
@@ -270,14 +264,17 @@ RSpec.describe Hyrax::FileSetPresenter do
         let(:mock_metadata) { { term: [("a" * 251), "2", "3", "4", "5", "6", ("b" * 251)] } }
 
         describe "#primary_characterization_values" do
-          subject { presenter.primary_characterization_values(:term) }
-
-          it { is_expected.to contain_exactly(("a" * 247) + "...", "2", "3", "4", "5") }
+          it "truncates" do
+            expect(presenter.primary_characterization_values(:term))
+              .to contain_exactly(("a" * 247) + "...", "2", "3", "4", "5")
+          end
         end
-        describe "#secondary_characterization_values" do
-          subject { presenter.secondary_characterization_values(:term) }
 
-          it { is_expected.to contain_exactly("6", (("b" * 247) + "...")) }
+        describe "#secondary_characterization_values" do
+          it "truncates" do
+            expect(presenter.secondary_characterization_values(:term))
+              .to contain_exactly("6", (("b" * 247) + "..."))
+          end
         end
       end
 
@@ -285,14 +282,14 @@ RSpec.describe Hyrax::FileSetPresenter do
         let(:mock_metadata) { { term: "string" } }
 
         describe "#primary_characterization_values" do
-          subject { presenter.primary_characterization_values(:term) }
-
-          it { is_expected.to contain_exactly("string") }
+          it "contains the string value" do
+            expect(presenter.primary_characterization_values(:term))
+              .to contain_exactly("string")
+          end
         end
-        describe "#secondary_characterization_values" do
-          subject { presenter.secondary_characterization_values(:term) }
 
-          it { is_expected.to be_empty }
+        describe "#secondary_characterization_values" do
+          it("is empty") { expect(presenter.secondary_characterization_values(:term)).to be_empty }
         end
       end
 
@@ -313,42 +310,38 @@ RSpec.describe Hyrax::FileSetPresenter do
       ActionDispatch::Journey::Router::Utils.escape_segment(uri)
     end
 
-    let(:file_set) { create(:file_set) }
-    let(:solr_document) { SolrDocument.new(file_set.to_solr) }
+    subject(:presenter) { described_class.new(solr_document, ability, request) }
+
+    let(:file) { FactoryBot.create(:uploaded_file) }
+    let(:file_metadata) { FactoryBot.valkyrie_create(:file_metadata, :original_file, :with_file, file: file) }
+    let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
     let(:request) { double('request', base_url: 'http://test.host') }
-    let(:presenter) { described_class.new(solr_document, ability, request) }
-    let(:id) { Hyrax::Base.uri_to_id(file_set.original_file.versions.last.uri) }
+    let(:id) { "#{file_set.id}/files/#{file_metadata.id}" }
 
     describe "#display_image" do
-      subject { presenter.display_image }
-
       context 'without a file' do
         let(:id) { 'bogus' }
 
-        it { is_expected.to be_nil }
+        its(:display_image) { is_expected.to be_nil }
       end
 
       context 'with a file' do
-        before do
-          Hydra::Works::AddFileToFileSet.call(file_set,
-                                              file_path, :original_file)
+        let(:file_set) do
+          FactoryBot.valkyrie_create(:hyrax_file_set,
+                                     :with_files,
+                                     files: [file_metadata],
+                                     original_file: file_metadata)
         end
 
         context "when the file is not an image" do
-          let(:file_path) { File.open(fixture_path + '/hyrax_generic_stub.txt') }
+          let(:file) { FactoryBot.create(:uploaded_file, :audio) }
 
-          it { is_expected.to be_nil }
+          its(:display_image) { is_expected.to be_nil }
         end
 
         context "when the file is an image" do
-          let(:file_path) { File.open(fixture_path + '/world.png') }
-
-          before do
-            allow(solr_document).to receive(:image?).and_return(true)
-          end
-
-          it { is_expected.to be_instance_of IIIFManifest::DisplayImage }
-          its(:url) { is_expected.to eq "http://test.host/images/#{uri_segment_escape(id)}/full/600,/0/default.jpg" }
+          its(:display_image) { is_expected.to be_instance_of IIIFManifest::DisplayImage }
+          its(:display_image) { is_expected.to have_attributes(url: "http://test.host/images/#{uri_segment_escape(id)}/full/600,/0/default.jpg") }
 
           context 'with custom image size default' do
             let(:custom_image_size) { '666,' }
@@ -360,12 +353,12 @@ RSpec.describe Hyrax::FileSetPresenter do
               Hyrax.config.iiif_image_size_default = default_image_size
             end
 
-            it { is_expected.to be_instance_of IIIFManifest::DisplayImage }
-            its(:url) { is_expected.to eq "http://test.host/images/#{uri_segment_escape(id)}/full/#{custom_image_size}/0/default.jpg" }
+            its(:display_image) { is_expected.to be_instance_of IIIFManifest::DisplayImage }
+            its(:display_image) { is_expected.to have_attributes(url: "http://test.host/images/#{uri_segment_escape(id)}/full/#{custom_image_size}/0/default.jpg") }
           end
 
           context 'with custom image url builder' do
-            let(:id) { file_set.original_file.id }
+            let(:id) { file_set.id.to_s }
             let(:custom_builder) do
               ->(file_id, base_url, _size, _format) { "#{base_url}/downloads/#{file_id.split('/').first}" }
             end
@@ -377,14 +370,15 @@ RSpec.describe Hyrax::FileSetPresenter do
               Hyrax.config.iiif_image_url_builder = default_builder
             end
 
-            it { is_expected.to be_instance_of IIIFManifest::DisplayImage }
-            its(:url) { is_expected.to eq "http://test.host/downloads/#{id.split('/').first}" }
+            its(:display_image) { is_expected.to be_instance_of IIIFManifest::DisplayImage }
+            its(:display_image) { is_expected.to have_attributes(url: "http://test.host/downloads/#{id.split('/').first}") }
           end
 
           context "when the user doesn't have permission to view the image" do
-            let(:user) { create(:user) }
+            let(:ability) { Ability.new(other_user) }
+            let(:other_user) { FactoryBot.create(:user) }
 
-            it { is_expected.to be_nil }
+            its(:display_image) { is_expected.to be_nil }
           end
         end
       end
@@ -395,8 +389,6 @@ RSpec.describe Hyrax::FileSetPresenter do
 
       before do
         allow(Hyrax.config).to receive(:iiif_image_server?).and_return(riiif_enabled)
-        Hydra::Works::AddFileToFileSet.call(file_set,
-                                            File.open(fixture_path + '/world.png'), :original_file)
       end
 
       context 'with iiif_image_server enabled' do
@@ -430,73 +422,78 @@ RSpec.describe Hyrax::FileSetPresenter do
   describe "#parent" do
     let(:read_permission) { true }
     let(:edit_permission) { false }
-    let(:parent_work_active) do
-      create(:work, :public, state: ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#active'))
+
+    let(:active) do
+      ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#active')
     end
-    let(:file_set_active) do
-      create(:file_set, read_groups: ['public']).tap do |file_set|
-        parent_work_active.ordered_members << file_set
-        parent_work_active.save!
-      end
+
+    let(:inactive) do
+      ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive')
     end
-    let(:parent_work_inactive) do
-      create(:work, :public, state: ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive'))
+
+    let(:file_set) do
+      FactoryBot.valkyrie_create(:hyrax_file_set, read_groups: ['public'])
     end
+
     let(:file_set_inactive) do
-      create(:file_set, read_groups: ['public']).tap do |file_set|
-        parent_work_inactive.ordered_members << file_set
-        parent_work_inactive.save!
-      end
+      FactoryBot.valkyrie_create(:hyrax_file_set, read_groups: ['public'])
     end
 
     describe "active parent" do
       let(:read_permission) { true }
       let(:edit_permission) { false }
-      let(:solr_document) { SolrDocument.new(file_set_active.to_solr) }
-      let(:solr_document_work) { SolrDocument.new(parent_work_active.to_solr) }
+      let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: file_set).to_solr) }
+      let(:solr_document_work) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: parent).to_solr) }
       let(:request) { double(base_url: 'http://test.host') }
       let(:presenter) { described_class.new(solr_document, ability, request) }
+
+      let!(:parent) do
+        FactoryBot.valkyrie_create(:hyrax_work, :public, state: active, member_ids: [file_set.id])
+      end
+
 
       before do
         allow(ability).to receive(:can?).with(:read, anything) do |_read, solr_doc|
           solr_document_work.id == solr_doc.id && read_permission
         end
+
         allow(ability).to receive(:can?).with(:edit, anything) do |_read, solr_doc|
           solr_document_work.id == solr_doc.id && edit_permission
         end
       end
 
       context "is created when parent work is active" do
-        subject { presenter.parent }
-
-        it { is_expected.not_to be_nil }
+        its(:parent) { is_expected.not_to be_nil }
       end
     end
 
     describe "inactive parent" do
       let(:read_permission) { true }
       let(:edit_permission) { false }
-      let(:solr_document) { SolrDocument.new(file_set_inactive.to_solr) }
-      let(:solr_document_work) { SolrDocument.new(parent_work_inactive.to_solr) }
+      let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: file_set).to_solr) }
+      let(:solr_document_work) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: parent).to_solr) }
       let(:request) { double(base_url: 'http://test.host') }
       let(:presenter) { described_class.new(solr_document, ability, request) }
+
+      let!(:parent) do
+        FactoryBot.valkyrie_create(:hyrax_work, :public, state: inactive, member_ids: [file_set.id])
+      end
 
       before do
         allow(ability).to receive(:can?).with(:read, anything) do |_read, solr_doc|
           solr_document_work.id == solr_doc.id && read_permission
         end
+
         allow(ability).to receive(:can?).with(:edit, anything) do |_read, solr_doc|
           solr_document_work.id == solr_doc.id && edit_permission
         end
       end
 
       context "is created when parent work is active" do
-        subject { presenter.parent }
         it "raises an error" do
-          expect { subject }.to raise_error(Hyrax::WorkflowAuthorizationException)
+          expect { presenter.parent }.to raise_error(Hyrax::WorkflowAuthorizationException)
         end
       end
     end
   end
 end
-# rubocop:enable RSpec/SubjectStub

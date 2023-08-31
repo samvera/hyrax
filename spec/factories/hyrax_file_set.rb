@@ -31,7 +31,7 @@ FactoryBot.define do
       file_set.permission_manager.edit_groups = evaluator.edit_groups
       file_set.permission_manager.edit_users  = evaluator.edit_users
       file_set.permission_manager.read_users  = evaluator.read_users
-      file_set.permission_manager.read_users  = evaluator.read_groups
+      file_set.permission_manager.read_groups = evaluator.read_groups
     end
 
     after(:create) do |file_set, evaluator|
@@ -44,7 +44,7 @@ FactoryBot.define do
       file_set.permission_manager.edit_groups = evaluator.edit_groups
       file_set.permission_manager.edit_users  = evaluator.edit_users
       file_set.permission_manager.read_users  = evaluator.read_users
-      file_set.permission_manager.read_users  = evaluator.read_groups
+      file_set.permission_manager.read_groups = evaluator.read_groups
 
       file_set.permission_manager.acl.save
 
