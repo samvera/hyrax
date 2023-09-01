@@ -25,28 +25,31 @@ module Hyrax
       end
 
       def terms
-        primary_terms + secondary_terms
+        self.class.terms
+      end
+
+      def self.terms
+        return Hyrax::Forms::BatchEditForm.terms if model_class < ActiveFedora::Base
+
+        terms_primary = definitions.select { |_, definition| definition[:primary] }
+                                   .keys.map(&:to_sym)
+        terms_secondary = definitions.select { |_, definition| definition[:display] && !definition[:primary] }
+                                     .keys.map(&:to_sym)
+
+        terms_primary + terms_secondary
       end
 
       attr_reader :batch_document_ids
 
       # Returns a list of parameters we accept from the form
-      # rubocop:disable Metrics/MethodLength
       def self.build_permitted_params
-        [{ creator: [] },
-         { contributor: [] },
-         { description: [] },
-         { keyword: [] },
-         { resource_type: [] },
-         { license: [] },
-         { publisher: [] },
-         { date_created: [] },
-         { subject: [] },
-         { language: [] },
-         { identifier: [] },
-         { based_near: [] },
-         { related_url: [] },
-         { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
+        terms_permitted_params + additional_permitted_params
+      end
+
+      # Returns a list of parameters other than those terms for the form
+      # rubocop:disable Metrics/MethodLength
+      def self.additional_permitted_params
+        [{ permissions_attributes: [:type, :name, :access, :id, :_destroy] },
          :on_behalf_of,
          :version,
          :add_works_to_collection,
@@ -60,6 +63,19 @@ module Hyrax
          { based_near_attributes: [:id, :_destroy] }]
       end
       # rubocop:enable Metrics/MethodLength
+
+      # Returns a list of permitted parameters for the terms
+      # @param terms Array[Symbol]
+      # @return Array[Hash]
+      def self.terms_permitted_params
+        [].tap do |params|
+          terms.each do |term|
+            h = {}
+            h[term] = []
+            params << h
+          end
+        end
+      end
 
       # @param name [Symbol]
       # @return [Symbol]
@@ -78,7 +94,7 @@ module Hyrax
           work = Hyrax.query_service.find_by(id: doc_id)
           terms.each do |field|
             combined_attributes[field] ||= []
-            combined_attributes[field] = (combined_attributes[field] + work[field].to_a).uniq
+            combined_attributes[field] = (combined_attributes[field] + Array.wrap(work[field])).uniq
           end
           names << work.to_s
         end
