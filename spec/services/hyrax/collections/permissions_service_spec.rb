@@ -15,7 +15,7 @@ RSpec.describe Hyrax::Collections::PermissionsService do
 
     context 'when manage user' do
       let(:grants) do
-        [{agent_type: 'user', access: 'manage', agent_id: user.user_key}]
+        [{ agent_type: 'user', access: 'manage', agent_id: user.user_key }]
       end
 
       it '.can_deposit_in_collection? returns true' do
@@ -31,7 +31,7 @@ RSpec.describe Hyrax::Collections::PermissionsService do
 
     context 'when deposit user' do
       let(:grants) do
-        [{agent_type: 'user', access: 'deposit', agent_id: user.user_key}]
+        [{ agent_type: 'user', access: 'deposit', agent_id: user.user_key }]
       end
 
       it '.can_deposit_in_collection? returns true' do
@@ -47,7 +47,7 @@ RSpec.describe Hyrax::Collections::PermissionsService do
 
     context 'when view user' do
       let(:grants) do
-        [{agent_type: 'user', access: 'view', agent_id: user.user_key}]
+        [{ agent_type: 'user', access: 'view', agent_id: user.user_key }]
       end
 
       it '.can_deposit_in_collection? returns false' do
@@ -63,7 +63,7 @@ RSpec.describe Hyrax::Collections::PermissionsService do
 
     context 'when deposit user through membership in public group' do
       let(:grants) do
-        [{agent_type: 'group', access: 'deposit', agent_id: 'public'}]
+        [{ agent_type: 'group', access: 'deposit', agent_id: 'public' }]
       end
 
       it '.can_deposit_in_collection? returns true' do
@@ -79,7 +79,7 @@ RSpec.describe Hyrax::Collections::PermissionsService do
 
     context 'when deposit user through membership in registered group' do
       let(:grants) do
-        [{agent_type: 'group', access: 'deposit', agent_id: 'registered'}]
+        [{ agent_type: 'group', access: 'deposit', agent_id: 'registered' }]
       end
 
       it '.can_deposit_in_collection? returns true' do
@@ -95,7 +95,7 @@ RSpec.describe Hyrax::Collections::PermissionsService do
 
     context 'when view user through membership in public group' do
       let(:grants) do
-        [{agent_type: 'group', access: 'view', agent_id: 'public'}]
+        [{ agent_type: 'group', access: 'view', agent_id: 'public' }]
       end
 
       it '.can_deposit_in_collection? returns false' do
@@ -111,7 +111,7 @@ RSpec.describe Hyrax::Collections::PermissionsService do
 
     context 'when view user through membership in registered group' do
       let(:grants) do
-        [{agent_type: 'group', access: 'view', agent_id: 'registered'}]
+        [{ agent_type: 'group', access: 'view', agent_id: 'registered' }]
       end
 
       it '.can_deposit_in_collection? returns false' do
@@ -150,97 +150,97 @@ RSpec.describe Hyrax::Collections::PermissionsService do
     let!(:col_view_user) do
       FactoryBot.valkyrie_create(:hyrax_collection,
                                  :with_permission_template,
-                                 access_grants: [{agent_type: 'user',
-                                                  access: 'view',
-                                                  agent_id: user.user_key}])
+                                 access_grants: [{ agent_type: 'user',
+                                                   access: 'view',
+                                                   agent_id: user.user_key }])
     end
 
     let!(:col_view_group) do
       FactoryBot.valkyrie_create(:hyrax_collection,
                                  :with_permission_template,
-                                 access_grants: [{agent_type: 'group',
-                                                  access: 'view',
-                                                  agent_id: 'view_group'}])
+                                 access_grants: [{ agent_type: 'group',
+                                                   access: 'view',
+                                                   agent_id: 'view_group' }])
     end
 
     let!(:col_manage_user) do
       FactoryBot.valkyrie_create(:hyrax_collection,
                                  :with_permission_template,
-                                 access_grants: [{agent_type: 'user',
-                                                  access: 'manage',
-                                                  agent_id: user.user_key}])
+                                 access_grants: [{ agent_type: 'user',
+                                                   access: 'manage',
+                                                   agent_id: user.user_key }])
     end
 
     let!(:col_manage_group) do
       FactoryBot.valkyrie_create(:hyrax_collection,
                                  :with_permission_template,
-                                 access_grants: [{agent_type: 'group',
-                                                  access: 'manage',
-                                                  agent_id: 'manage_group'}])
+                                 access_grants: [{ agent_type: 'group',
+                                                   access: 'manage',
+                                                   agent_id: 'manage_group' }])
     end
 
     let!(:col_deposit_user) do
       FactoryBot.valkyrie_create(:hyrax_collection,
                                  :with_permission_template,
-                                 access_grants: [{agent_type: 'user',
-                                                  access: 'deposit',
-                                                  agent_id: user.user_key}])
+                                 access_grants: [{ agent_type: 'user',
+                                                   access: 'deposit',
+                                                   agent_id: user.user_key }])
     end
 
     let!(:col_deposit_group) do
       FactoryBot.valkyrie_create(:hyrax_collection,
                                  :with_permission_template,
-                                 access_grants: [{agent_type: 'group',
-                                                  access: 'deposit',
-                                                  agent_id: 'deposit_group'}])
+                                 access_grants: [{ agent_type: 'group',
+                                                   access: 'deposit',
+                                                   agent_id: 'deposit_group' }])
     end
 
     let!(:as_view_user) do
       FactoryBot.valkyrie_create(:hyrax_admin_set,
                                  :with_permission_template,
-                                 access_grants: [{agent_type: 'user',
-                                                  access: 'view',
-                                                  agent_id: user.user_key}])
+                                 access_grants: [{ agent_type: 'user',
+                                                   access: 'view',
+                                                   agent_id: user.user_key }])
     end
 
     let!(:as_view_group) do
       FactoryBot.valkyrie_create(:hyrax_admin_set,
                                  :with_permission_template,
-                                 access_grants: [{agent_type: 'group',
-                                                  access: 'view',
-                                                  agent_id: 'view_group'}])
+                                 access_grants: [{ agent_type: 'group',
+                                                   access: 'view',
+                                                   agent_id: 'view_group' }])
     end
 
     let!(:as_manage_user) do
       FactoryBot.valkyrie_create(:hyrax_admin_set,
                                  :with_permission_template,
-                                 access_grants: [{agent_type: 'user',
-                                                  access: 'manage',
-                                                  agent_id: user.user_key}])
+                                 access_grants: [{ agent_type: 'user',
+                                                   access: 'manage',
+                                                   agent_id: user.user_key }])
     end
 
     let!(:as_manage_group) do
       FactoryBot.valkyrie_create(:hyrax_admin_set,
                                  :with_permission_template,
-                                 access_grants: [{agent_type: 'group',
-                                                  access: 'manage',
-                                                  agent_id: 'manage_group'}])
+                                 access_grants: [{ agent_type: 'group',
+                                                   access: 'manage',
+                                                   agent_id: 'manage_group' }])
     end
 
     let!(:as_deposit_user) do
       FactoryBot.valkyrie_create(:hyrax_admin_set,
                                  :with_permission_template,
-                                 access_grants: [{agent_type: 'user',
-                                                  access: 'deposit',
-                                                  agent_id: user.user_key}])
+                                 access_grants: [{ agent_type: 'user',
+                                                   access: 'deposit',
+                                                   agent_id: user.user_key }])
     end
 
     let!(:as_deposit_group) do
       FactoryBot.valkyrie_create(:hyrax_admin_set,
                                  :with_permission_template,
-                                 access_grants: [{agent_type: 'group',
-                                                  access: 'deposit',
-                                                  agent_id: 'deposit_group'}])
+                                 access_grants: [{ agent_type: 'group',
+                                                   access: 'deposit',
+                                                   agent_id: 'deposit_group' }])
     end
 
     describe '.collection_ids_for_user' do
