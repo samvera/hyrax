@@ -12,7 +12,7 @@ module Freyja
     # @return [Valkyrie::Resource] the persisted/updated resource
     # @raise [Valkyrie::Persistence::StaleObjectError] raised if the resource
     #   was modified in the database between been read into memory and persisted
-    def save(resource:, external_resource: false)
+    def save(resource:, external_resource: false, perform_af_validation: false)
       orm_object = resource_factory.from_resource(resource: resource)
       orm_object.transaction do
         orm_object.save!
