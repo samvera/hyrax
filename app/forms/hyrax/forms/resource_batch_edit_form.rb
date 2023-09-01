@@ -17,17 +17,15 @@ module Hyrax
         @names = []
         @batch_document_ids = batch_document_ids
         if @batch_document_ids.present?
-          super(model.class.new(initialize_combined_fields))
+          combined_fields = model_attributes(model, initialize_combined_fields)
+          super(model.class.new(combined_fields))
         else
           super(model)
         end
       end
 
       def terms
-        [:creator, :contributor, :description,
-         :keyword, :resource_type, :license, :publisher, :date_created,
-         :subject, :language, :identifier, :based_near,
-         :related_url]
+        primary_terms + secondary_terms
       end
 
       attr_reader :batch_document_ids
@@ -84,6 +82,16 @@ module Hyrax
           end
           names << work.to_s
         end
+      end
+
+      # Model attributes for ActiveFedora compatibility
+      def model_attributes(model, attrs)
+        return attrs unless model.is_a? ActiveFedora::Base
+
+        attrs.keys.each do |k|
+          attrs[k] = Array.wrap(attrs[k]).first unless model.class.properties[k.to_s]&.multiple?
+        end
+        attrs
       end
     end
   end
