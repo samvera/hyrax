@@ -11,7 +11,7 @@ RSpec.describe Hyrax::ChildTypes do
       expect(described_class.for(parent: parent)).to contain_exactly(parent)
     end
 
-    context 'with an ActiveFedora work' do
+    context 'with an ActiveFedora work', :active_fedora do
       let(:parent) { GenericWork }
 
       it 'gives the configured valid_child_concerns' do
