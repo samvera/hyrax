@@ -262,6 +262,20 @@ RSpec.configure do |config|
 
   config.profile_examples = 10
 
+  config.before(:example) do
+    raise("WHY ARE WE SET TO WINGS???") if Hyrax.metadata_adapter.is_a?(Wings::Valkyrie::MetadataAdapter)
+    raise("WHY ARE WE SET TO WINGS???") if defined?(::Wings)
+  rescue NameError
+    :noop
+  end
+
+  config.after(:example) do
+    raise("WHY ARE WE SET TO WINGS???") if Hyrax.metadata_adapter.is_a?(Wings::Valkyrie::MetadataAdapter)
+    raise("WHY ARE WE SET TO WINGS???") if defined?(::Wings)
+  rescue NameError
+    :noop
+  end
+
   config.before(:example, :clean_repo) do
     clean_active_fedora_repository unless Hyrax.config.disable_wings
     Hyrax::RedisEventStore.instance.then(&:flushdb)
