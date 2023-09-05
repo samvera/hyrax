@@ -7,6 +7,10 @@ module Hyrax
       self.required_fields = []
       self.model_class = Hyrax.primary_work_type
 
+      # Terms that need to exclude from batch edit
+      class_attribute :terms_excluded
+      self.terms_excluded = [:abstract, :label, :source]
+
       # Contains a list of titles of all the works in the batch
       attr_accessor :names
 
@@ -36,7 +40,7 @@ module Hyrax
         terms_secondary = definitions.select { |_, definition| definition[:display] && !definition[:primary] }
                                      .keys.map(&:to_sym)
 
-        terms_primary + terms_secondary
+        (terms_primary + terms_secondary) - terms_excluded
       end
 
       attr_reader :batch_document_ids
