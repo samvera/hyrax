@@ -36,6 +36,14 @@ FactoryBot.define do
       mime_type { 'image/png' }
     end
 
+    trait :audio_file do
+      mime_type { 'audio/x-wave' }
+    end
+
+    trait :video_file do
+      mime_type { 'video/mp4' }
+    end
+
     trait :with_file do
       transient do
         file { FactoryBot.create(:uploaded_file) }
