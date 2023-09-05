@@ -18,5 +18,9 @@ RSpec.describe Hyrax::FileSetDerivativesService do
     end
 
     it_behaves_like "a Hyrax::DerivativeService"
+
+    it "can get derivative mime type arrays" do
+      expect(Hyrax.config.derivative_mime_type_mappings.values.map(&:class).uniq).to contain_exactly(Array)
+    end
   end
 end
