@@ -22,5 +22,38 @@ RSpec.describe Hyrax::FileSetDerivativesService do
     it "can get derivative mime type arrays" do
       expect(Hyrax.config.derivative_mime_type_mappings.values.map(&:class).uniq).to contain_exactly(Array)
     end
+
+    describe "#create_derivatives" do
+      context "when given an audio file" do
+        let(:valid_file_set) do
+          FactoryBot.valkyrie_create(:hyrax_file_metadata, :audio_file, file_set_id: SecureRandom.uuid)
+        end
+
+        it "passes a mime-type to the audio derivatives service" do
+          allow(Hydra::Derivatives::AudioDerivatives).to receive(:create)
+          described_class.new(valid_file_set).create_derivatives('foo')
+          expect(Hydra::Derivatives::AudioDerivatives).to have_received(:create).with('foo', outputs: contain_exactly(hash_including(mime_type: 'audio/mpeg'), hash_including(mime_type: 'audio/ogg')))
+        end
+      end
+
+      context "when given a video file" do
+        let(:valid_file_set) do
+          FactoryBot.valkyrie_create(:hyrax_file_metadata, :video_file, file_set_id: SecureRandom.uuid)
+        end
+
+        it "passes a mime-type to the video derivatives service" do
+          allow(Hydra::Derivatives::VideoDerivatives).to receive(:create)
+          described_class.new(valid_file_set).create_derivatives('foo')
+          expect(Hydra::Derivatives::VideoDerivatives).to have_received(:create).with(
+            'foo',
+            outputs: contain_exactly(
+              hash_including(mime_type: 'video/mp4'),
+              hash_including(mime_type: 'video/webm'),
+              hash_including(mime_type: 'image/jpeg')
+            )
+          )
+        end
+      end
+    end
   end
 end
