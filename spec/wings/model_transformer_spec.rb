@@ -219,6 +219,13 @@ RSpec.describe Wings::ModelTransformer, :active_fedora, :clean_repo do
           work.members << child_work2
         end
 
+        it 'includes ordered_members too' do
+          ordered_members = [FactoryBot.create(:work), FactoryBot.create(:work)]
+          ordered_members.each { |w| work.ordered_members << w }
+
+          expect(factory.build.member_ids).to include(*['cw1', 'cw2'] + ordered_members.map(&:id))
+        end
+
         it 'sets member_ids to the ids of the unordered members' do
           expect(subject.build.member_ids).to match_valkyrie_ids_with_active_fedora_ids(['cw1', 'cw2'])
         end
@@ -380,7 +387,9 @@ RSpec.describe Wings::ModelTransformer, :active_fedora, :clean_repo do
     let(:pcdm_object) { AdminSet.create(title: ['my admin set']) }
 
     before do
-      5.times { |i| GenericWork.create(title: ["#{i}"], admin_set_id: pcdm_object.id) }
+      5.times do |i|
+        GenericWork.create(title: ["#{i}"], admin_set_id: pcdm_object.id)
+      end
     end
 
     it 'does not have member_ids' do

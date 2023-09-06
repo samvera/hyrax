@@ -81,12 +81,12 @@ module Wings
         (klass.try(:reflections) || []).each do |reflection_key, reflection|
           case reflection
           when ActiveFedora::Reflection::BelongsToReflection, # uses foreign_key SingularRDFPropertyReflection
-               ActiveFedora::Reflection::BasicContainsReflection, #???
+               ActiveFedora::Reflection::BasicContainsReflection, # ???
                ActiveFedora::Reflection::FilterReflection, # rely on :extending_from
                ActiveFedora::Reflection::HasAndBelongsToManyReflection, # uses foreign_key RDFPropertyReflection
                ActiveFedora::Reflection::HasManyReflection, # captured by inverse relation
                ActiveFedora::Reflection::HasSubresourceReflection, # ???
-               ActiveFedora::Reflection::OrdersReflection # depend on unordered association (refactor to do opposite?)
+               ActiveFedora::Reflection::OrdersReflection # map to :unordered_association in Wings::AttributeTransformer (but retain order)
             next
           when ActiveFedora::Reflection::DirectlyContainsOneReflection
             attribute_name = (reflection_key.to_s.singularize + '_id').to_sym
@@ -107,7 +107,6 @@ module Wings
 
           attribute(attribute_name, type)
         end
-
 
         def internal_resource
           self.class.internal_resource
