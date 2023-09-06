@@ -35,6 +35,7 @@ module Hyrax
       ORIGINAL_FILE = ::Valkyrie::Vocab::PCDMUse.OriginalFile
       EXTRACTED_TEXT = ::Valkyrie::Vocab::PCDMUse.ExtractedText
       THUMBNAIL = ::Valkyrie::Vocab::PCDMUse.ThumbnailImage
+      SERVICE_FILE = ::Valkyrie::Vocab::PCDMUse.ServiceFile
 
       ##
       # @param use [RDF::URI, Symbol]
