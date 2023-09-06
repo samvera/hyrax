@@ -121,18 +121,22 @@ module Hyrax
         #   monograph  = Monograph.new
         #   change_set = Hyrax::Forms::ResourceForm.for(monograph)
         def for(resource)
-          "#{resource.class.name}Form".constantize.new(resource)
-        rescue NameError => _err
-          case resource
-          when Hyrax::AdministrativeSet
-            Hyrax::Forms::AdministrativeSetForm.new(resource)
-          when Hyrax::FileSet
-            Hyrax::Forms::FileSetForm.new(resource)
-          when Hyrax::PcdmCollection
-            Hyrax::Forms::PcdmCollectionForm.new(resource)
+          klass = "#{resource.class.name}Form".safe_constantize
+
+          if klass
+            klass.new(resource)
           else
-            # NOTE: This will create a +Hyrax::Forms::PcdmObjectForm+.
-            Hyrax::Forms::ResourceForm(resource.class).new(resource)
+            case resource
+            when Hyrax::AdministrativeSet
+              Hyrax::Forms::AdministrativeSetForm.new(resource)
+            when Hyrax::FileSet
+              Hyrax::Forms::FileSetForm.new(resource)
+            when Hyrax::PcdmCollection
+              Hyrax::Forms::PcdmCollectionForm.new(resource)
+            else
+              # NOTE: This will create a +Hyrax::Forms::PcdmObjectForm+.
+              Hyrax::Forms::ResourceForm(resource.class).new(resource)
+            end
           end
         end
 
