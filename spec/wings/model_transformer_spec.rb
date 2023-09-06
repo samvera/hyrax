@@ -388,7 +388,7 @@ RSpec.describe Wings::ModelTransformer, :active_fedora, :clean_repo do
 
     before do
       5.times do |i|
-        GenericWork.create(title: ["#{i}"], admin_set_id: pcdm_object.id)
+        GenericWork.create(title: [i.to_s], admin_set_id: pcdm_object.id)
       end
     end
 
