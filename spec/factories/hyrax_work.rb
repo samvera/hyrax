@@ -6,6 +6,25 @@ FactoryBot.define do
   factory :hyrax_work, class: 'Hyrax::Test::SimpleWork' do
     trait :under_embargo do
       association :embargo, factory: :hyrax_embargo
+
+      after(:create) do |work, _e|
+        Hyrax::EmbargoManager.new(resource: work).apply
+        work.permission_manager.acl.save
+      end
+    end
+
+    trait :with_expired_enforced_embargo do
+      after(:build) do |work, _evaluator|
+        work.embargo = FactoryBot.valkyrie_create(:hyrax_embargo, :expired)
+      end
+
+      after(:create) do |work, _evaluator|
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_return(10.days.ago)
+        Hyrax::EmbargoManager.new(resource: work).apply
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_call_original
+
+        work.permission_manager.acl.save
+      end
     end
 
     trait :under_lease do

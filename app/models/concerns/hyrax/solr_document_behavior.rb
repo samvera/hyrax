@@ -91,9 +91,9 @@ module Hyrax
     end
 
     def visibility
-      @visibility ||= if embargo_release_date.present?
+      @visibility ||= if embargo_enforced?
                         Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO
-                      elsif lease_expiration_date.present?
+                      elsif lease_enforced?
                         Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE
                       elsif public?
                         Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
@@ -106,6 +106,23 @@ module Hyrax
 
     def collection_type_gid
       first(Hyrax.config.collection_type_index_field)
+    end
+
+    def embargo_enforced?
+      return false if embargo_release_date.blank?
+
+      indexed_embargo_visibility = first('visibility_during_embargo_ssim')
+      # if we didn't index an embargo visibility, assume the release date means
+      # it's enforced
+      return true if indexed_embargo_visibility.blank?
+
+      # if the visibility and the visibility during embargo are the same, we're
+      # enforcing the embargo
+      self['visibility_ssi'] == indexed_embargo_visibility
+    end
+
+    def lease_enforced?
+      lease_expiration_date.present?
     end
 
     private
