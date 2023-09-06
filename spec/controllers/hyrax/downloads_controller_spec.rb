@@ -110,7 +110,6 @@ RSpec.describe Hyrax::DownloadsController, valkyrie_adapter: :test_adapter, stor
             create(:file_with_work, user: user, content: original_file)
           end
         end
-        
         before do
           allow(subject).to receive(:authorize!).and_return(true)
           allow(subject).to receive(:workflow_restriction?).and_return(false)

@@ -13,8 +13,7 @@ module Hyrax
       response.headers["Accept-Ranges"] = "bytes"
       self.status = 200
       use = params.fetch(:file, :original_file).to_sym
-      # mime_type param is not allowed
-      mime_type = params.permit(:mime_type)
+      mime_type = params[:mime_type]
       file_metadata = find_file_metadata(file_set: file_set, use: use, mime_type: mime_type)
       return unless stale?(last_modified: file_metadata.updated_at, template: false)
 
@@ -64,18 +63,17 @@ module Hyrax
 
     def find_file_metadata(file_set:, use: :original_file, mime_type: nil)
       if mime_type.nil?
-        begin
-          use = :thumbnail_file if use == :thumbnail
-          use = Hyrax::FileMetadata::Use.uri_for(use: use)
-        rescue ArgumentError
-          raise Hyrax::ObjectNotFoundError
-        end
+        use = :thumbnail_file if use == :thumbnail
+        use = Hyrax::FileMetadata::Use.uri_for(use: use)
         results = Hyrax.custom_queries.find_many_file_metadata_by_use(resource: file_set, use: use)
       else
         files = Hyrax.custom_queries.find_files(file_set: file_set)
-        results = [files.find { |f| f.mime_type == mime_type}]
+        results = [files.find { |f| f.mime_type == mime_type }]
       end
+
       results.first || raise(Hyrax::ObjectNotFoundError)
+    rescue ArgumentError
+      raise(Hyrax::ObjectNotFoundError)
     end
   end
 end
