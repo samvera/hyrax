@@ -78,30 +78,36 @@ module Wings
         end
 
         # add reflection associations
-        ldp_reflections = (klass.try(:reflections) || []).select do |_key, reflection|
+        (klass.try(:reflections) || []).each do |reflection_key, reflection|
           case reflection
-          when ActiveFedora::Reflection::FilterReflection,
-               ActiveFedora::Reflection::OrdersReflection,
-               ActiveFedora::Reflection::BasicContainsReflection,
-               ActiveFedora::Reflection::HasSubresourceReflection
-            false
-          else
-            true
-          end
-        end
-
-        ldp_reflections.each do |reflection_key, reflection|
-          if reflection.collection?
-            type           = ::Valkyrie::Types::Set.of(::Valkyrie::Types::ID)
-            attribute_name = (reflection_key.to_s.singularize + '_ids').to_sym
-          else
-            type           = ::Valkyrie::Types::ID.optional
+          when ActiveFedora::Reflection::BelongsToReflection, # uses foreign_key SingularRDFPropertyReflection
+               ActiveFedora::Reflection::BasicContainsReflection, #???
+               ActiveFedora::Reflection::FilterReflection, # rely on :extending_from
+               ActiveFedora::Reflection::HasAndBelongsToManyReflection, # uses foreign_key RDFPropertyReflection
+               ActiveFedora::Reflection::HasManyReflection, # captured by inverse relation
+               ActiveFedora::Reflection::HasSubresourceReflection, # ???
+               ActiveFedora::Reflection::OrdersReflection # depend on unordered association (refactor to do opposite?)
+            next
+          when ActiveFedora::Reflection::DirectlyContainsOneReflection
             attribute_name = (reflection_key.to_s.singularize + '_id').to_sym
+            type = ::Valkyrie::Types::ID.optional
+          when ActiveFedora::Reflection::DirectlyContainsReflection,
+               ActiveFedora::Reflection::IndirectlyContainsReflection
+            attribute_name = (reflection_key.to_s.singularize + '_ids').to_sym
+            type = ::Valkyrie::Types::Set.of(::Valkyrie::Types::ID)
+          when ActiveFedora::Reflection::SingularRDFPropertyReflection
+            attribute_name = reflection.name.to_sym
+            type = ::Valkyrie::Types::ID.optional
+          when ActiveFedora::Reflection::RDFPropertyReflection
+            attribute_name = reflection.name.to_sym
+            type = ::Valkyrie::Types::Set.of(::Valkyrie::Types::ID)
+          else
+            raise NotImplementedError, "Expected a known ActiveFedora::Reflection, but got #{reflection}"
           end
 
-          next if fields.include?(attribute_name)
-          attribute attribute_name, type
+          attribute(attribute_name, type)
         end
+
 
         def internal_resource
           self.class.internal_resource

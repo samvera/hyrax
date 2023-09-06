@@ -286,7 +286,7 @@ RSpec.describe Wings::ModelTransformer, :active_fedora, :clean_repo do
 
     let(:page_class) do
       ActiveFedoraPage = Class.new(ActiveFedora::Base) do
-        belongs_to :active_fedora_book_with_active_fedora_pages, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
+        belongs_to :active_fedora_monograph, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
       end
     end
 
@@ -324,7 +324,19 @@ RSpec.describe Wings::ModelTransformer, :active_fedora, :clean_repo do
           .to have_attributes title: book.title,
                               contributor: book.contributor,
                               description: book.description
-        expect(subject.build.active_fedora_page_ids).to eq(['pg1', 'pg2'])
+      end
+
+      it "skips has_many reflections" do
+        expect(factory.build).not_to respond_to :active_fedora_page_ids
+      end
+
+      it "populates belongs_to reflections" do
+        monograph = book_class.create(**attributes)
+
+        expect(described_class.new(pcdm_object: page1).build)
+          .to have_attributes active_fedora_monograph_id: monograph.id
+        expect(described_class.new(pcdm_object: page2).build)
+          .to have_attributes active_fedora_monograph_id: monograph.id
       end
     end
   end
@@ -361,6 +373,18 @@ RSpec.describe Wings::ModelTransformer, :active_fedora, :clean_repo do
       it 'does not set file id in file set resource' do
         expect(factory.build.original_file_id).to be_nil
       end
+    end
+  end
+
+  context 'with an admin set' do
+    let(:pcdm_object) { AdminSet.create(title: ['my admin set']) }
+
+    before do
+      5.times { |i| GenericWork.create(title: ["#{i}"], admin_set_id: pcdm_object.id) }
+    end
+
+    it 'does not have member_ids' do
+      expect(factory.build).not_to respond_to :member_ids
     end
   end
 
