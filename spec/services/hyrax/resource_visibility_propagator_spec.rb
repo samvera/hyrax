@@ -3,7 +3,7 @@
 RSpec.describe Hyrax::ResourceVisibilityPropagator do
   subject(:propagator) { described_class.new(source: work) }
   let(:queries)        { Hyrax.custom_queries }
-  let(:work)           { FactoryBot.create(:work_with_files).valkyrie_resource }
+  let(:work)           { FactoryBot.valkyrie_create(:hyrax_work, :with_member_file_sets) }
   let(:file_sets)      { queries.find_child_file_sets(resource: work) }
 
   context 'a public work' do
@@ -14,13 +14,13 @@ RSpec.describe Hyrax::ResourceVisibilityPropagator do
       expect(file_sets.first.visibility).to eq 'restricted'
 
       expect { propagator.propagate }
-        .to change { queries.find_child_file_sets(resource: work).map(&:visibility) }
+        .to change { queries.find_child_file_sets(resource: work).map(&:visibility).to_a }
         .to contain_exactly(work.visibility, work.visibility)
     end
   end
 
   context 'when work is under embargo' do
-    let(:work) { FactoryBot.create(:embargoed_work_with_files).valkyrie_resource }
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :under_embargo, :with_member_file_sets) }
 
     before do
       fs = file_sets.first
@@ -30,7 +30,7 @@ RSpec.describe Hyrax::ResourceVisibilityPropagator do
 
     it 'copies visibility' do
       expect { propagator.propagate }
-        .to change { queries.find_child_file_sets(resource: work).map(&:visibility) }
+        .to change { queries.find_child_file_sets(resource: work).map(&:visibility).to_a }
         .to contain_exactly(work.visibility, work.visibility)
     end
 
@@ -45,7 +45,7 @@ RSpec.describe Hyrax::ResourceVisibilityPropagator do
   end
 
   context 'when work is under lease' do
-    let(:work) { FactoryBot.create(:leased_work_with_files).valkyrie_resource }
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :under_lease, :with_member_file_sets) }
 
     before do
       fs = file_sets.first
@@ -55,7 +55,7 @@ RSpec.describe Hyrax::ResourceVisibilityPropagator do
 
     it 'copies visibility' do
       expect { propagator.propagate }
-        .to change { queries.find_child_file_sets(resource: work).map(&:visibility) }
+        .to change { queries.find_child_file_sets(resource: work).map(&:visibility).to_a }
         .to contain_exactly(work.visibility, work.visibility)
     end
 

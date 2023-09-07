@@ -50,7 +50,6 @@ More detailed documentation about Hyrax is available on the [Hyrax Github Wiki](
 
 Hyrax can also work running prerequisite dependencies separately. The following describe ways to do this:
 * [Developing Your Hyrax-based Application](./documentation/developing-your-hyrax-based-app.md)
-* [Development setup using Engine Cart and Solr Fedora wrapper](https://github.com/samvera/hyrax/wiki/Development-setup-using-Engine-Cart-and-Solr---Fedora-wrapper)
 
 ## Contribute
 

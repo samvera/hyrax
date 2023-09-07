@@ -16,25 +16,8 @@ end
 # TODO Rob remove after valk merge
 gem 'valkyrie', github: 'samvera/valkyrie', branch: 'more_flexible_shared_query_spec'
 
-test_app_path = ENV['RAILS_ROOT'] ||
-                ENV.fetch('ENGINE_CART_DESTINATION', File.expand_path('.internal_test_app', File.dirname(__FILE__)))
-test_app_gemfile = File.expand_path('Gemfile', test_app_path)
-
-# rubocop:disable Bundler/DuplicatedGem
-if File.exist?(test_app_gemfile)
-  begin
-    Bundler.ui.info "[Hyrax] Including test application dependencies from #{test_app_gemfile}"
-    eval_gemfile test_app_gemfile
-  rescue Bundler::GemfileError => e
-    Bundler.ui.warn '[Hyrax] Skipping Rails application dependencies:'
-    Bundler.ui.warn e.message
-  end
-elsif ENV['RAILS_VERSION'] == 'edge'
-  gem 'rails', github: 'rails/rails', source: 'https://rubygems.org'
-  ENV['ENGINE_CART_RAILS_OPTIONS'] = '--edge --skip-turbolinks'
-elsif ENV['RAILS_VERSION']
-  gem 'rails', ENV['RAILS_VERSION'], source: 'https://rubygems.org'
-else
-  Bundler.ui.warn '[Hyrax] Skipping all Rails dependency injection'
+# Install gems from test app
+if ENV['RAILS_ROOT']
+  test_app_gemfile_path = File.expand_path('Gemfile', ENV['RAILS_ROOT'])
+  eval_gemfile test_app_gemfile_path
 end
-# rubocop:enable Bundler/DuplicatedGem

@@ -37,6 +37,8 @@ module Hyrax
         hyrax.my_collections_url(*args)
       end
 
+      # @api public
+      #
       # The url of the "more" link for additional facet values
       def search_facet_path(args = {})
         hyrax.my_dashboard_collections_facet_path(args[:id])

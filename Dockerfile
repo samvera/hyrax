@@ -33,7 +33,7 @@ USER app
 RUN mkdir -p /app/samvera/hyrax-webapp
 WORKDIR /app/samvera/hyrax-webapp
 
-COPY --chown=1001:101 ./bin/*.sh /app/samvera
+COPY --chown=1001:101 ./bin/*.sh /app/samvera/
 ENV PATH="/app/samvera:$PATH"
 ENV RAILS_ROOT="/app/samvera/hyrax-webapp"
 ENV RAILS_SERVE_STATIC_FILES="1"

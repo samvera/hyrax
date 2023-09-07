@@ -32,7 +32,7 @@ module Hyrax
 
       filename = filename(directives)
       Hyrax.logger.debug "Uploading derivative for FileSet #{file_set.id} as #{filename}"
-      uploader.upload(io: tmpfile, filename: filename, file_set: file_set, use: file_metadata(directives))
+      uploader.upload(io: tmpfile, filename: filename, file_set: file_set, use: file_metadata(directives), mime_type: directives[:mime_type])
     end
 
     # The filepath will look something like

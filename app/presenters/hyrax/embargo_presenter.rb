@@ -23,5 +23,9 @@ module Hyrax
     def embargo_history
       solr_document['embargo_history_ssim']
     end
+
+    def enforced?
+      solr_document.embargo_enforced?
+    end
   end
 end

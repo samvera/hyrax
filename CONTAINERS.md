@@ -71,8 +71,6 @@ Let's break down the above command:
 
 _**Note:**_ The `bundle exec rspec` portion of the command runs the whole test suite. See the [rspec command documentation](https://github.com/rspec/rspec-core#the-rspec-command) for how to refine your test runs.
 
-_**Note**: The `/app/samvera/hyrax-webapp` is analogous to the `.internal_test_app` that we generate as part of the Hyrax engine Continuous Integration._
-
 #### The Docker Container Named "app"
 
 As a developer, you may need to run commands against the Hyrax-based application and/or the Hyrax engine.  Examples

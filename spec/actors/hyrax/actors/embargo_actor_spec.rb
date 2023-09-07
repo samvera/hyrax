@@ -1,41 +1,39 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Actors::EmbargoActor, :active_fedora do
+RSpec.describe Hyrax::Actors::EmbargoActor, :clean_repo do
   let(:actor) { described_class.new(work) }
-  let(:authenticated_vis) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
-  let(:public_vis) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
+  let(:restricted_vis) { 'restricted' }
+  let(:authenticated_vis) { 'authenticated' }
+  let(:public_vis) { 'open' }
+
+  def embargo_manager(work)
+    Hyrax::EmbargoManager
+      .new(resource: Hyrax.query_service.find_by(id: work.id))
+  end
 
   describe '#destroy' do
-    context 'on a Valkyrie backed model', if: Hyrax.config.use_valkyrie? do
-      let(:work) { FactoryBot.valkyrie_create(:hyrax_resource, embargo: embargo) }
-      let(:embargo) { FactoryBot.create(:hyrax_embargo) }
-      let(:embargo_manager) { Hyrax::EmbargoManager.new(resource: work) }
-      let(:active_embargo_release_date) { work.embargo.embargo_release_date }
-
-      before do
-        work.visibility = authenticated_vis
-        Hyrax::AccessControlList(work).save
-      end
-
-      it 'removes the embargo' do
-        actor.destroy
-
-        expect(work.embargo.embargo_release_date).to eq nil
-        expect(work.embargo.visibility_after_embargo).to eq nil
-        expect(work.embargo.visibility_during_embargo).to eq nil
-      end
+    context 'on a Valkyrie backed model' do
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :under_embargo) }
 
       it 'releases the embargo' do
         expect { actor.destroy }
-          .to change { embargo_manager.enforced? }
+          .to change { embargo_manager(work).enforced? }
           .from(true)
           .to false
       end
 
-      it 'changes the embargo release date' do
+      it 'adds embargo history' do
         expect { actor.destroy }
-          .to change { work.embargo.embargo_release_date }
-          .from(active_embargo_release_date)
-          .to nil
+          .to change { embargo_manager(work).embargo.embargo_history }
+          .to include start_with("An active embargo was deactivated")
+      end
+
+      it 'removes the embargo from the UI' do
+        helper = Class.new { include Hyrax::EmbargoHelper }
+
+        expect { actor.destroy }
+          .to change { helper.new.assets_under_embargo }
+          .from(contain_exactly(have_attributes(id: work.id)))
+          .to be_empty
       end
 
       it 'changes the visibility' do
@@ -46,21 +44,35 @@ RSpec.describe Hyrax::Actors::EmbargoActor, :active_fedora do
       end
 
       context 'with an expired embargo' do
-        let(:work) { valkyrie_create(:hyrax_resource, embargo: expired_embargo) }
-        let(:expired_embargo) { create(:hyrax_embargo, :expired) }
-        let(:embargo_manager) { Hyrax::EmbargoManager.new(resource: work) }
-        let(:embargo_release_date) { work.embargo.embargo_release_date }
+        let!(:work) { FactoryBot.valkyrie_create(:hyrax_work, :with_expired_enforced_embargo) }
 
-        it 'removes the embargo' do
+        it 'releases the embargo' do
           expect { actor.destroy }
-            .to change { work.embargo.embargo_release_date }
-            .from(embargo_release_date)
-            .to nil
+            .to change { embargo_manager(work).enforced? }
+            .from(true)
+            .to false
+        end
+
+        it 'adds embargo history' do
+          expect { actor.destroy }
+            .to change { embargo_manager(work).embargo.embargo_history }
+            .to include start_with("An expired embargo was deactivated")
+        end
+
+        it 'removes the embargo from the UI' do
+          helper = Class.new { include Hyrax::EmbargoHelper }
+
+          work # create it
+
+          expect { actor.destroy }
+            .to change { helper.new.assets_under_embargo }
+            .from(contain_exactly(have_attributes(id: work.id)))
+            .to be_empty
         end
       end
     end
 
-    context 'with an ActiveFedora model', unless: Hyrax.config.use_valkyrie? do
+    context 'with an ActiveFedora model', :active_fedora do
       let(:work) do
         GenericWork.new do |work|
           work.apply_depositor_metadata 'foo'
@@ -72,6 +84,8 @@ RSpec.describe Hyrax::Actors::EmbargoActor, :active_fedora do
           work.save(validate: false)
         end
       end
+
+      let(:embargo_release_date) { work.embargo.embargo_release_date }
 
       context 'with an active embargo' do
         let(:embargo_release_date) { Time.zone.today + 2 }

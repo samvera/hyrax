@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 # This tests the Hyrax::WorksControllerBehavior module
-# which is included into .internal_test_app/app/controllers/hyrax/generic_works_controller.rb
 require 'hyrax/specs/spy_listener'
 
 RSpec.describe Hyrax::GenericWorksController, :active_fedora do

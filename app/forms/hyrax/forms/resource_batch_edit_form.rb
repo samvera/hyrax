@@ -7,6 +7,10 @@ module Hyrax
       self.required_fields = []
       self.model_class = Hyrax.primary_work_type
 
+      # Terms that need to exclude from batch edit
+      class_attribute :terms_excluded
+      self.terms_excluded = [:abstract, :label, :source]
+
       # Contains a list of titles of all the works in the batch
       attr_accessor :names
 
@@ -17,38 +21,39 @@ module Hyrax
         @names = []
         @batch_document_ids = batch_document_ids
         if @batch_document_ids.present?
-          super(model.class.new(initialize_combined_fields))
+          combined_fields = model_attributes(model, initialize_combined_fields)
+          super(model.class.new(combined_fields))
         else
           super(model)
         end
       end
 
       def terms
-        [:creator, :contributor, :description,
-         :keyword, :resource_type, :license, :publisher, :date_created,
-         :subject, :language, :identifier, :based_near,
-         :related_url]
+        self.class.terms
+      end
+
+      def self.terms
+        return Hyrax::Forms::BatchEditForm.terms if model_class < ActiveFedora::Base
+
+        terms_primary = definitions.select { |_, definition| definition[:primary] }
+                                   .keys.map(&:to_sym)
+        terms_secondary = definitions.select { |_, definition| definition[:display] && !definition[:primary] }
+                                     .keys.map(&:to_sym)
+
+        (terms_primary + terms_secondary) - terms_excluded
       end
 
       attr_reader :batch_document_ids
 
       # Returns a list of parameters we accept from the form
-      # rubocop:disable Metrics/MethodLength
       def self.build_permitted_params
-        [{ creator: [] },
-         { contributor: [] },
-         { description: [] },
-         { keyword: [] },
-         { resource_type: [] },
-         { license: [] },
-         { publisher: [] },
-         { date_created: [] },
-         { subject: [] },
-         { language: [] },
-         { identifier: [] },
-         { based_near: [] },
-         { related_url: [] },
-         { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
+        terms_permitted_params + additional_permitted_params
+      end
+
+      # Returns a list of parameters other than those terms for the form
+      # rubocop:disable Metrics/MethodLength
+      def self.additional_permitted_params
+        [{ permissions_attributes: [:type, :name, :access, :id, :_destroy] },
          :on_behalf_of,
          :version,
          :add_works_to_collection,
@@ -62,6 +67,19 @@ module Hyrax
          { based_near_attributes: [:id, :_destroy] }]
       end
       # rubocop:enable Metrics/MethodLength
+
+      # Returns a list of permitted parameters for the terms
+      # @param terms Array[Symbol]
+      # @return Array[Hash]
+      def self.terms_permitted_params
+        [].tap do |params|
+          terms.each do |term|
+            h = {}
+            h[term] = []
+            params << h
+          end
+        end
+      end
 
       # @param name [Symbol]
       # @return [Symbol]
@@ -80,10 +98,20 @@ module Hyrax
           work = Hyrax.query_service.find_by(id: doc_id)
           terms.each do |field|
             combined_attributes[field] ||= []
-            combined_attributes[field] = (combined_attributes[field] + work[field].to_a).uniq
+            combined_attributes[field] = (combined_attributes[field] + Array.wrap(work[field])).uniq
           end
           names << work.to_s
         end
+      end
+
+      # Model attributes for ActiveFedora compatibility
+      def model_attributes(model, attrs)
+        return attrs unless model.is_a? ActiveFedora::Base
+
+        attrs.keys.each do |k|
+          attrs[k] = Array.wrap(attrs[k]).first unless model.class.properties[k.to_s]&.multiple?
+        end
+        attrs
       end
     end
   end

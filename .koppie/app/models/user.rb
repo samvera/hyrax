@@ -1,8 +1,6 @@
 class User < ApplicationRecord
   # Connects this user object to Hydra behaviors.
   include Hydra::User
-  # Connects this user object to Role-management behaviors.
-  include Hydra::RoleManagement::UserRoles
 
   # Connects this user object to Hyrax behaviors.
   include Hyrax::User

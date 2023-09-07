@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/base/_form_relationships.html.erb', type: :view do
   let(:ability) { double }
-  let(:work) { GenericWork.new }
+  let(:work) { FactoryBot.build(:monograph) }
   let(:form) do
-    Hyrax::GenericWorkForm.new(work, ability, controller)
+    Hyrax::Forms::ResourceForm.for(work).prepopulate!
   end
   let(:service) { instance_double Hyrax::AdminSetService }
   let(:presenter) { instance_double Hyrax::AdminSetOptionsPresenter, select_options: [] }
@@ -34,7 +34,7 @@ RSpec.describe 'hyrax/base/_form_relationships.html.erb', type: :view do
 
     it "draws the page" do
       expect(page).to have_content('Administrative Set')
-      expect(page).to have_selector('select#generic_work_admin_set_id')
+      expect(page).to have_selector('select#monograph_admin_set_id')
     end
   end
 

@@ -18,7 +18,7 @@ FactoryBot.define do
       admin_set.permission_manager.edit_groups = evaluator.edit_groups
       admin_set.permission_manager.edit_users  = evaluator.edit_users
       admin_set.permission_manager.read_users  = evaluator.read_users
-      admin_set.permission_manager.read_groups  = evaluator.read_groups
+      admin_set.permission_manager.read_groups = evaluator.read_groups
 
       admin_set.permission_manager.acl.save
 

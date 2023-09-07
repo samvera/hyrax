@@ -34,12 +34,13 @@ class Hyrax::ValkyrieUpload
     @storage_adapter = storage_adapter
   end
 
-  def upload(filename:, file_set:, io:, use: Hyrax::FileMetadata::Use::ORIGINAL_FILE, user: nil)
+  def upload(filename:, file_set:, io:, use: Hyrax::FileMetadata::Use::ORIGINAL_FILE, user: nil, mime_type: nil)
     streamfile = storage_adapter.upload(file: io, original_filename: filename, resource: file_set)
     file_metadata = Hyrax::FileMetadata(streamfile)
     file_metadata.file_set_id = file_set.id
     file_metadata.pcdm_use = [use]
     file_metadata.recorded_size = [io.size]
+    file_metadata.mime_type = mime_type if mime_type
 
     if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE
       # Set file set label.

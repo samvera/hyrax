@@ -134,10 +134,20 @@ jobs:
       - ruby/rspec-test:
           app-dir: /app/samvera/hyrax-engine
 
+  rubocop:
+    working_directory: ~/hyrax
+    docker:
+      - image: cimg/ruby:3.2.2
+    steps:
+      - checkout
+      - run: bundle install
+      - ruby/rubocop-check
+
 workflows:
   version: 2
   dassie:
     jobs:
+      - rubocop
       - kaniko-build:
           name: "dassie-build"
           ruby_version: "3.2.2"
