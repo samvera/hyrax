@@ -121,8 +121,9 @@ module Hyrax
         #   monograph  = Monograph.new
         #   change_set = Hyrax::Forms::ResourceForm.for(monograph)
         def for(resource)
-          "#{resource.class.name}Form".constantize.new(resource)
-        rescue NameError => _err
+          klass = "#{resource.class.name}Form".safe_constantize
+
+          return  klass.new(resource) if klass
           case resource
           when Hyrax::AdministrativeSet
             Hyrax::Forms::AdministrativeSetForm.new(resource)
