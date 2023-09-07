@@ -150,15 +150,7 @@ module Wings
       { :id => pcdm_object.id,
         :created_at => pcdm_object.try(:create_date),
         :updated_at => pcdm_object.try(:modified_date),
-        :member_ids => member_ids,
         ::Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK => lock_token }
-    end
-
-    # Prefer ordered members, but if ordered members don't exist, use non-ordered members.
-    def member_ids
-      ordered_member_ids = pcdm_object.try(:ordered_member_ids)
-      return ordered_member_ids if ordered_member_ids.present?
-      pcdm_object.try(:member_ids)
     end
 
     def lock_token
