@@ -94,6 +94,8 @@ class Hyrax::ValkyrieUpload
         file_set.thumbnail_id = file_metadata.id
       when Hyrax::FileMetadata::Use::EXTRACTED_TEXT
         file_set.extracted_text_id = file_metadata.id
+      when Hyrax::FileMetadata::Use::SERVICE_FILE
+        # do nothing
       else
         Hyrax.logger.warn "Unknown file use #{file_metadata.type} specified for #{file_metadata.file_identifier}"
       end

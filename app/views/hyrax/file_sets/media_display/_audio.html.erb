@@ -2,8 +2,8 @@
   <div>
       <h2 class="sr-only"><%= t('hyrax.file_set.show.downloadable_content.heading') %></h2>
       <audio controls="controls" class="audiojs" style="width:100%" controlsList="nodownload" preload="auto">
-        <source src="<%= hyrax.download_path(file_set, file: 'ogg') %>" type="audio/ogg" />
-        <source src="<%= hyrax.download_path(file_set, file: 'mp3') %>" type="audio/mpeg" />
+        <source src="<%= hyrax.download_path(file_set, file: 'ogg', mime_type: 'audio/ogg') %>" type="audio/ogg" />
+        <source src="<%= hyrax.download_path(file_set, file: 'mp3', mime_type: 'audio/mpeg') %>" type="audio/mpeg" />
         <%= t('hyrax.file_set.show.downloadable_content.audio_tag_not_supported') %>
       </audio>
       <%= link_to t('hyrax.file_set.show.downloadable_content.audio_link'),
@@ -15,8 +15,8 @@
 <% else %>
     <div>
       <audio controls="controls" class="audiojs" style="width:100%" controlsList="nodownload" preload="auto">
-        <source src="<%= hyrax.download_path(file_set, file: 'ogg') %>" type="audio/ogg" />
-        <source src="<%= hyrax.download_path(file_set, file: 'mp3') %>" type="audio/mpeg" />
+        <source src="<%= hyrax.download_path(file_set, file: 'ogg', mime_type: 'audio/ogg') %>" type="audio/ogg" />
+        <source src="<%= hyrax.download_path(file_set, file: 'mp3', mime_type: 'audio/mpeg') %>" type="audio/mpeg" />
         <%= t('hyrax.file_set.show.downloadable_content.audio_tag_not_supported') %>
       </audio>
     </div>

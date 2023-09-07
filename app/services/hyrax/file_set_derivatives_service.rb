@@ -91,15 +91,15 @@ module Hyrax
 
     def create_audio_derivatives(filename)
       Hydra::Derivatives::AudioDerivatives.create(filename,
-                                                  outputs: [{ label: 'mp3', format: 'mp3', url: derivative_url('mp3'), mime_type: 'audio/mpeg' },
-                                                            { label: 'ogg', format: 'ogg', url: derivative_url('ogg'), mime_type: 'audio/ogg' }])
+                                                  outputs: [{ label: 'mp3', format: 'mp3', url: derivative_url('mp3'), mime_type: 'audio/mpeg', container: 'service_file' },
+                                                            { label: 'ogg', format: 'ogg', url: derivative_url('ogg'), mime_type: 'audio/ogg', container: 'service_file' }])
     end
 
     def create_video_derivatives(filename)
       Hydra::Derivatives::VideoDerivatives.create(filename,
                                                   outputs: [{ label: :thumbnail, format: 'jpg', url: derivative_url('thumbnail'), mime_type: 'image/jpeg' },
-                                                            { label: 'webm', format: 'webm', url: derivative_url('webm'), mime_type: 'video/webm' },
-                                                            { label: 'mp4', format: 'mp4', url: derivative_url('mp4'), mime_type: 'video/mp4' }])
+                                                            { label: 'webm', format: 'webm', url: derivative_url('webm'), mime_type: 'video/webm', container: 'service_file' },
+                                                            { label: 'mp4', format: 'mp4', url: derivative_url('mp4'), mime_type: 'video/mp4', container: 'service_file' }])
     end
 
     def create_image_derivatives(filename)
