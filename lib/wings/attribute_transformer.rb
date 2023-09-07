@@ -15,29 +15,36 @@ module Wings
       end
     end
 
-    def self.run(obj) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
-      attrs = obj.reflections.each_with_object({}) do |(key, reflection), mem|
+    def self.run(obj) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+      attrs = obj.reflections.each_with_object({}) do |(key, reflection), mem| # rubocop:disable Metrics/BlockLength
         case reflection
-        when ActiveFedora::Reflection::HasManyReflection,
-             ActiveFedora::Reflection::HasAndBelongsToManyReflection,
-             ActiveFedora::Reflection::IndirectlyContainsReflection
-          mem[:"#{key.to_s.singularize}_ids"] =
-            obj.association(key).ids_reader
-        when ActiveFedora::Reflection::DirectlyContainsReflection
-          mem[:"#{key.to_s.singularize}_ids"] =
-            Array(obj.public_send(reflection.name)).map(&:id)
-        when ActiveFedora::Reflection::FilterReflection,
-             ActiveFedora::Reflection::OrdersReflection,
-             ActiveFedora::Reflection::HasSubresourceReflection,
-             ActiveFedora::Reflection::BelongsToReflection,
-             ActiveFedora::Reflection::BasicContainsReflection
+        when ActiveFedora::Reflection::BelongsToReflection, # uses foreign_key SingularRDFPropertyReflection
+             ActiveFedora::Reflection::BasicContainsReflection, # ???
+             ActiveFedora::Reflection::FilterReflection, # rely on :extending_from
+             ActiveFedora::Reflection::HasAndBelongsToManyReflection, # uses foreign_key RDFPropertyReflection
+             ActiveFedora::Reflection::HasManyReflection, # captured by inverse relation
+             ActiveFedora::Reflection::HasSubresourceReflection, # ???
           :noop
+        when ActiveFedora::Reflection::OrdersReflection
+          mem[:"#{reflection.options[:unordered_reflection].name.to_s.singularize}_ids"] ||= []
+          mem[:"#{reflection.options[:unordered_reflection].name.to_s.singularize}_ids"] +=
+            obj.association(reflection.name).target_ids_reader
         when ActiveFedora::Reflection::DirectlyContainsOneReflection
           mem[:"#{key.to_s.singularize}_id"] =
             obj.public_send(reflection.name)&.id
+        when ActiveFedora::Reflection::IndirectlyContainsReflection
+          mem[:"#{key.to_s.singularize}_ids"] ||= []
+          mem[:"#{key.to_s.singularize}_ids"] +=
+            obj.association(key).ids_reader
+        when ActiveFedora::Reflection::DirectlyContainsReflection
+          mem[:"#{key.to_s.singularize}_ids"] ||= []
+          mem[:"#{key.to_s.singularize}_ids"] +=
+            Array(obj.public_send(reflection.name)).map(&:id)
+        when ActiveFedora::Reflection::RDFPropertyReflection
+          mem[reflection.name.to_sym] =
+            obj.public_send(reflection.name.to_sym)
         else
-          mem[reflection.foreign_key.to_sym] =
-            obj.public_send(reflection.foreign_key.to_sym)
+          raise NotImplementedError, "Expected a known ActiveFedora::Reflection, but got #{reflection}"
         end
       end
 
