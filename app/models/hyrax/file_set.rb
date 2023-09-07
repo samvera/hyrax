@@ -25,6 +25,17 @@ module Hyrax
   # @example Get all FileMetadata for a FileSet:
   #     file_metadata = Hyrax.custom_queries.find_files(file_set: file_set)
   #
+  # @example Attach a File to a FileSet through a FileMetadata. This will create
+  #   a FileMetadata for a File object, attach the File to the FileMetadata, and
+  #   attach that FileMetadata to a given FileSet.
+  #     ::Hyrax::ValkyrieUpload.file(
+  #       io: file_io,
+  #       filename: "myfile.jpg",
+  #       file_set: file_set,
+  #       use: pcdm_use,
+  #       user: user
+  #     )
+  #
   # ### FileMetadata and Files
   #
   # * Defined: The relationship is defined by the FileMetadata's `:file_identifier` attribute.
