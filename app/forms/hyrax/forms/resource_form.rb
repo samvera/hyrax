@@ -123,20 +123,17 @@ module Hyrax
         def for(resource)
           klass = "#{resource.class.name}Form".safe_constantize
 
-          if klass
-            klass.new(resource)
+          return  klass.new(resource) if klass
+          case resource
+          when Hyrax::AdministrativeSet
+            Hyrax::Forms::AdministrativeSetForm.new(resource)
+          when Hyrax::FileSet
+            Hyrax::Forms::FileSetForm.new(resource)
+          when Hyrax::PcdmCollection
+            Hyrax::Forms::PcdmCollectionForm.new(resource)
           else
-            case resource
-            when Hyrax::AdministrativeSet
-              Hyrax::Forms::AdministrativeSetForm.new(resource)
-            when Hyrax::FileSet
-              Hyrax::Forms::FileSetForm.new(resource)
-            when Hyrax::PcdmCollection
-              Hyrax::Forms::PcdmCollectionForm.new(resource)
-            else
-              # NOTE: This will create a +Hyrax::Forms::PcdmObjectForm+.
-              Hyrax::Forms::ResourceForm(resource.class).new(resource)
-            end
+            # NOTE: This will create a +Hyrax::Forms::PcdmObjectForm+.
+            Hyrax::Forms::ResourceForm(resource.class).new(resource)
           end
         end
 
