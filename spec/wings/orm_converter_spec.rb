@@ -21,11 +21,11 @@ RSpec.describe Wings::OrmConverter, :active_fedora do
         end
 
         it 'has a name' do
-          expect(klass.name).to eq 'Hyrax::Work'
+          expect(klass.name).to eq 'GenericWorkResource'
         end
 
         it 'includes name in instance inspect' do
-          expect(klass.new.inspect).to start_with '#<Hyrax::Work'
+          expect(klass.new.inspect).to start_with '#<GenericWorkResource'
         end
 
         it 'has a to_model for route resolution' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'wings'
 require 'freyja/metadata_adapter'
 require 'freyja/custom_query_container'

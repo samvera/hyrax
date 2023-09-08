@@ -3,7 +3,6 @@
 module Freyja
   # Persister for Postgres MetadataAdapter.
   class Persister < Valkyrie::Persistence::Postgres::Persister
-
     # Persists a resource within the database
     #
     # Modified from the upstream to skip previously persisted check
@@ -12,6 +11,7 @@ module Freyja
     # @return [Valkyrie::Resource] the persisted/updated resource
     # @raise [Valkyrie::Persistence::StaleObjectError] raised if the resource
     #   was modified in the database between been read into memory and persisted
+    # rubocop:disable Lint/UnusedMethodArgument
     def save(resource:, external_resource: false, perform_af_validation: false)
       orm_object = resource_factory.from_resource(resource: resource)
       orm_object.transaction do
@@ -27,5 +27,6 @@ module Freyja
     rescue ActiveRecord::StaleObjectError
       raise Valkyrie::Persistence::StaleObjectError, "The object #{resource.id} has been updated by another process."
     end
+    # rubocop:enable Lint/UnusedMethodArgument
   end
 end

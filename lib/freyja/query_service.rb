@@ -9,10 +9,10 @@ module Freyja
       @services = services
     end
 
-    # NOTE - this number may be overinflated. we dont have a good way to remove items in both from the count
+    # NOTE: - this number may be overinflated. we dont have a good way to remove items in both from the count
     def self.count_multiple(method_name)
       # look in all services, combine and uniq results
-      define_method method_name do |*args,**opts|
+      define_method method_name do |*args, **opts|
         opts[:model] = model_class_for(opts[:model]) if opts[:model]
         total_result = 0
         services.each do |service|
@@ -26,10 +26,9 @@ module Freyja
       end
     end
 
-
     def self.find_multiple(method_name)
       # look in all services, combine and uniq results
-      define_method method_name do |*args,**opts|
+      define_method method_name do |*args, **opts|
         opts[:model] = model_class_for(opts[:model]) if opts[:model]
         total_result = []
         services.each do |service|
@@ -45,7 +44,7 @@ module Freyja
     end
 
     def self.find_single(method_name)
-      define_method method_name do |*args,**opts|
+      define_method method_name do |*args, **opts|
         opts[:model] = model_class_for(opts[:model]) if opts[:model]
         result = nil
         services.each do |service|
@@ -61,19 +60,18 @@ module Freyja
     end
 
     [:find_all,
-      :find_all_of_model,
-      :find_many_by_ids,
-      :find_members,
-      :find_references_by,
-      :find_inverse_references_by,
-      :find_inverse_references_by,
-      :find_parents].each do |method_name|
+     :find_all_of_model,
+     :find_many_by_ids,
+     :find_members,
+     :find_references_by,
+     :find_inverse_references_by,
+     :find_inverse_references_by,
+     :find_parents].each do |method_name|
       find_multiple(method_name)
     end
 
     [:find_by,
-      :find_by_alternate_identifier
-    ].each do |method_name|
+     :find_by_alternate_identifier].each do |method_name|
       find_single(method_name)
     end
 

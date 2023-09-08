@@ -24,6 +24,7 @@ module Wings
       # @param [Valkyrie::Resource] resource
       # @param [Boolean] perform_af_validation
       # @return [Valkyrie::Resource] the persisted/updated resource
+      # rubocop:disable Lint/UnusedMethodArgument
       def save(resource:, perform_af_validation: false, external_resource: false)
         af_object = resource_factory.from_resource(resource: resource)
 
@@ -43,6 +44,7 @@ module Wings
 
         raise FailedSaveError.new(err.message, obj: af_object)
       end
+      # rubocop:enable Lint/UnusedMethodArgument
 
       # Persists a resource using ActiveFedora
       # @param [Valkyrie::Resource] resource
