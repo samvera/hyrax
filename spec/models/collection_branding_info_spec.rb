@@ -55,9 +55,13 @@ RSpec.describe CollectionBrandingInfo, type: :model do
     before { banner_info.save(file.path) }
 
     it "removes banner file" do
-      expect { banner_info.delete }
-        .to change { storage_adapter.find_by(id: banner_info.local_path) }
-        .to raise_error Valkyrie::StorageAdapter::FileNotFound
+      expect { banner_info.delete }.to change {
+        begin
+          storage_adapter.find_by(id: banner_info.local_path)
+        rescue Valkyrie::StorageAdapter::FileNotFound
+          'Raised FileNotFound' # Convert the raised error so change can detect it
+        end
+      }.from(be_a(Valkyrie::StorageAdapter::File)).to(eq 'Raised FileNotFound')
     end
   end
 end

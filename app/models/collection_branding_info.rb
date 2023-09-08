@@ -19,7 +19,7 @@ class CollectionBrandingInfo < ApplicationRecord
     super()
   end
 
-  def delete(location_path = nil)
+  def delete(_location_path = nil)
     storage.delete(id: local_path)
   end
 
