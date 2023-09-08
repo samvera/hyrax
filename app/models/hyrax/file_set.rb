@@ -6,28 +6,47 @@ module Hyrax
   #
   # ## Relationships
   #
-  # ### File Set and Work
+  # ### FileSet and Work
   #
   # * Defined: The relationship is defined by the inverse relationship stored in the
   #   work's `:member_ids` attribute.
-  # * Tested: The work tests the relationship.
-  # * File Set to Work: (1..1)  A file set must be in one and only one work.
+  # * Tested: The test for the Work class tests the relationship.
+  # * FileSet to Work: (n..1)  A FileSet must be in one and only one work. A Work can have zero to many FileSets.
+  # * See Hyrax::Work for code to get and set file sets for the work.
   #
-  # @example Get work for a file set:
+  # @example Get Work for a FileSet:
   #       work = Hyrax.custom_queries.find_parent_work(resource: file_set)
   #
-  # * Work to File Set: (0..m)  A work can have many file sets.
-  #   * See Hyrax::Work for code to get and set file sets for the work.
+  # ### FileSet and FileMetadata
   #
-  # ### File Set and File (TBD)
+  # * Defined: The relationship is defined by the FileSet's `:file_ids` attribute.
+  # * FileSet to FileMetadata: (0..n) A FileSet can have many FileMetadatas. A FileMetadata must be in one and only one FileSet.
+  #
+  # @example Get all FileMetadata for a FileSet:
+  #     file_metadata = Hyrax.custom_queries.find_files(file_set: file_set)
+  #
+  # @example Attach a File to a FileSet through a FileMetadata. This will create
+  #   a FileMetadata for a File object, attach the File to the FileMetadata, and
+  #   attach that FileMetadata to a given FileSet.
+  #     ::Hyrax::ValkyrieUpload.file(
+  #       io: file_io,
+  #       filename: "myfile.jpg",
+  #       file_set: file_set,
+  #       use: pcdm_use,
+  #       user: user
+  #     )
+  #
+  # ### FileMetadata and Files
+  #
+  # * Defined: The relationship is defined by the FileMetadata's `:file_identifier` attribute.
+  # * FileMetadata to File: (1..1) A FileMetadata can have one and only one File
+  #
+  # @example Get a File for a FileMetadata
+  #     file = Hyrax.storage_adapter.find_by(id: file_metadata.file_identifier)
   #
   # @see Hyrax::Work
+  # @see Hyrax::CustomQueries::Navigators::FindFiles#find_files
   # @see Hyrax::CustomQueries::Navigators::ParentWorkNavigator#find_parent_work
-  #
-  # @todo The description in Hydra::Works Shared Modeling is out of date and uses
-  #   terminology to describe the relationships that is no longer used in code.
-  #   Update the model and link to it.  This can be a simple relationship diagram
-  #   with a link to the original Works Shared Modeling for historical perspective.
   # @see https://wiki.duraspace.org/display/samvera/Hydra%3A%3AWorks+Shared+Modeling
   class FileSet < Hyrax::Resource
     include Hyrax::Schema(:core_metadata)

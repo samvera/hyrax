@@ -95,6 +95,32 @@ RSpec.describe Hyrax::DownloadsController, valkyrie_adapter: :test_adapter, stor
         end
       end
 
+      context 'with video file' do
+        let(:service_file_use)  { Hyrax::FileMetadata::Use::SERVICE_FILE }
+        let(:file_path) { fixture_path + '/sample_mpeg4.mp4' }
+        let(:service_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: service_file_use, mime_type: 'video/webm', file_identifier: "disk://#{file_path}") }
+        let(:file_set) do
+          if Hyrax.config.use_valkyrie?
+            FactoryBot.valkyrie_create(:hyrax_file_set,
+              :in_work,
+              files: [original_file_metadata, service_file_metadata],
+              edit_users: [user],
+              visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
+          else
+            create(:file_with_work, user: user, content: original_file)
+          end
+        end
+        before do
+          allow(subject).to receive(:authorize!).and_return(true)
+          allow(subject).to receive(:workflow_restriction?).and_return(false)
+        end
+
+        it 'accepts a mime_type param' do
+          get :show, params: { id: file_set, file: "webm", mime_type: 'video/webm' }
+          expect(response.body).to eq IO.binread(file_path)
+        end
+      end
+
       context 'when restricted by workflow' do
         before do
           allow(subject).to receive(:authorize!).and_return(true)
