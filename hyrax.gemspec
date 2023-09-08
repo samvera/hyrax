@@ -43,7 +43,7 @@ SUMMARY
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'connection_pool', '~> 2.4'
   spec.add_dependency 'draper', '~> 4.0'
-  spec.add_dependency 'dry-logic', '~> 1.4'
+  spec.add_dependency 'dry-logic', '~> 1.5'
   spec.add_dependency 'dry-events', '~> 1.0.0'
   spec.add_dependency 'dry-equalizer', '~> 0.2'
   spec.add_dependency 'dry-monads', '~> 1.5'
