@@ -139,6 +139,8 @@ RSpec.describe Hyrax::LeaseHelper do
       context 'when the wrapped work is under embargo' do
         let(:model) { FactoryBot.build(:hyrax_work, :under_lease) }
 
+        before { Hyrax::LeaseManager.apply_lease_for!(resource: resource.model) }
+
         it 'returns true' do
           # This allow call is a tweak to preserve spec for pre #4845 patch
           allow(model).to receive(:persisted?).and_return(true)
