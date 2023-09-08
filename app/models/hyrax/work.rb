@@ -91,11 +91,8 @@ module Hyrax
   #
   # @see /lib/hyrax/specs/shared_specs/hydra_works.rb
   #
-  # @todo The description in Hydra::Works Shared Modeling is out of date and uses
-  #   terminology to describe the relationships that is no longer used in code.
-  #   Update the model and link to it.  This can be a simple relationship diagram
-  #   with a link to the original Works Shared Modeling for historical perspective.
   # @see https://wiki.lyrasis.org/display/samvera/Hydra::Works+Shared+Modeling
+  #   for a historical perspective.
   class Work < Hyrax::Resource
     include Hyrax::Schema(:core_metadata)
 
