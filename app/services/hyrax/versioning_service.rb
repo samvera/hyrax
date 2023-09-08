@@ -35,7 +35,9 @@ module Hyrax
       if !supports_multiple_versions?
         []
       elsif resource.is_a?(Hyrax::FileMetadata)
-        storage_adapter.find_versions(id: resource.file_identifier).to_a
+        # Reverse - Valkyrie puts these most recent first, we assume most recent
+        # last.
+        storage_adapter.find_versions(id: resource.file_identifier).to_a.reverse
       else
         return resource.versions if resource.versions.is_a?(Array)
         resource.versions.all.to_a
@@ -67,7 +69,7 @@ module Hyrax
     # If the resource is nil, this method returns an empty string.
     def versioned_file_id
       latest = latest_version
-      if latest
+      if latest && !resource.is_a?(Hyrax::FileMetadata)
         if latest.respond_to?(:id)
           latest.id
         else
@@ -76,7 +78,7 @@ module Hyrax
       elsif resource.nil?
         ""
       elsif resource.is_a?(Hyrax::FileMetadata)
-        resource.file_identifier
+        latest_version&.version_id || resource.file_identifier
       else
         resource.id
       end
