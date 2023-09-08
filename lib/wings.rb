@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Short circuit loading if Wings is disabled
+return if Hyrax.config.disable_wings
+
 ##
 # Wings is a toolkit integrating Valkyrie into Hyrax as a bridge away from the
 # hard dependency on ActiveFedora.
