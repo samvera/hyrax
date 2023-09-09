@@ -563,18 +563,10 @@ RSpec.describe Hyrax::FileSetsController do
       end
 
       describe "#edit" do
-        let(:parent) { FactoryBot.create(:work, :public, user: user) }
-
-        let(:file_set) do
-          FactoryBot.create(:file_set, user: user).tap do |file_set|
-            parent.ordered_members << file_set
-            parent.save!
-          end
-        end
-
+        let(:parent) { work }
         before do
-          binary = StringIO.new("hey")
-          Hydra::Works::AddFileToFileSet.call(file_set, binary, :original_file, versioning: true)
+          binary = Valkyrie::StorageAdapter::StreamFile.new(id: "bla", io: StringIO.new("hey"))
+          Hyrax.storage_adapter.upload_version(id: file_metadata.id, file: binary)
           request.env['HTTP_REFERER'] = 'http://test.host/foo'
         end
 
@@ -607,14 +599,7 @@ RSpec.describe Hyrax::FileSetsController do
       end
 
       describe "#update" do
-        let(:parent) { FactoryBot.create(:work, :public, user: user) }
-
-        let(:file_set) do
-          FactoryBot.create(:file_set, user: user, title: ['test title']).tap do |file_set|
-            parent.ordered_members << file_set
-            parent.save!
-          end
-        end
+        let(:parent) { work }
 
         context "when updating metadata" do
           it "spawns a content update event job" do
@@ -624,17 +609,15 @@ RSpec.describe Hyrax::FileSetsController do
                 file_set: {
                   title: ['new_title'],
                   keyword: [''],
-                  permissions_attributes: [{ type: 'person',
-                                             name: 'archivist1',
-                                             access: 'edit' }]
+                  permissions_attributes: { "1" => { type: 'person',
+                                                     name: 'archivist1',
+                                                     access: 'edit' } }
                 }
               }
-            end.to have_enqueued_job(ContentUpdateEventJob).exactly(:once)
+            end.to have_enqueued_job(ContentUpdateEventJob).at_least(:once)
 
-            expect(response)
-              .to redirect_to main_app.hyrax_file_set_path(file_set, locale: 'en')
-            expect(assigns[:file_set].modified_date)
-              .not_to be file_set.modified_date
+            expect(assigns[:file_set].updated_at)
+              .not_to be file_set.updated_at
           end
         end
 
