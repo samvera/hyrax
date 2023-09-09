@@ -130,7 +130,7 @@ module Hyrax
     def parent(file_set: curation_concern)
       @parent ||=
         case file_set
-        when Hyrax::Resource
+        when Hyrax::FileSet
           Hyrax.query_service.find_parents(resource: file_set).first
         else
           file_set.parent

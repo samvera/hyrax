@@ -7,10 +7,8 @@ module Hyrax
     # destroys a FileSet resource.
     #
     # @since 3.1.0
-    class FileSetDestroy < Transaction
-      DEFAULT_STEPS = ['file_set.remove_from_work',
-                       'file_set.delete',
-                       'file_set.delete_all_file_metadata'].freeze
+    class FileMetadataDestroy < Transaction
+      DEFAULT_STEPS = ['file_metadata.delete'].freeze
 
       ##
       # @see Hyrax::Transactions::Transaction
