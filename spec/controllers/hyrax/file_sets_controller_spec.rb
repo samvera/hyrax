@@ -622,47 +622,25 @@ RSpec.describe Hyrax::FileSetsController do
         end
 
         context "when updating the attached file direct upload" do
-          let(:actor) { double }
-
-          before do
-            allow(Hyrax::Actors::FileActor).to receive(:new).and_return(actor)
-          end
-
-          it "spawns a ContentNewVersionEventJob", perform_enqueued: [IngestJob] do
-            expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
-            expect(actor).to receive(:ingest_file).with(JobIoWrapper).and_return(true)
+          it "spawns a ContentNewVersionEventJob", perform_enqueued: [ValkyrieIngestJob] do
+            allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
+            expect(ContentNewVersionEventJob).to receive(:perform_later)
             file = fixture_file_upload('/world.png', 'image/png')
-            post :update, params: { id: file_set, filedata: file, file_set: { keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
-            post :update, params: { id: file_set, file_set: { files: [file], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
+            post :update, params: { id: file_set, filedata: file, file_set: { keyword: [''], permissions_attributes: { "1" => { type: 'person', name: 'archivist1', access: 'edit' } } } }
+            post :update, params: { id: file_set, file_set: { files: [file], keyword: [''], permissions_attributes: { "1" => { type: 'person', name: 'archivist1', access: 'edit' } } } }
           end
         end
 
         context "when updating the attached file already uploaded" do
-          let(:actor) { double(Hyrax::Actors::FileActor) }
+          it "spawns a ContentNewVersionEventJob", perform_enqueued: [ValkyrieIngestJob] do
+            allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
+            expect(ContentNewVersionEventJob).to receive(:perform_later)
+            new_file = FactoryBot.create(:uploaded_file)
 
-          before do
-            allow(Hyrax::Actors::FileActor).to receive(:new).and_return(actor)
-          end
+            post :update, params: { id: file_set, files_files: [new_file.id.to_s] }
 
-          it "spawns a ContentNewVersionEventJob", perform_enqueued: [IngestJob] do
-            expect(actor)
-              .to receive(:ingest_file)
-              .with(JobIoWrapper)
-              .and_return(true)
-            expect(ContentNewVersionEventJob)
-              .to receive(:perform_later)
-              .with(file_set, user)
-
-            file = fixture_file_upload('/world.png', 'image/png')
-            allow(Hyrax::UploadedFile)
-              .to receive(:find)
-              .with(["1"])
-              .and_return([file])
-
-            post :update, params: { id: file_set, files_files: ["1"] }
-
-            expect(assigns[:file_set].modified_date)
-              .not_to be file_set.modified_date
+            expect(assigns[:file_set].updated_at)
+              .not_to be file_set.updated_at
             expect(assigns[:file_set].title)
               .to contain_exactly(*file_set.title)
           end

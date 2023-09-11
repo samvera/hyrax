@@ -63,11 +63,15 @@ FactoryBot.define do
       end
       if evaluator.uploaded_files.present?
         Hyrax::WorkUploadsHandler.new(work: work).add(files: evaluator.uploaded_files).attach
-        evaluator.uploaded_files.each do |file|
-          allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
-          # I don't love this - we might want to just run background jobs so
-          # this is more real, but we'd have to stub some things.
-          ValkyrieIngestJob.perform_now(file)
+        # Sometimes ValkyrieIngestJob is allowed to run by the test, so don't
+        # re-run it.
+        if Hyrax.query_service.find_by(id: work.id).member_ids.empty?
+          evaluator.uploaded_files.each do |file|
+            allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
+            # I don't love this - we might want to just run background jobs so
+            # this is more real, but we'd have to stub some things.
+            ValkyrieIngestJob.perform_now(file)
+          end
         end
       end
 

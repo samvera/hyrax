@@ -138,7 +138,9 @@ module Hyrax
     end
 
     def attempt_update
-      if wants_to_revert?
+      if Hyrax.config.use_valkyrie?
+        attempt_update_valkyrie
+      elsif wants_to_revert?
         actor.revert_content(params[:revision])
       elsif params.key?(:file_set)
         if params[:file_set].key?(:files)
@@ -153,9 +155,26 @@ module Hyrax
       end
     end
 
+    def attempt_update_valkyrie
+      if wants_to_revert?
+      elsif params.key?(:file_set)
+        if params[:file_set].key?(:files)
+          ValkyrieIngestJob.perform_later(uploaded_file_from_path)
+        else
+          update_metadata
+        end
+      elsif params.key?(:files_files) # version file already uploaded with ref id in :files_files array
+        uploaded_files = Array(Hyrax::UploadedFile.find(params[:files_files]))
+        uploaded_files.first.file_set_uri = file_set.id.to_s
+        uploaded_files.first.save
+        ValkyrieIngestJob.perform_later(uploaded_files.first)
+        update_metadata
+      end
+    end
+
     def uploaded_file_from_path
       uploaded_file = CarrierWave::SanitizedFile.new(params[:file_set][:files].first)
-      Hyrax::UploadedFile.create(user_id: current_user.id, file: uploaded_file)
+      Hyrax::UploadedFile.create(user_id: current_user.id, file: uploaded_file, file_set_uri: @file_set.id.to_s)
     end
 
     def after_update_response

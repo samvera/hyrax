@@ -35,6 +35,7 @@ class Hyrax::ValkyrieUpload
   end
 
   def upload(filename:, file_set:, io:, use: Hyrax::FileMetadata::Use::ORIGINAL_FILE, user: nil, mime_type: nil)
+    return version_upload(file_set: file_set, io: io, user: user) if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE && file_set.original_file_id && storage_adapter.supports?(:versions)
     streamfile = storage_adapter.upload(file: io, original_filename: filename, resource: file_set)
     file_metadata = Hyrax::FileMetadata(streamfile)
     file_metadata.file_set_id = file_set.id
@@ -62,6 +63,12 @@ class Hyrax::ValkyrieUpload
     Hyrax.publisher.publish('file.metadata.updated', metadata: saved_metadata, user: user)
 
     saved_metadata
+  end
+
+  def version_upload(file_set:, io:, user:)
+    file_metadata = Hyrax.query_service.custom_queries.find_file_metadata_by(id: file_set.original_file_id)
+    storage_adapter.upload_version(file: io, id: file_metadata.file_identifier)
+    ContentNewVersionEventJob.perform_later(file_set, user)
   end
 
   # @param [Hyrax::FileSet] file_set the file set to add to
