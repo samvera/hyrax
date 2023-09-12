@@ -156,7 +156,8 @@ module Hyrax
     end
 
     def attempt_update_valkyrie
-      if wants_to_revert?
+      if wants_to_revert_valkyrie?
+        revert_valkyrie
       elsif params.key?(:file_set)
         if params[:file_set].key?(:files)
           ValkyrieIngestJob.perform_later(uploaded_file_from_path)
@@ -170,6 +171,11 @@ module Hyrax
         ValkyrieIngestJob.perform_later(uploaded_files.first)
         update_metadata
       end
+    end
+
+    def revert_valkyrie
+      Hyrax::VersioningService.create(file_metadata, current_user, Hyrax.storage_adapter.find_by(id: params[:revision]))
+      true
     end
 
     def uploaded_file_from_path
@@ -272,6 +278,19 @@ module Hyrax
 
     def wants_to_revert?
       params.key?(:revision) && params[:revision] != curation_concern.latest_content_version.label
+    end
+
+    def wants_to_revert_valkyrie?
+      puts "REVERTING"
+      puts "FILE METADATA ID: #{file_metadata.id}"
+      puts "LATEST VERSION: #{Hyrax::VersioningService.new(resource: file_metadata).latest_version.version_id}"
+      puts "PARAMS: #{params[:revision]}"
+      puts params.key?(:revision) && params[:revision] != Hyrax::VersioningService.new(resource: file_metadata).latest_version.version_id.to_s
+      params.key?(:revision) && params[:revision] != Hyrax::VersioningService.new(resource: file_metadata).latest_version.version_id.to_s
+    end
+
+    def file_metadata
+      @file_metadata ||= Hyrax.query_service.custom_queries.find_file_metadata_by(id: curation_concern.original_file_id)
     end
 
     # Override this method to add additional response formats to your local app

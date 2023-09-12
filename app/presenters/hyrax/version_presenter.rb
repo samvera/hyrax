@@ -15,13 +15,17 @@ module Hyrax
       @current = true
     end
 
+    def label
+      version.try(:label) || version.version_id.to_s
+    end
+
     def created
-      @created ||= version.created.in_time_zone.to_formatted_s(:long_ordinal)
+      @created ||= version.try(:created)&.in_time_zone&.to_formatted_s(:long_ordinal) || "Unknown"
     end
 
     def committer
       Hyrax::VersionCommitter
-        .find_by(version_id: @version.uri)
+        .find_by(version_id: @version.try(:uri) || @version.try(:version_id))
         &.committer_login
     end
   end

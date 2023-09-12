@@ -40,7 +40,11 @@ module Hyrax
       @wrapped_list ||=
         begin
           presenters = @versioning_service.versions.map { |v| Hyrax::VersionPresenter.new(v) } # wrap each item in a presenter
-          presenters.sort! { |a, b| b.version.created <=> a.version.created } if presenters.first&.version.respond_to?(:created) # sort list of versions based on creation date
+          if presenters.first&.version&.respond_to?(:created)
+            presenters.sort! { |a, b| b.version.created <=> a.version.created } if presenters.first&.version.respond_to?(:created) # sort list of versions based on creation date
+          else
+            presenters.reverse!
+          end
           presenters.tap { |l| l.first.try(:current!) } # set the first version to the current version
         end
     end

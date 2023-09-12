@@ -42,6 +42,7 @@ class Hyrax::ValkyrieUpload
     file_metadata.pcdm_use = [use]
     file_metadata.recorded_size = [io.size]
     file_metadata.mime_type = mime_type if mime_type
+    file_metadata.original_filename = filename || File.basename(io)
 
     if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE
       # Set file set label.
@@ -67,7 +68,7 @@ class Hyrax::ValkyrieUpload
 
   def version_upload(file_set:, io:, user:)
     file_metadata = Hyrax.query_service.custom_queries.find_file_metadata_by(id: file_set.original_file_id)
-    storage_adapter.upload_version(file: io, id: file_metadata.file_identifier)
+    Hyrax::VersioningService.create(file_metadata, user, io)
     ContentNewVersionEventJob.perform_later(file_set, user)
   end
 

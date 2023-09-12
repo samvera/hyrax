@@ -88,9 +88,9 @@ module Hyrax
       # Make a version and record the version committer
       # @param [ActiveFedora::File | Hyrax::FileMetadata] content
       # @param [User, String] user
-      def create(content, user = nil)
+      def create(content, user = nil, file = nil)
         use_valkyrie = content.is_a? Hyrax::FileMetadata
-        perform_create(content, user, use_valkyrie)
+        perform_create(content, user, file, use_valkyrie)
       end
 
       # @param [ActiveFedora::File | Hyrax::FileMetadata] file
@@ -110,14 +110,14 @@ module Hyrax
         user_key = user_key.user_key if user_key.respond_to?(:user_key)
         version = latest_version_of(content)
         return if version.nil?
-        version_id = content.is_a?(Hyrax::FileMetadata) ? version.id.to_s : version.uri
+        version_id = content.is_a?(Hyrax::FileMetadata) ? version.version_id.to_s : version.uri
         Hyrax::VersionCommitter.create(version_id: version_id, committer_login: user_key)
       end
 
       private
 
-      def perform_create(content, user, use_valkyrie)
-        use_valkyrie ? perform_create_through_valkyrie(content, user) : perform_create_through_active_fedora(content, user)
+      def perform_create(content, user, file, use_valkyrie)
+        use_valkyrie ? perform_create_through_valkyrie(content, file, user) : perform_create_through_active_fedora(content, user)
       rescue NotImplementedError
         Hyrax.logger.warn "Declining to create a Version for #{content}; #{self} doesn't support versioning with use_valkyrie: #{use_valkyrie}"
       end
@@ -127,8 +127,14 @@ module Hyrax
         record_committer(content, user) if user
       end
 
-      def perform_create_through_valkyrie(content, user) # no-op
-        raise NotImplementedError
+      def perform_create_through_valkyrie(content, file, user)
+        raise NotImplementedError unless Hyrax.storage_adapter.supports?(:versions)
+        Hyrax.storage_adapter.upload_version(id: content.file_identifier, file: file)
+        record_committer(content, user) if user
+      end
+
+      def storage_adapter
+        Hyrax.storage_adapter
       end
     end
   end

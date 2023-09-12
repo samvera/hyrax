@@ -3,6 +3,9 @@
 RSpec.describe Hyrax::FileSetsController do
   routes      { Rails.application.routes }
   let(:user)  { FactoryBot.create(:user) }
+  before do
+    allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
+  end
 
   describe "active fedora", :active_fedora do
     let(:actor) { controller.send(:actor) }
@@ -536,7 +539,7 @@ RSpec.describe Hyrax::FileSetsController do
       let(:user)  { FactoryBot.create(:admin) }
       before { sign_in user }
       let(:file) { fixture_file_upload('/world.png', 'image/png') }
-      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, uploaded_files: [FactoryBot.create(:uploaded_file)], edit_users: [user]) }
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, uploaded_files: [FactoryBot.create(:uploaded_file, user: user)], edit_users: [user]) }
       let(:file_set) { query_service.find_members(resource: work).first }
       let(:file_metadata) { query_service.custom_queries.find_file_metadata_by(id: file_set.file_ids.first) }
       let(:uploaded) { storage_adapter.find_by(id: file_metadata.file_identifier) }
@@ -623,7 +626,6 @@ RSpec.describe Hyrax::FileSetsController do
 
         context "when updating the attached file direct upload" do
           it "spawns a ContentNewVersionEventJob", perform_enqueued: [ValkyrieIngestJob] do
-            allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
             expect(ContentNewVersionEventJob).to receive(:perform_later)
             file = fixture_file_upload('/world.png', 'image/png')
             post :update, params: { id: file_set, filedata: file, file_set: { keyword: [''], permissions_attributes: { "1" => { type: 'person', name: 'archivist1', access: 'edit' } } } }
@@ -632,10 +634,10 @@ RSpec.describe Hyrax::FileSetsController do
         end
 
         context "when updating the attached file already uploaded" do
+          let(:versions) { Hyrax::VersioningService.new(resource: file_metadata).versions }
           it "spawns a ContentNewVersionEventJob", perform_enqueued: [ValkyrieIngestJob] do
-            allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
             expect(ContentNewVersionEventJob).to receive(:perform_later)
-            new_file = FactoryBot.create(:uploaded_file)
+            new_file = FactoryBot.create(:uploaded_file, user: user, file: File.open("spec/fixtures/4-20.png"))
 
             post :update, params: { id: file_set, files_files: [new_file.id.to_s] }
 
@@ -643,41 +645,47 @@ RSpec.describe Hyrax::FileSetsController do
               .not_to be file_set.updated_at
             expect(assigns[:file_set].title)
               .to contain_exactly(*file_set.title)
+
+            expect(Hyrax::VersionCommitter.where(version_id: versions.last.version_id).pluck(:committer_login))
+              .to eq [user.user_key]
+            expect(Hyrax.config.characterization_service).to have_received(:run).exactly(1).times
+            # TODO: Make this pass. Store a history of original_filenames as a
+            # serialized JSON blob on FileMetadata.
+            # reloaded_metadata = Hyrax.query_service.find_by(id: file_metadata.id)
+            # expect(reloaded_metadata.original_filename).to eq "4-20.png"
           end
         end
 
         context "with two existing versions from different users", :perform_enqueued do
-          let(:file1)       { "world.png" }
-          let(:file2)       { "image.jpg" }
           let(:second_user) { create(:user) }
-          let(:version1)    { "version1" }
-          let(:actor1)      { Hyrax::Actors::FileSetActor.new(file_set, user) }
-          let(:actor2)      { Hyrax::Actors::FileSetActor.new(file_set, second_user) }
+          let(:second_file) { FactoryBot.create(:uploaded_file, user: second_user, file: File.open('spec/fixtures/4-20.png'), file_set_uri: file_set.id.to_s) }
+          let(:work) { FactoryBot.valkyrie_create(:hyrax_work, uploaded_files: [FactoryBot.create(:uploaded_file, user: user)], edit_users: [user]) }
+          let(:version1) { Hyrax::VersioningService.new(resource: file_metadata).versions.first }
 
           before do
-            ActiveJob::Base.queue_adapter.filter = [IngestJob]
-            actor1.create_content(fixture_file_upload(file1))
-            actor2.create_content(fixture_file_upload(file2))
+            ActiveJob::Base.queue_adapter.filter = [ValkyrieIngestJob]
           end
 
           describe "restoring a previous version" do
             context "as the first user" do
               before do
                 sign_in user
-                post :update, params: { id: file_set, revision: version1 }
+                # Attach second version.
+                ValkyrieIngestJob.perform_now(second_file)
+                post :update, params: { id: file_set, revision: version1.version_id.to_s }
               end
 
-              let(:restored_content) { file_set.reload.original_file }
-              let(:versions)         { restored_content.versions }
-              let(:latest_version)   { Hyrax::VersioningService.latest_version_of(restored_content) }
+              let(:versions)         { Hyrax::VersioningService.new(resource: file_metadata).versions }
+              let(:latest_version)   { Hyrax::VersioningService.latest_version_of(file_metadata) }
 
               it "restores the first versions's content and metadata" do
-                # expect(restored_content.mime_type).to eq "image/png"
-                expect(restored_content).to be_a(Hydra::PCDM::File)
-                expect(restored_content.original_name).to eq file1
-                expect(versions.all.count).to eq 3
-                expect(versions.last.label).to eq latest_version.label
-                expect(Hyrax::VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login))
+                expect(latest_version).to be_a Valkyrie::StorageAdapter::File
+                # Can't restore metadata w/ Valkyrie.
+                # TODO: Make original filename restore at least.
+                restored_content = Hyrax.query_service.find_by(id: file_metadata.id)
+                expect(restored_content.original_filename).to eq "image.jp2"
+                expect(Hyrax::VersioningService.new(resource: file_metadata).versions.count).to eq 3
+                expect(Hyrax::VersionCommitter.where(version_id: versions.last.version_id).pluck(:committer_login))
                   .to eq [user.user_key]
               end
             end
