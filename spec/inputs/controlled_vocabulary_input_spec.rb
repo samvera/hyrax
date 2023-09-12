@@ -5,14 +5,26 @@ RSpec.describe 'ControlledVocabularyInput', type: :input do
   let(:input) { ControlledVocabularyInput.new(builder, :based_near, nil, :multi_value, {}) }
 
   describe '#input' do
-    before { allow(work).to receive(:[]).with(:based_near).and_return([item1, item2]) }
-    let(:item1) { double('value 1', rdf_label: ['Item 1'], rdf_subject: 'http://example.org/1', full_label: 'Item One', node?: false) }
-    let(:item2) { double('value 2', rdf_label: ['Item 2'], rdf_subject: 'http://example.org/2', full_label: 'Item Two') }
+    context 'when we stub the based_near value' do
+      before { allow(work).to receive(:[]).with(:based_near).and_return([item1, item2]) }
+      let(:item1) { double('value 1', rdf_label: ['Item 1'], rdf_subject: 'http://example.org/1', full_label: 'Item One', node?: false) }
+      let(:item2) { double('value 2', rdf_label: ['Item 2'], rdf_subject: 'http://example.org/2', full_label: 'Item Two') }
 
-    it 'renders multi-value' do
-      expect(input).to receive(:build_field).with(item1, 0)
-      expect(input).to receive(:build_field).with(item2, 1)
-      input.input({})
+      it 'renders multi-value' do
+        expect(input).to receive(:build_field).with(item1, 0)
+        expect(input).to receive(:build_field).with(item2, 1)
+        input.input({})
+      end
+    end
+    context 'when we put the value directly in the Work' do
+      let(:work) { FactoryBot.valkyrie_create(:generic_work, based_near: [["0", Valkyrie::ID.new('https://sws.geonames.org/6255148/')],
+   ["1", Valkyrie::ID.new('https://sws.geonames.org/5102922/')]])}
+
+      it 'renders multi-value' do
+        allow(input).to receive(:build_field).and_call_original
+        input.input({})
+        expect(input).to have_received(:build_field).twice
+      end
     end
   end
 
