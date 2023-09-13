@@ -860,6 +860,10 @@ RSpec.describe Hyrax::FileSetsController do
       let(:private_file_set) { query_service.find_members(resource: private_work).first }
       let(:uploaded) { storage_adapter.find_by(id: file_metadata.file_identifier) }
       let(:query_service) { Hyrax.query_service }
+      before do
+        allow(controller.main_app).to receive(:polymorphic_path).and_call_original
+        allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{public_work.id}?locale=en")
+      end
 
       describe '#edit' do
         it 'requires login' do
@@ -881,10 +885,6 @@ RSpec.describe Hyrax::FileSetsController do
         end
 
         it 'allows access to public files' do
-          expect(controller)
-            .to receive(:additional_response_formats)
-            .with(ActionController::MimeResponds::Collector)
-
           get :show, params: { id: public_file_set }
 
           expect(response).to be_successful
