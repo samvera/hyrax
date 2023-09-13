@@ -852,22 +852,14 @@ RSpec.describe Hyrax::FileSetsController do
     end
 
     context 'when not signed in' do
-      let(:work) { FactoryBot.create(:work, :public, user: user) }
-      let(:private_file_set) { FactoryBot.create(:file_set) }
-      let(:public_file_set) { FactoryBot.create(:file_set, read_groups: ['public']) }
-
-      let(:work) do
-        FactoryBot.create(:generic_work, :public,
-                          title: ['test title'],
-                          user: user)
-      end
-
-      before do
-        work.ordered_members << private_file_set
-        work.ordered_members << public_file_set
-        work.save!
-        public_file_set.save!
-      end
+      let(:user)  { FactoryBot.create(:user) }
+      let(:file) { fixture_file_upload('/world.png', 'image/png') }
+      let(:public_work) { FactoryBot.valkyrie_create(:hyrax_work, :public, title: "test title", uploaded_files: [FactoryBot.create(:uploaded_file, user: work_user)], edit_users: [work_user]) }
+      let(:public_file_set) { query_service.find_members(resource: public_work).first }
+      let(:private_work) { FactoryBot.valkyrie_create(:hyrax_work, title: "test title", uploaded_files: [FactoryBot.create(:uploaded_file, user: work_user)], edit_users: [work_user]) }
+      let(:private_file_set) { query_service.find_members(resource: private_work).first }
+      let(:uploaded) { storage_adapter.find_by(id: file_metadata.file_identifier) }
+      let(:query_service) { Hyrax.query_service }
 
       describe '#edit' do
         it 'requires login' do
@@ -900,42 +892,31 @@ RSpec.describe Hyrax::FileSetsController do
       end
 
       describe '#show' do
-        let(:parent_work_active) do
-          FactoryBot
-            .create(:work, :public, state: Vocab::FedoraResourceStatus.active)
+        let(:active_work) { FactoryBot.valkyrie_create(:hyrax_work, :public, title: "test title", uploaded_files: [FactoryBot.create(:uploaded_file, user: work_user)], edit_users: [work_user]) }
+        let(:active_file_set) { query_service.find_members(resource: public_work).first }
+        let(:inactive_work) do
+          FactoryBot.valkyrie_create(
+            :hyrax_work,
+            :public,
+            state: Hyrax::ResourceStatus::INACTIVE,
+            title: "test title",
+            uploaded_files: [FactoryBot.create(:uploaded_file, user: work_user)],
+            edit_users: [work_user]
+          )
         end
-
-        let(:file_set_active) do
-          FactoryBot.create(:file_set, read_groups: ['public']).tap do |file_set|
-            parent_work_active.ordered_members << file_set
-            parent_work_active.save!
-          end
+        let(:inactive_file_set) { query_service.find_members(resource: inactive_work).first }
+        before do
+          allow(controller.main_app).to receive(:polymorphic_path).and_call_original
+          allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{active_work.id}?locale=en")
         end
-
-        let(:parent_work_inactive) do
-          FactoryBot
-            .create(:work, :public, state: Vocab::FedoraResourceStatus.inactive)
-        end
-
-        let(:file_set_inactive) do
-          FactoryBot.create(:file_set, read_groups: ['public']).tap do |file_set|
-            parent_work_inactive.ordered_members << file_set
-            parent_work_inactive.save!
-          end
-        end
-
         it "shows active parent" do
-          expect(controller)
-            .to receive(:additional_response_formats)
-            .with(ActionController::MimeResponds::Collector)
-
-          get :show, params: { id: file_set_active }
+          get :show, params: { id: active_file_set }
 
           expect(response).to be_successful
         end
 
         it "shows not currently available for inactive parent" do
-          get :show, params: { id: file_set_inactive }
+          get :show, params: { id: inactive_file_set }
 
           expect(response).to render_template 'unavailable'
           expect(flash[:notice])
@@ -948,22 +929,19 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe 'integration test for suppressed documents' do
       let(:work) do
-        FactoryBot
-          .create(:work, :public, state: Vocab::FedoraResourceStatus.inactive)
+        FactoryBot.valkyrie_create(
+          :hyrax_work,
+          :public,
+          state: Hyrax::ResourceStatus::INACTIVE,
+          title: "test title",
+          uploaded_files: [FactoryBot.create(:uploaded_file, user: work_user)],
+          edit_users: [work_user]
+        )
       end
-
-      let(:file_set) do
-        FactoryBot.create(:file_set, read_groups: ['public']).tap do |file_set|
-          work.ordered_members << file_set
-          work.save!
-        end
-      end
-
+      let(:query_service) { Hyrax.query_service }
+      let(:file_set) { query_service.find_members(resource: work).first }
       before do
-        work.ordered_members << file_set
-        work.save!
-
-        FactoryBot.create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+        FactoryBot.create(:sipity_entity, proxy_for_global_id: Hyrax::GlobalID(work).to_s)
       end
 
       it 'renders the unavailable message because it is in workflow' do
