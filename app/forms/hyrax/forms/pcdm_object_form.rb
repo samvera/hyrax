@@ -3,6 +3,27 @@
 module Hyrax
   module Forms
     ##
+    # @api public
+    #
+    # @example defining a form class using HydraEditor-like configuration
+    #   class MonographForm < Hyrax::Forms::PcdmObjectForm(Monograph)
+    #     self.required_fields = [:title, :creator, :rights_statement]
+    #     # other WorkForm-like configuration here
+    #   end
+    def self.PcdmObjectForm(work_class)
+      Class.new(Hyrax::Forms::PcdmObjectForm) do
+        self.model_class = work_class
+
+        ##
+        # @return [String]
+        def self.inspect
+          return "Hyrax::Forms::PcdmObjectForm(#{model_class})" if name.blank?
+          super
+        end
+      end
+    end
+
+    ##
     # A form for PCDM objects: resources which have collection relationships and
     # generally resemble +Hyrax::Work+.
     class PcdmObjectForm < Hyrax::Forms::ResourceForm
