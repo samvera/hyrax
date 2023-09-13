@@ -863,6 +863,9 @@ RSpec.describe Hyrax::FileSetsController do
       before do
         allow(controller.main_app).to receive(:polymorphic_path).and_call_original
         allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{public_work.id}?locale=en")
+        allow(controller)
+          .to receive(:additional_response_formats)
+          .with(ActionController::MimeResponds::Collector)
       end
 
       describe '#edit' do
@@ -906,6 +909,9 @@ RSpec.describe Hyrax::FileSetsController do
         end
         let(:inactive_file_set) { query_service.find_members(resource: inactive_work).first }
         before do
+          allow(controller)
+            .to receive(:additional_response_formats)
+            .with(ActionController::MimeResponds::Collector)
           allow(controller.main_app).to receive(:polymorphic_path).and_call_original
           allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{active_work.id}?locale=en")
         end
