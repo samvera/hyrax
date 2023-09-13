@@ -11,10 +11,14 @@ namespace :hyrax do
         type = Hyrax::CollectionType.find_by_gid(collection.collection_type_gid)
         next if collection.collection_type_gid == type.to_global_id.to_s
 
-        collection.public_send(:collection_type_gid=, type.to_global_id, force: true)
+        # Awful hack to allow converted AF collections to force update collection_type_gid
+        Thread.current[:force_collection_type_gid] = true
+        collection.collection_type_gid = type.to_global_id
 
         Hyrax.persister.save(resource: collection) &&
           count += 1
+      ensure
+        Thread.current[:force_collection_type_gid] = false
       end
 
       puts "Updated #{count} collections."
