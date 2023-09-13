@@ -69,6 +69,7 @@ class Hyrax::ValkyrieUpload
   def version_upload(file_set:, io:, user:)
     file_metadata = Hyrax.query_service.custom_queries.find_file_metadata_by(id: file_set.original_file_id)
     Hyrax::VersioningService.create(file_metadata, user, io)
+    Hyrax.publisher.publish("file.uploaded", metadata: file_metadata)
     ContentNewVersionEventJob.perform_later(file_set, user)
   end
 
