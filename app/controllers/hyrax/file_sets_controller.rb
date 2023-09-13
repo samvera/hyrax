@@ -41,6 +41,7 @@ module Hyrax
 
     layout :decide_layout
 
+
     # GET /concern/file_sets/:id
     def edit
       initialize_edit_form
@@ -115,12 +116,14 @@ module Hyrax
       when Hyrax::Resource
         change_set = Hyrax::Forms::ResourceForm.for(file_set)
 
-        change_set.validate(attributes) &&
+        result =
+          change_set.validate(attributes) &&
           transactions['change_set.update_file_set']
-            .with_step_args(
-              'file_set.save_acl' => { permissions_params: change_set.input_params["permissions"] }
-            )
-            .call(change_set).value_or { false }
+          .with_step_args(
+            'file_set.save_acl' => { permissions_params: change_set.input_params["permissions"] }
+          )
+          .call(change_set).value_or { false }
+        @file_set = result if result
       else
         file_attributes = form_class.model_attributes(attributes)
         actor.update_metadata(file_attributes)
@@ -281,11 +284,6 @@ module Hyrax
     end
 
     def wants_to_revert_valkyrie?
-      puts "REVERTING"
-      puts "FILE METADATA ID: #{file_metadata.id}"
-      puts "LATEST VERSION: #{Hyrax::VersioningService.new(resource: file_metadata).latest_version.version_id}"
-      puts "PARAMS: #{params[:revision]}"
-      puts params.key?(:revision) && params[:revision] != Hyrax::VersioningService.new(resource: file_metadata).latest_version.version_id.to_s
       params.key?(:revision) && params[:revision] != Hyrax::VersioningService.new(resource: file_metadata).latest_version.version_id.to_s
     end
 

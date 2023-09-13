@@ -135,6 +135,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.before :suite do
+    FactoryBot::SyntaxRunner.include ActiveJob::TestHelper
     FactoryBot::SyntaxRunner.include RSpec::Mocks::ExampleMethods
     Hyrax::RedisEventStore.instance.then(&:flushdb)
     DatabaseCleaner.clean_with(:truncation)

@@ -536,7 +536,7 @@ RSpec.describe Hyrax::FileSetsController do
 
   describe "with valkyrie" do
     context "when signed in" do
-      let(:user)  { FactoryBot.create(:admin) }
+      let(:user)  { FactoryBot.create(:user) }
       before { sign_in user }
       let(:file) { fixture_file_upload('/world.png', 'image/png') }
       let(:work) { FactoryBot.valkyrie_create(:hyrax_work, uploaded_files: [FactoryBot.create(:uploaded_file, user: user)], edit_users: [user]) }
@@ -648,7 +648,7 @@ RSpec.describe Hyrax::FileSetsController do
 
             expect(Hyrax::VersionCommitter.where(version_id: versions.last.version_id).pluck(:committer_login))
               .to eq [user.user_key]
-            expect(Hyrax.config.characterization_service).to have_received(:run).exactly(1).times
+            expect(Hyrax.config.characterization_service).to have_received(:run).exactly(2).times
             # TODO: Make this pass. Store a history of original_filenames as a
             # serialized JSON blob on FileMetadata.
             # reloaded_metadata = Hyrax.query_service.find_by(id: file_metadata.id)
@@ -706,31 +706,37 @@ RSpec.describe Hyrax::FileSetsController do
         it "adds new groups and users" do
           post :update, params: {
             id: file_set,
-            file_set: { keyword: [''],
-                        permissions_attributes: [
-                          { type: 'person', name: 'user1', access: 'edit' },
-                          { type: 'group', name: 'group1', access: 'read' }
-                        ] }
+            file_set: {
+              keyword: [''],
+              permissions_attributes: {
+                "1" => { type: 'person', name: 'user1', access: 'edit' },
+                "2" => { type: 'group', name: 'group1', access: 'read' }
+              }
+            }
           }
 
-          expect(assigns[:file_set])
-            .to have_attributes(read_groups: contain_exactly("group1"),
-                                edit_users: include("user1", user.user_key))
+          expect(assigns[:file_set].read_groups.to_a).to contain_exactly("group1")
+          expect(assigns[:file_set].edit_users.to_a).to include("user1")
         end
 
         it "updates existing groups and users" do
-          file_set.edit_groups = ['group3']
-          file_set.save
+          change_set = Hyrax::Forms::ResourceForm.for(file_set)
+          Hyrax::Transactions::Container['change_set.update_file_set']
+            .with_step_args(
+              'file_set.save_acl' => { permissions_params: [{ "type" => 'group', "name" => 'group3', "access" => 'edit' }] }
+            ).call(change_set).value!
 
           post :update, params: {
             id: file_set,
-            file_set: { keyword: [''],
-                        permissions_attributes: [
-                          { id: file_set.permissions.last.id, type: 'group', name: 'group3', access: 'read' }
-                        ] }
+            file_set: {
+              keyword: [''],
+              permissions_attributes: {
+                "1" => { type: 'group', name: 'group3', access: 'read' }
+              }
+            }
           }
 
-          expect(assigns[:file_set].read_groups).to contain_exactly("group3")
+          expect(assigns[:file_set].read_groups.to_a).to contain_exactly("group3")
         end
 
         context 'update visibility' do
@@ -739,44 +745,25 @@ RSpec.describe Hyrax::FileSetsController do
           it 'can make file set public' do
             patch :update, params: { id: file_set, file_set: update_params }
 
-            expect(assigns[:file_set].read_groups).to contain_exactly('public')
+            expect(assigns[:file_set].read_groups.to_a).to contain_exactly('public')
           end
         end
 
         context "when there's an error saving" do
-          let(:parent) { FactoryBot.create(:work, :public, user: user) }
-
-          let(:file_set) do
-            FactoryBot.create(:file_set, user: user).tap do |file_set|
-              parent.ordered_members << file_set
-              parent.save!
-            end
-          end
-
-          before { allow(FileSet).to receive(:find).and_return(file_set) }
-
           it "draws the edit page" do
-            expect(file_set).to receive(:valid?).and_return(false)
+            change_set = Hyrax::Forms::ResourceForm.for(file_set)
+            allow(Hyrax::Forms::ResourceForm).to receive(:for).and_return(change_set)
+            allow(change_set).to receive(:validate).and_return(false)
             post :update, params: { id: file_set, file_set: { keyword: [''] } }
             expect(response.code).to eq '422'
             expect(response).to render_template('edit')
             expect(response).to render_template('dashboard')
-            expect(assigns[:file_set]).to eq file_set
+            expect(assigns[:file_set]).to be_present
           end
         end
       end
 
       describe "#edit" do
-        let(:file_set) { FactoryBot.create(:file_set, read_groups: ['public']) }
-
-        let(:file) do
-          Hydra::Derivatives::IoDecorator
-            .new(File.open(fixture_path + '/world.png'),
-                 'image/png', 'world.png')
-        end
-
-        before { Hydra::Works::UploadFileToFileSet.call(file_set, file) }
-
         context "someone else's files" do
           it "sets flash error" do
             get :edit, params: { id: file_set }

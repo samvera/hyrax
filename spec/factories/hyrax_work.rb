@@ -61,20 +61,6 @@ FactoryBot.define do
           .new(resource: work)
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
-      if evaluator.uploaded_files.present?
-        Hyrax::WorkUploadsHandler.new(work: work).add(files: evaluator.uploaded_files).attach
-        # Sometimes ValkyrieIngestJob is allowed to run by the test, so don't
-        # re-run it.
-        if Hyrax.query_service.find_by(id: work.id).member_ids.empty?
-          evaluator.uploaded_files.each do |file|
-            allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
-            # I don't love this - we might want to just run background jobs so
-            # this is more real, but we'd have to stub some things.
-            ValkyrieIngestJob.perform_now(file)
-          end
-        end
-      end
-
       work.permission_manager.edit_groups = evaluator.edit_groups
       work.permission_manager.edit_users  = evaluator.edit_users
       work.permission_manager.read_users  = evaluator.read_users
@@ -85,7 +71,15 @@ FactoryBot.define do
 
       work.permission_manager.acl.save
 
-      Hyrax.index_adapter.save(resource: work) if evaluator.with_index
+      # This has to happen after permissions for permissions to propagate.
+      if evaluator.uploaded_files.present?
+        allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
+        perform_enqueued_jobs(only: ValkyrieIngestJob) do
+          Hyrax::WorkUploadsHandler.new(work: Hyrax.query_service.find_by(id: work.id)).add(files: evaluator.uploaded_files).attach
+        end
+      end
+
+      Hyrax.index_adapter.save(resource: Hyrax.query_service.find_by(id: work.id)) if evaluator.with_index
     end
 
     trait :public do
