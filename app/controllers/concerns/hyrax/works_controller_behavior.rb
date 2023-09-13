@@ -183,6 +183,9 @@ module Hyrax
     # rubocop:disable Metrics/MethodLength
     def create_valkyrie_work
       form = build_form
+      # TODO: We need to intercept the following value before `form.validate` to create a simple array of GeoID strings
+      # "based_near"=>
+      # <ActionController::Parameters {"0"=>{"hidden_label"=>"Paris, Île-de-France, France", "id"=>"https://sws.geonames.org/2988507/", "_destroy"=>""}, "1"=>{"hidden_label"=>"Madrid, Madrid, Spain", "id"=>"https://sws.geonames.org/3117735/", "_destroy"=>""}} permitted: false>,
       # fallback to an empty hash to avoid: # NoMethodError: undefined method `has_key?` for nil:NilClass
       original_input_params_for_form = params[hash_key_for_curation_concern] ? params[hash_key_for_curation_concern] : {}
       return after_create_error(form_err_msg(form), original_input_params_for_form) unless form.validate(original_input_params_for_form)
