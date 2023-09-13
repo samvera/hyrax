@@ -3,6 +3,7 @@
 RSpec.describe Hyrax::FileSetsController do
   routes      { Rails.application.routes }
   let(:user)  { FactoryBot.create(:user) }
+  let(:work_user) { user }
   before do
     allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
   end
@@ -539,7 +540,7 @@ RSpec.describe Hyrax::FileSetsController do
       let(:user)  { FactoryBot.create(:user) }
       before { sign_in user }
       let(:file) { fixture_file_upload('/world.png', 'image/png') }
-      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, uploaded_files: [FactoryBot.create(:uploaded_file, user: user)], edit_users: [user]) }
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, title: "test title", uploaded_files: [FactoryBot.create(:uploaded_file, user: work_user)], edit_users: [work_user]) }
       let(:file_set) { query_service.find_members(resource: work).first }
       let(:file_metadata) { query_service.custom_queries.find_file_metadata_by(id: file_set.file_ids.first) }
       let(:uploaded) { storage_adapter.find_by(id: file_metadata.file_identifier) }
@@ -593,9 +594,9 @@ RSpec.describe Hyrax::FileSetsController do
           get :edit, params: { id: file_set }
 
           expect(response).to be_successful
-          expect(assigns[:file_set]).to eq file_set
+          expect(assigns[:file_set].id).to eq file_set.id
           expect(assigns[:version_list]).to be_kind_of Hyrax::VersionListPresenter
-          expect(assigns[:parent]).to eq parent
+          expect(assigns[:parent].id).to eq parent.id
           expect(response).to render_template(:edit)
           expect(response).to render_template('dashboard')
         end
@@ -659,7 +660,7 @@ RSpec.describe Hyrax::FileSetsController do
         context "with two existing versions from different users", :perform_enqueued do
           let(:second_user) { create(:user) }
           let(:second_file) { FactoryBot.create(:uploaded_file, user: second_user, file: File.open('spec/fixtures/4-20.png'), file_set_uri: file_set.id.to_s) }
-          let(:work) { FactoryBot.valkyrie_create(:hyrax_work, uploaded_files: [FactoryBot.create(:uploaded_file, user: user)], edit_users: [user]) }
+          let(:work) { FactoryBot.valkyrie_create(:hyrax_work, uploaded_files: [FactoryBot.create(:uploaded_file, user: work_user)], edit_users: [work_user]) }
           let(:version1) { Hyrax::VersioningService.new(resource: file_metadata).versions.first }
 
           before do
@@ -680,8 +681,6 @@ RSpec.describe Hyrax::FileSetsController do
 
               it "restores the first versions's content and metadata" do
                 expect(latest_version).to be_a Valkyrie::StorageAdapter::File
-                # Can't restore metadata w/ Valkyrie.
-                # TODO: Make original filename restore at least.
                 restored_content = Hyrax.query_service.find_by(id: file_metadata.id)
                 expect(restored_content.original_filename).to eq "image.jp2"
                 expect(Hyrax::VersioningService.new(resource: file_metadata).versions.count).to eq 3
@@ -765,6 +764,7 @@ RSpec.describe Hyrax::FileSetsController do
 
       describe "#edit" do
         context "someone else's files" do
+          let(:work_user) { FactoryBot.create(:user) }
           it "sets flash error" do
             get :edit, params: { id: file_set }
             expect(response.code).to eq '401'
@@ -775,43 +775,15 @@ RSpec.describe Hyrax::FileSetsController do
       end
 
       describe "#show" do
-        let(:work) do
-          FactoryBot.create(:generic_work, :public,
-                            title: ['test title'],
-                            user: user)
-        end
-
-        let(:file_set) do
-          FactoryBot.create(:file_set, title: ['test file'], user: user).tap do |file_set|
-            work.ordered_members << file_set
-            work.save!
-          end
-        end
-
-        before do
-          work.ordered_members << file_set
-          work.save!
-        end
-
         context "without a referer" do
-          let(:work) do
-            FactoryBot.create(:generic_work, :public,
-                              title: ['test title'],
-                              user: user)
-          end
-
-          before do
-            work.ordered_members << file_set
-            work.save!
-            file_set.save!
-          end
-
           it "shows me the file and set breadcrumbs" do
             expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
             expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
             expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
             expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
-            expect(controller).to receive(:add_breadcrumb).with('test file', main_app.hyrax_file_set_path(file_set, locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('image.jp2', main_app.hyrax_file_set_path(file_set, locale: 'en'))
+            allow(controller.main_app).to receive(:polymorphic_path).and_call_original
+            allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{work.id}?locale=en")
             get :show, params: { id: file_set }
             expect(response).to be_successful
             expect(flash).to be_empty
@@ -825,9 +797,6 @@ RSpec.describe Hyrax::FileSetsController do
         context "with a referer" do
           before do
             request.env['HTTP_REFERER'] = 'http://test.host/foo'
-            work.ordered_members << file_set
-            work.save!
-            file_set.save!
           end
 
           it "shows me the breadcrumbs" do
@@ -835,7 +804,9 @@ RSpec.describe Hyrax::FileSetsController do
             expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
             expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
             expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
-            expect(controller).to receive(:add_breadcrumb).with('test file', main_app.hyrax_file_set_path(file_set, locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('image.jp2', main_app.hyrax_file_set_path(file_set, locale: 'en'))
+            allow(controller.main_app).to receive(:polymorphic_path).and_call_original
+            allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{work.id}?locale=en")
             get :show, params: { id: file_set }
             expect(response).to be_successful
           end
@@ -843,37 +814,23 @@ RSpec.describe Hyrax::FileSetsController do
       end
 
       context 'someone elses (public) files' do
-        let(:creator) do
+        let(:work_user) do
           FactoryBot.create(:user, email: 'archivist1@example.com')
         end
 
-        let(:parent) do
-          FactoryBot.create(:work, :public, user: creator, read_groups: ['public'])
-        end
-
-        let(:public_file_set) do
-          FactoryBot.create(:file_set, user: creator, read_groups: ['public']).tap do |file_set|
-            parent.ordered_members << file_set
-            parent.save!
-          end
-        end
-
         let(:work) do
-          FactoryBot.create(:generic_work, :public,
-                            title: ['test title'],
-                            user: user)
-        end
-
-        before do
-          sign_in user
-          work.ordered_members << public_file_set
-          work.save!
-          public_file_set.save!
+          FactoryBot.valkyrie_create(
+            :hyrax_work,
+            :public,
+            title: "test title",
+            uploaded_files: [FactoryBot.create(:uploaded_file, user: work_user)],
+            edit_users: [work_user]
+          )
         end
 
         describe '#edit' do
           it 'gives me the unauthorized page' do
-            get :edit, params: { id: public_file_set }
+            get :edit, params: { id: file_set }
 
             expect(response.code).to eq '401'
             expect(response).to render_template(:unauthorized)
@@ -883,7 +840,10 @@ RSpec.describe Hyrax::FileSetsController do
 
         describe '#show' do
           it 'allows access to the file' do
-            get :show, params: { id: public_file_set }
+            allow(controller.main_app).to receive(:polymorphic_path).and_call_original
+            allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{work.id}?locale=en")
+
+            get :show, params: { id: file_set }
 
             expect(response).to be_successful
           end
