@@ -32,7 +32,7 @@ module Wings
       end
 
       def upload(file:, original_filename:, resource:, content_type: DEFAULT_CTYPE, # rubocop:disable Metrics/ParameterLists
-                 resource_uri_transformer: default_resource_uri_transformer, use: Hydra::PCDM::Vocab::PCDMTerms.File,
+                 resource_uri_transformer: default_resource_uri_transformer, use: Hydra::PCDM::Vocab::PCDMTerms.File, # rubocop:disable Lint/UnusedMethodArgument
                  id_hint: 'original', **_extra_arguments)
         id = if resource.try(:file_set?)
                upload_with_works(resource: resource, file: file, use: use)

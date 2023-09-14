@@ -41,7 +41,6 @@ module Hyrax
 
     layout :decide_layout
 
-
     # GET /concern/file_sets/:id
     def edit
       initialize_edit_form
@@ -114,20 +113,24 @@ module Hyrax
     def update_metadata
       case file_set
       when Hyrax::Resource
-        change_set = Hyrax::Forms::ResourceForm.for(file_set)
-
-        result =
-          change_set.validate(attributes) &&
-          transactions['change_set.update_file_set']
-          .with_step_args(
-            'file_set.save_acl' => { permissions_params: change_set.input_params["permissions"] }
-          )
-          .call(change_set).value_or { false }
-        @file_set = result if result
+        valkyrie_update_metadata
       else
         file_attributes = form_class.model_attributes(attributes)
         actor.update_metadata(file_attributes)
       end
+    end
+
+    def valkyrie_update_metadata
+      change_set = Hyrax::Forms::ResourceForm.for(file_set)
+
+      result =
+        change_set.validate(attributes) &&
+        transactions['change_set.update_file_set']
+        .with_step_args(
+          'file_set.save_acl' => { permissions_params: change_set.input_params["permissions"] }
+        )
+          .call(change_set).value_or { false }
+        @file_set = result if result
     end
 
     def parent(file_set: curation_concern)
@@ -141,9 +144,8 @@ module Hyrax
     end
 
     def attempt_update
-      if Hyrax.config.use_valkyrie?
-        attempt_update_valkyrie
-      elsif wants_to_revert?
+      return attempt_update_valkyrie if Hyrax.config.use_valkyrie?
+      if wants_to_revert?
         actor.revert_content(params[:revision])
       elsif params.key?(:file_set)
         if params[:file_set].key?(:files)
