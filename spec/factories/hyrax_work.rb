@@ -77,6 +77,8 @@ FactoryBot.define do
         perform_enqueued_jobs(only: ValkyrieIngestJob) do
           Hyrax::WorkUploadsHandler.new(work: Hyrax.query_service.find_by(id: work.id)).add(files: evaluator.uploaded_files).attach
         end
+        # I'm not sure why, but Wings required this reload.
+        work.member_ids = Hyrax.query_service.find_by(id: work.id).member_ids
       end
 
       Hyrax.index_adapter.save(resource: Hyrax.query_service.find_by(id: work.id)) if evaluator.with_index
