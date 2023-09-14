@@ -70,6 +70,7 @@ jobs:
     docker:
       - image: gcr.io/kaniko-project/executor:v1.14.0-debug
         entrypoint: ""
+    working_directory: '/workspace'
     steps:
       - run:
           name: Configure GHCR credentials
@@ -83,6 +84,7 @@ jobs:
                }
              }
              JSON
+      - checkout
       - run:
           name: Build and Push image
           command: |
@@ -91,7 +93,7 @@ jobs:
                 --build-arg "EXTRA_APK_PACKAGES=git bash" \
                 --build-arg "APP_PATH=.<< parameters.hyrax_app >>" \
                 --build-arg "RUBY_VERSION=<< parameters.ruby_version >>" \
-                --context "git://github.com/$(echo $CIRCLE_REPOSITORY_URL | sed -E 's/.+:(.+)\.git/\1/')#refs/heads/${CIRCLE_BRANCH}#${CIRCLE_SHA1}" \
+                --context $(pwd) \
                 --target "hyrax-engine-dev" \
                 --destination "ghcr.io/samvera/hyrax/<< parameters.hyrax_app >>-dev:${CIRCLE_SHA1}"
 
