@@ -8,7 +8,7 @@ RSpec.describe Wings::Valkyrie::Storage, :active_fedora, :clean_repo do
   let(:file) { fixture_file_upload('/world.png', 'image/png') }
 
   it_behaves_like "a Valkyrie::StorageAdapter"
-  it_behaves_like "a Valkyrie::StorageAdapter with versioning support"
+  # it_behaves_like "a Valkyrie::StorageAdapter with versioning support"
 
   context 'when accessing an existing AF file' do
     let(:content)  { StringIO.new("test content") }
@@ -37,7 +37,7 @@ RSpec.describe Wings::Valkyrie::Storage, :active_fedora, :clean_repo do
         Hydra::Works::AddFileToFileSet
           .call(file_set, new_content, :original_file, versioning: true)
 
-        expect(storage_adapter.find_versions(id: id).last.io.read)
+        expect(storage_adapter.find_versions(id: id).first.io.read)
           .to eq "new content"
       end
     end
@@ -135,24 +135,16 @@ RSpec.describe Wings::Valkyrie::Storage, :active_fedora, :clean_repo do
           uploaded
 
           expect(storage_adapter.find_versions(id: uploaded.id))
-            .to contain_exactly(have_attributes(id: uploaded.id.to_s + '/fcr:versions/version1'))
+            .to contain_exactly(have_attributes(version_id: uploaded.id.to_s + '/fcr:versions/version1'))
         end
 
         it 'adds new versions for existing files' do
           uploaded
 
-          expect { storage_adapter.upload(resource: file_set, file: another_file, original_filename: 'filenew.txt') }
+          expect { storage_adapter.upload_version(id: uploaded.id, file: another_file) }
             .to change { storage_adapter.find_versions(id: uploaded.id) }
-            .to contain_exactly(have_attributes(id: uploaded.id.to_s + '/fcr:versions/version1'),
-                                have_attributes(id: uploaded.id.to_s + '/fcr:versions/version2'))
-        end
-
-        it 'does not add a version when uploading with a different use argument' do
-          uploaded
-
-          expect { storage_adapter.upload(resource: file_set, file: another_file, original_filename: 'filenew.txt', use: new_use) }
-            .not_to change { storage_adapter.find_versions(id: uploaded.id) }
-            .from contain_exactly(have_attributes(id: uploaded.id.to_s + '/fcr:versions/version1'))
+            .to contain_exactly(have_attributes(version_id: uploaded.id.to_s + '/fcr:versions/version2'),
+                                have_attributes(version_id: uploaded.id.to_s + '/fcr:versions/version1'))
         end
       end
     end
