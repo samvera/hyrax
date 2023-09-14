@@ -535,7 +535,7 @@ RSpec.describe Hyrax::FileSetsController do
     end
   end
 
-  describe "with valkyrie" do
+  describe "with valkyrie", if: ::FileSet < Hyrax::Resource do
     context "when signed in" do
       let(:user)  { FactoryBot.create(:user) }
       before { sign_in user }
@@ -548,6 +548,7 @@ RSpec.describe Hyrax::FileSetsController do
       let(:storage_adapter) { Hyrax.storage_adapter }
 
       before do
+        allow(Hyrax.config).to receive(:use_valkyrie?).and_return(true)
         # We can't redirect to a TestWork, there's no controller.
         allow(controller).to receive(:redirect_to)
       end
