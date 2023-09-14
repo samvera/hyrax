@@ -5,29 +5,26 @@ module Hyrax
     ##
     # @api public
     #
-    # @example defining a form class using HydraEditor-like configuration
-    #   class MonographForm < Hyrax::Forms::ResourceForm(Monograph)
-    #     self.required_fields = [:title, :creator, :rights_statement]
-    #     # other WorkForm-like configuration here
-    #   end
+    # Returns the form class associated with a given model.
     #
-    # @note The returned class will extend +Hyrax::Forms::PcdmObjectForm+, not
-    #   only +Hyrax::Forms::ResourceForm+. This is for backwards‐compatibility
-    #   with existing Hyrax instances and satisfies the expected general use
-    #   case (building forms for various PCDM object classes), but is *not*
-    #   necessarily suitable for other kinds of Hyrax resource, like
-    #   +Hyrax::FileSet+s.
-    def self.ResourceForm(work_class)
-      Class.new(Hyrax::Forms::PcdmObjectForm) do
-        self.model_class = work_class
-
-        ##
-        # @return [String]
-        def self.inspect
-          return "Hyrax::Forms::ResourceForm(#{model_class})" if name.blank?
-          super
+    # @note The default case assumes that the provided model class is for a
+    #   PCDM object and returns a +Hyrax::Forms::PcdmObjectForm+. This is for
+    #   backwards‐compatibility with existing Hyrax instances. However, a
+    #   different +Hyrax::Forms::ResourceForm+ subclass will be returned in
+    #   some known cases where that is preferable.
+    def self.ResourceForm(model_class)
+      @resource_forms ||= {}.compare_by_identity
+      @resource_forms[model_class] ||=
+        if model_class <= Hyrax::AdministrativeSet
+          Hyrax::Forms::AdministrativeSetForm
+        elsif model_class <= Hyrax::FileSet
+          Hyrax::Forms::FileSetForm
+        elsif model_class <= Hyrax::PcdmCollection
+          Hyrax::Forms::PcdmCollectionForm
+        else
+          "Hyrax::Forms::PcdmObjectForm".constantize # autoload
+          Hyrax::Forms::PcdmObjectForm(model_class)
         end
-      end
     end
 
     ##
@@ -122,19 +119,8 @@ module Hyrax
         #   change_set = Hyrax::Forms::ResourceForm.for(monograph)
         def for(resource)
           klass = "#{resource.class.name}Form".safe_constantize
-
-          return  klass.new(resource) if klass
-          case resource
-          when Hyrax::AdministrativeSet
-            Hyrax::Forms::AdministrativeSetForm.new(resource)
-          when Hyrax::FileSet
-            Hyrax::Forms::FileSetForm.new(resource)
-          when Hyrax::PcdmCollection
-            Hyrax::Forms::PcdmCollectionForm.new(resource)
-          else
-            # NOTE: This will create a +Hyrax::Forms::PcdmObjectForm+.
-            Hyrax::Forms::ResourceForm(resource.class).new(resource)
-          end
+          klass ||= Hyrax::Forms::ResourceForm(resource.class)
+          klass.new(resource)
         end
 
         ##
