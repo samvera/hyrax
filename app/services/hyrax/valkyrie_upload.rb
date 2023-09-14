@@ -42,7 +42,7 @@ class Hyrax::ValkyrieUpload
     file_metadata.pcdm_use = [use]
     file_metadata.recorded_size = [io.size]
     file_metadata.mime_type = mime_type if mime_type
-    file_metadata.original_filename = filename || File.basename(io)
+    file_metadata.original_filename = File.basename(filename).to_s || File.basename(io)
 
     if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE
       # Set file set label.
