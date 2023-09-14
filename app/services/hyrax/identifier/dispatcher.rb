@@ -60,9 +60,8 @@ module Hyrax
           Hyrax.persister.save(resource: result)
         else
           result.save
+          result
         end
-
-        result
       end
     end
   end
