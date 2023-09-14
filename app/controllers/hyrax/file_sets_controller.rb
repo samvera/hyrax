@@ -129,8 +129,8 @@ module Hyrax
         .with_step_args(
           'file_set.save_acl' => { permissions_params: change_set.input_params["permissions"] }
         )
-          .call(change_set).value_or { false }
-        @file_set = result if result
+        .call(change_set).value_or { false }
+      @file_set = result if result
     end
 
     def parent(file_set: curation_concern)
@@ -161,9 +161,8 @@ module Hyrax
     end
 
     def attempt_update_valkyrie
-      if wants_to_revert_valkyrie?
-        revert_valkyrie
-      elsif params.key?(:file_set)
+      return revert_valkyrie if wants_to_revert_valkyrie?
+      if params.key?(:file_set)
         if params[:file_set].key?(:files)
           ValkyrieIngestJob.perform_later(uploaded_file_from_path)
         else
