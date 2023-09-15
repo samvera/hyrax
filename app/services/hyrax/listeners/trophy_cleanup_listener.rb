@@ -9,7 +9,8 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_object_deleted(event)
-        Trophy.where(work_id: event[:id]).destroy_all
+        object_id = event[:object]&.id || event[:id]
+        Trophy.where(work_id: object_id).destroy_all
       rescue StandardError => err
         Hyrax.logger.warn "Failed to delete trophies for #{event[:id]}. " \
                           'These trophies might be orphaned.' \
