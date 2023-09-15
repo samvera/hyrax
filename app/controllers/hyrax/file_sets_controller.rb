@@ -144,7 +144,7 @@ module Hyrax
     end
 
     def attempt_update
-      return attempt_update_valkyrie if Hyrax.config.use_valkyrie?
+      return attempt_update_valkyrie if ::FileSet < Hyrax::Resource
       if wants_to_revert?
         actor.revert_content(params[:revision])
       elsif params.key?(:file_set)
