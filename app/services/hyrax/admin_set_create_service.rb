@@ -101,7 +101,7 @@ module Hyrax
       # Create an instance of `Hyrax::AdministrativeSet` with the suggested_id if supported.
       # @return [Hyrax::AdministrativeSet] the new admin set
       def create_admin_set(suggested_id:, title:)
-        if suggested_id.blank? || Hyrax.config.disable_wings || !Hyrax.metadata_adapter.is_a?(Wings::Valkyrie::MetadataAdapter)
+        if suggested_id.blank? || Hyrax.config.disable_wings
           # allow persister to assign id
           Hyrax::AdministrativeSet.new(title: Array.wrap(title))
         else

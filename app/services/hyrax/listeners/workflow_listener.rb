@@ -30,6 +30,18 @@ module Hyrax
         # don't error on known sipity error types; log instead
         Hyrax.logger.error(err)
       end
+
+      ##
+      # Called when 'object.deleted' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
+      def on_object_deleted(event)
+        return unless event[:object]
+        gid = Hyrax::ValkyrieGlobalIdProxy.new(resource: event[:object]).to_global_id
+        return unless gid.present?
+        Sipity::Entity.where(proxy_for_global_id: gid.to_s).destroy_all
+      end
+
     end
   end
 end
