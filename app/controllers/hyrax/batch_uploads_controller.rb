@@ -6,6 +6,10 @@ module Hyrax
 
     # Gives the class of the form.
     class BatchUploadFormService
+      def self.build(resource, current_ability, *extra)
+        form_class.new(resource, current_ability, *extra)
+      end
+
       def self.form_class(_ = nil)
         ::Hyrax::Forms::BatchUploadForm
       end
