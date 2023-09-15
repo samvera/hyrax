@@ -185,8 +185,33 @@ module Hyrax
       form = build_form
       # TODO: We need to intercept the following value before `form.validate` to create a simple array of GeoID strings
       # "based_near"=>
-      # <ActionController::Parameters {"0"=>{"hidden_label"=>"Paris, Île-de-France, France", "id"=>"https://sws.geonames.org/2988507/", "_destroy"=>""}, "1"=>{"hidden_label"=>"Madrid, Madrid, Spain", "id"=>"https://sws.geonames.org/3117735/", "_destroy"=>""}} permitted: false>,
-      # fallback to an empty hash to avoid: # NoMethodError: undefined method `has_key?` for nil:NilClass
+      # AF params passed to controller when updating record - notice, no `based_near`, just `based_near_atttributes`:
+      #
+      # generic_work[based_near_attributes][0][hidden_label]: https://sws.geonames.org/5750162/
+      # generic_work[based_near_attributes][0][id]: https://sws.geonames.org/5750162/
+      # generic_work[based_near_attributes][0][_destroy]:
+      # generic_work[based_near_attributes][1][hidden_label]: https://sws.geonames.org/4335045/
+      # generic_work[based_near_attributes][1][id]: https://sws.geonames.org/4335045/
+      # generic_work[based_near_attributes][1][_destroy]:
+      # generic_work[based_near_attributes][2][hidden_label]: Jakarta, Jakarta, Indonesia
+      # generic_work[based_near_attributes][2][id]: https://sws.geonames.org/1642911/
+      # generic_work[based_near_attributes][2][_destroy]:
+      #
+      # Valkyrie params passed to controller when updating record - these neet to be modified:
+      #
+      # generic_work[based_near][]: [:"0", #<Valkyrie::ID:0x0000ffff6a464d20 @id="https://sws.geonames.org/11919979/">] [:"1", #<Valkyrie::ID:0x0000ffff6a464c08 @id="https://sws.geonames.org/3882434/">]
+      # generic_work[based_near_attributes][0][id]:
+      # generic_work[based_near_attributes][0][_destroy]:
+      # generic_work[based_near][]: [:"0", #<Valkyrie::ID:0x0000ffff6a464d20 @id="https://sws.geonames.org/11919979/">] [:"1", #<Valkyrie::ID:0x0000ffff6a464c08 @id="https://sws.geonames.org/3882434/">]
+      # generic_work[based_near_attributes][1][id]:
+      # generic_work[based_near_attributes][1][_destroy]:
+      # binding.pry
+      # The following code removes the label, but it's not clear how to create an acceptable ActionController::Parameters value that does not contain hash index/keys
+      params[:generic_work][:based_near_attributes].each do |location|
+        location.last.delete('hidden_label')
+      end
+      params[:generic_work][:based_near_attributes].permit!
+
       original_input_params_for_form = params[hash_key_for_curation_concern] ? params[hash_key_for_curation_concern] : {}
       return after_create_error(form_err_msg(form), original_input_params_for_form) unless form.validate(original_input_params_for_form)
 
