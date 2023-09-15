@@ -72,7 +72,9 @@ RSpec.describe "work show view" do
         )
       end
 
-      it "allows adding work to a collection", clean_repo: true, js: true,
+      it "allows adding work to a collection",
+        clean_repo: true,
+        js: true,
         skip: Hyrax.config.use_valkyrie? && 'this failure is unrelated to embargoes (#5844). waiting for valkyrie spec suite improvements' do
           click_button "Add to collection" # opens the modal
           # Really ensure that this Collection model is persisted
