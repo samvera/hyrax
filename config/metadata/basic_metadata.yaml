@@ -5,16 +5,22 @@ attributes:
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "abstract_tesim"
   access_right:
     type: string
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "access_right_tesim"
   alternative_title:
     type: string
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "alternative_title_tesim"
   based_near:
     type: string
     multiple: true
@@ -31,6 +37,8 @@ attributes:
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "contributor_tesim"
   creator:
     type: string
     multiple: true
@@ -58,6 +66,8 @@ attributes:
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "identifier_tesim"
   import_url:
     type: string
   keyword:
@@ -73,20 +83,28 @@ attributes:
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "publisher_tesim"
   label:
     type: string
     form:
       primary: false
+    index_keys:
+      - "label_tesim"
   language:
     type: string
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "language_tesim"
   license:
     type: string
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "license_tesim"
   relative_path:
     type: string
   related_url:
@@ -109,6 +127,8 @@ attributes:
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "rights_notes_tesim"
   rights_statement:
     type: string
     multiple: true
@@ -121,6 +141,8 @@ attributes:
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "source_tesim"
   subject:
     type: string
     multiple: true

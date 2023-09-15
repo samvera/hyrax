@@ -182,7 +182,17 @@ RSpec.describe "work show view" do
     let(:work) do
       FactoryBot.valkyrie_create(
         :comet_in_moominland,
-        :public
+        :public,
+        abstract: "some fairy creatures meet a child from Sweden I think",
+        access_right: "open",
+        alternative_title: "mooninland",
+        contributor: "Mystery",
+        identifier: "867-5309",
+        publisher: "Books Incorporated",
+        language: "English",
+        license: "public domain",
+        rights_notes: "no rights reserved",
+        source: "springwater"
       )
     end
 
@@ -192,6 +202,16 @@ RSpec.describe "work show view" do
 
     it "shows a work" do
       expect(page).to have_selector 'h1', text: 'Comet in Moominland'
+      expect(page).to have_selector 'dt', text: 'Abstract'
+      expect(page).to have_selector 'dt', text: 'Access right'
+      expect(page).to have_selector 'dt', text: 'Alternative title'
+      expect(page).to have_selector 'dt', text: 'Contributor'
+      expect(page).to have_selector 'dt', text: 'Identifier'
+      expect(page).to have_selector 'dt', text: 'Publisher'
+      expect(page).to have_selector 'dt', text: 'Language'
+      expect(page).to have_selector 'dt', text: 'License'
+      expect(page).to have_selector 'dt', text: 'Rights notes'
+      expect(page).to have_selector 'dt', text: 'Source'
 
       # Doesn't have the upload form for uploading more files
       expect(page).not_to have_selector "form#fileupload"
@@ -202,7 +222,7 @@ RSpec.describe "work show view" do
       expect(page).to have_content '%0 Monograph'
       expect(page).to have_content '%T Comet in Moominland'
       expect(page).to have_content '%R http://localhost/files/'
-      expect(page).to have_content '%~ Koppie'
+      expect(page).to have_content "%~ #{I18n.t('hyrax.product_name')}"
       expect(page).to have_content '%W Institution'
     end
   end
