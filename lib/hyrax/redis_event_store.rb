@@ -25,15 +25,14 @@ module Hyrax
       #
       # @return [Redis]
       def instance
-        connection = Hyrax.config.redis_connection || Redis.current
-
-        if connection.is_a? Redis::Namespace
-          connection.namespace = namespace
-          connection
-        elsif connection == Redis.current
-          Redis.current = Redis::Namespace.new(namespace, redis: connection)
+        if  Hyrax.config.redis_connection&.is_a?(Redis::Namespace)
+          c = Hyrax.config.redis_connection
+          c.namespace = namespace
+          c
+        elsif Hyrax.config.redis_connection
+          Hyrax.config.redis_connection
         else
-          connection
+          Redis::Namespace.new(namespace, redis: Redis.new)
         end
       end
 

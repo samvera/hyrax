@@ -47,11 +47,10 @@ module Hyrax
     # @api private
     #
     # @note support both a ConnectionPool and a raw Redis client for now.
-    #   we should drop support for `Redis.current` in 5.0.0.
     #   `#then` supports both options. for a ConnectionPool it will block
     #   until a connection is available.
     def pool
-      Hyrax.config.redis_connection || Redis.current
+      Hyrax.config.redis_connection || Redis.new
     end
   end
 end
