@@ -52,20 +52,16 @@ RSpec.describe CollectionBrandingInfo, type: :model do
   end
 
   describe '#delete' do
-    it "removes banner file from public directory" do
-      banner_info.save(file.path)
-      banner_info.delete(banner_info.find_local_dir_name('123', 'banner') + "/banner.gif")
+    before { banner_info.save(file.path) }
 
-      expect { storage_adapter.find_by(id: banner_info.local_path) }
-        .to raise_error Valkyrie::StorageAdapter::FileNotFound
-    end
-
-    it "removes logo file from public directory" do
-      logo_info.save(file.path)
-      logo_info.delete(logo_info.find_local_dir_name('123', 'logo') + "/logo.gif")
-
-      expect { storage_adapter.find_by(id: logo_info.local_path) }
-        .to raise_error Valkyrie::StorageAdapter::FileNotFound
+    it "removes banner file" do
+      expect { banner_info.delete }.to change {
+        begin
+          storage_adapter.find_by(id: banner_info.local_path)
+        rescue Valkyrie::StorageAdapter::FileNotFound
+          'Raised FileNotFound' # Convert the raised error so change can detect it
+        end
+      }.from(be_a(Valkyrie::StorageAdapter::File)).to(eq 'Raised FileNotFound')
     end
   end
 end

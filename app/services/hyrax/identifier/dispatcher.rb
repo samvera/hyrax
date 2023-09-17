@@ -53,8 +53,15 @@ module Hyrax
       #
       # @see #assign_for
       def assign_for!(object:, attribute: :identifier)
-        assign_for(object: object, attribute: attribute).save!
-        object
+        result = assign_for(object: object, attribute: attribute)
+
+        case result
+        when Valkyrie::Resource
+          Hyrax.persister.save(resource: result)
+        else
+          result.save
+          result
+        end
       end
     end
   end

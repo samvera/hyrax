@@ -22,6 +22,7 @@ RSpec.describe 'Batch creation of works', type: :feature do
     before do
       allow(CharacterizeJob).to receive(:perform_later).and_return(true)
       allow(CreateDerivativesJob).to receive(:perform_later).and_return(true)
+      allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
 
       ProxyDepositRights.create!(grantor: second_user, grantee: user)
       sign_in user

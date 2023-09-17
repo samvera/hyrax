@@ -30,7 +30,7 @@ SUMMARY
   # NOTE: rails does not follow sem-ver conventions, it's
   # minor version releases can include breaking changes; see
   # http://guides.rubyonrails.org/maintenance_policy.html
-  spec.add_dependency 'rails', '~> 6.0'
+  spec.add_dependency 'rails', '~> 6.1'
 
   spec.add_dependency 'active-fedora', '~> 14.0'
   spec.add_dependency 'almond-rails', '~> 0.1'
@@ -98,7 +98,7 @@ SUMMARY
   spec.add_development_dependency 'pg', '~> 1.2'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency 'rspec-its', '~> 1.1'
-  spec.add_development_dependency 'rspec-rails', '~> 5.0'
+  spec.add_development_dependency 'rspec-rails', '~> 6.0'
   spec.add_development_dependency 'rspec_junit_formatter'
   spec.add_development_dependency "selenium-webdriver", '~> 4.4'
   spec.add_development_dependency 'i18n-debug'

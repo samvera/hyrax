@@ -91,7 +91,7 @@ jobs:
                 --build-arg "EXTRA_APK_PACKAGES=git bash" \
                 --build-arg "APP_PATH=.<< parameters.hyrax_app >>" \
                 --build-arg "RUBY_VERSION=<< parameters.ruby_version >>" \
-                --context "git://github.com/samvera/hyrax#refs/heads/${CIRCLE_BRANCH}#${CIRCLE_SHA1}" \
+                --context "git://github.com/$(echo $CIRCLE_REPOSITORY_URL | sed -E 's/.+:(.+)\.git/\1/')#refs/heads/${CIRCLE_BRANCH}#${CIRCLE_SHA1}" \
                 --target "hyrax-engine-dev" \
                 --destination "ghcr.io/samvera/hyrax/<< parameters.hyrax_app >>-dev:${CIRCLE_SHA1}"
 
