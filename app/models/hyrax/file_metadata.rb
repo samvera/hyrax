@@ -59,7 +59,7 @@ module Hyrax
       module_function :uri_for
     end
 
-    attribute :file_identifier, Valkyrie::Types::ID # id of the file stored by the storage adapter
+    attribute :file_identifier, ::Valkyrie::Types::ID # id of the file stored by the storage adapter
     attribute :alternate_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID) # id of the file, populated for queryability
     attribute :file_set_id, ::Valkyrie::Types::ID # id of parent file set resource
 

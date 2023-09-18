@@ -113,24 +113,30 @@ module Hyrax
     def update_metadata
       case file_set
       when Hyrax::Resource
-        change_set = Hyrax::Forms::ResourceForm.for(file_set)
-
-        change_set.validate(attributes) &&
-          transactions['change_set.update_file_set']
-            .with_step_args(
-              'file_set.save_acl' => { permissions_params: change_set.input_params["permissions"] }
-            )
-            .call(change_set).value_or { false }
+        valkyrie_update_metadata
       else
         file_attributes = form_class.model_attributes(attributes)
         actor.update_metadata(file_attributes)
       end
     end
 
+    def valkyrie_update_metadata
+      change_set = Hyrax::Forms::ResourceForm.for(file_set)
+
+      result =
+        change_set.validate(attributes) &&
+        transactions['change_set.update_file_set']
+        .with_step_args(
+          'file_set.save_acl' => { permissions_params: change_set.input_params["permissions"] }
+        )
+        .call(change_set).value_or { false }
+      @file_set = result if result
+    end
+
     def parent(file_set: curation_concern)
       @parent ||=
         case file_set
-        when Hyrax::Resource
+        when Hyrax::FileSet
           Hyrax.query_service.find_parents(resource: file_set).first
         else
           file_set.parent
@@ -138,6 +144,7 @@ module Hyrax
     end
 
     def attempt_update
+      return attempt_update_valkyrie if ::FileSet < Hyrax::Resource
       if wants_to_revert?
         actor.revert_content(params[:revision])
       elsif params.key?(:file_set)
@@ -153,9 +160,31 @@ module Hyrax
       end
     end
 
+    def attempt_update_valkyrie
+      return revert_valkyrie if wants_to_revert_valkyrie?
+      if params.key?(:file_set)
+        if params[:file_set].key?(:files)
+          ValkyrieIngestJob.perform_later(uploaded_file_from_path)
+        else
+          update_metadata
+        end
+      elsif params.key?(:files_files) # version file already uploaded with ref id in :files_files array
+        uploaded_files = Array(Hyrax::UploadedFile.find(params[:files_files]))
+        uploaded_files.first.file_set_uri = file_set.id.to_s
+        uploaded_files.first.save
+        ValkyrieIngestJob.perform_later(uploaded_files.first)
+        update_metadata
+      end
+    end
+
+    def revert_valkyrie
+      Hyrax::VersioningService.create(file_metadata, current_user, Hyrax.storage_adapter.find_by(id: params[:revision]))
+      true
+    end
+
     def uploaded_file_from_path
       uploaded_file = CarrierWave::SanitizedFile.new(params[:file_set][:files].first)
-      Hyrax::UploadedFile.create(user_id: current_user.id, file: uploaded_file)
+      Hyrax::UploadedFile.create(user_id: current_user.id, file: uploaded_file, file_set_uri: @file_set.id.to_s)
     end
 
     def after_update_response
@@ -253,6 +282,14 @@ module Hyrax
 
     def wants_to_revert?
       params.key?(:revision) && params[:revision] != curation_concern.latest_content_version.label
+    end
+
+    def wants_to_revert_valkyrie?
+      params.key?(:revision) && params[:revision] != Hyrax::VersioningService.new(resource: file_metadata).latest_version.version_id.to_s
+    end
+
+    def file_metadata
+      @file_metadata ||= Hyrax.query_service.custom_queries.find_file_metadata_by(id: curation_concern.original_file_id)
     end
 
     # Override this method to add additional response formats to your local app

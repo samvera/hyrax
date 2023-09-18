@@ -53,6 +53,9 @@ module Hyrax
       require 'hyrax/transactions/steps/set_user_as_depositor'
       require 'hyrax/transactions/steps/update_work_members'
       require 'hyrax/transactions/steps/validate'
+      require 'hyrax/transactions/steps/delete_all_file_metadata'
+      require 'hyrax/transactions/steps/file_metadata_delete'
+      require 'hyrax/transactions/file_metadata_destroy'
 
       extend Dry::Container::Mixin
 
@@ -128,9 +131,23 @@ module Hyrax
         end
       end
 
+      namespace "file_metadata" do |ops| # Hyrax::FileMetadata
+        ops.register 'destroy' do
+          FileMetadataDestroy.new
+        end
+
+        ops.register 'delete' do
+          Steps::FileMetadataDelete.new
+        end
+      end
+
       namespace 'file_set' do |ops| # Hyrax::FileSet resource
         ops.register 'delete' do
           Steps::DeleteResource.new
+        end
+
+        ops.register 'delete_all_file_metadata' do
+          Steps::DeleteAllFileMetadata.new(property: :file_ids)
         end
 
         ops.register 'destroy' do
