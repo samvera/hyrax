@@ -50,16 +50,6 @@ module Hyrax
         I18n.translate("hyrax.models.#{model_name.i18n_key}", default: model_name.human)
       end
 
-      private
-
-      ##
-      # @api private
-      #
-      # @return [Class] an ActiveModel::Name compatible class
-      def _hyrax_default_name_class
-        Hyrax::ResourceName
-      end
-
       ##
       # find a Valkyrie object by its primary identifyer.
       #
@@ -90,6 +80,16 @@ module Hyrax
 
       rescue Valkyrie::Persistence::ObjectNotFoundError
         nil
+      end
+
+      private
+
+      ##
+      # @api private
+      #
+      # @return [Class] an ActiveModel::Name compatible class
+      def _hyrax_default_name_class
+        Hyrax::ResourceName
       end
     end
 
