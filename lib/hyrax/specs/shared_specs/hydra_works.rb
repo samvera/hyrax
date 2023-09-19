@@ -249,7 +249,7 @@ RSpec.shared_examples 'a Hyrax::Work' do
   end
 end
 
-RSpec.shared_examples 'a Hyrax::FileSet' do
+RSpec.shared_examples 'a Hyrax::FileSet', valkyrie_adapter: :test_adapter do
   subject(:fileset)   { described_class.new }
   let(:adapter)       { Valkyrie::MetadataAdapter.find(:test_adapter) }
   let(:persister)     { adapter.persister }
@@ -275,12 +275,10 @@ RSpec.shared_examples 'a Hyrax::FileSet' do
     end
 
     context 'with files' do
-      let(:file_class) { Hyrax::FileMetadata }
-      let(:files) do
-        [file_class.new, file_class.new, file_class.new]
-          .map! { |f| persister.save(resource: f) }
-      end
-
+      let(:original_file) { FactoryBot.valkyrie_create :hyrax_file_metadata, :original_file }
+      let(:thumbnail) { FactoryBot.valkyrie_create :hyrax_file_metadata, :thumbnail }
+      let(:extracted_text) { FactoryBot.valkyrie_create :hyrax_file_metadata, :extracted_text }
+      let(:files) { [original_file, thumbnail, extracted_text] }
       let(:file_ids) { files.map(&:id) }
 
       before { fileset.file_ids = file_ids }
@@ -300,6 +298,21 @@ RSpec.shared_examples 'a Hyrax::FileSet' do
       it 'can not have the same file multiple times' do
         expect { fileset.file_ids << file_ids.first }
           .not_to change { query_service.custom_queries.find_files(file_set: fileset) }
+      end
+
+      it 'returns an original_file' do
+        expect(fileset.original_file).to eq original_file
+        expect(fileset.original_file_id).to eq original_file.id
+      end
+
+      it 'returns a thumbnail' do
+        expect(fileset.thumbnail).to eq thumbnail
+        expect(fileset.thumbnail_id).to eq thumbnail.id
+      end
+
+      it 'returns an extracted_text' do
+        expect(fileset.extracted_text).to eq extracted_text
+        expect(fileset.extracted_text_id).to eq extracted_text.id
       end
     end
   end
