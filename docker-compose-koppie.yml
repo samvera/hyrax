@@ -6,10 +6,11 @@ services:
       context: .
       target: hyrax-engine-dev
       args:
-        - EXTRA_APK_PACKAGES=git less chromium
+        - EXTRA_APK_PACKAGES=git less
         - APP_PATH=.koppie
         - BUNDLE_GEMFILE=Gemfile.koppie
-    image: ghcr.io/samvera/koppie
+    image: samvera/koppie
+    entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
     stdin_open: true
     tty: true
@@ -30,8 +31,10 @@ services:
       - 9877:9876
       - 1049:1048
     volumes:
+      - ./bin:/app/samvera
       - .koppie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
+      - bundle:/app/bundle
       - hyrax-storage:/app/samvera/hyrax-webapp/storage
       - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
@@ -45,8 +48,11 @@ services:
       context: .
       target: hyrax-engine-dev-worker
       args:
+        - EXTRA_APK_PACKAGES=git less
         - APP_PATH=.koppie
-    image: ghcr.io/samvera/koppie-worker
+        - BUNDLE_GEMFILE=Gemfile.koppie
+    image: samvera/koppie-worker
+    entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec sidekiq'
     user: root
     env_file:
@@ -58,8 +64,10 @@ services:
       - redis
       - solr
     volumes:
+      - ./bin:/app/samvera
       - .koppie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
+      - bundle:/app/bundle
       - hyrax-storage:/app/samvera/hyrax-webapp/storage
       - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
@@ -69,22 +77,20 @@ services:
       - koppie
 
   db_migrate:
-    build:
-      context: .
-      target: hyrax-engine-dev
-      args:
-        - EXTRA_APK_PACKAGES=git less
-        - APP_PATH=.koppie
-    image: ghcr.io/samvera/koppie
+    image: samvera/koppie
     user: root
     env_file:
       - .koppie/.env
+    entrypoint: dev-entrypoint.sh
     command: db-migrate-seed.sh
     depends_on:
       - postgres
+      - solr
     volumes:
+      - ./bin:/app/samvera
       - .koppie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
+      - bundle:/app/bundle
       - rails-public:/app/samvera/hyrax-webapp/public
       - rails-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
@@ -106,7 +112,7 @@ services:
       - koppie
 
   postgres:
-    image: postgres:latest
+    image: postgres:15
     env_file:
       - .koppie/.env
     ports:
@@ -158,6 +164,7 @@ services:
       - koppie
 
 volumes:
+  bundle:
   db:
   hyrax-storage:
   hyrax-derivatives:
