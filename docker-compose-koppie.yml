@@ -112,7 +112,7 @@ services:
       - koppie
 
   postgres:
-    image: postgres:14.9
+    image: postgres:15
     env_file:
       - .koppie/.env
     ports:

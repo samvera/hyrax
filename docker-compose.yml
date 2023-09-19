@@ -108,7 +108,7 @@ services:
       - hyrax
 
   postgres:
-    image: postgres:latest
+    image: postgres:15
     environment:
       - POSTGRES_USER=hyrax_user
       - POSTGRES_PASSWORD=hyrax_password
