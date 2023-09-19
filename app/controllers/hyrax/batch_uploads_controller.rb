@@ -5,7 +5,11 @@ module Hyrax
     include Hyrax::WorksControllerBehavior
 
     # Gives the class of the form.
-    class BatchUploadFormService < Hyrax::WorkFormService
+    class BatchUploadFormService
+      def self.build(resource, current_ability, *extra)
+        form_class.new(resource, current_ability, *extra)
+      end
+
       def self.form_class(_ = nil)
         ::Hyrax::Forms::BatchUploadForm
       end
