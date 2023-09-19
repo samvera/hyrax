@@ -8,7 +8,8 @@ services:
       args:
         - EXTRA_APK_PACKAGES=git less
         - BUNDLE_GEMFILE=Gemfile.dassie
-    image: ghcr.io/samvera/dassie
+    image: samvera/dassie
+    entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
     stdin_open: true
     tty: true
@@ -29,8 +30,10 @@ services:
       - 3000:3000
       - 9876:9876
     volumes:
+      - ./bin:/app/samvera
       - .dassie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
+      - bundle:/app/bundle
       - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
       - rails-public:/app/samvera/hyrax-webapp/public
@@ -42,7 +45,11 @@ services:
     build:
       context: .
       target: hyrax-engine-dev-worker
-    image: ghcr.io/samvera/dassie-worker
+      args:
+        - EXTRA_APK_PACKAGES=git less
+        - BUNDLE_GEMFILE=Gemfile.dassie
+    image: samvera/dassie-worker
+    entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec sidekiq'
     user: root
     env_file:
@@ -55,8 +62,10 @@ services:
       - redis
       - solr
     volumes:
+      - ./bin:/app/samvera
       - .dassie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
+      - bundle:/app/bundle
       - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
       - sidekiq-public:/app/samvera/hyrax-webapp/public
@@ -65,21 +74,19 @@ services:
       - hyrax
 
   db_migrate:
-    build:
-      context: .
-      target: hyrax-engine-dev
-      args:
-        - EXTRA_APK_PACKAGES=git less
-    image: ghcr.io/samvera/dassie
+    image: samvera/dassie
     user: root
     env_file:
       - .dassie/.env
+    entrypoint: dev-entrypoint.sh
     command: db-migrate-seed.sh
     depends_on:
       - postgres
     volumes:
+      - ./bin:/app/samvera
       - .dassie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
+      - bundle:/app/bundle
       - rails-public:/app/samvera/hyrax-webapp/public
       - rails-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
@@ -138,14 +145,16 @@ services:
       - hyrax
 
   redis:
-    image: redis:5-alpine
+    image: bitnami/redis:6.2
+    env_file:
+      - .dassie/.env
     volumes:
-      - redis:/data
+      - redis:/bitnami/redis/data
     networks:
       - hyrax
 
   solr:
-    image: solr:8.11.1
+    image: solr:8.11
     ports:
       - 8983:8983
     command:
@@ -163,6 +172,7 @@ services:
       - hyrax
 
 volumes:
+  bundle:
   db:
   fcrepo:
   hyrax-derivatives:
