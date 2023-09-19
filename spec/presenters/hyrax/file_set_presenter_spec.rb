@@ -29,15 +29,11 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe "#model_name" do
-    it do
-      name = subject.model_name
-      require 'pry'; binding.pry
-    end
     its(:model_name) { is_expected.to be_kind_of ActiveModel::Name }
   end
 
   describe "#to_partial_path" do
-    its(:to_partial_path) { is_expected.to eq 'file_sets/file_set' }
+    its(:to_partial_path) { is_expected.to eq 'hyrax/file_sets/file_set' }
   end
 
   describe "office_document?" do
@@ -450,7 +446,6 @@ RSpec.describe Hyrax::FileSetPresenter do
       let!(:parent) do
         FactoryBot.valkyrie_create(:hyrax_work, :public, state: active, member_ids: [file_set.id])
       end
-
 
       before do
         allow(ability).to receive(:can?).with(:read, anything) do |_read, solr_doc|
