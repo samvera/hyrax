@@ -1,1 +1,0 @@
-require 'hyrax/specs/disable_animations_in_test_environment'

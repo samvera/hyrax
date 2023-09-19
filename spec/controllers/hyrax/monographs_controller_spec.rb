@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 # This tests the Hyrax::WorksControllerBehavior module with a Valkyrie resource.
-# Included into .internal_test_app/app/controllers/hyrax/monographs_controller.rb
 RSpec.describe Hyrax::MonographsController do
   routes { Rails.application.routes }
   let(:main_app) { Rails.application.routes.url_helpers }

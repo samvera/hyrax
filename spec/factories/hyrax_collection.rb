@@ -19,6 +19,10 @@ FactoryBot.define do
       access_grants { [] }
     end
 
+    after(:build) do |collection, evaluator|
+      collection.depositor ||= evaluator.user.user_key
+    end
+
     after(:create) do |collection, evaluator|
       if evaluator.members.present?
         evaluator.members.map do |member|

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'dry/container'
+
 module Hyrax
   module Transactions
     ##
@@ -24,6 +26,7 @@ module Hyrax
       require 'hyrax/transactions/collection_destroy'
       require 'hyrax/transactions/collection_update'
       require 'hyrax/transactions/file_set_destroy'
+      require 'hyrax/transactions/file_set_update'
       require 'hyrax/transactions/work_create'
       require 'hyrax/transactions/work_destroy'
       require 'hyrax/transactions/work_update'
@@ -50,6 +53,9 @@ module Hyrax
       require 'hyrax/transactions/steps/set_user_as_depositor'
       require 'hyrax/transactions/steps/update_work_members'
       require 'hyrax/transactions/steps/validate'
+      require 'hyrax/transactions/steps/delete_all_file_metadata'
+      require 'hyrax/transactions/steps/file_metadata_delete'
+      require 'hyrax/transactions/file_metadata_destroy'
 
       extend Dry::Container::Mixin
 
@@ -112,6 +118,10 @@ module Hyrax
           CollectionUpdate.new
         end
 
+        ops.register 'update_file_set' do
+          FileSetUpdate.new
+        end
+
         ops.register 'update_work' do
           WorkUpdate.new
         end
@@ -121,9 +131,23 @@ module Hyrax
         end
       end
 
+      namespace "file_metadata" do |ops| # Hyrax::FileMetadata
+        ops.register 'destroy' do
+          FileMetadataDestroy.new
+        end
+
+        ops.register 'delete' do
+          Steps::FileMetadataDelete.new
+        end
+      end
+
       namespace 'file_set' do |ops| # Hyrax::FileSet resource
         ops.register 'delete' do
           Steps::DeleteResource.new
+        end
+
+        ops.register 'delete_all_file_metadata' do
+          Steps::DeleteAllFileMetadata.new(property: :file_ids)
         end
 
         ops.register 'destroy' do
@@ -132,6 +156,10 @@ module Hyrax
 
         ops.register 'remove_from_work' do
           Steps::RemoveFileSetFromWork.new
+        end
+
+        ops.register 'save_acl' do
+          Steps::SaveAccessControl.new
         end
       end
 

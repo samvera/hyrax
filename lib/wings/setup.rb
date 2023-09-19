@@ -98,12 +98,12 @@ end
 Valkyrie::MetadataAdapter.register(
   Wings::Valkyrie::MetadataAdapter.new, :wings_adapter
 )
-Valkyrie.config.metadata_adapter = :wings_adapter
+Valkyrie.config.metadata_adapter = :wings_adapter unless Hyrax.config.disable_wings
 
 Valkyrie::StorageAdapter.register(
   Wings::Valkyrie::Storage.new, :active_fedora
 )
-Valkyrie.config.storage_adapter = :active_fedora
+Valkyrie.config.storage_adapter = :active_fedora unless Hyrax.config.disable_wings
 
 # TODO: Custom query registration is not Wings specific.  These custom_queries need to be registered for other adapters too.
 #       A refactor is needed to add the default implementations to hyrax.rb and only handle the wings specific overrides here.

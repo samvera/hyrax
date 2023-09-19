@@ -34,12 +34,15 @@ class Hyrax::ValkyrieUpload
     @storage_adapter = storage_adapter
   end
 
-  def upload(filename:, file_set:, io:, use: Hyrax::FileMetadata::Use::ORIGINAL_FILE, user: nil)
+  def upload(filename:, file_set:, io:, use: Hyrax::FileMetadata::Use::ORIGINAL_FILE, user: nil, mime_type: nil) # rubocop:disable Metrics/AbcSize
+    return version_upload(file_set: file_set, io: io, user: user) if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE && file_set.original_file_id && storage_adapter.supports?(:versions)
     streamfile = storage_adapter.upload(file: io, original_filename: filename, resource: file_set)
     file_metadata = Hyrax::FileMetadata(streamfile)
     file_metadata.file_set_id = file_set.id
     file_metadata.pcdm_use = [use]
     file_metadata.recorded_size = [io.size]
+    file_metadata.mime_type = mime_type if mime_type
+    file_metadata.original_filename = File.basename(filename).to_s || File.basename(io)
 
     if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE
       # Set file set label.
@@ -61,6 +64,13 @@ class Hyrax::ValkyrieUpload
     Hyrax.publisher.publish('file.metadata.updated', metadata: saved_metadata, user: user)
 
     saved_metadata
+  end
+
+  def version_upload(file_set:, io:, user:)
+    file_metadata = Hyrax.query_service.custom_queries.find_file_metadata_by(id: file_set.original_file_id)
+    Hyrax::VersioningService.create(file_metadata, user, io)
+    Hyrax.publisher.publish("file.uploaded", metadata: file_metadata)
+    ContentNewVersionEventJob.perform_later(file_set, user)
   end
 
   # @param [Hyrax::FileSet] file_set the file set to add to
@@ -93,6 +103,8 @@ class Hyrax::ValkyrieUpload
         file_set.thumbnail_id = file_metadata.id
       when Hyrax::FileMetadata::Use::EXTRACTED_TEXT
         file_set.extracted_text_id = file_metadata.id
+      when Hyrax::FileMetadata::Use::SERVICE_FILE
+        # do nothing
       else
         Hyrax.logger.warn "Unknown file use #{file_metadata.type} specified for #{file_metadata.file_identifier}"
       end

@@ -30,7 +30,7 @@ SUMMARY
   # NOTE: rails does not follow sem-ver conventions, it's
   # minor version releases can include breaking changes; see
   # http://guides.rubyonrails.org/maintenance_policy.html
-  spec.add_dependency 'rails', '~> 6.0'
+  spec.add_dependency 'rails', '~> 6.1'
 
   spec.add_dependency 'active-fedora', '~> 14.0'
   spec.add_dependency 'almond-rails', '~> 0.1'
@@ -43,7 +43,9 @@ SUMMARY
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'connection_pool', '~> 2.4'
   spec.add_dependency 'draper', '~> 4.0'
-  spec.add_dependency 'dry-events', '~> 0.2.0'
+  spec.add_dependency 'dry-logic', '~> 1.5'
+  spec.add_dependency 'dry-container', '~> 0.11'
+  spec.add_dependency 'dry-events', '~> 1.0.0'
   spec.add_dependency 'dry-equalizer', '~> 0.2'
   spec.add_dependency 'dry-monads', '~> 1.5'
   spec.add_dependency 'dry-struct', '~> 1.0'
@@ -80,7 +82,7 @@ SUMMARY
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 5.10'
-  spec.add_dependency 'valkyrie', '~> 3.0.1'
+  spec.add_dependency 'valkyrie', '~> 3.1.0'
   spec.add_dependency 'view_component', '~> 2.74.1' # Pin until blacklight is updated with workaround for https://github.com/ViewComponent/view_component/issues/1565
   spec.add_dependency 'sprockets', '~> 3.7'
   spec.add_dependency 'sass-rails', '~> 6.0'
@@ -89,16 +91,14 @@ SUMMARY
   spec.add_development_dependency "capybara", '~> 3.29'
   spec.add_development_dependency 'capybara-screenshot', '~> 1.0'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
-  spec.add_development_dependency 'engine_cart', '~> 2.5'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "factory_bot", '~> 4.4'
-  spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
   spec.add_development_dependency 'mida', '~> 0.3'
   spec.add_development_dependency 'okcomputer'
   spec.add_development_dependency 'pg', '~> 1.2'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency 'rspec-its', '~> 1.1'
-  spec.add_development_dependency 'rspec-rails', '~> 5.0'
+  spec.add_development_dependency 'rspec-rails', '~> 6.0'
   spec.add_development_dependency 'rspec_junit_formatter'
   spec.add_development_dependency "selenium-webdriver", '~> 4.4'
   spec.add_development_dependency 'i18n-debug'
@@ -108,6 +108,5 @@ SUMMARY
   spec.add_development_dependency 'bixby', '~> 5.0', '>= 5.0.2' # bixby 5 briefly dropped Ruby 2.5
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
-  spec.add_development_dependency 'webdrivers', '~> 4.4'
   spec.add_development_dependency 'webmock'
 end

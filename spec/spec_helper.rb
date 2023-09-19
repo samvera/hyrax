@@ -16,7 +16,6 @@ require 'simplecov'
 SimpleCov.root(File.expand_path('../..', __FILE__))
 
 SimpleCov.start('rails') do
-  add_filter '/.internal_test_app'
   add_filter '/lib/generators'
   add_filter '/spec'
   add_filter '/tasks'
@@ -26,19 +25,12 @@ end
 
 require 'factory_bot'
 
-if ENV['IN_DOCKER']
-  require File.expand_path("config/environment", '../hyrax-webapp')
-  db_config = ActiveRecord::Base.configurations[ENV['RAILS_ENV']]
-  ActiveRecord::Tasks::DatabaseTasks.create(db_config)
-
-  ActiveRecord::Migrator.migrations_paths = [Pathname.new(ENV['RAILS_ROOT']).join('db', 'migrate').to_s]
-  ActiveRecord::Tasks::DatabaseTasks.migrate
-  ActiveRecord::Base.descendants.each(&:reset_column_information)
-else
-  require 'engine_cart'
-  EngineCart.load_application!
-end
-
+require File.expand_path("config/environment", '../hyrax-webapp')
+db_config = ActiveRecord::Base.configurations[ENV['RAILS_ENV']]
+ActiveRecord::Tasks::DatabaseTasks.create(db_config)
+ActiveRecord::Migrator.migrations_paths = [Pathname.new(ENV['RAILS_ROOT']).join('db', 'migrate').to_s]
+ActiveRecord::Tasks::DatabaseTasks.migrate
+ActiveRecord::Base.descendants.each(&:reset_column_information)
 ActiveRecord::Migration.maintain_test_schema!
 
 require 'active_fedora/cleaner'
@@ -68,6 +60,10 @@ Valkyrie::MetadataAdapter
 Valkyrie::StorageAdapter.register(
   Valkyrie::Storage::Disk.new(base_path: Rails.root / 'tmp' / 'test_adapter_uploads'),
   :test_disk
+)
+Valkyrie::StorageAdapter.register(
+  Valkyrie::Storage::Disk.new(base_path: File.expand_path('../fixtures', __FILE__)),
+  :fixture_disk
 )
 
 # Require supporting ruby files from spec/support/ and subdirectories.  Note: engine, not Rails.root context.
@@ -143,6 +139,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.before :suite do
+    FactoryBot::SyntaxRunner.include ActiveJob::TestHelper
     FactoryBot::SyntaxRunner.include RSpec::Mocks::ExampleMethods
     Hyrax::RedisEventStore.instance.then(&:flushdb)
     DatabaseCleaner.clean_with(:truncation)
@@ -178,17 +175,10 @@ RSpec.configure do |config|
 
   config.before(:each, type: :view) do
     initialize_controller_helpers(view)
-    # disallow network connections to services within the stack for view specs;
-    # no db/metadata/index calls
-    WebMock.disable_net_connect!(allow_localhost: false, allow: 'chromedriver.storage.googleapis.com')
 
     allow(Hyrax)
       .to receive(:metadata_adapter)
       .and_return(Valkyrie::MetadataAdapter.find(:test_adapter))
-  end
-
-  config.after(:each, type: :view) do
-    WebMock.disable_net_connect!(allow_localhost: true, allow: allowed_hosts)
   end
 
   config.before(:all, type: :feature) do
@@ -333,16 +323,16 @@ RSpec.configure do |config|
   config.prepend_before(:example, :valkyrie_adapter) do |example|
     adapter_name = example.metadata[:valkyrie_adapter]
 
-    allow(Hyrax)
-      .to receive(:metadata_adapter)
-      .and_return(Valkyrie::MetadataAdapter.find(adapter_name))
-
     if adapter_name == :wings_adapter
       skip("Don't test Wings when it is dasabled") if Hyrax.config.disable_wings
     else
       allow(Hyrax.config).to receive(:disable_wings).and_return(true)
       hide_const("Wings") # disable_wings=true removes the Wings constant
     end
+
+    allow(Hyrax)
+      .to receive(:metadata_adapter)
+      .and_return(Valkyrie::MetadataAdapter.find(adapter_name))
   end
 
   # Prepend this before block to ensure that it runs before other before blocks like clean_repo

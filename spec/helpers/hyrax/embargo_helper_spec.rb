@@ -154,7 +154,7 @@ RSpec.describe Hyrax::EmbargoHelper do
   end
 
   describe '#embargo_history' do
-    context 'with an ActiveFedora resource' do
+    context 'with an ActiveFedora resource', :active_fedora do
       let(:resource) { FactoryBot.build(:work) }
 
       it 'is empty' do

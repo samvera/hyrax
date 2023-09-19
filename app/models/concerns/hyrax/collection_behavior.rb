@@ -28,9 +28,11 @@ module Hyrax
       validates :collection_type_gid, presence: true
 
       # Need to define here in order to override setter defined by ActiveTriples
-      def collection_type_gid=(new_collection_type_gid, force: false)
+      def collection_type_gid=(new_collection_type_gid)
         new_collection_type_gid = new_collection_type_gid&.to_s
-        raise "Can't modify collection type of this collection" if !force && persisted? && !collection_type_gid_was.nil? && collection_type_gid_was != new_collection_type_gid
+        raise "Can't modify collection type of this collection" if
+          !Thread.current[:force_collection_type_gid] && # Used by update_collection_type_global_ids rake task
+          persisted? && !collection_type_gid_was.nil? && collection_type_gid_was != new_collection_type_gid
         new_collection_type = Hyrax::CollectionType.find_by_gid!(new_collection_type_gid)
         super(new_collection_type_gid)
         @collection_type = new_collection_type

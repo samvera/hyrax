@@ -370,6 +370,7 @@ module Hyrax
       can :manage, curation_concerns_models
       can :manage, Sipity::WorkflowResponsibility
       can :manage, :collection_types
+      can :manage, ::FileSet
     end
 
     ##
@@ -418,7 +419,7 @@ module Hyrax
     end
 
     def curation_concerns_models
-      [::FileSet, Hyrax.config.collection_class] + Hyrax.config.curation_concerns
+      [::FileSet, ::Hyrax::FileSet, Hyrax.config.collection_class] + Hyrax.config.curation_concerns
     end
 
     def can_review_submissions?

@@ -13,10 +13,11 @@ module Hyrax
       response.headers["Accept-Ranges"] = "bytes"
       self.status = 200
       use = params.fetch(:file, :original_file).to_sym
-      file_metadata = find_file_metadata(file_set: file_set, use: use)
+      mime_type = params[:mime_type]
+      file_metadata = find_file_metadata(file_set: file_set, use: use, mime_type: mime_type)
       return unless stale?(last_modified: file_metadata.updated_at, template: false)
 
-      file = Hyrax.storage_adapter.find_by(id: file_metadata.file_identifier)
+      file = Valkyrie::StorageAdapter.find_by(id: file_metadata.file_identifier)
       prepare_file_headers_valkyrie(metadata: file_metadata, file: file)
 
       # Warning - using the range header will load the range selection in to memory
@@ -60,15 +61,19 @@ module Hyrax
       self.content_type = metadata.mime_type
     end
 
-    def find_file_metadata(file_set:, use: :original_file)
-      use = :thumbnail_file if use == :thumbnail
-      begin
+    def find_file_metadata(file_set:, use: :original_file, mime_type: nil)
+      if mime_type.nil?
+        use = :thumbnail_file if use == :thumbnail
         use = Hyrax::FileMetadata::Use.uri_for(use: use)
-      rescue ArgumentError
-        raise Hyrax::ObjectNotFoundError
+        results = Hyrax.custom_queries.find_many_file_metadata_by_use(resource: file_set, use: use)
+      else
+        files = Hyrax.custom_queries.find_files(file_set: file_set)
+        results = [files.find { |f| f.mime_type == mime_type }]
       end
-      results = Hyrax.custom_queries.find_many_file_metadata_by_use(resource: file_set, use: use)
+
       results.first || raise(Hyrax::ObjectNotFoundError)
+    rescue ArgumentError
+      raise(Hyrax::ObjectNotFoundError)
     end
   end
 end

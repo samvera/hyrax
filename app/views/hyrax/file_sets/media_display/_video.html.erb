@@ -2,8 +2,8 @@
   <div>
       <h2 class="sr-only"><%= t('hyrax.file_set.show.downloadable_content.heading') %></h2>
       <video controls="controls" class="video-js vjs-default-skin" style="width:100%" data-setup="{}" controlsList="nodownload" preload="auto">
-        <source src="<%= hyrax.download_path(file_set, file: 'webm') %>" type="video/webm" />
-        <source src="<%= hyrax.download_path(file_set, file: 'mp4') %>" type="video/mp4" />
+        <source src="<%= hyrax.download_path(file_set, file: 'webm', mime_type: 'video/webm') %>" type="video/webm" />
+        <source src="<%= hyrax.download_path(file_set, file: 'mp4', mime_type: 'video/mp4') %>" type="video/mp4" />
         <%= t('hyrax.file_set.show.downloadable_content.video_tag_not_supported') %>
       </video>
       <%= link_to t('hyrax.file_set.show.downloadable_content.video_link'),

@@ -9,6 +9,8 @@ module Hyrax
   # engine options. For convenient reference, options are grouped into the
   # following functional areas:
   #
+  # - Analytics
+  # - Files
   # - Groups
   # - Identifiers
   # - IIIF
@@ -148,6 +150,129 @@ module Hyrax
     attr_writer :analytic_start_date
     attr_reader :analytic_start_date
 
+    # @!endgroup
+    # @!group Files
+
+    ##
+    # @!attribute [rw] characterization_service
+    #   @return [#run] the service to use for charactaerization for Valkyrie
+    #     objects
+    #   @ see Hyrax::Characterization::ValkyrieCharacterizationService
+    attr_writer :characterization_service
+    def characterization_service
+      @characterization_service ||=
+        Hyrax::Characterization::ValkyrieCharacterizationService
+    end
+
+    ##
+    # Options to pass to the characterization service
+    # @!attribute [rw] characterization_options
+    #  @return [Hash] of options like {ch12n_tool: :fits_servlet}
+    attr_accessor :characterization_options
+
+    ##
+    # @!attribute [w] characterization_proxy
+    #   Which FileSet file to use for mime type resolution
+    #   @ see Hyrax::FileSetTypeService
+    attr_writer :characterization_proxy
+    def characterization_proxy
+      @characterization_proxy ||= :original_file
+    end
+
+    # Override characterization runner
+    attr_accessor :characterization_runner
+
+    def mime_types_map # rubocop:disable Metrics/MethodLength
+      {
+        audio_mime_types: [
+          'audio/mp3',
+          'audio/mpeg',
+          'audio/wav',
+          'audio/x-wave',
+          'audio/x-wav',
+          'audio/ogg'
+        ],
+        image_mime_types: [
+          'image/png',
+          'image/jpeg',
+          'image/jpg',
+          'image/jp2',
+          'image/bmp',
+          'image/gif',
+          'image/tiff'
+        ],
+        office_mime_types: [
+          'text/rtf',
+          'application/msword',
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          'application/vnd.oasis.opendocument.text',
+          'application/vnd.ms-excel',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'application/vnd.ms-powerpoint',
+          'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+        ],
+        pdf_mime_types: ['application/pdf'],
+        video_mime_types: [
+          'video/mpeg',
+          'video/mp4',
+          'video/webm',
+          'video/x-msvideo',
+          'video/avi',
+          'video/quicktime',
+          'application/mxf'
+        ]
+      }
+    end
+
+    # First see if we can get them from the FileSet model. If not, use
+    # configuration.
+    # @param [Symbol] type as listed in mime_types_map keys, aligned with
+    # FileSet method names for backwards compatibility.
+    def lookup_mimes(type)
+      vals = "FileSet".safe_constantize.try(type)
+      return vals if vals.is_a?(Array)
+      mime_types_map[type]
+    end
+
+    attr_writer :derivative_mime_type_mappings
+
+    ##
+    # Maps mimetypes to create_*_derivatives methods
+    #
+    # @note these used to be set by +Hydra::Works::MimeTypes+ methods injected
+    #   into `FileSet`. for backwards compatibility, those are used as defaults
+    #   if present, but since `FileSet` is an application side model (and slated
+    #   to be removed) we shouldn't count on it providing these methods.
+    #
+    # @see Hyrax::VaDerivativeService
+    def derivative_mime_type_mappings
+      @derivative_mime_type_mappings ||=
+        { audio: lookup_mimes(:audio_mime_types),
+          image: lookup_mimes(:image_mime_types),
+          office: lookup_mimes(:office_mime_types),
+          pdf: lookup_mimes(:pdf_mime_types),
+          video: lookup_mimes(:video_mime_types) }
+    end
+
+    attr_writer :derivative_services
+    # The registered candidate derivative services.  In the array, the first `valid?` candidate will
+    # handle the derivative generation.
+    #
+    # @return [Array] of objects that conform to Hyrax::DerivativeService interface.
+    # @see Hyrax::DerivativeService
+    def derivative_services
+      @derivative_services ||= [Hyrax::FileSetDerivativesService]
+    end
+
+    attr_writer :fixity_service
+    def fixity_service
+      @fixity_service ||= Hyrax::Fixity::ActiveFedoraFixityService
+    end
+
+    attr_writer :max_days_between_fixity_checks
+    def max_days_between_fixity_checks
+      @max_days_between_fixity_checks ||= 7
+    end
     # @!endgroup
     # @!group Groups
 
@@ -484,45 +609,6 @@ module Hyrax
     def microdata_default_type
       @microdata_default_type ||= 'http://schema.org/CreativeWork'
     end
-
-    attr_writer :fixity_service
-    def fixity_service
-      @fixity_service ||= Hyrax::Fixity::ActiveFedoraFixityService
-    end
-
-    attr_writer :max_days_between_fixity_checks
-    def max_days_between_fixity_checks
-      @max_days_between_fixity_checks ||= 7
-    end
-
-    # Override characterization runner
-    attr_accessor :characterization_runner
-
-    ##
-    # @!attribute [rw] characterization_service
-    #   @return [#run] the service to use for charactaerization for Valkyrie
-    #     objects
-    #   @ see Hyrax::Characterization::ValkyrieCharacterizationService
-    attr_writer :characterization_service
-    def characterization_service
-      @characterization_service ||=
-        Hyrax::Characterization::ValkyrieCharacterizationService
-    end
-
-    ##
-    # @!attribute [w] characterization_proxy
-    #   Which FileSet file to use for mime type resolution
-    #   @ see Hyrax::FileSetTypeService
-    attr_writer :characterization_proxy
-    def characterization_proxy
-      @characterization_proxy ||= :original_file
-    end
-
-    ##
-    # Options to pass to the characterization service
-    # @!attribute [rw] characterization_options
-    #  @return [Hash] of options like {ch12n_tool: :fits_servlet}
-    attr_accessor :characterization_options
 
     # Attributes for the lock manager which ensures a single process/thread is mutating a ore:Aggregation at once.
     # @!attribute [w] lock_retry_count
@@ -880,16 +966,6 @@ module Hyrax
     # @return [Array<Integer>]
     def range_for_number_of_results_to_display_per_page
       @range_for_number_of_results_to_display_per_page ||= [10, 20, 50, 100]
-    end
-
-    attr_writer :derivative_services
-    # The registered candidate derivative services.  In the array, the first `valid?` candidate will
-    # handle the derivative generation.
-    #
-    # @return [Array] of objects that conform to Hyrax::DerivativeService interface.
-    # @see Hyrax::DerivativeService
-    def derivative_services
-      @derivative_services ||= [Hyrax::FileSetDerivativesService]
     end
 
     attr_writer :visibility_map

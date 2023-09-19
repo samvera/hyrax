@@ -6,6 +6,25 @@ FactoryBot.define do
   factory :hyrax_work, class: 'Hyrax::Test::SimpleWork' do
     trait :under_embargo do
       association :embargo, factory: :hyrax_embargo
+
+      after(:create) do |work, _e|
+        Hyrax::EmbargoManager.new(resource: work).apply
+        work.permission_manager.acl.save
+      end
+    end
+
+    trait :with_expired_enforced_embargo do
+      after(:build) do |work, _evaluator|
+        work.embargo = FactoryBot.valkyrie_create(:hyrax_embargo, :expired)
+      end
+
+      after(:create) do |work, _evaluator|
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_return(10.days.ago)
+        Hyrax::EmbargoManager.new(resource: work).apply
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_call_original
+
+        work.permission_manager.acl.save
+      end
     end
 
     trait :under_lease do
@@ -42,23 +61,27 @@ FactoryBot.define do
           .new(resource: work)
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
-      if evaluator.uploaded_files.present?
-        Hyrax::WorkUploadsHandler.new(work: work).add(files: evaluator.uploaded_files).attach
-        evaluator.uploaded_files.each do |file|
-          allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
-          # I don't love this - we might want to just run background jobs so
-          # this is more real, but we'd have to stub some things.
-          ValkyrieIngestJob.perform_now(file)
-        end
-      end
-
       work.permission_manager.edit_groups = evaluator.edit_groups
       work.permission_manager.edit_users  = evaluator.edit_users
       work.permission_manager.read_users  = evaluator.read_users
 
+      # these are both no-ops if an active embargo/lease isn't present
+      Hyrax::EmbargoManager.new(resource: work).apply
+      Hyrax::LeaseManager.new(resource: work).apply
+
       work.permission_manager.acl.save
 
-      Hyrax.index_adapter.save(resource: work) if evaluator.with_index
+      # This has to happen after permissions for permissions to propagate.
+      if evaluator.uploaded_files.present?
+        allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
+        perform_enqueued_jobs(only: ValkyrieIngestJob) do
+          Hyrax::WorkUploadsHandler.new(work: Hyrax.query_service.find_by(id: work.id)).add(files: evaluator.uploaded_files).attach
+        end
+        # I'm not sure why, but Wings required this reload.
+        work.member_ids = Hyrax.query_service.find_by(id: work.id).member_ids
+      end
+
+      Hyrax.index_adapter.save(resource: Hyrax.query_service.find_by(id: work.id)) if evaluator.with_index
     end
 
     trait :public do
@@ -92,6 +115,28 @@ FactoryBot.define do
       end
     end
 
+    trait :with_file_and_work do
+      transient do
+        members do
+          # If you set a depositor on the containing work, propogate that into these members
+          additional_attributes = {}
+          additional_attributes[:depositor] = depositor if depositor
+          [valkyrie_create(:hyrax_file_set, additional_attributes), valkyrie_create(:hyrax_work, additional_attributes)]
+        end
+      end
+    end
+
+    trait :with_one_file_set do
+      transient do
+        members do
+          # If you set a depositor on the containing work, propogate that into this member
+          additional_attributes = {}
+          additional_attributes[:depositor] = depositor if depositor
+          [valkyrie_create(:hyrax_file_set, additional_attributes)]
+        end
+      end
+    end
+
     trait :with_member_file_sets do
       transient do
         members do
@@ -113,7 +158,7 @@ FactoryBot.define do
 
     trait :with_representative do
       representative_id do
-        file_set = members.find(&:file_set?) ||
+        file_set = members&.find(&:file_set?) ||
                    valkyrie_create(:hyrax_file_set)
         file_set.id
       end

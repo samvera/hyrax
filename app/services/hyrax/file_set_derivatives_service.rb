@@ -5,7 +5,7 @@ module Hyrax
     attr_reader :file_set
     delegate :mime_type, to: :file_set
 
-    # @param file_set [Hyrax::FileSet] At least for this class, it must have #uri and #mime_type
+    # @param file_set [Hyrax::FileSet, Hyrax::FileMetadata] At least for this class, it must have #uri and #mime_type
     def initialize(file_set)
       @file_set = file_set
     end
@@ -31,11 +31,11 @@ module Hyrax
 
     def create_derivatives(filename)
       case mime_type
-      when *file_set.class.pdf_mime_types             then create_pdf_derivatives(filename)
-      when *file_set.class.office_document_mime_types then create_office_document_derivatives(filename)
-      when *file_set.class.audio_mime_types           then create_audio_derivatives(filename)
-      when *file_set.class.video_mime_types           then create_video_derivatives(filename)
-      when *file_set.class.image_mime_types           then create_image_derivatives(filename)
+      when *Hyrax.config.derivative_mime_type_mappings[:pdf]    then create_pdf_derivatives(filename)
+      when *Hyrax.config.derivative_mime_type_mappings[:office] then create_office_document_derivatives(filename)
+      when *Hyrax.config.derivative_mime_type_mappings[:audio]  then create_audio_derivatives(filename)
+      when *Hyrax.config.derivative_mime_type_mappings[:video]  then create_video_derivatives(filename)
+      when *Hyrax.config.derivative_mime_type_mappings[:image] then create_image_derivatives(filename)
       end
     end
 
@@ -91,15 +91,15 @@ module Hyrax
 
     def create_audio_derivatives(filename)
       Hydra::Derivatives::AudioDerivatives.create(filename,
-                                                  outputs: [{ label: 'mp3', format: 'mp3', url: derivative_url('mp3') },
-                                                            { label: 'ogg', format: 'ogg', url: derivative_url('ogg') }])
+                                                  outputs: [{ label: 'mp3', format: 'mp3', url: derivative_url('mp3'), mime_type: 'audio/mpeg', container: 'service_file' },
+                                                            { label: 'ogg', format: 'ogg', url: derivative_url('ogg'), mime_type: 'audio/ogg', container: 'service_file' }])
     end
 
     def create_video_derivatives(filename)
       Hydra::Derivatives::VideoDerivatives.create(filename,
-                                                  outputs: [{ label: :thumbnail, format: 'jpg', url: derivative_url('thumbnail') },
-                                                            { label: 'webm', format: 'webm', url: derivative_url('webm') },
-                                                            { label: 'mp4', format: 'mp4', url: derivative_url('mp4') }])
+                                                  outputs: [{ label: :thumbnail, format: 'jpg', url: derivative_url('thumbnail'), mime_type: 'image/jpeg' },
+                                                            { label: 'webm', format: 'webm', url: derivative_url('webm'), mime_type: 'video/webm', container: 'service_file' },
+                                                            { label: 'mp4', format: 'mp4', url: derivative_url('mp4'), mime_type: 'video/mp4', container: 'service_file' }])
     end
 
     def create_image_derivatives(filename)

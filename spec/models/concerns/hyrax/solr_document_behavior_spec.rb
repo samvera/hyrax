@@ -28,7 +28,7 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       end
     end
 
-    context 'with a Wings model name' do
+    context 'with a Wings model name', :active_fedora do
       let(:solr_hash) { { 'has_model_ssim' => 'Wings(Monograph)' } }
 
       it 'gives an appropriate generated ActiveFedora class' do
@@ -66,18 +66,13 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       end
 
       context 'using non-wings adapter', valkyrie_adapter: :test_adapter do
-        before do
-          allow(Hyrax.config).to receive(:disable_wings).and_return(true)
-          hide_const("Wings")
-        end
-
         it 'does not call Wings' do
           expect(solr_document.hydra_model).to eq Monograph
         end
       end
     end
 
-    context 'with a Wings model name' do
+    context 'with a Wings model name', :active_fedora do
       let(:solr_hash) { { 'has_model_ssim' => 'Wings(Monograph)' } }
 
       it 'gives an appropriate generated ActiveFedora class' do
@@ -159,7 +154,7 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       end
     end
 
-    context 'with a Wings model name' do
+    context 'with a Wings model name', :active_fedora do
       let(:solr_hash) { { 'has_model_ssim' => 'Wings(Monograph)', 'id' => '123' } }
 
       it 'gives the original valkyrie class' do
@@ -175,6 +170,48 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
   describe '#to_s' do
     it 'defaults to empty string' do
       expect(solr_document.to_s).to eq ''
+    end
+  end
+
+  describe '#visibility' do
+    context 'when an embargo is enforced' do
+      let(:solr_hash) do
+        { "embargo_release_date_dtsi" => "2023-08-30T00:00:00Z",
+          "visibility_during_embargo_ssim" => "restricted",
+          "visibility_after_embargo_ssim" => "open",
+          "visibility_ssi" => "restricted" }
+      end
+
+      it 'is "embargo"' do
+        expect(solr_document.visibility).to eq "embargo"
+      end
+    end
+
+    context 'when an embargo is released' do
+      let(:solr_hash) do
+        { "embargo_release_date_dtsi" => "2023-08-30T00:00:00Z",
+          "visibility_during_embargo_ssim" => "restricted",
+          "visibility_after_embargo_ssim" => "open",
+          "visibility_ssi" => "authenticated", # expect this to be ignored
+          "read_access_group_ssim" => ["public"] }
+      end
+
+      it 'is based on the read groups and Ability behavior' do
+        expect(solr_document.visibility).to eq "open"
+      end
+    end
+
+    # this is a special case because some of the older Hyrax tests
+    # expected this situation to work. Both ActiveFedora and Valkyrie
+    # actually index the whole embargo structure.
+    context 'when only an embargo date is indexed' do
+      let(:solr_hash) do
+        { "embargo_release_date_dtsi" => "2023-08-30T00:00:00Z" }
+      end
+
+      it 'is "embargo"' do
+        expect(solr_document.visibility).to eq "embargo"
+      end
     end
   end
 end

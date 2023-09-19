@@ -2,8 +2,12 @@
 RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
   routes { Hyrax::Engine.routes }
 
-  let(:user) { create(:user) }
-  let(:file) { create(:file_set, user: user) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:file) do
+    FactoryBot.valkyrie_create(:hyrax_file_set,
+                               depositor: user.user_key,
+                               edit_users: [user])
+  end
 
   describe "::show_presenter" do
     subject { described_class }
@@ -56,8 +60,12 @@ RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
   end
 
   describe "logged in user without edit permission" do
-    let(:other_user) { create(:user) }
-    let(:file) { create(:file_set, user: user, read_users: [other_user]) }
+    let(:other_user) { FactoryBot.create(:user) }
+    let(:file) do
+      FactoryBot.valkyrie_create(:hyrax_file_set,
+                                 depositor: user.user_key,
+                                 read_users: [other_user])
+    end
 
     before { sign_in other_user }
     subject { response }

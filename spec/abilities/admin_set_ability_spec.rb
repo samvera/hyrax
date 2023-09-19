@@ -2,18 +2,16 @@
 require 'cancan/matchers'
 
 RSpec.describe Hyrax::Ability, :clean_repo do
-  subject { ability }
-
-  let(:ability) { Ability.new(current_user) }
-  let(:user) { create(:user, email: 'user@example.com') }
+  subject(:ability) { Ability.new(current_user) }
+  let(:admin) { FactoryBot.create(:admin, email: 'admin@example.com') }
+  let(:user) { FactoryBot.create(:user, email: 'user@example.com') }
   let(:current_user) { user }
 
   context 'when admin user' do
     let(:current_user) { admin }
-    let(:admin) { FactoryBot.create(:admin, email: 'admin@example.com') }
 
-    context 'and admin set is an ActiveFedora::Base' do
-      let(:admin_set) { create(:adminset_lw, user: user, with_permission_template: true) }
+    context 'and admin set is an ActiveFedora::Base', :active_fedora do
+      let(:admin_set) { FactoryBot.create(:adminset_lw, user: user, with_permission_template: true) }
       let!(:solr_document) { SolrDocument.new(admin_set.to_solr) }
 
       context 'for abilities open to admins' do
@@ -65,18 +63,18 @@ RSpec.describe Hyrax::Ability, :clean_repo do
 
   context 'when admin set manager' do
     let(:current_user) { manager }
-    let(:manager) { create(:user, email: 'manager@example.com') }
+    let(:manager) { FactoryBot.create(:user, email: 'manager@example.com') }
 
-    context 'and admin set is an ActiveFedora::Base' do
-      let!(:admin_set) { create(:adminset_lw, id: 'as_mu', user: user, with_permission_template: true) }
+    context 'and admin set is an ActiveFedora::Base', :active_fedora do
+      let!(:admin_set) { FactoryBot.create(:adminset_lw, id: 'as_mu', user: user, with_permission_template: true) }
       let!(:solr_document) { SolrDocument.new(admin_set.to_solr) }
 
       before do
-        create(:permission_template_access,
-               :manage,
-               permission_template: admin_set.permission_template,
-               agent_type: 'user',
-               agent_id: manager.user_key)
+        FactoryBot.create(:permission_template_access,
+                          :manage,
+                          permission_template: admin_set.permission_template,
+                          agent_type: 'user',
+                          agent_id: manager.user_key)
         admin_set.permission_template.reset_access_controls_for(collection: admin_set)
       end
 
@@ -147,7 +145,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
     let(:current_user) { depositor }
     let(:depositor) { create(:user, email: 'depositor@example.com') }
 
-    context 'and admin set is an ActiveFedora::Base' do
+    context 'and admin set is an ActiveFedora::Base', :active_fedora do
       let!(:admin_set) { create(:adminset_lw, id: 'as_du', user: user, with_permission_template: true) }
       let!(:solr_document) { SolrDocument.new(admin_set.to_solr) }
 
@@ -235,7 +233,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
     let(:current_user) { viewer }
     let(:viewer) { create(:user, email: 'viewer@example.com') }
 
-    context 'and admin set is an ActiveFedora::Base' do
+    context 'and admin set is an ActiveFedora::Base', :active_fedora do
       let!(:admin_set) { create(:adminset_lw, id: 'as_vu', user: user, with_permission_template: true) }
       let!(:solr_document) { SolrDocument.new(admin_set.to_solr) }
 
@@ -319,10 +317,10 @@ RSpec.describe Hyrax::Ability, :clean_repo do
 
   context 'when user has no special access' do
     let(:current_user) { other_user }
-    let(:other_user) { create(:user, email: 'other_user@example.com') }
+    let(:other_user) { FactoryBot.create(:user, email: 'other_user@example.com') }
 
-    context 'and admin set is an ActiveFedora::Base' do
-      let(:admin_set) { create(:adminset_lw, id: 'as', user: user, with_permission_template: true) }
+    context 'and admin set is an ActiveFedora::Base', :active_fedora do
+      let(:admin_set) { FactoryBot.create(:adminset_lw, id: 'as', user: user, with_permission_template: true) }
       let!(:solr_document) { SolrDocument.new(admin_set.to_solr) }
 
       context 'for abilities NOT open to general user' do

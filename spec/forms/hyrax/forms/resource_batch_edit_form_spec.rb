@@ -43,18 +43,18 @@ RSpec.describe Hyrax::Forms::ResourceBatchEditForm do
 
     it do
       is_expected.to include(:creator,
-                         :contributor,
-                         :description,
-                         :keyword,
-                         :resource_type,
-                         :license,
-                         :publisher,
-                         :date_created,
-                         :subject,
-                         :language,
-                         :identifier,
-                         :based_near,
-                         :related_url)
+        :contributor,
+        :description,
+        :keyword,
+        :resource_type,
+        :license,
+        :publisher,
+        :date_created,
+        :subject,
+        :language,
+        :identifier,
+        :based_near,
+        :related_url)
     end
   end
 
@@ -79,31 +79,31 @@ RSpec.describe Hyrax::Forms::ResourceBatchEditForm do
     subject { described_class.build_permitted_params }
 
     it do
-      is_expected.to eq [{ creator: [] },
-                         { contributor: [] },
-                         { description: [] },
-                         { keyword: [] },
-                         { resource_type: [] },
-                         { license: [] },
-                         { publisher: [] },
-                         { date_created: [] },
-                         { subject: [] },
-                         { language: [] },
-                         { identifier: [] },
-                         { based_near: [] },
-                         { related_url: [] },
-                         { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
-                         :on_behalf_of,
-                         :version,
-                         :add_works_to_collection,
-                         :visibility_during_embargo,
-                         :embargo_release_date,
-                         :visibility_after_embargo,
-                         :visibility_during_lease,
-                         :lease_expiration_date,
-                         :visibility_after_lease,
-                         :visibility,
-                         { based_near_attributes: [:id, :_destroy] }]
+      is_expected.to include({ creator: [] },
+        { contributor: [] },
+        { description: [] },
+        { keyword: [] },
+        { resource_type: [] },
+        { license: [] },
+        { publisher: [] },
+        { date_created: [] },
+        { subject: [] },
+        { language: [] },
+        { identifier: [] },
+        { based_near: [] },
+        { related_url: [] },
+        { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
+        :on_behalf_of,
+        :version,
+        :add_works_to_collection,
+        :visibility_during_embargo,
+        :embargo_release_date,
+        :visibility_after_embargo,
+        :visibility_during_lease,
+        :lease_expiration_date,
+        :visibility_after_lease,
+        :visibility,
+        { based_near_attributes: [:id, :_destroy] })
     end
   end
 end

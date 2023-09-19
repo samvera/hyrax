@@ -25,6 +25,22 @@ RSpec.describe Hyrax::ValkyriePersistDerivatives, valkyrie_adapter: :test_adapte
         .to change { Hyrax.custom_queries.find_files(file_set: file_set) }
         .from(be_empty)
     end
+
+    context "when given a mime_type directive" do
+      let(:directives) do
+        { url: "file:///app/samvera/hyrax-webapp/derivatives/#{id}-mp4.mp4",
+          mime_type: 'video/webm',
+          container: 'service_file' }
+      end
+
+      it 'adds the mime_type to the file metadata' do
+        described_class.call(stream, directives)
+        files = Hyrax.custom_queries.find_files(file_set: file_set)
+        file = files.first
+        expect(file.mime_type).to eq 'video/webm'
+        expect(file.pcdm_use).to eq [Hyrax::FileMetadata::Use::SERVICE_FILE]
+      end
+    end
   end
 
   describe '.fileset_for_directives' do

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe Hyrax::SolrQueryService do
+RSpec.describe Hyrax::SolrQueryService, :clean_repo do
   subject(:solr_query_service) { described_class.new(query: [initial_query]) }
   let(:initial_query) { '_query_:"{!field f=subject_ssim:Science"' }
 
@@ -10,50 +10,54 @@ RSpec.describe Hyrax::SolrQueryService do
     is_expected.to respond_to :solr_service
   end
 
+  shared_context 'with works with creator metadata' do
+    let!(:work1) { FactoryBot.valkyrie_create(:monograph, creator: ['Mark']) }
+    let!(:work2) { FactoryBot.valkyrie_create(:monograph, creator: ['Fred']) }
+    let!(:work3) { FactoryBot.valkyrie_create(:monograph, creator: ['Mark']) }
+
+    let(:ids_for_queried_creator) { [work1.id, work3.id] }
+
+    before do
+      # add query filter
+      solr_query_service.with_field_pairs(field_pairs: { creator_tesim: 'Mark' })
+    end
+  end
+
   describe '#get' do
-    let!(:work1) { create(:work, id: 'wk1', creator: ['Mark']) }
-    let!(:work2) { create(:work, id: 'wk2', creator: ['Fred']) }
-    let!(:work3) { create(:work, id: 'wk3', creator: ['Mark']) }
     subject(:solr_query_service) { described_class.new }
 
-    before { solr_query_service.with_field_pairs(field_pairs: { creator_tesim: 'Mark' }) }
+    include_context 'with works with creator metadata'
 
     it 'get solr document matching the query' do
       results = solr_query_service.get["response"]["docs"]
       expect(results.count).to eq 2
-      expect(results.map { |doc| doc["id"] }).to match_array ['wk1', 'wk3']
+      expect(results.map { |doc| doc["id"] }).to contain_exactly(*ids_for_queried_creator)
     end
   end
 
   describe '#get_ids' do
-    let!(:work1) { create(:work, id: 'wk1', creator: ['Mark']) }
-    let!(:work2) { create(:work, id: 'wk2', creator: ['Fred']) }
-    let!(:work3) { create(:work, id: 'wk3', creator: ['Mark']) }
     subject(:solr_query_service) { described_class.new }
 
-    before { solr_query_service.with_field_pairs(field_pairs: { creator_tesim: 'Mark' }) }
+    include_context 'with works with creator metadata'
 
     it 'get ids for solr document matching the query' do
       ids = solr_query_service.get_ids
       expect(ids.count).to eq 2
-      expect(ids).to match_array ['wk1', 'wk3']
+      expect(ids).to contain_exactly(*ids_for_queried_creator)
     end
   end
 
   describe '#get_objects' do
-    let!(:work1) { create(:work, id: 'wk1', creator: ['Mark']) }
-    let!(:work2) { create(:work, id: 'wk2', creator: ['Fred']) }
-    let!(:work3) { create(:work, id: 'wk3', creator: ['Mark']) }
     subject(:solr_query_service) { described_class.new }
 
-    before { solr_query_service.with_field_pairs(field_pairs: { creator_tesim: 'Mark' }) }
+    include_context 'with works with creator metadata'
 
-    context "when use_valkyrie is false" do
+    context "when use_valkyrie is false", :active_fedora do
       it 'get ActiveFedora::Base objects matching the query' do
         objects = solr_query_service.get_objects(use_valkyrie: false)
         expect(objects.count).to eq 2
         expect(objects.first).to be_kind_of ActiveFedora::Base
-        expect(objects.map(&:id)).to match_array ['wk1', 'wk3']
+        expect(objects.map(&:id)).to contain_exactly(*ids_for_queried_creator)
       end
     end
 
@@ -62,18 +66,15 @@ RSpec.describe Hyrax::SolrQueryService do
         objects = solr_query_service.get_objects(use_valkyrie: true)
         expect(objects.count).to eq 2
         expect(objects.first).to be_kind_of Valkyrie::Resource
-        expect(objects.map(&:id)).to match_array ['wk1', 'wk3']
+        expect(objects.map(&:id)).to contain_exactly(*ids_for_queried_creator)
       end
     end
   end
 
   describe '#count' do
-    let!(:work1) { create(:work, id: 'wk1', creator: ['Mark']) }
-    let!(:work2) { create(:work, id: 'wk2', creator: ['Fred']) }
-    let!(:work3) { create(:work, id: 'wk3', creator: ['Mark']) }
     subject(:solr_query_service) { described_class.new }
 
-    before { solr_query_service.with_field_pairs(field_pairs: { creator_tesim: 'Mark' }) }
+    include_context 'with works with creator metadata'
 
     it 'counts the number of results matching the query' do
       expect(solr_query_service.count).to eq 2

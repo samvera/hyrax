@@ -33,7 +33,7 @@ USER app
 RUN mkdir -p /app/samvera/hyrax-webapp
 WORKDIR /app/samvera/hyrax-webapp
 
-COPY --chown=1001:101 ./bin /app/samvera
+COPY --chown=1001:101 ./bin/*.sh /app/samvera/
 ENV PATH="/app/samvera:$PATH"
 ENV RAILS_ROOT="/app/samvera/hyrax-webapp"
 ENV RAILS_SERVE_STATIC_FILES="1"
@@ -100,7 +100,9 @@ COPY --chown=1001:101 . /app/samvera/hyrax-engine
 RUN bundle -v && \
   bundle install --jobs "$(nproc)" && \
   cd $HYRAX_ENGINE_PATH && \
-  bundle install --jobs "$(nproc)"
+  bundle install --jobs "$(nproc)" && \
+  yarn
+
 RUN RAILS_ENV=production SECRET_KEY_BASE='fakesecret1234' DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
 
