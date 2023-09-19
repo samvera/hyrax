@@ -33,8 +33,6 @@ module Hyrax
     end
 
     def show
-      # Pass sort params to the search builder
-      params[:sort] ||= Hyrax::Collections::CollectionMemberSearchService::DEFAULT_SORT_FIELD
       @curation_concern = @collection # we must populate curation_concern
       presenter
       query_collection_members
