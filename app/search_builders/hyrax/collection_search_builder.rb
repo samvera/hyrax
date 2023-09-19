@@ -20,7 +20,7 @@ module Hyrax
 
     # @return [String] Solr field name indicating default sort order
     def sort_field
-      "title_si"
+      "title_ssi"
     end
 
     # This overrides the models in FilterByType

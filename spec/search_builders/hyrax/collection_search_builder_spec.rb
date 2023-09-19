@@ -6,7 +6,7 @@ RSpec.describe Hyrax::CollectionSearchBuilder do
   let(:scope) { FakeSearchBuilderScope.new(current_user: user) }
 
   describe '#sort_field' do
-    its(:sort_field) { is_expected.to eq('title_si') }
+    its(:sort_field) { is_expected.to eq('title_ssi') }
   end
 
   describe '#models' do
