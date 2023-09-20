@@ -128,6 +128,7 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer, if: Hyrax.config.use_valkyrie? do
       allow(Hyrax.custom_queries).to receive(:find_original_file).with(file_set: file_set).and_return(mock_file)
       allow(Hyrax.custom_queries).to receive(:find_file_metadata_by).with(id: file_set.original_file_id).and_return(mock_file)
       allow(Hyrax.custom_queries).to receive(:find_thumbnail).with(file_set: file_set).and_return(mock_thumbnail)
+      allow(Hyrax.custom_queries).to receive(:find_extracted_text).with(file_set: file_set).and_return(mock_text)
       allow(mock_file).to receive(:file_name).and_return(file_name)
     end
     subject { indexer.generate_solr_document }
