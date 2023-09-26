@@ -29,7 +29,7 @@ module Hyrax
         record.member_of_collections_attributes
               .each do |_k, h|
                 next if h["_destroy"] == "true"
-                collection_ids << Valkyrie::ID.new(h["id"])
+                collection_ids += [Valkyrie::ID.new(h["id"])]
               end
       end
 
