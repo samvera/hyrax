@@ -24,14 +24,11 @@ FactoryBot.define do
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
       file_set.file_ids = evaluator.files.map(&:id) if evaluator.files
-      file_set.original_file_id = evaluator.original_file.id if evaluator.original_file
-      file_set.extracted_text_id = evaluator.extracted_text.id if evaluator.extracted_text
-      file_set.thumbnail_id = evaluator.thumbnail.id if evaluator.thumbnail
 
       file_set.permission_manager.edit_groups = evaluator.edit_groups
       file_set.permission_manager.edit_users  = evaluator.edit_users
       file_set.permission_manager.read_users  = evaluator.read_users
-      file_set.permission_manager.read_users  = evaluator.read_groups
+      file_set.permission_manager.read_groups = evaluator.read_groups
     end
 
     after(:create) do |file_set, evaluator|
@@ -44,7 +41,7 @@ FactoryBot.define do
       file_set.permission_manager.edit_groups = evaluator.edit_groups
       file_set.permission_manager.edit_users  = evaluator.edit_users
       file_set.permission_manager.read_users  = evaluator.read_users
-      file_set.permission_manager.read_users  = evaluator.read_groups
+      file_set.permission_manager.read_groups = evaluator.read_groups
 
       file_set.permission_manager.acl.save
 

@@ -3,7 +3,7 @@
 ##
 # Use this factory for FileMetadata for Files in valkyrie.
 FactoryBot.define do
-  factory :hyrax_file_metadata, class: 'Hyrax::FileMetadata' do
+  factory :hyrax_file_metadata, class: 'Hyrax::FileMetadata', aliases: [:file_metadata] do
     transient do
       use { nil }
       visibility_setting { nil }
@@ -30,6 +30,18 @@ FactoryBot.define do
       transient do
         visibility_setting { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
       end
+    end
+
+    trait :original_file do
+      use { Hyrax::FileMetadata::Use.uri_for(use: :original_file) }
+    end
+
+    trait :thumbnail do
+      use { Hyrax::FileMetadata::Use.uri_for(use: :thumbnail_file) }
+    end
+
+    trait :extracted_text do
+      use { Hyrax::FileMetadata::Use.uri_for(use: :extracted_file) }
     end
 
     trait :image do

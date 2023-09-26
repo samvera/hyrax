@@ -60,9 +60,42 @@ module Hyrax
     self.characterization_proxy = Hyrax.config.characterization_proxy
 
     attribute :file_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID) # id for FileMetadata resources
-    attribute :thumbnail_id, Valkyrie::Types::ID.optional # id for FileMetadata resource
-    attribute :original_file_id, Valkyrie::Types::ID.optional # id for FileMetadata resource
-    attribute :extracted_text_id, Valkyrie::Types::ID.optional # id for FileMetadata resource
+
+    # @return [Hyrax::FileMetadata, nil]
+    def original_file
+      Hyrax.custom_queries.find_original_file(file_set: self)
+    rescue Valkyrie::Persistence::ObjectNotFoundError
+      nil
+    end
+
+    # @return [Valkyrie::ID, nil]
+    def original_file_id
+      original_file&.id
+    end
+
+    # @return [Hyrax::FileMetadata, nil]
+    def thumbnail
+      Hyrax.custom_queries.find_thumbnail(file_set: self)
+    rescue Valkyrie::Persistence::ObjectNotFoundError
+      nil
+    end
+
+    # @return [Valkyrie::ID, nil]
+    def thumbnail_id
+      thumbnail&.id
+    end
+
+    # @return [Hyrax::FileMetadata, nil]
+    def extracted_text
+      Hyrax.custom_queries.find_extracted_text(file_set: self)
+    rescue Valkyrie::Persistence::ObjectNotFoundError
+      nil
+    end
+
+    # @return [Valkyrie::ID, nil]
+    def extracted_text_id
+      extracted_text&.id
+    end
 
     ##
     # @return [Valkyrie::ID]

@@ -81,33 +81,7 @@ class Hyrax::ValkyrieUpload
   # @return [Hyrax::FileSet] updated file set
   def add_file_to_file_set(file_set:, file_metadata:, user:)
     file_set.file_ids << file_metadata.id
-    set_file_use_ids(file_set, file_metadata)
-
     Hyrax.persister.save(resource: file_set)
     Hyrax.publisher.publish('object.membership.updated', object: file_set, user: user)
-  end
-
-  private
-
-  # @api private
-  # @param [Hyrax::FileSet] file_set the file set to add to
-  # @param [Hyrax::FileMetadata] file_metadata the metadata object representing
-  #   the file to add
-  # @return [void]
-  def set_file_use_ids(file_set, file_metadata)
-    file_metadata.pcdm_use.each do |type|
-      case type
-      when Hyrax::FileMetadata::Use::ORIGINAL_FILE
-        file_set.original_file_id = file_metadata.id
-      when Hyrax::FileMetadata::Use::THUMBNAIL
-        file_set.thumbnail_id = file_metadata.id
-      when Hyrax::FileMetadata::Use::EXTRACTED_TEXT
-        file_set.extracted_text_id = file_metadata.id
-      when Hyrax::FileMetadata::Use::SERVICE_FILE
-        # do nothing
-      else
-        Hyrax.logger.warn "Unknown file use #{file_metadata.type} specified for #{file_metadata.file_identifier}"
-      end
-    end
   end
 end

@@ -349,16 +349,11 @@ RSpec.describe Wings::ModelTransformer, :active_fedora, :clean_repo do
   end
 
   context 'build for file' do
-    let(:id)       { '123' }
-    let(:file_set) { FactoryBot.create(:file_set, id: id) }
-    let(:file) { file_set.build_original_file }
+    let(:file_set) { FactoryBot.create(:file_set, :image) }
+    let(:file) { file_set.original_file }
     let(:pcdm_object) { file_set }
 
     context 'with content' do
-      before do
-        file.content = 'foo'
-      end
-
       it 'sets file id in file set resource' do
         expect(subject.build.original_file_id).to eq file.id
       end
