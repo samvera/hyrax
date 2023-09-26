@@ -569,11 +569,13 @@ module Hyrax
     #
     # @return [#call] lambda/proc that generates a Faraday connection
     def fedora_connection_builder
-      @fedora_connection_builder ||= ->(url) { Faraday.new(url) do |f|
-        f.request :multipart
-        f.request :url_encoded
-        f.adapter Faraday.default_adapter
-      end }
+      @fedora_connection_builder ||= lambda { |url|
+        Faraday.new(url) do |f|
+          f.request :multipart
+          f.request :url_encoded
+          f.adapter Faraday.default_adapter
+        end
+      }
     end
     attr_writer :fedora_connection_builder
 
