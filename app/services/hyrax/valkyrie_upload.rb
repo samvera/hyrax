@@ -80,7 +80,7 @@ class Hyrax::ValkyrieUpload
   #
   # @return [Hyrax::FileSet] updated file set
   def add_file_to_file_set(file_set:, file_metadata:, user:)
-    file_set.file_ids << file_metadata.id
+    file_set.file_ids += [file_metadata.id]
     Hyrax.persister.save(resource: file_set)
     Hyrax.publisher.publish('object.membership.updated', object: file_set, user: user)
   end

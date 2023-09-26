@@ -63,7 +63,7 @@ module Hyrax
   #   `it_behaves_like 'has_members'`.  Shared specs are defined in /lib/hyrax/specs/shared_specs/hydra_works.rb.
   # * Work to File Set: (0..m)  A work can have many file sets.
   # @example Add a file set to a work (code from Hyrax::WorkUploadsHandler#append_to_work)
-  #       work.member_ids << file_set.id
+  #       work.member_ids += [file_set.id]
   #       work.representative_id = file_set.id if work.respond_to?(:representative_id) && work.representative_id.blank?
   #       work.thumbnail_id = file_set.id if work.respond_to?(:thumbnail_id) && work.thumbnail_id.blank?
   #       Hyrax.persister.save(resource: work)

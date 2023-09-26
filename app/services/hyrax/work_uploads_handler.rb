@@ -124,7 +124,7 @@ module Hyrax
     #
     # @todo figure out how to know less about Work's ideas about FileSet use here. Maybe post-Wings, work.
     def append_to_work(file_set)
-      work.member_ids << file_set.id
+      work.member_ids += [file_set.id]
       work.representative_id = file_set.id if work.respond_to?(:representative_id) && work.representative_id.blank?
       work.thumbnail_id = file_set.id if work.respond_to?(:thumbnail_id) && work.thumbnail_id.blank?
     end

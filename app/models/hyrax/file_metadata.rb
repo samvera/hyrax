@@ -18,7 +18,7 @@ module Hyrax
                        "with id #{file.id}. Initializing a new one")
 
     FileMetadata.new(file_identifier: file.id,
-                     original_filename: File.basename(file.io))
+                     original_filename: File.basename(file.disk_path))
   end
 
   class FileMetadata < Valkyrie::Resource
