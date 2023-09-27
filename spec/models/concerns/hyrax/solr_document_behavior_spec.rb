@@ -213,5 +213,45 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
         expect(solr_document.visibility).to eq "embargo"
       end
     end
+
+    context 'when an lease is enforced' do
+      let(:solr_hash) do
+        { "lease_expiration_date_dtsi" => "2023-08-30T00:00:00Z",
+          "visibility_during_lease_ssim" => "open",
+          "visibility_after_lease_ssim" => "restricted",
+          "visibility_ssi" => "open" }
+      end
+
+      it 'is "lease"' do
+        expect(solr_document.visibility).to eq "lease"
+      end
+    end
+
+    context 'when an lease is released' do
+      let(:solr_hash) do
+        { "lease_expiration_date_dtsi" => "2023-08-30T00:00:00Z",
+          "visibility_during_lease_ssim" => "authenticated",
+          "visibility_after_lease_ssim" => "restricted",
+          "visibility_ssi" => "restricted", # expect this to be ignored
+          "read_access_group_ssim" => ["public"] }
+      end
+
+      it 'is based on the read groups and Ability behavior' do
+        expect(solr_document.visibility).to eq "open"
+      end
+    end
+
+    # this is a special case because some of the older Hyrax tests
+    # expected this situation to work. Both ActiveFedora and Valkyrie
+    # actually index the whole embargo structure.
+    context 'when only an lease date is indexed' do
+      let(:solr_hash) do
+        { "lease_expiration_date_dtsi" => "2023-08-30T00:00:00Z" }
+      end
+
+      it 'is "lease"' do
+        expect(solr_document.visibility).to eq "lease"
+      end
+    end
   end
 end
