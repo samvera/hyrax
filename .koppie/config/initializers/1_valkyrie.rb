@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'faraday/multipart'
 
 # require "shrine/storage/s3"
 # require "valkyrie/storage/shrine"
@@ -26,7 +27,17 @@ Valkyrie::MetadataAdapter.register(
   Valkyrie::Persistence::Postgres::MetadataAdapter.new,
   :nurax_pg_metadata_adapter
 )
-Valkyrie.config.metadata_adapter = :nurax_pg_metadata_adapter
+
+Valkyrie::MetadataAdapter.register(
+  Valkyrie::Persistence::Fedora::MetadataAdapter.new(
+    connection: ::Ldp::Client.new(Hyrax.config.fedora_connection_builder.call(
+      ENV.fetch('FCREPO_URL') { "http://localhost:8080/fcrepo/rest" })),
+    base_path: Rails.env, #, schema: Valkyrie::Persistence::Fedora::PermissiveSchema.new(title: RDF::URI("http://example.com/title"))
+    fedora_version: 6
+  ), :nurax_fedora_metadata_adapter
+)
+
+Valkyrie.config.metadata_adapter = ENV.fetch('VALKYRIE_METADATA_ADAPTER') { :nurax_pg_metadata_adapter }.to_sym
 
 # shrine_s3_options = {
 #   bucket: ENV.fetch("REPOSITORY_S3_BUCKET") { "nurax_pg#{Rails.env}" },
@@ -46,11 +57,21 @@ Valkyrie.config.metadata_adapter = :nurax_pg_metadata_adapter
 # )
 #
 # Valkyrie.config.storage_adapter = :repository_s3
+
+Valkyrie::StorageAdapter.register(
+  Valkyrie::Storage::Fedora.new(
+    connection: ::Ldp::Client.new(Hyrax.config.fedora_connection_builder.call(
+      ENV.fetch('FCREPO_URL') { "http://localhost:8080/fcrepo/rest" })),
+    base_path: Rails.env,
+    fedora_version: 6
+  ), :fedora
+)
+
 Valkyrie::StorageAdapter.register(
   Valkyrie::Storage::VersionedDisk.new(base_path: Rails.root.join("storage", "files"),
                                        file_mover: FileUtils.method(:cp)),
   :disk
 )
-Valkyrie.config.storage_adapter  = :disk
+Valkyrie.config.storage_adapter  = ENV.fetch('VALKYRIE_STORAGE_ADAPTER') { :disk }.to_sym
 
 Valkyrie.config.indexing_adapter = :solr_index
