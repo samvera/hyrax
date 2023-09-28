@@ -7,6 +7,7 @@ module Hyrax
     include Hyrax::ResourceIndexer
     include Hyrax::PermissionIndexer
     include Hyrax::VisibilityIndexer
+    include Hyrax::LocationIndexer
     include Hyrax::ThumbnailIndexer
     include Hyrax::Indexer(:core_metadata)
 
