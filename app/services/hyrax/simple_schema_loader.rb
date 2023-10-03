@@ -169,7 +169,7 @@ module Hyrax
 
     def predicate_pairs(ret_hsh, schema_name)
       schema_config(schema_name)['attributes'].each do |name, config|
-        ret_hsh[name] = RDF::URI(config['predicate']) if ret_hsh[name].blank?
+        ret_hsh[name.to_sym] = RDF::URI(config['predicate']) if ret_hsh[name].blank?
       end
     end
   end

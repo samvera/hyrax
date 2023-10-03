@@ -45,7 +45,7 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
       expect(permissive_schema.size).to eq(38)
       expect(permissive_schema.values.all? { |v| v.is_a? RDF::URI }).to be_truthy
       expect(permissive_schema.values.all? { |v| v.value.present? }).to be_truthy
-      expect(permissive_schema['sample_attribute'].value).to eq("http://hyrax-example.com/sample_attribute")
+      expect(permissive_schema[:sample_attribute].value).to eq("http://hyrax-example.com/sample_attribute")
     end
   end
 end
