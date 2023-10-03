@@ -32,7 +32,8 @@ Valkyrie::MetadataAdapter.register(
   Valkyrie::Persistence::Fedora::MetadataAdapter.new(
     connection: ::Ldp::Client.new(Hyrax.config.fedora_connection_builder.call(
       ENV.fetch('FCREPO_URL') { "http://localhost:8080/fcrepo/rest" })),
-    base_path: Rails.env, #, schema: Valkyrie::Persistence::Fedora::PermissiveSchema.new(title: RDF::URI("http://example.com/title"))
+    base_path: Rails.env,
+    schema: Valkyrie::Persistence::Fedora::PermissiveSchema.new(Hyrax::SimpleSchemaLoader.new.permissive_schema_for_valkrie_adapter),
     fedora_version: 6
   ), :nurax_fedora_metadata_adapter
 )

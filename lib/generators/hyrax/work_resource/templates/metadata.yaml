@@ -2,6 +2,8 @@
 # index key names, and form properties.
 #
 # Attributes must have a type but all other configuration options are optional.
+# Please note: If using Valkyrie's Fedora Metadata Adapter, predicates for attributes
+# must be placed here.
 #
 # attributes:
 #   attribute_name:

@@ -23,6 +23,7 @@
 attributes:
   monograph_title:
     type: string
+    predicate: http://hyrax-example.com/monograph_title
   record_info:
     type: string
     form:
@@ -30,26 +31,33 @@ attributes:
       primary: true
     index_keys:
       - "record_info_tesim"
+    predicate: http://hyrax-example.com/record_info
   place_of_publication:
     type: string
     form:
       required: false
       primary: true
+    predicate: http://hyrax-example.com/place_of_publication
   genre:
     type: string
     form:
       primary: true
+    predicate: http://hyrax-example.com/genre
   series_title:
     type: string
     form:
       primary: false
+    predicate: http://hyrax-example.com/series_title
   target_audience:
     type: string
     form:
       multiple: true
+    predicate: http://hyrax-example.com/target_audience
   table_of_contents:
     type: string
     form:
       multiple: false
+    predicate: http://hyrax-example.com/table_of_contents
   date_of_issuance:
     type: string
+    predicate: http://hyrax-example.com/date_of_issuance

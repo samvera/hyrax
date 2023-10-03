@@ -7,6 +7,7 @@ attributes:
       primary: false
     index_keys:
       - "abstract_tesim"
+    predicate: http://purl.org/dc/terms/abstract
   access_right:
     type: string
     multiple: true
@@ -14,6 +15,7 @@ attributes:
       primary: false
     index_keys:
       - "access_right_tesim"
+    predicate: http://purl.org/dc/terms/accessRights
   alternative_title:
     type: string
     multiple: true
@@ -21,6 +23,7 @@ attributes:
       primary: false
     index_keys:
       - "alternative_title_tesim"
+    predicate: http://purl.org/dc/terms/alternative
   based_near:
     type: string
     multiple: true
@@ -29,9 +32,11 @@ attributes:
     index_keys:
       - "based_near_sim"
       - "based_near_tesim"
+    predicate: http://xmlns.com/foaf/0.1/based_near
   bibliographic_citation:
     type: string
     multiple: true
+    predicate: http://purl.org/dc/terms/bibliographicCitation
   contributor:
     type: string
     multiple: true
@@ -39,6 +44,7 @@ attributes:
       primary: false
     index_keys:
       - "contributor_tesim"
+    predicate: http://purl.org/dc/elements/1.1/contributor
   creator:
     type: string
     multiple: true
@@ -47,6 +53,7 @@ attributes:
       primary: true
     index_keys:
       - "creator_tesim"
+    predicate: http://purl.org/dc/elements/1.1/creator
   date_created:
     type: date_time
     multiple: true
@@ -54,6 +61,7 @@ attributes:
       primary: false
     index_keys:
       - "date_created_tesim"
+    predicate: http://purl.org/dc/terms/created
   description:
     type: string
     multiple: true
@@ -61,6 +69,7 @@ attributes:
       primary: false
     index_keys:
       - "description_tesim"
+    predicate: http://purl.org/dc/elements/1.1/description
   identifier:
     type: string
     multiple: true
@@ -68,8 +77,10 @@ attributes:
       primary: false
     index_keys:
       - "identifier_tesim"
+    predicate: http://purl.org/dc/terms/identifier
   import_url:
     type: string
+    predicate: http://scholarsphere.psu.edu/ns#importUrl
   keyword:
     type: string
     multiple: true
@@ -78,6 +89,7 @@ attributes:
       - "keyword_tesim"
     form:
       primary: false
+    predicate: http://schema.org/keywords
   publisher:
     type: string
     multiple: true
@@ -85,12 +97,14 @@ attributes:
       primary: false
     index_keys:
       - "publisher_tesim"
+    predicate: http://purl.org/dc/elements/1.1/publisher
   label:
     type: string
     form:
       primary: false
     index_keys:
       - "label_tesim"
+    predicate: info:fedora/fedora-system:def/model#downloadFilename
   language:
     type: string
     multiple: true
@@ -98,6 +112,7 @@ attributes:
       primary: false
     index_keys:
       - "language_tesim"
+    predicate: http://purl.org/dc/elements/1.1/language
   license:
     type: string
     multiple: true
@@ -105,8 +120,10 @@ attributes:
       primary: false
     index_keys:
       - "license_tesim"
+    predicate: http://purl.org/dc/terms/license
   relative_path:
     type: string
+    predicate: http://scholarsphere.psu.edu/ns#relativePath
   related_url:
     type: string
     multiple: true
@@ -114,6 +131,7 @@ attributes:
       primary: false
     index_keys:
       - "related_url_tesim"
+    predicate: http://www.w3.org/2000/01/rdf-schema#seeAlso
   resource_type:
     type: string
     multiple: true
@@ -122,6 +140,7 @@ attributes:
     index_keys:
       - "resource_type_sim"
       - "resource_type_tesim"
+    predicate: http://purl.org/dc/terms/type
   rights_notes:
     type: string
     multiple: true
@@ -129,6 +148,7 @@ attributes:
       primary: false
     index_keys:
       - "rights_notes_tesim"
+    predicate: http://purl.org/dc/elements/1.1/rights
   rights_statement:
     type: string
     multiple: true
@@ -136,6 +156,7 @@ attributes:
       primary: true
     index_keys:
       - "rights_statement_tesim"
+    predicate: http://www.europeana.eu/schemas/edm/rights
   source:
     type: string
     multiple: true
@@ -143,6 +164,7 @@ attributes:
       primary: false
     index_keys:
       - "source_tesim"
+    predicate: http://purl.org/dc/terms/source
   subject:
     type: string
     multiple: true
@@ -151,3 +173,4 @@ attributes:
       - "subject_tesim"
     form:
       primary: false
+    predicate: http://purl.org/dc/elements/1.1/subject
