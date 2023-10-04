@@ -86,6 +86,34 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '#based_near' do
+    subject(:form) { form_class.new(work) }
+
+    let(:work) { build(:monograph) }
+    let(:geonames_uri) { "https://sws.geonames.org/4254679/" }
+
+    let(:form_class) do
+      Class.new(Hyrax::Forms::ResourceForm(work.class)) do
+        include Hyrax::FormFields(:basic_metadata)
+      end
+    end
+
+    it 'runs the based_near prepopulator' do
+      work.based_near = [geonames_uri]
+      form.prepopulate!
+      expect(form.based_near)
+        .to contain_exactly(an_instance_of(Hyrax::ControlledVocabularies::Location))
+    end
+
+    it 'runs the based_near populator' do
+      form.validate(based_near_attributes: { "0" => { "hidden_label" => geonames_uri,
+                                                      "id" => geonames_uri,
+                                                      "_destroy" => "" } })
+      expect(form.based_near)
+        .to contain_exactly(geonames_uri)
+    end
+  end
+
   describe '#embargo_release_date' do
     context 'without an embargo' do
       it 'is nil' do

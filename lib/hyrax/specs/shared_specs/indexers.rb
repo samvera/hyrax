@@ -89,8 +89,6 @@ RSpec.shared_examples 'a thumbnail indexer' do
   before do
     raise 'indexer_class must be set with `let(:indexer_class)`' unless defined? indexer_class
     raise 'resource must be set with `let(:resource)` and is expected to be a kind of Hyrax::Resource' unless defined?(resource) && resource.kind_of?(Hyrax::Resource)
-    # optionally can pass in default_visibility by setting it with a let statement if your application changes the default; Hyrax defines this as 'restricted'
-    # See samvera/hyrda-head hydra-access-controls/app/models/concerns/hydra/access_controls/access_rights.rb for possible VISIBILITY_TEXT_VALUE_...'
   end
   subject(:indexer)  { indexer_class.new(resource: resource) }
   let(:thumbnail_path) { '/downloads/foo12345?file=thumbnail' }
@@ -102,6 +100,27 @@ RSpec.shared_examples 'a thumbnail indexer' do
   describe '#to_solr' do
     it 'indexes a thumbnail path' do
       expect(indexer.to_solr).to include(thumbnail_path_ss: thumbnail_path)
+    end
+  end
+end
+
+RSpec.shared_examples 'a location indexer' do
+  before do
+    raise 'indexer_class must be set with `let(:indexer_class)`' unless defined? indexer_class
+    raise 'resource must be set with `let(:resource)` and is expected to be a kind of Hyrax::Resource' unless defined?(resource) && resource.kind_of?(Hyrax::Resource)
+    resource.based_near = based_near
+  end
+  subject(:indexer)  { indexer_class.new(resource: resource) }
+  let(:based_near) { ["https://sws.geonames.org/4254679/"] }
+  let(:based_near_label) { ["Bloomington, Indiana, United States"] }
+
+  before do
+    allow(Hyrax.config.location_service).to receive(:full_label).with(based_near[0]).and_return(based_near_label[0])
+  end
+
+  describe '#to_solr' do
+    it 'indexes locations' do
+      expect(indexer.to_solr).to include(based_near_tesim: based_near, based_near_label_tesim: based_near_label)
     end
   end
 end
@@ -138,9 +157,10 @@ RSpec.shared_examples 'a Basic metadata indexer' do
   end
   subject(:indexer) { indexer_class.new(resource: resource) }
 
+  it_behaves_like 'a location indexer'
+
   let(:attributes) do
     {
-      based_near: ['helsinki', 'finland'],
       date_created: ['tuesday'],
       keyword: ['comic strip'],
       related_url: ['http://example.com/moomin'],
@@ -152,9 +172,7 @@ RSpec.shared_examples 'a Basic metadata indexer' do
   describe '#to_solr' do
     it 'indexes basic metadata' do
       expect(indexer.to_solr)
-        .to include(based_near_tesim: a_collection_containing_exactly(*attributes[:based_near]),
-                    based_near_sim: a_collection_containing_exactly(*attributes[:based_near]),
-                    date_created_tesim: a_collection_containing_exactly(*attributes[:date_created]),
+        .to include(date_created_tesim: a_collection_containing_exactly(*attributes[:date_created]),
                     keyword_sim: a_collection_containing_exactly(*attributes[:keyword]),
                     related_url_tesim: a_collection_containing_exactly(*attributes[:related_url]),
                     resource_type_tesim: a_collection_containing_exactly(*attributes[:resource_type]),

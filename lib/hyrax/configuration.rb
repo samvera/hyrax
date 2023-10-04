@@ -778,6 +778,11 @@ module Hyrax
       Qa::Authorities::Geonames.username = username
     end
 
+    def location_service
+      @location_service ||= Hyrax::LocationService.new
+    end
+    attr_writer :location_service
+
     attr_writer :active_deposit_agreement_acceptance
     def active_deposit_agreement_acceptance?
       return true if @active_deposit_agreement_acceptance.nil?
