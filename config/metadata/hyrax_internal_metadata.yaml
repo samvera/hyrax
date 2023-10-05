@@ -1,0 +1,56 @@
+---
+attributes:
+  admin_set_id: 
+    predicate: http://purl.org/dc/terms/isPartOf
+  id:
+    predicate: http://purl.org/dc/terms/id
+  internal_resource:
+    predicate: info:fedora/fedora-system:def/model#hasModel
+  representative_id:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasRelatedMediaFragment
+  state:
+    predicate: http://fedora.info/definitions/1/0/access/ObjState#objState
+  thumbnail_id:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasRelatedImage
+  created_at: 
+    predicate: http://purl.org/dc/terms/created
+  byte_order:
+    predicate: http://sweet.jpl.nasa.gov/2.2/reprDataFormat.owl#byteOrder
+  color_space:
+    predicate: http://www.w3.org/2003/12/exif/ns#colorSpace
+  compression:
+    predicate: http://vocabulary.samvera.org/ns#compressionScheme
+  file_identifier:
+    predicate: http://vocabulary.samvera.org/ns#fileIdentifier
+  file_set_id:
+    predicate: http://vocabulary.samvera.org/ns#fileSetId
+  format_label:
+    predicate: http://www.loc.gov/premis/rdf/v1#hasFormatName
+  height: 
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#height
+  mime_type:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasMimeType
+  original_filename:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename
+  pcdm_use:
+    predicate: http://vocabulary.samvera.org/ns#pcdmUse
+  recorded_size:
+    predicate: http://www.loc.gov/premis/rdf/v1#hasSize
+  valid:
+    predicate: http://vocabulary.samvera.org/ns#valid
+  well_formed:
+    predicate: http://vocabulary.samvera.org/ns#wellFormed
+  width:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#width
+  access_to:
+    predicate: http://www.w3.org/ns/auth/acl#accessTo
+  permissions:
+    predicate: http://vocabulary.samvera.org/ns#permissions
+  updated_at:
+    predicate: http://vocabulary.samvera.org/ns#updatedAt
+  agent:
+    predicate: http://www.w3.org/ns/auth/acl#agent
+  mode:
+    predicate: http://www.w3.org/ns/auth/acl#mode
+  file_ids:
+    predicate: http://pcdm.org/models#hasFile
