@@ -37,4 +37,15 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
         .to eq(title: { required: true, primary: true, multiple: true })
     end
   end
+
+  describe '#permissive_schema_for_valkrie_adapter' do
+    let(:permissive_schema) { schema_loader.permissive_schema_for_valkrie_adapter }
+
+    it 'provides the expected hash' do
+      expect(permissive_schema.size).to eq(65)
+      expect(permissive_schema.values.all? { |v| v.is_a? RDF::URI }).to be_truthy
+      expect(permissive_schema.values.all? { |v| v.value.present? }).to be_truthy
+      expect(permissive_schema[:sample_attribute].value).to eq("http://hyrax-example.com/sample_attribute")
+    end
+  end
 end
