@@ -5,9 +5,7 @@ RSpec.describe 'hyrax/base/_form_metadata.html.erb', type: :view do
   end
   let(:ability) { double }
   let(:work) { GenericWork.new }
-  let(:form) do
-    Hyrax::GenericWorkForm.new(work, ability, controller)
-  end
+  let(:form) { Hyrax.config.disable_wings ? Hyrax::Forms::ResourceForm.for(work) : Hyrax::GenericWorkForm.new(work, ability, controller) }
 
   let(:form_template) do
     %(

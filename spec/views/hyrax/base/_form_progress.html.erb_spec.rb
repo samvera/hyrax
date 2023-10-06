@@ -3,7 +3,7 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
   let(:ability) { double }
   let(:user) { stub_model(User) }
   let(:form) do
-    Hyrax::GenericWorkForm.new(work, ability, controller)
+    Hyrax.config.disable_wings ? Hyrax::Forms::ResourceForm.for(work).prepopulate! : Hyrax::GenericWorkForm.new(work, ability, controller)
   end
   let(:page) do
     view.simple_form_for form do |f|
@@ -116,7 +116,7 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
   context "when the work has been saved before" do
     before do
       # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
-      allow(work).to receive(:new_record?).and_return(false)
+      allow(work).to receive_messages(new_record?: false, new_record: false)
       assign(:form, form)
       allow(Hyrax.config).to receive(:active_deposit_agreement_acceptance)
         .and_return(true)
@@ -124,8 +124,12 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
 
     let(:work) { stub_model(GenericWork, id: '456', etag: '123456') }
 
-    it "renders the deposit agreement already checked and the version" do
+    it "renders the deposit agreement already checked" do
       expect(page).to have_selector("#agreement[checked]")
+    end
+
+    # Not applicable without wings; see Hyrax::Forms::ResourceForm::LockKeyPrepopulator
+    it 'renders the version', :active_fedora do
       expect(page).to have_selector("input#generic_work_version[value=\"123456\"]", visible: false)
     end
   end
