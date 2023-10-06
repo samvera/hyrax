@@ -169,20 +169,20 @@ module Hyrax
 
     def predicate_pairs(ret_hsh, schema_name)
       schema_config(schema_name)['attributes'].each do |name, config|
+        predicate = RDF::URI(config['predicate'])
         if ret_hsh[name].blank?
-          ret_hsh[name.to_sym] = RDF::URI(config['predicate'])
-        else
-          multiple_predicate_message(name)
+          ret_hsh[name.to_sym] = predicate
+        elsif ret_hsh[name] != predicate
+          multiple_predicate_message(name, ret_hsh[name], predicate)
         end
       end
     end
 
-    def multiple_predicate_message(name)
-      message =  "The attribute of #{name} has been assigned multiple times " \
-                 "within the metadata YAMLs. Please be aware that once the " \
-                 "attribute's predicate value is first assigned, any other value " \
-                 "will be ignored."
-
+    def multiple_predicate_message(name, existing, incoming)
+      message =  "The attribute of #{name} has been assigned a predicate multiple times " \
+                 "within the metadata YAMLs. Please be aware that once the attribute's " \
+                 "predicate value is first assigned, any other value will be ignored. " \
+                 "The existing value is #{existing} preventing the use of #{incoming}"
       Hyrax.logger.warn(message)
     end
   end
