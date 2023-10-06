@@ -25,10 +25,10 @@ FactoryBot.define do
       end
       file_set.file_ids = evaluator.files.map(&:id) if evaluator.files
 
-      file_set.permission_manager.edit_groups = evaluator.edit_groups
-      file_set.permission_manager.edit_users  = evaluator.edit_users
-      file_set.permission_manager.read_users  = evaluator.read_users
-      file_set.permission_manager.read_groups = evaluator.read_groups
+      file_set.permission_manager.edit_groups = file_set.permission_manager.edit_groups.to_a + evaluator.edit_groups
+      file_set.permission_manager.edit_users  = file_set.permission_manager.edit_users.to_a + evaluator.edit_users
+      file_set.permission_manager.read_users  = file_set.permission_manager.read_users.to_a + evaluator.read_users
+      file_set.permission_manager.read_groups = file_set.permission_manager.read_groups.to_a + evaluator.read_groups
     end
 
     after(:create) do |file_set, evaluator|
@@ -38,10 +38,10 @@ FactoryBot.define do
         writer.permission_manager.acl.save
       end
 
-      file_set.permission_manager.edit_groups = evaluator.edit_groups
-      file_set.permission_manager.edit_users  = evaluator.edit_users
-      file_set.permission_manager.read_users  = evaluator.read_users
-      file_set.permission_manager.read_groups = evaluator.read_groups
+      file_set.permission_manager.edit_groups = file_set.permission_manager.edit_groups.to_a + evaluator.edit_groups
+      file_set.permission_manager.edit_users  = file_set.permission_manager.edit_users.to_a + evaluator.edit_users
+      file_set.permission_manager.read_users  = file_set.permission_manager.read_users.to_a + evaluator.read_users
+      file_set.permission_manager.read_groups = file_set.permission_manager.read_groups.to_a + evaluator.read_groups
 
       file_set.permission_manager.acl.save
 

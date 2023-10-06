@@ -35,6 +35,7 @@ FactoryBot.define do
       edit_users         { [] }
       edit_groups        { [] }
       read_users         { [] }
+      read_groups        { [] }
       members            { nil }
       visibility_setting { nil }
       with_index         { true }
@@ -48,9 +49,10 @@ FactoryBot.define do
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
 
-      work.permission_manager.edit_groups = evaluator.edit_groups
-      work.permission_manager.edit_users  = evaluator.edit_users
-      work.permission_manager.read_users  = evaluator.read_users
+      work.permission_manager.edit_groups = work.permission_manager.edit_groups.to_a + evaluator.edit_groups
+      work.permission_manager.edit_users  = work.permission_manager.edit_users.to_a + evaluator.edit_users
+      work.permission_manager.read_users  = work.permission_manager.read_users.to_a + evaluator.read_users
+      work.permission_manager.read_groups = work.permission_manager.read_groups.to_a + evaluator.read_groups
 
       work.member_ids = evaluator.members.map(&:id) if evaluator.members
     end
@@ -61,9 +63,10 @@ FactoryBot.define do
           .new(resource: work)
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
-      work.permission_manager.edit_groups = evaluator.edit_groups
-      work.permission_manager.edit_users  = evaluator.edit_users
-      work.permission_manager.read_users  = evaluator.read_users
+      work.permission_manager.edit_groups = work.permission_manager.edit_groups.to_a + evaluator.edit_groups
+      work.permission_manager.edit_users  = work.permission_manager.edit_users.to_a + evaluator.edit_users
+      work.permission_manager.read_users  = work.permission_manager.read_users.to_a + evaluator.read_users
+      work.permission_manager.read_groups = work.permission_manager.read_groups.to_a + evaluator.read_groups
 
       # these are both no-ops if an active embargo/lease isn't present
       Hyrax::EmbargoManager.new(resource: work).apply
