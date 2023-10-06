@@ -54,7 +54,7 @@ FactoryBot.define do
       work.permission_manager.read_users  = work.permission_manager.read_users.to_a + evaluator.read_users
       work.permission_manager.read_groups = work.permission_manager.read_groups.to_a + evaluator.read_groups
 
-      work.member_ids = evaluator.members.map(&:id) if evaluator.members
+      work.member_ids = evaluator.members.compact.map(&:id) if evaluator.members
     end
 
     after(:create) do |work, evaluator|
