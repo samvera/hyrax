@@ -99,7 +99,7 @@ Hyrax.config do |config|
 
   # Hyrax can integrate with Zotero's Arkivo service for automatic deposit
   # of Zotero-managed research items.
-  # config.arkivo_api = false
+  config.arkivo_api = true
 
   # Stream realtime notifications to users in the browser
   # config.realtime_notifications = true
