@@ -19,23 +19,6 @@ module Hyrax
 
     class << self
       # @api public
-      # Creates the default Hyrax::AdministrativeSet and corresponding data
-      # @param admin_set_id [String] The default admin set ID
-      # @param title [Array<String>] The title of the default admin set
-      # @return [TrueClass]
-      # @see Hyrax::AdministrativeSet
-      # @deprecated
-      # TODO: When this deprecated method is removed, update private method
-      #       .create_default_admin_set! to remove the parameters.
-      def create_default_admin_set(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
-        Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
-                         "Instead, use 'Hyrax::AdminSetCreateService.find_or_create_default_admin_set'.")
-        create_default_admin_set!(admin_set_id: admin_set_id, title: title).present?
-      rescue RuntimeError => _err
-        false
-      end
-
-      # @api public
       # Finds the default AdministrativeSet if it exists; otherwise, creates it and corresponding data
       # @return [Hyrax::AdministrativeSet] The default admin set.
       # @see Hyrax::AdministrativeSet
