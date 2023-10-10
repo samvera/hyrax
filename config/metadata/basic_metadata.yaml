@@ -24,6 +24,12 @@ attributes:
     index_keys:
       - "alternative_title_tesim"
     predicate: http://purl.org/dc/terms/alternative
+  arkivo_checksum:
+    type: string
+    multiple: false
+    form:
+      primary: false
+    predicate: http://scholarsphere.psu.edu/ns#arkivoChecksum
   based_near:
     type: string
     multiple: true
