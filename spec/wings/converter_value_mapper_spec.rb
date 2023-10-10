@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+return if Hyrax.config.disable_wings
+
 require 'spec_helper'
 require 'wings/converter_value_mapper'
 

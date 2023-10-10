@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+return unless defined? Hyrax::GenericWorkForm
+
 # TODO: this should be merged with work_form_spec.rb
 RSpec.describe Hyrax::GenericWorkForm do
   let(:work) { GenericWork.new }
