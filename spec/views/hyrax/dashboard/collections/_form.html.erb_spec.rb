@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/_form.html.erb', type: :view do
-  let(:collection) { Collection.new }
-  let(:collection_form) { Hyrax::Forms::CollectionForm.new(collection, double, double) }
+  let(:collection) { build :collection_resource }
+  let(:collection_form) { Hyrax::Forms::ResourceForm.for(collection) }
   let(:banner_info) { { file: "banner.gif", alttext: "Banner alt text" } }
   let(:logo_info) { [{ file: "logo.gif", alttext: "Logo alt text", linkurl: "http://abc.com" }] }
 

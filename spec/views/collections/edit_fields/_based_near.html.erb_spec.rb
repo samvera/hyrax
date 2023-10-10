@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe 'collections/edit_fields/_based_near.html.erb', type: :view do
-  let(:collection) { Collection.new }
-  let(:form) { Hyrax::Forms::CollectionForm.new(collection, nil, controller) }
+  let(:collection) { build :collection_resource }
+  let(:form) { Hyrax::Forms::ResourceForm.for(collection) }
   let(:form_template) do
     %(
       <%= simple_form_for @form, url: [hyrax, :dashboard, @form] do |f| %>
