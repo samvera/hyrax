@@ -15,5 +15,9 @@ module Hyrax
       @route_key          = legacy_model.model_name.route_key
       @singular_route_key = legacy_model.model_name.singular_route_key
     end
+
+    def human
+      super.titleize
+    end
   end
 end

@@ -101,7 +101,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
   describe 'head tag page title' do
     it 'appears in head tags' do
       head_tag = Nokogiri::HTML(rendered).xpath("//head/title")
-      expect(head_tag.text).to eq("Work | My Title | ID: 999 | Hyrax")
+      expect(head_tag.text).to eq("Work | My Title | ID: 999 | #{I18n.t('hyrax.product_name')}")
     end
   end
 
@@ -193,7 +193,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
       expect(tag.attribute('content').value).to eq('@bot4lib')
 
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:site_name']")
-      expect(tag.attribute('content').value).to eq('Hyrax')
+      expect(tag.attribute('content').value).to eq(I18n.t('hyrax.product_name'))
 
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:type']")
       expect(tag.attribute('content').value).to eq('object')
