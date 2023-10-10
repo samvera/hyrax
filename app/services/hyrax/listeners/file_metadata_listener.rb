@@ -52,7 +52,7 @@ module Hyrax
 
         Hyrax.config
              .characterization_service
-             .run(metadata: event[:metadata], file: event[:metadata].file)
+             .run(metadata: event[:metadata], file: event[:metadata].file, **Hyrax.config.characterization_options)
       end
     end
   end
