@@ -56,6 +56,29 @@ $gutter-width: $grid-gutter-width/2;
     }
   }
 
+  &:not(.maximized) {
+    .sidebar-action-text,
+    a span + span,
+    h5 {
+      display: none;
+    }
+
+    .nav li {
+      text-align: center;
+      a {
+        padding-left: 0;
+        padding-right: 0;
+      }
+      .fa {
+        margin-right: 0;
+      }
+    }
+
+    .nav-item {
+      width: $drawer-small;
+    }
+  }
+
   .sidebar-toggle {
     cursor: pointer;
     background-color: $body-background-color;
