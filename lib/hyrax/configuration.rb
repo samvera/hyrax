@@ -168,7 +168,10 @@ module Hyrax
     # Options to pass to the characterization service
     # @!attribute [rw] characterization_options
     #  @return [Hash] of options like {ch12n_tool: :fits_servlet}
-    attr_accessor :characterization_options
+    attr_writer :characterization_options
+    def characterization_options
+      @characterization_options ||= {}
+    end
 
     ##
     # @!attribute [w] characterization_proxy
