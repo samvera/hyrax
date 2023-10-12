@@ -29,6 +29,7 @@ module Hyrax
           return Failure(:resource_not_persisted) unless resource.persisted?
 
           @persister.delete(resource: resource)
+          @publisher.publish('file.metadata.deleted', metadata: resource)
           Valkyrie::StorageAdapter.delete(id: resource.file_identifier)
 
           Success(resource)
