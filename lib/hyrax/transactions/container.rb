@@ -158,6 +158,10 @@ module Hyrax
           Steps::RemoveFileSetFromWork.new
         end
 
+        ops.register 'delete_acl' do
+          Steps::DeleteAccessControl.new
+        end
+
         ops.register 'save_acl' do
           Steps::SaveAccessControl.new
         end
