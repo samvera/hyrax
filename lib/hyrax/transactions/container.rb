@@ -42,7 +42,6 @@ module Hyrax
       require 'hyrax/transactions/steps/ensure_admin_set'
       require 'hyrax/transactions/steps/set_collection_type_gid'
       require 'hyrax/transactions/steps/remove_file_set_from_work'
-      require 'hyrax/transactions/steps/remove_file_set_related_objects'
       require 'hyrax/transactions/steps/save'
       require 'hyrax/transactions/steps/save_access_control'
       require 'hyrax/transactions/steps/save_collection_banner'
@@ -259,10 +258,6 @@ module Hyrax
 
         ops.register 'update_work_members' do
           Steps::UpdateWorkMembers.new
-        end
-
-        ops.register 'delete_file_set_related_objects' do
-          Steps::RemoveFileSetRelatedObjects.new
         end
       end
       # rubocop:enable Metrics/BlockLength
