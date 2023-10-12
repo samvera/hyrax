@@ -11,8 +11,8 @@
   <% if show_sort_and_per_page? && collection_member_sort_fields.many? %>
     <div class="sort-toggle">
       <%= form_tag dashboard_collection_path(collection), method: :get, class: 'per_page' do %>
-         <div class="form-group row form-control-lg">
-           <fieldset class="col-sm-9">
+         <div class="form-group row">
+           <fieldset class="col-sm-7 col-lg-8">
              <legend class="sr-only"><%= t('hyrax.sort_label') %></legend>
              <%= label_tag(:sort, t(".sort_by")) %>
              <%= select_tag(:sort, options_from_collection_for_select(collection_member_sort_fields, 'first', lambda {|field| field.last.label}, h(params[:sort]))) %>
@@ -22,7 +22,7 @@
              <%= render Blacklight::HiddenSearchStateComponent.new(params: search_state.params_for_search.except(:per_page, :sort)) %>
              <button class="btn btn-info"><span class="fa fa-refresh"></span> <%= t('helpers.action.refresh') %></button>
            </fieldset>
-           <div class="col-sm-3">
+           <div class="col-sm-5 col-lg-4">
              <%= render 'hyrax/collections/view_type_group' %>
            </div>
          </div>
