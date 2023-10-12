@@ -14,9 +14,9 @@ module Hyrax
 
         Hyrax.custom_queries.find_child_file_sets(resource: event[:object]).each do |file_set|
           Hyrax::Transactions::Container['file_set.destroy']
-              .with_step_args('file_set.remove_from_work' => { user: event[:user] },
+            .with_step_args('file_set.remove_from_work' => { user: event[:user] },
                               'file_set.delete' => { user: event[:user] })
-                              .call(file_set)
+            .call(file_set)
           Hyrax.publisher
                .publish('object.deleted', object: file_set, id: file_set.id, user: event[:user])
         rescue StandardError # we don't uncaught errors looping filesets
