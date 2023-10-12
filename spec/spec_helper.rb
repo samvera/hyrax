@@ -58,7 +58,7 @@ Valkyrie::MetadataAdapter
 Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Postgres::MetadataAdapter.new, :postgres_adapter)
 Valkyrie::StorageAdapter.register(
-  Valkyrie::Storage::Disk.new(base_path: Rails.root / 'tmp' / 'test_adapter_uploads'),
+  Valkyrie::Storage::VersionedDisk.new(base_path: Rails.root / 'tmp' / 'test_adapter_uploads'),
   :test_disk
 )
 Valkyrie::StorageAdapter.register(

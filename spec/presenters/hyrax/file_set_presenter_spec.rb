@@ -312,7 +312,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:file_metadata) { FactoryBot.valkyrie_create(:file_metadata, :original_file, :with_file, file: file) }
     let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
     let(:request) { double('request', base_url: 'http://test.host') }
-    let(:id) { "#{file_set.id}/files/#{file_metadata.id}" }
+    let(:id) { "#{file_set.id}/files/#{file_metadata.id}/#{Digest::MD5.hexdigest(file_metadata.file.version_id)}" }
 
     describe "#display_image" do
       context 'without a file' do
