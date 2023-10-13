@@ -116,6 +116,11 @@ ul.tabular {
   background: #fff;
   border-color: #e0e0e0;
 
+  & > .btn {
+    padding: 0;
+    border: 0;
+  }
+
   .card-header {
     background-color: #e6ab5f;
     color: #ffffff;
