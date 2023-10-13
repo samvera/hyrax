@@ -3,7 +3,7 @@ RSpec.describe Hyrax::CitationsBehaviors::Formatters::ChicagoFormatter do
   subject(:formatter) { described_class.new(:no_context) }
 
   let(:solr_document) do
-    if work.instance_of? ActiveFedora::Base
+    if work.is_a? ActiveFedora::Base
       SolrDocument.new(work.to_solr)
     else
       SolrDocument.new(GenericWorkIndexer.new(resource: work).to_solr)
