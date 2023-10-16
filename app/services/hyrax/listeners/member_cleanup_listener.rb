@@ -10,9 +10,10 @@ module Hyrax
       # @return [void]
       def on_object_deleted(event)
         return unless event.payload.key?(:object) # legacy callback
+        return unless event.payload.key?(:members)
         return if event[:object].is_a?(ActiveFedora::Base) # handled by legacy code
 
-        Hyrax.custom_queries.find_child_file_sets(resource: event[:object]).each do |file_set|
+        event[:members].each do |file_set|
           Hyrax.persister.delete(resource: file_set)
           Hyrax.publisher
                .publish('object.deleted', object: file_set, id: file_set.id, user: event[:user])
@@ -28,9 +29,10 @@ module Hyrax
       # @return [void]
       def on_collection_deleted(event)
         return unless event.payload.key?(:collection) # legacy callback
+        return unless event.payload.key?(:members)
         return if event[:collection].is_a?(ActiveFedora::Base) # handled by legacy code
 
-        Hyrax.custom_queries.find_members_of(collection: event[:collection]).each do |resource|
+        event[:members].each do |resource|
           resource.member_of_collection_ids -= [event[:collection].id]
           Hyrax.persister.save(resource: resource)
           Hyrax.publisher

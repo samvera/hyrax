@@ -9,8 +9,8 @@ module Hyrax
     # @since 3.4.0
     class CollectionDestroy < Transaction
       # TODO: Add step that checks if collection is empty for collections of types that require it
-      DEFAULT_STEPS = ['collection_resource.delete',
-                       'collection_resource.delete_acl'].freeze
+      DEFAULT_STEPS = ['collection_resource.delete_acl',
+                       'collection_resource.delete'].freeze
 
       ##
       # @see Hyrax::Transactions::Transaction
