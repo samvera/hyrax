@@ -5,17 +5,16 @@ module Hyrax
   module Transactions
     module Steps
       ##
-      # Deletes a resource from the persister, returning a `Dry::Monads::Result`
+      # Deletes a resource's member FileSets from the persister, returning a `Dry::Monads::Result`
       # (`Success`|`Failure`).
       #
       # @see https://dry-rb.org/gems/dry-monads/1.0/result/
-      class DeleteAllFileMetadata
+      class DeleteAllFileSets
         include Dry::Monads[:result]
 
         ##
         # @params [#save] persister
-        def initialize(property: :file_ids, query_service: Hyrax.query_service, persister: Hyrax.persister, publisher: Hyrax.publisher)
-          @property = property
+        def initialize(query_service: Hyrax.query_service, persister: Hyrax.persister, publisher: Hyrax.publisher)
           @persister = persister
           @query_service = query_service
           @publisher = publisher
@@ -26,13 +25,13 @@ module Hyrax
         # @param [::User] the user resposible for the delete action
         #
         # @return [Dry::Monads::Result]
-        def call(resource)
+        def call(resource, user: nil)
           return Failure(:resource_not_persisted) unless resource.persisted?
-
-          resource[@property].each do |file_id|
-            Hyrax::Transactions::Container['file_metadata.destroy']
-              .call(@query_service.custom_queries.find_file_metadata_by(id: file_id))
-              .value!
+          @query_service.custom_queries.find_child_file_sets(resource: resource).each do |file_set|
+            Hyrax::Transactions::Container['file_set.destroy']
+              .with_step_args('file_set.remove_from_work' => { user: user },
+                              'file_set.delete' => { user: user })
+              .call(file_set).value!
           rescue ::Ldp::Gone
             nil
           end

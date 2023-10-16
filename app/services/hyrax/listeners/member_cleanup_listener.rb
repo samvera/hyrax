@@ -8,23 +8,7 @@ module Hyrax
       # Called when 'object.deleted' event is published
       # @param [Dry::Events::Event] event
       # @return [void]
-      def on_object_deleted(event)
-        return unless event.payload.key?(:object) # legacy callback
-        return if event[:object].is_a?(ActiveFedora::Base) # handled by legacy code
-
-        Hyrax.custom_queries.find_child_file_sets(resource: event[:object]).each do |file_set|
-          Hyrax::Transactions::Container['file_set.destroy']
-            .with_step_args('file_set.remove_from_work' => { user: event[:user] },
-                            'file_set.delete' => { user: event[:user] })
-            .call(file_set)
-          Hyrax.publisher
-               .publish('object.deleted', object: file_set, id: file_set.id, user: event[:user])
-        rescue StandardError # we don't uncaught errors looping filesets
-          Hyrax.logger.warn "Failed to delete #{file_set.class}:#{file_set.id} " \
-                            "during cleanup for resource: #{event[:object]}. " \
-                            'This member may now be orphaned.'
-        end
-      end
+      def on_object_deleted(event); end
 
       # Called when 'collection.deleted' event is published
       # @param [Dry::Events::Event] event
