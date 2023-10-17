@@ -5,7 +5,7 @@ require 'hyrax/transactions'
 RSpec.describe Hyrax::Transactions::CollectionDestroy, valkyrie_adapter: :test_adapter do
   subject(:tx)   { described_class.new }
   let(:resource) { FactoryBot.valkyrie_create(:hyrax_collection) }
-  let(:user)         { FactoryBot.create(:user) }
+  let(:user)     { FactoryBot.create(:user) }
 
   describe '#call' do
     it 'is a success' do
