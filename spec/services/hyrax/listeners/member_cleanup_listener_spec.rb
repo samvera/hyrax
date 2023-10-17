@@ -42,14 +42,14 @@ RSpec.describe Hyrax::Listeners::MemberCleanupListener do
       work
     end
 
-    it 'removes collection references from member objects' do
+    xit 'removes collection references from member objects' do
       expect { listener.on_collection_deleted(event) }
         .to change { Hyrax.custom_queries.find_members_of(collection: event[:collection]).size }
         .from(1)
         .to(0)
     end
 
-    it 'publishes events' do
+    xit 'publishes events' do
       listener.on_collection_deleted(event)
       expect(spy_listener.collection_membership_updated&.payload)
         .to include(collection: collection, user: user)

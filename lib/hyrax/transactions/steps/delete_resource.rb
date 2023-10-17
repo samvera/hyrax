@@ -26,37 +26,26 @@ module Hyrax
         # @return [Dry::Monads::Result]
         def call(resource, user: nil)
           return Failure(:resource_not_persisted) unless resource.persisted?
-          members = find_child_members(resource: resource)
 
           @persister.delete(resource: resource)
-          publish_changes(resource: resource, user: user, members: members)
+          publish_changes(resource: resource, user: user)
 
           Success(resource)
         end
 
         private
 
-        def publish_changes(resource:, user:, members:)
+        def publish_changes(resource:, user:)
           if resource.collection?
             @publisher.publish('collection.deleted',
                                collection: resource,
                                id: resource.id.id,
-                               user: user,
-                               members: members)
+                               user: user)
           else
             @publisher.publish('object.deleted',
                                object: resource,
                                id: resource.id.id,
-                               user: user,
-                               members: members)
-          end
-        end
-
-        def find_child_members(resource:)
-          if resource.collection?
-            Hyrax.custom_queries.find_members_of(collection: resource)
-          else
-            Hyrax.custom_queries.find_child_file_sets(resource: resource)
+                               user: user)
           end
         end
       end

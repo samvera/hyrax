@@ -41,9 +41,9 @@ module Hyrax
       batch.each do |doc_id|
         resource = Hyrax.query_service.find_by(id: Valkyrie::ID.new(doc_id))
         transactions['collection_resource.destroy']
-          .with_step_args('collection_resource.delete' => { user: current_user })
-          .call(resource)
-          .value!
+          .with_step_args('collection_resource.delete' => { user: current_user },
+                          'collection_resource.remove_from_membership' => { user: current_user })
+          .call(resource).value!
       end
       flash[:notice] = "Batch delete complete"
       after_destroy_collection
