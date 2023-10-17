@@ -18,14 +18,8 @@ RSpec.describe Hyrax::Listeners::MemberCleanupListener do
     let(:work)         { FactoryBot.valkyrie_create(:hyrax_work, member_ids: [file_set.id]) }
     let(:file_set)     { FactoryBot.valkyrie_create(:hyrax_file_set) }
 
-    it 'removes child file set objects' do
-      expect { listener.on_object_deleted(event) }
-        .to change { Hyrax.custom_queries.find_child_file_sets(resource: event[:object]).size }
-        .from(1)
-        .to(0)
-    end
-
-    it 'publishes events' do
+    # exited because we have moved the logic to a transaction
+    xit 'publishes events' do
       listener.on_object_deleted(event)
       expect(spy_listener.object_deleted&.payload)
         .to include(id: file_set.id, object: file_set, user: user)

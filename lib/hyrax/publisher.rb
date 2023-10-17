@@ -139,6 +139,10 @@ module Hyrax
 
     # @since 5.0.0
     # @macro a_registered_event
+    register_event('file.metadata.deleted')
+
+    # @since 5.0.0
+    # @macro a_registered_event
     register_event('file.uploaded')
 
     # @since 3.0.0

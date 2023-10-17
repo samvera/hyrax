@@ -83,6 +83,17 @@ module Hyrax
         Hyrax.index_adapter.delete(resource: event[:collection])
       end
 
+      ##
+      # Remove the resource from the index.
+      #
+      # Called when 'file.metadata.deleted' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
+      def on_file_metadata_deleted(event)
+        return unless resource? event.payload[:metadata]
+        Hyrax.index_adapter.delete(resource: event[:metadata])
+      end
+
       private
 
       def resource?(resource)

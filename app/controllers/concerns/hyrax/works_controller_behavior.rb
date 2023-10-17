@@ -114,9 +114,9 @@ module Hyrax
         Hyrax.config.callback.run(:after_destroy, curation_concern.id, current_user, warn: false)
       else
         transactions['work_resource.destroy']
-          .with_step_args('work_resource.delete' => { user: current_user })
-          .call(curation_concern)
-          .value!
+          .with_step_args('work_resource.delete' => { user: current_user },
+                          'work_resource.delete_all_file_sets' => { user: current_user })
+          .call(curation_concern).value!
 
         title = Array(curation_concern.title).first
       end

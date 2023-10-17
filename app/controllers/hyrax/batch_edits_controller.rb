@@ -108,9 +108,9 @@ module Hyrax
       batch.each do |id|
         resource = Hyrax.query_service.find_by(id: Valkyrie::ID.new(id))
         transactions['work_resource.destroy']
-          .with_step_args('work_resource.delete' => { user: current_user })
-          .call(resource)
-          .value!
+          .with_step_args('work_resource.delete' => { user: current_user },
+                          'work_resource.delete_all_file_sets' => { user: current_user })
+          .call(resource).value!
       end
       after_update
     end

@@ -2,41 +2,43 @@
 require 'spec_helper'
 require 'hyrax/transactions'
 
-RSpec.describe Hyrax::Transactions::FileSetDestroy do
+RSpec.describe Hyrax::Transactions::WorkDestroy do
   subject(:transaction) { described_class.new }
-  let(:file_set)        { FactoryBot.valkyrie_create(:hyrax_file_set) }
+  let(:work)      { FactoryBot.valkyrie_create(:hyrax_work, read_users: [user], members: [file_set]) }
+  let(:file_set)  { FactoryBot.valkyrie_create(:hyrax_file_set) }
 
   describe '#call' do
     let(:user) { FactoryBot.create(:user) }
 
-    before do
-      file_set.permission_manager.read_users = [user.user_key]
-      file_set.permission_manager.acl.save
-    end
-
     context 'without a user' do
       it 'is a failure' do
-        expect(transaction.call(file_set)).to be_failure
+        expect(transaction.call(work)).to be_failure
       end
     end
 
     it 'succeeds' do
-      expect(transaction.with_step_args('file_set.remove_from_work' => { user: user }).call(file_set))
+      expect(transaction.with_step_args('work_resource.delete_all_file_sets' => { user: user }).call(work))
         .to be_success
     end
 
+    it 'deletes the work' do
+      transaction.with_step_args('work_resource.delete_all_file_sets' => { user: user }).call(work)
+
+      expect { Hyrax.query_service.find_by(id: work.id) }
+        .to raise_error Valkyrie::Persistence::ObjectNotFoundError
+    end
+
     it 'deletes the file set' do
-      transaction.with_step_args('file_set.remove_from_work' => { user: user }).call(file_set)
+      transaction.with_step_args('work_resource.delete_all_file_sets' => { user: user }).call(work)
 
       expect { Hyrax.query_service.find_by(id: file_set.id) }
         .to raise_error Valkyrie::Persistence::ObjectNotFoundError
     end
 
     it 'deletes the access control resource' do
-      expect { transaction.with_step_args('file_set.remove_from_work' => { user: user }).call(file_set) }
-        .to change { Hyrax::AccessControl.for(resource: file_set).persisted? }
-        .from(true)
-        .to(false)
+      expect { transaction.with_step_args('work_resource.delete_all_file_sets' => { user: user }).call(work) }
+        .to change { Hyrax::AccessControl.for(resource: work).persisted? }
+        .from(true).to(false)
     end
 
     context "with attached files" do
@@ -48,7 +50,7 @@ RSpec.describe Hyrax::Transactions::FileSetDestroy do
       let(:query_service) { Hyrax.query_service }
       it "deletes them" do
         file_metadata
-        transaction.with_step_args('file_set.remove_from_work' => { user: user }).call(file_set)
+        transaction.with_step_args('work_resource.delete_all_file_sets' => { user: user }).call(work)
 
         expect { Hyrax.query_service.find_by(id: file_metadata.id) }.to raise_error Valkyrie::Persistence::ObjectNotFoundError
         expect { storage_adapter.find_by(id: uploaded.id) }.to raise_error Valkyrie::StorageAdapter::FileNotFound
