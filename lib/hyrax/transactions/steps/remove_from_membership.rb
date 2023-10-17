@@ -27,6 +27,7 @@ module Hyrax
         # @return [Dry::Monads::Result]
         def call(collection, user: nil)
           return Failure(:resource_not_persisted) unless collection.persisted?
+          return Failure(:user_not_present) if user.blank?
 
           @query_service.find_members_of(collection: collection).each do |member|
             member.member_of_collection_ids -= [collection.id]
