@@ -116,6 +116,21 @@ ul.tabular {
   background: #fff;
   border-color: #e0e0e0;
 
+  & > .btn {
+    padding: 0;
+    border: 0;
+  }
+
+  .btn-primary {
+    margin-bottom: 1rem;
+  }
+
+  .workflow-comments {
+    label {
+      font-weight: bold;
+    }
+  }
+
   .card-header {
     background-color: #e6ab5f;
     color: #ffffff;
@@ -128,8 +143,9 @@ ul.tabular {
   .card-body {
     background-color: #f2f1eb;
   }
-}
 
-.workflow-actions {
-  background-color: #f8f8f8;
+  .workflow-actions {
+    background-color: #f8f8f8;
+    padding: 1rem;
+  }
 }
