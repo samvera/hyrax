@@ -27,11 +27,13 @@ module Hyrax
         # @return [Dry::Monads::Result]
         def call(resource, user: nil)
           return Failure(:resource_not_persisted) unless resource.persisted?
+
           @query_service.custom_queries.find_child_file_sets(resource: resource).each do |file_set|
-            Hyrax::Transactions::Container['file_set.destroy']
+            return Failure[:failed_to_delete_file_set, file_set] unless
+              Hyrax::Transactions::Container['file_set.destroy']
               .with_step_args('file_set.remove_from_work' => { user: user },
                               'file_set.delete' => { user: user })
-              .call(file_set).value!
+              .call(file_set).success?
           rescue ::Ldp::Gone
             nil
           end

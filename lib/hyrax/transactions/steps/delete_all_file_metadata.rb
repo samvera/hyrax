@@ -30,9 +30,10 @@ module Hyrax
           return Failure(:resource_not_persisted) unless resource.persisted?
 
           resource[@property].each do |file_id|
-            Hyrax::Transactions::Container['file_metadata.destroy']
+            return Failure[:failed_to_delete_file_metadata, file_id] unless
+              Hyrax::Transactions::Container['file_metadata.destroy']
               .call(@query_service.custom_queries.find_file_metadata_by(id: file_id))
-              .value!
+              .success?
           rescue ::Ldp::Gone
             nil
           end
