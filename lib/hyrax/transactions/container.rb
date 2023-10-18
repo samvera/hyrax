@@ -46,6 +46,7 @@ module Hyrax
       require 'hyrax/transactions/steps/file_metadata_delete'
       require 'hyrax/transactions/steps/set_collection_type_gid'
       require 'hyrax/transactions/steps/remove_file_set_from_work'
+      require 'hyrax/transactions/steps/remove_from_membership'
       require 'hyrax/transactions/steps/save'
       require 'hyrax/transactions/steps/save_access_control'
       require 'hyrax/transactions/steps/save_collection_banner'
@@ -213,6 +214,10 @@ module Hyrax
 
         ops.register 'delete_acl' do
           Steps::DeleteAccessControl.new
+        end
+
+        ops.register 'remove_from_membership' do
+          Steps::RemoveFromMembership.new
         end
 
         ops.register 'save_acl' do
