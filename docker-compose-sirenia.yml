@@ -8,7 +8,6 @@ services:
       args:
         - EXTRA_APK_PACKAGES=git less
         - APP_PATH=.koppie
-        - BUNDLE_GEMFILE=Gemfile.sirenia
     image: samvera/koppie
     entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
@@ -18,9 +17,10 @@ services:
     env_file:
       - .koppie/.env
     environment:
+      - APP_NAME=sirenia
       - RAILS_ROOT=/app/samvera/hyrax-webapp
-      - VALKYRIE_METADATA_ADAPTER=nurax_fedora_metadata_adapter
-      - VALKYRIE_STORAGE_ADAPTER=fedora
+      - VALKYRIE_METADATA_ADAPTER=fedora_metadata
+      - VALKYRIE_STORAGE_ADAPTER=fedora_storage
     depends_on:
       - chrome
       - db_migrate
@@ -60,8 +60,9 @@ services:
     env_file:
       - .koppie/.env
     environment:
-      - VALKYRIE_METADATA_ADAPTER=nurax_fedora_metadata_adapter
-      - VALKYRIE_STORAGE_ADAPTER=fedora
+      - APP_NAME=sirenia
+      - VALKYRIE_METADATA_ADAPTER=fedora_metadata
+      - VALKYRIE_STORAGE_ADAPTER=fedora_storage
     depends_on:
       - db_migrate
       - memcached
@@ -87,8 +88,9 @@ services:
     env_file:
       - .koppie/.env
     environment:
-      - VALKYRIE_METADATA_ADAPTER=nurax_fedora_metadata_adapter
-      - VALKYRIE_STORAGE_ADAPTER=fedora
+      - APP_NAME=sirenia
+      - VALKYRIE_METADATA_ADAPTER=fedora_metadata
+      - VALKYRIE_STORAGE_ADAPTER=fedora_storage
     entrypoint: dev-entrypoint.sh
     command: db-migrate-seed.sh
     depends_on:

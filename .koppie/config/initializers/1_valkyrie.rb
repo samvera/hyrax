@@ -25,7 +25,7 @@ require 'faraday/multipart'
 #             :nurax_pg_metadata_adapter)
 Valkyrie::MetadataAdapter.register(
   Valkyrie::Persistence::Postgres::MetadataAdapter.new,
-  :nurax_pg_metadata_adapter
+  :pg_metadata
 )
 
 Valkyrie::MetadataAdapter.register(
@@ -35,10 +35,10 @@ Valkyrie::MetadataAdapter.register(
     base_path: Rails.env,
     schema: Valkyrie::Persistence::Fedora::PermissiveSchema.new(Hyrax::SimpleSchemaLoader.new.permissive_schema_for_valkrie_adapter),
     fedora_version: 6
-  ), :nurax_fedora_metadata_adapter
+  ), :fedora_metadata
 )
 
-Valkyrie.config.metadata_adapter = ENV.fetch('VALKYRIE_METADATA_ADAPTER') { :nurax_pg_metadata_adapter }.to_sym
+Valkyrie.config.metadata_adapter = ENV.fetch('VALKYRIE_METADATA_ADAPTER') { :pg_metadata }.to_sym
 
 # shrine_s3_options = {
 #   bucket: ENV.fetch("REPOSITORY_S3_BUCKET") { "nurax_pg#{Rails.env}" },
@@ -65,14 +65,15 @@ Valkyrie::StorageAdapter.register(
       ENV.fetch('FCREPO_URL') { "http://localhost:8080/fcrepo/rest" })),
     base_path: Rails.env,
     fedora_version: 6
-  ), :fedora
+  ), :fedora_storage
 )
 
 Valkyrie::StorageAdapter.register(
   Valkyrie::Storage::VersionedDisk.new(base_path: Rails.root.join("storage", "files"),
                                        file_mover: FileUtils.method(:cp)),
-  :disk
+  :versioned_disk_storage
 )
-Valkyrie.config.storage_adapter  = ENV.fetch('VALKYRIE_STORAGE_ADAPTER') { :disk }.to_sym
+
+Valkyrie.config.storage_adapter  = ENV.fetch('VALKYRIE_STORAGE_ADAPTER') { :versioned_disk_storage }.to_sym
 
 Valkyrie.config.indexing_adapter = :solr_index
