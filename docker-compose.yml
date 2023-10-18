@@ -42,13 +42,7 @@ services:
       - hyrax
 
   sidekiq:
-    build:
-      context: .
-      target: hyrax-engine-dev-worker
-      args:
-        - EXTRA_APK_PACKAGES=git less
-        - BUNDLE_GEMFILE=Gemfile.dassie
-    image: samvera/dassie-worker
+    image: samvera/dassie
     entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec sidekiq'
     user: root
@@ -68,8 +62,8 @@ services:
       - bundle:/app/bundle
       - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
-      - sidekiq-public:/app/samvera/hyrax-webapp/public
-      - sidekiq-tmp:/app/samvera/hyrax-webapp/tmp
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
       - hyrax
 
@@ -180,8 +174,6 @@ volumes:
   rails-public:
   rails-tmp:
   redis:
-  sidekiq-public:
-  sidekiq-tmp:
   solr_home:
 
 networks:
