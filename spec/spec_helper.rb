@@ -342,9 +342,5 @@ RSpec.configure do |config|
     allow(Hyrax)
       .to receive(:storage_adapter)
       .and_return(Valkyrie::StorageAdapter.find(adapter_name))
-
-    allow(Valkyrie::StorageAdapter)
-      .to receive(:adapter_for)
-      .and_return(Valkyrie::StorageAdapter.find(adapter_name))
   end
 end
