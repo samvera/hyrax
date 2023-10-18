@@ -89,6 +89,13 @@ ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nu
 
 FROM hyrax-base as hyrax-engine-dev
 
+USER root
+RUN apk --no-cache add bash \
+  ffmpeg \
+  mediainfo \
+  perl
+USER app
+
 ARG APP_PATH=.dassie
 ARG BUNDLE_WITHOUT=
 
