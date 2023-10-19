@@ -249,7 +249,7 @@ Hyrax.config do |config|
   # Identify the model class name that will be used for Collections in your app
   # (i.e. ::Collection for ActiveFedora, Hyrax::PcdmCollection for Valkyrie)
   # config.collection_model = '::Collection'
-  config.collection_model = 'Hyrax::PcdmCollection'
+  # config.collection_model = 'Hyrax::PcdmCollection'
   # Injected via `rails g hyrax:collection_resource CollectionResource`
   config.collection_model = 'CollectionResource'
 

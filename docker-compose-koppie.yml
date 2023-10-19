@@ -44,14 +44,7 @@ services:
       - koppie
 
   sidekiq:
-    build:
-      context: .
-      target: hyrax-engine-dev-worker
-      args:
-        - EXTRA_APK_PACKAGES=git less
-        - APP_PATH=.koppie
-        - BUNDLE_GEMFILE=Gemfile.koppie
-    image: samvera/koppie-worker
+    image: samvera/koppie
     entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec sidekiq'
     user: root
@@ -71,8 +64,8 @@ services:
       - hyrax-storage:/app/samvera/hyrax-webapp/storage
       - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
-      - sidekiq-public:/app/samvera/hyrax-webapp/public
-      - sidekiq-tmp:/app/samvera/hyrax-webapp/tmp
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
       - koppie
 
