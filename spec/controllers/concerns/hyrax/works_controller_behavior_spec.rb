@@ -478,21 +478,21 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         expect(response.status).to eq 200
       end
 
-      it 'resolves ntriples' do
+      it 'resolves ntriples', :active_fedora do
         get :show, params: { id: work.id }, format: :nt
 
         expect(RDF::Reader.for(:ntriples).new(response.body).objects)
           .to include(RDF::Literal(title.first))
       end
 
-      it 'resolves turtle' do
+      it 'resolves turtle', :active_fedora do
         get :show, params: { id: work.id }, format: :ttl
 
         expect(RDF::Reader.for(:ttl).new(response.body).objects)
           .to include(RDF::Literal(title.first))
       end
 
-      it 'resolves jsonld' do
+      it 'resolves jsonld', :active_fedora do
         get :show, params: { id: work.id }, format: :jsonld
 
         expect(RDF::Reader.for(:jsonld).new(response.body).objects)

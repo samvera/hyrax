@@ -84,9 +84,6 @@ module Hyrax
           render :show, status: :ok
         end
         additional_response_formats(wants)
-        wants.ttl { render body: presenter.export_as_ttl, mime_type: Mime[:ttl] }
-        wants.jsonld { render body: presenter.export_as_jsonld, mime_type: Mime[:jsonld] }
-        wants.nt { render body: presenter.export_as_nt, mime_type: Mime[:nt] }
       end
     end
     # rubocop:enable Metrics/AbcSize
@@ -434,10 +431,47 @@ module Hyrax
     end
 
     def additional_response_formats(format)
+      respond_to_endnote(format)
+      respond_to_ttl(format)
+      respond_to_jsonld(format)
+      respond_to_nt(format)
+    end
+
+    def respond_to_endnote(format)
       format.endnote do
         send_data(presenter.solr_document.export_as_endnote,
                   type: "application/x-endnote-refer",
                   filename: presenter.solr_document.endnote_filename)
+      end
+    end
+
+    def respond_to_ttl(format)
+      format.ttl do
+        if presenter.valkyrie_presenter?
+          render plain: "Error: Not Implemented", status: :not_implemented
+        else
+          render body: presenter.export_as_ttl, mime_type: Mime[:ttl]
+        end
+      end
+    end
+
+    def respond_to_jsonld(format)
+      format.jsonld do
+        if presenter.valkyrie_presenter?
+          render plain: "Error: Not Implemented", status: :not_implemented
+        else
+          render body: presenter.export_as_jsonld, mime_type: Mime[:jsonld]
+        end
+      end
+    end
+
+    def respond_to_nt(format)
+      format.nt do
+        if presenter.valkyrie_presenter?
+          render plain: "Error: Not Implemented", status: :not_implemented
+        else
+          render body: presenter.export_as_nt, mime_type: Mime[:nt]
+        end
       end
     end
 
