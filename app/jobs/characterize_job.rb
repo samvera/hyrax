@@ -51,7 +51,7 @@ class CharacterizeJob < Hyrax::ApplicationJob
     # value. So later we'll ensure it's set to the new file's filename.
     reset_title = file_set.title.first == file_set.label
 
-    characterization_service.run(file_set.characterization_proxy, filepath)
+    characterization_service.run(file_set.characterization_proxy, filepath, **Hyrax.config.characterization_options)
     Hyrax.logger.debug "Ran characterization on #{file_set.characterization_proxy.id} (#{file_set.characterization_proxy.mime_type})"
     file_set.characterization_proxy.alpha_channels = channels(filepath) if file_set.image? && Hyrax.config.iiif_image_server?
     file_set.characterization_proxy.save!
