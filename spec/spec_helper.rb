@@ -58,7 +58,7 @@ Valkyrie::MetadataAdapter
 Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Postgres::MetadataAdapter.new, :postgres_adapter)
 Valkyrie::StorageAdapter.register(
-  Valkyrie::Storage::Disk.new(base_path: Rails.root / 'tmp' / 'test_adapter_uploads'),
+  Valkyrie::Storage::VersionedDisk.new(base_path: Rails.root / 'tmp' / 'test_adapter_uploads'),
   :test_disk
 )
 Valkyrie::StorageAdapter.register(
@@ -341,10 +341,6 @@ RSpec.configure do |config|
 
     allow(Hyrax)
       .to receive(:storage_adapter)
-      .and_return(Valkyrie::StorageAdapter.find(adapter_name))
-
-    allow(Valkyrie::StorageAdapter)
-      .to receive(:adapter_for)
       .and_return(Valkyrie::StorageAdapter.find(adapter_name))
   end
 end
