@@ -8,6 +8,7 @@ class Hyrax::My::HighlightsSearchBuilder < Hyrax::SearchBuilder
   def show_only_highlighted_works(solr_parameters)
     ids = scope.current_user.trophies.pluck(:work_id)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] += [Hyrax::SolrQueryBuilderService.construct_query_for_ids([ids])]
+    return solr_parameters[:fq] += ['-id:NEVER_USE_THIS_ID'] if ids.empty?
+    solr_parameters[:fq] += [Hyrax::SolrQueryService.new.with_ids(ids: [ids]).build]
   end
 end

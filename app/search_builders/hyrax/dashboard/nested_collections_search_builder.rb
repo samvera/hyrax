@@ -28,7 +28,7 @@ module Hyrax
       def show_only_other_collections_of_the_same_collection_type(solr_parameters)
         solr_parameters[:fq] ||= []
         solr_parameters[:fq] += [
-          Hyrax::SolrQueryBuilderService.construct_query(Hyrax.config.collection_type_index_field => @collection.collection_type_gid),
+          Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: { Hyrax.config.collection_type_index_field => @collection.collection_type_gid }).build,
           "-{!graph from=id to=member_of_collection_ids_ssim#{' maxDepth=1' if @nest_direction == :as_parent}}id:#{@collection.id}",
           "-{!graph to=id from=member_of_collection_ids_ssim#{' maxDepth=1' if @nest_direction == :as_child}}id:#{@collection.id}"
         ]

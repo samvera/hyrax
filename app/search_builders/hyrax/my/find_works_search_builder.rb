@@ -15,24 +15,25 @@ class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
 
   def filter_on_title(solr_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] += [Hyrax::SolrQueryBuilderService.construct_query(title_tesim: @q)]
+    solr_parameters[:fq] += [Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: { title_tesim: @q }).build]
   end
 
   def show_only_other_works(solr_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] += ["-#{Hyrax::SolrQueryBuilderService.construct_query_for_ids([@id])}"]
+    solr_parameters[:fq] += ["-#{Hyrax::SolrQueryService.new.with_ids(ids: [@id]).build}"]
   end
 
   def show_only_works_not_child(solr_parameters)
     ids = Hyrax::SolrService.query("{!field f=id}#{@id}", fl: "member_ids_ssim", rows: 10_000).flat_map { |x| x.fetch("member_ids_ssim", []) }
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] += ["-#{Hyrax::SolrQueryBuilderService.construct_query_for_ids([ids])}"]
+    return solr_parameters[:fq] += ['-id:NEVER_USE_THIS_ID'] if ids.empty?
+    solr_parameters[:fq] += ["-#{Hyrax::SolrQueryService.new.with_ids(ids: [ids]).build}"]
   end
 
   def show_only_works_not_parent(solr_parameters)
     solr_parameters[:fq] ||= []
     solr_parameters[:fq]  += [
-      "-" + Hyrax::SolrQueryBuilderService.construct_query(member_ids_ssim: @id)
+      "-" + Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: { member_ids_ssim: @id }).build
     ]
   end
 

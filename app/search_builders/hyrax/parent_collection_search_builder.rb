@@ -6,8 +6,10 @@ module Hyrax
 
     # include filters into the query to only include the collections containing this item
     def include_item_ids(solr_parameters)
+      ids = item.member_of_collection_ids
       solr_parameters[:fq] ||= []
-      solr_parameters[:fq] += [Hyrax::SolrQueryBuilderService.construct_query_for_ids([item.member_of_collection_ids])]
+      return solr_parameters[:fq] += ['-id:NEVER_USE_THIS_ID'] if ids.empty?
+      solr_parameters[:fq] += [Hyrax::SolrQueryService.new.with_ids(ids: [ids]).build]
     end
   end
 end
