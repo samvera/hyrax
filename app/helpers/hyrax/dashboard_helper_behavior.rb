@@ -17,6 +17,19 @@ module Hyrax
       'n/a'
     end
 
+    def link_to_works(user = current_user)
+      state = Blacklight::SearchState.new(params, CatalogController.blacklight_config)
+      facet_type = if Hyrax.config.use_valkyrie?
+                     state.add_facet_params('generic_type_si', 'Work')
+                   else
+                     state.add_facet_params('generic_type_sim', 'Work')
+                   end
+      facet_depositor = state.add_facet_params('depositor_ssim', user.to_s)
+      state = Hash.new {}
+      state["f"] = facet_type["f"].merge(facet_depositor["f"])
+      link_to(t("hyrax.dashboard.stats.works"), main_app.search_catalog_path(state))
+    end
+
     # @param user [User]
     # @return [Integer] number of FileSets the user deposited
     def number_of_files(user = current_user)
