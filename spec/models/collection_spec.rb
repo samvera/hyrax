@@ -201,7 +201,7 @@ RSpec.describe ::Collection, :active_fedora, type: :model do
     end
   end
 
-  describe '#reset_access_controls!' do
+  describe 'permission_template reset_access_controls_for' do
     let!(:user) { build(:user) }
     let(:collection_type) { create(:collection_type) }
     let!(:collection) { FactoryBot.build(:collection_lw, user: user, collection_type: collection_type) }
