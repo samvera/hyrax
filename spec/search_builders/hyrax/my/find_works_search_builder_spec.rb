@@ -11,7 +11,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
                                current_user: user,
                                params: params)
   end
-  let!(:work) { create(:generic_work, :public, title: ['foo'], user: user) }
+  let(:work) { create(:generic_work, :public, title: ['foo'], user: user) }
 
   let(:builder) { described_class.new(context) }
   let(:solr_params) { Blacklight::Solr::Request.new }
@@ -36,10 +36,12 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
 
   describe "#show_only_works_not_child" do
     subject { builder.show_only_works_not_child(solr_params) }
+    let(:work) { create(:work_with_one_child, :public, title: ['foo'], user: user) }
 
     it "is successful" do
       subject
       ids = Hyrax::SolrService.query("{!field f=id}#{work.id}", fl: "member_ids_ssim").flat_map { |x| x.fetch("member_ids_ssim", []) }
+      expect(ids).to_not be_empty
       expect(solr_params[:fq]).to eq ["-" + Hyrax::SolrQueryService.new.with_ids(ids: [ids]).build]
     end
   end
