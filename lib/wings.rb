@@ -60,7 +60,7 @@
 module Wings
   Deprecation.warn(self, "ActiveFedora and Wings will be removed from a future major release of Hyrax in favor " \
     "of Valkyrie resource models. Please migrate your models from ActiveFedora::Base to Hyrax::Resource.")
-  
+
   ##
   # @api public
   #
