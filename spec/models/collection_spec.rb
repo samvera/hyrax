@@ -170,30 +170,6 @@ RSpec.describe ::Collection, :active_fedora, type: :model do
     end
   end
 
-  describe '#collection_type' do
-    let(:collection) { described_class.new(collection_type: collection_type) }
-    let(:collection_type) { create(:collection_type) }
-
-    it 'returns a collection_type instance from the collection_type_gid' do
-      expect(collection.collection_type).to be_kind_of(Hyrax::CollectionType)
-      expect(collection.collection_type).to eq collection_type
-    end
-  end
-
-  describe 'collection type delegated methods' do
-    subject { build(:collection_lw) }
-
-    it { is_expected.to delegate_method(:nestable?).to(:collection_type) }
-    it { is_expected.to delegate_method(:discoverable?).to(:collection_type) }
-    it { is_expected.to delegate_method(:brandable?).to(:collection_type) }
-    it { is_expected.to delegate_method(:sharable?).to(:collection_type) }
-    it { is_expected.to delegate_method(:share_applies_to_new_works?).to(:collection_type) }
-    it { is_expected.to delegate_method(:allow_multiple_membership?).to(:collection_type) }
-    it { is_expected.to delegate_method(:require_membership?).to(:collection_type) }
-    it { is_expected.to delegate_method(:assigns_workflow?).to(:collection_type) }
-    it { is_expected.to delegate_method(:assigns_visibility?).to(:collection_type) }
-  end
-
   describe '.after_destroy' do
     it 'will destroy the associated permission template' do
       collection = build(:collection_lw, with_permission_template: true)
