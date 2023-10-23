@@ -177,7 +177,7 @@ RSpec.describe Wings::ModelTransformer, :active_fedora, :clean_repo do
     end
 
     context 'with files and derivatives in fileset' do
-      let(:file_set)            { Hydra::Works::FileSet.new }
+      let(:file_set)            { FileSet.new }
       let(:original_file)       { File.open(File.join(fixture_path, 'world.png')) }
       let(:thumbnail_file)      { File.open(File.join(fixture_path, 'image.jpg')) }
       let(:extracted_text_file) { File.open(File.join(fixture_path, 'updated-file.txt')) }
