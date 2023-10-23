@@ -137,9 +137,14 @@ $gutter-width: $grid-gutter-width/2;
     li {
       white-space: nowrap;
 
-      > a:hover, > a:focus {
+      > a:focus {
+        color: $admin-sidebar-link-color;
+      }
+
+      > a:hover {
         text-decoration: none;
         background-color: $admin-sidebar-link-background-color;
+        color: $admin-sidebar-link-hover-color;
       }
     }
     
