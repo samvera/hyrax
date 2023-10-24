@@ -6,6 +6,8 @@ require_relative 'resource_factory'
 
 module Freyja
   class MetadataAdapter
+    include Goddess::Metadata
+
     def persister
       @persister ||= Freyja::Persister.new(adapter: self)
     end
@@ -16,14 +18,6 @@ module Freyja
         Valkyrie::Persistence::Postgres::QueryService.new(adapter: self, resource_factory: resource_factory),
         Valkyrie::MetadataAdapter.adapters[:wings_adapter].query_service
       )
-    end
-
-    # @return [Valkyrie::ID] Identifier for this metadata adapter.
-    def id
-      @id ||= begin
-                to_hash = "migrate_adapter"
-                ::Valkyrie::ID.new(Digest::MD5.hexdigest(to_hash))
-              end
     end
 
     # @return [Class] +Valkyrie::Persistence::Postgres::ResourceFactory+

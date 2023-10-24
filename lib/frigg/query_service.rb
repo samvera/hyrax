@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Freyja
+module Frigg
   class QueryService
     include Goddess::Query
 
@@ -9,8 +9,7 @@ module Freyja
     #
     # @return [Valkyrie::Persistence::CustomQueryContainer]
     def custom_queries
-      @custom_queries ||= Freyja::CustomQueryContainer.new(query_service: self)
+      @custom_queries ||= Frigg::CustomQueryContainer.new(query_service: self)
     end
-    alias_method :custom_query, :custom_queries
   end
 end

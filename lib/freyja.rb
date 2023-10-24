@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'wings'
+require 'goddess/metadata'
+require 'goddess/query'
 require 'freyja/metadata_adapter'
 require 'freyja/custom_query_container'
 require 'freyja/resource_factory'
