@@ -10,7 +10,7 @@
         <span><%= current_user.name %></span>
         <span class="sr-only"> <%= t("hyrax.toolbar.profile.sr_target") %></span>
       </a>
-      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
         <%= link_to "My Profile", hyrax.dashboard_profile_path(current_user), class: 'dropdown-item' %>
         <%= link_to t("hyrax.toolbar.dashboard.menu"), hyrax.dashboard_path, class: "dropdown-item" %>
         <div class="dropdown-divider"></div>
