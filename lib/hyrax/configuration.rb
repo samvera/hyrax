@@ -168,7 +168,10 @@ module Hyrax
     # Options to pass to the characterization service
     # @!attribute [rw] characterization_options
     #  @return [Hash] of options like {ch12n_tool: :fits_servlet}
-    attr_accessor :characterization_options
+    attr_writer :characterization_options
+    def characterization_options
+      @characterization_options ||= {}
+    end
 
     ##
     # @!attribute [w] characterization_proxy
@@ -581,6 +584,20 @@ module Hyrax
       @derivatives_storage_adapter = Valkyrie::StorageAdapter.find(adapter.to_sym)
     end
 
+    # A HTTP connection to use for Valkyrie Fedora requests
+    #
+    # @return [#call] lambda/proc that generates a Faraday connection
+    def fedora_connection_builder
+      @fedora_connection_builder ||= lambda { |url|
+        Faraday.new(url) do |f|
+          f.request :multipart
+          f.request :url_encoded
+          f.adapter Faraday.default_adapter
+        end
+      }
+    end
+    attr_writer :fedora_connection_builder
+
     ##
     # @return [#save, #save_all, #delete, #wipe!] an indexing adapter
     def index_adapter
@@ -779,6 +796,11 @@ module Hyrax
     def geonames_username=(username)
       Qa::Authorities::Geonames.username = username
     end
+
+    def location_service
+      @location_service ||= Hyrax::LocationService.new
+    end
+    attr_writer :location_service
 
     attr_writer :active_deposit_agreement_acceptance
     def active_deposit_agreement_acceptance?

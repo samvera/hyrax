@@ -58,8 +58,12 @@ Valkyrie::MetadataAdapter
 Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Postgres::MetadataAdapter.new, :postgres_adapter)
 Valkyrie::StorageAdapter.register(
-  Valkyrie::Storage::Disk.new(base_path: Rails.root / 'tmp' / 'test_adapter_uploads'),
+  Valkyrie::Storage::VersionedDisk.new(base_path: Rails.root / 'tmp' / 'test_adapter_uploads'),
   :test_disk
+)
+Valkyrie::StorageAdapter.register(
+  Valkyrie::Storage::Disk.new(base_path: File.expand_path('../fixtures', __FILE__)),
+  :fixture_disk
 )
 
 # Require supporting ruby files from spec/support/ and subdirectories.  Note: engine, not Rails.root context.
@@ -135,6 +139,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.before :suite do
+    FactoryBot::SyntaxRunner.include ActiveJob::TestHelper
     FactoryBot::SyntaxRunner.include RSpec::Mocks::ExampleMethods
     Hyrax::RedisEventStore.instance.then(&:flushdb)
     DatabaseCleaner.clean_with(:truncation)

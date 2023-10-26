@@ -1,0 +1,57 @@
+---
+# This internal metadata config is used to define predicates for hyrax internals only
+attributes:
+  access_to:
+    predicate: http://www.w3.org/ns/auth/acl#accessTo
+  admin_set_id:
+    predicate: http://purl.org/dc/terms/isPartOf
+  agent:
+    predicate: http://www.w3.org/ns/auth/acl#agent
+  byte_order:
+    predicate: http://sweet.jpl.nasa.gov/2.2/reprDataFormat.owl#byteOrder
+  color_space:
+    predicate: http://www.w3.org/2003/12/exif/ns#colorSpace
+  compression:
+    predicate: http://vocabulary.samvera.org/ns#compressionScheme
+  created_at:
+    predicate: http://purl.org/dc/terms/created
+  file_identifier:
+    predicate: http://vocabulary.samvera.org/ns#fileIdentifier
+  file_ids:
+    predicate: http://pcdm.org/models#hasFile
+  file_set_id:
+    predicate: http://vocabulary.samvera.org/ns#fileSetId
+  format_label:
+    predicate: http://www.loc.gov/premis/rdf/v1#hasFormatName
+  height:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#height
+  id:
+    predicate: http://purl.org/dc/terms/id
+  internal_resource:
+    predicate: info:fedora/fedora-system:def/model#hasModel
+  mime_type:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasMimeType
+  mode:
+    predicate: http://www.w3.org/ns/auth/acl#mode
+  original_filename:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename
+  pcdm_use:
+    predicate: http://vocabulary.samvera.org/ns#pcdmUse
+  permissions:
+    predicate: http://vocabulary.samvera.org/ns#permissions
+  recorded_size:
+    predicate: http://www.loc.gov/premis/rdf/v1#hasSize
+  representative_id:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasRelatedMediaFragment
+  state:
+    predicate: http://fedora.info/definitions/1/0/access/ObjState#objState
+  thumbnail_id:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasRelatedImage
+  updated_at:
+    predicate: http://vocabulary.samvera.org/ns#updatedAt
+  valid:
+    predicate: http://vocabulary.samvera.org/ns#valid
+  well_formed:
+    predicate: http://vocabulary.samvera.org/ns#wellFormed
+  width:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#width

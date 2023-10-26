@@ -173,13 +173,16 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
       end
 
       context "ttl" do
-        let(:presenter) { double }
+        let(:presenter) do
+          double("Presenter Double",
+                 export_as_ttl: 'ttl graph',
+                 'editor?': true,
+                 to_model: stub_model(GenericWork),
+                 'valkyrie_presenter?': false)
+        end
 
         before do
           allow(controller).to receive(:presenter).and_return(presenter)
-          allow(presenter).to receive(:export_as_ttl).and_return("ttl graph")
-          allow(presenter).to receive(:editor?).and_return(true)
-          allow(presenter).to receive(:to_model).and_return(stub_model(GenericWork))
         end
 
         it 'renders a turtle file' do

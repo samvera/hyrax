@@ -6,7 +6,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module NuraxPg
+module Koppie
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
@@ -15,6 +15,7 @@ module NuraxPg
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
+    config.session_store :cookie_store, key: "_#{ENV.fetch('APP_NAME', 'koppie')}_session"
 
     # use SideKiq by default
     config.active_job.queue_adapter = :sidekiq

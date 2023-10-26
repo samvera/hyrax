@@ -12,7 +12,7 @@ RSpec.describe 'hyrax/base/show.json.jbuilder' do
 
   it "renders json of the curation_concern" do
     json = JSON.parse(rendered)
-    expect(json['id']).to eq curation_concern.id
+    expect(json['id']).to eq curation_concern.id.to_s
     expect(json['title']).to match_array curation_concern.title
     expected_fields = curation_concern.class.fields.reject { |f| [:has_model, :create_date].include? f }
     expected_fields << :date_created

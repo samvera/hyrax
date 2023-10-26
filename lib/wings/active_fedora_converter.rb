@@ -170,6 +170,7 @@ module Wings
 
     # for files, add attributes to metadata_node, plus some other work
     def add_file_attributes(af_object)
+      add_file_uri(af_object)
       converted_attrs = normal_attributes
       pcdm_use = converted_attrs.delete(:pcdm_use)
       af_object.metadata_node.attributes = converted_attrs
@@ -178,6 +179,11 @@ module Wings
       new_type = (resource.pcdm_use - af_object.metadata_node.type.to_a).first
       af_object.metadata_node.type = new_type if new_type
       af_object.mime_type = resource.mime_type
+    end
+
+    def add_file_uri(af_object)
+      file_uri = Hyrax.storage_adapter.fedora_identifier(id: resource.file_identifier)
+      af_object.uri = file_uri.to_s if af_object.uri.to_s.blank? && file_uri.to_s.present?
     end
 
     def perform_lease_conversion(af_object:, resource:)

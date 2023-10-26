@@ -20,7 +20,7 @@ module Hyrax
           return Success(obj) if parent_id.blank?
 
           parent = Hyrax.query_service.find_by(id: parent_id)
-          parent.member_ids << obj.id
+          parent.member_ids += [obj.id]
           Hyrax.persister.save(resource: parent)
 
           user ||= ::User.find_by_user_key(obj.depositor)

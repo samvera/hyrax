@@ -1,20 +1,21 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Strategies::YamlStrategy do
-  subject { described_class.new(config: "test_file") }
+  subject { described_class.new(config: tmpfile) }
 
   context "when given a YAML file" do
-    let(:content) do
-      {
-        "assign_admin_set" => {
-          "enabled" => false
-        }
-      }
-    end
+    let(:content) { { "assign_admin_set" => { "enabled" => false } }.to_yaml }
+    let(:tmpfile) { Tempfile.new }
 
     before do
-      allow(YAML).to receive(:load_file).with("test_file").and_return(content)
-      allow(File).to receive(:exist?).with("test_file").and_return(true)
+      tmpfile.write(content)
+      tmpfile.rewind
     end
+
+    after do
+      tmpfile.close
+      tmpfile.unlink
+    end
+
     it "tests for features based on an enabled key" do
       expect(subject.enabled?(:assign_admin_set)).to eq false
     end
@@ -24,6 +25,8 @@ RSpec.describe Hyrax::Strategies::YamlStrategy do
   end
 
   context "when given a non-existent file" do
+    let(:tmpfile) { "/tmp/non-existent-file" }
+
     it "returns nil for everything" do
       expect(subject.enabled?(:assign_admin_set)).to be_nil
     end

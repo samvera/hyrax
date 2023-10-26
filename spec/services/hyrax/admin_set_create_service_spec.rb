@@ -6,27 +6,6 @@ RSpec.describe Hyrax::AdminSetCreateService do
   let(:persister) { Hyrax.persister }
   let(:query_service) { Hyrax.query_service }
 
-  describe '.create_default_admin_set', :clean_repo do
-    context "when new admin set persists" do
-      it "is a convenience method for .create_default_admin_set!" do
-        expect(described_class).to receive(:create_default_admin_set!).and_call_original
-        expect(described_class.create_default_admin_set).to eq true
-      end
-    end
-
-    context "when new admin set fails to persist" do
-      before do
-        allow(persister).to receive(:save).with(resource: instance_of(Hyrax::AdministrativeSet))
-                                          .and_raise(RuntimeError)
-      end
-
-      it "returns false" do
-        expect(described_class).to receive(:create_default_admin_set!).and_call_original
-        expect(described_class.create_default_admin_set).to eq false
-      end
-    end
-  end
-
   describe '.find_or_create_default_admin_set', :clean_repo do
     context "when default admin set doesn't exist yet" do
       it "is a convenience method for .create_default_admin_set!" do

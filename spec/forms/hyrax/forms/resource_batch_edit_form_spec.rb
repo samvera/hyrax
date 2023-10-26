@@ -38,6 +38,10 @@ RSpec.describe Hyrax::Forms::ResourceBatchEditForm do
   # let(:ability) { Ability.new(user) }
   let(:user) { build(:user, display_name: 'Jill Z. User') }
 
+  before do
+    allow(Hyrax.config.location_service).to receive(:full_label) # Avoid external request to geonames
+  end
+
   describe "#terms" do
     subject { form.terms }
 

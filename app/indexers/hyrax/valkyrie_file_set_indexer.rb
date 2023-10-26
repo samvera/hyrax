@@ -17,7 +17,7 @@ module Hyrax
 
         # Metadata from the FileSet
         solr_doc['file_ids_ssim']                = resource.file_ids&.map(&:to_s)
-        solr_doc['original_file_id_ssi']         = original_file_id
+        solr_doc['original_file_id_ssi']         = resource.iiif_id
         solr_doc['extracted_text_id_ssi']        = resource.extracted_text_id.to_s
         solr_doc['hasRelatedMediaFragment_ssim'] = resource.representative_id.to_s
         solr_doc['hasRelatedImage_ssim']         = resource.thumbnail_id.to_s
@@ -105,11 +105,6 @@ module Hyrax
     end
 
     private
-
-    # Convert Valkyrie Original File Pointer to versioned url syntax expected by the iiif_presenter
-    def original_file_id
-      "#{resource.id}/files/#{resource.original_file_id}"
-    end
 
     def file_format(file)
       if file.mime_type.present? && file.format_label.present?

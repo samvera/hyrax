@@ -172,23 +172,6 @@ module Hyrax
       create_work_presenter.first_model
     end
 
-    ##
-    # @deprecated this implementation requires an extra db round trip, had a
-    #   buggy cacheing mechanism, and was largely duplicative of other code.
-    #   all versions of this code are replaced by
-    #   {CollectionsHelper#available_parent_collections_data}.
-    def available_parent_collections(scope:)
-      Deprecation.warn("#{self.class}#available_parent_collections is " \
-                       "deprecated. Use available_parent_collections_data " \
-                       "helper instead.")
-      return @available_parents if @available_parents.present?
-      collection = Hyrax.config.collection_class.find(id)
-      colls = Hyrax::Collections::NestedCollectionQueryService.available_parent_collections(child: collection, scope: scope, limit_to_id: nil)
-      @available_parents = colls.map do |col|
-        { "id" => col.id, "title_first" => col.title.first }
-      end.to_json
-    end
-
     def subcollection_count=(total)
       @subcollection_count = total unless total.nil?
     end

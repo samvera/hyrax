@@ -2,7 +2,7 @@
   <div class="col-sm-6">
     <% if !workflow_restriction?(presenter) %>
       <% if presenter.show_deposit_for?(collections: @user_collections) %>
-        <input type="checkbox"  style="display:none" name="batch_document_ids[]" id="batch_document_<%= presenter.id %>" value="<%= presenter.id %>" class="batch_document_selector" checked="checked" />
+        <input type="checkbox" aria-label="Batch Documents" style="display:none" name="batch_document_ids[]" id="batch_document_<%= presenter.id %>" value="<%= presenter.id %>" class="batch_document_selector" checked="checked" />
         <%= button_tag t('hyrax.dashboard.my.action.add_to_collection'),
                       class: 'btn btn-secondary submits-batches submits-batches-add',
                       data: { toggle: "modal", target: "#collection-list-container" } %>

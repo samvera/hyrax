@@ -18,7 +18,7 @@ module Hyrax
                        "with id #{file.id}. Initializing a new one")
 
     FileMetadata.new(file_identifier: file.id,
-                     original_filename: File.basename(file.io))
+                     original_filename: File.basename(file.disk_path))
   end
 
   class FileMetadata < Valkyrie::Resource
@@ -59,7 +59,7 @@ module Hyrax
       module_function :uri_for
     end
 
-    attribute :file_identifier, Valkyrie::Types::ID # id of the file stored by the storage adapter
+    attribute :file_identifier, ::Valkyrie::Types::ID # id of the file stored by the storage adapter
     attribute :alternate_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID) # id of the file, populated for queryability
     attribute :file_set_id, ::Valkyrie::Types::ID # id of parent file set resource
 

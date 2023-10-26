@@ -1,0 +1,202 @@
+# Requires Docker Compose v2
+name: sirenia
+services:
+  app: &app
+    build:
+      context: .
+      target: hyrax-engine-dev
+      args:
+        - EXTRA_APK_PACKAGES=git less
+        - APP_PATH=.koppie
+    image: samvera/koppie
+    entrypoint: dev-entrypoint.sh
+    command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
+    stdin_open: true
+    tty: true
+    user: root
+    env_file:
+      - .koppie/.env
+    environment:
+      - APP_NAME=sirenia
+      - RAILS_ROOT=/app/samvera/hyrax-webapp
+      - VALKYRIE_METADATA_ADAPTER=fedora_metadata
+      - VALKYRIE_STORAGE_ADAPTER=fedora_storage
+    depends_on:
+      - chrome
+      - db_migrate
+      - memcached
+      - postgres
+      - redis
+      - solr
+    ports:
+      - 3002:3000
+      - 9878:9876
+      - 1050:1048
+    volumes:
+      - ./bin:/app/samvera
+      - .koppie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
+      - bundle:/app/bundle
+      - hyrax-storage:/app/samvera/hyrax-webapp/storage
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - sirenia
+
+  sidekiq:
+    image: samvera/koppie
+    entrypoint: dev-entrypoint.sh
+    command: sh -c 'bundle exec sidekiq'
+    user: root
+    env_file:
+      - .koppie/.env
+    environment:
+      - APP_NAME=sirenia
+      - VALKYRIE_METADATA_ADAPTER=fedora_metadata
+      - VALKYRIE_STORAGE_ADAPTER=fedora_storage
+    depends_on:
+      - db_migrate
+      - memcached
+      - postgres
+      - redis
+      - solr
+    volumes:
+      - ./bin:/app/samvera
+      - .koppie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
+      - bundle:/app/bundle
+      - hyrax-storage:/app/samvera/hyrax-webapp/storage
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - sirenia
+
+  db_migrate:
+    image: samvera/koppie
+    user: root
+    env_file:
+      - .koppie/.env
+    environment:
+      - APP_NAME=sirenia
+      - VALKYRIE_METADATA_ADAPTER=fedora_metadata
+      - VALKYRIE_STORAGE_ADAPTER=fedora_storage
+    entrypoint: dev-entrypoint.sh
+    command: db-migrate-seed.sh
+    depends_on:
+      - postgres
+      - solr
+    volumes:
+      - ./bin:/app/samvera
+      - .koppie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
+      - bundle:/app/bundle
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - sirenia
+
+  chrome:
+    image: seleniarm/standalone-chromium:114.0
+    environment:
+      - START_XVFB=false
+    logging:
+      driver: none
+    volumes:
+      - /dev/shm:/dev/shm
+    shm_size: 2G
+    ports:
+      - "4447:4444"
+      - "5962:5900"
+    networks:
+      - sirenia
+
+  postgres:
+    image: postgres:15
+    env_file:
+      - .koppie/.env
+    ports:
+      - "5434:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - sirenia
+
+  fcrepo:
+    image: fcrepo/fcrepo:6.4.0
+    environment:
+      - >-
+        CATALINA_OPTS=-Dfcrepo.home=/fcrepo-home -Djava.awt.headless=true -Dfile.encoding=UTF-8 
+        -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m 
+        -XX:MaxPermSize=256m -XX:+DisableExplicitGC -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true
+      - JAVA_OPTS=-Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true
+    volumes:
+      - fcrepo:/fcrepo-home
+    ports:
+      - 8081:8080
+    networks:
+      - sirenia
+
+  fits:
+    image: ghcr.io/samvera/fitsservlet:1.6.0
+    ports:
+      - 9082:8080
+    networks:
+      - sirenia
+
+  memcached:
+    image: bitnami/memcached
+    ports:
+      - '11213:11211'
+    networks:
+      - sirenia
+
+  redis:
+    image: bitnami/redis:6.2
+    env_file:
+      - .koppie/.env
+    volumes:
+      - redis:/bitnami/redis/data
+    networks:
+      - sirenia
+
+  solr:
+    image: solr:8.11
+    ports:
+      - 8985:8983
+    command:
+      - sh
+      - "-c"
+      - "precreate-core koppie_test /opt/solr/server/configsets/hyraxconf; solr-precreate koppie /opt/solr/server/configsets/hyraxconf"
+    volumes:
+      - solr_home:/var/solr/data:cached
+      - .koppie/solr/conf:/opt/solr/server/configsets/hyraxconf
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 524288
+    networks:
+      - sirenia
+
+volumes:
+  bundle:
+  db:
+  fcrepo:
+  hyrax-storage:
+  hyrax-derivatives:
+  hyrax-uploads:
+  rails-public:
+  rails-tmp:
+  redis:
+  sidekiq-public:
+  sidekiq-tmp:
+  solr_home:
+
+networks:
+  sirenia:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-sirenia

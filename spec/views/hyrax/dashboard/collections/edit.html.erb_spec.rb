@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/edit.html.erb', type: :view do
   let(:collection_type) { stub_model(Hyrax::CollectionType) }
-  let(:collection) { stub_model(Collection, id: 'xyz123z4', title: ["Make Collections Great Again"]) }
-  let(:form) { Hyrax::Forms::CollectionForm.new(collection, double, double) }
+  let(:collection) { build :hyrax_collection }
+  let(:form) { Hyrax::Forms::ResourceForm.for(collection) }
 
   before do
     assign(:collection, collection)

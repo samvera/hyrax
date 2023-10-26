@@ -99,7 +99,7 @@ Hyrax.config do |config|
 
   # Hyrax can integrate with Zotero's Arkivo service for automatic deposit
   # of Zotero-managed research items.
-  # config.arkivo_api = false
+  config.arkivo_api = true
 
   # Stream realtime notifications to users in the browser
   # config.realtime_notifications = true
@@ -249,7 +249,7 @@ Hyrax.config do |config|
   # Identify the model class name that will be used for Collections in your app
   # (i.e. ::Collection for ActiveFedora, Hyrax::PcdmCollection for Valkyrie)
   # config.collection_model = '::Collection'
-  config.collection_model = 'Hyrax::PcdmCollection'
+  # config.collection_model = 'Hyrax::PcdmCollection'
   # Injected via `rails g hyrax:collection_resource CollectionResource`
   config.collection_model = 'CollectionResource'
 

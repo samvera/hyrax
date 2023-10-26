@@ -31,7 +31,7 @@
         </li>
         <li class="form-check">
           <label class="form-check-label">
-            <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO, class: 'form-check-input', data: { 'target': '#collapseEmbargo' } %>
+            <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO, 'aria-label': 'Embargo', class: 'form-check-input', data: { 'target': '#collapseEmbargo' } %>
             <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO) %>
             <br />
             <%= t('hyrax.visibility.embargo.note_html') %>
@@ -39,7 +39,7 @@
               <div class="form-inline">
                 <%= f.input :visibility_during_embargo, wrapper: :inline, collection: visibility_options(:restrict), include_blank: false %>
                 <%= t('hyrax.works.form.visibility_until') %>
-                <%= f.date_field :embargo_release_date, wrapper: :inline, value: f.object.embargo_release_date&.to_date || Date.tomorrow, class: 'datepicker form-control' %>
+                <%= f.date_field :embargo_release_date, wrapper: :inline, 'aria-label': 'Embargo Release Date', value: f.object.embargo_release_date&.to_date || Date.tomorrow, class: 'datepicker form-control' %>
                 <%= f.input :visibility_after_embargo, wrapper: :inline, collection: visibility_options(:loosen), include_blank: false %>
               </div>
             </div>
@@ -47,7 +47,7 @@
         </li>
         <li class="form-check">
           <label class="form-check-label">
-            <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE, class: 'form-check-input', data: { 'target': '#collapseLease' } %>
+            <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE, 'aria-label': 'Lease', class: 'form-check-input', data: { 'target': '#collapseLease' } %>
             <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE) %>
             <br />
             <%= t('hyrax.visibility.lease.note_html') %>
@@ -55,7 +55,7 @@
               <div class="form-inline">
                 <%= f.input :visibility_during_lease, wrapper: :inline, collection: visibility_options(:loosen), include_blank: false %>
                 <%= t('hyrax.works.form.visibility_until') %>
-                <%= f.date_field :lease_expiration_date, wrapper: :inline, value: f.object.lease_expiration_date&.to_date || Date.tomorrow, class: 'datepicker form-control' %>
+                <%= f.date_field :lease_expiration_date, wrapper: :inline, 'aria-label': 'Lease Expiration Date', value: f.object.lease_expiration_date&.to_date || Date.tomorrow, class: 'datepicker form-control' %>
                 <%= f.input :visibility_after_lease, wrapper: :inline, collection: visibility_options(:restrict), include_blank: false %>
               </div>
             </div>

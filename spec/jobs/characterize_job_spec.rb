@@ -27,7 +27,7 @@ RSpec.describe CharacterizeJob, :active_fedora, :clean_repo do
 
   before do
     allow(FileSet).to receive(:find).with(file_set_id).and_return(file_set)
-    allow(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+    allow(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename, **Hyrax.config.characterization_options)
     allow(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
   end
 
@@ -36,7 +36,7 @@ RSpec.describe CharacterizeJob, :active_fedora, :clean_repo do
 
     it 'skips Hyrax::WorkingDirectory.copy_repository_resource_to_working_directory' do
       expect(Hyrax::WorkingDirectory).not_to receive(:copy_repository_resource_to_working_directory)
-      expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+      expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename, **Hyrax.config.characterization_options)
       described_class.perform_now(file_set, file.id, filename)
     end
   end
@@ -46,14 +46,14 @@ RSpec.describe CharacterizeJob, :active_fedora, :clean_repo do
 
     it 'uses Hyrax::WorkingDirectory.copy_repository_resource_to_working_directory to pull the repo file' do
       expect(Hyrax::WorkingDirectory).to receive(:copy_repository_resource_to_working_directory)
-      expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+      expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename, **Hyrax.config.characterization_options)
       described_class.perform_now(file_set, file.id, filename)
     end
   end
 
   context 'when the characterization proxy content is present' do
     it 'runs Hydra::Works::CharacterizationService and creates a CreateDerivativesJob' do
-      expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+      expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename, **Hyrax.config.characterization_options)
       expect(file).to receive(:save!)
       expect(file_set).to receive(:update_index)
       expect(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
@@ -70,7 +70,7 @@ RSpec.describe CharacterizeJob, :active_fedora, :clean_repo do
 
   context 'FileSet with preexisting characterization metadata getting a new version' do
     before do
-      allow(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+      allow(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename, **Hyrax.config.characterization_options)
       allow(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
     end
 

@@ -60,21 +60,55 @@ module Hyrax
     self.characterization_proxy = Hyrax.config.characterization_proxy
 
     attribute :file_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID) # id for FileMetadata resources
-    attribute :thumbnail_id, Valkyrie::Types::ID.optional # id for FileMetadata resource
-    attribute :original_file_id, Valkyrie::Types::ID.optional # id for FileMetadata resource
-    attribute :extracted_text_id, Valkyrie::Types::ID.optional # id for FileMetadata resource
 
-    ##
-    # @return [Valkyrie::ID]
-    def representative_id
-      id
+    # @return [Hyrax::FileMetadata, nil]
+    def original_file
+      Hyrax.custom_queries.find_original_file(file_set: self)
+    rescue Valkyrie::Persistence::ObjectNotFoundError
+      nil
+    end
+
+    # @return [Valkyrie::ID, nil]
+    def original_file_id
+      original_file&.id
+    end
+
+    # @return [String, Nil] versioned identifier suitable for use in a IIIF manifest
+    def iiif_id
+      orig_file = original_file
+      return nil if orig_file.nil? || orig_file.file_identifier.blank?
+      latest_file = Hyrax::VersioningService.latest_version_of(orig_file)
+      version = latest_file&.version_id ? Digest::MD5.hexdigest(latest_file.version_id) : nil
+      "#{id}/files/#{orig_file.id}#{'/' + version if version}"
+    end
+
+    # @return [Hyrax::FileMetadata, nil]
+    def thumbnail
+      Hyrax.custom_queries.find_thumbnail(file_set: self)
+    rescue Valkyrie::Persistence::ObjectNotFoundError
+      nil
+    end
+
+    # @return [Valkyrie::ID, nil]
+    def thumbnail_id
+      thumbnail&.id
+    end
+
+    # @return [Hyrax::FileMetadata, nil]
+    def extracted_text
+      Hyrax.custom_queries.find_extracted_text(file_set: self)
+    rescue Valkyrie::Persistence::ObjectNotFoundError
+      nil
+    end
+
+    # @return [Valkyrie::ID, nil]
+    def extracted_text_id
+      extracted_text&.id
     end
 
     ##
     # @return [Valkyrie::ID]
-    def representative_id=(_input)
-      # saving a file set using valkyrie would err because this method didn't exist.
-      Rails.logger.warn('This is not a valid method for file sets')
+    def representative_id
       id
     end
 

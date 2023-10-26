@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/base/_form_files.html.erb', type: :view do
   let(:model) { stub_model(GenericWork) }
-  let(:form) { Hyrax::GenericWorkForm.new(model, double, controller) }
+  let(:form) { Hyrax.config.disable_wings ? Hyrax::Forms::ResourceForm.for(model) : Hyrax::GenericWorkForm.new(model, double, controller) }
   let(:f) { double(object: form) }
 
   before do

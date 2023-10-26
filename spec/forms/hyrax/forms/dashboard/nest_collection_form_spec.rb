@@ -96,28 +96,6 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
       end
     end
 
-    describe '#available_child_collections' do
-      it 'delegates to the underlying query_service' do
-        expect(query_service)
-          .to receive(:available_child_collections)
-          .with(parent: parent, scope: context)
-          .and_return(:results)
-
-        expect(form.available_child_collections).to eq(:results)
-      end
-    end
-
-    describe '#available_parent_collections' do
-      it 'delegates to the underlying query_service' do
-        expect(query_service)
-          .to receive(:available_parent_collections)
-          .with(child: child, scope: context)
-          .and_return(:results)
-
-        expect(form.available_parent_collections).to eq(:results)
-      end
-    end
-
     describe '#validate_add' do
       context 'when not nestable' do
         let(:parent) { double(nestable?: false) }
@@ -252,28 +230,6 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
 
           expect(form.save).to eq :persisted
         end
-      end
-    end
-
-    describe '#available_child_collections' do
-      it 'delegates to the underlying query_service' do
-        expect(query_service)
-          .to receive(:available_child_collections)
-          .with(parent: parent, scope: context)
-          .and_return(:results)
-
-        expect(form.available_child_collections).to eq(:results)
-      end
-    end
-
-    describe '#available_parent_collections' do
-      it 'delegates to the underlying query_service' do
-        expect(query_service)
-          .to receive(:available_parent_collections)
-          .with(child: child, scope: context)
-          .and_return(:results)
-
-        expect(form.available_parent_collections).to eq(:results)
       end
     end
 

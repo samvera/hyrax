@@ -3,7 +3,7 @@
 ##
 # Use this factory for FileMetadata for Files in valkyrie.
 FactoryBot.define do
-  factory :hyrax_file_metadata, class: 'Hyrax::FileMetadata' do
+  factory :hyrax_file_metadata, class: 'Hyrax::FileMetadata', aliases: [:file_metadata] do
     transient do
       use { nil }
       visibility_setting { nil }
@@ -32,6 +32,18 @@ FactoryBot.define do
       end
     end
 
+    trait :original_file do
+      use { Hyrax::FileMetadata::Use.uri_for(use: :original_file) }
+    end
+
+    trait :thumbnail do
+      use { Hyrax::FileMetadata::Use.uri_for(use: :thumbnail_file) }
+    end
+
+    trait :extracted_text do
+      use { Hyrax::FileMetadata::Use.uri_for(use: :extracted_file) }
+    end
+
     trait :image do
       mime_type { 'image/png' }
     end
@@ -46,8 +58,9 @@ FactoryBot.define do
 
     trait :with_file do
       transient do
-        file { FactoryBot.create(:uploaded_file) }
+        file { FactoryBot.create(:uploaded_file, file: File.open('spec/fixtures/world.png')) }
         file_set { FactoryBot.valkyrie_create(:hyrax_file_set) }
+        user { FactoryBot.create(:user) }
       end
 
       after(:build) do |file_metadata, evaluator|
@@ -63,6 +76,12 @@ FactoryBot.define do
                                              file: evaluator.file.uploader.file,
                                              original_filename: evaluator.file.uploader.filename)
         file_metadata.file_identifier = saved.id
+      end
+
+      after(:create) do |file_metadata, evaluator|
+        Hyrax::ValkyrieUpload.new.add_file_to_file_set(file_set: evaluator.file_set,
+                                                       file_metadata: file_metadata,
+                                                       user: evaluator.user)
       end
     end
   end
