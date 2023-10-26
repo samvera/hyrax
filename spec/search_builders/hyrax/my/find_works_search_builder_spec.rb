@@ -30,7 +30,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
 
     it "is successful" do
       subject
-      expect(solr_params[:fq]).to eq ["-" + Hyrax::SolrQueryBuilderService.construct_query_for_ids([work.id])]
+      expect(solr_params[:fq]).to eq ["-" + Hyrax::SolrQueryService.new.with_ids(ids: [work.id]).build]
     end
   end
 
@@ -40,7 +40,24 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
     it "is successful" do
       subject
       ids = Hyrax::SolrService.query("{!field f=id}#{work.id}", fl: "member_ids_ssim").flat_map { |x| x.fetch("member_ids_ssim", []) }
+      expect(solr_params[:fq]).to eq ["-" + Hyrax::SolrQueryService.new.with_ids(ids: [ids]).build]
+    end
+
+    it "is successful old way" do
+      subject
+      ids = Hyrax::SolrService.query("{!field f=id}#{work.id}", fl: "member_ids_ssim").flat_map { |x| x.fetch("member_ids_ssim", []) }
       expect(solr_params[:fq]).to eq ["-" + Hyrax::SolrQueryBuilderService.construct_query_for_ids([ids])]
+    end
+
+    it "is successful new same code way" do
+      subject
+      ids = Hyrax::SolrService.query("{!field f=id}#{work.id}", fl: "member_ids_ssim").flat_map { |x| x.fetch("member_ids_ssim", []) }
+      ids = [ids]
+      ids = ids.reject(&:blank?)
+      if ids.empty?
+        ids = "id:NEVER_USE_THIS_ID"
+      end
+      expect(solr_params[:fq]).to eq ["-" + Hyrax::SolrQueryService.new.with_ids(ids: ids).build]
     end
   end
 
