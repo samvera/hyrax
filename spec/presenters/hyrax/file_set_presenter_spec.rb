@@ -324,7 +324,6 @@ RSpec.describe Hyrax::FileSetPresenter do
       context 'with a file' do
         let(:file_set) do
           FactoryBot.valkyrie_create(:hyrax_file_set,
-                                     :with_files,
                                      files: [file_metadata],
                                      original_file: file_metadata)
         end
