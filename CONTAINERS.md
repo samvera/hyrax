@@ -5,10 +5,11 @@ Our goal is to provide a practical, reusable reference environment for applicati
 
 The [Hyrax Engine Development](#hyrax-engine-development) is further along than the [Docker Image for Hyrax-based Applications](#docker-image-for-hyrax-based-applications) which is further along than [Deploying to Production](#deploying-to-production).
 
-There are two options for development environments to run:
+There are three options for development environments to run:
 
 - [Dassie](#dassie-internal-test-app-with-activefedora) is the default internal test app that will run an ActiveFedora-based Hyrax web application using Fedora 4 as the backend storage. See [Troubleshooting Dassie](#troubleshooting-dassie) if you encounter any issues.
 - [Koppie](#koppie-internal-test-app-with-valkyrie-connector-to-postgres) is a newer internal test app that is a Valkyrie-based Hyrax web application that runs with PostGres as backend storage. It does not run ActiveFedora or use Fedora 4. See [Troubleshooting Koppie](#troubleshooting-koppie) if you encounter any issues.
+- [Sirenia](#sirenia-internal-test-app-with-valkyrie-connector-to-fedora) is Koppie but with Valkyrie configured to use Fedora 6 metadata and storage adapters.
 
 <!-- NOTE: This title is referenced in the top-level README.md. Keep that in mind if you change it. -->
 ## Hyrax Engine Development
@@ -37,6 +38,7 @@ This starts containers for:
   - Redis
   - Memcached
   - SideKiq (for background jobs)
+  - Chrome (for feature tests)
 
 It also runs database migrations. This will also bring up a development application on `http://localhost:3000`.
 
@@ -147,6 +149,7 @@ This starts containers for:
   - Redis
   - Memcached
   - SideKiq (for background jobs)
+  - Chrome (for feature tests)
 
 It also runs database migrations. This will also bring up a development application on `http://localhost:3001`.
 
@@ -182,6 +185,40 @@ echo "FROM samveralabs/hyrax" > Dockerfile
 ```
 
 _This is for applications that mount Hyrax and is separate from the docker containers for Hyrax engine development._
+
+### Sirenia Internal Test App with Valkyrie Connector to Fedora
+
+Sirenia uses the same image as koppie. If you have not already done so, follow the build instructions for koppie above.
+
+Start Sirenia: `docker compose -f docker-compose-sirenia.yml up`
+
+This starts containers for:
+
+  - a `hyrax` test application (`.sirenia`);
+  - Fedora
+  - Solr
+  - Postgresql
+  - Redis
+  - Memcached
+  - SideKiq (for background jobs)
+  - Chrome (for feature tests)
+
+It also runs database migrations. This will also bring up a development application on `http://localhost:3002`.
+
+To stop the containers for the Hyrax-based application, type <kbd>Ctrl</kbd>+<kbd>c</kbd>. To restart the containers run `docker compose -f docker-compose-sirenia.yml up`.
+
+_**Note:** Starting and stopping Docker in this way will preserve your data between restarts._
+
+Sirenia runs as a different project than Dassie and Koppie, so it should be possible to run both concurrently (assuming your workstation has enough RAM).
+
+#### Run rails console on Sirenia
+
+Currently Sirenia should not be used for running specs. See [Code Changes and Testing](#code-changes-and-testing) under Dassie instead until the specs can be updated for a valkyrie only environment.
+
+```sh
+docker compose -f docker-compose-sirenia.yml up
+docker compose -f docker-compose-sirenia.yml exec app bundle exec rails c
+```
 
 ### Maintaining
 
