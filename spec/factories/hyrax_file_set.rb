@@ -62,7 +62,14 @@ FactoryBot.define do
 
     trait :with_files do
       transient do
-        files { [valkyrie_create(:hyrax_file_metadata), valkyrie_create(:hyrax_file_metadata)] }
+        ios { [File.open('spec/fixtures/image.png'), File.open('spec/fixtures/Example.ogg')] }
+
+        after(:create) do |file_set, evaluator|
+          evaluator.ios.each do |file|
+            filename = File.basename(file.path).to_s
+            Hyrax::ValkyrieUpload.file(filename: filename, file_set: file_set, io: file)
+          end
+        end
       end
     end
 
