@@ -53,19 +53,22 @@ module Hyrax
     ##
     # @return [Boolean]
     def collection?
-      hydra_model == Hyrax.config.collection_class
+      hydra_model == Hyrax.config.collection_class ||
+        ("Collection".safe_constantize == hydra_model)
     end
 
     ##
     # @return [Boolean]
     def file_set?
-      hydra_model == ::FileSet || hydra_model == Hyrax::FileSet
+      hydra_model == Hyrax::FileSet ||
+        ("::FileSet".safe_constantize == hydra_model)
     end
 
     ##
     # @return [Boolean]
     def admin_set?
-      hydra_model == Hyrax.config.admin_set_class
+      (hydra_model == Hyrax.config.admin_set_class) ||
+        ("AdminSet".safe_constantize == hydra_model)
     end
 
     ##
