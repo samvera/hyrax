@@ -894,7 +894,7 @@ module Hyrax
     ##
     # @return [Class]
     def administrative_set_form
-      @administrative_set_model ||= Hyrax::Forms::AdministrativeSetForm
+      @administrative_set_form ||= Hyrax::Forms::AdministrativeSetForm
     end
 
     attr_writer :file_set_form
