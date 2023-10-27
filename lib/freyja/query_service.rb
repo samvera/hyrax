@@ -11,6 +11,6 @@ module Freyja
     def custom_queries
       @custom_queries ||= Freyja::CustomQueryContainer.new(query_service: self)
     end
-    alias_method :custom_query, :custom_queries
+    alias custom_query custom_queries
   end
 end

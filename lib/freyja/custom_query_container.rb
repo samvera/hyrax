@@ -12,6 +12,7 @@ module Freyja
       query_service.services.each do |service|
         return true if service.custom_queries.respond_to?(method_name)
       end
+      false
     end
   end
 end

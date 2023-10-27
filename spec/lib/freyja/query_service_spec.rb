@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+return if Hyrax.config.disable_wings
+
 require 'spec_helper'
 require 'valkyrie/specs/shared_specs'
 require 'wings'
@@ -13,7 +16,7 @@ RSpec.describe Freyja::QueryService, :clean_repo do
         Freyja::QueryService.new(
           Valkyrie::Persistence::Postgres::QueryService.new(adapter: adapter,
                                                             resource_factory: adapter.resource_factory),
-          Hyrax.query_service
+          Valkyrie::MetadataAdapter.adapters[:wings_adapter].query_service
         )
       end
     end
