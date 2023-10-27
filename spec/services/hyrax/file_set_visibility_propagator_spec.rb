@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::FileSetVisibilityPropagator do
+RSpec.describe Hyrax::FileSetVisibilityPropagator, :active_fedora do
   subject(:propagator) { described_class.new(source: work) }
   let(:work)           { FactoryBot.create(:work_with_files) }
 
