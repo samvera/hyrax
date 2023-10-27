@@ -890,6 +890,37 @@ module Hyrax
       @index_field_mapper ||= ActiveFedora.index_field_mapper
     end
 
+    attr_writer :administrative_set_form
+    ##
+    # @return [Class]
+    def administrative_set_form
+      @administrative_set_model ||= Hyrax::Forms::AdministrativeSetForm
+    end
+
+    attr_writer :file_set_form
+    ##
+    # @return [Class]
+    def file_set_form
+      @file_set_form ||= Hyrax::Forms::FileSetForm
+    end
+
+    attr_writer :pcdm_collection_form
+    ##
+    # @return [Class]
+    def pcdm_collection_form
+      @pcdm_collection_form ||= Hyrax::Forms::PcdmCollectionForm
+    end
+
+    attr_writer :pcdm_object_form_builder
+    ##
+    # @return [Proc]
+    def pcdm_object_form_builder
+      "Hyrax::Forms::PcdmObjectForm".constantize # autoload
+      @pcdm_object_form_builder = lambda do |model_class|
+        Hyrax::Forms::PcdmObjectForm(model_class)
+      end
+    end
+
     # Should a button with "Share my work" show on the front page to users who are not logged in?
     attr_writer :display_share_button_when_not_logged_in
     def display_share_button_when_not_logged_in?

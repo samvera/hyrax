@@ -16,14 +16,13 @@ module Hyrax
       @resource_forms ||= {}.compare_by_identity
       @resource_forms[model_class] ||=
         if model_class <= Hyrax::AdministrativeSet
-          Hyrax::Forms::AdministrativeSetForm
+          Hyrax.config.administrative_set_form
         elsif model_class <= Hyrax::FileSet
-          Hyrax::Forms::FileSetForm
+          Hyrax.config.file_set_form
         elsif model_class <= Hyrax::PcdmCollection
-          Hyrax::Forms::PcdmCollectionForm
+          Hyrax.config.pcdm_collection_form
         else
-          "Hyrax::Forms::PcdmObjectForm".constantize # autoload
-          Hyrax::Forms::PcdmObjectForm(model_class)
+          Hyrax.config.pcdm_object_form_builder.call(model_class)
         end
     end
 

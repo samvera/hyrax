@@ -242,6 +242,20 @@ Hyrax.config do |config|
   # config.admin_set_model = 'AdminSet'
   # config.admin_set_model = 'Hyrax::AdministrativeSet'
 
+  # Identify the form that will be used for Admin Sets
+  # config.administrative_set_form = Hyrax::Forms::AdministrativeSetForm
+
+  # Identify the form that will be used for File Sets
+  # config.file_set_form = Hyrax::Forms::FileSetForm
+
+  # Identify the form that will be used for Collections
+  # config.pcdm_collection_form = Hyrax::Forms::PcdmCollectionForm
+
+  # Provide a proc for form generation for Objects
+  # config.pcdm_object_form_builder = lambda do |model_class|
+  #   Hyrax::Forms::PcdmObjectForm(model_class)
+  # end
+
   # When your application is ready to use the valkyrie index instead of the one
   # maintained by active fedora, you will need to set this to true. You will
   # also need to update your Blacklight configuration.
