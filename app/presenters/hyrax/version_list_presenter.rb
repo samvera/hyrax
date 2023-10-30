@@ -19,13 +19,10 @@ module Hyrax
     # @return [Hyrax::VersionListPresenter] an enumerable of presenters for the
     #   relevant file versions.
     #
-    # @raise [ArgumentError] if we can't build an enu
+    # @raise [ArgumentError] if we can't build an enumerable
     def self.for(file_set:)
-      original_file = if file_set.respond_to?(:original_file)
-                        file_set.original_file
-                      else
-                        Hyrax::FileSetFileService.new(file_set: file_set).original_file
-                      end
+      original_file = Hyrax::FileSetFileService.new(file_set: file_set).primary_file
+
       new(Hyrax::VersioningService.new(resource: original_file))
     rescue NoMethodError
       raise ArgumentError
