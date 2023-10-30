@@ -53,11 +53,11 @@ module Hyrax
         #
         # See NOTE above regarding use of :find_file_metadata_by.
         @primary_file ||= begin
-                             query_service.custom_queries.find_original_file(file_set: file_set)
-                           rescue Valkyrie::Persistence::ObjectNotFoundError
-                             fallback_id = file_set.file_ids.first
-                             query_service.custom_queries.find_file_metadata_by(id: fallback_id) if fallback_id
-                           end
+                            query_service.custom_queries.find_original_file(file_set: file_set)
+                          rescue Valkyrie::Persistence::ObjectNotFoundError
+                            fallback_id = file_set.file_ids.first
+                            query_service.custom_queries.find_file_metadata_by(id: fallback_id) if fallback_id
+                          end
       end
     end
     alias original_file primary_file

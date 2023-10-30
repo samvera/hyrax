@@ -248,6 +248,10 @@ Hyrax.config do |config|
   # Identify the form that will be used for File Sets
   # config.file_set_form = Hyrax::Forms::FileSetForm
 
+  # Service for resolving {FileMetadata} nodes by status, e.g. "primary", rather
+  # than use.
+  # config.file_set_file_service = Hyrax::FileSetFileService
+
   # Identify the form that will be used for Collections
   # config.pcdm_collection_form = Hyrax::Forms::PcdmCollectionForm
 

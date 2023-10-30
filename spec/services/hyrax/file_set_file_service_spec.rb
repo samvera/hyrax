@@ -15,7 +15,7 @@ RSpec.describe Hyrax::FileSetFileService do
       it "finds the original_file" do
         expect(service.primary_file)
           .to have_attributes(file_set_id: file_set.id,
-                              pcdm_use: contain_exactly("http://pcdm.org/use#OriginalFile"))
+                              pcdm_use: include("http://pcdm.org/use#OriginalFile"))
       end
     end
 

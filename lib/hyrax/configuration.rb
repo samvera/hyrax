@@ -267,6 +267,14 @@ module Hyrax
       @derivative_services ||= [Hyrax::FileSetDerivativesService]
     end
 
+    ##
+    # @!attribute [rw] file_set_file_service
+    #   @return [Class] implementer of {Hyrax::FileSetFileService}
+    attr_writer :file_set_file_service
+    def file_set_file_service
+      @file_set_file_service ||= Hyrax::FileSetFileService
+    end
+
     attr_writer :fixity_service
     def fixity_service
       @fixity_service ||= Hyrax::Fixity::ActiveFedoraFixityService
