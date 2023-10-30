@@ -26,7 +26,7 @@ module Hyrax
         index_embargo(solr_doc)
 
         # Add in metadata from the original file.
-        file_metadata = Hyrax::FileSetFileService.new(file_set: resource).original_file
+        file_metadata = Hyrax::FileSetFileService.new(file_set: resource).primary_file
         return solr_doc unless file_metadata
 
         # Label is the actual file name. It's not editable by the user.
