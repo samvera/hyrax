@@ -20,8 +20,13 @@ module Hyrax
     #   relevant file versions.
     #
     # @raise [ArgumentError] if we can't build an enumerable
-    def self.for(file_set:)
-      original_file = Hyrax::FileSetFileService.new(file_set: file_set).primary_file
+    def self.for(file_set:, file_service: Hyrax.config.file_set_file_service)
+      original_file = case file_set
+                      when ActiveFedora::Base
+                        file_set.original_file
+                      else
+                        file_service.new(file_set: file_set).primary_file
+                      end
 
       new(Hyrax::VersioningService.new(resource: original_file))
     rescue NoMethodError
