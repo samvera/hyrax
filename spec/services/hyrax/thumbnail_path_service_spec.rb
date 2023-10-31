@@ -33,7 +33,7 @@ RSpec.describe Hyrax::ThumbnailPathService do
     end
   end
 
-  context "with a FileSet" do
+  context "with a FileSet", :active_fedora do
     let(:object) { build(:file_set, id: '999') }
 
     before do
