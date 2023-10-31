@@ -67,7 +67,7 @@ RSpec.describe Hyrax::Ability do
   end
 
   describe "#user_is_depositor?" do
-    let(:work) { create(:work) }
+    let(:work) { valkyrie_create(:hyrax_work) }
 
     subject { ability.send(:user_is_depositor?, work.id) }
 
@@ -76,7 +76,7 @@ RSpec.describe Hyrax::Ability do
 
   describe "ProxyDepositRequests" do
     let(:sender) { create(:user) }
-    let(:work) { create(:work, user: sender) }
+    let(:work) { valkyrie_create(:hyrax_work, depositor: sender.user_key, edit_users: [sender]) }
 
     context "creating a ProxyDepositRequest" do
       before do
