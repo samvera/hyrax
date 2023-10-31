@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::Forms::FileSetForm do
+RSpec.describe Hyrax::Forms::FileSetForm, :active_fedora do
   subject(:form) { described_class.new(file_set) }
   let(:file_set) { Hyrax::FileSet.new }
 
