@@ -1,23 +1,44 @@
 # frozen_string_literal: true
-RSpec.describe "Browse Dashboard", type: :feature do
-  let(:user) { create(:user) }
+RSpec.describe "Browse Dashboard", :clean_repo, type: :feature do
+  let(:user) { FactoryBot.create(:user) }
+
   let!(:dissertation) do
-    create(:public_work, user: user, title: ["Fake PDF Title"], subject: %w[lorem ipsum dolor sit amet])
+    FactoryBot.valkyrie_create(:monograph,
+                               :public,
+                               depositor: user.user_key,
+                               edit_users: [user],
+                               title: ["Fake PDF Title"],
+                               subject: %w[lorem ipsum dolor sit amet])
   end
+
   let!(:mp3_work) do
-    create(:public_work, user: user, title: ["Test Document MP3"], subject: %w[consectetur adipisicing elit])
+    FactoryBot.valkyrie_create(:monograph,
+                               :public,
+                               depositor: user.user_key,
+                               edit_users: [user],
+                               title: ["Test Document MP3"],
+                               subject: %w[consectetur adipisicing elit])
+  end
+
+  let!(:wav_work) do
+    FactoryBot.valkyrie_create(:monograph,
+                               :public,
+                               depositor: user.user_key,
+                               edit_users: [user],
+                               title: ["Fake Wav Files"],
+                               subject: %w[sed do eiusmod tempor incididunt ut labore])
   end
 
   before do
     # Grant the user access to deposit into an admin set.
-    create(:permission_template_access,
-           :deposit,
-           permission_template: create(:permission_template, with_admin_set: true),
-           agent_type: 'user',
-           agent_id: user.user_key)
+    FactoryBot.create(:permission_template_access,
+                      :deposit,
+                      permission_template: create(:permission_template, with_admin_set: true),
+                      agent_type: 'user',
+                      agent_id: user.user_key)
 
     sign_in user
-    create(:public_work, user: user, title: ["Fake Wav Files"], subject: %w[sed do eiusmod tempor incididunt ut labore])
+
     visit "/dashboard/my/works"
   end
 
@@ -37,7 +58,7 @@ RSpec.describe "Browse Dashboard", type: :feature do
     click_link "Published"
     within("#document_#{mp3_work.id}") do
       expect(page).to have_link("Display all details of Test Document MP3",
-                                href: hyrax_generic_work_path(mp3_work, locale: 'en'))
+                                href: hyrax_monograph_path(mp3_work, locale: 'en'))
     end
     click_link("Remove constraint Status: Published")
 
@@ -49,9 +70,10 @@ RSpec.describe "Browse Dashboard", type: :feature do
 
   it "allows me to delete works in upload_sets", js: true do
     first('input#check_all').click
+
     expect do
       accept_confirm { click_button('Delete Selected') }
       expect(page).to have_content('Batch delete complete')
-    end.to change { GenericWork.count }.by(-3)
+    end.to change { Hyrax.query_service.count_all_of_model(model: Monograph) }.by(-3)
   end
 end
