@@ -12,8 +12,8 @@ RSpec.describe Hyrax::MonographsController do
     context "when updating work members" do
       let(:work) { FactoryBot.valkyrie_create(:comet_in_moominland, :with_member_works) }
       let(:children) { Hyrax.query_service.custom_queries.find_child_works(resource: work) }
-      let(:child1) { children.first }
-      let(:child2) { children.last }
+      let(:child1) { children.to_a.first }
+      let(:child2) { children.to_a.last }
       let(:child3) { FactoryBot.valkyrie_create(:monograph) }
       let(:attributes) do
         { '0' => { id: child1.id, _destroy: 'true' },
