@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 module Hyrax
   module Statistics
+    ##
+    # @deprecated for removal in 6.0.0
     class QueryService
+      extend Deprecation
+      self.deprecation_horizon = 'hyrax version 6.0.0'
+      deprecation_deprecate :initialize
+
       # query to find works created during the time range
       # @param [DateTime] start_datetime starting date time for range query
       # @param [DateTime] end_datetime ending date time for range query
