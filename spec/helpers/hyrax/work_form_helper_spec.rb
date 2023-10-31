@@ -11,7 +11,7 @@ RSpec.describe Hyrax::WorkFormHelper do
       end
     end
 
-    context 'with a legacy GenericWork form' do
+    context 'with a legacy GenericWork form', :active_fedora do
       let(:work) { stub_model(GenericWork, id: '456') }
       let(:ability) { double }
       let(:form) { Hyrax::GenericWorkForm.new(work, ability, controller) }
@@ -51,7 +51,7 @@ RSpec.describe Hyrax::WorkFormHelper do
       end
     end
 
-    context 'with a legacy GenericWork form' do
+    context 'with a legacy GenericWork form', :active_fedora do
       let(:work) { stub_model(GenericWork, id: '456') }
       let(:ability) { double }
       let(:form) { Hyrax::GenericWorkForm.new(work, ability, controller) }
@@ -119,7 +119,7 @@ RSpec.describe Hyrax::WorkFormHelper do
       end
     end
 
-    context 'with a legacy GenericWork form' do
+    context 'with a legacy GenericWork form', :active_fedora do
       let(:work) { stub_model(GenericWork, id: '456', member_ids: file_set_ids) }
       let(:ability) { double }
       let(:file_set_ids) { [] }
