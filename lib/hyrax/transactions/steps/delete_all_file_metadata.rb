@@ -14,7 +14,7 @@ module Hyrax
 
         ##
         # @params [#save] persister
-        def initialize(property:, query_service: Hyrax.query_service, persister: Hyrax.persister, publisher: Hyrax.publisher)
+        def initialize(property: :file_ids, query_service: Hyrax.query_service, persister: Hyrax.persister, publisher: Hyrax.publisher)
           @property = property
           @persister = persister
           @query_service = query_service
@@ -30,7 +30,10 @@ module Hyrax
           return Failure(:resource_not_persisted) unless resource.persisted?
 
           resource[@property].each do |file_id|
-            Hyrax::Transactions::Container['file_metadata.destroy'].call(@query_service.custom_queries.find_file_metadata_by(id: file_id))
+            return Failure[:failed_to_delete_file_metadata, file_id] unless
+              Hyrax::Transactions::Container['file_metadata.destroy']
+              .call(@query_service.custom_queries.find_file_metadata_by(id: file_id))
+              .success?
           rescue ::Ldp::Gone
             nil
           end

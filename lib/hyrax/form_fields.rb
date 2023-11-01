@@ -51,6 +51,12 @@ module Hyrax
         descendant.property field_name.to_sym, options.merge(display: true, default: [])
         descendant.validates field_name.to_sym, presence: true if options.fetch(:required, false)
       end
+
+      # Auto include any matching FormFieldBehaviors
+      schema_name = name.to_s.camelcase
+      behavior = "#{schema_name}FormFieldsBehavior".safe_constantize ||
+                 "Hyrax::#{schema_name}FormFieldsBehavior".safe_constantize
+      descendant.include(behavior) if behavior
     end
   end
 end

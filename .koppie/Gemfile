@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+# Attempts to determine if a global gem source has ready been added by another Gemfile
 if @sources.global_rubygems_source == Bundler::SourceList.new.global_rubygems_source
   Bundler.ui.info '[Koppie] Adding global rubygems source.'
   source 'https://rubygems.org'
@@ -40,8 +42,8 @@ group :development do
 end
 
 group :development, :test do
-  gem "debug", ">= 1.0.0"
-  gem "pry-doc"
-  gem "pry-rails"
-  gem "pry-rescue"
+  gem 'debug', '>= 1.0.0'
+  gem 'pry-doc'
+  gem 'pry-rails'
+  gem 'pry-rescue'
 end

@@ -13,11 +13,14 @@ attributes:
     form:
       primary: true
       multiple: true
+    predicate: http://hyrax-example.com/target_audience
   department:
     type: string
     form:
       primary: true
+    predicate: http://hyrax-example.com/department
   course:
     type: string
     form:
       primary: false
+    predicate: http://hyrax-example.com/course

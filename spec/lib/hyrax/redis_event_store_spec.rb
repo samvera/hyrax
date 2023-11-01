@@ -13,7 +13,7 @@ RSpec.describe Hyrax::RedisEventStore do
       it { is_expected.to eq(1) }
     end
     context "when the Redis command fails" do
-      before { allow(Redis).to receive(:current).and_raise(Redis::CommandError) }
+      before { allow(Hyrax.config).to receive(:redis_connection).and_raise(Redis::CommandError) }
       context "without a logger" do
         before { allow(Rails).to receive(:logger).and_return(false) }
         it { is_expected.to be_nil }
@@ -31,11 +31,11 @@ RSpec.describe Hyrax::RedisEventStore do
     subject { described_class.new("key").fetch("size") }
 
     context "when the Redis command fails" do
-      before { allow(Redis).to receive(:current).and_raise(Redis::CommandError) }
+      before { allow(Hyrax.config).to receive(:redis_connection).and_raise(Redis::CommandError) }
       it { is_expected.to eq([]) }
     end
     context "when the Redis is unavailable" do
-      before { allow(Redis).to receive(:current).and_raise(Redis::CannotConnectError) }
+      before { allow(Hyrax.config).to receive(:redis_connection).and_raise(Redis::CannotConnectError) }
       it { is_expected.to eq([]) }
     end
   end
@@ -44,11 +44,11 @@ RSpec.describe Hyrax::RedisEventStore do
     subject { described_class.new("key").push("some value") }
 
     context "when the Redis command fails" do
-      before { allow(Redis).to receive(:current).and_raise(Redis::CommandError) }
+      before { allow(Hyrax.config).to receive(:redis_connection).and_raise(Redis::CommandError) }
       it { is_expected.to be_nil }
     end
     context "when the Redis is unavailable" do
-      before { allow(Redis).to receive(:current).and_raise(Redis::CannotConnectError) }
+      before { allow(Hyrax.config).to receive(:redis_connection).and_raise(Redis::CannotConnectError) }
       it { is_expected.to be_nil }
     end
   end

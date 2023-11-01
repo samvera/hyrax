@@ -106,7 +106,7 @@ module Hyrax
         def add_member(collection_id:, new_member:, user:)
           message = Hyrax::MultipleMembershipChecker.new(item: new_member).check(collection_ids: [collection_id], include_current_members: true)
           raise Hyrax::SingleMembershipError, message if message.present?
-          new_member.member_of_collection_ids << collection_id # only populate this direction
+          new_member.member_of_collection_ids += [collection_id] # only populate this direction
           new_member = Hyrax.persister.save(resource: new_member)
           publish_metadata_updated(new_member, user)
           new_member

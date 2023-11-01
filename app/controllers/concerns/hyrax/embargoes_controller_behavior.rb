@@ -31,7 +31,13 @@ module Hyrax
       filter_docs_with_edit_access!
       copy_visibility = []
       copy_visibility = params[:embargoes].values.map { |h| h[:copy_visibility] } if params[:embargoes]
-      resources = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: Hyrax.config.use_valkyrie?)
+
+      resources = if Hyrax.config.use_valkyrie?
+                    Hyrax.query_service.find_many_by_ids(ids: batch)
+                  else
+                    Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: false)
+                  end
+
       resources.each do |resource|
         if Hyrax.config.use_valkyrie?
           EmbargoManager.new(resource: resource).release!

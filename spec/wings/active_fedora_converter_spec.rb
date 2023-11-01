@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+return if Hyrax.config.disable_wings
+
 require 'spec_helper'
 require 'wings'
 require 'wings/active_fedora_converter'
@@ -73,14 +76,30 @@ RSpec.describe Wings::ActiveFedoraConverter, :active_fedora, :clean_repo do
 
     context 'when given a FileMetadata node' do
       let(:resource) { Hyrax::FileMetadata.new(file_identifier: file.id) }
+      let(:io) { fixture_file_upload('/world.png', 'image/png') }
       let(:file) do
-        io = fixture_file_upload('/world.png', 'image/png')
         file_set = FactoryBot.valkyrie_create(:hyrax_file_set)
         storage_adapter.upload(file: io, resource: file_set, original_filename: 'test-world.png')
       end
 
       context 'when it describes an ActiveFedora File' do
-        it 'converts to a Hydra::Pcdm::File'
+        let(:storage_adapter) { Valkyrie::StorageAdapter.find(:active_fedora) }
+
+        it 'converts to a Hydra::Pcdm::File' do
+          expect(converter.convert).to be_a Hydra::PCDM::File
+        end
+
+        it 'refers to the correct file id' do
+          expect(converter.convert)
+            .to have_attributes(uri: storage_adapter.fedora_identifier(id: file.id))
+        end
+
+        it 'round trips' do
+          af = converter.convert
+          af.save
+          io.rewind
+          expect(Hydra::PCDM::File.find(af.id).content).to eq io.read
+        end
       end
 
       context 'when it describes a file for an arbitrary storage adapter' do

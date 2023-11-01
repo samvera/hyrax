@@ -2,9 +2,7 @@
 RSpec.describe 'hyrax/base/_form_rendering.html.erb', type: :view do
   let(:ability) { double }
   let(:work) { stub_model(GenericWork, new_record?: false) }
-  let(:form) do
-    Hyrax::GenericWorkForm.new(work, ability, controller)
-  end
+  let(:form) { Hyrax.config.disable_wings ? Hyrax::Forms::ResourceForm.for(work) : Hyrax::GenericWorkForm.new(work, ability, controller) }
 
   let(:page) do
     view.simple_form_for form do |f|

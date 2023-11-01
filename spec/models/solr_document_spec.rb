@@ -158,15 +158,27 @@ RSpec.describe ::SolrDocument, type: :model do
   end
 
   describe "#admin_set?" do
-    let(:attributes) { { 'has_model_ssim' => 'AdminSet' } }
+    let(:attributes) { { 'has_model_ssim' => Hyrax.config.admin_set_model } }
 
     it { is_expected.to be_admin_set }
+
+    context "with legacy indexed admin set" do
+      let(:attributes) { { 'has_model_ssim' => "AdminSet" } }
+
+      it { is_expected.to be_admin_set }
+    end
   end
 
   describe "#collection?" do
     let(:attributes) { { 'has_model_ssim' => Hyrax.config.collection_model } }
 
     it { is_expected.to be_collection }
+
+    context "with legacy indexed collection" do
+      let(:attributes) { { 'has_model_ssim' => "Collection" } }
+
+      it { is_expected.to be_collection }
+    end
   end
 
   describe "#work?" do

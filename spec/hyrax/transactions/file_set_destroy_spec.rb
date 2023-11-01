@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 require 'spec_helper'
 require 'hyrax/transactions'
-require 'dry/container/stub'
 
 RSpec.describe Hyrax::Transactions::FileSetDestroy do
   subject(:transaction) { described_class.new }
@@ -9,6 +8,11 @@ RSpec.describe Hyrax::Transactions::FileSetDestroy do
 
   describe '#call' do
     let(:user) { FactoryBot.create(:user) }
+
+    before do
+      file_set.permission_manager.read_users = [user.user_key]
+      file_set.permission_manager.acl.save
+    end
 
     context 'without a user' do
       it 'is a failure' do
@@ -26,6 +30,13 @@ RSpec.describe Hyrax::Transactions::FileSetDestroy do
 
       expect { Hyrax.query_service.find_by(id: file_set.id) }
         .to raise_error Valkyrie::Persistence::ObjectNotFoundError
+    end
+
+    it 'deletes the access control resource' do
+      expect { transaction.with_step_args('file_set.remove_from_work' => { user: user }).call(file_set) }
+        .to change { Hyrax::AccessControl.for(resource: file_set).persisted? }
+        .from(true)
+        .to(false)
     end
 
     context "with attached files" do

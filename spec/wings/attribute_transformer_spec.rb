@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+return if Hyrax.config.disable_wings
+
 require 'wings/attribute_transformer'
 
 RSpec.describe Wings::AttributeTransformer, :active_fedora do

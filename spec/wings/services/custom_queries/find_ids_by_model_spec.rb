@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+return if Hyrax.config.disable_wings
+
 require 'wings_helper'
 require 'wings/services/custom_queries/find_ids_by_model'
 

@@ -24,7 +24,7 @@ RSpec.describe 'hyrax/dashboard/collections/_list_collections.html.erb', type: :
     allow(view)
       .to receive(:available_parent_collections_data)
       .with(collection: presenter)
-      .and_return([mock_model(Collection)])
+      .and_return([build(:hyrax_collection)])
 
     stub_template 'hyrax/my/_collection_action_menu.html.erb' => 'actions'
   end

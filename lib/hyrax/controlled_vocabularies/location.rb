@@ -14,7 +14,13 @@ module Hyrax
       end
 
       def full_label
-        Hyrax::LocationService.new.full_label(rdf_subject.to_s)
+        location_service.full_label(rdf_subject.to_s)
+      end
+
+      private
+
+      def location_service
+        Hyrax.config.location_service
       end
     end
   end

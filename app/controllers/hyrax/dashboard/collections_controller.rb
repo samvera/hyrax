@@ -245,7 +245,10 @@ module Hyrax
       end
 
       def valkyrie_destroy
-        if transactions['collection_resource.destroy'].call(@collection).success?
+        if transactions['collection_resource.destroy']
+           .with_step_args('collection_resource.delete' => { user: current_user },
+                           'collection_resource.remove_from_membership' => { user: current_user })
+           .call(@collection).success?
           after_destroy(params[:id])
         else
           after_destroy_error(params[:id])

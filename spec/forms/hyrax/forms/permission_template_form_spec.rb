@@ -14,7 +14,6 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   it { is_expected.to delegate_method(:source_model).to(:model) }
   it { is_expected.to delegate_method(:source_id).to(:model) }
   it { is_expected.to delegate_method(:visibility).to(:model) }
-  it { is_expected.to delegate_method(:reset_access_controls!).to(:source_model) }
 
   it 'is expected to delegate method #active_workflow_id to #active_workflow#id' do
     workflow = double(:workflow, id: 1234, active: true)

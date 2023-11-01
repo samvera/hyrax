@@ -10,6 +10,8 @@ module Hyrax
   # reflect the kinds of resources the event applied to.
   #
   #   - `batch`: events related to the performance of `BatchCreateJob`
+  #   - `collection`: events related to the lifecycle of PCDM Collections
+  #   - `file`: events related to the lifecycle of File/FileMetadata
   #   - `file.set`: events related to the lifecycle of Hydra Works FileSets
   #   - `object`: events related to the lifecycle of all PCDM Objects
   #
@@ -73,7 +75,7 @@ module Hyrax
   #
   #   publisher.unsubscribe(event_listener)
   #
-  # @see https://dry-rb.org/gems/dry-events/0.2/
+  # @see https://dry-rb.org/gems/dry-events
   # @see Dry::Events::Publisher
   # @see https://github.com/samvera/hyrax/wiki/Hyrax's-Event-Bus-(Hyrax::Publisher)
   class Publisher
@@ -86,6 +88,7 @@ module Hyrax
     # are you adding an event?
     # make sure Hyrax is publishing events in the correct places (this is be non-trivial!)
     # and add it to the list at https://github.com/samvera/hyrax/wiki/Hyrax's-Event-Bus-(Hyrax::Publisher)
+    # and to the listener generator.
 
     # @!macro [new] a_registered_event
     #   @!attribute [r] $1
@@ -136,6 +139,10 @@ module Hyrax
     #     the `:user` responsible for {FileMetadata} changes may frequently be
     #     a system user.
     register_event('file.metadata.updated')
+
+    # @since 5.0.0
+    # @macro a_registered_event
+    register_event('file.metadata.deleted')
 
     # @since 5.0.0
     # @macro a_registered_event

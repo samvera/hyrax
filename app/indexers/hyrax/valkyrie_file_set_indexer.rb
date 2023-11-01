@@ -17,7 +17,7 @@ module Hyrax
 
         # Metadata from the FileSet
         solr_doc['file_ids_ssim']                = resource.file_ids&.map(&:to_s)
-        solr_doc['original_file_id_ssi']         = original_file_id
+        solr_doc['original_file_id_ssi']         = resource.iiif_id
         solr_doc['extracted_text_id_ssi']        = resource.extracted_text_id.to_s
         solr_doc['hasRelatedMediaFragment_ssim'] = resource.representative_id.to_s
         solr_doc['hasRelatedImage_ssim']         = resource.thumbnail_id.to_s
@@ -25,8 +25,8 @@ module Hyrax
         index_lease(solr_doc)
         index_embargo(solr_doc)
 
-        # Add in metadata from the original file.
-        file_metadata = Hyrax::FileSetFileService.new(file_set: resource).original_file
+        # Add in metadata from the primary file.
+        file_metadata = Hyrax.config.file_set_file_service.new(file_set: resource).primary_file
         return solr_doc unless file_metadata
 
         # Label is the actual file name. It's not editable by the user.
@@ -105,11 +105,6 @@ module Hyrax
     end
 
     private
-
-    # Convert Valkyrie Original File Pointer to versioned url syntax expected by the iiif_presenter
-    def original_file_id
-      "#{resource.id}/files/#{resource.original_file_id}"
-    end
 
     def file_format(file)
       if file.mime_type.present? && file.format_label.present?

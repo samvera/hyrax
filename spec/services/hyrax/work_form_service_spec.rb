@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::WorkFormService do
+RSpec.describe Hyrax::WorkFormService, :active_fedora do
   subject(:form_service) { described_class }
   let(:work)             { GenericWork.new }
 

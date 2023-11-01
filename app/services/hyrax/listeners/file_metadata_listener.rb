@@ -50,9 +50,7 @@ module Hyrax
         # Run characterization for original file only
         return unless event[:metadata]&.original_file?
 
-        Hyrax.config
-             .characterization_service
-             .run(metadata: event[:metadata], file: event[:metadata].file)
+        ValkyrieCharacterizationJob.perform_later(event[:metadata].id.to_s)
       end
     end
   end

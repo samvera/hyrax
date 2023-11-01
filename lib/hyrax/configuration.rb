@@ -168,7 +168,10 @@ module Hyrax
     # Options to pass to the characterization service
     # @!attribute [rw] characterization_options
     #  @return [Hash] of options like {ch12n_tool: :fits_servlet}
-    attr_accessor :characterization_options
+    attr_writer :characterization_options
+    def characterization_options
+      @characterization_options ||= {}
+    end
 
     ##
     # @!attribute [w] characterization_proxy
@@ -262,6 +265,14 @@ module Hyrax
     # @see Hyrax::DerivativeService
     def derivative_services
       @derivative_services ||= [Hyrax::FileSetDerivativesService]
+    end
+
+    ##
+    # @!attribute [rw] file_set_file_service
+    #   @return [Class] implementer of {Hyrax::FileSetFileService}
+    attr_writer :file_set_file_service
+    def file_set_file_service
+      @file_set_file_service ||= Hyrax::FileSetFileService
     end
 
     attr_writer :fixity_service
@@ -565,6 +576,20 @@ module Hyrax
       @derivatives_storage_adapter = Valkyrie::StorageAdapter.find(adapter.to_sym)
     end
 
+    # A HTTP connection to use for Valkyrie Fedora requests
+    #
+    # @return [#call] lambda/proc that generates a Faraday connection
+    def fedora_connection_builder
+      @fedora_connection_builder ||= lambda { |url|
+        Faraday.new(url) do |f|
+          f.request :multipart
+          f.request :url_encoded
+          f.adapter Faraday.default_adapter
+        end
+      }
+    end
+    attr_writer :fedora_connection_builder
+
     ##
     # @return [#save, #save_all, #delete, #wipe!] an indexing adapter
     def index_adapter
@@ -764,6 +789,11 @@ module Hyrax
       Qa::Authorities::Geonames.username = username
     end
 
+    def location_service
+      @location_service ||= Hyrax::LocationService.new
+    end
+    attr_writer :location_service
+
     attr_writer :active_deposit_agreement_acceptance
     def active_deposit_agreement_acceptance?
       return true if @active_deposit_agreement_acceptance.nil?
@@ -866,6 +896,37 @@ module Hyrax
     attr_writer :index_field_mapper
     def index_field_mapper
       @index_field_mapper ||= ActiveFedora.index_field_mapper
+    end
+
+    attr_writer :administrative_set_form
+    ##
+    # @return [Class]
+    def administrative_set_form
+      @administrative_set_form ||= Hyrax::Forms::AdministrativeSetForm
+    end
+
+    attr_writer :file_set_form
+    ##
+    # @return [Class]
+    def file_set_form
+      @file_set_form ||= Hyrax::Forms::FileSetForm
+    end
+
+    attr_writer :pcdm_collection_form
+    ##
+    # @return [Class]
+    def pcdm_collection_form
+      @pcdm_collection_form ||= Hyrax::Forms::PcdmCollectionForm
+    end
+
+    attr_writer :pcdm_object_form_builder
+    ##
+    # @return [Proc]
+    def pcdm_object_form_builder
+      "Hyrax::Forms::PcdmObjectForm".constantize # autoload
+      @pcdm_object_form_builder = lambda do |model_class|
+        Hyrax::Forms::PcdmObjectForm(model_class)
+      end
     end
 
     # Should a button with "Share my work" show on the front page to users who are not logged in?

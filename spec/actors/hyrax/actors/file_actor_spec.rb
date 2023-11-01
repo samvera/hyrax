@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+return if Hyrax.config.disable_wings
+
 require 'wings/valkyrie/query_service'
 
 RSpec.describe Hyrax::Actors::FileActor, :active_fedora do

@@ -41,7 +41,7 @@
     var checked = $("#check_all")[0]['checked'];
 
     // check each individual box
-    $("input[type='checkbox'].batch_document_selector").each(function(index, value) {
+    $("input[type='checkbox'].batch_document_selector:not(.disabled)").each(function(index, value) {
        value['checked'] = checked;
     });
     toggleButtons();

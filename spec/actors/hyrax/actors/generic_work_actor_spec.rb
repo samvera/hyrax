@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+return unless defined? Hyrax::Actors::GenericWorkActor
+
 require 'redlock'
 require 'hyrax/specs/spy_listener'
 
