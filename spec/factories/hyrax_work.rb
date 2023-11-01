@@ -21,9 +21,8 @@ FactoryBot.define do
       after(:create) do |work, _evaluator|
         allow(Hyrax::TimeService).to receive(:time_in_utc).and_return(10.days.ago)
         Hyrax::EmbargoManager.new(resource: work).apply
-        allow(Hyrax::TimeService).to receive(:time_in_utc).and_call_original
-
         work.permission_manager.acl.save
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_call_original
       end
     end
 
