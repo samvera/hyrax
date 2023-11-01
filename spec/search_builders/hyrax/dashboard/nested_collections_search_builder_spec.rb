@@ -6,7 +6,7 @@ RSpec.describe Hyrax::Dashboard::NestedCollectionsSearchBuilder do
   let(:ability) { ::Ability.new(user) }
   let(:test_nest_direction) { :as_parent }
 
-  [false, true].each do |test_valkyrie|
+  (Hyrax.config.disable_wings ? [true] : [false, true]).each do |test_valkyrie|
     context "when test_valkyrie is #{test_valkyrie}" do
       let(:builder) do
         described_class.new(scope: scope, access: access, collection: collection, nest_direction: test_nest_direction)
