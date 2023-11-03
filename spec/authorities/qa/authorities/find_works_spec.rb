@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Qa::Authorities::FindWorks do
+RSpec.describe Qa::Authorities::FindWorks, clean_repo: true do
   let(:controller) { Qa::TermsController.new }
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
