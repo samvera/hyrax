@@ -39,7 +39,7 @@ module Hyrax
 
       respond_to do |format|
         format.html
-        format.json { render json: @curation_concern }
+        format.json { render 'hyrax/base/show' }
       end
     end
 
