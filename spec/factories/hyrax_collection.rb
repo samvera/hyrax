@@ -9,6 +9,7 @@ FactoryBot.define do
 
     transient do
       with_permission_template { true }
+      collection_type { nil }
       with_index { true }
       user { create(:user) }
       edit_groups { [] }
@@ -21,6 +22,7 @@ FactoryBot.define do
 
     after(:build) do |collection, evaluator|
       collection.depositor ||= evaluator.user.user_key
+      collection.collection_type_gid = evaluator.collection_type.to_global_id.to_s if evaluator.collection_type
     end
 
     after(:create) do |collection, evaluator|
