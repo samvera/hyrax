@@ -31,6 +31,7 @@ FactoryBot.define do
     end
 
     transient do
+      user               { create(:user) }
       edit_users         { [] }
       edit_groups        { [] }
       read_users         { [] }
@@ -42,6 +43,8 @@ FactoryBot.define do
     end
 
     after(:build) do |work, evaluator|
+      work.depositor ||= evaluator.user.user_key
+
       if evaluator.visibility_setting
         Hyrax::VisibilityWriter
           .new(resource: work)
@@ -49,7 +52,7 @@ FactoryBot.define do
       end
 
       work.permission_manager.edit_groups = work.permission_manager.edit_groups.to_a + evaluator.edit_groups
-      work.permission_manager.edit_users  = work.permission_manager.edit_users.to_a + evaluator.edit_users
+      work.permission_manager.edit_users  = work.permission_manager.edit_users.to_a + evaluator.edit_users << evaluator.user
       work.permission_manager.read_users  = work.permission_manager.read_users.to_a + evaluator.read_users
       work.permission_manager.read_groups = work.permission_manager.read_groups.to_a + evaluator.read_groups
 
@@ -63,7 +66,7 @@ FactoryBot.define do
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
       work.permission_manager.edit_groups = work.permission_manager.edit_groups.to_a + evaluator.edit_groups
-      work.permission_manager.edit_users  = work.permission_manager.edit_users.to_a + evaluator.edit_users
+      work.permission_manager.edit_users  = work.permission_manager.edit_users.to_a + evaluator.edit_users << evaluator.user
       work.permission_manager.read_users  = work.permission_manager.read_users.to_a + evaluator.read_users
       work.permission_manager.read_groups = work.permission_manager.read_groups.to_a + evaluator.read_groups
 
