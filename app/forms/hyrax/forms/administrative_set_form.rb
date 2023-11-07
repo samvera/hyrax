@@ -5,7 +5,7 @@ module Hyrax
     ##
     # @api public
     # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
-    class AdministrativeSetForm < Valkyrie::ChangeSet
+    class AdministrativeSetForm < Hyrax::Forms::ResourceForm
       ##
       # @api private
       AdminSetMembersPopulator = lambda do |**_options|
@@ -22,10 +22,6 @@ module Hyrax
 
       property :title, required: true, primary: true
       property :description, primary: true
-
-      property :human_readable_type, writable: false
-      property :date_modified, readable: false
-      property :date_uploaded, readable: false
 
       property :creator
 
