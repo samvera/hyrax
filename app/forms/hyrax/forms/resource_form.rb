@@ -9,14 +9,22 @@ module Hyrax
     def self.ResourceForm(model_class) # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
       @resource_forms ||= {}.compare_by_identity
       @resource_forms[model_class] ||=
-        if model_class <= Hyrax::AdministrativeSet
-          Hyrax.config.administrative_set_form
-        elsif model_class <= Hyrax::FileSet
-          Hyrax.config.file_set_form
-        elsif model_class <= Hyrax::PcdmCollection
-          Hyrax.config.pcdm_collection_form
+        # +#respond_to?+ needs to be used here, not +#try+, because Dry::Types
+        # overrides the latter??
+        if model_class.respond_to?(:pcdm_collection?) && model_class.pcdm_collection?
+          if model_class <= Hyrax::AdministrativeSet
+            Hyrax.config.administrative_set_form
+          else
+            Hyrax.config.pcdm_collection_form
+          end
+        elsif model_class.respond_to?(:pcdm_object?) && model_class.pcdm_object?
+          if model_class.respond_to?(:file_set?) && model_class.file_set?
+            Hyrax.config.file_set_form
+          else
+            Hyrax.config.pcdm_object_form_builder.call(model_class)
+          end
         else
-          Hyrax.config.pcdm_object_form_builder.call(model_class)
+          Hyrax::Forms::ResourceForm
         end
     end
 
