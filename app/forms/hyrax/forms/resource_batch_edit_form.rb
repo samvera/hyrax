@@ -3,6 +3,7 @@ module Hyrax
   module Forms
     class ResourceBatchEditForm < Hyrax::Forms::ResourceForm
       include Hyrax::FormFields(:basic_metadata)
+      include Hyrax::ContainedInWorksBehavior
 
       self.required_fields = []
       self.model_class = Hyrax.primary_work_type

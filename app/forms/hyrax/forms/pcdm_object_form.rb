@@ -32,6 +32,8 @@ module Hyrax
     class PcdmObjectForm < Hyrax::Forms::ResourceForm
       include Hyrax::FormFields(:core_metadata)
 
+      include Hyrax::ContainedInWorksBehavior
+
       property :on_behalf_of
       property :proxy_depositor
 

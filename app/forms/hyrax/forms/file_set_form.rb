@@ -12,6 +12,8 @@ module Hyrax
       # be configurable.
       include Hyrax::FormFields(:file_set_metadata)
 
+      include Hyrax::ContainedInWorksBehavior
+
       property :representative_id, type: Valkyrie::Types::String, writeable: false
       property :thumbnail_id, type: Valkyrie::Types::String, writeable: false
     end
