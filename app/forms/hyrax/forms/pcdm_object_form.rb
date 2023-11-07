@@ -26,6 +26,9 @@ module Hyrax
     ##
     # A form for PCDM objects: resources which have collection relationships and
     # generally resemble +Hyrax::Work+.
+    #
+    # Although File Sets are technically also PCDM objects, they use a separate
+    # form class: +Hyrax::Forms::FileSetForm+.
     class PcdmObjectForm < Hyrax::Forms::ResourceForm
       include Hyrax::FormFields(:core_metadata)
 
