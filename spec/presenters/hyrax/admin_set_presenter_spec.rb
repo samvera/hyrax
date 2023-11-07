@@ -118,7 +118,7 @@ RSpec.describe Hyrax::AdminSetPresenter, :clean_repo do
       end
 
       it 'returns false' do
-        expect(presenter.allow_batch?).to eq false
+        expect(presenter.allow_batch?).to be false
       end
     end
 
