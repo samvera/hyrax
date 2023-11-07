@@ -4,7 +4,7 @@ RSpec.describe FileViewStat, type: :model do
   let(:user_id) { 123 }
   let(:date) { Time.current }
   let(:file_stat) { described_class.create(views: "25", date: date, file_id: file_id, user_id: user_id) }
-  let(:file) { mock_model(FileSet, id: 99) }
+  let(:file) { mock_model('MockFileSet', id: 99) }
 
   it "has attributes" do
     expect(file_stat).to respond_to(:views)
