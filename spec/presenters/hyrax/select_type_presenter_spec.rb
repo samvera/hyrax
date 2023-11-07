@@ -5,14 +5,18 @@ RSpec.describe Hyrax::SelectTypePresenter do
 
   describe "#icon_class" do
     subject { instance.icon_class }
+    # Koppie's associated locales are unset, so should default
+    let(:expected_classes) { Hyrax.config.use_valkyrie? ? 'fa fa-cube' : 'fa fa-file-text-o' }
 
-    it { is_expected.to eq 'fa fa-file-text-o' }
+    it { is_expected.to eq expected_classes }
   end
 
   describe "#description" do
     subject { instance.description }
+    # Koppie's associated locales are unset, so should default
+    let(:expected_description) { Hyrax.config.use_valkyrie? ? 'General purpose worktype' : 'Generic work works' }
 
-    it { is_expected.to eq 'Generic work works' }
+    it { is_expected.to eq expected_description }
   end
 
   describe "#name" do
