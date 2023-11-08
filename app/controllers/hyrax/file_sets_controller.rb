@@ -121,7 +121,7 @@ module Hyrax
     end
 
     def valkyrie_update_metadata
-      change_set = Hyrax::Forms::ResourceForm.for(file_set)
+      change_set = Hyrax::Forms::ResourceForm.for(resource: file_set)
 
       result =
         change_set.validate(attributes) &&
@@ -233,7 +233,7 @@ module Hyrax
 
       case file_set
       when Hyrax::Resource
-        @form = Hyrax::Forms::ResourceForm.for(file_set)
+        @form = Hyrax::Forms::ResourceForm.for(resource: file_set)
         @form.prepopulate!
       else
         @form = form_class.new(file_set)

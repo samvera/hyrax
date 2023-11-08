@@ -23,9 +23,9 @@ module Hyrax
         @batch_document_ids = batch_document_ids
         if @batch_document_ids.present?
           combined_fields = model_attributes(model, initialize_combined_fields)
-          super(model.class.new(combined_fields))
+          super(resource: model.class.new(combined_fields))
         else
-          super(model)
+          super(resource: model)
         end
       end
 

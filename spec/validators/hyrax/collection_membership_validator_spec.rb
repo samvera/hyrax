@@ -3,7 +3,7 @@
 RSpec.describe Hyrax::CollectionMembershipValidator do
   subject(:validator) { described_class.new }
   let(:work) { FactoryBot.build(:hyrax_work, :as_collection_member) }
-  let(:form) { Hyrax::Forms::ResourceForm(Monograph).new(work) }
+  let(:form) { Hyrax::Forms::ResourceForm(Monograph).new(resource: work) }
 
   describe '#validate' do
     it 'is valid' do
@@ -18,7 +18,7 @@ RSpec.describe Hyrax::CollectionMembershipValidator do
     end
 
     context 'when record is a work form changeset' do
-      let(:form) { Hyrax::Forms::ResourceForm.for(work) }
+      let(:form) { Hyrax::Forms::ResourceForm.for(resource: work) }
       let(:work) { FactoryBot.build(:hyrax_work) }
       let(:mem_of_cols_attrs) { {} }
 

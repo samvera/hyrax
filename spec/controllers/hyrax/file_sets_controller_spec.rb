@@ -720,7 +720,7 @@ RSpec.describe Hyrax::FileSetsController do
         end
 
         it "updates existing groups and users" do
-          change_set = Hyrax::Forms::ResourceForm.for(file_set)
+          change_set = Hyrax::Forms::ResourceForm.for(resource: file_set)
           Hyrax::Transactions::Container['change_set.update_file_set']
             .with_step_args(
               'file_set.save_acl' => { permissions_params: [{ "type" => 'group', "name" => 'group3', "access" => 'edit' }] }
@@ -751,7 +751,7 @@ RSpec.describe Hyrax::FileSetsController do
 
         context "when there's an error saving" do
           it "draws the edit page" do
-            change_set = Hyrax::Forms::ResourceForm.for(file_set)
+            change_set = Hyrax::Forms::ResourceForm.for(resource: file_set)
             allow(Hyrax::Forms::ResourceForm).to receive(:for).and_return(change_set)
             allow(change_set).to receive(:validate).and_return(false)
             post :update, params: { id: file_set, file_set: { keyword: [''] } }
