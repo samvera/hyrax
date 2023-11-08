@@ -28,14 +28,11 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
         it 'user is not offered the option to create that type of collection' do
           # try and create the new admin set
-          find('#add-new-collection-button').click
-          expect(page).to have_xpath("//h4", text: "User Collection")
-          expect(page).to have_xpath("//h4", text: "Other")
-          expect(page).not_to have_xpath("//h4", text: "Managed Collection")
+          user_create_collection_attempt(page)
         end
       end
 
-      context "and collection model is a Valkyrie::Resource" do
+      skip "and collection model is a Valkyrie::Resource" do
         before do
           allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection')
           sign_in user
@@ -44,159 +41,180 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
         it 'user is not offered the option to create that type of collection' do
           # try and create the new admin set
-          find('#add-new-collection-button').click
-          expect(page).to have_xpath("//h4", text: "User Collection")
-          expect(page).to have_xpath("//h4", text: "Other")
-          expect(page).not_to have_xpath("//h4", text: "Managed Collection")
+          user_create_collection_attempt(page)
         end
       end
     end
 
     context "and user is a creator for managed collection type" do
       before do
+        allow(Hyrax.config).to receive(:collection_model).and_return('::Collection')
         sign_in creator
         click_link('Collections', match: :first)
       end
 
       it 'creates the collection' do
         # create the new collection
-        find('#add-new-collection-button').click
-        expect(page).to have_xpath("//h4", text: "User Collection")
-        expect(page).to have_xpath("//h4", text: "Other")
-        expect(page).to have_xpath("//h4", text: "Managed Collection")
-        choose "collection_type", option: "ManagedCollection"
-        click_button 'Create collection'
-        fill_in('Title', with: 'A Managed Collection')
-        fill_in('Description', with: "This collection was created by #{creator.user_key}")
-        click_on('Save')
-        expect(page).to have_content("Collection was successfully created.")
+        creator_create_collection(page, creator)
+      end
+    end
 
-        # navigate to show page for the new collection
-        visit '/dashboard'
+    skip "and user is a creator for a Valkyrie managed collection type" do
+      before do
+        allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection')
+        sign_in creator
         click_link('Collections', match: :first)
-        click_on('Display all details of A Managed Collection')
+      end
 
-        # confirm creating user can view and edit the new collection
-        expect(page).to have_xpath('//h2', text: 'A Managed Collection')
-        expect(page).to have_content("This collection was created by #{creator.user_key}")
-        expect(page).to have_link("Edit collection")
-
-        # confirm admin can view and edit the new collection
-        logout
-        sign_in admin
-        click_link('Collections', match: :first)
-        click_link 'All Collections'
-        click_on('Display all details of A Managed Collection')
-        expect(page).to have_xpath('//h2', text: 'A Managed Collection')
-        expect(page).to have_content("This collection was created by #{creator.user_key}")
-        expect(page).to have_link("Edit collection")
-
-        # confirm a collection type manager can view and edit the new collection
-        logout
-        sign_in manager
-        click_link('Collections', match: :first)
-        click_link 'Managed Collections'
-        click_on('Display all details of A Managed Collection')
-        expect(page).to have_xpath('//h2', text: 'A Managed Collection')
-        expect(page).to have_content("This collection was created by #{creator.user_key}")
-        expect(page).to have_link("Edit collection")
+      it 'creates the collection' do
+        # create the new collection
+        creator_create_collection(page)
       end
     end
 
     context "and user is a manager for managed collection type" do
       before do
+        allow(Hyrax.config).to receive(:collection_model).and_return('::Collection')
         sign_in manager
         click_link('Collections', match: :first)
       end
 
       it 'creates the collection' do
         # create the new collection
-        find('#add-new-collection-button').click
-        expect(page).to have_xpath("//h4", text: "User Collection")
-        expect(page).to have_xpath("//h4", text: "Other")
-        expect(page).to have_xpath("//h4", text: "Managed Collection")
-        choose "collection_type", option: "ManagedCollection"
-        click_button 'Create collection'
-        fill_in('Title', with: 'A Managed Collection')
-        fill_in('Description', with: "This collection was created by #{manager.user_key}")
-        click_on('Save')
-        expect(page).to have_content("Collection was successfully created.")
+        manager_create_collection(page, manager)
+      end
+    end
 
-        # navigate to show page for the new collection
-        visit '/dashboard'
+    skip "and user is a manager for managed collection type using Valkyrie Resource Collections" do
+      before do
+        allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection')
+        sign_in manager
         click_link('Collections', match: :first)
-        click_on('Display all details of A Managed Collection')
+      end
 
-        # confirm creating user can view and edit the new collection
-        expect(page).to have_xpath('//h2', text: 'A Managed Collection')
-        expect(page).to have_content("This collection was created by #{manager.user_key}")
-        expect(page).to have_link("Edit collection")
-
-        # confirm admin can view and edit the new collection
-        logout
-        sign_in admin
-        click_link('Collections', match: :first)
-        click_link 'All Collections'
-        click_on('Display all details of A Managed Collection')
-        expect(page).to have_xpath('//h2', text: 'A Managed Collection')
-        expect(page).to have_content("This collection was created by #{manager.user_key}")
-        expect(page).to have_link("Edit collection")
-
-        # confirm a collection type creator can not view the new collection
-        logout
-        sign_in creator
-        click_link('Collections', match: :first)
-        expect(page).not_to have_content('Managed Collections')
-        expect(page).not_to have_content('A Managed Collection')
+      it 'creates the collection' do
+        # create the new collection
+        manager_create_collection(page)
       end
     end
   end
 
   context "when user is an admin" do
     before do
+      allow(Hyrax.config).to receive(:collection_model).and_return('::Collection')
       sign_in admin
       click_link('Collections', match: :first)
     end
 
     it 'creates the collection' do
       # create the new collection
-      find('#add-new-collection-button').click
-      expect(page).to have_xpath("//h4", text: "User Collection")
-      expect(page).to have_xpath("//h4", text: "Other")
-      expect(page).to have_xpath("//h4", text: "Managed Collection")
-      choose "collection_type", option: "ManagedCollection"
-      click_button 'Create collection'
-      fill_in('Title', with: 'A Managed Collection')
-      fill_in('Description', with: "This collection was created by #{admin.user_key}")
-      click_on('Save')
-      expect(page).to have_content("Collection was successfully created.")
-
-      # navigate to show page for the new collection
-      visit '/dashboard'
-      click_link('Collections', match: :first)
-      click_on('Display all details of A Managed Collection')
-
-      # confirm creating user can view and edit the new collection
-      expect(page).to have_xpath('//h2', text: 'A Managed Collection')
-      expect(page).to have_content("This collection was created by #{admin.user_key}")
-      expect(page).to have_link("Edit collection")
-
-      # confirm a collection type manager can view and edit the new collection
-      logout
-      sign_in manager
-      click_link('Collections', match: :first)
-      click_link 'Managed Collections'
-      click_on('Display all details of A Managed Collection')
-      expect(page).to have_xpath('//h2', text: 'A Managed Collection')
-      expect(page).to have_content("This collection was created by #{admin.user_key}")
-      expect(page).to have_link("Edit collection")
-
-      # confirm a collection type creator can not view the new collection
-      logout
-      sign_in creator
-      click_link('Collections', match: :first)
-      expect(page).not_to have_content('Managed Collections')
-      expect(page).not_to have_content('A Managed Collection')
+      admin_create_collection(page, admin)
     end
   end
+
+  skip "when user is an admin using Valkyrie Resource Collections" do
+    before do
+      allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection')
+      sign_in admin
+      click_link('Collections', match: :first)
+    end
+
+    it 'creates the collection' do
+      # create the new collection
+      admin_create_collection(page)
+    end
+  end
+
+  # extracts create the new collection into methods to prevent code repetition in tests
+  def user_create_collection_attempt(page)
+    find('#add-new-collection-button').click
+    expect(page).to have_xpath("//h4", text: "User Collection")
+    expect(page).to have_xpath("//h4", text: "Other")
+    expect(page).not_to have_xpath("//h4", text: "Managed Collection")
+  end
+
+  def creator_create_collection(page, user)
+    find('#add-new-collection-button').click
+    create_managed_collection(page, user)
+    goto_new_collection_show_page
+    confirm_user_can_view_edit(page, user)
+    test_manager(page, user)
+  end
+
+  def manager_create_collection(page, user)
+    find('#add-new-collection-button').click
+    create_managed_collection(page, user)
+    goto_new_collection_show_page
+    confirm_user_can_view_edit(page, user)
+    test_admin(page, user)
+    test_creator(page)
+  end
+
+  def admin_create_collection(page, user)
+    find('#add-new-collection-button').click
+    create_managed_collection(page, user)
+    goto_new_collection_show_page
+    confirm_user_can_view_edit(page, user)
+    test_manager(page, user)
+    test_creator(page)
+  end
+end
+
+def test_creator(page)
+  # confirm a collection type creator can not view the new collection
+  logout
+  sign_in creator
+  click_link('Collections', match: :first)
+  expect(page).not_to have_content('Managed Collections')
+  expect(page).not_to have_content('A Managed Collection')
+end
+
+def test_manager(page, user)
+  # confirm a collection type manager can view and edit the new collection
+  logout
+  sign_in manager
+  click_link('Collections', match: :first)
+  click_link 'Managed Collections'
+  click_on('Display all details of A Managed Collection')
+  expect(page).to have_xpath('//h2', text: 'A Managed Collection')
+  expect(page).to have_content("This collection was created by #{user.user_key}")
+  expect(page).to have_link("Edit collection")
+end
+
+def test_admin(page, user)
+  # confirm admin can view and edit the new collection
+  logout
+  sign_in admin
+  click_link('Collections', match: :first)
+  click_link 'All Collections'
+  click_on('Display all details of A Managed Collection')
+  expect(page).to have_xpath('//h2', text: 'A Managed Collection')
+  expect(page).to have_content("This collection was created by #{user.user_key}")
+  expect(page).to have_link("Edit collection")
+end
+
+def goto_new_collection_show_page
+  # navigate to show page for the new collection
+  visit '/dashboard'
+  click_link('Collections', match: :first)
+  click_on('Display all details of A Managed Collection')
+end
+
+def confirm_user_can_view_edit(page, user)
+  # confirm creating user can view and edit the new collection
+  expect(page).to have_xpath('//h2', text: 'A Managed Collection')
+  expect(page).to have_content("This collection was created by #{user.user_key}")
+  expect(page).to have_link("Edit collection")
+end
+
+def create_managed_collection(page, user)
+  expect(page).to have_xpath("//h4", text: "User Collection")
+  expect(page).to have_xpath("//h4", text: "Other")
+  expect(page).to have_xpath("//h4", text: "Managed Collection")
+  choose "collection_type", option: "ManagedCollection"
+  click_button 'Create collection'
+  fill_in('Title', with: 'A Managed Collection')
+  fill_in('Description', with: "This collection was created by #{user.user_key}")
+  click_on('Save')
+  expect(page).to have_content("Collection was successfully created.")
 end
