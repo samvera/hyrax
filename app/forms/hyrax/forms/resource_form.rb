@@ -68,6 +68,24 @@ module Hyrax
       # @see https://github.com/samvera/valkyrie/wiki/Optimistic-Locking
       property :version, virtual: true, prepopulator: LockKeyPrepopulator
 
+      ##
+      # @api public
+      #
+      # Forms should be initialized with an explicit +resource:+ parameter to
+      # match indexers.
+      def initialize(deprecated_resource = nil, resource: nil)
+        if resource.nil?
+          if !deprecated_resource.nil?
+            Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. Pass the resource with `resource:` instead."
+            super(deprecated_resource)
+          else
+            super()
+          end
+        else
+          super(resource)
+        end
+      end
+
       class << self
         ##
         # @api public
@@ -76,11 +94,20 @@ module Hyrax
         #
         # @example
         #   monograph  = Monograph.new
-        #   change_set = Hyrax::Forms::ResourceForm.for(monograph)
-        def for(resource)
+        #   change_set = Hyrax::Forms::ResourceForm.for(resource: monograph)
+        def for(deprecated_resource = nil, resource: nil)
+          if resource.nil? && !deprecated_resource.nil?
+            Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. Pass the resource with `resource:` instead."
+            return self.for(resource: deprecated_resource)
+          end
           klass = "#{resource.class.name}Form".safe_constantize
           klass ||= Hyrax::Forms::ResourceForm(resource.class)
-          klass.new(resource)
+          begin
+            klass.new(resource: resource)
+          rescue ArgumentError
+            Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. #{klass} should be updated accordingly."
+            klass.new(resource)
+          end
         end
 
         ##
