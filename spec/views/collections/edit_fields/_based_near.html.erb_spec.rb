@@ -29,7 +29,7 @@ RSpec.describe 'collections/edit_fields/_based_near.html.erb', type: :view do
 
   context 'Valkyrie' do
     let(:collection) { CollectionResource.new }
-    let(:form) { Hyrax::Forms::ResourceForm.for(collection) }
+    let(:form) { Hyrax::Forms::ResourceForm.for(resource: collection) }
 
     include_examples 'check for based_near autocomplete url'
   end

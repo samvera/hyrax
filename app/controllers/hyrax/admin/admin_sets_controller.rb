@@ -182,7 +182,7 @@ module Hyrax
       @form ||=
         case @admin_set
         when Valkyrie::Resource
-          Hyrax::Forms::ResourceForm.for(@admin_set)
+          Hyrax::Forms::ResourceForm.for(resource: @admin_set)
         else
           form_class.new(@admin_set, current_ability, repository)
         end

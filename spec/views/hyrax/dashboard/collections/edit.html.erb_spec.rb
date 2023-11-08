@@ -2,7 +2,7 @@
 RSpec.describe 'hyrax/dashboard/collections/edit.html.erb', type: :view do
   let(:collection_type) { stub_model(Hyrax::CollectionType) }
   let(:collection) { build :hyrax_collection }
-  let(:form) { Hyrax::Forms::ResourceForm.for(collection) }
+  let(:form) { Hyrax::Forms::ResourceForm.for(resource: collection) }
 
   before do
     assign(:collection, collection)

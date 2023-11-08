@@ -4,7 +4,7 @@ RSpec.describe Hyrax::WorkFormHelper do
   describe '.form_tabs_for' do
     context 'with a change set style form' do
       let(:work) { build(:hyrax_work) }
-      let(:form) { Hyrax::Forms::ResourceForm.for(work) }
+      let(:form) { Hyrax::Forms::ResourceForm.for(resource: work) }
 
       it 'returns a default tab list' do
         expect(form_tabs_for(form: form)).to eq ["metadata", "files", "relationships"]
@@ -44,7 +44,7 @@ RSpec.describe Hyrax::WorkFormHelper do
   describe '.form_progress_sections_for' do
     context 'with a change set style form' do
       let(:work) { build(:hyrax_work) }
-      let(:form) { Hyrax::Forms::ResourceForm.for(work) }
+      let(:form) { Hyrax::Forms::ResourceForm.for(resource: work) }
 
       it 'returns an empty list' do
         expect(form_progress_sections_for(form: form)).to eq []
@@ -83,7 +83,7 @@ RSpec.describe Hyrax::WorkFormHelper do
     end
 
     context 'with a ChangeSet-style ResourceForm' do
-      let(:form) { Hyrax::Forms::ResourceForm.for(work) }
+      let(:form) { Hyrax::Forms::ResourceForm.for(resource: work) }
       let(:work) { FactoryBot.build(:hyrax_work) }
 
       it 'gives an empty hash' do

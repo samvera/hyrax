@@ -3,7 +3,7 @@ RSpec.describe 'hyrax/base/_form_share.html.erb', type: :view do
   let(:ability) { instance_double(Ability, admin?: false, user_groups: [], current_user: user) }
   let(:user) { stub_model(User) }
   let(:work) { GenericWork.new }
-  let(:form) { Hyrax.config.disable_wings ? Hyrax::Forms::ResourceForm.for(work) : Hyrax::GenericWorkForm.new(work, ability, controller) }
+  let(:form) { Hyrax.config.disable_wings ? Hyrax::Forms::ResourceForm.for(resource: work) : Hyrax::GenericWorkForm.new(work, ability, controller) }
   let(:form_template) do
     %(
       <%= simple_form_for [main_app, @form] do |f| %>

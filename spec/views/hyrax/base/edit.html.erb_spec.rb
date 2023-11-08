@@ -4,7 +4,7 @@ RSpec.describe 'hyrax/base/edit.html.erb', type: :view do
   let(:work) { stub_model(GenericWork, id: '456', title: ["A nice work"]) }
   let(:ability) { double }
   let(:controller_class) { Hyrax::GenericWorksController }
-  let(:form) { Hyrax.config.disable_wings ? Hyrax::Forms::ResourceForm.for(work) : Hyrax::GenericWorkForm.new(work, ability, controller) }
+  let(:form) { Hyrax.config.disable_wings ? Hyrax::Forms::ResourceForm.for(resource: work) : Hyrax::GenericWorkForm.new(work, ability, controller) }
 
   before do
     allow(view).to receive(:curation_concern).and_return(work)

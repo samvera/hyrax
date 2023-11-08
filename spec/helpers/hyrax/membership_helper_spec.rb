@@ -5,7 +5,7 @@ RSpec.describe Hyrax::MembershipHelper do
 
   describe '.member_of_collections_json' do
     context 'with a ChangeSet form' do
-      let(:resource) { Hyrax::Forms::ResourceForm.for(work) }
+      let(:resource) { Hyrax::Forms::ResourceForm.for(resource: work) }
       let(:work) { build(:monograph) }
 
       context 'when it has no collections' do
@@ -61,7 +61,7 @@ RSpec.describe Hyrax::MembershipHelper do
 
   describe '.work_members_json' do
     context 'with a ChangeSet form' do
-      let(:resource) { Hyrax::Forms::ResourceForm.for(work) }
+      let(:resource) { Hyrax::Forms::ResourceForm.for(resource: work) }
       let(:work) { build(:monograph) }
 
       context 'when it has no members' do

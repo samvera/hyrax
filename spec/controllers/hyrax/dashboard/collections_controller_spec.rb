@@ -240,7 +240,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
               skip("these validations only apply to Valkyrie forms") if
                 Hyrax.config.collection_class < ActiveFedora::Base
               allow(controller).to receive(:authorize!)
-              allow(Hyrax::Forms::ResourceForm).to receive(:for).with(collection).and_return(form)
+              allow(Hyrax::Forms::ResourceForm).to receive(:for).and_return(form)
               allow(form).to receive(:validate).with(any_args).and_return(false)
               allow(form).to receive(:prepopulate!).with(any_args).and_return(true)
             end
@@ -469,7 +469,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
               skip("these validations only apply to Valkyrie forms") if
                 Hyrax.config.collection_class < ActiveFedora::Base
 
-              allow(Hyrax::Forms::ResourceForm).to receive(:for).with(collection).and_return(form)
+              allow(Hyrax::Forms::ResourceForm).to receive(:for).and_return(form)
               allow(form).to receive(:validate).with(any_args).and_return(false)
               allow(form).to receive(:prepopulate!).with(any_args).and_return(true)
             end
