@@ -196,7 +196,7 @@ RSpec.shared_examples 'a Hyrax::AdministrativeSet' do
     it { is_expected.to be_collection }
     it { is_expected.not_to be_file }
     it { is_expected.not_to be_file_set }
-    it { is_expected.not_to be_pcdm_collection }
+    it { is_expected.to be_pcdm_collection }
     it { is_expected.not_to be_pcdm_object }
     it { is_expected.not_to be_work }
   end
