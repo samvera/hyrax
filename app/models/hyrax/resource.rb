@@ -104,35 +104,30 @@ module Hyrax
     def collection?
       self.class.collection?
     end
-    deprecation_deprecate :collection?, message: :"class.collection?"
 
     ##
     # @return [Boolean]
     def file?
       self.class.file?
     end
-    deprecation_deprecate :file?, message: :"class.file?"
 
     ##
     # @return [Boolean]
     def file_set?
       self.class.file_set?
     end
-    deprecation_deprecate :file_set?, message: :"class.file_set?"
 
     ##
     # @return [Boolean]
     def pcdm_collection?
       self.class.pcdm_collection?
     end
-    deprecation_deprecate :pcdm_collection?, message: :"class.pcdm_collection?"
 
     ##
     # @return [Boolean]
     def pcdm_object?
       self.class.pcdm_object?
     end
-    deprecation_deprecate :pcdm_object?, message: :"class.pcdm_object?"
 
     ##
     # Works are PCDM Objects which are not File Sets.
@@ -141,7 +136,6 @@ module Hyrax
     def work?
       self.class.work?
     end
-    deprecation_deprecate :work?, message: :"class.work?"
 
     def ==(other)
       attributes.except(:created_at, :updated_at) == other.attributes.except(:created_at, :updated_at)
