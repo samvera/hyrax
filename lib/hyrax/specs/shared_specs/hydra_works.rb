@@ -29,6 +29,31 @@ RSpec.shared_examples 'a Hyrax::Resource' do
     it { is_expected.to respond_to :pcdm_object? }
     it { is_expected.to respond_to :work? }
   end
+
+  it do
+    is_expected.to respond_to :collection?
+    expect(resource.collection?).to eq resource.class.collection?
+  end
+  it do
+    is_expected.to respond_to :file?
+    expect(resource.file?).to eq resource.class.file?
+  end
+  it do
+    is_expected.to respond_to :file_set?
+    expect(resource.file_set?).to eq resource.class.file_set?
+  end
+  it do
+    is_expected.to respond_to :pcdm_collection?
+    expect(resource.pcdm_collection?).to eq resource.class.pcdm_collection?
+  end
+  it do
+    is_expected.to respond_to :pcdm_object?
+    expect(resource.pcdm_object?).to eq resource.class.pcdm_object?
+  end
+  it do
+    is_expected.to respond_to :work?
+    expect(resource.work?).to eq resource.class.work?
+  end
 end
 
 RSpec.shared_examples 'belongs to collections' do
