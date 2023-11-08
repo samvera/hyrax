@@ -3,7 +3,7 @@
 ##
 # Use this factory for generic Hyrax/HydraWorks Collections in valkyrie.
 FactoryBot.define do
-  factory :hyrax_collection, class: 'Hyrax::PcdmCollection', aliases: [:pcdm_collection] do
+  factory :hyrax_collection, class: 'CollectionResource', aliases: [:pcdm_collection, :collection_resource] do
     sequence(:title) { |n| ["The Tove Jansson Collection #{n}"] }
     collection_type_gid { Hyrax::CollectionType.find_or_create_default_collection_type.to_global_id.to_s }
 
@@ -78,7 +78,7 @@ FactoryBot.define do
       end
     end
 
-    factory :collection_resource, class: 'CollectionResource' do
+    factory :pcdm_collection, class: 'Hyrax::PcdmCollection' do
     end
   end
 end
