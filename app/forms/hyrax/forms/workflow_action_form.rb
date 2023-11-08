@@ -33,9 +33,15 @@ module Hyrax
 
       def save
         return false unless valid?
-        Workflow::WorkflowActionService.run(subject: subject,
-                                            action: sipity_workflow_action,
-                                            comment: comment)
+
+        WorkflowActionJob.perform_later(
+          comment: comment,
+          name: name,
+          user: current_user,
+          work_id: work.id.to_s,
+          workflow: subject.entity.workflow
+        )
+
         true
       end
 
