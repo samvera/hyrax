@@ -22,7 +22,6 @@ FactoryBot.define do
 
     after(:build) do |collection, evaluator|
       collection.depositor ||= evaluator.user.user_key
-      collection.creator += [evaluator.user.user_key] if collection.respond_to?(:creator) && collection.creator.blank?
       collection.collection_type_gid = evaluator.collection_type.to_global_id.to_s if evaluator.collection_type
     end
 

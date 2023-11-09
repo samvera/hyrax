@@ -12,10 +12,10 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   # Setting Title on admin sets to avoid false positive matches with collections.
   let(:admin_set_a) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_permission_template, user: admin_user, title: ['Set A'], description: 'A') }
   let(:admin_set_b) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_permission_template, user: user, title: ['Set B'], edit_users: [user.user_key]) }
-  let(:collection1) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: user, collection_type: collection_type) }
-  let(:collection2) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: user, collection_type: collection_type) }
-  let(:collection3) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: admin_user, collection_type: collection_type) }
-  let(:collection4) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: admin_user, collection_type: user_collection_type) }
+  let(:collection1) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: user, creator: 'A User', collection_type: collection_type) }
+  let(:collection2) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: user, creator: 'A User', collection_type: collection_type) }
+  let(:collection3) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: admin_user, creator: 'An Admin', collection_type: collection_type) }
+  let(:collection4) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: admin_user, creator: 'An Admin', collection_type: user_collection_type) }
 
   describe 'Your Collections tab' do
     context 'when non-admin user' do
@@ -166,7 +166,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     let(:user2) { create(:user) }
     let(:collection1) do
       FactoryBot.valkyrie_create(:hyrax_collection, :public,
-                                 user: user, collection_type: collection_type,
+                                 user: user, creator: 'A User', collection_type: collection_type,
                                  access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
                                                    agent_id: user.user_key,
                                                    access: Hyrax::PermissionTemplateAccess::MANAGE },
@@ -176,7 +176,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
     let(:collection2) do
       FactoryBot.valkyrie_create(:hyrax_collection, :public,
-                                 user: user, collection_type: collection_type,
+                                 user: user, creator: 'A User', collection_type: collection_type,
                                  access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
                                                    agent_id: user.user_key,
                                                    access: Hyrax::PermissionTemplateAccess::MANAGE },
@@ -186,7 +186,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
     let(:collection4) do
       FactoryBot.valkyrie_create(:hyrax_collection, :public,
-                                 user: admin_user, collection_type: user_collection_type,
+                                 user: admin_user, creator: 'An Admin', collection_type: user_collection_type,
                                  access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
                                                    agent_id: user.user_key,
                                                    access: Hyrax::PermissionTemplateAccess::MANAGE },
@@ -336,9 +336,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
   # TODO: this section is still deactivated
   describe "adding works to a collection", skip: "we need to define a dashboard/works path" do
-    let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, title: ["Barrel of monkeys"], user: user) }
-    let!(:work1) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Louie"], user: user) }
-    let!(:work2) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Kong"], user: user) }
+    let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, title: ["Barrel of monkeys"], user: user, creator: 'A User') }
+    let!(:work1) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Louie"], depositor: user.user_key) }
+    let!(:work2) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Kong"], depositor: user.user_key) }
 
     before do
       sign_in user
@@ -359,12 +359,12 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   end
 
   describe 'delete collection' do
-    let!(:empty_collection) { FactoryBot.valkyrie_create(:hyrax_collection, :public, title: ['Empty Collection'], user: user) }
-    let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, :public, title: ['Collection with Work'], user: user) }
+    let!(:empty_collection) { FactoryBot.valkyrie_create(:hyrax_collection, :public, title: ['Empty Collection'], user: user, creator: 'A User') }
+    let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, :public, title: ['Collection with Work'], user: user, creator: 'A User') }
     let!(:admin_user) { create(:admin) }
     let!(:empty_adminset) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_permission_template, title: ['Empty Admin Set'], creator: [admin_user.user_key]) }
     let!(:adminset) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_permission_template, title: ['Admin Set with Work'], creator: [admin_user.user_key]) }
-    let!(:work) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Louie"], admin_set_id: adminset.id, member_of_collection_ids: [collection.id], user: user) }
+    let!(:work) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Louie"], admin_set_id: adminset.id, member_of_collection_ids: [collection.id], depositor: user.user_key) }
 
     # Check table row has appropriate data attributes added
     def check_tr_data_attributes(id, type)
@@ -595,10 +595,10 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
   describe 'collection show page' do
     let(:collection) do
-      FactoryBot.valkyrie_create(:hyrax_collection, user: user, members: [work1, work2], description: ['collection description'])
+      FactoryBot.valkyrie_create(:hyrax_collection, user: user, members: [work1, work2], description: ['collection description'], creator: 'A User')
     end
-    let!(:work1) { FactoryBot.valkyrie_create(:monograph, title: ["King Louie"], user: user) }
-    let!(:work2) { FactoryBot.valkyrie_create(:monograph, title: ["King Kong"], user: user) }
+    let!(:work1) { FactoryBot.valkyrie_create(:monograph, title: ["King Louie"], depositor: user.user_key, edit_users: [user.user_key]) }
+    let!(:work2) { FactoryBot.valkyrie_create(:monograph, title: ["King Kong"], depositor: user.user_key, edit_users: [user.user_key]) }
 
     before do
       collection
@@ -739,7 +739,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       sign_in user
     end
-    let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['A Collection of Testing'], user: user) }
+    let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['A Collection of Testing'], user: user, creator: 'A User') }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit '/dashboard/my/collections'
@@ -754,8 +754,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
   describe 'remove works from collection' do
     context 'user that can edit' do
-      let!(:work2) { FactoryBot.valkyrie_create(:monograph, title: ["King Louie"], member_of_collection_ids: [collection1.id], user: user) }
-      let!(:work1) { FactoryBot.valkyrie_create(:monograph, title: ["King Kong"], member_of_collection_ids: [collection1.id], user: user) }
+      let!(:work2) { FactoryBot.valkyrie_create(:monograph, title: ["King Louie"], member_of_collection_ids: [collection1.id], depositor: user.user_key, edit_users: [user.user_key]) }
+      let!(:work1) { FactoryBot.valkyrie_create(:monograph, title: ["King Kong"], member_of_collection_ids: [collection1.id], depositor: user.user_key, edit_users: [user.user_key]) }
 
       before do
         sign_in admin_user
@@ -820,9 +820,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
     context 'from dashboard -> collections action menu' do
       context 'for a collection' do
-        let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['A Collection of Tests'], description: ['Test Description'], user: user) }
-        let(:work1) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Louie"], member_of_collection_ids: [collection.id], user: user) }
-        let(:work2) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Kong"], member_of_collection_ids: [collection.id], user: user) }
+        let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['A Collection of Tests'], description: ['Test Description'], user: user, creator: 'A User') }
+        let(:work1) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Louie"], member_of_collection_ids: [collection.id], depositor: user.user_key) }
+        let(:work2) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Kong"], member_of_collection_ids: [collection.id], depositor: user.user_key) }
 
         before do
           collection
@@ -929,8 +929,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'with brandable set' do
-        let(:brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: brandable_collection_type.to_global_id.to_s).id }
-        let(:not_brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: not_brandable_collection_type.to_global_id.to_s).id }
+        let(:brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type_gid: brandable_collection_type.to_global_id.to_s).id }
+        let(:not_brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type_gid: not_brandable_collection_type.to_global_id.to_s).id }
         let(:brandable_collection_type) { create(:collection_type, :brandable) }
         let(:not_brandable_collection_type) { create(:collection_type, :not_brandable) }
 
@@ -946,8 +946,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'with discoverable set' do
-        let(:discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: discoverable_collection_type.to_global_id.to_s).id }
-        let(:not_discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type_gid: not_discoverable_collection_type.to_global_id.to_s).id }
+        let(:discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type_gid: discoverable_collection_type.to_global_id.to_s).id }
+        let(:not_discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type_gid: not_discoverable_collection_type.to_global_id.to_s).id }
         let(:discoverable_collection_type) { create(:collection_type, :discoverable) }
         let(:not_discoverable_collection_type) { create(:collection_type, :not_discoverable) }
 
@@ -963,8 +963,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'with sharable set' do
-        let(:sharable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type: sharable_collection_type).id }
-        let(:not_sharable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type: not_sharable_collection_type).id }
+        let(:sharable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: sharable_collection_type).id }
+        let(:not_sharable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: not_sharable_collection_type).id }
         let(:sharable_collection_type) { create(:collection_type, :sharable) }
         let(:not_sharable_collection_type) { create(:collection_type, :not_sharable) }
 
@@ -996,8 +996,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
 
     context "navigate through tabs", js: true do
-      let!(:empty_collection) { FactoryBot.valkyrie_create(:hyrax_collection, :public, title: ['Empty Collection'], user: user) }
-      let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, collection_type: collection_type) }
+      let!(:empty_collection) { FactoryBot.valkyrie_create(:hyrax_collection, :public, title: ['Empty Collection'], user: user, creator: 'A User') }
+      let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: collection_type) }
       let(:collection_type) { create(:collection_type, :brandable, :discoverable, :sharable) }
       let!(:confirm_modal_text) { 'Are you sure you want to leave this tab? Any unsaved data will be lost.' }
       let!(:new_description) { 'New Description' }
