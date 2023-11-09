@@ -1,5 +1,9 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Forms::BatchUploadForm do
+
+# This uses app/services/hydra_editor/field_metadata_service.rb, which calls
+#   #reflect_on_association on the Work class. This is an ActiveFedora-specific
+#   method that doesn't translate to Valkyrie Work behavior.
+RSpec.describe Hyrax::Forms::BatchUploadForm, :active_fedora do
   let(:model) { GenericWork.new }
   let(:controller) { instance_double(Hyrax::BatchUploadsController) }
   let(:form) { described_class.new(model, ability, controller) }
