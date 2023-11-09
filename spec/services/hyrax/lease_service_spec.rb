@@ -22,7 +22,7 @@ RSpec.describe Hyrax::LeaseService, :clean_repo do
 
   # With Valkyrie Work indexing (app/indexers/hyrax/valkyrie_work_indexer.rb:59),
   #   lease_expiration_date_dtsi is only populated when there's an active lease in place.
-  #   Since the LeaseService always queries Solr, this will always an empty array.
+  #   Since the LeaseService always queries Solr, this will always be an empty array.
   describe '#assets_with_expired_leases' do
     it 'returns an array of assets with expired lease' do
       expect(subject.assets_with_expired_leases).to be_empty
