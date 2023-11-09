@@ -17,6 +17,7 @@ RSpec.describe 'Creating a new child Work', :workflow do
                     edit_users: [user.user_key])
   end
   let!(:persister) { Hyrax.persister }
+  let!(:query_service) { Hyrax.query_service }
 
   before do
     sign_in user
@@ -52,7 +53,7 @@ RSpec.describe 'Creating a new child Work', :workflow do
       visit "/concern/parent/#{parent.id}/monographs/#{curation_concern.id}/edit"
       click_on "Save"
 
-      expect(parent.member_ids.count).to eq 1
+      expect(query_service.find_by(id: parent.id).member_ids.count).to eq 1
     end
 
     it "doesn't lose other memberships" do
@@ -62,8 +63,8 @@ RSpec.describe 'Creating a new child Work', :workflow do
       visit "/concern/parent/#{parent.id}/monographs/#{curation_concern.id}/edit"
       click_on "Save"
 
-      expect(parent.member_ids.count).to eq 1
-      expect(new_parent.member_ids.count).to eq 1
+      expect(query_service.find_by(id: parent.id).member_ids.count).to eq 1
+      expect(query_service.find_by(id: new_parent.id).member_ids.count).to eq 1
     end
 
     context "with a parent that doesn't belong to this user" do
@@ -76,7 +77,7 @@ RSpec.describe 'Creating a new child Work', :workflow do
         first("input#parent_id", visible: false).set new_parent.id
         click_on "Save"
 
-        expect(new_parent.member_ids.count).to eq 0
+        expect(query_service.find_by(id: new_parent.id).member_ids.count).to eq 0
       end
     end
   end
