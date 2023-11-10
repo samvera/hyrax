@@ -22,6 +22,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         FactoryBot.valkyrie_create(:hyrax_collection,
                                    :public,
                                    title: ["My collection"],
+                                   creator: user.user_key,
                                    depositor: user.user_key,
                                    edit_users: [user])
       end

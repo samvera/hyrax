@@ -4,17 +4,8 @@ RSpec.describe 'collection', type: :feature do
 
   before { sign_in(user) }
 
-  # Ensure CollectionResource is the collection model so it is not excluded by solr search builder filters.
-  # This can likely be removed alongside Wings.
-  around(:each) do |example|
-    current_collection_model = Hyrax.config.collection_model
-    Hyrax.config.collection_model = 'CollectionResource'
-    example.run
-    Hyrax.config.collection_model = current_collection_model
-  end
-
   shared_context 'with many indexed members' do
-    let(:collection) { FactoryBot.valkyrie_create(:collection_resource, user: user, title: ['collection title'], description: ['collection description']) }
+    let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, title: ['collection title'], description: ['collection description']) }
 
     before do
       docs = (0..12).map do |n|
@@ -34,7 +25,7 @@ RSpec.describe 'collection', type: :feature do
 
   describe 'collection show page' do
     let(:collection) do
-      FactoryBot.valkyrie_create(:collection_resource,
+      FactoryBot.valkyrie_create(:hyrax_collection,
                                  user: user,
                                  description: ['collection description'],
                                  collection_type_gid: collection_type.to_global_id.to_s,
@@ -43,8 +34,8 @@ RSpec.describe 'collection', type: :feature do
     let(:collection_type) { FactoryBot.create(:collection_type, :nestable) }
     let(:work1) { FactoryBot.valkyrie_create(:monograph, title: ["King Louie"], read_users: [user]) }
     let(:work2) { FactoryBot.valkyrie_create(:monograph, title: ["King Kong"], read_users: [user]) }
-    let(:col1) { FactoryBot.valkyrie_create(:collection_resource, title: ["Sub-collection 1"], read_users: [user]) }
-    let(:col2) { FactoryBot.valkyrie_create(:collection_resource, title: ["Sub-collection 2"], read_users: [user]) }
+    let(:col1) { FactoryBot.valkyrie_create(:hyrax_collection, title: ["Sub-collection 1"], read_users: [user]) }
+    let(:col2) { FactoryBot.valkyrie_create(:hyrax_collection, title: ["Sub-collection 2"], read_users: [user]) }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit "/collections/#{collection.id}"
@@ -98,7 +89,7 @@ RSpec.describe 'collection', type: :feature do
 
   context "with a non-nestable collection type" do
     let(:collection) do
-      FactoryBot.valkyrie_create(:collection_resource,
+      FactoryBot.valkyrie_create(:hyrax_collection,
                                  user: user,
                                  description: ['collection description'],
                                  collection_type_gid: collection_type.to_global_id.to_s)
@@ -133,7 +124,7 @@ RSpec.describe 'collection', type: :feature do
 
   describe 'show subcollection pages of a collection' do
     include_context 'with many indexed members' do
-      let(:model_name) { 'CollectionResource' }
+      let(:model_name) { Hyrax.config.collection_class.to_s }
     end
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do

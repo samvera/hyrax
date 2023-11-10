@@ -1,5 +1,5 @@
 <% provide :page_header do %>
-  <h1><span class="fa fa-edit" aria-hidden="true"></span> <%= t('.header', title: @form.title) %></h1>
+  <h1><span class="fa fa-edit" aria-hidden="true"></span> <%= t('.header', title: Array(@form.title).first) %></h1>
 <% end %>
 
 <div class="row">
