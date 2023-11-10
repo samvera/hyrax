@@ -129,7 +129,6 @@ end
 
 Wings::ModelRegistry.register(Hyrax::AccessControl,     Hydra::AccessControl)
 Wings::ModelRegistry.register(Hyrax::AdministrativeSet, AdminSet)
-Wings::ModelRegistry.register(CollectionResource,       ::Collection)
 Wings::ModelRegistry.register(Hyrax::PcdmCollection,    ::Collection)
 Wings::ModelRegistry.register(Hyrax::FileSet,           FileSet)
 Wings::ModelRegistry.register(Hyrax::Embargo,           Hydra::AccessControls::Embargo)
