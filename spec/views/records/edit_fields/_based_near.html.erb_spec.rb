@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe 'records/edit_fields/_based_near.html.erb', type: :view do
-  let(:work) { GenericWork.new }
-  let(:form) { Hyrax::GenericWorkForm.new(work, nil, controller) }
+  let(:work) { Monograph.new }
+  let(:form) { Hyrax::Forms::ResourceForm.for(work) }
   let(:form_template) do
     %(
       <%= simple_form_for [main_app, @form] do |f| %>
@@ -12,6 +12,7 @@ RSpec.describe 'records/edit_fields/_based_near.html.erb', type: :view do
 
   before do
     assign(:form, form)
+    form.prepopulate!
     render inline: form_template
   end
 

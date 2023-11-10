@@ -35,7 +35,7 @@ RSpec.describe 'hyrax/dashboard/collections/_form.html.erb', type: :view do
       expect(rendered).to have_selector("input#collection_date_created")
       expect(rendered).to have_selector("input#collection_language")
       expect(rendered).to have_selector("input#collection_identifier")
-      expect(rendered).to have_selector("div#collection_based_near")
+      expect(rendered).to have_selector("div.controlled_vocabulary.collection_based_near")
       expect(rendered).to have_selector("input#collection_related_url")
       expect(rendered).to have_selector("select#collection_license")
       expect(rendered).to have_selector("select#collection_resource_type")

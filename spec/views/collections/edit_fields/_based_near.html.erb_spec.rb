@@ -12,6 +12,7 @@ RSpec.describe 'collections/edit_fields/_based_near.html.erb', type: :view do
 
   before do
     assign(:form, form)
+    form.prepopulate!
     render inline: form_template
   end
 
