@@ -929,8 +929,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'with brandable set' do
-        let(:brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type_gid: brandable_collection_type.to_global_id.to_s).id }
-        let(:not_brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type_gid: not_brandable_collection_type.to_global_id.to_s).id }
+        let(:brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: brandable_collection_type).id }
+        let(:not_brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: not_brandable_collection_type).id }
         let(:brandable_collection_type) { create(:collection_type, :brandable) }
         let(:not_brandable_collection_type) { create(:collection_type, :not_brandable) }
 
@@ -946,8 +946,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'with discoverable set' do
-        let(:discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type_gid: discoverable_collection_type.to_global_id.to_s).id }
-        let(:not_discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type_gid: not_discoverable_collection_type.to_global_id.to_s).id }
+        let(:discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: discoverable_collection_type).id }
+        let(:not_discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: not_discoverable_collection_type).id }
         let(:discoverable_collection_type) { create(:collection_type, :discoverable) }
         let(:not_discoverable_collection_type) { create(:collection_type, :not_discoverable) }
 
