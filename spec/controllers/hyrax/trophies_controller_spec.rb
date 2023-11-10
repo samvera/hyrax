@@ -2,7 +2,7 @@
 RSpec.describe Hyrax::TrophiesController do
   describe "#toggle_trophy" do
     let(:user) { create(:user) }
-    let(:work) { create(:work, user: user) }
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work, user: user) }
 
     context "for a work we have edit access on" do
       before do
