@@ -85,7 +85,10 @@ module Hyrax
     # @param ids [Array] id_array the ids that you want included in the query
     # @return [Hyrax::SolrQueryService] the existing service with id query appended
     def with_ids(ids: [])
+      puts "tryna figure this out:"
+      puts ids
       ids = ids.reject(&:blank?)
+      puts ids
       raise ArgumentError, "Expected there to be at least one non-blank id." if ids.blank?
       id_query = construct_query_for_ids(ids)
       @query += [id_query]
