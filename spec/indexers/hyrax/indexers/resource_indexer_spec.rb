@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::ValkyrieIndexer do
+RSpec.describe Hyrax::Indexers::ResourceIndexer do
   let(:indexer) { described_class.new(resource: resource) }
 
   describe '.for' do
@@ -12,9 +12,9 @@ RSpec.describe Hyrax::ValkyrieIndexer do
     context 'for a work' do
       let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }
 
-      it 'gives an instance of ValkyrieWorkIndexer' do
+      it 'gives an instance of Hyrax::Indexers::PcdmObjectIndexer' do
         expect(described_class.for(resource: resource))
-          .to be_a Hyrax::ValkyrieWorkIndexer
+          .to be_a Hyrax::Indexers::PcdmObjectIndexer
       end
     end
 
@@ -23,7 +23,7 @@ RSpec.describe Hyrax::ValkyrieIndexer do
 
       it 'gives an instance of PcdmCollectionIndexer' do
         expect(described_class.for(resource: resource))
-          .to be_a Hyrax::PcdmCollectionIndexer
+          .to be_a Hyrax::Indexers::PcdmCollectionIndexer
       end
     end
 
@@ -32,7 +32,7 @@ RSpec.describe Hyrax::ValkyrieIndexer do
 
       it 'gives an instance of ValkyrieFileSetIndexer' do
         expect(described_class.for(resource: resource))
-          .to be_a Hyrax::ValkyrieFileSetIndexer
+          .to be_a Hyrax::Indexers::FileSetIndexer
       end
     end
 

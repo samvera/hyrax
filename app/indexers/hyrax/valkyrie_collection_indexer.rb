@@ -2,9 +2,11 @@
 
 module Hyrax
   ##
-  # Indexes properties common to PCDM Collections
-  #
-  # @deprecated use Hyrax::PcdmCollectionIndexer instead
-  class ValkyrieCollectionIndexer < Hyrax::PcdmCollectionIndexer
+  # @deprecated use +Hyrax::Indexers::PcdmCollectionIndexer+ instead
+  class ValkyrieCollectionIndexer < Hyrax::PcdmCollectionIndexer # also deprecated
+    def initialize(*args, **kwargs)
+      Deprecation.warn "`Hyrax::ValkyrieCollectionIndexer` is deprecated. Use `Hyrax::Indexers::PcdmCollectionIndexer` instead."
+      super
+    end
   end
 end

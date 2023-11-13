@@ -2,7 +2,7 @@
 
 require 'hyrax/specs/shared_specs'
 
-RSpec.describe Hyrax::AdministrativeSetIndexer do
+RSpec.describe Hyrax::Indexers::AdministrativeSetIndexer do
   let(:resource) { FactoryBot.valkyrie_create(:hyrax_admin_set) }
   let(:indexer_class) { described_class }
 
@@ -13,7 +13,7 @@ RSpec.describe Hyrax::AdministrativeSetIndexer do
   let(:admin_set_title) { 'An Admin Set' }
 
   it 'is resolved from an admin set' do
-    expect(Hyrax::ValkyrieIndexer.for(resource: resource))
+    expect(Hyrax::Indexers::ResourceIndexer.for(resource: resource))
       .to be_a described_class
   end
 end

@@ -929,6 +929,37 @@ module Hyrax
       end
     end
 
+    attr_writer :administrative_set_indexer
+    ##
+    # @return [Class]
+    def administrative_set_indexer
+      @administrative_set_indexer ||= Hyrax::Indexers::AdministrativeSetIndexer
+    end
+
+    attr_writer :file_set_indexer
+    ##
+    # @return [Class]
+    def file_set_indexer
+      @file_set_indexer ||= Hyrax::Indexers::FileSetIndexer
+    end
+
+    attr_writer :pcdm_collection_indexer
+    ##
+    # @return [Class]
+    def pcdm_collection_indexer
+      @pcdm_collection_indexer ||= Hyrax::Indexers::PcdmCollectionIndexer
+    end
+
+    attr_writer :pcdm_object_indexer_builder
+    ##
+    # @return [Proc]
+    def pcdm_object_indexer_builder
+      "Hyrax::Indexers::PcdmObjectIndexer".constantize # autoload
+      @pcdm_object_indexer_builder = lambda do |model_class|
+        Hyrax::Indexers::PcdmObjectIndexer(model_class)
+      end
+    end
+
     # Should a button with "Share my work" show on the front page to users who are not logged in?
     attr_writer :display_share_button_when_not_logged_in
     def display_share_button_when_not_logged_in?

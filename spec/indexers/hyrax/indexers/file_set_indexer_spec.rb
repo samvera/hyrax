@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::ValkyrieFileSetIndexer, if: Hyrax.config.use_valkyrie? do
+RSpec.describe Hyrax::Indexers::FileSetIndexer, if: Hyrax.config.use_valkyrie? do
   include Hyrax::FactoryHelpers
 
   let(:fileset_id) { 'fs1' }

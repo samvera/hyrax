@@ -2,7 +2,7 @@
 
 require 'hyrax/specs/shared_specs'
 
-RSpec.describe Hyrax::ValkyrieWorkIndexer do
+RSpec.describe Hyrax::Indexers::PcdmObjectIndexer do
   let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }
   let(:indexer_class) { described_class }
 
@@ -37,7 +37,7 @@ RSpec.describe Hyrax::ValkyrieWorkIndexer do
             attribute :broader, Valkyrie::Types::Array.of(Valkyrie::Types::String)
           end
 
-          class WorkIndexer < Hyrax::ValkyrieWorkIndexer
+          class WorkIndexer < Hyrax::Indexers::PcdmObjectIndexer(Hyrax::Test::Custom::Work)
             def to_solr
               super.tap do |solr_doc|
                 solr_doc['broader_ssim'] = resource.broader.first
