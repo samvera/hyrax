@@ -33,6 +33,9 @@ module Hyrax
       include Hyrax::FormFields(:core_metadata)
 
       include Hyrax::ContainedInWorksBehavior
+      include Hyrax::DepositAgreementBehavior
+      include Hyrax::LeaseabilityBehavior
+      include Hyrax::PermissionBehavior
 
       property :on_behalf_of
       property :proxy_depositor
