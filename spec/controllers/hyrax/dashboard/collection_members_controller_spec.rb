@@ -6,9 +6,9 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
   before { sign_in(user) }
 
   describe '#update_members' do
-    let(:owned_work_1) { FactoryBot.create(:work, user: user) }
-    let(:owned_work_2) { FactoryBot.create(:work, user: user) }
-    let(:owned_work_3) { FactoryBot.create(:work, user: user) }
+    let(:owned_work_1) { FactoryBot.valkyrie_create(:hyrax_work, edit_users: [user]) }
+    let(:owned_work_2) { FactoryBot.valkyrie_create(:hyrax_work, edit_users: [user]) }
+    let(:owned_work_3) { FactoryBot.valkyrie_create(:hyrax_work, edit_users: [user]) }
     let(:private_work) { FactoryBot.valkyrie_create(:hyrax_work) }
 
     let(:queries) { Hyrax.custom_queries }
@@ -22,19 +22,22 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
     end
 
     let(:owned_collection) do
-      FactoryBot.create(:private_collection_lw,
-                        user: user,
-                        with_permission_template: true)
+      FactoryBot.valkyrie_create(:hyrax_collection,
+                        user: user)
     end
 
     let(:managed_collection) do
-      FactoryBot.create(:private_collection_lw,
-                        with_permission_template: { manage_users: [user] })
+      FactoryBot.valkyrie_create(:hyrax_collection,
+                        access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                          agent_id: user.user_key,
+                                          access: Hyrax::PermissionTemplateAccess::MANAGE }])
     end
 
     let(:depositable_collection) do
-      FactoryBot.create(:private_collection_lw,
-                        with_permission_template: { deposit_users: [user] })
+      FactoryBot.valkyrie_create(:hyrax_collection,
+                        access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                          agent_id: user.user_key,
+                                          access: Hyrax::PermissionTemplateAccess::DEPOSIT }])
     end
 
     let(:viewable_collection) do
@@ -42,7 +45,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
     end
 
     let(:private_collection) do
-      FactoryBot.valkyrie_create(:hyrax_collection, with_permission_template: true)
+      FactoryBot.valkyrie_create(:hyrax_collection)
     end
 
     let(:parameters) do
@@ -55,9 +58,15 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
       let(:collection) { owned_collection }
 
       before do
-        [owned_work_1, owned_work_2].each do |asset|
-          asset.member_of_collections << collection
-          asset.save!
+        if collection.is_a? Valkyrie::Resource
+          Hyrax::Collections::CollectionMemberService.add_members(collection_id: collection.id,
+                                                                  new_members: [owned_work_1, owned_work_2],
+                                                                  user: user)
+        else
+          [owned_work_1, owned_work_2].each do |asset|
+            asset.member_of_collections << collection
+            asset.save!
+          end
         end
       end
 
@@ -66,7 +75,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds members to the collection' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .from(contain_exactly(owned_work_1.id, owned_work_2.id))
             .to contain_exactly(owned_work_1.id, owned_work_2.id, owned_work_3.id)
         end
@@ -84,7 +93,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds members to the collection' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .from(contain_exactly(owned_work_1.id, owned_work_2.id))
             .to contain_exactly(owned_work_1.id, owned_work_2.id, editable_work.id)
         end
@@ -95,7 +104,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds members to the collection' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .from(contain_exactly(owned_work_1.id, owned_work_2.id))
             .to contain_exactly(owned_work_1.id, owned_work_2.id, readable_work.id)
         end
@@ -106,7 +115,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds only members with read access' do
           expect { post :update_members, params: parameters }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .from(contain_exactly(owned_work_1.id, owned_work_2.id))
             .to contain_exactly(owned_work_1.id, owned_work_2.id, owned_work_3.id)
         end
@@ -117,7 +126,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'does not change membership' do
           expect { post(:update_members, params: parameters) }
-            .not_to change { queries.find_members_of(collection: collection.valkyrie_resource).count }
+            .not_to change { queries.find_members_of(collection: collection).count }
 
           expect(flash[:alert])
             .to eq 'You do not have sufficient privileges to any of the selected members'
@@ -136,7 +145,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds collection user created' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .to contain_exactly(owned_work_1.id, owned_work_2.id, owned_collection.id)
         end
 
@@ -153,7 +162,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds collection to members' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .to contain_exactly(owned_work_1.id, owned_work_2.id, managed_collection.id)
         end
       end
@@ -163,7 +172,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds collection to members' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .to contain_exactly(owned_work_1.id, owned_work_2.id, depositable_collection.id)
         end
       end
@@ -173,7 +182,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds collection' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .to contain_exactly(owned_work_1.id, owned_work_2.id, viewable_collection.id)
         end
       end
@@ -183,7 +192,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'does not change membership ' do
           expect { post(:update_members, params: parameters) }
-            .not_to change { queries.find_members_of(collection: collection.valkyrie_resource).count }
+            .not_to change { queries.find_members_of(collection: collection).count }
         end
 
         it 'displays error message ' do
@@ -199,9 +208,15 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
       let(:collection) { depositable_collection }
 
       before do
-        [owned_work_1, owned_work_2].each do |asset|
-          asset.member_of_collections << collection
-          asset.save!
+        if collection.is_a? Valkyrie::Resource
+          Hyrax::Collections::CollectionMemberService.add_members(collection_id: collection.id,
+                                                                  new_members: [owned_work_1, owned_work_2],
+                                                                  user: user)
+        else
+          [owned_work_1, owned_work_2].each do |asset|
+            asset.member_of_collections << collection
+            asset.save!
+          end
         end
       end
 
@@ -210,7 +225,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds members to the collection' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .from(contain_exactly(owned_work_1.id, owned_work_2.id))
             .to contain_exactly(owned_work_1.id, owned_work_2.id, owned_work_3.id)
         end
@@ -228,7 +243,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds members to the collection' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .from(contain_exactly(owned_work_1.id, owned_work_2.id))
             .to contain_exactly(owned_work_1.id, owned_work_2.id, editable_work.id)
         end
@@ -239,7 +254,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds members to the collection' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .from(contain_exactly(owned_work_1.id, owned_work_2.id))
             .to contain_exactly(owned_work_1.id, owned_work_2.id, readable_work.id)
         end
@@ -250,7 +265,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds only members with read access' do
           expect { post :update_members, params: parameters }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .from(contain_exactly(owned_work_1.id, owned_work_2.id))
             .to contain_exactly(owned_work_1.id, owned_work_2.id, owned_work_3.id)
         end
@@ -261,7 +276,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'does not change membership' do
           expect { post(:update_members, params: parameters) }
-            .not_to change { queries.find_members_of(collection: collection.valkyrie_resource).count }
+            .not_to change { queries.find_members_of(collection: collection).count }
 
           expect(flash[:alert])
             .to eq 'You do not have sufficient privileges to any of the selected members'
@@ -280,7 +295,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds collection user created' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .to contain_exactly(owned_work_1.id, owned_work_2.id, owned_collection.id)
         end
 
@@ -297,7 +312,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds collection to members' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .to contain_exactly(owned_work_1.id, owned_work_2.id, managed_collection.id)
         end
       end
@@ -307,7 +322,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds collection to members' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .to contain_exactly(owned_work_1.id, owned_work_2.id, depositable_collection.id)
         end
       end
@@ -317,7 +332,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds collection' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .to contain_exactly(owned_work_1.id, owned_work_2.id, viewable_collection.id)
         end
       end
@@ -327,7 +342,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'does not change membership ' do
           expect { post(:update_members, params: parameters) }
-            .not_to change { queries.find_members_of(collection: collection.valkyrie_resource).count }
+            .not_to change { queries.find_members_of(collection: collection).count }
         end
 
         it 'displays error message ' do
@@ -347,7 +362,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds members to the collection' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .to contain_exactly(owned_collection.id)
         end
       end
@@ -357,7 +372,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds members to the collection' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .to contain_exactly(editable_work.id)
         end
       end
@@ -367,7 +382,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'adds members to the collection' do
           expect { post(:update_members, params: parameters) }
-            .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+            .to change { queries.find_members_of(collection: collection).map(&:id) }
             .to contain_exactly(readable_work.id)
         end
       end
@@ -377,7 +392,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
         it 'declines to add members' do
           expect { post(:update_members, params: parameters) }
-            .not_to change { queries.find_members_of(collection: collection.valkyrie_resource) }
+            .not_to change { queries.find_members_of(collection: collection).to_a }
             .from be_none
         end
       end
@@ -388,7 +403,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
           it 'adds collection' do
             expect { post(:update_members, params: parameters) }
-              .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+              .to change { queries.find_members_of(collection: collection).map(&:id) }
               .to contain_exactly(owned_collection.id)
           end
         end
@@ -398,7 +413,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
           it 'adds collection' do
             expect { post(:update_members, params: parameters) }
-              .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+              .to change { queries.find_members_of(collection: collection).map(&:id) }
               .to contain_exactly(managed_collection.id)
           end
         end
@@ -408,7 +423,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
           it 'adds collection' do
             expect { post(:update_members, params: parameters) }
-              .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+              .to change { queries.find_members_of(collection: collection).map(&:id) }
               .to contain_exactly(managed_collection.id)
           end
         end
@@ -418,7 +433,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
           it 'adds collection' do
             expect { post(:update_members, params: parameters) }
-              .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+              .to change { queries.find_members_of(collection: collection).map(&:id) }
               .to contain_exactly(depositable_collection.id)
           end
         end
@@ -428,7 +443,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
           it 'adds collection' do
             expect { post(:update_members, params: parameters) }
-              .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+              .to change { queries.find_members_of(collection: collection).map(&:id) }
               .to contain_exactly(viewable_collection.id)
           end
         end
@@ -438,7 +453,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
           it 'does not add members' do
             expect { post(:update_members, params: parameters) }
-              .not_to change { queries.find_members_of(collection: collection.valkyrie_resource) }
+              .not_to change { queries.find_members_of(collection: collection).to_a }
               .from be_none
           end
 
@@ -460,7 +475,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
       it 'does not add the work' do
         expect { post(:update_members, params: parameters) }
-          .not_to change { queries.find_members_of(collection: collection) }
+          .not_to change { queries.find_members_of(collection: collection).to_a }
           .from be_none
       end
 
@@ -478,31 +493,37 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
       let(:members_to_add) { [owned_work_1, owned_work_2, owned_work_3] }
 
       let(:single_membership_type) do
-        FactoryBot.create(:collection_type, allow_multiple_membership: false)
+        FactoryBot.create(:collection_type, :not_allow_multiple_membership)
       end
 
       let(:collection) do
-        FactoryBot.create(:collection_lw,
+        FactoryBot.valkyrie_create(:hyrax_collection,
                           collection_type: single_membership_type,
                           user: user)
       end
 
       let(:other_collection_of_type) do
-        FactoryBot.create(:collection_lw,
+        FactoryBot.valkyrie_create(:hyrax_collection,
                           collection_type: single_membership_type,
                           user: user)
       end
 
       before do
-        [owned_work_1, owned_work_2].each do |asset|
-          asset.member_of_collections << other_collection_of_type
-          asset.save!
+        if other_collection_of_type.is_a? Valkyrie::Resource
+          Hyrax::Collections::CollectionMemberService.add_members(collection_id: other_collection_of_type.id,
+                                                                  new_members: [owned_work_1, owned_work_2],
+                                                                  user: user)
+        else
+          [owned_work_1, owned_work_2].each do |asset|
+            asset.member_of_collections << other_collection_of_type
+            asset.save!
+          end
         end
       end
 
       it "deposits works not in violation" do
         expect { post(:update_members, params: parameters) }
-          .to change { queries.find_members_of(collection: collection.valkyrie_resource).map(&:id) }
+          .to change { queries.find_members_of(collection: collection).map(&:id) }
           .to contain_exactly(owned_work_3.id)
       end
 
