@@ -1,12 +1,53 @@
 # frozen_string_literal: true
 
-# rubocop:disable BracesAroundHashParameters maybe a rubocop bug re hash params?
-RSpec.describe Hyrax::IiifManifestPresenter do
+RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
   subject(:presenter) { described_class.new(work) }
   let(:work) { build(:monograph) }
+  let(:file_path) { fixture_path + '/world.png' }
+  let(:original_file_use) { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
+  let(:original_file_metadata) do
+    valkyrie_create(:hyrax_file_metadata, 
+      mime_type: 'image/png', 
+      original_filename: 'world.png', 
+      use: original_file_use, 
+      file_identifier: file_path)
+  end
+  let(:second_file_metadata) do
+    valkyrie_create(:hyrax_file_metadata, mime_type: 'image/png', use: original_file_use, file_identifier: file_path)
+  end
+  let(:file_set) do
+    FactoryBot.valkyrie_create(:hyrax_file_set,
+      files: [original_file_metadata],
+      visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
+  end
+  let(:second_file_set) do
+    FactoryBot.valkyrie_create(:hyrax_file_set,
+      files: [second_file_metadata],
+      visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
+  end
 
-  it { is_expected.to respond_to :hostname }
-  it { is_expected.to respond_to :ability }
+  shared_context 'with assigned ability' do
+    let(:ability) { Ability.new(user) }
+    let(:user) { create(:user) }
+
+    before { presenter.ability = ability }
+  end
+
+  shared_examples 'test for expected method responses' do
+    it { is_expected.to respond_to :hostname }
+    it { is_expected.to respond_to :ability }
+  end
+
+  shared_examples 'tests for image resolution' do
+    it 'can still resolve the image' do
+      allow_any_instance_of(Hyrax::IiifManifestPresenter::DisplayImagePresenter)
+        .to receive(:latest_file_id).and_return('123')
+
+      expect(presenter.display_image.to_json).to include 'images/123/full'
+    end
+  end
+
+  include_examples 'test for expected method responses'
 
   describe 'manifest generation' do
     let(:builder_service) { Hyrax::ManifestBuilderService.new }
@@ -17,29 +58,27 @@ RSpec.describe Hyrax::IiifManifestPresenter do
     end
 
     context 'with file set and work members' do
-      let(:work) { create(:work_with_image_files) }
+      let(:work) { valkyrie_create(:monograph) }
 
       it 'generates a manifest with nested content' do
+        work.member_ids += [file_set.id, second_file_set.id]
+        save_work
+
         expect(builder_service.manifest_for(presenter: presenter)['sequences'].first['canvases'].count)
           .to eq 2 # two image file_set members from the factory
       end
 
       context 'and an ability' do
-        let(:ability) { Ability.new(user) }
-        let(:user) { create(:user) }
-
-        before { presenter.ability = ability }
+        include_context 'with assigned ability'
 
         it 'excludes items the user cannot read' do
-          expect(builder_service.manifest_for(presenter: presenter))
-            .not_to have_key('sequences')
+          expect(builder_service.manifest_for(presenter: presenter)).not_to have_key('sequences')
         end
 
         it 'includes items with read permissions' do
-          readable = FactoryBot.create(:file_set, :image, user: user)
-          work.ordered_members << readable
-          work.save
-
+          work.member_ids += [file_set.id]
+          save_work
+         
           expect(builder_service.manifest_for(presenter: presenter)['sequences'].first['canvases'].count)
             .to eq 1 # just the one readable file_set; not the two from the factory
         end
@@ -49,91 +88,76 @@ RSpec.describe Hyrax::IiifManifestPresenter do
 
   describe Hyrax::IiifManifestPresenter::DisplayImagePresenter do
     subject(:presenter) { described_class.new(solr_doc) }
-    let(:solr_doc) { SolrDocument.new(file_set.to_solr) }
-    let(:file_set) { create(:file_set, :image) }
+    let(:solr_doc) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: file_set).to_solr) }
 
-    it { is_expected.to respond_to :hostname }
-    it { is_expected.to respond_to :ability }
+    shared_examples 'test for expected method responses'
 
     describe '#display_image' do
-      it 'gives a IIIFManifest::DisplayImage' do
-        expect(presenter.display_image.to_json)
-          .to include 'fcr:versions%2Fversion1/full'
-      end
+      shared_examples 'tests for image resolution'
 
       context 'with non-image file_set' do
-        let(:file_set) { create(:file_set) }
+        let(:file_set) { valkyrie_create(:hyrax_file_set) }
 
-        it 'returns nil' do
-          expect(presenter.display_image).to be_nil
-        end
+        it('returns nil') { expect(presenter.display_image).to be_nil }
       end
 
       context 'when no original file is indexed' do
         let(:solr_doc) do
-          index_hash = file_set.to_solr
+          index_hash = Hyrax::ValkyrieIndexer.for(resource: file_set).to_solr
           index_hash.delete('original_file_id_ssi')
 
           SolrDocument.new(index_hash)
         end
 
-        it 'can still resolve the image' do
-          expect(presenter.display_image.to_json)
-            .to include 'fcr:versions%2Fversion1/full'
-        end
+        shared_examples 'tests for image resolution'
       end
     end
   end
 
   describe '#description' do
-    it 'returns a string description of the object' do
-      expect(presenter.description).to be_a String
-    end
+    it('returns a string description of the object') { expect(presenter.description).to be_a String }
   end
 
   describe '#file_set_presenters' do
-    it 'is empty' do
-      expect(presenter.file_set_presenters).to be_empty
-    end
+    it('is empty') { expect(presenter.file_set_presenters).to be_empty }
 
     context 'when the work has file set members' do
-      let(:work) { create(:work_with_image_files) }
+      let(:work) { valkyrie_create(:monograph) }
 
       it 'gives presenters for the file sets' do
+        work.member_ids += [file_set.id, second_file_set.id]
+        save_work
+
         expect(presenter.file_set_presenters)
           .to contain_exactly(*work.member_ids.map { |id| have_attributes(id: id) })
       end
 
       it 'gives DisplayImagePresenters' do
+        work.member_ids += [file_set.id, second_file_set.id]
+        save_work
+
         expect(presenter.file_set_presenters.map(&:display_image))
           .to contain_exactly(an_instance_of(IIIFManifest::DisplayImage),
                               an_instance_of(IIIFManifest::DisplayImage))
       end
 
       context 'and work members' do
-        let(:work) { create(:work_with_file_and_work) }
+        let(:work) { valkyrie_create(:monograph, :with_file_and_work) }
 
         it 'gives presenters only for the file set members' do
-          fs_members = work.members.select(&:file_set?)
+          fs_members = work.member_ids.map{ |id| Hyrax.query_service.find_by(id:) }.select(&:file_set?)
 
           expect(presenter.file_set_presenters)
             .to contain_exactly(*fs_members.map { |member| have_attributes(id: member.id) })
         end
 
         context 'and an ability' do
-          let(:ability) { Ability.new(user) }
-          let(:user) { create(:user) }
+          include_context 'with assigned ability'
 
-          before { presenter.ability = ability }
-
-          it 'is empty when the user cannot read any file sets' do
-            expect(presenter.file_set_presenters).to be_empty
-          end
+          it('is empty when the user cannot read any file sets') { expect(presenter.file_set_presenters).to be_empty }
 
           it 'has file sets the user can read' do
-            readable = FactoryBot.create(:file_set, :image, user: user)
-            work.ordered_members << readable
-            work.save
+            readable = valkyrie_create(:hyrax_file_set, :with_files, :in_work, work: work, read_users: [user])
 
             expect(presenter.file_set_presenters)
               .to contain_exactly(have_attributes(id: readable.id))
@@ -170,11 +194,7 @@ RSpec.describe Hyrax::IiifManifestPresenter do
   end
 
   describe '#manifest_url' do
-    let(:work) { build(:monograph) }
-
-    it 'gives an empty string for an unpersisted object' do
-      expect(presenter.manifest_url).to be_empty
-    end
+    it('gives an empty string for an unpersisted object') { expect(presenter.manifest_url).to be_empty }
 
     context 'with a persisted work' do
       let(:work) { valkyrie_create(:monograph) }
@@ -186,28 +206,22 @@ RSpec.describe Hyrax::IiifManifestPresenter do
   end
 
   describe '#sequence_rendering' do
-    it 'provides an empty sequence rendering' do
-      expect(presenter.sequence_rendering).to eq([])
-    end
+    it('provides an empty sequence rendering') { expect(presenter.sequence_rendering).to eq([]) }
 
     context 'with file sets in a rendering sequence' do
-      let(:work) { create(:work_with_image_files) }
+      let(:work) { valkyrie_create(:monograph, uploaded_files: [FactoryBot.create(:uploaded_file), FactoryBot.create(:uploaded_file)]) }
 
       before do
-        work.rendering_ids = work.file_set_ids
-        work.save!
+        work.rendering_ids = work.member_ids
+        save_work
       end
 
-      it 'provides a sequence rendering for the file_sets' do
-        expect(presenter.sequence_rendering.count).to eq 2
-      end
+      it('provides a sequence rendering for the file_sets') { expect(presenter.sequence_rendering.count).to eq 2 }
     end
   end
 
   describe '#work_presenters' do
-    it 'is empty' do
-      expect(presenter.work_presenters).to be_empty
-    end
+    it('is empty') { expect(presenter.work_presenters).to be_empty } 
 
     context 'when the work has member works' do
       let(:work) { build(:monograph, :with_member_works) }
@@ -218,10 +232,10 @@ RSpec.describe Hyrax::IiifManifestPresenter do
       end
 
       context 'and file set members' do
-        let(:work) { create(:work_with_file_and_work) }
+        let(:work) { valkyrie_create(:monograph, :with_file_and_work) }
 
         it 'gives presenters only for the work members' do
-          work_members = work.members.select(&:work?)
+          work_members = work.member_ids.map{ |id| Hyrax.query_service.find_by(id:) }.select(&:work?)
 
           expect(presenter.work_presenters)
             .to contain_exactly(*work_members.map { |member| have_attributes(id: member.id) })
@@ -231,19 +245,18 @@ RSpec.describe Hyrax::IiifManifestPresenter do
   end
 
   describe '#version' do
-    let(:work) { create(:work) }
+    let(:work) { valkyrie_create(:monograph) }
 
-    it 'returns a string' do
-      expect(presenter.version).to be_a String
-    end
+    it('returns a string') { expect(presenter.version).to be_a String }
 
     context 'when the work is unsaved' do
       let(:work) { build(:monograph) }
 
-      it 'is still a string' do
-        expect(presenter.version).to be_a String
-      end
+      it('is still a string') { expect(presenter.version).to be_a String }
     end
   end
+
+  def save_work
+    Hyrax.persister.save(resource: work)
+  end
 end
-# rubocop:enable Style/BracesAroundHashParameters
