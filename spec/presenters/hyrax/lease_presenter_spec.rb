@@ -59,4 +59,5 @@ RSpec.describe Hyrax::LeasePresenter do
     end
 
     it { is_expected.to be_enforced }
+  end
 end
