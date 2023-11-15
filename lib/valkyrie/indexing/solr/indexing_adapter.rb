@@ -91,7 +91,7 @@ module Valkyrie
         end
 
         def resource_indexer
-          Hyrax::ValkyrieIndexer
+          Hyrax::Indexers::ResourceIndexer
         end
       end
     end

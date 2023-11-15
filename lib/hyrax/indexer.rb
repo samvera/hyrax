@@ -14,7 +14,7 @@ module Hyrax
   #
   # @example building a module as a mixin
   #
-  #   class MyIndexer < Hyrax::ValkyrieIndexer
+  #   class MyIndexer < Hyrax::Indexers::ResourceIndexer
   #     include Hyrax::Indexer(:core_metadata)
   #   end
   #
