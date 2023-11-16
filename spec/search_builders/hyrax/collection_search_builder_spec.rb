@@ -44,7 +44,7 @@ RSpec.describe Hyrax::CollectionSearchBuilder do
     end
   end
 
-  describe '#gated_discovery_filters' do
+  describe '#gated_discovery_filters', :active_fedora do
     subject { builder.gated_discovery_filters(access, ::Ability.new(user)) }
 
     context 'when access is :deposit' do
