@@ -5,11 +5,11 @@ module Hyrax
   module Transactions
     module Steps
       ##
-      # Validates emptiness of the {Hyrax::AdministrativeSet}; gives `Success`
-      # when empty and `Failure` otherwise.
+      # Validates non-defaultness of the {Hyrax::AdministrativeSet}; gives `Success`
+      # when not the default and `Failure` otherwise.
       #
-      # Use this step to guard against destroying AdminSets with member objects.
-      class CheckForEmptyAdminSet
+      # Use this step to guard against destroying the default AdminSet.
+      class CheckForDefaultAdminSet
         include Dry::Monads[:result]
 
         ##
@@ -23,11 +23,7 @@ module Hyrax
         #
         # @return [Dry::Monads::Result]
         def call(admin_set)
-          members = @query_service
-                    .find_inverse_references_by(property: :admin_set_id,
-                                                resource: admin_set)
-          return Failure["Administrative set cannot be deleted as it is not empty", members] if members.any?
-
+          return Failure["Administrative set cannot be deleted as it is the default set", admin_set] if admin_set.id == Hyrax.config.default_admin_set_id
           Success(admin_set)
         end
       end
