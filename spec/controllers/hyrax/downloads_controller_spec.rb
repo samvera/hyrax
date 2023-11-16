@@ -9,7 +9,7 @@ RSpec.describe Hyrax::DownloadsController, valkyrie_adapter: :test_adapter, stor
     let(:user) { FactoryBot.create(:user) }
 
     let(:original_file_use) { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
-    let(:original_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: original_file_use, file_identifier: "disk://#{file_path}") }
+    let(:original_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: original_file_use, file_identifier: file_path) }
     let(:file_set) do
       if Hyrax.config.use_valkyrie?
         FactoryBot.valkyrie_create(:hyrax_file_set,
@@ -64,8 +64,8 @@ RSpec.describe Hyrax::DownloadsController, valkyrie_adapter: :test_adapter, stor
       let(:original_file_use)  { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
       let(:thumbnail_use)      { Hyrax::FileMetadata::Use::THUMBNAIL }
       let(:file_path) { fixture_path + '/image.png' }
-      let(:original_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: original_file_use, file_identifier: "disk://#{file_path}") }
-      let(:thumbnail_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: thumbnail_use, file_identifier: "disk://#{file_path}") }
+      let(:original_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: original_file_use, file_identifier: file_path) }
+      let(:thumbnail_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: thumbnail_use, file_identifier: file_path) }
       let(:original_file) { File.open(file_path) }
       let(:file_set) do
         if Hyrax.config.use_valkyrie?
@@ -98,7 +98,7 @@ RSpec.describe Hyrax::DownloadsController, valkyrie_adapter: :test_adapter, stor
       context 'with video file' do
         let(:service_file_use)  { Hyrax::FileMetadata::Use::SERVICE_FILE }
         let(:file_path) { fixture_path + '/sample_mpeg4.mp4' }
-        let(:service_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: service_file_use, mime_type: 'video/webm', file_identifier: "disk://#{file_path}") }
+        let(:service_file_metadata) { FactoryBot.valkyrie_create(:hyrax_file_metadata, use: service_file_use, mime_type: 'video/webm', file_identifier: file_path) }
         let(:file_set) do
           if Hyrax.config.use_valkyrie?
             FactoryBot.valkyrie_create(:hyrax_file_set,
@@ -140,10 +140,10 @@ RSpec.describe Hyrax::DownloadsController, valkyrie_adapter: :test_adapter, stor
           let(:thumbnail_use)      { Hyrax::FileMetadata::Use::THUMBNAIL }
           let(:file_path) { fixture_path + '/world.png' }
           let(:original_file_metadata) do
-            FactoryBot.valkyrie_create(:hyrax_file_metadata, mime_type: 'image/png', original_filename: 'world.png', use: original_file_use, file_identifier: "disk://#{file_path}")
+            FactoryBot.valkyrie_create(:hyrax_file_metadata, mime_type: 'image/png', original_filename: 'world.png', use: original_file_use, file_identifier: file_path)
           end
           let(:thumbnail_file_metadata) do
-            FactoryBot.valkyrie_create(:hyrax_file_metadata, use: thumbnail_use, mime_type: 'image/png', original_filename: 'world.png', file_identifier: "disk://#{file_path}")
+            FactoryBot.valkyrie_create(:hyrax_file_metadata, use: thumbnail_use, mime_type: 'image/png', original_filename: 'world.png', file_identifier: file_path)
           end
           let(:original_file) { File.open(file_path) }
 
