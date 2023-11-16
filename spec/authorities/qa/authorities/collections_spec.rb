@@ -11,62 +11,39 @@ RSpec.describe Qa::Authorities::Collections, :clean_repo do
   let(:user2) { FactoryBot.create(:user) }
 
   let!(:collection1) do
-    FactoryBot.valkyrie_create(:hyrax_collection,
-                     title: ['foo foo'],
-                     user: user1)
+    valkyrie_create(:hyrax_collection, title: ['foo foo'], user: user1)
   end
 
   let!(:collection2) do
-    FactoryBot.valkyrie_create(:hyrax_collection,
-                     title: ['bar'],
-                     user: user1)
+    valkyrie_create(:hyrax_collection, title: ['bar'], user: user1)
   end
 
   let!(:collection3) do
-    FactoryBot.valkyrie_create(:hyrax_collection,
-                     title: ['another foo'],
-                     user: user1)
+    valkyrie_create(:hyrax_collection, title: ['another foo'], user: user1)
   end
 
   let!(:collection4) do
-    FactoryBot.valkyrie_create(:hyrax_collection,
-                     title: ['foo foo foo'],
-                     user: user2)
+    valkyrie_create(:hyrax_collection, title: ['foo foo foo'], user: user2)
   end
 
   let!(:collection5) do
-    FactoryBot.valkyrie_create(:hyrax_collection,
-                     title: ['foo for you'],
-                     user: user2,
-                     edit_users: [user1.user_key])
+    valkyrie_create(:hyrax_collection, title: ['foo for you'], user: user2, edit_users: [user1.user_key])
   end
 
   let!(:collection6) do
-    FactoryBot.valkyrie_create(:hyrax_collection,
-                     title: ['foo too'],
-                     user: user2,
-                     edit_users: [user1.user_key])
+    valkyrie_create(:hyrax_collection, title: ['foo too'], user: user2, edit_users: [user1.user_key])
   end
 
   let!(:collection7) do
-    FactoryBot.valkyrie_create(:hyrax_collection,
-                     title: ['foo bar baz'],
-                     user: user2,
-                     read_users: [user1.user_key])
+    valkyrie_create(:hyrax_collection, title: ['foo bar baz'], user: user2, read_users: [user1.user_key])
   end
 
   let!(:collection8) do
-    FactoryBot.valkyrie_create(:hyrax_collection,
-                     title: ['bar too'],
-                     user: user2,
-                     edit_users: [user1.user_key])
+    valkyrie_create(:hyrax_collection, title: ['bar too'], user: user2, edit_users: [user1.user_key])
   end
 
   let!(:collection9) do
-    FactoryBot.valkyrie_create(:hyrax_collection,
-                     title: ['bar bar baz'],
-                     user: user2,
-                     read_users: [user1.user_key])
+    valkyrie_create(:hyrax_collection, title: ['bar bar baz'], user: user2, read_users: [user1.user_key])
   end
 
   before do
