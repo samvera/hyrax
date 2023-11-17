@@ -17,7 +17,7 @@ module Hyrax
       file_metadata = find_file_metadata(file_set: file_set, use: use, mime_type: mime_type)
       return unless stale?(last_modified: file_metadata.updated_at, template: false)
 
-      file = Hyrax.storage_adapter.find_by(id: file_metadata.file_identifier)
+      file = Valkyrie::StorageAdapter.find_by(id: file_metadata.file_identifier)
       prepare_file_headers_valkyrie(metadata: file_metadata, file: file)
 
       # Warning - using the range header will load the range selection in to memory
