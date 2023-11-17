@@ -6,9 +6,7 @@ module Hyrax
     # Handle the HTTP show request
     def send_local_content
       response.headers['Accept-Ranges'] = 'bytes'
-      if request.head?
-        local_content_head
-      elsif request.headers['Range']
+      if request.headers['Range']
         send_range_for_local_file
       else
         send_local_file_contents
@@ -26,7 +24,11 @@ module Hyrax
       self.status = 206
       prepare_local_file_headers
       # For derivatives stored on the local file system
-      send_data IO.binread(file, length, from), local_derivative_download_options.merge(status: status)
+      if request.head?
+        head status
+      else
+        send_data IO.binread(file, length, from), local_derivative_download_options.merge(status: status)
+      end
     end
 
     def send_local_file_contents
@@ -34,7 +36,11 @@ module Hyrax
       self.status = 200
       prepare_local_file_headers
       # For derivatives stored on the local file system
-      send_file file, local_derivative_download_options
+      if request.head?
+        head status
+      else
+        send_file file, local_derivative_download_options
+      end
     end
 
     def local_file_size
@@ -55,15 +61,8 @@ module Hyrax
     end
 
     # Override
-    # render an HTTP HEAD response
-    def local_content_head
-      response.headers['Content-Length'] = local_file_size.to_s
-      head :ok, content_type: local_file_mime_type
-    end
-
-    # Override
     def prepare_local_file_headers
-      send_file_headers! local_content_options
+      send_file_headers! local_derivative_download_options
       response.headers['Content-Type'] = local_file_mime_type
       response.headers['Content-Length'] ||= local_file_size.to_s
       # Prevent Rack::ETag from calculating a digest over body
@@ -72,12 +71,6 @@ module Hyrax
     end
 
     private
-
-    # Override the Hydra::Controller::DownloadBehavior#content_options so that
-    # we have an attachement rather than 'inline'
-    def local_content_options
-      { type: local_file_mime_type, filename: local_file_name, disposition: 'attachment' }
-    end
 
     # Override this method if you want to change the options sent when downloading
     # a derivative file
