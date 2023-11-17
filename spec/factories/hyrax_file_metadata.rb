@@ -44,6 +44,10 @@ FactoryBot.define do
       use { Hyrax::FileMetadata::Use.uri_for(use: :extracted_file) }
     end
 
+    trait :service_file do
+      use { Hyrax::FileMetadata::Use.uri_for(use: :service_file) }
+    end
+
     trait :image do
       mime_type { 'image/png' }
     end

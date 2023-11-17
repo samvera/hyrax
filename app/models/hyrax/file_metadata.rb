@@ -52,6 +52,8 @@ module Hyrax
           EXTRACTED_TEXT
         when :thumbnail_file
           THUMBNAIL
+        when :service_file
+          SERVICE_FILE
         else
           raise ArgumentError, "No PCDM use is recognized for #{use}"
         end
