@@ -98,7 +98,7 @@ RSpec.describe Hyrax::Ability do
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
     it { is_expected.not_to be_able_to(:create, AdminSet) }
     it { is_expected.to be_able_to(:read, ContentBlock) }
-    unless I18n.t('hyrax.product_name') == 'Koppie'
+    unless Hyrax.config.disable_wings
       it { is_expected.to be_able_to(:read, GenericWork) }
       it { is_expected.to be_able_to(:stats, GenericWork) }
       it { is_expected.to be_able_to(:citation, GenericWork) }
