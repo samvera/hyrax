@@ -69,7 +69,7 @@ FactoryBot.define do
 
       after(:build) do |file_metadata, evaluator|
         file_metadata.label = evaluator.file.uploader.filename
-        file_metadata.mime_type = evaluator.file.uploader.content_type
+        file_metadata.mime_type = evaluator.file.uploader.content_type if file_metadata.mime_type == Hyrax::FileMetadata::GENERIC_MIME_TYPE
         file_metadata.original_filename = evaluator.file.uploader.filename
         file_metadata.recorded_size = evaluator.file.uploader.size
         file_metadata.file_set_id = evaluator.file_set.id
