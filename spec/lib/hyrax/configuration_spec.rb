@@ -26,6 +26,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:admin_set_predicate=) }
   it { is_expected.to respond_to(:administrative_set_form) }
   it { is_expected.to respond_to(:administrative_set_form=) }
+  it { is_expected.to respond_to(:administrative_set_indexer) }
+  it { is_expected.to respond_to(:administrative_set_indexer=) }
   it { is_expected.to respond_to(:analytic_start_date) }
   it { is_expected.to respond_to(:analytics?) }
   it { is_expected.to respond_to(:analytics_provider) }
@@ -57,6 +59,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:file_set_form=) }
   it { is_expected.to respond_to(:file_set_file_service) }
   it { is_expected.to respond_to(:file_set_file_service=) }
+  it { is_expected.to respond_to(:file_set_indexer) }
+  it { is_expected.to respond_to(:file_set_indexer=) }
   it { is_expected.to respond_to(:identifier_registrars) }
   it { is_expected.to respond_to(:iiif_image_compliance_level_uri) }
   it { is_expected.to respond_to(:iiif_image_compliance_level_uri=) }
@@ -83,8 +87,12 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:owner_permission_levels) }
   it { is_expected.to respond_to(:pcdm_collection_form) }
   it { is_expected.to respond_to(:pcdm_collection_form=) }
+  it { is_expected.to respond_to(:pcdm_collection_indexer) }
+  it { is_expected.to respond_to(:pcdm_collection_indexer=) }
   it { is_expected.to respond_to(:pcdm_object_form_builder) }
   it { is_expected.to respond_to(:pcdm_object_form_builder=) }
+  it { is_expected.to respond_to(:pcdm_object_indexer_builder) }
+  it { is_expected.to respond_to(:pcdm_object_indexer_builder=) }
   it { is_expected.to respond_to(:permission_levels) }
   it { is_expected.to respond_to(:permission_options) }
   it { is_expected.to respond_to(:persistent_hostpath) }
