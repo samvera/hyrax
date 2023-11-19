@@ -4,27 +4,24 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
   subject(:presenter) { described_class.new(work) }
   let(:work) { build(:monograph) }
   let(:file_path) { fixture_path + '/world.png' }
-  let(:original_file_use) { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
+  let(:original_file) { File.open(file_path) }
+  let(:uploaded_file) { FactoryBot.create(:uploaded_file, file: original_file) }
+
   let(:original_file_metadata) do
-    valkyrie_create(:hyrax_file_metadata, 
-      mime_type: 'image/png', 
-      original_filename: 'world.png', 
-      use: original_file_use, 
-      file_identifier: file_path)
+    valkyrie_create(:hyrax_file_metadata, :original_file, :image, :with_file,
+                    original_filename: 'world.png',
+                    file_set: file_set,
+                    file: uploaded_file)
   end
+
   let(:second_file_metadata) do
-    valkyrie_create(:hyrax_file_metadata, mime_type: 'image/png', use: original_file_use, file_identifier: file_path)
+    valkyrie_create(:hyrax_file_metadata, :original_file, :image, :with_file,
+                    file_set: second_file_set,
+                    file: uploaded_file)
   end
-  let(:file_set) do
-    FactoryBot.valkyrie_create(:hyrax_file_set,
-      files: [original_file_metadata],
-      visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
-  end
-  let(:second_file_set) do
-    FactoryBot.valkyrie_create(:hyrax_file_set,
-      files: [second_file_metadata],
-      visibility_setting: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
-  end
+
+  let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+  let(:second_file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
 
   shared_context 'with assigned ability' do
     let(:ability) { Ability.new(user) }
@@ -58,11 +55,11 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
     end
 
     context 'with file set and work members' do
-      let(:work) { valkyrie_create(:monograph) }
+      let(:work) { valkyrie_create(:monograph, members: [file_set, second_file_set]) }
 
       it 'generates a manifest with nested content' do
-        work.member_ids += [file_set.id, second_file_set.id]
-        save_work
+        original_file_metadata
+        second_file_metadata
 
         expect(builder_service.manifest_for(presenter: presenter)['sequences'].first['canvases'].count)
           .to eq 2 # two image file_set members from the factory
@@ -75,12 +72,18 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
           expect(builder_service.manifest_for(presenter: presenter)).not_to have_key('sequences')
         end
 
-        it 'includes items with read permissions' do
-          work.member_ids += [file_set.id]
-          save_work
-         
-          expect(builder_service.manifest_for(presenter: presenter)['sequences'].first['canvases'].count)
-            .to eq 1 # just the one readable file_set; not the two from the factory
+        context 'with readable items' do
+          let(:file_set) do
+            FactoryBot.valkyrie_create(:hyrax_file_set, read_users: [user])
+          end
+
+          it 'includes items with read permissions' do
+            original_file_metadata
+            second_file_metadata
+
+            expect(builder_service.manifest_for(presenter: presenter)['sequences'].first['canvases'].count)
+              .to eq 1 # just the one readable file_set; not the two from the factory
+          end
         end
       end
     end
@@ -90,13 +93,17 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
     subject(:presenter) { described_class.new(solr_doc) }
     let(:solr_doc) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: file_set).to_solr) }
 
+    before do
+      original_file_metadata
+    end
+
     shared_examples 'test for expected method responses'
 
     describe '#display_image' do
       shared_examples 'tests for image resolution'
 
       context 'with non-image file_set' do
-        let(:file_set) { valkyrie_create(:hyrax_file_set) }
+        let(:original_file_metadata) { }
 
         it('returns nil') { expect(presenter.display_image).to be_nil }
       end
@@ -122,30 +129,26 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
     it('is empty') { expect(presenter.file_set_presenters).to be_empty }
 
     context 'when the work has file set members' do
-      let(:work) { valkyrie_create(:monograph) }
+      let(:work) { valkyrie_create(:monograph, members: [file_set, second_file_set]) }
 
-      it 'gives presenters for the file sets' do
-        work.member_ids += [file_set.id, second_file_set.id]
-        save_work
-
-        expect(presenter.file_set_presenters)
-          .to contain_exactly(*work.member_ids.map { |id| have_attributes(id: id) })
+      before do
+        original_file_metadata
+        second_file_metadata
       end
 
-      it 'gives DisplayImagePresenters' do
-        work.member_ids += [file_set.id, second_file_set.id]
-        save_work
-
+      it 'gives DisplayImagePresenters for the file sets' do
+        expect(presenter.file_set_presenters)
+          .to contain_exactly(*work.member_ids.map { |id| have_attributes(id: id) })
         expect(presenter.file_set_presenters.map(&:display_image))
           .to contain_exactly(an_instance_of(IIIFManifest::DisplayImage),
                               an_instance_of(IIIFManifest::DisplayImage))
       end
 
       context 'and work members' do
-        let(:work) { valkyrie_create(:monograph, :with_file_and_work) }
+        let(:work) { valkyrie_create(:monograph, members: [valkyrie_create(:monograph), file_set, second_file_set]) }
 
         it 'gives presenters only for the file set members' do
-          fs_members = work.member_ids.map{ |id| Hyrax.query_service.find_by(id:) }.select(&:file_set?)
+          fs_members = work.member_ids.map { |id| Hyrax.query_service.find_by(id:) }.select(&:file_set?)
 
           expect(presenter.file_set_presenters)
             .to contain_exactly(*fs_members.map { |member| have_attributes(id: member.id) })
@@ -213,7 +216,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
 
       before do
         work.rendering_ids = work.member_ids
-        save_work
+        Hyrax.persister.save(resource: work)
       end
 
       it('provides a sequence rendering for the file_sets') { expect(presenter.sequence_rendering.count).to eq 2 }
@@ -254,9 +257,5 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
 
       it('is still a string') { expect(presenter.version).to be_a String }
     end
-  end
-
-  def save_work
-    Hyrax.persister.save(resource: work)
   end
 end
