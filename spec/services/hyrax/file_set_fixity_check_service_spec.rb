@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::FileSetFixityCheckService do
+RSpec.describe Hyrax::FileSetFixityCheckService, :active_fedora do
   let(:f)                 { create(:file_set, :image) }
   let(:service_by_object) { described_class.new(f) }
   let(:service_by_id)     { described_class.new(f.id) }
