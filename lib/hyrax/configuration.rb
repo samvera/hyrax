@@ -923,6 +923,7 @@ module Hyrax
     ##
     # @return [Proc]
     def pcdm_object_form_builder
+      return @pcdm_object_form_builder unless @pcdm_object_form_builder.nil?
       "Hyrax::Forms::PcdmObjectForm".constantize # autoload
       @pcdm_object_form_builder = lambda do |model_class|
         Hyrax::Forms::PcdmObjectForm(model_class)
@@ -954,6 +955,7 @@ module Hyrax
     ##
     # @return [Proc]
     def pcdm_object_indexer_builder
+      return @pcdm_object_indexer_builder unless @pcdm_object_indexer_builder.nil?
       "Hyrax::Indexers::PcdmObjectIndexer".constantize # autoload
       @pcdm_object_indexer_builder = lambda do |model_class|
         Hyrax::Indexers::PcdmObjectIndexer(model_class)
