@@ -30,9 +30,10 @@ class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
   end
 
   def show_only_works_not_parent(solr_parameters)
+    parsed_id = @id.is_a?(String) ? @id : @id&.id
     solr_parameters[:fq] ||= []
     solr_parameters[:fq]  += [
-      "-" + Hyrax::SolrQueryBuilderService.construct_query(member_ids_ssim: @id)
+      "-" + Hyrax::SolrQueryBuilderService.construct_query(member_ids_ssim: parsed_id)
     ]
   end
 
