@@ -44,27 +44,36 @@ RSpec.describe Hyrax::CollectionSearchBuilder do
     end
   end
 
-  describe '#gated_discovery_filters', :active_fedora do
+  describe '#gated_discovery_filters' do
     subject { builder.gated_discovery_filters(access, ::Ability.new(user)) }
 
     context 'when access is :deposit' do
       let(:access) { "deposit" }
-      let!(:collection) { FactoryBot.create(:collection_lw, with_permission_template: attributes) }
+      let(:access_grant) do
+        { agent_type:,
+          agent_id: user.user_key,
+          access: Hyrax::PermissionTemplateAccess::DEPOSIT}
+      end
+      let!(:collection) do
+        valkyrie_create(:hyrax_collection, user: user, access_grants: [access_grant])
+      end
 
       context 'and user has access' do
-        let(:attributes) { { deposit_users: [user.user_key] } }
+        let(:agent_type) { Hyrax::PermissionTemplateAccess::USER }
 
         it { is_expected.to eq ["{!terms f=id}#{collection.id}"] }
       end
 
       context 'and group has access' do
-        let(:attributes) { { deposit_groups: ['registered'] } }
+        let(:agent_type) { Hyrax::PermissionTemplateAccess::GROUP }
 
         it { is_expected.to eq ["{!terms f=id}#{collection.id}"] }
       end
 
       context "and user has no access" do
-        let(:attributes) { true }
+        let(:collection) do
+          valkyrie_create(:hyrax_collection, :with_permission_template)
+        end
 
         it { is_expected.to eq ["{!terms f=id}"] }
       end
