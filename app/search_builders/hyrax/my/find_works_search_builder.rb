@@ -20,17 +20,16 @@ class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
 
   def show_only_other_works(solr_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] += ["-#{Hyrax::SolrQueryBuilderService.construct_query_for_ids([@id])}"]
+    solr_parameters[:fq] += ["-#{Hyrax::SolrQueryBuilderService.construct_query_for_ids([parsed_id])}"]
   end
 
   def show_only_works_not_child(solr_parameters)
-    ids = Hyrax::SolrService.query("{!field f=id}#{@id}", fl: "member_ids_ssim", rows: 10_000).flat_map { |x| x.fetch("member_ids_ssim", []) }
+    ids = Hyrax::SolrService.query("{!field f=id}#{parsed_id}", fl: "member_ids_ssim", rows: 10_000).flat_map { |x| x.fetch("member_ids_ssim", []) }
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] += ["-#{Hyrax::SolrQueryBuilderService.construct_query_for_ids([ids])}"]
   end
 
   def show_only_works_not_parent(solr_parameters)
-    parsed_id = @id.is_a?(String) ? @id : @id&.id
     solr_parameters[:fq] ||= []
     solr_parameters[:fq]  += [
       "-" + Hyrax::SolrQueryBuilderService.construct_query(member_ids_ssim: parsed_id)
@@ -39,5 +38,10 @@ class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
 
   def only_works?
     true
+  end
+
+  # Since Valkyrie objects pass is an Id object, additional parsing is needed.
+  def parsed_id
+    @id.is_a?(String) ? @id : @id.id
   end
 end
