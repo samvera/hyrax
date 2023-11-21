@@ -45,7 +45,6 @@ RSpec.describe Hyrax::CitationsController do
         end
       end
     end
-    
     context "with a Valkyrie resource" do
       let(:work) { FactoryBot.valkyrie_create(:monograph, edit_users: [user.user_key]) }
       before do
@@ -67,7 +66,7 @@ RSpec.describe Hyrax::CitationsController do
     let(:user) { create(:user) }
     let(:file_set) { create(:file_set, user: user) }
 
-    context "with a ActiveFedora resource", :active_fedora do 
+    context "with a ActiveFedora resource", :active_fedora do
       context "with an authenticated_user" do
         before do
           sign_in user
