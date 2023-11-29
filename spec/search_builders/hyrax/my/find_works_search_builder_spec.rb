@@ -54,6 +54,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
       ids = Hyrax::SolrService.query("{!field f=id}#{work.id}", fl: "member_ids_ssim").flat_map { |x| x.fetch("member_ids_ssim", []) }
       ids = [ids]
       ids = ids.reject(&:blank?)
+      # rubocop:disable Style/IfUnlessModifier
       if ids.empty?
         ids = "id:NEVER_USE_THIS_ID"
       end
