@@ -8,43 +8,44 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
     request.env["HTTP_REFERER"] = 'test.host/original_page'
   end
 
-  describe "#edit" do
+  shared_examples('tests that edit page loads') do
+    it "is successful" do
+      expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
+      get :edit
+      expect(response).to be_successful
+      expect(response).to render_template('dashboard')
+      expect(assigns[:form].model.creator).to match_array ["Fred", "Wilma"]
+    end
+  end
+
+  shared_context('with set batch and permissions') do
     before do
+      # TODO: why aren't we just submitting batch_document_ids[] as a parameter?
       controller.batch = [one.id, two.id, three.id]
       expect(controller).to receive(:can?).with(:edit, one.id).and_return(true)
       expect(controller).to receive(:can?).with(:edit, two.id).and_return(true)
       expect(controller).to receive(:can?).with(:edit, three.id).and_return(false)
     end
+  end
+
+  describe "#edit" do
+    include_context 'with set batch and permissions'
 
     context 'with ActiveFedora works', :active_fedora do
       let(:one) { create(:work, creator: ["Fred"], title: ["abc"], language: ['en']) }
       let(:two) { create(:work, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }
       let(:three) { create(:work, creator: ["Dino"], title: ["abc3"]) }
 
-      it "is successful" do
-        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
-        get :edit
-        expect(response).to be_successful
-        expect(response).to render_template('dashboard')
-        expect(assigns[:form].model.creator).to match_array ["Fred", "Wilma"]
-      end
+      include_examples 'tests that edit page loads'
     end
     context "with work resources" do
       let(:one) { FactoryBot.valkyrie_create(:monograph, creator: ["Fred"], title: ["abc"], language: ['en']) }
       let(:two) { FactoryBot.valkyrie_create(:monograph, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }
       let(:three) { FactoryBot.valkyrie_create(:monograph, creator: ["Dino"], title: ["abc3"]) }
 
-      it "is successful" do
-        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
-        get :edit
-        expect(response).to be_successful
-        expect(response).to render_template('dashboard')
-        expect(assigns[:form].model.creator).to match_array ["Fred", "Wilma"]
-      end
+      include_examples 'tests that edit page loads'
     end
   end
 
@@ -56,31 +57,14 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
     let(:mycontroller) { "hyrax/my/works" }
 
-    before do
-      # TODO: why aren't we just submitting batch_document_ids[] as a parameter?
-      controller.batch = [one.id, two.id, three.id]
-      expect(controller).to receive(:can?).with(:edit, one.id).and_return(true)
-      expect(controller).to receive(:can?).with(:edit, two.id).and_return(true)
-      expect(controller).to receive(:can?).with(:edit, three.id).and_return(false)
-    end
+    include_context 'with set batch and permissions'
 
     context "with ActiveFedora works", :active_fedora do
       let(:admin_set) { create(:admin_set) }
-      let!(:one) do
-        create(:work, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
-      end
-
-      let!(:two) do
-        create(:work, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
-      end
-
-      let!(:three) do
-        create(:work, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'])
-      end
-
-      let!(:file_set) do
-        create(:file_set, creator: ["Fred"])
-      end
+      let!(:one) { create(:work, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'], user: user) }
+      let!(:two) { create(:work, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'], user: user) }
+      let!(:three) { create(:work, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en']) }
+      let!(:file_set) { create(:file_set, creator: ["Fred"]) }
 
       before do
         one.members << file_set
@@ -193,23 +177,11 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
     context "with work resources" do
       let(:admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set) }
-      let!(:one) do
-        FactoryBot.valkyrie_create(:monograph, :with_member_file_sets, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'], depositor: user.user_key)
-      end
-
-      let!(:two) do
-        FactoryBot.valkyrie_create(:monograph, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'], depositor: user.user_key)
-      end
-
-      let!(:three) do
-        FactoryBot.valkyrie_create(:monograph, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'])
-      end
-
-      let(:form_class) do
-        Hyrax.config.use_valkyrie? ? Hyrax::Forms::ResourceBatchEditForm : Hyrax::Forms::BatchEditForm
-      end
+      let!(:one) { valkyrie_create(:monograph, :with_member_file_sets, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'], depositor: user.user_key) }
+      let!(:two) { valkyrie_create(:monograph, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'], depositor: user.user_key) }
+      let!(:three) { valkyrie_create(:monograph, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en']) }
+      let(:form_class) { Hyrax.config.use_valkyrie? ? Hyrax::Forms::ResourceBatchEditForm : Hyrax::Forms::BatchEditForm }
       let(:param_key) { form_class.model_class.model_name.param_key }
-
       let(:work1) { Hyrax.query_service.find_by(id: one.id) }
       let(:work2) { Hyrax.query_service.find_by(id: two.id) }
       let(:work3) { Hyrax.query_service.find_by(id: three.id) }
@@ -310,22 +282,20 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
   end
 
   describe "#destroy_collection" do
+    shared_context('with signed-in user, set batch, and permissions') do
+      before do
+        sign_in user2
+        controller.batch = [collection1.id, collection3.id]
+        allow(controller).to receive(:can?).with(:edit, collection1.id).and_return(false)
+        allow(controller).to receive(:can?).with(:edit, collection2.id).and_return(false)
+        allow(controller).to receive(:can?).with(:edit, collection3.id).and_return(true)
+      end
+    end
+
     context 'with ActiveFedora objects', :active_fedora do
-      let(:collection1) do
-        FactoryBot.valkyrie_create(:hyrax_collection,
-                                   :public,
-                                   title: ["My First Collection"],
-                                   user: user)
-      end
-
-      let(:collection2) do
-        FactoryBot.valkyrie_create(:hyrax_collection,
-                                   :public,
-                                   title: ["My Other Collection"],
-                                   user: user)
-      end
-
-      let!(:work1) { FactoryBot.valkyrie_create(:hyrax_work, title: ["First of the Assets"], member_of_collection_ids: [collection1.id], depositor: user.user_key) }
+      let(:collection1) { valkyrie_create(:hyrax_collection, :public, title: ["My First Collection"], user: user) }
+      let(:collection2) { valkyrie_create(:hyrax_collection, :public, title: ["My Other Collection"], user: user) }
+      let!(:work1) { valkyrie_create(:hyrax_work, title: ["First of the Assets"], member_of_collection_ids: [collection1.id], depositor: user.user_key) }
 
       context 'when user has edit access' do
         before do
@@ -343,28 +313,9 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       context 'when user does not have edit access' do
         let(:user2) { create(:user) }
+        let(:collection3) { valkyrie_create(:hyrax_collection, :public, title: ["User2's Collection"], user: user2) }
 
-        let(:collection3) do
-          FactoryBot.valkyrie_create(:hyrax_collection,
-                                     :public,
-                                     title: ["User2's Collection"],
-                                     user: user2)
-        end
-
-        before do
-          sign_in user2
-          controller.batch = [collection1.id, collection3.id]
-          allow(controller).to receive(:can?).with(:edit, collection1.id).and_return(false)
-          allow(controller).to receive(:can?).with(:edit, collection2.id).and_return(false)
-          allow(controller).to receive(:can?).with(:edit, collection3.id).and_return(true)
-        end
-
-        it "fails to delete collections when user does not have edit access" do
-          delete :destroy_collection, params: { update_type: "delete_all" }
-          expect(Collection.exists?(collection1.id.to_s)).to eq true
-          expect(Collection.exists?(collection2.id.to_s)).to eq true
-        end
-
+        include_context 'with signed-in user, set batch, and permissions'
         it "deletes collections where user has edit access, failing to delete those where user does not have edit access" do
           delete :destroy_collection, params: { update_type: "delete_all" }
           expect(Collection.exists?(collection1.id.to_s)).to eq true
@@ -375,18 +326,10 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
     end
 
     context 'with work resources' do
-      let(:collection1) do
-        FactoryBot.valkyrie_create(:hyrax_collection, title: ["My First Collection"],
-                                                      edit_users: [user.user_key])
-      end
-
-      let(:collection2) do
-        FactoryBot.valkyrie_create(:hyrax_collection, title: ["My Other Collection"],
-                                                      edit_users: [user.user_key])
-      end
-
-      let!(:work1) { FactoryBot.valkyrie_create(:monograph, title: ["First of the Assets"], member_of_collection_ids: [collection1.id], depositor: user.user_key, edit_users: [user.user_key]) }
-      let(:work2)  { FactoryBot.valkyrie_create(:monograph, title: ["Second of the Assets"], depositor: user.user_key, edit_users: [user.user_key]) }
+      let(:collection1) { valkyrie_create(:hyrax_collection, title: ["My First Collection"], edit_users: [user.user_key]) }
+      let(:collection2) { valkyrie_create(:hyrax_collection, title: ["My Other Collection"], edit_users: [user.user_key]) }
+      let!(:work1) { valkyrie_create(:monograph, title: ["First of the Assets"], member_of_collection_ids: [collection1.id], depositor: user.user_key, edit_users: [user.user_key]) }
+      let(:work2)  { valkyrie_create(:monograph, title: ["Second of the Assets"], depositor: user.user_key, edit_users: [user.user_key]) }
 
       context 'when user has edit access' do
         before do
@@ -404,25 +347,9 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       context 'when user does not have edit access' do
         let(:user2) { create(:user) }
+        let(:collection3) { valkyrie_create(:hyrax_collection, title: ["User2's Collection"], edit_users: [user2]) }
 
-        let(:collection3) do
-          FactoryBot.valkyrie_create(:hyrax_collection, title: ["User2's Collection"],
-                                                        edit_users: [user2])
-        end
-
-        before do
-          sign_in user2
-          controller.batch = [collection1.id, collection3.id]
-          allow(controller).to receive(:can?).with(:edit, collection1.id).and_return(false)
-          allow(controller).to receive(:can?).with(:edit, collection2.id).and_return(false)
-          allow(controller).to receive(:can?).with(:edit, collection3.id).and_return(true)
-        end
-
-        it "fails to delete collections when user does not have edit access" do
-          delete :destroy_collection, params: { update_type: "delete_all" }
-          expect { Hyrax.query_service.find_by(id: collection1.id) }.not_to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
-          expect { Hyrax.query_service.find_by(id: collection2.id) }.not_to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
-        end
+        include_context 'with signed-in user, set batch, and permissions'
 
         it "deletes collections where user has edit access, failing to delete those where user does not have edit access" do
           delete :destroy_collection, params: { update_type: "delete_all" }
