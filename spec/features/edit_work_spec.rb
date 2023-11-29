@@ -49,7 +49,7 @@ RSpec.describe 'Editing a work', :clean_repo, type: :feature do
     end
 
     it 'selects group assigned to user' do
-      visit edit_hyrax_generic_work_path(work)
+      visit edit_hyrax_monograph_path(work)
       click_link "Sharing" # switch tab
       expect(page).to have_selector('#new_group_name_skel', text: 'librarians')
     end
