@@ -10,7 +10,11 @@ module Hyrax
     #
     # @example creating with FactoryBot
     #   work = FactoryBot.valkyrie_create(:hyrax_work, :public, title: ['Comet in Moominland'])
-    class SimpleWork < Hyrax::Work; end
+    class SimpleWork < Hyrax::Work
+      def self.model_name(name_class: Hyrax::Name)
+        @_model_name ||= name_class.new(self, nil, 'Hyrax::Test::SimpleWork')
+      end
+    end
 
     class SimpleWorkLegacy < ActiveFedora::Base
       include WorkBehavior
@@ -24,5 +28,8 @@ module Hyrax
     end
   end
 end
+
+Hyrax.config.register_curation_concern 'hyrax/test/simple_work'
+Rails.application.reload_routes!
 
 Wings::ModelRegistry.register(Hyrax::Test::SimpleWork, Hyrax::Test::SimpleWorkLegacy) if defined?(Wings)
