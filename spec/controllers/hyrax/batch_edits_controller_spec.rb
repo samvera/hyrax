@@ -9,10 +9,6 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
   end
 
   describe "#edit" do
-    let(:one) { create(:work, creator: ["Fred"], title: ["abc"], language: ['en']) }
-    let(:two) { create(:work, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }
-    let(:three) { create(:work, creator: ["Dino"], title: ["abc3"]) }
-
     before do
       controller.batch = [one.id, two.id, three.id]
       expect(controller).to receive(:can?).with(:edit, one.id).and_return(true)
@@ -20,16 +16,21 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       expect(controller).to receive(:can?).with(:edit, three.id).and_return(false)
     end
 
-    it "is successful" do
-      expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
-      get :edit
-      expect(response).to be_successful
-      expect(response).to render_template('dashboard')
-      expect(assigns[:form].model.creator).to match_array ["Fred", "Wilma"]
-    end
+    context 'with ActiveFedora works', :active_fedora do
+      let(:one) { create(:work, creator: ["Fred"], title: ["abc"], language: ['en']) }
+      let(:two) { create(:work, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }
+      let(:three) { create(:work, creator: ["Dino"], title: ["abc3"]) }
 
+      it "is successful" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
+        get :edit
+        expect(response).to be_successful
+        expect(response).to render_template('dashboard')
+        expect(assigns[:form].model.creator).to match_array ["Fred", "Wilma"]
+      end
+    end
     context "with work resources" do
       let(:one) { FactoryBot.valkyrie_create(:monograph, creator: ["Fred"], title: ["abc"], language: ['en']) }
       let(:two) { FactoryBot.valkyrie_create(:monograph, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }
@@ -63,7 +64,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       expect(controller).to receive(:can?).with(:edit, three.id).and_return(false)
     end
 
-    context "with ActiveFedora works" do
+    context "with ActiveFedora works", :active_fedora do
       let(:admin_set) { create(:admin_set) }
       let!(:one) do
         create(:work, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
@@ -309,7 +310,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
   end
 
   describe "#destroy_collection" do
-    context 'with ActiveFedora objects' do
+    context 'with ActiveFedora objects', :active_fedora do
       let(:collection1) do
         FactoryBot.valkyrie_create(:hyrax_collection,
                                    :public,
