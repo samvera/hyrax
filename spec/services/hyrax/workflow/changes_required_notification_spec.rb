@@ -4,7 +4,7 @@ RSpec.describe Hyrax::Workflow::ChangesRequiredNotification do
   let(:depositor) { FactoryBot.create(:user) }
   let(:to_user) { FactoryBot.create(:user) }
   let(:cc_user) { FactoryBot.create(:user) }
-  let(:work) { FactoryBot.valkyrie_create(:work, depositor: depositor.user_key) }
+  let(:work) { FactoryBot.valkyrie_create(:monograph, depositor: depositor.user_key, title: 'Test title') }
   let(:entity) { FactoryBot.create(:sipity_entity, proxy_for_global_id: Hyrax::GlobalID(work).to_s) }
   let(:comment) { double("comment", comment: 'A pleasant read') }
   let(:recipients) { { 'to' => [to_user], 'cc' => [cc_user] } }
@@ -14,7 +14,7 @@ RSpec.describe Hyrax::Workflow::ChangesRequiredNotification do
       expect(approver)
         .to receive(:send_message)
         .with(anything,
-              "Test title (<a href=\"/concern/generic_works/#{work.id}\">#{work.id}</a>) " \
+              "Test title (<a href=\"/concern/monographs/#{work.id}\">#{work.id}</a>) " \
               "requires additional changes before approval.\n 'A pleasant read'",
               anything)
         .exactly(3)
