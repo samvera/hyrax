@@ -58,6 +58,10 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
       if ids.empty?
         ids = "id:NEVER_USE_THIS_ID"
       end
+      if Hyrax::SolrQueryBuilderService.construct_query_for_ids([ids]) == "id:NEVER_USE_THIS_ID"
+        # if this is true that means he orininal test is bad.
+        expect(true).to be(false)
+      end
       expect(solr_params[:fq]).to eq ["-" + Hyrax::SolrQueryService.new.with_ids(ids: ids).build]
     end
   end
