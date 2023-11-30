@@ -176,7 +176,7 @@ module Hyrax
     # Deactivates the embargo
     # @return [Boolean]
     def deactivate!
-      release!(force: true)
+      release(force: true)
       nullify(force: true)
     end
 
