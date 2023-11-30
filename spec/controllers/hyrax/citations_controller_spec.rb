@@ -2,13 +2,13 @@
 RSpec.describe Hyrax::CitationsController do
   describe "#work" do
     let(:user) { create(:user) }
-    let(:work) { create(:work, user: user) }
+    let(:work) { valkyrie_create(:monograph, depositor: user.user_key, edit_users: [user]) }
 
     context "with an authenticated_user" do
       before do
         sign_in user
         request.env['HTTP_REFERER'] = 'http://test.host/foo'
-        create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+        create(:sipity_entity, proxy_for: work)
       end
 
       it "is successful" do
@@ -62,7 +62,7 @@ RSpec.describe Hyrax::CitationsController do
   end
   describe "#file" do
     let(:user) { create(:user) }
-    let(:file_set) { create(:file_set, user: user) }
+    let(:file_set) { valkyrie_create(:hyrax_file_set, edit_users: [user]) }
 
     context "with an authenticated_user" do
       before do
