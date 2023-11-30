@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::LeaseService do
+RSpec.describe Hyrax::LeaseService, :clean_repo do
   subject { described_class }
 
   let(:future_date) { 2.days.from_now }
