@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 RSpec.describe Hyrax::LeaseService, :clean_repo do
   subject { described_class }
 

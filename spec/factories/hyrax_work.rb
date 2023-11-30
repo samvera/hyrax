@@ -28,6 +28,25 @@ FactoryBot.define do
 
     trait :under_lease do
       association :lease, factory: :hyrax_lease
+
+      after(:create) do |work, _e|
+        Hyrax::LeaseManager.new(resource: work).apply
+        work.permission_manager.acl.save
+      end
+    end
+
+    trait :with_expired_enforced_lease do
+      after(:build) do |work, _evaluator|
+        work.lease = FactoryBot.valkyrie_create(:hyrax_lease, :expired)
+      end
+
+      after(:create) do |work, _evaluator|
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_return(10.days.ago)
+        Hyrax::LeaseManager.new(resource: work).apply
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_call_original
+
+        work.permission_manager.acl.save
+      end
     end
 
     transient do
