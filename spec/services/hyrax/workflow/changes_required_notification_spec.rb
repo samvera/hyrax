@@ -4,8 +4,8 @@ RSpec.describe Hyrax::Workflow::ChangesRequiredNotification do
   let(:depositor) { FactoryBot.create(:user) }
   let(:to_user) { FactoryBot.create(:user) }
   let(:cc_user) { FactoryBot.create(:user) }
-  let(:work) { FactoryBot.create(:work, user: depositor) }
-  let(:entity) { FactoryBot.create(:sipity_entity, proxy_for_global_id: work.to_global_id) }
+  let(:work) { FactoryBot.valkyrie_create(:work, depositor: depositor.user_key) }
+  let(:entity) { FactoryBot.create(:sipity_entity, proxy_for_global_id: Hyrax::GlobalID(work).to_s) }
   let(:comment) { double("comment", comment: 'A pleasant read') }
   let(:recipients) { { 'to' => [to_user], 'cc' => [cc_user] } }
 
