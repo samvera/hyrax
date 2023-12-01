@@ -115,7 +115,7 @@ module Hyrax
 
     # Deactivates the lease and logs a message to the lease_history property
     def deactivate!
-      release!(force: true)
+      release(force: true)
       nullify(force: true)
     end
 
