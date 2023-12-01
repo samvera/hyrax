@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Forms::AdminSetForm do
+RSpec.describe Hyrax::Forms::AdminSetForm, :active_fedora do
   let(:ability) { Ability.new(create(:user)) }
   let(:repository) { double }
   let(:form) { described_class.new(model, ability, repository) }
