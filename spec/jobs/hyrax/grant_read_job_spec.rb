@@ -2,7 +2,7 @@
 RSpec.describe Hyrax::GrantReadJob do
   let(:depositor) { create(:user) }
 
-  context "when use_valkyrie is false" do
+  context "when use_valkyrie is false", :active_fedora do
     let(:file_set) { create(:file_set) }
 
     it 'grants a user read access to a FileSet' do
