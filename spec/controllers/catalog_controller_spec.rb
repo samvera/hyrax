@@ -144,17 +144,15 @@ RSpec.describe CatalogController, :clean_repo, type: :controller do
       # NOTE: The old expected behavior was "finds a work and a work that contains a file set with a matching title".
       #   This is no longer the case in a Valkyrie environment. A work's child file set's metadata is no longer passed in
       #   to the work's SolrDocument. The only references to the containing file sets are their ids.
-      #   Previous `contain_exactly` was (work1[:id], work2[:id])
-      it "finds a work and a work that contains a file set with a matching title" do
+      it "finds a work and a work that contains a file set with a matching title", pending: 'FIXME: Valkyrie indexer should do this' do
         get :index, params: { q: 'find me', search_field: 'all_fields' }
-        expect(assigns(:response).documents.map(&:id)).to contain_exactly(work2[:id])
+        expect(assigns(:response).documents.map(&:id)).to contain_exactly(work1[:id], work2[:id])
       end
 
       # NOTE: The same logic in the above comment applies here.
-      #   Previous `contain_exactly` was (work1[:id])
-      it "finds a work that contains a file set with a matching title" do
+      it "finds a work that contains a file set with a matching title", pending: 'FIXME: Valkyrie indexer should do this' do
         get :index, params: { q: 'other file', search_field: 'all_fields' }
-        expect(assigns(:response).documents.map(&:id)).to match_array([])
+        expect(assigns(:response).documents.map(&:id)).to contain_exactly(work1[:id])
       end
 
       it "finds a work with a matching title" do
