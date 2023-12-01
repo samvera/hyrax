@@ -18,7 +18,7 @@ RSpec.describe "User Profile", type: :feature do
       expect(page).to have_content(user.email)
 
       within '.highlighted-works' do
-        expect(page).to have_link('Test Monograph 123')
+        expect(page).to have_link('Test Monograph 123', href: "/concern/monographs/#{work.id}?locale=en")
       end
 
       within '.panel-user' do
