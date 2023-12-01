@@ -4,7 +4,7 @@ RSpec.describe Hyrax::Workflow::DepositedNotification do
   let(:depositor) { FactoryBot.create(:user) }
   let(:to_user) { FactoryBot.create(:user) }
   let(:cc_user) { FactoryBot.create(:user) }
-  let(:work) { FactoryBot.create(:work, user: depositor) }
+  let(:work) { valkyrie_create(:monograph, title: 'Test title', depositor: depositor.user_key) }
   let(:entity) { FactoryBot.create(:sipity_entity, proxy_for: work) }
   let(:comment) { double("comment", comment: 'A pleasant read') }
   let(:recipients) { { 'to' => [to_user], 'cc' => [cc_user] } }
@@ -14,7 +14,7 @@ RSpec.describe Hyrax::Workflow::DepositedNotification do
       expect(approver)
         .to receive(:send_message)
         .with(anything,
-              "Test title (<a href=\"/concern/generic_works/#{work.id}\">#{work.id}</a>) " \
+              "Test title (<a href=\"/concern/monographs/#{work.id}\">#{work.id}</a>) " \
               "was approved by #{approver.user_key}. A pleasant read",
               anything)
         .exactly(3)
