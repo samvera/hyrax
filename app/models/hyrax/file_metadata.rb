@@ -149,7 +149,7 @@ module Hyrax
     ##
     # @return [Boolean]
     def thumbnail_file?
-      pcdm_use.include?(Use::THUMBNAIL)
+      pcdm_use.include?(Use::THUMBNAIL_IMAGE)
     end
 
     ##

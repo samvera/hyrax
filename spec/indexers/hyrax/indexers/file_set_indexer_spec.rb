@@ -115,7 +115,7 @@ RSpec.describe Hyrax::Indexers::FileSetIndexer, if: Hyrax.config.use_valkyrie? d
     Hyrax::FileMetadata.new(
       id: SecureRandom.uuid,
       file_set_id: fileset_id,
-      type: [Hyrax::FileMetadata::Use::THUMBNAIL]
+      type: [Hyrax::FileMetadata::Use::THUMBNAIL_IMAGE]
     )
   end
 
