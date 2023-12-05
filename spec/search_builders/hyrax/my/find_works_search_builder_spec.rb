@@ -47,6 +47,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
       subject
       ids = Hyrax::SolrService.query("{!field f=id}#{work.id}", fl: "member_ids_ssim").flat_map { |x| x.fetch("member_ids_ssim", []) }
       expect(solr_params[:fq]).to eq ["-" + Hyrax::SolrQueryBuilderService.construct_query_for_ids([ids])]
+      expect(ids.reject(&:blank?).empty?).to eq(false)
     end
 
     it "is successful new same code way" do
@@ -54,7 +55,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
       ids = Hyrax::SolrService.query("{!field f=id}#{work.id}", fl: "member_ids_ssim").flat_map { |x| x.fetch("member_ids_ssim", []) }
       ids = [ids]
       expect(ids.to_s).to eq("false")
-      
+
       # rubocop:disable Style/IfUnlessModifier
       if ids.reject(&:blank?).empty?
         expect(ids.to_s).to eq("false")
