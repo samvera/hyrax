@@ -55,7 +55,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
       ids = [ids]
       # rubocop:disable Style/IfUnlessModifier
       if ids.reject(&:blank?).empty?
-        expect(ids).to be(false)
+        expect(ids.to_s).to be(false)
       end
       if Hyrax::SolrQueryBuilderService.construct_query_for_ids([ids]) == "id:NEVER_USE_THIS_ID"
         # if this is true that means he orininal test is bad.
