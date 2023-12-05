@@ -5,13 +5,10 @@ require 'rake'
 # Run the jasmine tests by running the karma javascript test framework
 # The spec will fail if any jasmine tests fails.
 RSpec.describe "Jasmine" do
-  before do
-    Rails.application.load_tasks
-    Rake::Task["assets:clobber"].invoke
-    Rake::Task["assets:precompile"].invoke
-  end
-
   it "expects all jasmine tests to pass" do
+    # Ensure capybara is not using the remote browser
+    Capybara.using_driver(Capybara.javascript_driver) { Capybara.current_session.quit }
+
     jasmine_out = `node_modules/karma/bin/karma start`
 
     if $CHILD_STATUS.exitstatus == 0
