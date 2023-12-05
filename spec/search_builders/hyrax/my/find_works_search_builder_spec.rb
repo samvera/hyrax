@@ -53,13 +53,15 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
       subject
       ids = Hyrax::SolrService.query("{!field f=id}#{work.id}", fl: "member_ids_ssim").flat_map { |x| x.fetch("member_ids_ssim", []) }
       ids = [ids]
+      expect(ids.to_s).to eq("false")
+      
       # rubocop:disable Style/IfUnlessModifier
       if ids.reject(&:blank?).empty?
-        expect(ids.to_s).to be("false")
+        expect(ids.to_s).to eq("false")
       end
       if Hyrax::SolrQueryBuilderService.construct_query_for_ids([ids]) == "id:NEVER_USE_THIS_ID"
         # if this is true that means he orininal test is bad.
-        expect(true).to be(false)
+        expect(true).to eq(false)
       end
       expect(solr_params[:fq]).to eq ["-" + Hyrax::SolrQueryService.new.with_ids(ids: ids).build]
     end
