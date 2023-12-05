@@ -80,3 +80,5 @@ This software has been developed by and is brought to you by the Samvera communi
 ## License
 
 Hyrax is available under [the Apache 2.0 license](LICENSE).
+
+Testing build
