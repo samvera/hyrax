@@ -66,6 +66,11 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
       end
       expect(solr_params[:fq]).to eq ["-" + Hyrax::SolrQueryService.new.with_ids(ids: ids).build]
     end
+    it "is successful the real test" do
+      subject
+      ids = Hyrax::SolrService.query("{!field f=id}#{work.id}", fl: "member_ids_ssim").flat_map { |x| x.fetch("member_ids_ssim", []) }
+      expect(solr_params[:fq]).to eq ["-" + "id:NEVER_USE_THIS_ID"]
+    end
   end
 
   describe "#show_only_works_not_parent" do
