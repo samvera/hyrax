@@ -10,6 +10,7 @@ RSpec.describe Hyrax::FixityChecksController do
       let(:json_response) { JSON.parse(response.body) }
 
       it "returns json with the result" do
+        pending 'Needs Valkyrie fixity support' if Hyrax.config.disable_wings
         post :create, params: { file_set_id: file_set }, xhr: true
 
         expect(response).to be_successful
