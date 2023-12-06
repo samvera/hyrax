@@ -52,8 +52,8 @@ module Hyrax
     def count_files(admin_sets)
       file_counts = Hash.new(0)
       admin_sets.each do |admin_set|
-        query = "{!join from=file_set_ids_ssim to=id}isPartOf_ssim:#{admin_set.id}"
-        file_results = Hyrax::SolrService.get(fq: [query, "has_model_ssim:FileSet"], rows: 0)
+        query = "{!join from=member_ids_ssim to=id}isPartOf_ssim:#{admin_set.id}"
+        file_results = Hyrax::SolrService.get(fq: [query, "{!terms f=has_model_ssim}FileSet,Hyrax::FileSet"], rows: 0)
         file_counts[admin_set.id] = file_results['response']['numFound']
       end
       file_counts
