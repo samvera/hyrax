@@ -199,6 +199,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         context "when create fails" do
           let(:collection) { Hyrax.config.collection_class.new }
           let(:error) { "Failed to save collection" }
+          let(:step) { double('change_set.apply', call: Dry::Monads::Failure([error])) }
 
           before do
             allow(controller).to receive(:authorize!)
@@ -208,10 +209,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
               allow(collection).to receive(:save).and_return(false)
               allow(collection).to receive(:errors).and_return(error)
             else
-              allow(Hyrax.persister)
-                .to receive(:save)
-                .with(resource: collection)
-                .and_raise(StandardError, error)
+              allow(Hyrax::Transactions::Container).to receive(:[]).and_call_original
+              allow(Hyrax::Transactions::Container).to receive(:[]).with('change_set.apply').and_return(step)
             end
           end
 
@@ -420,14 +419,10 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
           let(:repository) { instance_double(Blacklight::Solr::Repository, search: result) }
           let(:result) { double(documents: [], total: 0) }
           let(:error) { "Failed to save collection" }
+          let(:step) { double('change_set.apply', call: Dry::Monads::Failure([error])) }
 
           before do
             allow(controller).to receive(:authorize!)
-
-            allow(Hyrax.persister)
-              .to receive(:save)
-              .with(any_args)
-              .and_raise(StandardError, error)
 
             if Hyrax.config.collection_class < ActiveFedora::Base
               existing = ActiveFedora::Base.find(collection.id.to_s)
@@ -437,6 +432,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
               allow(existing).to receive(:errors).and_return(error)
               allow(controller).to receive(:repository).and_return(repository)
               allow_any_instance_of(::Collection).to receive(:save).and_return(false)
+            else
+              allow(Hyrax::Transactions::Container).to receive(:[]).and_call_original
+              allow(Hyrax::Transactions::Container).to receive(:[]).with('change_set.apply').and_return(step)
             end
           end
 
@@ -680,10 +678,10 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
         context 'with admin user and private collection' do
           let(:collection) do
-            FactoryBot.create(:private_collection,
+            FactoryBot.valkyrie_create(:hyrax_collection,
                               title: ["My collection"],
                               description: ["My incredibly detailed description of the collection"],
-                              user: user)
+                              edit_users: [user])
           end
 
           before do
@@ -730,14 +728,16 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         end
 
         context "when an error occurs" do
+          let(:error) { "Collection could not be deleted" }
+          let(:step) { double('collection_resource.delete', call: Dry::Monads::Failure([error])) }
+
           before do
             # rubocop:disable RSpec/AnyInstance
             allow_any_instance_of(Collection).to receive(:destroy).and_return(nil)
-            allow(Hyrax.persister)
-              .to receive(:delete)
-              .with(any_args)
-              .and_raise(StandardError, "Failed to delete collection.")
             # rubocop:enable RSpec/AnyInstance
+
+            allow(Hyrax::Transactions::Container).to receive(:[]).and_call_original
+            allow(Hyrax::Transactions::Container).to receive(:[]).with('collection_resource.delete').and_return(step)
           end
 
           it "renders the edit view" do
@@ -796,7 +796,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
         it 'shows a list of member files' do
           pending "update implementation to work with CollectionResource" if
-            model == "CollectionResource"
+            model.safe_constantize == CollectionResource
 
           get :files, params: { id: collection }, format: :json
 
