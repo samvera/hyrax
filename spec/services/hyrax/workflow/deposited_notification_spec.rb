@@ -4,7 +4,7 @@ RSpec.describe Hyrax::Workflow::DepositedNotification do
   let(:depositor) { FactoryBot.create(:user) }
   let(:to_user) { FactoryBot.create(:user) }
   let(:cc_user) { FactoryBot.create(:user) }
-  let(:work) { FactoryBot.create(:work, user: depositor) }
+  let(:work) { valkyrie_create(:work, depositor: depositor.user_key) }
   let(:entity) { FactoryBot.create(:sipity_entity, proxy_for: work) }
   let(:comment) { double("comment", comment: 'A pleasant read') }
   let(:recipients) { { 'to' => [to_user], 'cc' => [cc_user] } }

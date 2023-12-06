@@ -3,8 +3,8 @@ RSpec.describe Hyrax::Workflow::PendingReviewNotification do
   let(:depositor) { create(:user) }
   let(:to_user) { create(:user) }
   let(:cc_user) { create(:user) }
-  let(:work) { create(:generic_work, user: depositor) }
-  let(:entity) { create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s) }
+  let(:work) { valkyrie_create(:work, depositor: depositor.user_key) }
+  let(:entity) { create(:sipity_entity, proxy_for_global_id: Hyrax::GlobalID(work).to_s) }
   let(:comment) { double("comment", comment: 'A pleasant read') }
   let(:recipients) { { 'to' => [to_user], 'cc' => [cc_user] } }
 
