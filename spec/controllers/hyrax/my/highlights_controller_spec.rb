@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::My::HighlightsController, type: :controller do
+RSpec.describe Hyrax::My::HighlightsController, :clean_repo, type: :controller do
   describe "logged in user" do
     let(:user) { create(:user) }
 
@@ -12,18 +12,13 @@ RSpec.describe Hyrax::My::HighlightsController, type: :controller do
       end
 
       let(:other_user) { create(:user) }
-      let(:highlighted_work) { create(:generic_work, user: user) }
-      let!(:normal_work) { create(:generic_work, user: user) }
-      let(:unrelated_highlighted_work) do
-        create(:generic_work, user: other_user).tap do |r|
-          r.edit_users += [user.user_key]
-          r.save!
-        end
-      end
+      let(:highlighted_work) { valkyrie_create(:monograph, edit_users: [user]) }
+      let!(:normal_work) { valkyrie_create(:monograph, edit_users: [user]) }
+      let(:unrelated_highlighted_work) { valkyrie_create(:monograph, edit_users: [user, other_user]) }
 
       it "paginates" do
-        work1 = create(:work, user: user)
-        work2 = create(:work, user: user)
+        work1 = valkyrie_create(:monograph, edit_users: [user])
+        work2 = valkyrie_create(:monograph, edit_users: [user])
         user.trophies.create!(work_id: work1.id)
         user.trophies.create!(work_id: work2.id)
         get :index, params: { per_page: 2 }
