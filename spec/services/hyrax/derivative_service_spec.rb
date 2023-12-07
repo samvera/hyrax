@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 require 'hyrax/specs/shared_specs'
 
-RSpec.describe Hyrax::DerivativeService do
+# NOTE: This service class is marked for deprecation. The new Hyrax::FileSetDerivativesService is preferred and can handle
+#   both ActiveFedora and Valkyrie objects.
+RSpec.describe Hyrax::DerivativeService, :active_fedora do
   let(:valid_file_set) { FileSet.new }
 
   subject { described_class.new(file_set) }
