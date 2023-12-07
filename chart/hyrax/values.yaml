@@ -284,10 +284,14 @@ nginx:
   image:
     repository: bitnami/nginx
     tag: 1.23.0-debian-11-r1
-  # this needs to be set to an empty hash, since templates/ingress.yaml tries to
+  # this needs to be set since templates/ingress.yaml tries to
   # evaluate .Values.nginx.service.port, and it needs to at least evaluate to
   # nil, rather than throw an error (which it does if `service` itself is nil).
-  service: {}
+  # you can change to NodePort or LoadBalancer if direct access is needed.
+  # ClusterIP is used as we assume an ingress is in place.
+  service:
+    type: ClusterIP
+    port: 80
   # The set up below does malicious bot / ip blocking and mounts
   # volumes to allow nginx to server assets and other public directory items
   # extraVolumes:
