@@ -13,7 +13,7 @@ RSpec.describe Hyrax::Workflow::PendingReviewNotification do
   let(:entity) { create(:sipity_entity, proxy_for_global_id: Hyrax::GlobalID(work).to_s) }
   let(:comment) { double("comment", comment: 'A pleasant read') }
   let(:recipients) { { 'to' => [to_user], 'cc' => [cc_user] } }
-  let(:expected_klass) { Hyrax.config.use_valkyrie? ? 'monographs' : 'generic_works' }
+  let(:expected_klass) { Hyrax.config.disable_wings ? 'monographs' : 'generic_works' }
 
   before { work }
   describe ".send_notification" do
