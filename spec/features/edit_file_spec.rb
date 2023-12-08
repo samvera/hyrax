@@ -24,7 +24,7 @@ RSpec.describe "Editing a file:", type: :feature do
     if Hyrax.config.use_valkyrie?
       valkyrie_create(:hyrax_file_set, :with_files, title: ['Test File Set'], depositor: user.user_key, read_groups: ['public'], edit_users: [user])
     else
-      create(:file_set, :with_original_file, title: ['Test File Set'], user: user, read_groups: ['public'], edit_users: [user])
+      create(:file_set, title: ['Test File Set'], user: user, read_groups: ['public'], edit_users: [user])
     end
   end
 
