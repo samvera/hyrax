@@ -4,7 +4,7 @@ RSpec.describe Hyrax::Workflow::PendingReviewNotification do
   let(:to_user) { create(:user) }
   let(:cc_user) { create(:user) }
   let(:work) do
-    if Hyrax.config.use_valkyrie?
+    if Hyrax.config.disable_wings
       valkyrie_create(:monograph, title: ["Test title"], depositor: depositor.user_key)
     else
       create(:generic_work, user: depositor)
