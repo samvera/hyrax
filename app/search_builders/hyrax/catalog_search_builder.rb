@@ -80,6 +80,6 @@ class Hyrax::CatalogSearchBuilder < Hyrax::SearchBuilder
 
   # join from file id to work relationship solrized member_ids_ssim
   def join_for_works_from_files
-    "{!join from=#{Hyrax.config.id_field} to=member_ids_ssim}{!terms f=has_model_ssim}FileSet,Hyrax::FileSet#{dismax_query}"
+    "{!join from=#{Hyrax.config.id_field} to=member_ids_ssim}#{dismax_query}{!terms f=has_model_ssim}FileSet,Hyrax::FileSet"
   end
 end
