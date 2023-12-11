@@ -5,7 +5,7 @@ RSpec.describe "Editing a file:", type: :feature do
   let!(:workflow) { create(:workflow, allows_access_grant: true, active: true, permission_template_id: permission_template.id) }
 
   let(:admin_set) do
-    if Hyrax.config.use_valkyrie?
+    if Hyrax.config.disable_wings
       valkyrie_create(:hyrax_admin_set)
     else
       create(:admin_set)
@@ -13,7 +13,7 @@ RSpec.describe "Editing a file:", type: :feature do
   end
 
   let!(:work) do
-    if Hyrax.config.use_valkyrie?
+    if Hyrax.config.disable_wings
       valkyrie_create(:monograph, depositor: user.user_key, admin_set_id: admin_set.id, members: [file_set])
     else
       build(:work, user: user, admin_set_id: admin_set.id)
@@ -21,7 +21,7 @@ RSpec.describe "Editing a file:", type: :feature do
   end
 
   let(:file_set) do
-    if Hyrax.config.use_valkyrie?
+    if Hyrax.config.disable_wings
       valkyrie_create(:hyrax_file_set, :with_files, title: ['Test File Set'], depositor: user.user_key, read_groups: ['public'], edit_users: [user])
     else
       create(:file_set, title: ['Test File Set'], user: user, read_groups: ['public'], edit_users: [user])
@@ -33,7 +33,7 @@ RSpec.describe "Editing a file:", type: :feature do
   before do
     sign_in user
 
-    unless Hyrax.config.use_valkyrie?
+    unless Hyrax.config.disable_wings
       Hydra::Works::AddFileToFileSet.call(file_set, file, :original_file)
       work.ordered_members << file_set
       work.save!
