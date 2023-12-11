@@ -81,6 +81,7 @@ jobs:
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
+      solr_version: 8.11-slim
     resource_class: medium
     environment:
       RAILS_VERSION: << parameters.rails_version >>
@@ -124,6 +125,7 @@ jobs:
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
+      solr_version: 8.11-slim
     resource_class: medium+
     parallelism: 10
     environment:
