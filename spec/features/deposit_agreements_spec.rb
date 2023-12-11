@@ -28,14 +28,14 @@ RSpec.describe 'Deposit Agreement options', :js, :workflow, :clean_repo do
     end
 
     it "allows saving work when active deposit agreement is off" do
-      expect(find('input[name="save_with_files"]')[:disabled]).to eq('true')
+      expect(page).to have_selector('input[name="save_with_files"][disabled]')
 
       # Fill in required metadata
       fill_in('Title', with: 'My Test Work')
       fill_in('Creator', with: 'Doe, Jane')
       select('In Copyright', from: 'Rights statement')
 
-      expect(find('input[name="save_with_files"]')[:disabled]).to eq('false')
+      expect(page).to have_selector('input[name="save_with_files"]:not([disabled])')
 
       # Add a file
       click_link "Files"
@@ -44,7 +44,7 @@ RSpec.describe 'Deposit Agreement options', :js, :workflow, :clean_repo do
       end
 
       expect(page).not_to have_selector('#agreement')
-      expect(find('input[name="save_with_files"]')[:disabled]).to eq('true')
+      expect(page).to have_selector('input[name="save_with_files"]:not([disabled])')
     end
   end
 end
