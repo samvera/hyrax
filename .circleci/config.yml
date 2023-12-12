@@ -5,6 +5,7 @@ orbs:
   ruby: circleci/ruby@2
   node: circleci/node@5
 
+executors:
   hyrax:
     parameters:
       fcrepo_version:
@@ -146,87 +147,81 @@ workflows:
   version: 2
   ruby3-2:
     jobs:
-      - bundle:
+      - rubocop
+      - kaniko-build:
+          name: "dassie-build"
           ruby_version: "3.2.2"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
-      - build:
+          hyrax_app: "dassie"
+      - hyrax-test:
+          name: "dassie-test"
           ruby_version: "3.2.2"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
+          hyrax_app: "dassie"
           requires:
-            - bundle
-      - test:
-          name: "ruby3-2"
+            - dassie-build
+      - hyrax-test:
+          name: "dassie-valkyrie-test"
           ruby_version: "3.2.2"
-          bundler_version: "2.4.8"
+          hyrax_app: "dassie"
+          hyrax_valkyrie: "1"
           requires:
-            - build
-      - test:
-          name: "ruby3-2-valkyrie"
-          ruby_version: "3.2.2"
-          bundler_version: "2.4.8"
-          hyrax_valkyrie: "true"
-          requires:
-            - build
+            - dassie-build
   ruby3-1:
     jobs:
-      - bundle:
+      - rubocop
+      - kaniko-build:
+          name: "dassie-build"
           ruby_version: "3.1.4"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
-      - build:
+          hyrax_app: "dassie"
+      - hyrax-test:
+          name: "dassie-test"
           ruby_version: "3.1.4"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
+          hyrax_app: "dassie"
           requires:
-            - bundle
-      - test:
-          name: "ruby3-1"
+            - dassie-build
+      - hyrax-test:
+          name: "dassie-valkyrie-test"
           ruby_version: "3.1.4"
-          bundler_version: "2.4.8"
+          hyrax_app: "dassie"
+          hyrax_valkyrie: "1"
           requires:
-            - build
+            - dassie-build
   ruby3-0:
     jobs:
-      - bundle:
+      - rubocop
+      - kaniko-build:
+          name: "dassie-build"
           ruby_version: "3.0.6"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
-      - build:
+          hyrax_app: "dassie"
+      - hyrax-test:
+          name: "dassie-test"
           ruby_version: "3.0.6"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
+          hyrax_app: "dassie"
           requires:
-            - bundle
-      - test:
-          name: "ruby3-0"
+            - dassie-build
+      - hyrax-test:
+          name: "dassie-valkyrie-test"
           ruby_version: "3.0.6"
-          bundler_version: "2.4.8"
+          hyrax_app: "dassie"
+          hyrax_valkyrie: "1"
           requires:
-            - build
+            - dassie-build
   ruby2-7:
     jobs:
-      - bundle:
+      - rubocop
+      - kaniko-build:
+          name: "dassie-build"
           ruby_version: "2.7.7"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
-      - build:
+          hyrax_app: "dassie"
+      - hyrax-test:
+          name: "dassie-test"
           ruby_version: "2.7.7"
-          rails_version: "6.1.7.2"
-          bundler_version: "2.4.8"
+          hyrax_app: "dassie"
           requires:
-            - bundle
-      - test:
-          name: "ruby2-7"
+            - dassie-build
+      - hyrax-test:
+          name: "dassie-valkyrie-test"
           ruby_version: "2.7.7"
-          bundler_version: "2.4.8"
+          hyrax_app: "dassie"
+          hyrax_valkyrie: "1"
           requires:
-            - build
-      - test:
-          name: "ruby2-7-valkyrie"
-          ruby_version: "2.7.7"
-          bundler_version: "2.4.8"
-          hyrax_valkyrie: "true"
-          requires:
-            - build
+            - dassie-build
