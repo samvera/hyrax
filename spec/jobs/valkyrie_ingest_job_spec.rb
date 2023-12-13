@@ -38,13 +38,11 @@ RSpec.describe ValkyrieIngestJob do
     # programatically for a spec.
     context "when in Valkyrie mode" do
       it 'runs derivatives', index_adapter: :solr_index, perform_enqueued: true do
-        allow(ValkyrieCreateDerivativesJob).to receive(:perform_later).and_call_original
-        allow(Hyrax::ValkyrieUpload).to receive(:file).and_call_original
+        expect(Hyrax::ValkyrieUpload).to receive(:file).and_call_original
+        expect(ValkyrieCreateDerivativesJob).to receive(:perform_later)
 
         described_class.perform_now(upload)
 
-        expect(Hyrax::ValkyrieUpload).to have_received(:file)
-        expect(ValkyrieCreateDerivativesJob).to have_received(:perform_later)
         solr_doc = Hyrax.index_adapter.connection.get("select", params: { q: "id:#{file_set.id}" })["response"]["docs"].first
         expect(solr_doc["thumbnail_path_ss"]).not_to be_empty
       end

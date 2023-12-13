@@ -15,54 +15,43 @@ require 'capybara/rspec'
 require 'capybara/rails'
 require 'capybara-screenshot/rspec'
 require 'selenium-webdriver'
-require 'webdrivers' unless ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
 
 Capybara.save_path = ENV['CI'] ? "/tmp/test-results" : Rails.root.join('tmp', 'capybara')
 
-if ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
-  args = %w[disable-gpu no-sandbox whitelisted-ips window-size=1400,1400]
-  args.push('headless') if ActiveModel::Type::Boolean.new.cast(ENV['CHROME_HEADLESS_MODE'])
-
-  options = Selenium::WebDriver::Options.chrome("goog:chromeOptions" => { args: args })
-
-  Capybara.register_driver :selenium_chrome_headless_sandboxless do |app|
-    driver = Capybara::Selenium::Driver.new(app,
-                                       browser: :remote,
-                                       capabilities: options,
-                                       url: ENV['HUB_URL'])
-
-    # Fix for capybara vs remote files. Selenium handles this for us
-    driver.browser.file_detector = lambda do |args|
-      str = args.first.to_s
-      str if File.exist?(str)
-    end
-
-    driver
-  end
-
-  Capybara.server_host = '0.0.0.0'
-  Capybara.server_port = 3010
-
-  ip = IPSocket.getaddress(Socket.gethostname)
-  Capybara.app_host = "http://#{ip}:#{Capybara.server_port}"
-else
-  TEST_HOST = 'localhost:3000'.freeze
-  # @note In January 2018, TravisCI disabled Chrome sandboxing in its Linux
-  #       container build environments to mitigate Meltdown/Spectre
-  #       vulnerabilities, at which point Hyrax could no longer use the
-  #       Capybara-provided :selenium_chrome_headless driver (which does not
-  #       include the `--no-sandbox` argument).
-  Capybara.register_driver :selenium_chrome_headless_sandboxless do |app|
-    browser_options = ::Selenium::WebDriver::Chrome::Options.new
-    browser_options.args << '--headless'
-    browser_options.args << '--disable-gpu'
-    browser_options.args << '--no-sandbox'
-    Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
-  end
+options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+  opts.add_argument("--headless") if ENV["CHROME_HEADLESS_MODE"]
+  opts.add_argument("--disable-gpu") if Gem.win_platform?
+  # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
+  opts.add_argument("--disable-site-isolation-trials")
+  opts.add_argument("--window-size=1440,1440")
+  opts.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
+  opts.add_argument("--disable-features=VizDisplayCompositor")
 end
+
+Capybara.register_driver :selenium_chrome_headless_sandboxless do |app|
+  driver = Capybara::Selenium::Driver.new(app,
+                                      browser: :remote,
+                                      capabilities: options,
+                                      url: ENV['HUB_URL'])
+
+  # Fix for capybara vs remote files. Selenium handles this for us
+  driver.browser.file_detector = lambda do |args|
+    str = args.first.to_s
+    str if File.exist?(str)
+  end
+
+  driver
+end
+
+Capybara.server_host = '0.0.0.0'
+Capybara.server_port = 3010
+
+ip = IPSocket.getaddress(Socket.gethostname)
+Capybara.app_host = "http://#{ip}:#{Capybara.server_port}"
 
 Capybara.default_driver = :rack_test # This is a faster driver
 Capybara.javascript_driver = :selenium_chrome_headless_sandboxless # This is slower
+Capybara.disable_animation = true
 Capybara.default_max_wait_time = ENV.fetch('CAPYBARA_WAIT_TIME', 10) # We may have a slow application, let's give it some time.
 
 Capybara::Screenshot.register_driver(:selenium_chrome_headless_sandboxless) do |driver, path|
