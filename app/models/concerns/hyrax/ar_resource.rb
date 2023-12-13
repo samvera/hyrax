@@ -72,5 +72,24 @@ module Hyrax
     end
     alias create! save!
     alias update! save!
+
+    ##
+    # This will delete the resource and publish its delete event
+    #
+    # @param [Hyrax::Persister] Valkyrie persister (optional) will default to Hyrax.persister
+    # @param [Hyrax::IndexAdapter] Valkyrie index adapter (optional) will default to Hyrax.index_adapter
+    # @param [User] user the user to record the event for. Will not set depositor yet
+    # @return [Boolean]
+    def destroy(persister: Hyrax.persister, index_adapter: Hyrax.index_adapter, user: ::User.system_user)
+      return false unless persisted?
+      persister.delete(resource: self)
+      index_adapter.delete(resource: self)
+      Hyrax.publisher.publish('object.deleted', object: self, user: user)
+      true
+    end
+
+    def destroy!(**opts)
+      raise Valkyrie::Persistence::ObjectNotFoundError unless destroy(**opts)
+    end
   end
 end
