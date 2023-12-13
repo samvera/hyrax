@@ -72,7 +72,8 @@ module Hyrax
         "date_modified_dtsi": resource.updated_at,
         "system_create_dtsi": resource.created_at,
         "system_modified_dtsi": resource.updated_at,
-        "has_model_ssim": resource.internal_resource
+        "has_model_ssim": resource.internal_resource,
+        "valkyrie_bsi": true
       }.with_indifferent_access
     end
 

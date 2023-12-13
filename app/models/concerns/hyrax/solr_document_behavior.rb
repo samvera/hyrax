@@ -77,6 +77,12 @@ module Hyrax
       Hyrax.config.curation_concerns.include? hydra_model
     end
 
+    ##
+    # @return [Boolean]
+    def valkyrie?
+      ['valkyrie_bsi']
+    end
+
     # Method to return the model
     def hydra_model(classifier: nil)
       first('has_model_ssim')&.safe_constantize ||
