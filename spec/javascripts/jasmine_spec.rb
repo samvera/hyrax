@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require 'English'
-require 'rake'
 
 # Run the jasmine tests by running the karma javascript test framework
 # The spec will fail if any jasmine tests fails.

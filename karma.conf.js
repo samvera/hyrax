@@ -23,7 +23,7 @@ module.exports = function(config) {
     },
 
     // list of files / patterns to load in the browser
-    // uses dotenv to allow for .internal_test_app or .dassie as the Rails root
+    // uses dotenv to allow for .dassie as the Rails root
 
     files: [
       {pattern: 'spec/javascripts/fixtures/*.html', watched: true, included: false, served: true},
