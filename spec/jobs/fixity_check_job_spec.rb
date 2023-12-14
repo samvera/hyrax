@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe FixityCheckJob do
+RSpec.describe FixityCheckJob, :active_fedora do
   let(:user) { create(:user) }
 
   let(:file_set) do
