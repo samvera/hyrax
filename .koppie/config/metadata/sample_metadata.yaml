@@ -1,0 +1,4 @@
+attributes:
+  sample_attribute:
+    type: string
+    predicate: http://hyrax-example.com/sample_attribute
