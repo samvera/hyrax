@@ -20,6 +20,8 @@ attributes:
       required: false
       primary: true
     predicate: http://purl.org/dc/terms/license
+    index_keys:
+      - "license_tesim"
 
   # Other attributes:
   abstract:
