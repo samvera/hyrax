@@ -17,6 +17,10 @@ RSpec.describe Hyrax::Statistics::Collections::OverTime do
       include_examples 'test list of points'
     end
 
+    # NOTE: Hyrax::AbstractTypeRelation inherits from ActiveFedora::Relation. When the code attempts to run
+    #   `AbstractTypeRelation.new(allowable_types: [Hyrax.config.collection_class])` in a Valkyrie environment,
+    #   it quietly fails with `#<NoMethodError: undefined method `solr_query_handler' for Monograph:Class> rescued
+    #   during inspection` and returns nil.
     context 'Valkyrie environment' do
       # include_examples 'test list of points'
     end
