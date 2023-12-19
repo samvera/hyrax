@@ -5,7 +5,7 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
 
   it "is deprecated" do
     work = build(:work)
-    expect(Deprecation).to receive(:warn)
+    expect(Deprecation).to receive(:warn).at_least(:once)
     described_class.call(work, receiver, false)
   end
 
