@@ -952,7 +952,7 @@ module Hyrax
     attr_writer :translate_id_to_uri
     def translate_id_to_uri
       @translate_id_to_uri ||= lambda do |id|
-        "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{::Noid::Rails.treeify(id)}"
+        "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{::Noid::Rails.treeify(id.to_s)}"
       end
     end
 
