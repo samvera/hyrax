@@ -92,7 +92,7 @@ module Hyrax
     end
 
     def ==(other)
-      attributes.except(:created_at, :updated_at) == other.attributes.except(:created_at, :updated_at)
+      attributes.except(:created_at, :updated_at) == other.attributes.except(:created_at, :updated_at) if other.respond_to?(:attributes)
     end
 
     def permission_manager
