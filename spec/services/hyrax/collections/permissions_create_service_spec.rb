@@ -2,6 +2,7 @@
 RSpec.describe Hyrax::Collections::PermissionsCreateService do
   let(:user) { FactoryBot.create(:user) }
   let(:user2) { FactoryBot.create(:user) }
+  let(:query_service) { Hyrax.query_service }
 
   describe ".create_default" do
     let(:collection_type) { FactoryBot.create(:collection_type) }
@@ -87,7 +88,8 @@ RSpec.describe Hyrax::Collections::PermissionsCreateService do
           .by(1)
 
         # collection depositors are granted read access to the collection
-        expect(collection.permission_manager.read_groups)
+        pulled_collection = query_service.find_by(id: collection.id)
+        expect(pulled_collection.permission_manager.read_groups.to_a)
           .to include 'archivist'
       end
     end
@@ -106,7 +108,8 @@ RSpec.describe Hyrax::Collections::PermissionsCreateService do
           .by(1)
 
         # collection depositors are granted read access to the collection
-        expect(admin_set.permission_manager.read_groups)
+        pulled_admin_set = query_service.find_by(id: admin_set.id)
+        expect(pulled_admin_set.permission_manager.read_groups.to_a)
           .to include 'archivist'
       end
     end
