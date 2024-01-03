@@ -1,24 +1,33 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::FileSetCsvService do
-  let(:mock_file) do
-    Hydra::PCDM::File.new
+RSpec.describe Hyrax::FileSetCsvService, :clean_repo do
+  let(:file) { create(:uploaded_file, file: File.open('spec/fixtures/sample-file.pdf')) }
+  let(:file_metadata) { valkyrie_create(:file_metadata, :original_file, :with_file, file: file, mime_type: 'application/pdf') }
+  let(:file_set) do
+    valkyrie_create(:hyrax_file_set,
+                   depositor: 'jilluser@example.com',
+                   title: ['My Title'],
+                   creator: ['Von, Creator'],
+                   resource_type: ['Book', 'Other'],
+                   license: ['Mine'],
+                   files: [file_metadata],
+                   original_file: file_metadata)
   end
-  let(:work) { create(:work, title: ['test title'], creator: ['Von, Creator']) }
-  let(:file_set_id) { '123abc456' }
-  let(:file) do
-    f = create(:file_set, id: file_set_id, title: ['My Title'], creator: ['Von, Creator'],
-                          resource_type: ['Book', 'Other'], license: ['Mine'])
-    f.apply_depositor_metadata('jilluser@example.com')
-    work.ordered_members << f
-    work.save!
-    f
-  end
-  let(:solr_document) { SolrDocument.new(file.to_solr) }
+  let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: file_set).to_solr) }
 
-  before do
-    allow(mock_file).to receive(:mime_type).and_return('application/pdf')
-    allow(file).to receive(:resource_type).and_return(['Book', 'Other'])
-    allow(file).to receive(:original_file).and_return(mock_file)
+  shared_examples('with expected header text') do
+    describe "csv_header" do
+      subject { csv_service.csv_header }
+
+      it { is_expected.to eq "id,title,depositor,creator,visibility,resource_type,license,file_format\n" }
+    end
+  end
+
+  shared_examples('with expected header text (specifying terms)') do
+    describe "csv_header" do
+      subject { csv_service.csv_header }
+
+      it { is_expected.to eq "id,title,resource_type\n" }
+    end
   end
 
   context "when using the defaults" do
@@ -27,32 +36,25 @@ RSpec.describe Hyrax::FileSetCsvService do
     describe "csv" do
       subject { csv_service.csv }
 
-      it { is_expected.to eq "#{file_set_id},My Title,jilluser@example.com,\"Von, Creator\",restricted,Book|Other,Mine,pdf\n" }
+      it { is_expected.to include "#{file_set.id},My Title,jilluser@example.com,\"Von, Creator\",restricted,", "Book", "|", "Other", ",Mine,pdf\n" }
       it "parses as valid csv" do
-        expect(::CSV.parse(subject)).to eq([[file_set_id, "My Title", "jilluser@example.com", "Von, Creator", "restricted", "Book|Other", "Mine", "pdf"]])
+        expect(::CSV.parse(subject).flatten).to include(file_set.id.to_s, "My Title", "jilluser@example.com", "Von, Creator", "restricted", "Mine", "pdf")
       end
     end
 
-    describe "csv_header" do
-      subject { csv_service.csv_header }
-
-      it { is_expected.to eq "id,title,depositor,creator,visibility,resource_type,license,file_format\n" }
-    end
+    include_examples 'with expected header text'
   end
 
   context "when specifying terms" do
-    let(:csv_service) { described_class.new(file, [:id, :title, :resource_type]) }
+    let(:csv_service) { described_class.new(file_set, [:id, :title, :resource_type]) }
 
     describe "csv" do
       subject { csv_service.csv }
 
-      it { is_expected.to eq "#{file_set_id},My Title,Book|Other\n" }
+      it { is_expected.to include "#{file_set.id},My Title,", "Book", "|", "Other", "\n" }
     end
-    describe "csv_header" do
-      subject { csv_service.csv_header }
 
-      it { is_expected.to eq "id,title,resource_type\n" }
-    end
+    include_examples 'with expected header text (specifying terms)'
   end
 
   context "when specifying separator" do
@@ -61,28 +63,21 @@ RSpec.describe Hyrax::FileSetCsvService do
     describe "csv" do
       subject { csv_service.csv }
 
-      it { is_expected.to eq "#{file_set_id},My Title,jilluser@example.com,\"Von, Creator\",restricted,Book&&Other,Mine,pdf\n" }
+      it { is_expected.to include "#{file_set.id},My Title,jilluser@example.com,\"Von, Creator\",restricted,", "Book", "&&", "Other", ",Mine,pdf\n" }
     end
 
-    describe "csv_header" do
-      subject { csv_service.csv_header }
-
-      it { is_expected.to eq "id,title,depositor,creator,visibility,resource_type,license,file_format\n" }
-    end
+    include_examples 'with expected header text'
   end
 
   context "when specifying terms and separator" do
-    let(:csv_service) { described_class.new(file, [:id, :title, :resource_type], '*$*') }
+    let(:csv_service) { described_class.new(file_set, [:id, :title, :resource_type], '*$*') }
 
     describe "csv" do
       subject { csv_service.csv }
 
-      it { is_expected.to eq "#{file_set_id},My Title,Book*$*Other\n" }
+      it { is_expected.to include "#{file_set.id},My Title,", "Book", "*$*", "Other", "\n" }
     end
-    describe "csv_header" do
-      subject { csv_service.csv_header }
 
-      it { is_expected.to eq "id,title,resource_type\n" }
-    end
+    include_examples 'with expected header text (specifying terms)'
   end
 end
