@@ -228,7 +228,13 @@ module Hyrax
     end
 
     def transaction_err_msg(result)
-      result.failure.first
+      msg = if result.failure[1].respond_to?(:full_messages)
+              "#{result.failure[1].full_messages.to_sentence} [#{result.failure[0]}]"
+            else
+              result.failure[0].to_s
+            end
+      Rails.logger.info("Transaction failed: #{msg}\n  #{result.trace}")
+      msg
     end
 
     def presenter

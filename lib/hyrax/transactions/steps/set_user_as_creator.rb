@@ -23,7 +23,7 @@ module Hyrax
 
           Success(change_set)
         rescue NoMethodError => err
-          Failure([err.message, change_set])
+          Failure.new([err.message, change_set], err.backtrace.first)
         end
 
         ##
