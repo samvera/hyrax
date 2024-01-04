@@ -21,8 +21,8 @@ RSpec.describe Hyrax::Statistics::Collections::OverTime do
     #   `AbstractTypeRelation.new(allowable_types: [Hyrax.config.collection_class])` in a Valkyrie environment,
     #   it quietly fails with `#<NoMethodError: undefined method `solr_query_handler' for Monograph:Class> rescued
     #   during inspection` and returns nil.
-    context 'Valkyrie environment' do
-      # include_examples 'test list of points'
+    context 'Valkyrie environment', pending: 'undefined method solr_query_handler' do
+      include_examples 'test list of points' if Hyrax.config.disable_wings
     end
   end
 end
