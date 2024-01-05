@@ -4,17 +4,24 @@ RSpec.describe Hyrax::Workflow::DepositedNotification do
   let(:depositor) { FactoryBot.create(:user) }
   let(:to_user) { FactoryBot.create(:user) }
   let(:cc_user) { FactoryBot.create(:user) }
-  let(:work) { FactoryBot.create(:work, user: depositor) }
+  let(:work) do
+    if Hyrax.config.disable_wings
+      valkyrie_create(:monograph, title: ["Test title"], depositor: depositor.user_key)
+    else
+      create(:work, user: depositor)
+    end
+  end
   let(:entity) { FactoryBot.create(:sipity_entity, proxy_for: work) }
   let(:comment) { double("comment", comment: 'A pleasant read') }
   let(:recipients) { { 'to' => [to_user], 'cc' => [cc_user] } }
+  let(:expected_class) { Hyrax.config.disable_wings ? 'monographs' : 'generic_works' }
 
   describe ".send_notification" do
     it 'sends a message to all users' do # rubocop:disable RSpec/ExampleLength
       expect(approver)
         .to receive(:send_message)
         .with(anything,
-              "Test title (<a href=\"/concern/generic_works/#{work.id}\">#{work.id}</a>) " \
+              "Test title (<a href=\"/concern/#{expected_class}/#{work.id}\">#{work.id}</a>) " \
               "was approved by #{approver.user_key}. A pleasant read",
               anything)
         .exactly(3)
