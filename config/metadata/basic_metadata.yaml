@@ -42,6 +42,10 @@ attributes:
   bibliographic_citation:
     type: string
     multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "bibliographic_citation_tesim"
     predicate: http://purl.org/dc/terms/bibliographicCitation
   contributor:
     type: string
