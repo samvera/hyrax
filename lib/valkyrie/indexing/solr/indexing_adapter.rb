@@ -37,6 +37,10 @@ module Valkyrie
           connection.commit
         end
 
+        def reset!
+          connection = default_connection
+        end
+
         private
 
         def persist(resources)
