@@ -67,6 +67,8 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         choose "collection_type", option: "ManagedCollection"
         click_button 'Create collection'
         fill_in('Title', with: 'A Managed Collection')
+        fill_in('Creator', with: 'Doe, Jane') if Hyrax.config.disable_wings
+        find('a.btn.btn-secondary.additional-fields').click
         fill_in('Description', with: "This collection was created by #{creator.user_key}")
         click_on('Save')
         expect(page).to have_content("Collection was successfully created.")
@@ -118,6 +120,8 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         choose "collection_type", option: "ManagedCollection"
         click_button 'Create collection'
         fill_in('Title', with: 'A Managed Collection')
+        fill_in('Creator', with: 'Doe, Jane') if Hyrax.config.disable_wings
+        find('a.btn.btn-secondary.additional-fields').click
         fill_in('Description', with: "This collection was created by #{manager.user_key}")
         click_on('Save')
         expect(page).to have_content("Collection was successfully created.")
@@ -167,6 +171,8 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
       choose "collection_type", option: "ManagedCollection"
       click_button 'Create collection'
       fill_in('Title', with: 'A Managed Collection')
+      fill_in('Creator', with: 'Doe, Jane') if Hyrax.config.disable_wings
+      find('a.btn.btn-secondary.additional-fields').click
       fill_in('Description', with: "This collection was created by #{admin.user_key}")
       click_on('Save')
       expect(page).to have_content("Collection was successfully created.")
