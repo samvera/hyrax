@@ -25,7 +25,7 @@ RSpec.describe Hyrax::ValkyrieUpload do
   describe '.file' do
     it 'adds an original_file file to the file_set' do
       described_class.file(
-        filename: File.basename(file.path).to_s,
+        filename: filename,
         file_set: file_set,
         io: file
       )
@@ -41,7 +41,7 @@ RSpec.describe Hyrax::ValkyrieUpload do
 
     it 'makes original_file queryable by use' do
       described_class.file(
-        filename: File.basename(file.path).to_s,
+        filename: filename,
         file_set: file_set,
         io: file,
         user: user
@@ -55,7 +55,7 @@ RSpec.describe Hyrax::ValkyrieUpload do
 
     it 'publishes events' do
       described_class.file(
-        filename: File.basename(file.path).to_s,
+        filename: filename,
         file_set: file_set,
         io: file,
         user: user
