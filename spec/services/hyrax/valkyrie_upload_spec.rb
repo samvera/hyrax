@@ -4,7 +4,9 @@ require 'hyrax/specs/spy_listener'
 
 RSpec.describe Hyrax::ValkyrieUpload do
   let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
-  let(:upload) { FactoryBot.create(:uploaded_file, file_set_uri: file_set.id, file: File.open('spec/fixtures/image.png')) }
+  let(:file) { File.open('spec/fixtures/image.png') }
+  let(:filename) { File.basename(file.path).to_s }
+  let(:user) { create(:user) }
 
   let(:listener) { Hyrax::Specs::AppendingSpyListener.new }
   let(:characterizer) { double(characterize: fits_response) }
@@ -23,9 +25,9 @@ RSpec.describe Hyrax::ValkyrieUpload do
   describe '.file' do
     it 'adds an original_file file to the file_set' do
       described_class.file(
-        filename: Rails.root.join('spec', 'fixtures', 'image.png'),
+        filename: filename,
         file_set: file_set,
-        io: upload.uploader.file.to_file
+        io: file
       )
 
       reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
@@ -39,10 +41,10 @@ RSpec.describe Hyrax::ValkyrieUpload do
 
     it 'makes original_file queryable by use' do
       described_class.file(
-        filename: Rails.root.join('spec', 'fixtures', 'image.png'),
+        filename: filename,
         file_set: file_set,
-        io: upload.uploader.file.to_file,
-        user: upload.user
+        io: file,
+        user: user
       )
 
       resource = Hyrax.query_service.find_by(id: file_set.id)
@@ -53,23 +55,23 @@ RSpec.describe Hyrax::ValkyrieUpload do
 
     it 'publishes events' do
       described_class.file(
-        filename: Rails.root.join('spec', 'fixtures', 'image.png'),
+        filename: filename,
         file_set: file_set,
-        io: upload.uploader.file.to_file,
-        user: upload.user
+        io: file,
+        user: user
       )
       expect(listener.file_uploaded.map(&:payload))
         .to contain_exactly(match(metadata: have_attributes(id: an_instance_of(Valkyrie::ID),
-                                                            original_filename: upload.file.filename)))
+                                                            original_filename: filename)))
 
       expect(listener.file_metadata_updated.map(&:payload))
         .to include(match(metadata: have_attributes(id: an_instance_of(Valkyrie::ID),
-                                                    original_filename: upload.file.filename),
-                          user: upload.user))
+                                                    original_filename: filename),
+                          user: user))
 
       expect(listener.object_membership_updated.map(&:payload))
         .to contain_exactly(match(object: file_set,
-                                  user: upload.user))
+                                  user: user))
     end
   end
 end
