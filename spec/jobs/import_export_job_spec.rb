@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe ImportExportJob do
+# NOTE: This job communicates exclusively with Fedora.
+RSpec.describe ImportExportJob, :active_fedora do
   let(:work)    { create(:work) }
   let(:job)     { described_class.new }
 
