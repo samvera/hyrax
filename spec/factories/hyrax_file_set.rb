@@ -70,6 +70,28 @@ FactoryBot.define do
       end
     end
 
+    trait :under_lease do
+      association :lease, factory: :hyrax_lease
+
+      after(:create) do |fs, _e|
+        Hyrax::LeaseManager.new(resource: fs).apply
+        fs.permission_manager.acl.save
+      end
+    end
+
+    trait :with_expired_enforced_lease do
+      after(:build) do |fs, _evaluator|
+        fs.lease = FactoryBot.valkyrie_create(:hyrax_lease, :expired)
+      end
+
+      after(:create) do |fs, _evaluator|
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_return(10.days.ago)
+        Hyrax::LeaseManager.new(resource: fs).apply
+        fs.permission_manager.acl.save
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_call_original
+      end
+    end
+
     trait :public do
       transient do
         visibility_setting { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
