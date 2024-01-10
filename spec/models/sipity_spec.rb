@@ -59,23 +59,23 @@ RSpec.describe Sipity do
       let(:workflow_state) { create(:workflow_state) }
 
       it 'will raise an conversion error if an id has not been assigned' do
-        object = build(:generic_work)
+        object = build(:hyrax_work)
 
         expect { described_class.Entity(object) }
           .to raise_error Sipity::ConversionError
       end
 
       it 'raises a conversion error when there is no matching entity' do
-        object = create(:generic_work)
+        object = valkyrie_create(:hyrax_work)
 
         expect { described_class.Entity(object) }
           .to raise_error Sipity::ConversionError
       end
 
       it 'gives a matching entity' do
-        object = create(:generic_work)
+        object = valkyrie_create(:hyrax_work)
 
-        entity = Sipity::Entity.create(proxy_for_global_id: object.to_global_id,
+        entity = Sipity::Entity.create(proxy_for_global_id: Hyrax::GlobalID(object).to_s,
                                        workflow_state: workflow_state,
                                        workflow: workflow_state.workflow)
 
