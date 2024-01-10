@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
-  RSpec.describe WorkQueryService do
+  RSpec.describe WorkQueryService, :active_fedora do
     let(:user) { create(:user) }
     let(:work_id) { 'abc' }
     let(:work_relation) { double('Work Relation') }
