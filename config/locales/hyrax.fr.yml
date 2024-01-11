@@ -906,6 +906,11 @@ fr:
             collection_title: Titre de la collection
           this_collection_in_other_collections_description: Vous pouvez ajouter cette collection à d'autres collections en tant que sous-collection.
         form_share:
+          access_options:
+            creator: Créateur
+            depositor: Déposant
+            manager: Gestionnaire
+            viewer: Téléspectateur
           add_group: Ajouter un groupe
           add_sharing: Ajouter un partage
           add_user: Ajouter un utilisateur

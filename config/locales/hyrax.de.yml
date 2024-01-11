@@ -905,6 +905,11 @@ de:
             collection_title: Sammlungstitel
           this_collection_in_other_collections_description: Sie können diese Sammlung anderen Sammlungen als Untersammlung hinzufügen.
         form_share:
+          access_options:
+            creator: Schöpfer
+            depositor: Einleger
+            manager: Manager
+            viewer: Zuschauer
           add_group: Gruppe hinzufügen
           add_sharing: Freigaben hinzufügen
           add_user: Benutzer hinzufügen
