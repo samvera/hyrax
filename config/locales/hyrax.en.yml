@@ -584,11 +584,11 @@ en:
         help_html: Select the file with media that represents this work.
         legend_html: Representative Media
       form_share:
-          access_options:
-            creator: Creator
-            depositor: Depositor
-            manager: Manager
-            viewer: Viewer
+        access_options:
+          creator: Creator
+          depositor: Depositor
+          manager: Manager
+          viewer: Viewer
         access_type_to_grant: Access type to grant
         account_label_without_suffix: "%{account_label} (without the %{suffix} part)"
         add_sharing: Add Sharing
