@@ -24,6 +24,7 @@ RSpec.describe Flipflop do
     end
   end
 
+  # NOTE: This is set to true in Koppie's config.
   unless Hyrax.config.disable_wings
     describe "batch_upload?" do
       subject { described_class.batch_upload? }
