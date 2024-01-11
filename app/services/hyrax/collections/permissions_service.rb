@@ -203,7 +203,7 @@ module Hyrax
       end
       private_class_method :deposit_access_to_collection?
 
-      # @api private
+      # @api public
       #
       # Determine if the given user has :manage access for the given collection
       #
@@ -215,7 +215,6 @@ module Hyrax
       def self.manage_access_to_collection?(collection_id:, ability:, exclude_groups: [])
         access_to_collection?(collection_id: collection_id, access: 'manage', ability: ability, exclude_groups: exclude_groups)
       end
-      private_class_method :manage_access_to_collection?
 
       # @api private
       #
