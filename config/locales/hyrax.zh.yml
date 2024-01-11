@@ -903,6 +903,11 @@ zh:
             collection_title: 收藏标题
           this_collection_in_other_collections_description: 您可以将此集合作为子集合添加到其他集合。
         form_share:
+          access_options:
+            creator: 造物主
+            depositor: 储户
+            manager: 经理
+            viewer: 查看器
           add_group: 添加组
           add_sharing: 添加共享
           add_user: 添加用户
