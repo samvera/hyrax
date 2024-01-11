@@ -1,69 +1,69 @@
-     <div id="fileupload">
-        <!-- Redirect browsers with JavaScript disabled to the origin page -->
-        <noscript><input type="hidden" name="redirect" value="<%= main_app.root_path %>" /></noscript>
-        <!-- The table listing the files available for upload/download -->
-        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
-        <% if Hyrax.config.browse_everything? %>
-          <%= t('hyrax.base.form_files.local_upload_browse_everything_html',
-                contact_href: link_to(t("hyrax.upload.alert.contact_href_text"), hyrax.contact_form_index_path),
-                upload_file_limit: Hyrax.config.uploader[:maxNumberOfFiles],
-                upload_size_limit: Hyrax.config.uploader[:maxFileSize] / 1.megabytes) %>
-        <% else %>
-          <%= t('hyrax.base.form_files.local_upload_html',
-                upload_file_limit: Hyrax.config.uploader[:maxNumberOfFiles],
-                upload_size_limit: Hyrax.config.uploader[:maxFileSize] / 1.megabytes) %>
-        <% end %>
-        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-        <div class="fileupload-buttonbar">
-          <div class="row">
-            <div class="col-12">
-                <div class="fileinput-button" id="add-files">
-                  <input id="addfiles" type="file" style="display:none;"  name="files[]" multiple />
-                  <button type="button" class="btn btn-success" onclick="document.getElementById('addfiles').click();">
-                    <span class="fa fa-plus"></span>
-                    <span><%=  t(".add_files") %></span>
-                  </button>
-                </div>
-                <div class="fileinput-button">
-                  <input id="addfolder" type="file" style="display:none;"  name="files[]" multiple directory webkitdirectory />
-                  <button type="button" class="btn btn-success" onclick="document.getElementById('addfolder').click();">
-                    <span class="fa fa-plus"></span>
-                    <span><%=  t(".add_folder") %></span>
-                  </button>
-                </div>
-                <% if Hyrax.config.browse_everything? %>
-                  <%= button_tag(type: 'button', class: 'btn btn-success', id: "browse-btn",
-                    'data-toggle' => 'browse-everything', 'data-route' => browse_everything_engine.root_path,
-                    'data-target' => "#{f.object.persisted? ? "#edit_#{f.object.model.model_name.param_key}_#{f.object.model.id}" : "#new_#{f.object.model.model_name.param_key}"}" ) do %>
-                    <span class="fa fa-plus"></span>
-                    <%= t('hyrax.upload.browse_everything.browse_files_button') %>
-                  <% end %>
-                <% end %>
-                <button type="reset" id="file-upload-cancel-btn" class="btn btn-warning cancel">
-                    <span class="fa fa-ban"></span>
-                    <span><%= t('.cancel_upload') %></span>
-                </button>
-                <!-- The global file processing state -->
-                <span class="fileupload-process"></span>
-            </div>
+<div id="fileupload">
+  <!-- Redirect browsers with JavaScript disabled to the origin page -->
+  <noscript><input type="hidden" name="redirect" value="<%= main_app.root_path %>" /></noscript>
+  <!-- The table listing the files available for upload/download -->
+  <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+  <% if Hyrax.config.browse_everything? %>
+    <%= t('hyrax.base.form_files.local_upload_browse_everything_html',
+          contact_href: link_to(t("hyrax.upload.alert.contact_href_text"), hyrax.contact_form_index_path),
+          upload_file_limit: Hyrax.config.uploader[:maxNumberOfFiles],
+          upload_size_limit: Hyrax.config.uploader[:maxFileSize] / 1.megabytes) %>
+  <% else %>
+    <%= t('hyrax.base.form_files.local_upload_html',
+          upload_file_limit: Hyrax.config.uploader[:maxNumberOfFiles],
+          upload_size_limit: Hyrax.config.uploader[:maxFileSize] / 1.megabytes) %>
+  <% end %>
+  <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+  <div class="fileupload-buttonbar">
+    <div class="row">
+      <div class="col-12">
+          <div class="fileinput-button" id="add-files">
+            <input id="addfiles" type="file" style="display:none;"  name="files[]" multiple />
+            <button type="button" class="btn btn-success" onclick="document.getElementById('addfiles').click();">
+              <span class="fa fa-plus"></span>
+              <span><%=  t(".add_files") %></span>
+            </button>
           </div>
-          <div class="row">
-            <div class="col-12">
-              <!-- The global progress state -->
-              <div class="fileupload-progress fade">
-                  <!-- The global progress bar -->
-                  <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                      <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%;"></div>
-                  </div>
-                  <!-- The extended global progress state -->
-                  <div class="progress-extended">&nbsp;</div>
-              </div>
-            </div>
+          <div class="fileinput-button">
+            <input id="addfolder" type="file" style="display:none;"  name="files[]" multiple directory webkitdirectory />
+            <button type="button" class="btn btn-success" onclick="document.getElementById('addfolder').click();">
+              <span class="fa fa-plus"></span>
+              <span><%=  t(".add_folder") %></span>
+            </button>
           </div>
+          <% if Hyrax.config.browse_everything? %>
+            <%= button_tag(type: 'button', class: 'btn btn-success', id: "browse-btn",
+              'data-toggle' => 'browse-everything', 'data-route' => browse_everything_engine.root_path,
+              'data-target' => "#{f.object.persisted? ? "#edit_#{f.object.model.model_name.param_key}_#{f.object.model.id}" : "#new_#{f.object.model.model_name.param_key}"}" ) do %>
+              <span class="fa fa-plus"></span>
+              <%= t('hyrax.upload.browse_everything.browse_files_button') %>
+            <% end %>
+          <% end %>
+          <button type="reset" id="file-upload-cancel-btn" class="btn btn-warning cancel">
+              <span class="fa fa-ban"></span>
+              <span><%= t('.cancel_upload') %></span>
+          </button>
+          <!-- The global file processing state -->
+          <span class="fileupload-process"></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <!-- The global progress state -->
+        <div class="fileupload-progress fade">
+            <!-- The global progress bar -->
+            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%;"></div>
+            </div>
+            <!-- The extended global progress state -->
+            <div class="progress-extended">&nbsp;</div>
         </div>
-        <div class="dropzone">
-          <%= t('hyrax.base.form_files.dropzone') %>
-        </div>
-     </div>
+      </div>
+    </div>
+  </div>
+  <div class="dropzone">
+    <%= t('hyrax.base.form_files.dropzone') %>
+  </div>
+</div>
 
 <%= render 'hyrax/uploads/js_templates' %>
