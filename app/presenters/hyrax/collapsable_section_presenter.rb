@@ -21,17 +21,14 @@ module Hyrax
     private
 
     def button_tag
-      attrs = {
-        role: 'button',
-        class: "#{button_class}collapse-toggle nav-link",
-        data: { toggle: 'collapse' },
-        href: "##{id}",
-        onclick: "toggleCollapse(this)",
-        'aria-expanded' => open,
-        'aria-controls' => id
-      }
-      attrs[:title] = title if title.present?
-      tag.a(attrs) do
+      tag.a(role: 'button',
+            class: "#{button_class}collapse-toggle nav-link",
+            data: { toggle: 'collapse' },
+            href: "##{id}",
+            onclick: "toggleCollapse(this)",
+            'aria-expanded' => open,
+            'aria-controls' => id,
+            title: title) do
         safe_join([tag.span('', class: icon_class, 'aria-hidden': true),
                    tag.span(text)], ' ')
       end
