@@ -30,8 +30,6 @@ module Hyrax
     require 'hyrax/model_decorator'
     require 'hyrax/publisher'
     require 'hyrax/schema'
-    # We need to require this so that we have access to the `Hyrax::Forms.ResourceForm` method
-    require 'hyrax/forms/resource_form'
     require 'hyrax/search_state'
     require 'hyrax/transactions'
     require 'hyrax/errors'
@@ -93,6 +91,9 @@ module Hyrax
       require 'wings' unless Hyrax.config.disable_wings
       require 'freyja' unless Hyrax.config.disable_freyja
       require 'frigg' unless Hyrax.config.disable_frigg
+
+      # We need to require this so that we have access to the `Hyrax::Forms.ResourceForm` method
+      require 'hyrax/forms/resource_form'
     end
 
     initializer 'routing' do
