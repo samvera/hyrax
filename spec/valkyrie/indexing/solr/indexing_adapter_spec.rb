@@ -8,10 +8,11 @@ RSpec.describe Valkyrie::Indexing::Solr::IndexingAdapter, :clean_index, index_ad
   let(:metadata_adapter) { Wings::Valkyrie::MetadataAdapter.new }
   let(:resource) { FactoryBot.valkyrie_create(:hyrax_resource) }
   let(:resource2) { FactoryBot.valkyrie_create(:hyrax_resource) }
+  let(:expected_solr_core) { Hyrax.config.disable_wings ? 'koppie_test' : 'valkyrie-test' }
 
   describe "#connection" do
     it "returns connection" do
-      expect(adapter.connection.uri.to_s).to include 'valkyrie-test'
+      expect(adapter.connection.uri.to_s).to include expected_solr_core
     end
   end
 
