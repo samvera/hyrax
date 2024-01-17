@@ -12,13 +12,6 @@ RSpec.describe Hyrax::My::CollectionsSearchBuilder do
   let(:user) { create(:user) }
   let(:builder) { described_class.new(context) }
   let(:admin_klass) { Hyrax.config.disable_wings ? Hyrax::AdministrativeSet : AdminSet }
-  let(:expected_klasses) do
-    if Hyrax.config.disable_wings
-      [AdminSet, Hyrax::AdministrativeSet, Hyrax::PcdmCollection]
-    else
-      [AdminSet, Hyrax::AdministrativeSet, ::Collection, Hyrax::PcdmCollection]
-    end
-  end
 
   describe '#models' do
     subject { builder.models }
@@ -31,7 +24,7 @@ RSpec.describe Hyrax::My::CollectionsSearchBuilder do
 
     context 'when collection class is something other than ::Collection' do
       before { allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection') }
-      it { is_expected.to contain_exactly(*expected_klasses) }
+      it { is_expected.to contain_exactly(AdminSet, Hyrax::AdministrativeSet, ::Collection, Hyrax::PcdmCollection) }
     end
   end
 
