@@ -52,6 +52,8 @@ RSpec.describe Hyrax::Schema do
 
   describe 'basic metadata' do
     let(:resource) { resource_class.new(attributes) }
+    let!(:date_time_array) { [Time.zone.today, DateTime.current] }
+    let!(:times_parsed) { date_time_array.map { |t| DateTime.parse(t.to_s).strftime("%FT%R") } }
 
     let(:attributes) do
       { abstract: ['lorem ipsum', 'sit dolor'],
@@ -60,7 +62,7 @@ RSpec.describe Hyrax::Schema do
         based_near: ['lorem ipsum', 'sit dolor'],
         contributor: ['moominpapa', 'moominmama'],
         creator: ['moomin'],
-        date_created: [Time.zone.today, DateTime.current],
+        date_created: date_time_array,
         description: ['lorem ipsum', 'sit dolor'],
         bibliographic_citation: ['lorem ipsum', 'sit dolor'],
         identifier: ['lorem ipsum', 'sit dolor'],
@@ -85,10 +87,13 @@ RSpec.describe Hyrax::Schema do
       saved = Hyrax.persister.save(resource: resource)
 
       matchers = attributes.each_with_object({}) do |(k, v), hash|
-        v.is_a?(Array) ? hash[k] = contain_exactly(*v) : v
+        unless k == :date_created
+          v.is_a?(Array) ? hash[k] = contain_exactly(*v) : v
+        end
       end
 
       expect(saved).to have_attributes(**matchers)
+      expect(saved[:date_created].map { |t| DateTime.parse(t.to_s).strftime("%FT%R") }).to match_array(times_parsed)
     end
   end
 end
