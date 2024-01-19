@@ -2,6 +2,6 @@
 
 # Generated via
 #  `rails generate hyrax:collection_resource <%= class_name %>`
-class <%= class_name %>Indexer < Hyrax::PcdmCollectionIndexer
+class <%= class_name %>Indexer < Hyrax::Indexers::PcdmCollectionIndexer
   include Hyrax::Indexer(:<%= file_name %>)
 end

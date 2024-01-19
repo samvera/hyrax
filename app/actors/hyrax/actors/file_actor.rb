@@ -80,7 +80,7 @@ module Hyrax
           :original_file
         when Hyrax::FileMetadata::Use::EXTRACTED_TEXT
           :extracted_file
-        when Hyrax::FileMetadata::Use::THUMBNAIL
+        when Hyrax::FileMetadata::Use::THUMBNAIL_IMAGE
           :thumbnail_file
         else
           :original_file

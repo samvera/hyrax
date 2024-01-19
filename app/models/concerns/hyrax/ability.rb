@@ -53,6 +53,7 @@ module Hyrax
       include Hyrax::Ability::CollectionAbility
       include Hyrax::Ability::CollectionTypeAbility
       include Hyrax::Ability::PermissionTemplateAbility
+      include Hyrax::Ability::ResourceAbility
       include Hyrax::Ability::SolrDocumentAbility
 
       class_attribute :admin_group_name, :registered_group_name, :public_group_name
@@ -76,6 +77,7 @@ module Hyrax
                              :collection_abilities,
                              :collection_type_abilities,
                              :permission_template_abilities,
+                             :resource_abilities,
                              :solr_document_abilities,
                              :trophy_abilities]
     end

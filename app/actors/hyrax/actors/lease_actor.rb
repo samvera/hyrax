@@ -14,12 +14,9 @@ module Hyrax
       def destroy
         case work
         when Valkyrie::Resource
-          lease_manager = Hyrax::LeaseManager.new(resource: work)
-          return if lease_manager.lease.lease_expiration_date.blank?
-
-          lease_manager.deactivate!
-          work.lease = Hyrax.persister.save(resource: lease_manager.lease)
-          Hyrax::AccessControlList(work).save
+          Hyrax::LeaseManager.deactivate_lease_for(resource: work) &&
+            Hyrax.persister.save(resource: work.lease) &&
+            Hyrax::AccessControlList(work).save
         else
           work.lease_visibility! # If the lease has lapsed, update the current visibility.
           work.deactivate_lease!

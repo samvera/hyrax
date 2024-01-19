@@ -39,7 +39,7 @@ class AdminSet < ActiveFedora::Base
            predicate: Hyrax.config.admin_set_predicate,
            class_name: 'ActiveFedora::Base'
 
-  before_destroy :check_if_not_default_set, :check_if_empty
+  before_destroy :check_if_not_default_set, :check_if_empty, prepend: true
   after_destroy :destroy_permission_template
 
   def collection_type_gid

@@ -114,13 +114,13 @@ module Hyrax
 
     ##
     # @return [Boolean] true
-    def pcdm_object?
+    def self.file_set?
       true
     end
 
     ##
     # @return [Boolean] true
-    def file_set?
+    def self.pcdm_object?
       true
     end
   end

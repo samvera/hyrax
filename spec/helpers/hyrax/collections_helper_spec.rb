@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::CollectionsHelper do
+RSpec.describe Hyrax::CollectionsHelper, :clean_repo do
   let(:user) { FactoryBot.create(:user, groups: ['admin']) }
   let(:ability) { Ability.new(user) }
 
@@ -28,20 +28,20 @@ RSpec.describe Hyrax::CollectionsHelper do
     end
 
     it 'gives a list of available collections' do
-      FactoryBot.create(:collection) # other collection
-      current_collection = FactoryBot.create(:collection)
+      valkyrie_create(:hyrax_collection) # other collection
+      current_collection = valkyrie_create(:hyrax_collection)
 
       expect(helper.available_child_collections(collection: current_collection))
         .not_to be_empty
     end
 
     context 'with a presenter' do
-      let(:collection) { FactoryBot.create(:collection) }
+      let(:collection) { valkyrie_create(:hyrax_collection) }
       let(:presenter)  { Hyrax::CollectionPresenter.new(solr_doc, ability) }
-      let(:solr_doc)   { SolrDocument.new(collection.to_solr) }
+      let(:solr_doc)   { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: collection).to_solr) }
 
       before do
-        FactoryBot.create(:collection) # other collection
+        valkyrie_create(:hyrax_collection) # other collection
       end
 
       it 'gives a list of available collections' do
@@ -144,7 +144,7 @@ RSpec.describe Hyrax::CollectionsHelper do
   end
 
   describe "button_for_remove_selected_from_collection" do
-    let(:collection) { create(:collection) }
+    let(:collection) { valkyrie_create(:hyrax_collection) }
 
     it "creates a button to the collections delete path" do
       str = button_for_remove_selected_from_collection collection
@@ -222,7 +222,7 @@ RSpec.describe Hyrax::CollectionsHelper do
       end
     end
 
-    context "when receiving an collection_form" do
+    context "when receiving an collection_form", :active_fedora do
       let(:ability)    { Ability.new(create(:user)) }
       let(:repository) { double }
       let(:model)      { build(:collection_lw) }

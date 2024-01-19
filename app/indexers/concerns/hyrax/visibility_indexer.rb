@@ -7,7 +7,7 @@ module Hyrax
   # views.
   #
   # @example
-  #   class MyIndexer < Hyrax::ValkyrieIndexer
+  #   class MyIndexer < Hyrax::Indexers::ResourceIndexer
   #     include Hyrax::VisibilityIndexer
   #   end
   module VisibilityIndexer

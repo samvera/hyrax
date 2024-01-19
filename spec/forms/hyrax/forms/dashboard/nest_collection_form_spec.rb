@@ -26,7 +26,7 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
     it { is_expected.to respond_to(:persist_nested_collection_for) }
   end
 
-  context "when parent/child are ActiveFedora object" do
+  context "when parent/child are ActiveFedora object", :active_fedora do
     subject(:form) do
       described_class.new(parent: parent,
                           child: child,

@@ -37,6 +37,7 @@ module Hyrax
       require 'hyrax/transactions/steps/apply_collection_type_permissions'
       require 'hyrax/transactions/steps/apply_permission_template'
       require 'hyrax/transactions/steps/change_depositor'
+      require 'hyrax/transactions/steps/check_for_default_admin_set'
       require 'hyrax/transactions/steps/check_for_empty_admin_set'
       require 'hyrax/transactions/steps/delete_access_control'
       require 'hyrax/transactions/steps/delete_all_file_metadata'
@@ -170,6 +171,10 @@ module Hyrax
       end
 
       namespace 'admin_set_resource' do |ops| # Hyrax::AdministrativeSet resource
+        ops.register 'check_default' do
+          Steps::CheckForDefaultAdminSet.new
+        end
+
         ops.register 'check_empty' do
           Steps::CheckForEmptyAdminSet.new
         end

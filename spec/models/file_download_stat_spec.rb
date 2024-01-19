@@ -3,7 +3,7 @@ RSpec.describe FileDownloadStat, type: :model do
   let(:file_id) { file.id }
   let(:date) { Time.current }
   let(:file_stat) { described_class.new(downloads: "2", date: date, file_id: file_id) }
-  let(:file) { mock_model(FileSet, id: 99) }
+  let(:file) { mock_model('MockFileSet', id: 99) }
 
   it "has attributes" do
     expect(file_stat).to respond_to(:downloads)

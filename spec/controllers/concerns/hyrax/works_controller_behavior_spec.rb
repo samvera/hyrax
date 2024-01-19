@@ -167,7 +167,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
       end
 
       context 'when adding a collection' do
-        let(:collection) { FactoryBot.valkyrie_create(:pcdm_collection) }
+        let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
 
         let(:create_params) do
           { title: 'comet in moominland',
@@ -198,7 +198,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         end
 
         context 'with both setter styles' do
-          let(:other_collection) { FactoryBot.valkyrie_create(:pcdm_collection) }
+          let(:other_collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
           let(:create_params) do
             { title: 'comet in moominland',
               member_of_collections_attributes:

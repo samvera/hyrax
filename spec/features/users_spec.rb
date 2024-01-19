@@ -7,7 +7,7 @@ RSpec.describe "User Profile", type: :feature do
   let(:profile_path) { Hyrax::Engine.routes.url_helpers.user_path(user, locale: 'en') }
 
   context 'when visiting user profile with highlighted works' do
-    let(:work) { create(:work, user: user) }
+    let(:work) { valkyrie_create(:monograph, title: 'Test Monograph 123', depositor: user.user_key) }
 
     before do
       user.trophies.create!(work_id: work.id)
@@ -18,7 +18,7 @@ RSpec.describe "User Profile", type: :feature do
       expect(page).to have_content(user.email)
 
       within '.highlighted-works' do
-        expect(page).to have_link(work.to_s)
+        expect(page).to have_link('Test Monograph 123', href: "/concern/monographs/#{work.id}?locale=en")
       end
 
       within '.panel-user' do

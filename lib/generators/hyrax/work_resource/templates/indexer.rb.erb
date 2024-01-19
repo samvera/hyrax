@@ -2,7 +2,7 @@
 
 # Generated via
 #  `rails generate hyrax:work_resource <%= class_name %>`
-class <%= class_name %>Indexer < Hyrax::ValkyrieWorkIndexer
+class <%= class_name %>Indexer < Hyrax::Indexers::PcdmObjectIndexer(<%= class_name %>)
   include Hyrax::Indexer(:basic_metadata)
   include Hyrax::Indexer(:<%= file_name %>)
 

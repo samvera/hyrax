@@ -173,7 +173,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       it 'is empty' do
         form.prepopulate!
 
-        expect(form.in_works_ids).to eq []
+        expect(form.in_works_ids.to_a).to eq []
       end
     end
   end

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe ContentNewVersionEventJob do
   let(:user) { create(:user) }
-  let(:file_set) { create(:file_set, title: ['Hamlet'], user: user) }
-  let(:generic_work) { create(:generic_work, title: ['BethsMac'], user: user) }
+  let(:file_set) { valkyrie_create(:hyrax_file_set, title: ['Hamlet'], depositor: user.user_key) }
   let(:mock_time) { Time.zone.at(1) }
   let(:event) { { action: "User <a href=\"/users/#{user.to_param}\">#{user.user_key}</a> has added a new version of <a href=\"/concern/file_sets/#{file_set.id}\">Hamlet</a>", timestamp: '1' } }
 

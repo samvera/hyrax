@@ -1,5 +1,8 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::MemberPresenterFactory do
+
+# NOTE: Valkyrie has it's own factory (Hyrax::PcdmMemberPresenterFactory).
+#   This is the legacy ActiveFedora factory.
+RSpec.describe Hyrax::MemberPresenterFactory, :active_fedora do
   subject(:factory) { described_class.new(solr_document, ability, request) }
 
   let(:solr_document) { SolrDocument.new(attributes) }

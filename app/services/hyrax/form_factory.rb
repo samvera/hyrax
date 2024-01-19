@@ -23,7 +23,7 @@ module Hyrax
     #
     # @see https://trailblazer.to/2.0/gems/reform/prepopulator.html
     def build(model, _ability, _controller)
-      Hyrax::Forms::ResourceForm.for(model).prepopulate!
+      Hyrax::Forms::ResourceForm.for(resource: model).prepopulate!
     end
   end
 end

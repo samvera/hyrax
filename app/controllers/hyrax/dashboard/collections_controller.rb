@@ -512,7 +512,7 @@ module Hyrax
         @form ||=
           case @collection
           when Valkyrie::Resource
-            form = Hyrax::Forms::ResourceForm.for(@collection)
+            form = Hyrax::Forms::ResourceForm.for(resource: @collection)
             form.prepopulate!
             form
           else

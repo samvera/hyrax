@@ -22,7 +22,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
   end
 
   context 'with a change_set style form' do
-    let(:form) { Hyrax::Forms::ResourceForm.for(work) }
+    let(:form) { Hyrax::Forms::ResourceForm.for(resource: work) }
     let(:work) { build(:monograph, title: 'comet in moominland') }
 
     context 'for a new object' do

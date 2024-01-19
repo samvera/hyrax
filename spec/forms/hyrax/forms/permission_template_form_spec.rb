@@ -3,8 +3,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   let(:permission_template) { build(:permission_template) }
   let(:form) { described_class.new(permission_template) }
   let(:today) { Time.zone.today }
-  let(:admin_set) { create(:admin_set) }
-  let(:collection) { build(:collection_lw) }
+  let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
 
   subject { form }
 
@@ -183,7 +182,8 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
         expect(count_workflow_roles_for(user)).to eq 1
         expect(count_workflow_roles_for(user2)).to eq 1
         expect(count_workflow_roles_for(user3)).to eq 0
-        expect(admin_set.reload.edit_users).to match_array [user2.user_key, user.user_key]
+        reload = Hyrax.query_service.find_by id: admin_set.id
+        expect(reload.edit_users).to match_array [user2.user_key, user.user_key]
       end
     end
 
@@ -196,7 +196,8 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
       it "also adds edit_access to the AdminSet itself" do
         expect { subject }.to change { permission_template.access_grants.count }.by(1)
-        expect(admin_set.reload.edit_groups).to match_array ['bob', 'archivists']
+        reload = Hyrax.query_service.find_by id: admin_set.id
+        expect(reload.edit_groups).to match_array ['bob', 'archivists']
       end
     end
 
@@ -210,7 +211,8 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
       it "doesn't adds edit_access to the AdminSet itself" do
         expect { subject }.to change { permission_template.access_grants.count }.by(1)
-        expect(admin_set.reload.edit_users).to match_array [user.user_key] # MANAGE user added in before do
+        reload = Hyrax.query_service.find_by id: admin_set.id
+        expect(reload.edit_users).to match_array [user.user_key] # MANAGE user added in before do
       end
     end
 

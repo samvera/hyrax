@@ -99,8 +99,8 @@ services:
       - /dev/shm:/dev/shm
     shm_size: 2G
     ports:
-      - "4445:4444"
-      - "5960:5900"
+      - "4446:4444"
+      - "5961:5900"
     networks:
       - koppie
 

@@ -33,6 +33,7 @@ module Hyrax
           loc
         end
       end
+      based_near << Hyrax::ControlledVocabularies::Location.new if based_near.empty?
     end
   end
 end

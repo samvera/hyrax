@@ -36,7 +36,7 @@ RSpec.describe Hyrax::Transactions::Steps::SetDefaultAdminSet do
       end
     end
 
-    context 'with an active fedora object' do
+    context 'with an active fedora object', :active_fedora do
       let(:work) { build(:generic_work) }
 
       it 'is success' do

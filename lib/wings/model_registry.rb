@@ -24,6 +24,10 @@ module Wings
       instance.register(*args)
     end
 
+    def self.unregister(*args)
+      instance.unregister(*args)
+    end
+
     def self.lookup(*args)
       instance.lookup(*args)
     end
@@ -38,6 +42,10 @@ module Wings
 
     def register(valkyrie, active_fedora)
       @map[valkyrie.name] = active_fedora.name
+    end
+
+    def unregister(valkyrie)
+      @map.delete(valkyrie.name)
     end
 
     def lookup(valkyrie)

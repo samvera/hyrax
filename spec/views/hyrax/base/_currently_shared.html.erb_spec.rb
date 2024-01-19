@@ -34,7 +34,7 @@ RSpec.describe 'hyrax/base/_currently_shared.html.erb', type: :view do
   end
 
   context "with ResourceForm", valkyrie_adapter: :test_adapter do
-    let(:form) { Hyrax::Forms::ResourceForm.for(work).prepopulate! }
+    let(:form) { Hyrax::Forms::ResourceForm.for(resource: work).prepopulate! }
     let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :public) }
 
     let(:file_set_form) do

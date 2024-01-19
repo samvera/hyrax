@@ -2,6 +2,7 @@
 module Hyrax
   class DownloadsController < ApplicationController
     include Hydra::Controller::DownloadBehavior
+    include Hyrax::StreamFileDownloadsControllerBehavior
     include Hyrax::LocalFileDownloadsControllerBehavior
     include Hyrax::ValkyrieDownloadsControllerBehavior
     include Hyrax::WorkflowsHelper # Provides #workflow_restriction?

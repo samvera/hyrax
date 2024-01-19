@@ -108,13 +108,7 @@ module Hyrax
 
     ##
     # @return [Boolean] true
-    def pcdm_object?
-      true
-    end
-
-    ##
-    # @return [Boolean] true
-    def work?
+    def self.pcdm_object?
       true
     end
   end

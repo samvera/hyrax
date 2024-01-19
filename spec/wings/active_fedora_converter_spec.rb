@@ -155,7 +155,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :active_fedora, :clean_repo do
       end
 
       it 'supports indexing' do
-        expect(converter.convert.indexing_service).to be_a Hyrax::ValkyrieIndexer
+        expect(converter.convert.indexing_service).to be_a Hyrax::Indexers::ResourceIndexer
       end
 
       it 'does not add superflous metadata'
@@ -220,7 +220,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :active_fedora, :clean_repo do
         before do
           module Hyrax::Test
             module Converter
-              class Resource < Valkyrie::Resource
+              class Resource < Hyrax::Resource
                 attribute :member_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
               end
             end

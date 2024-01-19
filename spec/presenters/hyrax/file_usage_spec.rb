@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::FileUsage, type: :model do
+# NOTE: This presenter is currently utilizing multiple classes that are solely focused on ActiveFedora objects and classes.
+#   This class, as well as others involving Statistics and Analytics should be Valkyrized in the future.
+RSpec.describe Hyrax::FileUsage, :active_fedora, type: :model do
   let(:user) { build(:user) }
   let(:file) do
     create(:file_set, user: user)

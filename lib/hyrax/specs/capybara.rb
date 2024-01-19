@@ -51,6 +51,7 @@ Capybara.app_host = "http://#{ip}:#{Capybara.server_port}"
 
 Capybara.default_driver = :rack_test # This is a faster driver
 Capybara.javascript_driver = :selenium_chrome_headless_sandboxless # This is slower
+Capybara.disable_animation = true
 Capybara.default_max_wait_time = ENV.fetch('CAPYBARA_WAIT_TIME', 10) # We may have a slow application, let's give it some time.
 
 Capybara::Screenshot.register_driver(:selenium_chrome_headless_sandboxless) do |driver, path|

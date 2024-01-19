@@ -15,21 +15,31 @@ RSpec.describe Hyrax do
 
     context 'when uploaded from a generic storage adapter' do
       let(:storage_adapter) { Valkyrie::StorageAdapter.find(:derivatives_disk) }
-
       let(:file) do
         storage_adapter.upload(resource: file_set,
                                file: Tempfile.new('moomin'),
                                original_filename: 'test_for_filemetadata')
       end
+      let!(:unpersisted_file_meta) { described_class::FileMetadata(file) }
+      let(:wings_disabled?) { Hyrax.config.disable_wings }
 
       it 'builds a new FileMetadata' do
-        expect(described_class::FileMetadata(file))
-          .to have_attributes(file_identifier: file.id)
+        expect(unpersisted_file_meta).to have_attributes(file_identifier: file.id)
       end
 
       it 'can recover the metadata after saving' do
-        file_meta = Hyrax.persister.save(resource: described_class::FileMetadata(file))
-        expect(described_class::FileMetadata(file)).to eq file_meta
+        file_meta = Hyrax.persister.save(resource: unpersisted_file_meta)
+
+        expect(described_class::FileMetadata(file)).to eq file_meta unless wings_disabled?
+        if wings_disabled?
+          expect(unpersisted_file_meta).to have_attributes(
+            internal_resource: file_meta.internal_resource,
+            original_filename: file_meta.original_filename,
+            mime_type: file_meta.mime_type
+          )
+        end
+        expect(unpersisted_file_meta.file_identifier.id).to eq(file_meta.file_identifier.id)
+        expect(unpersisted_file_meta.pcdm_use.first.to_s).to eq(file_meta.pcdm_use.first.to_s)
       end
     end
   end
@@ -56,14 +66,9 @@ RSpec.describe Hyrax::FileMetadata do
   end
 
   context 'when saved with a file' do
-    subject(:file_metadata) { Hyrax.custom_queries.find_file_metadata_by(id: stored_file.id) }
-    let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
-
-    let(:stored_file) do
-      Hyrax.storage_adapter.upload(resource: file_set,
-                                   file: file,
-                                   original_filename: 'world.png')
-    end
+    let(:file) { create(:uploaded_file, file: File.open('spec/fixtures/world.png')) }
+    let(:file_metadata) { valkyrie_create(:file_metadata, :original_file, :with_file, file: file) }
+    let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, files: [file_metadata], original_file: file_metadata) }
 
     it 'can be changed and saved' do
       file_metadata.creator = 'Tove'
@@ -90,7 +95,7 @@ RSpec.describe Hyrax::FileMetadata do
 
     context 'when use does not say file is the original file' do
       before do
-        file_metadata.pcdm_use = [described_class::Use::THUMBNAIL, pcdm_file_uri]
+        file_metadata.pcdm_use = [described_class::Use::THUMBNAIL_IMAGE, pcdm_file_uri]
       end
 
       it { is_expected.not_to be_original_file }
@@ -100,7 +105,7 @@ RSpec.describe Hyrax::FileMetadata do
   describe '#thumbnail_file?' do
     context 'when use says file is the thumbnail file' do
       before do
-        file_metadata.pcdm_use = [described_class::Use::THUMBNAIL, pcdm_file_uri]
+        file_metadata.pcdm_use = [described_class::Use::THUMBNAIL_IMAGE, pcdm_file_uri]
       end
 
       it { is_expected.to be_thumbnail_file }

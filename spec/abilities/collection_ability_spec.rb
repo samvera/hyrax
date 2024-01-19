@@ -20,10 +20,6 @@ RSpec.describe Hyrax::Ability, :clean_repo do
     Hyrax.config.collection_model = current_collection_model
   end
 
-  after :all do
-    Hyrax.config.collection_model = @current_collection_model
-  end
-
   # rubocop:disable RSpec/ExampleLength
   context 'when admin user' do
     let(:current_user) { admin }

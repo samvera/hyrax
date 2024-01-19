@@ -15,7 +15,7 @@ RSpec.describe ChangeDepositorEventJob do
     allow(Time).to receive(:now).at_least(:once).and_return(mock_time)
   end
 
-  context "when passing an ActiveFedora work" do
+  context "when passing an ActiveFedora work", :active_fedora do
     let(:generic_work) { create(:generic_work, title: ['BethsMac'], user: new_user, proxy_depositor: previous_user.user_key) }
 
     it "logs the event to the proxy depositor's profile, the depositor's dashboard, and the FileSet" do
