@@ -2,10 +2,10 @@
 FactoryBot.define do
   factory :uploaded_file, class: Hyrax::UploadedFile do
     user
-    file { File.open('spec/fixtures/image.jp2') }
+    file { File.open(Hyrax::engine.root + 'spec/fixtures/image.jp2') }
 
     trait :audio do
-      file { File.open('spec/fixtures/sample_mpeg4.mp4') }
+      file { File.open(Hyrax::engine.root + 'spec/fixtures/sample_mpeg4.mp4') }
     end
   end
 end
