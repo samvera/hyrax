@@ -17,9 +17,9 @@ group :development, :test do
   gem 'okcomputer'
   gem 'pry' unless ENV['CI']
   gem 'pry-byebug' unless ENV['CI']
+  gem 'rspec'
   gem 'ruby-prof', require: false
   gem "simplecov", require: false
-  gem 'rspec'
 end
 
 # TODO: Rob remove after valk merge
