@@ -21,7 +21,7 @@ RSpec.describe Hyrax::WorkFormHelper do
       end
     end
 
-    context 'with a batch upload form' do
+    context 'with a batch upload form', :active_fedora do
       let(:work) { stub_model(GenericWork, id: '456') }
       let(:ability) { double }
       let(:form) { Hyrax::Forms::BatchUploadForm.new(work, ability, controller) }
@@ -61,7 +61,7 @@ RSpec.describe Hyrax::WorkFormHelper do
       end
     end
 
-    context 'with a batch upload form' do
+    context 'with a batch upload form', :active_fedora do
       let(:work) { stub_model(GenericWork, id: '456') }
       let(:ability) { double }
       let(:form) { Hyrax::Forms::BatchUploadForm.new(work, ability, controller) }
