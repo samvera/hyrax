@@ -38,7 +38,7 @@ module Valkyrie
         end
 
         def reset!
-          connection = default_connection
+          self.connection = default_connection
         end
 
         private

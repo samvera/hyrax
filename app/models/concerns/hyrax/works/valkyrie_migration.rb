@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module Hyrax
   module Works
     module ValkyrieMigration
       extend ActiveSupport::Concern
 
       included do
-        attribute :internal_resource, Valkyrie::Types::Any.default(self.name.gsub(/Resource$/,'').freeze), internal: true
+        attribute :internal_resource, Valkyrie::Types::Any.default(name.gsub(/Resource$/, '').freeze), internal: true
       end
 
       class_methods do
@@ -20,11 +22,9 @@ module Hyrax
       def members
         return @members if @members.present?
         @members = member_ids.map do |id|
-          begin
-            Hyrax.query_service.find_by(id: id)
-          rescue Valkyrie::Persistence::ObjectNotFoundError
-            Rails.logger.warn("Could not find member #{id} for #{self.id}")
-          end
+          Hyrax.query_service.find_by(id: id)
+        rescue Valkyrie::Persistence::ObjectNotFoundError
+          Rails.logger.warn("Could not find member #{id} for #{self.id}")
         end
       end
 

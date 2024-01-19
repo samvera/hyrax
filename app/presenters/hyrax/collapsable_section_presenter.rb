@@ -2,6 +2,7 @@
 module Hyrax
   # Draws a collapsable list widget using the Bootstrap 3 / Collapse.js plugin
   class CollapsableSectionPresenter
+    # rubocop:disable Metrics/ParameterLists
     def initialize(view_context:, text:, id:, icon_class:, open:, title: nil)
       @view_context = view_context
       @text = text
@@ -10,6 +11,7 @@ module Hyrax
       @open = open
       @title = title
     end
+    # rubocop:enable Metrics/ParameterLists
 
     attr_reader :view_context, :text, :id, :icon_class, :open, :title
     delegate :content_tag, :safe_join, :tag, to: :view_context
