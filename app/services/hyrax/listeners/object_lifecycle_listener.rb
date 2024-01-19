@@ -10,6 +10,9 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_object_deleted(event)
+        # Accessing a non-existent key on a Dry::Events::Event will raise a KeyError; hence
+        # we cast the event to a hash
+        event = event.to_h
         object_id = event[:object]&.id || event[:id]
         ContentDeleteEventJob.perform_later(object_id.to_s, event[:user])
       end

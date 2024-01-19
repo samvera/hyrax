@@ -38,10 +38,9 @@ module Hyrax
       def on_object_deleted(event)
         return unless event[:object]
         gid = Hyrax::ValkyrieGlobalIdProxy.new(resource: event[:object]).to_global_id
-        return unless gid.present?
+        return if gid.blank?
         Sipity::Entity.where(proxy_for_global_id: gid.to_s).destroy_all
       end
-
     end
   end
 end
