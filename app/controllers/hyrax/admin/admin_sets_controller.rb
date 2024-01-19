@@ -99,7 +99,7 @@ module Hyrax
       case @admin_set
       when Valkyrie::Resource
         transactions['admin_set_resource.destroy'].call(@admin_set).value_or do |failure|
-          redirect_to hyrax.admin_admin_set_path(admin_set_id), alert: failure.first
+          return redirect_to hyrax.admin_admin_set_path(admin_set_id), alert: failure.first
         end
         after_delete_success
       else
@@ -182,7 +182,7 @@ module Hyrax
       @form ||=
         case @admin_set
         when Valkyrie::Resource
-          Hyrax::Forms::ResourceForm.for(@admin_set)
+          Hyrax::Forms::ResourceForm.for(resource: @admin_set)
         else
           form_class.new(@admin_set, current_ability, repository)
         end

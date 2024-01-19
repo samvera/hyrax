@@ -131,7 +131,16 @@ module Hyrax
     end
 
     def lease_enforced?
-      lease_expiration_date.present?
+      return false if lease_expiration_date.blank?
+
+      indexed_lease_visibility = first('visibility_during_lease_ssim')
+      # if we didn't index an embargo visibility, assume the release date means
+      # it's enforced
+      return true if indexed_lease_visibility.blank?
+
+      # if the visibility and the visibility during lease are the same, we're
+      # enforcing the lease
+      self['visibility_ssi'] == indexed_lease_visibility
     end
 
     private

@@ -2,7 +2,7 @@
 RSpec.describe Hyrax::FileSetHelper do
   describe '#display_media_download_link?' do
     let(:ability)  { double(Ability) }
-    let(:file_set) { FactoryBot.create(:file_set) }
+    let(:file_set) { valkyrie_create(:hyrax_file_set) }
 
     before do
       allow(controller).to receive(:current_ability).and_return(ability)
@@ -22,9 +22,9 @@ RSpec.describe Hyrax::FileSetHelper do
 
     context 'with a FileSetPresenter' do
       let(:ability) { Ability.new(user) }
-      let(:file_set) { FactoryBot.create(:file_set, user: user) }
+      let(:file_set) { valkyrie_create(:hyrax_file_set, :public, depositor: user.user_key) }
       let(:presenter) { Hyrax::FileSetPresenter.new(solr_document, ability) }
-      let(:solr_document) { SolrDocument.new(file_set.to_solr) }
+      let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: file_set).to_solr) }
       let(:user) { FactoryBot.create(:user) }
 
       it 'resolves permissions based on the solr document' do

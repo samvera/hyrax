@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-require 'hyrax/specs/shared_specs'
-
 RSpec.describe Hyrax::ValkyrieCollectionIndexer do
-  let(:resource) { FactoryBot.valkyrie_create(:hyrax_collection) }
-  let(:indexer_class) { described_class }
-
-  it_behaves_like 'a Collection indexer'
+  it "is deprecated" do
+    expect(Deprecation).to receive(:warn).with(/Hyrax::ValkyrieCollectionIndexer/)
+    expect(Deprecation).to receive(:warn).with(/Hyrax::PcdmCollectionIndexer/)
+    expect(described_class.new(resource: Hyrax::PcdmCollection.new)).to be_a Hyrax::Indexers::PcdmCollectionIndexer
+  end
 end

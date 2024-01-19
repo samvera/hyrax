@@ -42,8 +42,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
       it 'can remove admin group from viewers'
 
       context 'when source is an admin set' do
-        let(:admin_set) { FactoryBot.create(:admin_set, edit_users: [user_liz.user_key]) }
-        # let(:admin_set) { FactoryBot.create(:admin_set) }
+        let(:admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set, edit_users: [user_liz.user_key]) }
 
         let(:permission_template) do
           FactoryBot.create(:permission_template, source_id: admin_set.id)
@@ -128,7 +127,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
 
       context 'when source is a collection' do
         let(:permission_template) { create(:permission_template, source_id: collection.id) }
-        let(:collection) { create(:collection, edit_users: [user_liz.user_key]) }
+        let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, edit_users: [user_liz.user_key], with_permission_template: false) }
 
         context 'when deleting the admin users group' do
           let(:agent_type) { 'group' }

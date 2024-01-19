@@ -29,7 +29,7 @@ module Hyrax
           @pageviews = Hyrax::Analytics.daily_events_for_id(@document.id, 'work-view')
           @uniques = Hyrax::Analytics.unique_visitors_for_id(@document.id)
           @downloads = Hyrax::Analytics.daily_events_for_id(@document.id, 'file_set_in_work_download')
-          @files = paginate(@document._source["file_set_ids_ssim"], rows: 5)
+          @files = paginate(@document._source["member_ids_ssim"], rows: 5)
           respond_to do |format|
             format.html
             format.csv { export_data }

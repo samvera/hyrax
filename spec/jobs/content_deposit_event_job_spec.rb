@@ -2,10 +2,10 @@
 RSpec.describe ContentDepositEventJob do
   let(:user) { create(:user) }
   let(:mock_time) { Time.zone.at(1) }
-  let(:curation_concern) { create(:work, title: ['MacBeth'], user: user) }
+  let(:curation_concern) { valkyrie_create(:monograph, title: ['MacBeth'], depositor: user.user_key) }
   let(:event) do
     {
-      action: "User <a href=\"/users/#{user.to_param}\">#{user.user_key}</a> has deposited <a href=\"/concern/generic_works/#{curation_concern.id}\">MacBeth</a>",
+      action: "User <a href=\"/users/#{user.to_param}\">#{user.user_key}</a> has deposited <a href=\"/concern/monographs/#{curation_concern.id}\">MacBeth</a>",
       timestamp: '1'
     }
   end

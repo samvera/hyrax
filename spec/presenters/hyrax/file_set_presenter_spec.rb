@@ -44,7 +44,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:current_ability) { ability }
 
     it 'is deprecated' do
-      expect(Deprecation).to receive(:warn)
+      expect(Deprecation).to receive(:warn).at_least(:once)
 
       presenter.user_can_perform_any_action?
     end

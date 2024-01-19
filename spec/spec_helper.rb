@@ -251,7 +251,7 @@ RSpec.configure do |config|
 
   config.profile_examples = 10
 
-  config.before(:example, :active_fedora) do
+  config.prepend_before(:context, :active_fedora) do
     skip("Don't test Wings") if Hyrax.config.disable_wings
   end
 

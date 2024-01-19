@@ -33,7 +33,7 @@ module Hyrax
 
     ##
     # @return [Boolean] true
-    def collection?
+    def self.pcdm_collection?
       true
     end
 

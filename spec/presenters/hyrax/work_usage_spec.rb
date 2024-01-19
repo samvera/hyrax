@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::WorkUsage, type: :model do
+RSpec.describe Hyrax::WorkUsage, :active_fedora, type: :model do
   let!(:work) { create(:work, id: 'abc12345xy') }
 
   let(:dates) do

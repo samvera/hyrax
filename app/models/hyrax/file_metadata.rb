@@ -32,26 +32,39 @@ module Hyrax
     # Constants for PCDM Use URIs; use these constants in place of hard-coded
     # URIs in the `::Valkyrie::Vocab::PCDMUse` vocabulary.
     module Use
-      ORIGINAL_FILE = ::Valkyrie::Vocab::PCDMUse.OriginalFile
       EXTRACTED_TEXT = ::Valkyrie::Vocab::PCDMUse.ExtractedText
-      THUMBNAIL = ::Valkyrie::Vocab::PCDMUse.ThumbnailImage
+      INTERMEDIATE_FILE = ::Valkyrie::Vocab::PCDMUse.IntermediateFile
+      ORIGINAL_FILE = ::Valkyrie::Vocab::PCDMUse.OriginalFile
+      PRESERVATION_FILE = ::Valkyrie::Vocab::PCDMUse.PreservationFile
       SERVICE_FILE = ::Valkyrie::Vocab::PCDMUse.ServiceFile
+      THUMBNAIL_IMAGE = ::Valkyrie::Vocab::PCDMUse.ThumbnailImage
+      TRANSCRIPT = ::Valkyrie::Vocab::PCDMUse.Transcript
+
+      THUMBNAIL = ::Valkyrie::Vocab::PCDMUse.ThumbnailImage # for compatibility with earlier versions of Hyrax; prefer +THUMBNAIL_IMAGE+
 
       ##
       # @param use [RDF::URI, Symbol]
       #
       # @return [RDF::URI]
       # @raise [ArgumentError] if no use is known for the argument
-      def uri_for(use:)
+      def uri_for(use:) # rubocop:disable Metrics/MethodLength
         case use
         when RDF::URI
           use
-        when :original_file
-          ORIGINAL_FILE
         when :extracted_file
           EXTRACTED_TEXT
+        when :intermediate_file
+          INTERMEDIATE_FILE
+        when :original_file
+          ORIGINAL_FILE
+        when :preservation_file
+          PRESERVATION_FILE
+        when :service_file
+          SERVICE_FILE
         when :thumbnail_file
-          THUMBNAIL
+          THUMBNAIL_IMAGE
+        when :transcript_file
+          TRANSCRIPT
         else
           raise ArgumentError, "No PCDM use is recognized for #{use}"
         end
@@ -136,7 +149,7 @@ module Hyrax
     ##
     # @return [Boolean]
     def thumbnail_file?
-      pcdm_use.include?(Use::THUMBNAIL)
+      pcdm_use.include?(Use::THUMBNAIL_IMAGE)
     end
 
     ##

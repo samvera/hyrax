@@ -29,7 +29,7 @@ RSpec.describe "hyrax/my/facet.html.erb", type: :view do
   end
 
   it "renders the facet limit" do
-    expect(view).to receive(:render_facet_limit).with(display_facet, layout: false)
+    expect(view).to receive(:render_facet_limit).with(display_facet, layout: false, partial: 'catalog/facet_limit')
     render
   end
 end

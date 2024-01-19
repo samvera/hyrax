@@ -50,6 +50,44 @@ module Hyrax
         I18n.translate("hyrax.models.#{model_name.i18n_key}", default: model_name.human)
       end
 
+      ##
+      # @return [Boolean]
+      def collection?
+        pcdm_collection?
+      end
+
+      ##
+      # @return [Boolean]
+      def file?
+        false
+      end
+
+      ##
+      # @return [Boolean]
+      def file_set?
+        false
+      end
+
+      ##
+      # @return [Boolean]
+      def pcdm_collection?
+        false
+      end
+
+      ##
+      # @return [Boolean]
+      def pcdm_object?
+        false
+      end
+
+      ##
+      # Works are PCDM Objects which are not File Sets.
+      #
+      # @return [Boolean]
+      def work?
+        pcdm_object? && !file_set?
+      end
+
       private
 
       ##
@@ -64,31 +102,39 @@ module Hyrax
     ##
     # @return [Boolean]
     def collection?
-      false
+      self.class.collection?
     end
 
     ##
     # @return [Boolean]
     def file?
-      false
+      self.class.file?
     end
 
     ##
     # @return [Boolean]
     def file_set?
-      false
+      self.class.file_set?
+    end
+
+    ##
+    # @return [Boolean]
+    def pcdm_collection?
+      self.class.pcdm_collection?
     end
 
     ##
     # @return [Boolean]
     def pcdm_object?
-      false
+      self.class.pcdm_object?
     end
 
     ##
+    # Works are PCDM Objects which are not File Sets.
+    #
     # @return [Boolean]
     def work?
-      false
+      self.class.work?
     end
 
     def ==(other)

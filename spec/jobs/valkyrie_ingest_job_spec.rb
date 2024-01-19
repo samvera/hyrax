@@ -66,7 +66,7 @@ RSpec.describe ValkyrieIngestJob do
 
       it 'adds an original_file file to the file_set' do
         described_class.perform_now(upload)
-        described_class.perform_now(thumbnail_upload, pcdm_use: Hyrax::FileMetadata::Use::THUMBNAIL)
+        described_class.perform_now(thumbnail_upload, pcdm_use: Hyrax::FileMetadata::Use::THUMBNAIL_IMAGE)
 
         reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
         files = Hyrax.custom_queries.find_files(file_set: reloaded_file_set)

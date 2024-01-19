@@ -41,7 +41,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       allow(view)
         .to receive(:available_parent_collections_data)
         .with(collection: collection_presenter)
-        .and_return([mock_model(Collection)])
+        .and_return([mock_model('MockCollection')])
 
       view.lookup_context.prefixes.push 'hyrax/my'
       render 'hyrax/my/collections/list_collections', collection_presenter: collection_presenter, is_admin_set: doc.admin_set?

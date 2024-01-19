@@ -1,5 +1,9 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
+
+# NOTE: This has been marked ActiveFedora only because the queries the class utilizes relies only on
+#   AF methods (for example, `lib/hyrax/resource_sync/change_list_writer.rb#L39`). If this fuctionality
+#   is missing in Valkyrie, this class will have to be reworked to include Valkyrie methods.
+RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :active_fedora, :clean_repo do
   let(:sitemap) { 'http://www.sitemaps.org/schemas/sitemap/0.9' }
   let(:public_collection) { create(:public_collection) }
   let(:public_work) { create(:public_generic_work) }

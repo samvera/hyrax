@@ -141,7 +141,7 @@ module Wings
       end
 
       def indexing_service
-        Hyrax::ValkyrieIndexer.for(resource: valkyrie_resource)
+        Hyrax::Indexers::ResourceIndexer.for(resource: valkyrie_resource)
       end
 
       def to_global_id

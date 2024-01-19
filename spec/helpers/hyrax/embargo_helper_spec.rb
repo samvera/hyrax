@@ -79,7 +79,7 @@ RSpec.describe Hyrax::EmbargoHelper do
       end
     end
 
-    context 'with an ActiveFedora resource' do
+    context 'with an ActiveFedora resource', :active_fedora do
       let(:resource) { build(:work) }
 
       it 'returns false' do
@@ -108,7 +108,7 @@ RSpec.describe Hyrax::EmbargoHelper do
       end
     end
 
-    context 'with a HydraEditor::Form' do
+    context 'with a HydraEditor::Form (ActiveFedora)', :active_fedora do
       let(:resource) { Hyrax::GenericWorkForm.new(model, ability, form_controller) }
       let(:model) { build(:work) }
       let(:ability) { :FAKE_ABILITY }
@@ -130,7 +130,7 @@ RSpec.describe Hyrax::EmbargoHelper do
       end
     end
 
-    context 'with a Hyrax::Forms::FailedSubmissionFormWrapper' do
+    context 'with a Hyrax::Forms::FailedSubmissionFormWrapper (ActiveFedora)', :active_fedora do
       let(:resource) { Hyrax::Forms::FailedSubmissionFormWrapper.new(form: form, input_params: {}, permitted_params: {}) }
       let(:form) { Hyrax::GenericWorkForm.new(model, ability, form_controller) }
       let(:model) { build(:work) }

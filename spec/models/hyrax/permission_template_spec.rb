@@ -102,7 +102,7 @@ RSpec.describe Hyrax::PermissionTemplate, valkyrie_adapter: :test_adapter do
       end
     end
 
-    context "with an ActiveFedora ::Collection" do
+    context "with an ActiveFedora ::Collection", :active_fedora do
       let(:collection) { FactoryBot.create(:collection) }
 
       it "sets access controls to template settings" do

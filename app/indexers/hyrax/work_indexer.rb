@@ -15,6 +15,7 @@ module Hyrax
         # This enables us to return a Work when we have a FileSet that matches
         # the search query.  While at the same time allowing us not to return Collections
         # when a work in the collection matches the query.
+        # NOTE: file_set_ids_ssim is not indexed for valkyrie resources
         solr_doc['file_set_ids_ssim'] = solr_doc['member_ids_ssim']
         solr_doc['visibility_ssi'] = object.visibility
 

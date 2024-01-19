@@ -49,11 +49,11 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
       # puts "Agreement : #{page.evaluate_script(%{$('#form-progress').data('save_work_control').depositAgreement.isAccepted})}"
       click_on('Save')
       expect(page).to have_content('My Test Work')
-      expect(page).to have_content "Your files are being processed by Hyrax in the background."
+      expect(page).to have_content "Your files are being processed by #{I18n.t('hyrax.product_name')} in the background."
     end
   end
 
-  context 'when the user is a proxy', perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
+  context 'when the user is a proxy', perform_enqueued: [AttachFilesToWorkJob, IngestJob, ValkyrieIngestJob] do
     let(:second_user) { create(:user) }
 
     before do
@@ -91,7 +91,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
       # puts "Agreement : #{page.evaluate_script(%{$('#form-progress').data('save_work_control').depositAgreement.isAccepted})}"
       click_on('Save')
       expect(page).to have_content('My Test Work')
-      expect(page).to have_content "Your files are being processed by Hyrax in the background."
+      expect(page).to have_content "Your files are being processed by #{I18n.t('hyrax.product_name')} in the background."
 
       sign_in second_user
       click_link 'Works'

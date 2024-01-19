@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 RSpec.describe FeaturedWorkList, type: :model do
-  let(:work1) { create(:generic_work) }
-  let(:work2) { create(:generic_work) }
+  let(:user) { create(:user) }
+  let(:work1) { valkyrie_create(:hyrax_work) }
+  let(:work2) { valkyrie_create(:hyrax_work) }
 
   describe 'featured_works' do
     before do
@@ -17,9 +18,10 @@ RSpec.describe FeaturedWorkList, type: :model do
       end
     end
 
-    context 'when one of the files is deleted' do
+    context 'when one of the works is deleted' do
       before do
-        work1.destroy
+        transaction = Hyrax::Transactions::WorkDestroy.new
+        transaction.with_step_args('work_resource.delete_all_file_sets' => { user: user }).call(work1)
       end
 
       it 'is a list of the remaining featured work objects, each with the generic_work\'s solr_doc' do

@@ -1,16 +1,26 @@
 # frozen_string_literal: true
-RSpec.describe 'searching' do
+
+RSpec.shared_examples "search functionality" do |_adapter|
   let(:user) { create :user }
   let(:subject_value) { 'mustache' }
   let!(:work) do
-    create(:public_work,
-           title: ["Toothbrush"],
-           keyword: [subject_value, 'taco'],
-           user: user)
+    if Hyrax.config.use_valkyrie?
+      FactoryBot.valkyrie_create(:monograph, :public, title: ["Toothbrush"], keyword: [subject_value, 'taco'])
+    else
+      create(:public_work, title: ["Toothbrush"], keyword: [subject_value, 'taco'], user: user)
+    end
   end
 
   let!(:collection) do
-    create(:public_collection_lw, title: ['collection title abc'], description: [subject_value], user: user, members: [work])
+    if Hyrax.config.use_valkyrie?
+      FactoryBot.valkyrie_create(:collection_resource, :public, title: ['collection title abc'], creator: user.email, description: [subject_value], members: [work])
+    else
+      create(:public_collection_lw, title: ['collection title abc'], description: [subject_value], user: user, members: [work])
+    end
+  end
+
+  before do
+    allow(Hyrax.config).to receive(:collection_model).and_return('CollectionResource') if Hyrax.config.use_valkyrie?
   end
 
   context "as a public user", :clean_repo do
@@ -59,5 +69,15 @@ RSpec.describe 'searching' do
       expect(page.body).to include "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=taco&amp;locale=en\">taco</a></span>"
       expect(page.body).to include "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=mustache&amp;locale=en\">mustache</a></span>"
     end
+  end
+end
+
+RSpec.describe 'Searching' do
+  context "when Valkyrie is not used" do
+    include_examples "search functionality"
+  end
+
+  context "when Valkyrie is used" do
+    include_examples "search functionality", index_adapter: :solr_index, valkyrie_adapter: :test_adapter
   end
 end

@@ -1,5 +1,8 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Arkivo::Actor do
+
+return if Hyrax.config.disable_wings
+
+RSpec.describe Hyrax::Arkivo::Actor, :active_fedora do
   before do
     # Don't test characterization on these items; it breaks TravisCI and it's slow
     allow(CharacterizeJob).to receive(:perform_later)

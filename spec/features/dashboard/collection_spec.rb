@@ -10,12 +10,12 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   let(:solr_model_field) { 'has_model_ssim' }
 
   # Setting Title on admin sets to avoid false positive matches with collections.
-  let(:admin_set_a) { create(:admin_set, creator: [admin_user.user_key], title: ['Set A'], with_permission_template: true) }
-  let(:admin_set_b) { create(:admin_set, creator: [user.user_key], title: ['Set B'], edit_users: [user.user_key], with_permission_template: true) }
-  let(:collection1) { FactoryBot.create(:public_collection_lw, user: user, collection_type: collection_type, with_permission_template: true) }
-  let(:collection2) { FactoryBot.create(:public_collection_lw, user: user, collection_type: collection_type, with_permission_template: true) }
-  let(:collection3) { FactoryBot.create(:public_collection_lw, user: admin_user, collection_type: collection_type, with_permission_template: true) }
-  let(:collection4) { FactoryBot.create(:public_collection_lw, user: admin_user, collection_type: user_collection_type, with_permission_template: true) }
+  let(:admin_set_a) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_permission_template, user: admin_user, title: ['Set A'], description: 'A') }
+  let(:admin_set_b) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_permission_template, user: user, title: ['Set B'], edit_users: [user.user_key]) }
+  let(:collection1) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: user, creator: 'A User', collection_type: collection_type) }
+  let(:collection2) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: user, creator: 'A User', collection_type: collection_type) }
+  let(:collection3) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: admin_user, creator: 'An Admin', collection_type: collection_type) }
+  let(:collection4) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: admin_user, creator: 'An Admin', collection_type: user_collection_type) }
 
   describe 'Your Collections tab' do
     context 'when non-admin user' do
@@ -24,11 +24,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         admin_user
         admin_set_a
         admin_set_b
-        create(:permission_template_access,
-               :manage,
-               permission_template: admin_set_b.permission_template,
-               agent_type: 'user',
-               agent_id: user.user_key)
         collection1
         collection2
         collection3
@@ -58,8 +53,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_button 'Collection Type'
         expect(page).to have_link collection_type.title,
                                   href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.to_global_id.to_s))}/
-        expect(page).to have_link 'AdminSet',
-                                  href: /#{solr_model_field}.+#{Regexp.escape('AdminSet')}/
+        expect(page).to have_link Hyrax.config.admin_set_model,
+                                  href: /#{solr_model_field}.+#{Regexp.escape(CGI.escape(Hyrax.config.admin_set_model))}/
         expect(page).not_to have_link user_collection_type.title,
                                       href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.to_global_id.to_s))}/
         expect(page).not_to have_link 'Collection',
@@ -68,21 +63,25 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
 
     context 'when admin user' do
+      let(:admin_set_b) do
+        FactoryBot.valkyrie_create(:hyrax_admin_set,
+                                   :with_permission_template,
+                                   user: user,
+                                   title: ['Set B'],
+                                   edit_users: [user.user_key],
+                                   access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                                     agent_id: user.user_key,
+                                                     access: Hyrax::PermissionTemplateAccess::MANAGE },
+                                                   { agent_type: Hyrax::PermissionTemplateAccess::GROUP,
+                                                     agent_id: 'admin',
+                                                     access: Hyrax::PermissionTemplateAccess::MANAGE }])
+      end
+
       before do
         user
         admin_user
         admin_set_a
         admin_set_b
-        create(:permission_template_access,
-               :manage,
-               permission_template: admin_set_a.permission_template,
-               agent_type: 'user',
-               agent_id: admin_user.user_key)
-        create(:permission_template_access,
-               :manage,
-               permission_template: admin_set_b.permission_template,
-               agent_type: 'group',
-               agent_id: 'admin')
         collection1
         collection2
         collection3
@@ -112,8 +111,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
                                   href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.to_global_id.to_s))}/
         expect(page).to have_link user_collection_type.title,
                                   href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.to_global_id.to_s))}/
-        expect(page).to have_link 'AdminSet',
-                                  href: /#{solr_model_field}.+#{Regexp.escape('AdminSet')}/
+        expect(page).to have_link Hyrax.config.admin_set_model,
+                                  href: /#{solr_model_field}.+#{Regexp.escape(CGI.escape(Hyrax.config.admin_set_model))}/
         expect(page).not_to have_link 'Collection',
                                       href: /#{solr_model_field}.+#{Regexp.escape('Collection')}/
       end
@@ -156,8 +155,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
                                 href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.to_global_id.to_s))}/
       expect(page).to have_link user_collection_type.title,
                                 href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.to_global_id.to_s))}/
-      expect(page).to have_link 'AdminSet',
-                                href: /#{solr_model_field}.+#{Regexp.escape('AdminSet')}/
+      expect(page).to have_link Hyrax.config.admin_set_model,
+                                href: /#{solr_model_field}.+#{Regexp.escape(CGI.escape(Hyrax.config.admin_set_model))}/
       expect(page).not_to have_link 'Collection',
                                     href: /#{solr_model_field}.+#{Regexp.escape('Collection')}/
     end
@@ -165,6 +164,36 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
   describe 'Managed Collections tab (for non-admin users with shared access' do
     let(:user2) { create(:user) }
+    let(:collection1) do
+      FactoryBot.valkyrie_create(:hyrax_collection, :public,
+                                 user: user, creator: 'A User', collection_type: collection_type,
+                                 access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                                   agent_id: user.user_key,
+                                                   access: Hyrax::PermissionTemplateAccess::MANAGE },
+                                                 { agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                                   agent_id: user2.user_key,
+                                                   access: Hyrax::PermissionTemplateAccess::MANAGE }])
+    end
+    let(:collection2) do
+      FactoryBot.valkyrie_create(:hyrax_collection, :public,
+                                 user: user, creator: 'A User', collection_type: collection_type,
+                                 access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                                   agent_id: user.user_key,
+                                                   access: Hyrax::PermissionTemplateAccess::MANAGE },
+                                                 { agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                                   agent_id: user2.user_key,
+                                                   access: Hyrax::PermissionTemplateAccess::DEPOSIT }])
+    end
+    let(:collection4) do
+      FactoryBot.valkyrie_create(:hyrax_collection, :public,
+                                 user: admin_user, creator: 'An Admin', collection_type: user_collection_type,
+                                 access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                                   agent_id: user.user_key,
+                                                   access: Hyrax::PermissionTemplateAccess::MANAGE },
+                                                 { agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                                   agent_id: user2.user_key,
+                                                   access: Hyrax::PermissionTemplateAccess::VIEW }])
+    end
 
     before do
       user
@@ -173,24 +202,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       collection2
       collection3
       collection4
-      create(:permission_template_access,
-             :manage,
-             permission_template: collection1.permission_template,
-             agent_type: 'user',
-             agent_id: user2.user_key)
-      collection1.permission_template.reset_access_controls_for(collection: collection1, interpret_visibility: true)
-      create(:permission_template_access,
-             :deposit,
-             permission_template: collection2.permission_template,
-             agent_type: 'user',
-             agent_id: user2.user_key)
-      collection2.permission_template.reset_access_controls_for(collection: collection2, interpret_visibility: true)
-      create(:permission_template_access,
-             :view,
-             permission_template: collection4.permission_template,
-             agent_type: 'user',
-             agent_id: user2.user_key)
-      collection4.permission_template.reset_access_controls_for(collection: collection4, interpret_visibility: true)
       sign_in user2
       visit '/dashboard/my/collections'
     end
@@ -251,11 +262,13 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
         fill_in('Title', with: title)
         fill_in('Description', with: description)
+        fill_in('Creator', with: 'Doe, Jane')
         fill_in('Related URL', with: 'http://example.com/')
 
         click_button("Save")
         expect(page).to have_content 'Collection was successfully created.'
         expect(page).to have_content title
+        click_link('Additional fields')
         expect(page).to have_content description
       end
 
@@ -273,6 +286,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         stub_request(:get, 'http://api.geonames.org/searchJSON')
           .with(query: hash_including({ 'q': 'minneapolis' }))
           .to_return(status: 200, body: geonames_data)
+        stub_request(:get, 'http://www.geonames.org/getJSON')
+          .with(query: hash_including({ 'geonameId': '5037649' }))
+          .to_return(status: 200, body: File.open(File.join(fixture_path, 'geonames.json')))
         user_collection_type
         sign_in user
         visit '/dashboard/my/collections'
@@ -288,9 +304,10 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
         fill_in('Title', with: title)
         fill_in('Description', with: description)
+        fill_in('Creator', with: 'Doe, Jane')
         fill_in('Related URL', with: 'http://example.com/')
 
-        find('#s2id_collection_based_near').click
+        click_link('Search for a location')
         expect(page).to have_content 'Please enter 2 or more characters'
         find('#s2id_autogen1_search').send_keys("minneapolis")
         expect(page).to have_content location
@@ -299,8 +316,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         click_button("Save")
         expect(page).to have_content 'Collection was successfully created.'
         expect(page).to have_content title
-        expect(page).to have_content description
         click_link('Additional fields')
+        expect(page).to have_content description
         expect(page).to have_content location
       end
     end
@@ -319,9 +336,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
   # TODO: this section is still deactivated
   describe "adding works to a collection", skip: "we need to define a dashboard/works path" do
-    let!(:collection) { create!(:collection, title: ["Barrel of monkeys"], user: user, with_permission_template: true) }
-    let!(:work1) { create(:work, title: ["King Louie"], user: user) }
-    let!(:work2) { create(:work, title: ["King Kong"], user: user) }
+    let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, title: ["Barrel of monkeys"], user: user, creator: 'A User') }
+    let!(:work1) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Louie"], depositor: user.user_key) }
+    let!(:work2) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Kong"], depositor: user.user_key) }
 
     before do
       sign_in user
@@ -342,12 +359,12 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   end
 
   describe 'delete collection' do
-    let!(:empty_collection) { create(:public_collection_lw, title: ['Empty Collection'], user: user, with_permission_template: true) }
-    let!(:collection) { create(:public_collection_lw, title: ['Collection with Work'], user: user, with_permission_template: true) }
+    let!(:empty_collection) { FactoryBot.valkyrie_create(:hyrax_collection, :public, title: ['Empty Collection'], user: user, creator: 'A User') }
+    let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, :public, title: ['Collection with Work'], user: user, creator: 'A User') }
     let!(:admin_user) { create(:admin) }
-    let!(:empty_adminset) { create(:admin_set, title: ['Empty Admin Set'], creator: [admin_user.user_key], with_permission_template: true) }
-    let!(:adminset) { create(:admin_set, title: ['Admin Set with Work'], creator: [admin_user.user_key], with_permission_template: true) }
-    let!(:work) { create(:work, title: ["King Louie"], admin_set: adminset, member_of_collections: [collection], user: user) }
+    let!(:empty_adminset) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_permission_template, title: ['Empty Admin Set'], creator: [admin_user.user_key]) }
+    let!(:adminset) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_permission_template, title: ['Admin Set with Work'], creator: [admin_user.user_key]) }
+    let!(:work) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Louie"], admin_set_id: adminset.id, member_of_collection_ids: [collection.id], depositor: user.user_key) }
 
     # Check table row has appropriate data attributes added
     def check_tr_data_attributes(id, type)
@@ -466,7 +483,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       before do
         create(:permission_template_access,
                :deposit,
-               permission_template: collection.permission_template,
+               permission_template: Hyrax::PermissionTemplate.find_by!(source_id: collection.id),
                agent_type: 'user',
                agent_id: user2.user_key)
         sign_in user2
@@ -553,7 +570,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       before do
         create(:permission_template_access,
                :view,
-               permission_template: adminset.permission_template,
+               permission_template: Hyrax::PermissionTemplate.find_by!(source_id: adminset.id),
                agent_type: 'user',
                agent_id: user2.user_key)
         sign_in user2
@@ -578,18 +595,19 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
   describe 'collection show page' do
     let(:collection) do
-      build(:public_collection_lw, user: user, description: ['collection description'], with_permission_template: true)
+      FactoryBot.valkyrie_create(:hyrax_collection, user: user, members: [work1, work2], description: ['collection description'], creator: 'A User')
     end
-    let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
-    let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
+    let!(:work1) { FactoryBot.valkyrie_create(:monograph, title: ["King Louie"], depositor: user.user_key, edit_users: [user.user_key]) }
+    let!(:work2) { FactoryBot.valkyrie_create(:monograph, title: ["King Kong"], depositor: user.user_key, edit_users: [user.user_key]) }
 
     before do
+      collection
       sign_in user
       visit '/dashboard/my/collections'
     end
 
     it "has creation date for collections and shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
-      expect(page).to have_content(collection.create_date.to_date)
+      expect(page).to have_content(collection.created_at.to_date)
 
       expect(page).to have_content(collection.title.first)
       within('#document_' + collection.id) do
@@ -710,25 +728,25 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   describe 'show pages of a collection' do
     before do
       docs = (0..12).map do |n|
-        { "has_model_ssim" => ["GenericWork"], :id => "zs25x871q#{n}",
+        { "has_model_ssim" => ["Monograph"], :id => "zs25x871q#{n}",
           "depositor_ssim" => [user.user_key],
           "suppressed_bsi" => false,
-          "member_of_collection_ids_ssim" => [collection.id],
-          "nesting_collection__parent_ids_ssim" => [collection.id],
+          "member_of_collection_ids_ssim" => [collection.id.to_s],
+          "nesting_collection__parent_ids_ssim" => [collection.id.to_s],
           "edit_access_person_ssim" => [user.user_key] }
       end
       Hyrax::SolrService.add(docs, commit: true)
 
       sign_in user
     end
-    let(:collection) { create(:named_collection_lw, user: user, with_permission_template: true) }
+    let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['A Collection of Testing'], user: user, creator: 'A User') }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit '/dashboard/my/collections'
       expect(page).to have_content(collection.title.first)
-      within('#document_' + collection.id) do
+      within('#document_' + collection.id.to_s) do
         # Now go to the collection show page
-        click_link("Display all details of collection title")
+        click_link("Display all details of #{collection.title.first}")
       end
       expect(page).to have_css(".pagination")
     end
@@ -736,14 +754,14 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
   describe 'remove works from collection' do
     context 'user that can edit' do
-      let!(:work2) { create(:work, title: ["King Louie"], member_of_collections: [collection1], user: user) }
-      let!(:work1) { create(:work, title: ["King Kong"], member_of_collections: [collection1], user: user) }
+      let!(:work2) { FactoryBot.valkyrie_create(:monograph, title: ["King Louie"], member_of_collection_ids: [collection1.id], depositor: user.user_key, edit_users: [user.user_key]) }
+      let!(:work1) { FactoryBot.valkyrie_create(:monograph, title: ["King Kong"], member_of_collection_ids: [collection1.id], depositor: user.user_key, edit_users: [user.user_key]) }
 
       before do
         sign_in admin_user
       end
       # TODO: move this test to a view unit test (and solve the missing warden problem when using Ability in view tests)
-      it 'shows remove action buttons' do
+      it 'shows remove action buttons', skip: 'Duplicated in next spec' do
         visit "/dashboard/collections/#{collection1.id}"
         expect(page).to have_selector('input.collection-remove', count: 2)
       end
@@ -761,8 +779,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
     end
     context 'user that cannot edit' do
-      let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection3], user: user) }
-      let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection3], user: user) }
+      let!(:work1) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Louie"], member_of_collection_ids: [collection3.id], depositor: user.user_key) }
+      let!(:work2) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Kong"], member_of_collection_ids: [collection3.id], depositor: user.user_key) }
 
       before do
         sign_in user
@@ -780,7 +798,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       before do
         create(:permission_template_access,
                :deposit,
-               permission_template: collection1.permission_template,
+               permission_template: Hyrax::PermissionTemplate.find_by!(source_id: collection1.id),
                agent_type: 'user',
                agent_id: user.user_key)
 
@@ -802,9 +820,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
     context 'from dashboard -> collections action menu' do
       context 'for a collection' do
-        let(:collection) { build(:named_collection_lw, user: user, with_permission_template: true) }
-        let(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
-        let(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
+        let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['A Collection of Tests'], description: ['Test Description'], user: user, creator: 'A User') }
+        let(:work1) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Louie"], member_of_collection_ids: [collection.id], depositor: user.user_key) }
+        let(:work2) { FactoryBot.valkyrie_create(:hyrax_work, title: ["King Kong"], member_of_collection_ids: [collection.id], depositor: user.user_key) }
 
         before do
           collection
@@ -861,7 +879,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
         it "shows edit form" do
           expect(page).to have_selector('h1', text: "Edit Administrative Set: #{admin_set_a.title.first}")
-          expect(page).to have_field('admin_set_description', with: admin_set_a.description.first)
+          expect(page).to have_field('admin_set_description', with: Array(admin_set_a.description).first)
         end
 
         it "does not display a confirmation message when form data has not changed" do
@@ -911,8 +929,10 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'with brandable set' do
-        let(:brandable_collection_id) { create(:collection_lw, user: user, collection_type_settings: [:brandable], with_permission_template: true).id }
-        let(:not_brandable_collection_id) { create(:collection_lw, user: user, collection_type_settings: [:not_brandable], with_permission_template: true).id }
+        let(:brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: brandable_collection_type).id }
+        let(:not_brandable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: not_brandable_collection_type).id }
+        let(:brandable_collection_type) { create(:collection_type, :brandable) }
+        let(:not_brandable_collection_type) { create(:collection_type, :not_brandable) }
 
         it 'to true, it shows Branding tab' do
           visit "/dashboard/collections/#{brandable_collection_id}/edit"
@@ -926,8 +946,10 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'with discoverable set' do
-        let(:discoverable_collection_id) { create(:collection_lw, user: user, collection_type_settings: [:discoverable], with_permission_template: true).id }
-        let(:not_discoverable_collection_id) { create(:collection_lw, user: user, collection_type_settings: [:not_discoverable], with_permission_template: true).id }
+        let(:discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: discoverable_collection_type).id }
+        let(:not_discoverable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: not_discoverable_collection_type).id }
+        let(:discoverable_collection_type) { create(:collection_type, :discoverable) }
+        let(:not_discoverable_collection_type) { create(:collection_type, :not_discoverable) }
 
         it 'to true, it shows Discovery tab' do
           visit "/dashboard/collections/#{discoverable_collection_id}/edit"
@@ -941,8 +963,10 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'with sharable set' do
-        let(:sharable_collection_id) { create(:collection_lw, user: user, collection_type_settings: [:sharable], with_permission_template: true).id }
-        let(:not_sharable_collection_id) { create(:collection_lw, user: user, collection_type_settings: [:not_sharable], with_permission_template: true).id }
+        let(:sharable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: sharable_collection_type).id }
+        let(:not_sharable_collection_id) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: not_sharable_collection_type).id }
+        let(:sharable_collection_type) { create(:collection_type, :sharable) }
+        let(:not_sharable_collection_type) { create(:collection_type, :not_sharable) }
 
         it 'to true, it shows Sharable tab' do
           visit "/dashboard/collections/#{sharable_collection_id}/edit"
@@ -972,14 +996,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
 
     context "navigate through tabs", js: true do
-      let!(:empty_collection) { create(:public_collection_lw, title: ['Empty Collection'], user: user, with_permission_template: true) }
-      let(:collection_id) { create(:collection_lw, user: user, collection_type_settings: [:brandable, :discoverable, :sharable], with_permission_template: true).id }
+      let!(:empty_collection) { FactoryBot.valkyrie_create(:hyrax_collection, :public, title: ['Empty Collection'], user: user, creator: 'A User') }
+      let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, user: user, creator: 'A User', collection_type: collection_type) }
+      let(:collection_type) { create(:collection_type, :brandable, :discoverable, :sharable) }
       let!(:confirm_modal_text) { 'Are you sure you want to leave this tab? Any unsaved data will be lost.' }
       let!(:new_description) { 'New Description' }
 
       before do
         sign_in user
-        visit "/dashboard/collections/#{collection_id}/edit"
+        visit "/dashboard/collections/#{collection.id}/edit"
       end
 
       it "does not display a confirmation message when form data has not changed" do
@@ -990,6 +1015,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       it "displays a confirmation when form data has changed" do
+        click_link('Additional fields')
         fill_in('Description', with: new_description)
         click_link('Sharing')
         within('#nav-safety-modal') do
@@ -998,6 +1024,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       it "changes tab when user dismisses the confirmation by clicking OK" do
+        click_link('Additional fields')
         fill_in('Description', with: new_description)
         click_link('Sharing')
         within('#nav-safety-modal') do
@@ -1010,6 +1037,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       it "does not redisplay the confirmation unless form data is changed" do
+        click_link('Additional fields')
         expect(page).to have_selector('#description', class: 'active')
         expect(page).not_to have_selector('#discovery', class: 'active')
         fill_in('Description', with: new_description)
@@ -1017,6 +1045,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         within('#nav-safety-modal') do
           click_button('OK')
         end
+        # expect(page).not_to have_selector('#nav-safety-modal', visible: true)
+        # expect(page).not_to have_content(confirm_modal_text)
         click_link 'Description'
         expect(page).not_to have_content(confirm_modal_text)
       end

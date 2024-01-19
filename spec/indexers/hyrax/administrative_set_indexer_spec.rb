@@ -1,19 +1,8 @@
 # frozen_string_literal: true
 
-require 'hyrax/specs/shared_specs'
-
 RSpec.describe Hyrax::AdministrativeSetIndexer do
-  let(:resource) { FactoryBot.valkyrie_create(:hyrax_admin_set) }
-  let(:indexer_class) { described_class }
-
-  it_behaves_like 'an Administrative Set indexer'
-
-  subject(:service) { described_class.new(resource: admin_set) }
-  let(:admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set, title: [admin_set_title]) }
-  let(:admin_set_title) { 'An Admin Set' }
-
-  it 'is resolved from an admin set' do
-    expect(Hyrax::ValkyrieIndexer.for(resource: resource))
-      .to be_a described_class
+  it "is deprecated" do
+    expect(Deprecation).to receive(:warn).with(/Hyrax::AdministrativeSetIndexer/)
+    expect(described_class.new(resource: Hyrax::AdministrativeSet.new)).to be_a Hyrax::Indexers::AdministrativeSetIndexer
   end
 end

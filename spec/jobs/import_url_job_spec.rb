@@ -28,7 +28,8 @@ RSpec.describe ImportUrlJob do
     allow(mock_retriever).to receive(:retrieve)
   end
 
-  context 'when use_valkyrie is false' do
+  # NOTE: Valkyrie processing has been marked as "TODO" in the method.
+  context 'when use_valkyrie is false', :active_fedora do
     let(:file_set) do
       FileSet.new(import_url: "http://example.org#{file_hash}",
                   label: label) do |f|

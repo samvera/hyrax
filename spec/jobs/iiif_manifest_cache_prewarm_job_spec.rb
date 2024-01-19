@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe IiifManifestCachePrewarmJob do
-  let(:work) { create(:work_with_files) }
+  let(:work) { valkyrie_create(:monograph, :with_member_file_sets) }
   let(:cache_key) do
     Hyrax::CachingIiifManifestBuilder
       .new

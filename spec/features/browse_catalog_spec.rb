@@ -1,25 +1,17 @@
 # frozen_string_literal: true
 RSpec.describe "Browse catalog:", type: :feature, clean_repo: true do
   let!(:jills_work) do
-    GenericWork.new do |work|
-      work.title = ["Jill's Research"]
-      (1..25).each do |i|
-        work.keyword << ["keyword#{format('%02d', i)}"]
-      end
-      work.apply_depositor_metadata('jilluser')
-      work.read_groups = ['public']
-      work.save!
-    end
+    valkyrie_create(:monograph,
+                  title: ["Jill's Research"],
+                  keyword: (1..25).to_a.map { |i| "keyword#{format('%02d', i)}" },
+                  read_groups: ['public'])
   end
 
   let!(:jacks_work) do
-    GenericWork.new do |work|
-      work.title = ["Jack's Research"]
-      work.keyword = ['jacks_keyword']
-      work.apply_depositor_metadata('jackuser')
-      work.read_groups = ['public']
-      work.save!
-    end
+    valkyrie_create(:monograph,
+                  title: ["Jack's Research"],
+                  keyword: ['jacks_keyword'],
+                  read_groups: ['public'])
   end
 
   before do

@@ -7,11 +7,20 @@ RSpec.describe 'Transferring work ownership:', type: :feature do
   let(:original_owner) { create(:user) }
   let(:new_owner) { create(:user) }
   let!(:work) do
-    create(:public_work,
-           title: ['little_generic_work'],
-           creator: ['little_generic_work.creator'],
-           resource_type: ["stuff"],
-           user: original_owner)
+    if Hyrax.config.use_valkyrie?
+      FactoryBot.valkyrie_create(:monograph,
+        :public,
+        title: ['little_generic_work'],
+        creator: ['little_generic_work.creator'],
+        resource_type: ["stuff"],
+        depositor: original_owner.user_key)
+    else
+      create(:public_work,
+        title: ['little_generic_work'],
+        creator: ['little_generic_work.creator'],
+        resource_type: ["stuff"],
+        user: original_owner)
+    end
   end
 
   describe 'When I request a work transfer:', :js do

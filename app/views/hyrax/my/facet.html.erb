@@ -9,7 +9,7 @@
   <%= render partial: 'facet_index_navigation' if @facet.index_range && @display_facet.index? %>
 
   <div class="facet-extended-list">
-    <%= render_facet_limit(@display_facet, layout: false) %>
+    <%= render_facet_limit(@display_facet, layout: false, partial: 'catalog/facet_limit') %>
   </div>
 
   <%# Removed component footer and placed the facet pagination partial within a `container` div %>

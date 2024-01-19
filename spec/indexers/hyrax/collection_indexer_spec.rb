@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::CollectionIndexer do
+
+# Marked as AF-only, since Valkyrie Collection indexing is handled by Hyrax::PcdmCollectionIndexer.
+RSpec.describe Hyrax::CollectionIndexer, :active_fedora do
   let(:indexer) { described_class.new(collection) }
   let(:collection) { build(:collection_lw) }
   let(:col1id) { 'col1' }

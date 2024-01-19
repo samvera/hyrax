@@ -535,7 +535,7 @@ RSpec.describe Hyrax::FileSetsController do
     end
   end
 
-  describe "with valkyrie", if: ::FileSet < Hyrax::Resource do
+  describe "with valkyrie", :clean_repo, if: ::FileSet < Hyrax::Resource do
     context "when signed in" do
       let(:user)  { FactoryBot.create(:user) }
       before { sign_in user }
@@ -637,7 +637,7 @@ RSpec.describe Hyrax::FileSetsController do
 
         context "when updating the attached file already uploaded" do
           let(:versions) { Hyrax::VersioningService.new(resource: file_metadata).versions }
-          it "spawns a ContentNewVersionEventJob", perform_enqueued: [ValkyrieIngestJob] do
+          it "spawns a ContentNewVersionEventJob", perform_enqueued: [ValkyrieIngestJob, ValkyrieCharacterizationJob] do
             expect(ContentNewVersionEventJob).to receive(:perform_later)
             new_file = FactoryBot.create(:uploaded_file, user: user, file: File.open("spec/fixtures/4-20.png"))
 
@@ -650,7 +650,7 @@ RSpec.describe Hyrax::FileSetsController do
 
             expect(Hyrax::VersionCommitter.where(version_id: versions.last.version_id).pluck(:committer_login))
               .to eq [user.user_key]
-            expect(Hyrax.config.characterization_service).to have_received(:run).exactly(2).times
+            expect(Hyrax.config.characterization_service).to have_received(:run).exactly(1).times
             # TODO: Make this pass. Store a history of original_filenames as a
             # serialized JSON blob on FileMetadata.
             # reloaded_metadata = Hyrax.query_service.find_by(id: file_metadata.id)
@@ -720,7 +720,7 @@ RSpec.describe Hyrax::FileSetsController do
         end
 
         it "updates existing groups and users" do
-          change_set = Hyrax::Forms::ResourceForm.for(file_set)
+          change_set = Hyrax::Forms::ResourceForm.for(resource: file_set)
           Hyrax::Transactions::Container['change_set.update_file_set']
             .with_step_args(
               'file_set.save_acl' => { permissions_params: [{ "type" => 'group', "name" => 'group3', "access" => 'edit' }] }
@@ -751,7 +751,7 @@ RSpec.describe Hyrax::FileSetsController do
 
         context "when there's an error saving" do
           it "draws the edit page" do
-            change_set = Hyrax::Forms::ResourceForm.for(file_set)
+            change_set = Hyrax::Forms::ResourceForm.for(resource: file_set)
             allow(Hyrax::Forms::ResourceForm).to receive(:for).and_return(change_set)
             allow(change_set).to receive(:validate).and_return(false)
             post :update, params: { id: file_set, file_set: { keyword: [''] } }

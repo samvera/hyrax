@@ -10,6 +10,9 @@ module Hyrax
       Rails.cache.fetch(cache_key(id), expires_in: CACHE_EXPIRATION) do
         label.call(find(id))
       end
+    rescue URI::InvalidURIError
+      # Old data may be just a string, display it.
+      uri
     end
 
     private

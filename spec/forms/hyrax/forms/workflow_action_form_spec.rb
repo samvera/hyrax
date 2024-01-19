@@ -12,7 +12,7 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm do
   let(:sipity_entity) do
     FactoryBot
       .create(:sipity_entity,
-              proxy_for_global_id: work.to_global_id.to_s,
+              proxy_for_global_id: Hyrax::GlobalID(work).to_s,
               workflow_state_id: 2)
   end
 

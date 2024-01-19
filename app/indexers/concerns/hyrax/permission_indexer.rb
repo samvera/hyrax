@@ -6,7 +6,7 @@ module Hyrax
   # permissions being up-to-date in the index to support `Hyrax::Ability`.
   #
   # @example
-  #   class MyIndexer < Hyrax::ValkyrieIndexer
+  #   class MyIndexer < Hyrax::Indexers::ResourceIndexer
   #     include Hyrax::PermissionIndexer
   #   end
   module PermissionIndexer

@@ -1,16 +1,16 @@
 # frozen_string_literal: true
-RSpec.describe WorkViewStat, type: :model do
+RSpec.describe WorkViewStat, :clean_repo, type: :model do
   let(:work_id) { work.id }
   let(:user_id) { 123 }
   let(:date) { DateTime.new.in_time_zone }
   let(:work_stat) { described_class.create(work_views: "25", date: date, work_id: work_id, user_id: user_id) }
-  let(:work) { mock_model(GenericWork, id: 199) }
+  let(:work) { valkyrie_create(:monograph) }
 
   it "has attributes" do
     expect(work_stat).to respond_to(:work_views)
     expect(work_stat).to respond_to(:date)
     expect(work_stat).to respond_to(:work_id)
-    expect(work_stat.work_id).to eq("199")
+    expect(work_stat.work_id).to eq(work_id)
     expect(work_stat.date).to eq(date)
     expect(work_stat.work_views).to eq(25)
     expect(work_stat.user_id).to eq(user_id)
@@ -18,7 +18,7 @@ RSpec.describe WorkViewStat, type: :model do
 
   describe ".ga_statistic" do
     let(:start_date) { 2.days.ago }
-    let(:expected_path) { Rails.application.routes.url_helpers.hyrax_generic_work_path(work) }
+    let(:expected_path) { "/concern/monographs/#{work_id}" }
 
     before do
       allow(Hyrax::Analytics).to receive(:profile).and_return(profile)

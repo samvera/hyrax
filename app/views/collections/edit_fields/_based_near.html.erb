@@ -1,8 +1,12 @@
 <%= f.input key,
-  as: :multi_value,
-  input_html: {
-    class: 'form-control',
-    data: { 'autocomplete-url' => "/authorities/search/geonames",
-            'autocomplete' => key }
-  },
-  required: f.object.required?(key) %>
+            as: :controlled_vocabulary,
+            placeholder: 'Search for a location',
+            input_html: {
+              class: 'form-control',
+              data: { 'autocomplete-url' => "/authorities/search/geonames",
+                      'autocomplete' => key }
+            },
+            ### Required for the ControlledVocabulary javascript:
+            wrapper_html: { data: { 'autocomplete-url' => "/authorities/search/geonames",
+                                    'field-name' => key }},
+            required: f.object.required?(key) %>

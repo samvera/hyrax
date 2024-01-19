@@ -5,7 +5,7 @@ RSpec.describe Hyrax::MembershipHelper do
 
   describe '.member_of_collections_json' do
     context 'with a ChangeSet form' do
-      let(:resource) { Hyrax::Forms::ResourceForm.for(work) }
+      let(:resource) { Hyrax::Forms::ResourceForm.for(resource: work) }
       let(:work) { build(:monograph) }
 
       context 'when it has no collections' do
@@ -15,7 +15,7 @@ RSpec.describe Hyrax::MembershipHelper do
       end
 
       context 'when it is a member of a collection' do
-        let(:work) { build(:monograph, :as_collection_member) }
+        let(:work) { valkyrie_create(:monograph, :as_collection_member) }
         let(:collection) { Hyrax.custom_queries.find_parent_collections(resource: work).first }
 
         it 'gives collection details' do
@@ -37,7 +37,7 @@ RSpec.describe Hyrax::MembershipHelper do
       end
 
       context 'when it is a member of a collection' do
-        let(:resource) { build(:hyrax_work, :as_collection_member) }
+        let(:resource) { valkyrie_create(:hyrax_work, :as_collection_member) }
         let(:collection) { Hyrax.custom_queries.find_parent_collections(resource: resource).first }
 
         it 'gives collection details' do
@@ -61,7 +61,7 @@ RSpec.describe Hyrax::MembershipHelper do
 
   describe '.work_members_json' do
     context 'with a ChangeSet form' do
-      let(:resource) { Hyrax::Forms::ResourceForm.for(work) }
+      let(:resource) { Hyrax::Forms::ResourceForm.for(resource: work) }
       let(:work) { build(:monograph) }
 
       context 'when it has no members' do

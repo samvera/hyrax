@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/_form.html.erb', type: :view do
   let(:collection) { build :collection_resource }
-  let(:collection_form) { Hyrax::Forms::ResourceForm.for(collection) }
+  let(:collection_form) { Hyrax::Forms::ResourceForm.for(resource: collection) }
   let(:banner_info) { { file: "banner.gif", alttext: "Banner alt text" } }
   let(:logo_info) { [{ file: "logo.gif", alttext: "Logo alt text", linkurl: "http://abc.com" }] }
 
@@ -35,7 +35,7 @@ RSpec.describe 'hyrax/dashboard/collections/_form.html.erb', type: :view do
       expect(rendered).to have_selector("input#collection_date_created")
       expect(rendered).to have_selector("input#collection_language")
       expect(rendered).to have_selector("input#collection_identifier")
-      expect(rendered).to have_selector("input#collection_based_near")
+      expect(rendered).to have_selector("div.controlled_vocabulary.collection_based_near")
       expect(rendered).to have_selector("input#collection_related_url")
       expect(rendered).to have_selector("select#collection_license")
       expect(rendered).to have_selector("select#collection_resource_type")

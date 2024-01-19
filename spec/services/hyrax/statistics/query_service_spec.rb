@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
+RSpec.describe Hyrax::Statistics::QueryService, :clean_repo, :active_fedora do
   let(:service) { described_class.new }
 
   describe "#count" do

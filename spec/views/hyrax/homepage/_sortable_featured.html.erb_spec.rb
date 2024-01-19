@@ -1,10 +1,20 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/homepage/_sortable_featured.html.erb', type: :view do
-  let(:form_builder)  { double }
-  let(:work)          { stub_model(GenericWork, id: "99", title: ['Foo']) }
+  let(:form_builder) { double }
+  let(:work) do
+    stub_model(
+      GenericWork,
+      id: "99",
+      title: ['Foo'],
+      created_at: DateTime.now,
+      updated_at: DateTime.now,
+      internal_resource: 'GenericWork',
+      alternate_ids: []
+    )
+  end
   let(:featured_work) { FeaturedWork.create(work_id: "99", presenter: presenter) }
-  let(:presenter)     { Hyrax::WorkShowPresenter.new(work, nil) }
-  let(:page)          { rendered }
+  let(:presenter) { Hyrax::WorkShowPresenter.new(SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr), nil) }
+  let(:page) { rendered }
 
   before do
     # https://github.com/samvera/active_fedora/issues/1251

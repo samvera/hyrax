@@ -130,7 +130,7 @@ RSpec.describe Hyrax::LeaseHelper do
     context 'with a Hyrax::Forms::FailedSubmissionFormWrapper' do
       let(:resource) { Hyrax::Forms::FailedSubmissionFormWrapper.new(form: form, input_params: {}, permitted_params: {}) }
       let(:model) { FactoryBot.build(:hyrax_work) }
-      let(:form) { Hyrax::Forms::ResourceForm.for(model) }
+      let(:form) { Hyrax::Forms::ResourceForm.for(resource: model) }
 
       it 'returns false' do
         expect(lease_enforced?(resource)).to be false

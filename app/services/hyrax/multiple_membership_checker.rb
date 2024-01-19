@@ -145,7 +145,7 @@ module Hyrax
     def collection_titles_from_list(collection_list)
       collection_list.map do |collection|
         collection.title.first
-      end.to_sentence
+      end.sort.to_sentence
     end
   end
 end
