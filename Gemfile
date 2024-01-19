@@ -19,13 +19,8 @@ group :development, :test do
   gem 'pry-byebug' unless ENV['CI']
   gem 'ruby-prof', require: false
   gem "simplecov", require: false
+  gem 'rspec'
 end
 
 # TODO: Rob remove after valk merge
 gem 'valkyrie', github: 'samvera/valkyrie', branch: 'more_flexible_shared_query_spec'
-
-# Install gems from test app
-if ENV['RAILS_ROOT']
-  test_app_gemfile_path = File.expand_path('Gemfile', ENV['RAILS_ROOT'])
-  eval_gemfile test_app_gemfile_path
-end
