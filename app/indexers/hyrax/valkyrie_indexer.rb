@@ -87,8 +87,8 @@ module Hyrax
     class << self
       ##
       # @api public
-      # @param resource [Valkyrie::Resource] an instance of a +Valkyrie::Resource+
-      #   or an inherited class
+      # @param resource [Valkyrie::Resource, Class<Valkyrie::Resource>] an instance of a
+      #   +Valkyrie::Resource+ or an inherited class
       # @note This factory will attempt to return an indexer following a naming convention
       #   where the indexer for a resource class is expected to be the class name
       #   appended with 'Indexer'.  It will return default {ValkyrieIndexer} if
@@ -99,25 +99,25 @@ module Hyrax
       # @example
       #     ValkyrieIndexer.for(resource: Book.new) # => #<BookIndexer ...>
       def for(resource:)
-        case resource
-        when Hyrax::FileSet
-          Hyrax::ValkyrieFileSetIndexer.new(resource: resource)
-        else
-          indexer_class_for(resource).new(resource: resource)
-        end
+        indexer_class_for(resource).new(resource: resource)
       end
 
-      private
-
       ##
-      # @param [Object]
+      # @param thing [Object, Class]
       # @return [Class]
-      def indexer_class_for(resource)
-        indexer_class = "#{resource.class.name}Indexer".safe_constantize
+      def indexer_class_for(thing)
+        thing_class = if thing.is_a?(Class)
+                           thing
+                         else
+                           thing.class
+                         end
+        return Hyrax::ValkyrieFileSetIndexer if thing == Hyrax::FileSet || thing.ancesters.include?(Hyrax::FileSet)
+
+        indexer_class = "#{thing_class.name}Indexer".safe_constantize
 
         return indexer_class if indexer_class.is_a?(Class) &&
                                 indexer_class.instance_methods.include?(:to_solr)
-        resource.try(:work?) ? Hyrax::ValkyrieWorkIndexer : ValkyrieIndexer
+        thing.try(:work?) ? Hyrax::ValkyrieWorkIndexer : ValkyrieIndexer
       end
     end
   end

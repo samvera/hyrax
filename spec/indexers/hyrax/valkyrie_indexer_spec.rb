@@ -56,6 +56,19 @@ RSpec.describe Hyrax::ValkyrieIndexer do
     end
   end
 
+  describe '.indexer_class_for' do
+    subject { described_class.indexer_class_for(object) }
+
+    describe 'for Hyrax::FileSet' do
+      let(:object) { Hyrax::FileSet }
+      it { is_expected.to eq(Hyrax::ValkyrieFileSetIndexer) }
+    end
+    describe 'for an instance of Hyrax::FileSet' do
+      let(:object) { Hyrax::FileSet.new }
+      it { is_expected.to eq(Hyrax::ValkyrieFileSetIndexer) }
+    end
+  end
+
   describe "#to_solr" do
     let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }
 
