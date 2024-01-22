@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::ImportUrlFailureService do
+# NOTE: This class deals with accessing a FileSet's #errors attribute,
+#   which isn't a defined attribute in Valkyrie objects.
+RSpec.describe Hyrax::ImportUrlFailureService, :active_fedora do
   let!(:depositor) { create(:user) }
   let(:inbox) { depositor.mailbox.inbox }
   let(:file) do
