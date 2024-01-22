@@ -7,7 +7,8 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm, :clean_repo do
     let(:collection_type) { FactoryBot.create(:collection_type) }
 
     # NOTE: Changed collection object to :pcdm_collection because the query used to find a collection_type's
-    #   collections is tied to Hyrax::PcdmCollection, which :hyrax_collection doesn't parse to when that type of collection is created via FactoryBot.
+    #   collections is tied to Hyrax::PcdmCollection, which :hyrax_collection doesn't parse to when that type
+    #   of collection is created via FactoryBot.
     before do
       FactoryBot.valkyrie_create(:pcdm_collection, collection_type_gid: collection_type.to_global_id)
     end
