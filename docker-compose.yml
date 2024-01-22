@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  app: &app
+  web:
     build:
       context: .
       target: hyrax-engine-dev
@@ -41,7 +41,7 @@ services:
     networks:
       - hyrax
 
-  sidekiq:
+  worker:
     image: samvera/dassie
     entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec sidekiq'
