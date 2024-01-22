@@ -1,0 +1,37 @@
+name: 'Build Test Lint'
+run-name: Build Test Lint of ${{ github.ref_name }} by @${{ github.actor }}
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
+
+jobs:
+  build:
+    uses: scientist-softserv/actions/.github/workflows/build.yaml@v0.0.16
+    secrets: inherit
+    with:
+      platforms: 'linux/amd64'
+      webTarget: hyrax-engine-dev
+
+  test:
+    needs: build
+    uses: scientist-softserv/actions/.github/workflows/test.yaml@v0.0.16
+    with:
+      confdir: '/app/samvera/hyrax-webapp/solr/conf'
+      webTarget: hyrax-engine-dev
+
+  lint:
+    needs: build
+    uses: scientist-softserv/actions/.github/workflows/lint.yaml@v0.0.16
+    with:
+      webTarget: hyrax-engine-dev
