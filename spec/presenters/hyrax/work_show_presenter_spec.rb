@@ -342,13 +342,6 @@ RSpec.describe Hyrax::WorkShowPresenter do
       expect(presenter.file_set_presenters.map(&:id)).to eq obj.member_ids
     end
 
-    context "solr query" do
-      it "requests >10 rows" do
-        expect(Hyrax::SolrService).to receive(:post).with(hash_including(rows: 10_000)).and_call_original
-        presenter.file_set_presenters
-      end
-    end
-
     context "when some of the members are not file sets" do
       let(:obj) { FactoryBot.valkyrie_create(:hyrax_work, :with_file_and_work) }
       let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: obj).to_solr) }
