@@ -1,20 +1,22 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Statistics::Depositors::Summary, :clean_repo do
+RSpec.describe Hyrax::Statistics::Depositors::Summary, :clean_repo, index_adapter: :solr_index do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
-  let!(:old_work) { create(:work, user: user1) }
-  let(:two_days_ago_date) { Time.zone.now - 2.days }
 
+  let(:two_days_ago_date) { Time.zone.now - 2.days }
   let(:start_date) { nil }
   let(:end_date) { nil }
-  let!(:work1) { create(:work, user: user1) }
-  let!(:work2) { create(:work, user: user2) }
-  let!(:collection1) { create(:public_collection_lw, user: user1) }
+
+  let!(:old_work) { valkyrie_create(:monograph, depositor: user1.user_key) }
+  let!(:work1) { valkyrie_create(:monograph, depositor: user1.user_key) }
+  let!(:work2) { valkyrie_create(:monograph, depositor: user2.user_key) }
+  let!(:collection1) { valkyrie_create(:hyrax_collection, :public, user: user1) }
+
   let(:service) { described_class.new(start_date, end_date) }
 
   before do
-    allow(old_work).to receive(:create_date).and_return(two_days_ago_date.to_datetime)
-    old_work.update_index
+    allow(old_work).to receive(:created_at).and_return(two_days_ago_date.to_datetime)
+    Hyrax.index_adapter.save(resource: old_work)
   end
 
   describe '.depositors' do

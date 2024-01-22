@@ -14,7 +14,7 @@ RSpec.describe ContentRestoredVersionEventJob do
     allow(Time).to receive(:now).at_least(:once).and_return(mock_time)
   end
 
-  context "when use_valkyrie is false" do
+  context "when use_valkyrie is false", :active_fedora do
     let(:file_set) { create(:file_set, title: ['Hamlet'], user: user) }
     let(:generic_work) { create(:generic_work, title: ['BethsMac'], user: user) }
     it "logs the event to the depositor's profile and the FileSet" do

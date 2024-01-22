@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::GraphExporter do
+
+# NOTE: This service focuses solely on interacting with ActiveFedora methods and connections.
+RSpec.describe Hyrax::GraphExporter, :active_fedora do
   subject(:service) { described_class.new(document, hostname: 'localhost') }
   let(:work) { FactoryBot.create(:work_with_one_file, visibility: 'open') }
   let(:document) { double(id: work.id) }

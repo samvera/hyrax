@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::VisibilityIntentionApplicator do
+
+# NOTE: Leases and Embargoes have separate managers for Valkyrie objects.
+RSpec.describe Hyrax::VisibilityIntentionApplicator, :active_fedora do
   subject(:applicator) { described_class.new(intention: intention) }
   let(:work)           { build(:work) }
 

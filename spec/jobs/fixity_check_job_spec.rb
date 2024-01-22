@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-RSpec.describe FixityCheckJob do
+
+# NOTE: A Valkyrie-compliant Fixity Check service needs to be created.
+RSpec.describe FixityCheckJob, :active_fedora do
   let(:user) { create(:user) }
 
   let(:file_set) do

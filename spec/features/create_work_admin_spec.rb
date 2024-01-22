@@ -1,30 +1,14 @@
 # frozen_string_literal: true
 RSpec.describe 'Creating a new Work as admin', :js, :workflow, perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
   let(:user) { create(:admin) }
-  let(:admin_set_1) do
-    create(:admin_set, id: AdminSet::DEFAULT_ID,
-                       title: ["Default Admin Set"],
-                       description: ["A description"],
-                       edit_users: [user.user_key])
-  end
-  let(:admin_set_2) do
-    create(:admin_set, title: ["Another Admin Set"],
-                       description: ["A description"],
-                       edit_users: [user.user_key])
+
+  before do
+    Hyrax::AdminSetCreateService.find_or_create_default_admin_set
+    valkyrie_create(:hyrax_admin_set, :with_permission_template, title: ['Another Admin Set'], user: user)
   end
 
   context 'when there are multiple admin sets' do
     before do
-      create(:permission_template_access,
-             :deposit,
-             permission_template: create(:permission_template, source_id: admin_set_1.id, with_admin_set: true, with_active_workflow: true),
-             agent_type: 'user',
-             agent_id: user.user_key)
-      create(:permission_template_access,
-             :deposit,
-             permission_template: create(:permission_template, source_id: admin_set_2.id, with_admin_set: true, with_active_workflow: true),
-             agent_type: 'user',
-             agent_id: user.user_key)
       sign_in user
     end
 

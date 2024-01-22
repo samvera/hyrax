@@ -14,8 +14,8 @@ RSpec.describe Hyrax::Transactions::Steps::EnsureAdminSet do
     end
 
     context 'with an admin set' do
-      let(:admin_set) { create(:admin_set) }
-      let(:work)      { build(:generic_work, admin_set_id: admin_set.id) }
+      let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
+      let(:work)      { build(:hyrax_work, admin_set_id: admin_set.id) }
 
       it 'is a success' do
         expect(step.call(work)).to be_success

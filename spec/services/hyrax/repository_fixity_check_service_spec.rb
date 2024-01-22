@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::RepositoryFixityCheckService do
+
+# NOTE: This service is only optimized to process ActiveFedora objects.
+RSpec.describe Hyrax::RepositoryFixityCheckService, :active_fedora do
   let!(:file) do
     create(:file_set).tap do |file|
       file.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')

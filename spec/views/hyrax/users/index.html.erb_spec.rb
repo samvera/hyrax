@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/users/index.html.erb', type: :view do
   let(:join_date) { 5.days.ago }
+  let(:application_name) { I18n.t('hyrax.product_name', default: 'Hyrax') }
 
   before do
     users = []
@@ -17,7 +18,7 @@ RSpec.describe 'hyrax/users/index.html.erb', type: :view do
   it "draws user list" do
     render
     page = Capybara::Node::Simple.new(rendered)
-    expect(page).to have_content("Hyrax Users")
+    expect(page).to have_content("#{application_name} Users")
     expect(page).to have_content("Works Created")
     (1..10).each do |i|
       expect(page).to have_content("user#{i}")

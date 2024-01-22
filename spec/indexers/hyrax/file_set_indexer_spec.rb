@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::FileSetIndexer do
+
+# Marked as AF-only, since Valkyrie FileSet indexing is handled by Hyrax::ValkyrieFileSetIndexer.
+RSpec.describe Hyrax::FileSetIndexer, :active_fedora do
   include Hyrax::FactoryHelpers
 
   let(:file_set) do
