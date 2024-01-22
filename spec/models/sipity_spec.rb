@@ -45,9 +45,15 @@ RSpec.describe Sipity do
 
     context "with a SolrDocument" do
       let(:object) { SolrDocument.new(id: '9999', has_model_ssim: ["GenericWork"]) }
-      let(:workflow_state) { create(:workflow_state) }
+      let(:workflow_state) { FactoryBot.create(:workflow_state) }
       let!(:entity) do
-        Sipity::Entity.create(proxy_for_global_id: "gid://#{GlobalID.app}/GenericWork/9999",
+        gid_class_string = if GenericWork < Valkyrie::Resource
+                             "Hyrax::ValkyrieGlobalIdProxy"
+                           else
+                             "GenericWork"
+                           end
+
+        Sipity::Entity.create(proxy_for_global_id: "gid://#{GlobalID.app}/#{gid_class_string}/9999",
                               workflow_state: workflow_state,
                               workflow: workflow_state.workflow)
       end
