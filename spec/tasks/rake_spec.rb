@@ -109,14 +109,14 @@ RSpec.describe "Rake tasks" do
         let(:other_collection_type) { FactoryBot.create(:collection_type) }
 
         let(:collections_with_legacy_gids) do
-          [FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: "gid://internal/sometext/#{collection_type.id}"),
-           FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: "gid://internal/sometext/#{other_collection_type.id}")]
+          [FactoryBot.valkyrie_create(:pcdm_collection, collection_type_gid: "gid://internal/sometext/#{collection_type.id}"),
+           FactoryBot.valkyrie_create(:pcdm_collection, collection_type_gid: "gid://internal/sometext/#{other_collection_type.id}")]
         end
 
         before do
           3.times do
-            FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.to_global_id)
-            FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: other_collection_type.to_global_id)
+            FactoryBot.valkyrie_create(:pcdm_collection, collection_type_gid: collection_type.to_global_id)
+            FactoryBot.valkyrie_create(:pcdm_collection, collection_type_gid: other_collection_type.to_global_id)
           end
         end
 
