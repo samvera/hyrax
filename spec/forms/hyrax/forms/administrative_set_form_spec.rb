@@ -66,7 +66,7 @@ RSpec.describe Hyrax::Forms::AdministrativeSetForm do
 
       it 'populates as empty' do
         expect { form.prepopulate! }
-          .not_to change { form.member_ids }
+          .not_to change { form.member_ids.to_a }
           .from be_empty
       end
 
