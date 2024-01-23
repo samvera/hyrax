@@ -24,7 +24,9 @@ RSpec.describe Sipity do
       it { expect(described_class.Entity(object)).to eq object }
     end
 
-    context "with a Sipity::Entity that doesn't match the globalID for a valkyrie object" do
+    # NOTE: Since this is testing an ActiveFedora object parsed into a Valkyrie object, this has been marked as
+    #   ActiveFedora-only.
+    context "with a Sipity::Entity that doesn't match the globalID for a valkyrie object", :active_fedora do
       let(:object) { FactoryBot.create(:generic_work, id: '9999').valkyrie_resource }
       let(:workflow_state) { create(:workflow_state) }
       let!(:entity) do
