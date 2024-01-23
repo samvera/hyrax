@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::ResourceSync::ResourceListWriter, :clean_repo do
+
+# NOTE: This uses methods, such as `#delegated_attributes`, that inherit from ActiveFedora::Relation.
+RSpec.describe Hyrax::ResourceSync::ResourceListWriter, :active_fedora, :clean_repo do
   subject(:writer) do
     described_class.new(resource_host: 'example.com', capability_list_url: capability_list)
   end
