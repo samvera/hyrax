@@ -29,9 +29,11 @@ jobs:
     with:
       confdir: '/app/samvera/hyrax-webapp/solr/conf'
       webTarget: hyrax-engine-dev
+      subDir: '/app/samvera/hyrax-engine'
 
   lint:
     needs: build
     uses: scientist-softserv/actions/.github/workflows/lint.yaml@v0.0.16
     with:
       webTarget: hyrax-engine-dev
+      subDir: '/app/samvera/hyrax-engine'
