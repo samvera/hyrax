@@ -61,11 +61,10 @@ module Hyrax
     # @param value [Valkyrie::Resource]
     # @return [Valkyrie::Resource]
     def resource=(value)
-      @resource = value
       # We need to remove the memoization as the @resource has changed.
       @change_set = nil
       @access_control_model = nil
-      @resource
+      @resource = value
     end
 
     ##
