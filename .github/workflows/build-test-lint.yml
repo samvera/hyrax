@@ -29,11 +29,12 @@ jobs:
     with:
       confdir: '/app/samvera/hyrax-webapp/solr/conf'
       webTarget: hyrax-engine-dev
-      subDir: '/app/samvera/hyrax-engine'
+      rspec_cmd: 'cd /app/samvera/hyrax-engine && gem install semaphore_test_boosters && rspec_booster --job $CI_NODE_INDEX/$CI_NODE_TOTAL'
+      setup_db_cmd: 'true'
 
   lint:
     needs: build
     uses: scientist-softserv/actions/.github/workflows/lint.yaml@v0.0.16
     with:
       webTarget: hyrax-engine-dev
-      subDir: '/app/samvera/hyrax-engine'
+      rubocop_cmd: 'cd /app/samvera/hyrax-engine && bundle exec rubocop --parallel --format progress'
