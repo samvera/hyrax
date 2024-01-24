@@ -158,6 +158,12 @@ module Hyrax
       pcdm_use.include?(Use::EXTRACTED_TEXT)
     end
 
+    ##
+    # @return [String]
+    def to_rdf_representation
+      self.class.to_rdf_representation
+    end
+
     def title
       label
     end
