@@ -5,6 +5,15 @@ module Hyrax
     ##
     # This mixin is for {Valkyrie::Resource} objects to be able to read/write the same Solr document
     # as their corresponding {ActiveFedora::Base} object.
+    #
+    # This module assumes that for GenericWorkResource that there is a corresponding GenericWork
+    # class; Something that is useful as applications look to migrate in place from an
+    # ActiveFedora::Base GenericWork representation to a Valkyrie based GenericWorkResource.
+    #
+    # Put another way, this is convention over configuration for enabling us to re-use logic around
+    # solr documents.
+    #
+    # @see https://github.com/samvera/hyrax/pull/6221 Discussion about having one indexed document
     module ValkyrieMigration
       extend ActiveSupport::Concern
 
