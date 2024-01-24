@@ -119,7 +119,7 @@ jobs:
       HYRAX_VALKYRIE: << parameters.hyrax_valkyrie >>
       IN_DOCKER: true
       KARMA_BROWSER: remote-chromium
-      SOLR_URL: http://127.0.0.1:8985/solr/hydra-test
+      SOLR_URL: http://127.0.0.1:8985/solr/koppie_test
       VALKYRIE_SOLR_CORE: valkyrie-test
       VALKYRIE_SOLR_PORT: 8985
     steps:
@@ -130,7 +130,7 @@ jobs:
             zip -1 -r solr_conf.zip ./*
             db-wait.sh localhost:8985 # wait for solr to be available before hitting the API
             curl -H "Content-type:application/octet-stream" --data-binary @solr_conf.zip "http://solr:SolrRocks@127.0.0.1:8985/solr/admin/configs?action=UPLOAD&name=solrconfig"
-            curl -H 'Content-type: application/json' http://solr:SolrRocks@127.0.0.1:8985/api/collections/ -d '{create: {name: hydra-test, config: solrconfig, numShards: 1}}'
+            curl -H 'Content-type: application/json' http://solr:SolrRocks@127.0.0.1:8985/api/collections/ -d '{create: {name: koppie_test, config: solrconfig, numShards: 1}}'
             curl -H 'Content-type: application/json' http://solr:SolrRocks@127.0.0.1:8985/api/collections/ -d '{create: {name: valkyrie-test, config: solrconfig, numShards: 1}}'
       - ruby/rspec-test:
           app-dir: /app/samvera/hyrax-engine
