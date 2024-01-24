@@ -11,8 +11,8 @@ def fill_in_batch_edit_fields_and_verify!
   batch_edit_fields.each do |field_id|
     within "#form_#{field_id}" do
       batch_edit_expand(field_id)
-      page.find("#generic_work_#{field_id}") # Ensuring that the element is on the page before we fill it
-      fill_in "generic_work_#{field_id}", with: "NEW #{field_id}"
+      page.find("##{expected_element_text}_#{field_id}") # Ensuring that the element is on the page before we fill it
+      fill_in "#{expected_element_text}_#{field_id}", with: "NEW #{field_id}"
 
       find("##{field_id}_save").click
 

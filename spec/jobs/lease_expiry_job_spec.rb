@@ -3,14 +3,16 @@ RSpec.describe LeaseExpiryJob, :clean_repo do
   subject { described_class }
 
   context 'with Valkyrie resources' do
-    let(:leased_work) { valkyrie_create(:hyrax_work, :under_lease) }
-    let(:work_with_expired_lease) { valkyrie_create(:hyrax_work, :with_expired_enforced_lease) }
-    let(:file_set_with_expired_lease) { valkyrie_create(:hyrax_file_set, :with_expired_enforced_lease) }
+    let!(:leased_work) { valkyrie_create(:hyrax_work, :under_lease) }
+    let!(:work_with_expired_lease) { valkyrie_create(:hyrax_work, :with_expired_enforced_lease) }
+    let!(:file_set_with_expired_lease) { valkyrie_create(:hyrax_file_set, :with_expired_enforced_lease) }
 
     describe '#records_with_expired_leases' do
       it 'returns all records with expired leases' do
-        records = [work_with_expired_lease.id, file_set_with_expired_lease.id]
-        expect(described_class.new.records_with_expired_leases.map(&:id)).to eq(records)
+        record_ids = described_class.new.records_with_expired_leases.map(&:id)
+        expect(record_ids.count).to eq(2)
+        expect(record_ids).to include(work_with_expired_lease.id)
+        expect(record_ids).to include(file_set_with_expired_lease.id)
       end
     end
 
