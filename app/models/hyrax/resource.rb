@@ -88,6 +88,12 @@ module Hyrax
         pcdm_object? && !file_set?
       end
 
+      ##
+      # @return [String]
+      def to_rdf_representation
+        name
+      end
+
       private
 
       ##
@@ -127,6 +133,12 @@ module Hyrax
     # @return [Boolean]
     def pcdm_object?
       self.class.pcdm_object?
+    end
+
+    ##
+    # @return [String]
+    def to_rdf_representation
+      self.class.to_rdf_representation
     end
 
     ##
