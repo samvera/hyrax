@@ -30,6 +30,10 @@ module Hyrax
       self.default_system_virus_scanner = Hyrax::VirusScanner
     end
 
+    def to_rdf_representation
+      self.class.to_rdf_representation
+    end
+
     module ClassMethods
       # This governs which partial to draw when you render this type of object
       def _to_partial_path # :nodoc:
