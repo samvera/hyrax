@@ -40,6 +40,10 @@ module Wings
             _canonical_valkyrie_model&.name
           end
 
+          def to_rdf_representation
+            name
+          end
+
           ##
           # @return [String]
           def to_s
