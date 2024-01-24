@@ -8,15 +8,9 @@ RSpec.feature 'Read Only Mode' do
   context 'a logged in user' do
     let(:user) { create(:user) }
     let(:admin_user) { FactoryBot.create(:admin) }
-    let(:admin_set) do
-      AdminSet.create(title: ["work admin set"],
-                      description: ["some description"],
-                      edit_users: [user.id])
-    end
+    let(:admin_set) { valkyrie_create(:hyrax_admin_set, edit_users: [user]) }
 
-    let(:permission_template) do
-      Hyrax::PermissionTemplate.create!(source_id: admin_set.id)
-    end
+    let(:permission_template) { Hyrax::PermissionTemplate.create!(source_id: admin_set.id) }
 
     let(:workflow) { Sipity::Workflow.find_by!(name: 'default', permission_template: permission_template) }
 
@@ -43,9 +37,7 @@ RSpec.feature 'Read Only Mode' do
       permission_template.available_workflows.first.update!(active: true)
     end
 
-    scenario 'as a non-admin', js: false do
-      login_as user
-
+    def common_read_only_page_tests
       visit new_hyrax_generic_work_path
       expect(page).to have_content('Add New Work')
 
@@ -58,19 +50,16 @@ RSpec.feature 'Read Only Mode' do
       expect(page).to have_content('Add New Work')
     end
 
+    scenario 'as a non-admin', js: false do
+      login_as user
+
+      common_read_only_page_tests
+    end
+
     scenario 'as admin', js: false do
       login_as admin_user
 
-      visit new_hyrax_generic_work_path
-      expect(page).to have_content('Add New Work')
-
-      allow(Flipflop).to receive(:read_only?).and_return(true)
-      visit new_hyrax_generic_work_path
-      expect(page).to have_content('The repository is in read-only mode for maintenance.')
-
-      allow(Flipflop).to receive(:read_only?).and_return(false)
-      visit new_hyrax_generic_work_path
-      expect(page).to have_content('Add New Work')
+      common_read_only_page_tests
     end
   end
 end

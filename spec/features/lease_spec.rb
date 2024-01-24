@@ -12,6 +12,7 @@ RSpec.describe 'leases' do
     it 'can be created, displayed and updated', :clean_repo, :workflow do
       visit '/concern/generic_works/new'
       fill_in 'Title', with: 'Lease test'
+      fill_in 'Creator', with: 'Doe, Jane'
       choose 'Lease'
       fill_in 'generic_work_lease_expiration_date', with: future_date
       select 'Public', from: 'Is available to'
