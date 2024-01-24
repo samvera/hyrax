@@ -46,7 +46,8 @@ end
 Capybara.server_host = '0.0.0.0'
 Capybara.server_port = 3010
 
-ip = IPSocket.getaddress(Socket.gethostname)
+# ip = IPSocket.getaddress(Socket.gethostname)
+ip = `hostname -s`.strip
 Capybara.app_host = "http://#{ip}:#{Capybara.server_port}"
 
 Capybara.default_driver = :rack_test # This is a faster driver
