@@ -9,8 +9,8 @@ RSpec.describe EmbargoExpiryJob, :clean_repo do
 
     describe '#records_with_expired_embargos' do
       it 'returns all records with expired embargos' do
-        records = [work_with_expired_embargo.id, file_set_with_expired_embargo.id]
-        expect(described_class.new.records_with_expired_embargos.map(&:id)).to eq(records)
+        records = [work_with_expired_embargo.id.to_s, file_set_with_expired_embargo.id.to_s]
+        expect(described_class.new.records_with_expired_embargos.map { |r| r.id.to_s }).to match_array(records)
       end
     end
 
