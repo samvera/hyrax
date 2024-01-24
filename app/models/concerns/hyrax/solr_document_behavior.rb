@@ -80,7 +80,7 @@ module Hyrax
     ##
     # @return [Boolean]
     def valkyrie?
-      ['valkyrie_bsi']
+      self['valkyrie_bsi']
     end
 
     # Method to return the model

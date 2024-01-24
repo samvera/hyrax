@@ -14,6 +14,9 @@ module Hyrax
     # solr documents.
     #
     # @see https://github.com/samvera/hyrax/pull/6221 Discussion about having one indexed document
+    #
+    # @todo Consider having this module provide configuration option; namely how to derive the
+    #       {.to_rdf_representation}.
     module ValkyrieMigration
       extend ActiveSupport::Concern
 
