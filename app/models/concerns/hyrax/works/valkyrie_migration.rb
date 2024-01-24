@@ -2,11 +2,14 @@
 
 module Hyrax
   module Works
+    ##
+    # This mixin is for {Valkyrie::Resource} objects to be able to read/write the same Solr document
+    # as their corresponding {ActiveFedora::Base} object.
     module ValkyrieMigration
       extend ActiveSupport::Concern
 
       included do
-        attribute :internal_resource, Valkyrie::Types::Any.default(name.gsub(/Resource$/, '').freeze), internal: true
+        attribute :internal_resource, Valkyrie::Types::Any.default(to_rdf_representation.freeze), internal: true
       end
 
       class_methods do
