@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
+require 'hyrax/specs/shared_specs'
+
 RSpec.describe Hyrax::Indexers::ResourceIndexer do
+  let(:indexer_class) { described_class }
+  let(:resource) { FactoryBot.build(:hyrax_work) }
   let(:indexer) { described_class.new(resource: resource) }
+
+  it_behaves_like 'a Hyrax::Resource indexer'
 
   describe '.for' do
     it 'gives an instance of itself as the default indexer class' do
