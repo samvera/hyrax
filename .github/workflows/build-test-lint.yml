@@ -25,7 +25,7 @@ jobs:
 
   test:
     needs: build
-    uses: dlpierce/actions/.github/workflows/test.yaml@main
+    uses: ./.github/workflows/test-reusable-workflow.yaml
     with:
       confdir: '/app/samvera/hyrax-webapp/solr/conf'
       webTarget: hyrax-engine-dev
