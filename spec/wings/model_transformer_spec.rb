@@ -101,9 +101,7 @@ RSpec.describe Wings::ModelTransformer, :active_fedora, :clean_repo do
         next if work.public_send(attr) == resource.public_send(attr)
         errors << { attr => [work.public_send(attr), resource.public_send(attr)] }
       end
-      unless work.publisher.select(&:present?) == resource.publisher.select(&:present?)
-        errors << { publisher: [work.publisher, resource.publisher] }
-      end
+      errors << { publisher: [work.publisher, resource.publisher] } unless work.publisher.select(&:present?) == resource.publisher.select(&:present?)
 
       expect(errors).to be_empty
     end
