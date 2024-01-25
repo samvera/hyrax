@@ -40,10 +40,6 @@ on:
         description: "Used to set your target for the web image"
         required: false
         type: string
-      workerTarget:
-        description: "Used to set your target for the worker image"
-        required: false
-        type: string
   workflow_call:
     inputs:
       baseTarget:
@@ -82,10 +78,6 @@ on:
         type: string
       webTarget:
         description: "Used to set your target for the web image"
-        required: false
-        type: string
-      workerTarget:
-        description: "Used to set your target for the worker image"
         required: false
         type: string
 
