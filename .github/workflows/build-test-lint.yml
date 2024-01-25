@@ -25,19 +25,13 @@ jobs:
 
   test:
     needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Setup tmate
-      uses: mxschmitt/action-tmate@v3
-      with:
-        detached: true
-    - name: Run rspec
-      uses: scientist-softserv/actions/.github/workflows/test.yaml@v0.0.16
-      with:
-        confdir: '/app/samvera/hyrax-webapp/solr/conf'
-        webTarget: hyrax-engine-dev
-        rspec_cmd: 'cd /app/samvera/hyrax-engine && gem install semaphore_test_boosters && bundle install && rspec_booster --job $CI_NODE_INDEX/$CI_NODE_TOTAL'
-        setup_db_cmd: 'true'
+    uses: dlpierce/actions/.github/workflows/test.yaml
+    with:
+      confdir: '/app/samvera/hyrax-webapp/solr/conf'
+      webTarget: hyrax-engine-dev
+      rspec_cmd: 'cd /app/samvera/hyrax-engine && gem install semaphore_test_boosters && bundle install && rspec_booster --job $CI_NODE_INDEX/$CI_NODE_TOTAL'
+      setup_db_cmd: 'true'
+      debug_enabled: true
 
   lint:
     needs: build
