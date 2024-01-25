@@ -270,12 +270,13 @@ RSpec.describe Freyja::Persister, :active_fedora do
 
     it "can delete all objects but only from postgers" do
       resource2 = resource_class.new
-      persister.save_all(resources: [resource, resource2])
-      persister.wipe!
-      expect(query_service.services[0].find_all.to_a.length).to eq 0
 
-      # TODO: This was retruning some 400 objects; meaning stuffs perhaps not being cleared out.
-      expect(query_service.services[1].find_all.to_a.length > 6).to be_truthy
+      persister.save_all(resources: [resource, resource2])
+      expect do
+        expect do
+          persister.wipe!
+        end.to change { query_service.services[0].find_all.to_a.length }.to 0
+      end.not_to change { query_service.services[1].find_all.to_a.length }
     end
 
     context "optimistic locking" do
