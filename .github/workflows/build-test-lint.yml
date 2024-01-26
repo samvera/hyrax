@@ -31,7 +31,7 @@ jobs:
       webTarget: hyrax-engine-dev
       rspec_cmd: 'cd /app/samvera/hyrax-engine && gem install semaphore_test_boosters && bundle install && rspec_booster --job $CI_NODE_INDEX/$CI_NODE_TOTAL'
       setup_db_cmd: 'true'
-      debug_enabled: true
+      debug_enabled: false
 
   lint:
     needs: build
