@@ -35,7 +35,6 @@ RSpec.describe Hyrax::Indexers::PcdmObjectIndexer do
         module Custom
           class Work < Hyrax::Work
             attribute :broader, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-            include Hyrax::Works::ValkyrieMigration
           end
 
           class WorkIndexer < Hyrax::Indexers::PcdmObjectIndexer(Hyrax::Test::Custom::Work)
