@@ -11,7 +11,6 @@ module Hyrax
     # @example creating with FactoryBot
     #   work = FactoryBot.valkyrie_create(:hyrax_work, :public, title: ['Comet in Moominland'])
     class SimpleWork < Hyrax::Work
-      include Hyrax::Works::ValkyrieMigration
     end
 
     class SimpleWorkLegacy < ActiveFedora::Base
