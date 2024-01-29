@@ -26,4 +26,6 @@ module Hyrax
   end
 end
 
+Hyrax::ValkyrieLazyMigration.migrating(Hyrax::Test::SimpleWork, from: Hyrax::Test::SimpleWorkLegacy)
+
 Wings::ModelRegistry.register(Hyrax::Test::SimpleWork, Hyrax::Test::SimpleWorkLegacy) if defined?(Wings)

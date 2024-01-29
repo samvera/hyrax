@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Hyrax::Works::ValkyrieMigration do
+RSpec.describe Hyrax::ValkyrieLazyMigration do
   before do
     class MigratingResource < Hyrax::Resource
     end
