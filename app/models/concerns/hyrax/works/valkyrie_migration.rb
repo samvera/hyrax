@@ -6,32 +6,40 @@ module Hyrax
     # This mixin is for {Valkyrie::Resource} objects to be able to read/write the same Solr document
     # as their corresponding {ActiveFedora::Base} object.
     #
-    # This module assumes that for GenericWorkResource that there is a corresponding GenericWork
-    # class; Something that is useful as applications look to migrate in place from an
-    # ActiveFedora::Base GenericWork representation to a Valkyrie based GenericWorkResource.
-    #
-    # Put another way, this is convention over configuration for enabling us to re-use logic around
-    # solr documents.
-    #
     # @see https://github.com/samvera/hyrax/pull/6221 Discussion about having one indexed document
-    #
-    # @todo Consider having this module provide configuration option; namely how to derive the
-    #       {.to_rdf_representation}.
     module ValkyrieMigration
+      ##
+      # This function helps configuration a work for a valkyrie migration; namely by helping re-use
+      # an existing SOLR document, by specifying that the given :klass is a migration :from another
+      # class.
+      #
+      # @note This is similar to the {Wings::ModelRegistry.register}, but is envisioned as part of
+      # the Frigg and Freyja adapters for Postges and Fedora lazy migrations.
+      #
+      # @param klass [Hyrax::Resource, .attribute]
+      # @param from [ActiveFedora::Base, .to_rdf_representation]
+      # @param name_class [Hyrax::Name] responsible, in part, for determining the various routing
+      #        paths you might use.
+      #
+      # @example
+      #   class MyWork < ActiveFedora::Base
+      #   end
+      #
+      #   class MyWorkResource < Hyrax::Resource
+      #     Hyrax::Works::ValkyrieMigration.migrating(self, from: MyWork)
+      #   end
+      def self.migrating(klass, from:, name_class: Hyrax::Name)
+        klass.singleton_class.define_method(:migrating_from) { from }
+        klass.singleton_class.define_method(:_hyrax_default_name_class) { name_class }
+        klass.singleton_class.define_method(:to_rdf_representation) { migrating_from.to_rdf_representation }
+
+        klass.include(self)
+      end
+
       extend ActiveSupport::Concern
 
       included do
         attribute :internal_resource, Valkyrie::Types::Any.default(to_rdf_representation.freeze), internal: true
-      end
-
-      class_methods do
-        def _hyrax_default_name_class
-          Hyrax::Name
-        end
-
-        def to_rdf_representation
-          name.gsub("Resource", "")
-        end
       end
 
       def members
