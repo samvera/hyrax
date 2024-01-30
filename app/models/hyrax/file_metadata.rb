@@ -140,6 +140,14 @@ module Hyrax
     # attributes set by fits for video
     attribute :aspect_ratio, ::Valkyrie::Types::Set
 
+    class << self
+      ##
+      # @return [String]
+      def to_rdf_representation
+        name
+      end
+    end
+
     ##
     # @return [Boolean]
     def original_file?
