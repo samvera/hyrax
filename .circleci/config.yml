@@ -119,6 +119,7 @@ jobs:
       HYRAX_VALKYRIE: << parameters.hyrax_valkyrie >>
       IN_DOCKER: true
       KARMA_BROWSER: remote-chromium
+      SOLR_URL: http://127.0.0.1:8985/solr/hydra-test
       VALKYRIE_SOLR_CORE: valkyrie-test
       VALKYRIE_SOLR_PORT: 8985
     steps:
@@ -165,3 +166,16 @@ workflows:
           hyrax_valkyrie: "1"
           requires:
             - dassie-build
+
+  koppie:
+    jobs:
+      - kaniko-build:
+          name: "koppie-build"
+          ruby_version: "3.2.2"
+          hyrax_app: "koppie"
+      - hyrax-test:
+          name: "koppie-test"
+          ruby_version: "3.2.2"
+          hyrax_app: "koppie"
+          requires:
+            - koppie-build
