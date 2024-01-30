@@ -1,8 +1,5 @@
-ARG ALPINE_VERSION=3.18
-ARG RUBY_VERSION=3.2.2
-
-FROM ruby:$RUBY_VERSION-alpine$ALPINE_VERSION as builder
-RUN apk add build-base curl jemalloc
+ARG ALPINE_VERSION=3.19
+ARG RUBY_VERSION=3.2.3
 
 FROM ruby:$RUBY_VERSION-alpine$ALPINE_VERSION as hyrax-base
 
@@ -16,6 +13,7 @@ RUN apk --no-cache upgrade && \
   curl \
   gcompat \
   imagemagick \
+  jemalloc \
   tzdata \
   nodejs \
   yarn \
@@ -34,12 +32,10 @@ RUN mkdir -p /app/samvera/hyrax-webapp
 WORKDIR /app/samvera/hyrax-webapp
 
 COPY --chown=1001:101 ./bin/*.sh /app/samvera/
-ENV PATH="/app/samvera:$PATH"
-ENV RAILS_ROOT="/app/samvera/hyrax-webapp"
-ENV RAILS_SERVE_STATIC_FILES="1"
-
-COPY --from=builder /usr/lib/libjemalloc.so.2 /usr/local/lib/
-ENV LD_PRELOAD="/usr/local/lib/libjemalloc.so.2"
+ENV PATH="/app/samvera:$PATH" \
+    RAILS_ROOT="/app/samvera/hyrax-webapp" \
+    RAILS_SERVE_STATIC_FILES="1" \
+    LD_PRELOAD="/usr/local/lib/libjemalloc.so.2"
 
 ENTRYPOINT ["hyrax-entrypoint.sh"]
 CMD ["bundle", "exec", "puma", "-v", "-b", "tcp://0.0.0.0:3000"]
