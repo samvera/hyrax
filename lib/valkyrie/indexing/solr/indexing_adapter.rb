@@ -70,9 +70,14 @@ module Valkyrie
             return {}
           end
 
-          { 'host' => bl_index.host,
+          {
+            'host' => bl_index.host,
+            'user' => bl_index.user,
+            'password' => bl_index.password,
+            'scheme' => bl_index.scheme,
             'port' => bl_index.port,
-            'core' => 'hyrax-valkyrie' }
+            'core' => bl_index.path.split("/")[2] || 'hyrax-valkyrie'
+          }.compact
         end
 
         def connection_url
@@ -82,12 +87,17 @@ module Valkyrie
                      {}
                    end
 
-          # if any configuration is missing, derive it from Blacklight
-          config = blacklight_based_config.with_indifferent_access.merge(config)
-
+          # Given how we're building blacklight_based_config, there won't be a URL.  So let's avoid
+          # that whole logic path.
           return config['url'] if config['url'].present?
 
-          "http://#{config['host']}:#{config['port']}/solr/#{config['core']}"
+          # Derive any missing configuration from Blacklight.
+          config = blacklight_based_config.with_indifferent_access.merge(config)
+
+          url = "#{config.fetch('scheme', 'http')}://"
+          url = "#{url}#{config['user']}:#{config['password']}@" if config.key?('user') && config.key?('password')
+
+          "#{url}#{config['host']}:#{config['port']}/solr/#{config['core']}"
         end
 
         def default_connection
