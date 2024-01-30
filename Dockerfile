@@ -13,6 +13,13 @@ RUN apk --no-cache upgrade && \
   curl \
   gcompat \
   imagemagick \
+  imagemagick-heic \
+  imagemagick-jpeg \
+  imagemagick-jxl \
+  imagemagick-pdf \
+  imagemagick-svg \
+  imagemagick-tiff \
+  imagemagick-webp \
   jemalloc \
   tzdata \
   nodejs \
