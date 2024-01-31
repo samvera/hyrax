@@ -17,7 +17,7 @@ module Hyrax
     delegate :commit, to: :connection
 
     def initialize(use_valkyrie: Hyrax.config.query_index_from_valkyrie)
-      @old_service = ActiveFedora::SolrService
+      @old_service = ActiveFedora::SolrService # What hopefully will be the lone reference to ActiveFedora::SolrService
       @use_valkyrie = use_valkyrie
     end
 
