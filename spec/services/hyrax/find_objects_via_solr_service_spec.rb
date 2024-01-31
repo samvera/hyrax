@@ -9,7 +9,7 @@ RSpec.describe Hyrax::FindObjectsViaSolrService do
     end
     subject(:results) { described_class.find_for_model_by_field_pairs(model: collection1.class, field_pairs: field_pairs, use_valkyrie: use_valkyrie) }
 
-    context "when use_valkyrie is false" do
+    context "when use_valkyrie is false", :active_fedora do
       let(:use_valkyrie) { false }
       let(:collection1) { create(:collection_lw, title: ['Foo']) }
       let(:collection2) { create(:collection_lw, title: ['Too']) }
@@ -21,7 +21,7 @@ RSpec.describe Hyrax::FindObjectsViaSolrService do
 
     context "when use_valkyrie is true" do
       let(:use_valkyrie) { true }
-      context "and objects were created with ActiveFedora" do
+      context "and objects were created with ActiveFedora", :active_fedora do
         let(:collection1) { create(:collection_lw, title: ['Foo']) }
         let(:collection2) { create(:collection_lw, title: ['Too']) }
 

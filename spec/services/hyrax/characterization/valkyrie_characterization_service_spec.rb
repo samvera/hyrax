@@ -2,34 +2,26 @@
 require 'spec_helper'
 require 'hyrax/specs/spy_listener'
 
-# rubocop:disable RSpec/AnyInstance
 RSpec.describe Hyrax::Characterization::ValkyrieCharacterizationService do
   describe "run" do
     let(:characterizer) { double(characterize: fits_response) }
-    let(:file_set)      { FactoryBot.valkyrie_create(:hyrax_file_set) }
     let(:fits_response) { IO.read('spec/fixtures/png_fits.xml') }
     let(:listener)      { Hyrax::Specs::SpyListener.new }
-    let(:metadata)      { Hyrax.custom_queries.find_file_metadata_by(id: file.id) }
-    let(:upload)        { Rack::Test::UploadedFile.new('spec/fixtures/world.png', 'image/png') }
 
-    let(:file) do
-      Hyrax.storage_adapter.upload(resource: file_set,
-                                   file: upload,
-                                   original_filename: 'test_world.png')
-    end
+    let(:file_set)      { FactoryBot.valkyrie_create(:hyrax_file_set, files: [file_metadata], original_file: file_metadata) }
+    let(:file_metadata) { valkyrie_create(:file_metadata, :original_file, :with_file, file: file, mime_type: 'image/png') }
+    let(:file)          { create(:uploaded_file, file: File.open('spec/fixtures/world.png')) }
 
     before do
       Hyrax.publisher.subscribe(listener)
-      metadata.file_set_id = file_set.id
+      described_class
+        .run(metadata: file_metadata, file: file_set.original_file.file, characterizer: characterizer)
     end
     after { Hyrax.publisher.unsubscribe(listener) }
 
     describe '#run' do
       it 'successfully sets the property values' do
-        described_class
-          .run(metadata: metadata, file: file, characterizer: characterizer)
-
-        expect(metadata)
+        expect(file_metadata)
           .to have_attributes(compression: contain_exactly("Deflate/Inflate"),
                               format_label: contain_exactly("Portable Network Graphics"),
                               height: contain_exactly("50"),
@@ -37,14 +29,9 @@ RSpec.describe Hyrax::Characterization::ValkyrieCharacterizationService do
       end
 
       it 'publishes metadata updated for file metadata node' do
-        described_class
-          .run(metadata: metadata, file: file, characterizer: characterizer)
-
-        expect(listener.file_metadata_updated&.payload)
-          .to include(user: ::User.system_user,
-                      metadata: metadata)
+        expect(listener.file_metadata_updated&.payload&.values&.map(&:id))
+          .to include(::User.system_user.id, file_metadata.id)
       end
     end
   end
 end
-# rubocop:enable RSpec/AnyInstance

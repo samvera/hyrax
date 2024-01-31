@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 RSpec.describe "The dashboard as viewed by a admin user", type: :feature do
+  let(:admin) { create(:admin) }
+
   before do
-    sign_in create(:admin)
+    sign_in admin
   end
 
   context "upon sign-in" do

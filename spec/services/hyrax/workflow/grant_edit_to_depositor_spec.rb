@@ -30,7 +30,7 @@ RSpec.describe Hyrax::Workflow::GrantEditToDepositor do
       let(:work) { valkyrie_create(:hyrax_work, depositor: depositor.user_key) }
 
       it "adds edit access" do
-        expect { subject }.to change { work.edit_users }.from([]).to([depositor.user_key])
+        expect { subject }.to change { work.edit_users.to_a }.from([]).to([depositor.user_key])
         expect(work).to be_persisted
       end
     end
@@ -40,7 +40,7 @@ RSpec.describe Hyrax::Workflow::GrantEditToDepositor do
       let(:work) { valkyrie_create(:hyrax_work, depositor: depositor.user_key, edit_users: [editor.user_key]) }
 
       it "adds edit access" do
-        expect { subject }.to change { work.edit_users }.from([editor.user_key]).to([editor.user_key, depositor.user_key])
+        expect { subject }.to change { work.edit_users.to_a }.from([editor.user_key]).to([editor.user_key, depositor.user_key])
         expect(work).to be_persisted
       end
     end

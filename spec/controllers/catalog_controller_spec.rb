@@ -88,20 +88,20 @@ RSpec.describe CatalogController, :clean_repo, type: :controller do
       end
       let(:work1) do
         { has_model_ssim: ["GenericWork"], id: "ff365c76z", title_tesim: ["me too"],
-          file_set_ids_ssim: ["ff365c78h", "ff365c79s"], read_access_group_ssim: ["public"],
+          member_ids_ssim: ["ff365c78h", "ff365c79s"], read_access_group_ssim: ["public"],
           edit_access_person_ssim: ["user1@example.com"] }
       end
       let(:work2) do
         { has_model_ssim: ["GenericWork"], id: "ff365c777", title_tesim: ["find me"],
-          file_set_ids_ssim: [], read_access_group_ssim: ["public"], edit_access_person_ssim: ["user2@example.com"] }
+          member_ids_ssim: [], read_access_group_ssim: ["public"], edit_access_person_ssim: ["user2@example.com"] }
       end
       let(:file1) do
         { has_model_ssim: ["FileSet"], id: "ff365c78h", title_tesim: ["find me"],
-          file_set_ids_ssim: [], edit_access_person_ssim: [user.user_key] }
+          member_ids_ssim: [], edit_access_person_ssim: [user.user_key] }
       end
       let(:file2) do
         { has_model_ssim: ["FileSet"], id: "ff365c79s", title_tesim: ["other file"],
-          file_set_ids_ssim: [], edit_access_person_ssim: [user.user_key] }
+          member_ids_ssim: [], edit_access_person_ssim: [user.user_key] }
       end
 
       before do
@@ -144,13 +144,13 @@ RSpec.describe CatalogController, :clean_repo, type: :controller do
       # NOTE: The old expected behavior was "finds a work and a work that contains a file set with a matching title".
       #   This is no longer the case in a Valkyrie environment. A work's child file set's metadata is no longer passed in
       #   to the work's SolrDocument. The only references to the containing file sets are their ids.
-      it "finds a work and a work that contains a file set with a matching title", pending: 'FIXME: Valkyrie indexer should do this' do
+      it "finds a work and a work that contains a file set with a matching title" do
         get :index, params: { q: 'find me', search_field: 'all_fields' }
         expect(assigns(:response).documents.map(&:id)).to contain_exactly(work1[:id], work2[:id])
       end
 
       # NOTE: The same logic in the above comment applies here.
-      it "finds a work that contains a file set with a matching title", pending: 'FIXME: Valkyrie indexer should do this' do
+      it "finds a work that contains a file set with a matching title" do
         get :index, params: { q: 'other file', search_field: 'all_fields' }
         expect(assigns(:response).documents.map(&:id)).to contain_exactly(work1[:id])
       end

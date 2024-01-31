@@ -54,8 +54,6 @@ module Hyrax
       #   @return [Valkyrie::Resource]
       attr_reader :resource
 
-      prepend Hyrax::ResourceIndexer
-
       ##
       # @api private
       # @param [Valkyrie::Resource] resource
@@ -73,7 +71,9 @@ module Hyrax
           "date_modified_dtsi": resource.updated_at,
           "system_create_dtsi": resource.created_at,
           "system_modified_dtsi": resource.updated_at,
-          "has_model_ssim": resource.internal_resource
+          "has_model_ssim": resource.to_rdf_representation,
+          "human_readable_type_tesim": resource.human_readable_type,
+          "alternate_ids_sim": resource.alternate_ids.map(&:to_s)
         }.with_indifferent_access
       end
 

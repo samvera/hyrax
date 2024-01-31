@@ -19,3 +19,5 @@ attributes:
   depositor:
     type: string
     predicate: http://id.loc.gov/vocabulary/relators/dpt
+    index_keys:
+      - "depositor_tesim"

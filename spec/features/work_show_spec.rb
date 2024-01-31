@@ -8,7 +8,7 @@ RSpec.describe "work show view" do
   # development in the valkyrie context. It doesn't reflect AF-only
   # functionality; these tests probably still need to be updated to run in the
   # valkyrie context
-  context "in ActiveFedora" do
+  context "in ActiveFedora", :active_fedora do
     let(:app_host) { Capybara.app_host || 'http://www.example.com' }
 
     before do

@@ -9,7 +9,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
   let(:ability) do
     ::Ability.new(user)
   end
-  let(:user) { build(:user, groups: 'registered') }
+  let(:user) { create(:user, groups: 'registered') }
   let(:builder) { described_class.new(context) }
 
   describe '#models' do
@@ -32,13 +32,16 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
 
   describe "#show_only_managed_collections_for_non_admins" do
     let(:solr_params) { Blacklight::Solr::Request.new }
+    let(:admin_text) { Hyrax.config.disable_wings ? 'Hyrax::AdministrativeSet' : 'AdminSet' }
 
     before do
       builder.show_only_managed_collections_for_non_admins(solr_params)
     end
 
     it "has filter that excludes depositor" do
-      expect(solr_params[:fq]).to eq ["(-_query_:\"{!raw f=depositor_ssim}#{user.user_key}\" OR -(_query_:\"{!raw f=has_model_ssim}AdminSet\" AND _query_:\"{!raw f=creator_ssim}#{user.user_key}\"))"]
+      expect(solr_params[:fq]).to eq(
+        ["(-_query_:\"{!raw f=depositor_ssim}#{user.user_key}\" OR -(_query_:\"{!raw f=has_model_ssim}#{admin_text}\" AND _query_:\"{!raw f=creator_ssim}#{user.user_key}\"))"]
+      )
     end
 
     context "as admin" do
@@ -52,37 +55,57 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
   end
 
   describe "#gated_discovery_filters" do
-    let(:user2) { build(:user) }
-    let!(:collection) { build(:collection_lw, user: user2, with_permission_template: permissions, with_solr_document: true) }
+    let(:user2) { create(:user) }
+    let!(:collection) { valkyrie_create(:hyrax_collection, user: user2, access_grants: grants) }
 
     subject { builder.gated_discovery_filters }
 
     context "user has manage access" do
-      let(:permissions) { { manage_users: [user] } }
+      let(:grants) do
+        [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+           agent_id: user.user_key,
+           access: Hyrax::PermissionTemplateAccess::MANAGE }]
+      end
 
       it { is_expected.to include ["{!terms f=id}#{collection.id}"] }
     end
 
     context "user has deposit access" do
-      let(:permissions) { { deposit_users: [user] } }
+      let(:grants) do
+        [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+           agent_id: user.user_key,
+           access: Hyrax::PermissionTemplateAccess::DEPOSIT }]
+      end
 
       it { is_expected.to include ["{!terms f=id}#{collection.id}"] }
     end
 
     context "user has view access" do
-      let(:permissions) { { view_users: [user] } }
+      let(:grants) do
+        [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+           agent_id: user.user_key,
+           access: Hyrax::PermissionTemplateAccess::VIEW }]
+      end
 
       it { is_expected.not_to include ["{!terms f=id}#{collection.id}"] }
     end
 
     context "does not include registered group for read access" do
-      let(:permissions) { { view_groups: ['registered'] } }
+      let(:grants) do
+        [{ agent_type: Hyrax::PermissionTemplateAccess::GROUP,
+           agent_id: 'registered',
+           access: Hyrax::PermissionTemplateAccess::VIEW }]
+      end
 
       it { is_expected.not_to include ["{!terms f=id}#{collection.id}"] }
     end
 
     context "does not include public group for read access" do
-      let(:permissions) { { view_groups: ['public'] } }
+      let(:grants) do
+        [{ agent_type: Hyrax::PermissionTemplateAccess::GROUP,
+           agent_id: 'public',
+           access: Hyrax::PermissionTemplateAccess::VIEW }]
+      end
 
       let(:expected_discovery_filters) do
         # all filters except no additional ids added for deposit collections
@@ -98,7 +121,14 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
     context "user has deposit access and registered has deposit access" do
       # make sure that having registered deposit access, which isn't included, doesn't
       # remove the user specific deposit access
-      let(:permissions) { { deposit_users: [user], view_groups: ['registered'] } }
+      let(:grants) do
+        [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+           agent_id: user.user_key,
+           access: Hyrax::PermissionTemplateAccess::DEPOSIT },
+         { agent_type: Hyrax::PermissionTemplateAccess::GROUP,
+           agent_id: 'registered',
+           access: Hyrax::PermissionTemplateAccess::VIEW }]
+      end
 
       it { is_expected.to include ["{!terms f=id}#{collection.id}"] }
     end

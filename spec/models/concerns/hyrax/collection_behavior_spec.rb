@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::CollectionBehavior, clean_repo: true do
+RSpec.describe Hyrax::CollectionBehavior, :active_fedora, :clean_repo do
   let(:collection) { create(:collection_lw) }
   let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
 

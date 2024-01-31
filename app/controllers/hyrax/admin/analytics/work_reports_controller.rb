@@ -29,7 +29,7 @@ module Hyrax
           @pageviews = Hyrax::Analytics.daily_events_for_id(@document.id, 'work-view')
           @uniques = Hyrax::Analytics.unique_visitors_for_id(@document.id)
           @downloads = Hyrax::Analytics.daily_events_for_id(@document.id, 'file_set_in_work_download')
-          @files = paginate(@document._source["file_set_ids_ssim"], rows: 5)
+          @files = paginate(@document._source["member_ids_ssim"], rows: 5)
           respond_to do |format|
             format.html
             format.csv { export_data }
@@ -41,11 +41,11 @@ module Hyrax
         def accessible_works
           models = Hyrax.config.curation_concerns.map { |m| "\"#{m}\"" }
           if current_user.ability.admin?
-            ActiveFedora::SolrService.query("has_model_ssim:(#{models.join(' OR ')})",
+            Hyrax::SolrService.query("has_model_ssim:(#{models.join(' OR ')})",
               fl: 'title_tesim, id, member_of_collections',
               rows: 50_000)
           else
-            ActiveFedora::SolrService.query(
+            Hyrax::SolrService.query(
               "edit_access_person_ssim:#{current_user} AND has_model_ssim:(#{models.join(' OR ')})",
               fl: 'title_tesim, id, member_of_collections',
               rows: 50_000
@@ -55,13 +55,13 @@ module Hyrax
 
         def accessible_file_sets
           if current_user.ability.admin?
-            ActiveFedora::SolrService.query(
+            Hyrax::SolrService.query(
               "has_model_ssim:FileSet",
               fl: 'title_tesim, id',
               rows: 50_000
             )
           else
-            ActiveFedora::SolrService.query(
+            Hyrax::SolrService.query(
               "edit_access_person_ssim:#{current_user} AND has_model_ssim:FileSet",
               fl: 'title_tesim, id',
               rows: 50_000

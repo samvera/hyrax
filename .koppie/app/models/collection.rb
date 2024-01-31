@@ -1,1 +1,1 @@
-Collection = Hyrax::PcdmCollection
+Collection = CollectionResource

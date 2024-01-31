@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::DeepIndexingService do
+
+# Marked as AF-only, since Valkyrie work indexing is handled by Hyrax::ValkyrieWorkIndexer.
+RSpec.describe Hyrax::DeepIndexingService, :active_fedora do
   subject(:service) { described_class.new(work) }
   let(:work) { FactoryBot.build(:work) }
 

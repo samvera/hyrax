@@ -11,7 +11,7 @@ RSpec.describe Wings::Works::AddFileToFileSet, :active_fedora, :clean_repo do
 
   let(:original_file_use)  { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
   let(:extracted_text_use) { Hyrax::FileMetadata::Use::EXTRACTED_TEXT }
-  let(:thumbnail_use)      { Hyrax::FileMetadata::Use::THUMBNAIL }
+  let(:thumbnail_use)      { Hyrax::FileMetadata::Use::THUMBNAIL_IMAGE }
 
   let(:pdf_filename)  { 'sample-file.pdf' }
   let(:pdf_mimetype)  { 'application/pdf' }

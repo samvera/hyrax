@@ -33,6 +33,6 @@ RSpec.describe Hyrax::SelectTypeListPresenter do
 
     subject { instance.first_model }
 
-    it { is_expected.to be GenericWork }
+    it { is_expected.to be(GenericWork).or be(Monograph) }
   end
 end

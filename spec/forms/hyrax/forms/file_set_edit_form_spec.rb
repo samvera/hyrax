@@ -1,5 +1,9 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Forms::FileSetEditForm do
+
+# This uses app/services/hydra_editor/field_metadata_service.rb, which calls
+#   #reflect_on_association on the FileSet class. This is an ActiveFedora-specific
+#   method that doesn't translate to Valkyrie Work behavior.
+RSpec.describe Hyrax::Forms::FileSetEditForm, :active_fedora do
   subject { described_class.new(FileSet.new) }
 
   describe '#terms' do

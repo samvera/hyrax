@@ -78,8 +78,8 @@ class Hyrax::CatalogSearchBuilder < Hyrax::SearchBuilder
     "{!dismax v=$user_query}"
   end
 
-  # join from file id to work relationship solrized file_set_ids_ssim
+  # join from file id to work relationship solrized member_ids_ssim
   def join_for_works_from_files
-    "{!join from=#{Hyrax.config.id_field} to=file_set_ids_ssim}#{dismax_query}"
+    "{!join from=#{Hyrax.config.id_field} to=member_ids_ssim v=has_model_ssim:*FileSet}#{dismax_query}"
   end
 end
