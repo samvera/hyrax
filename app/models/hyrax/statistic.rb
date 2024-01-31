@@ -43,7 +43,7 @@ module Hyrax
 
       def query_works(query)
         models = Hyrax.config.curation_concerns.map { |m| "\"#{m}\"" }
-        ActiveFedora::SolrService.query("has_model_ssim:(#{models.join(' OR ')})", fl: query, rows: 100_000)
+        Hyrax::SolrService.query("has_model_ssim:(#{models.join(' OR ')})", fl: query, rows: 100_000)
       end
 
       def work_types
