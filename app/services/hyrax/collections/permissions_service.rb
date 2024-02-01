@@ -24,9 +24,9 @@ module Hyrax
         return [] if ids.empty?
         model = case source_type
                 when 'admin_set'
-                  Hyrax::AdministrativeSet
+                  Hyrax.config.admin_set_class
                 when 'collection'
-                  Hyrax::PcdmCollection
+                  Hyrax.config.collection_class
                 end
 
         Hyrax.custom_queries.find_ids_by_model(model: model, ids: ids).to_a

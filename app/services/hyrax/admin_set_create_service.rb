@@ -86,10 +86,10 @@ module Hyrax
       def create_admin_set(suggested_id:, title:)
         if suggested_id.blank? || Hyrax.config.disable_wings
           # allow persister to assign id
-          Hyrax::AdministrativeSet.new(title: Array.wrap(title))
+          Hyrax.config.admin_set_class.new(title: Array.wrap(title))
         else
           # use suggested_id
-          Hyrax::AdministrativeSet.new(id: suggested_id, title: Array.wrap(title))
+          Hyrax.config.admin_set_class.new(id: suggested_id, title: Array.wrap(title))
         end
       end
 
