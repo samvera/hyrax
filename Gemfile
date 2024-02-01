@@ -21,6 +21,3 @@ group :development, :test do
   gem 'ruby-prof', require: false
   gem "simplecov", require: false
 end
-
-# TODO: Rob remove after valk merge
-gem 'valkyrie', github: 'samvera/valkyrie', branch: 'more_flexible_shared_query_spec'

@@ -8,9 +8,6 @@ else
 end
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-# TODO Rob remove after valk merge
-gem 'valkyrie', github: 'samvera/valkyrie', branch: 'more_flexible_shared_query_spec'
-
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'bootstrap', '~> 4.0'
 gem 'coffee-rails', '~> 4.2'
