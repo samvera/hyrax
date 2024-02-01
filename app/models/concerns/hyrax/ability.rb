@@ -405,7 +405,7 @@ module Hyrax
                                     .distinct
                                     .pluck(:source_id)
 
-      Hyrax.custom_queries.find_ids_by_model(model: Hyrax::AdministrativeSet, ids: ids).any?
+      Hyrax.custom_queries.find_ids_by_model(model: Hyrax.config.admin_set_class, ids: ids).any?
     end
 
     def registered_user?

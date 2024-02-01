@@ -215,9 +215,9 @@ module Hyrax
     # @todo Refactor inner working of code as there's lots of branching logic with potential hidden assumptions.
     def qualifies_as_unauthorized_collection?(resource:)
       case resource
-      when AdminSet, Hyrax::AdministrativeSet
+      when AdminSet, Hyrax::AdministrativeSet, Hyrax.config.admin_set_class
         # Prior to this refactor, we looked at AdminSet only; However with the advent of the
-        # Hyrax::AdministrativeSet, we need to test both cases.
+        # Hyrax::AdministrativeSet and the configurable setting, we need to test them all.
         true
       else
         Hyrax::CollectionType.for(collection: resource).share_applies_to_new_works?
