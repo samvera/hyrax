@@ -12,6 +12,7 @@ module Hyrax
             can :view_admin_show_any, admin_set_model
           end
         else
+          # rubocop:disable Lint/UnusedBlockArgument
           models.each { |admin_set_model| can :manage_any, admin_st_model } if
             Hyrax::Collections::PermissionsService.can_manage_any_admin_set?(ability: self)
 
@@ -20,6 +21,7 @@ module Hyrax
 
           models.each { |admin_set_model| can :view_admin_show_any, admin_st_model } if
             Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_collection?(ability: self)
+          # rubocop:enable Lint/UnusedBlockArgument
 
           # [:edit, :update, :destroy] for AdminSet is controlled by Hydra::Ability #edit_permissions
           models.each do |admin_set_model|
