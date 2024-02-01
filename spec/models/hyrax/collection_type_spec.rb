@@ -4,7 +4,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
 
   shared_context 'with a collection' do
     let(:collection_type) { FactoryBot.create(:collection_type) }
-    let!(:collection) { FactoryBot.valkyrie_create(:pcdm_collection, collection_type_gid: collection_type.to_global_id.to_s) }
+    let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.to_global_id.to_s) }
   end
 
   describe "validations", :clean_repo do
@@ -155,7 +155,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
       end
 
       context 'when use_valkyrie is true' do
-        let!(:pcdm_collection) { valkyrie_create(:pcdm_collection, collection_type_gid: collection_type.to_global_id.to_s) }
+        let!(:pcdm_collection) { valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.to_global_id.to_s) }
 
         it 'returns pcdm collections of this collection type' do
           expect(collection_type.collections(use_valkyrie: true).to_a).to include pcdm_collection

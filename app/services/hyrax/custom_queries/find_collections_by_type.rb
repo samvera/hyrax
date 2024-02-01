@@ -30,7 +30,7 @@ module Hyrax
       # @return [Enumerable<PcdmCollection>]
       def find_collections_by_type(global_id:)
         query_service
-          .find_all_of_model(model: Hyrax.config.collection_model)
+          .find_all_of_model(model: Hyrax.config.collection_model.safe_constantize)
           .select { |collection| collection.collection_type_gid == global_id }
       end
     end
