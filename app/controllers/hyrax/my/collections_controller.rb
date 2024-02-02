@@ -11,7 +11,7 @@ module Hyrax
           # Name of pivot facet must match field name that uses helper_method
           # doing skip_item for everything because we were getting admin set twice:
           # once labeled with model, and the other with collection type title.
-          # What changed to cause this behavior?  
+          # What changed to cause this behavior?
           config.add_facet_field Hyrax.config.collection_type_index_field,
                                  helper_method: :collection_type_label, limit: 5,
                                  pivot: ['has_model_ssim', Hyrax.config.collection_type_index_field],
