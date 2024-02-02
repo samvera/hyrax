@@ -22,6 +22,7 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_object_deposited(event)
+        event = event.to_h
         return Hyrax.logger.warn("Skipping workflow initialization for #{event[:object]}; no user is given\n\t#{event}") if
           event[:user].blank?
 
@@ -29,6 +30,18 @@ module Hyrax
       rescue Sipity::StateError, Sipity::ConversionError => err
         # don't error on known sipity error types; log instead
         Hyrax.logger.error(err)
+      end
+
+      ##
+      # Called when 'object.deleted' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
+      def on_object_deleted(event)
+        event = event.to_h
+        return unless event[:object]
+        gid = Hyrax::ValkyrieGlobalIdProxy.new(resource: event[:object]).to_global_id
+        return if gid.blank?
+        Sipity::Entity.where(proxy_for_global_id: gid.to_s).destroy_all
       end
     end
   end
