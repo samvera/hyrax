@@ -23,7 +23,6 @@ module Hyrax
       # @return [void]
       def on_object_deposited(event)
         event = event.to_h
-
         return Hyrax.logger.warn("Skipping workflow initialization for #{event[:object]}; no user is given\n\t#{event}") if
           event[:user].blank?
 
@@ -39,7 +38,6 @@ module Hyrax
       # @return [void]
       def on_object_deleted(event)
         event = event.to_h
-
         return unless event[:object]
         gid = Hyrax::ValkyrieGlobalIdProxy.new(resource: event[:object]).to_global_id
         return if gid.blank?
