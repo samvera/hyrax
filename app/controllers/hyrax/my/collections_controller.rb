@@ -9,10 +9,13 @@ module Hyrax
       def self.configure_facets
         configure_blacklight do |config|
           # Name of pivot facet must match field name that uses helper_method
+          # doing skip_item for everything because we were getting admin set twice:
+          # once labeled with model, and the other with collection type title.
+          # What changed to cause this behavior?  
           config.add_facet_field Hyrax.config.collection_type_index_field,
                                  helper_method: :collection_type_label, limit: 5,
                                  pivot: ['has_model_ssim', Hyrax.config.collection_type_index_field],
-                                 skip_item: ->(item) { item.value == Hyrax.config.collection_class.to_s },
+                                 skip_item: ->(item) { true },
                                  label: I18n.t('hyrax.dashboard.my.heading.collection_type')
           # This causes AdminSets to also be shown with the Collection Type label
           config.add_facet_field 'has_model_ssim',
