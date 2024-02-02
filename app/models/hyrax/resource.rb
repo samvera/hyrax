@@ -35,8 +35,8 @@ module Hyrax
     include Hyrax::WithEvents
 
     attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
-    attribute :embargo_id,    Valkyrie::Types::ID
-    attribute :lease_id,      Valkyrie::Types::ID
+    attribute :embargo_id,    Valkyrie::Types::Params::ID
+    attribute :lease_id,      Valkyrie::Types::Params::ID
 
     delegate :edit_groups, :edit_groups=,
              :edit_users,  :edit_users=,
