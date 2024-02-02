@@ -9,7 +9,7 @@ module Valkyrie
         ##
         # @!attribute [r] connection
         #   @return [RSolr::Client]
-        attr_reader :connection
+        attr_accessor :connection
 
         ##
         # @param connection [RSolr::Client] The RSolr connection to index to.
@@ -35,6 +35,10 @@ module Valkyrie
         def wipe!
           connection.delete_by_query("*:*")
           connection.commit
+        end
+
+        def reset!
+          self.connection = default_connection
         end
 
         private
