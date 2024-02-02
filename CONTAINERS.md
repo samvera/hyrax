@@ -167,16 +167,6 @@ Currently Koppie should not be used for running specs. See [Code Changes and Tes
 docker compose -f docker-compose-koppie.yml up
 docker compose -f docker-compose-koppie.yml exec app bundle exec rails c
 ```
-
-#### Shell into Koppie to run specs
-
-To run the specs, you need to be in the `/app/samvera/hyrax-engine` directory:
-
-```sh
-docker compose -f docker-compose-koppie.yml up
-docker compose -f docker-compose-koppie.yml exec -w /app/samvera/hyrax-engine app bash
-```
-
 #### Troubleshooting Koppie
 
 If the postgres service logs show permissions errors, there may be old data from alternate versions of the postgres image. The old data volumes can deleted by using `docker compose -f docker-compose-koppie.yml down -v`
