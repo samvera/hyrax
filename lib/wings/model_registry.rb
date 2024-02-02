@@ -48,7 +48,9 @@ module Wings
       @map.delete(valkyrie.name)
     end
 
+    # given a model, return the ActiveFedora class
     def lookup(valkyrie)
+      return valkyrie if valkyrie < ::ActiveFedora::Base
       valkyrie = valkyrie._canonical_valkyrie_model if
         valkyrie.respond_to?(:_canonical_valkyrie_model)
 
@@ -56,7 +58,9 @@ module Wings
         ActiveFedoraConverter::DefaultWork(valkyrie)
     end
 
+    # given a model, return an Valkyrie Resource class
     def reverse_lookup(active_fedora)
+      return active_fedora if active_fedora < ::Valkyrie::Resource
       @map.rassoc(active_fedora.name)&.first&.safe_constantize
     end
   end
