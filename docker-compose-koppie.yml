@@ -115,6 +115,15 @@ services:
     networks:
       - koppie
 
+  fcrepo:
+    image: ghcr.io/samvera/fcrepo4:4.7.5
+    volumes:
+      - fcrepo:/data:cached
+    ports:
+      - 8080:8080
+    networks:
+      - koppie
+
   fits:
     image: ghcr.io/samvera/fitsservlet:1.6.0
     ports:
@@ -159,6 +168,7 @@ services:
 volumes:
   bundle:
   db:
+  fcrepo:
   hyrax-storage:
   hyrax-derivatives:
   hyrax-uploads:
