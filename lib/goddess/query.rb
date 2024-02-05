@@ -43,7 +43,7 @@ module Goddess
             next
           end
 
-          return result_sets.max
+          result_sets.max
         end
       end
 
@@ -61,7 +61,7 @@ module Goddess
 
           # We need to remove items in both sets, but not remove duplicates with in the set
           # because Valkyrie specifies that relationships can be duplicated (A can have [B, C, B, D] as children)
-          return total_results(result_sets)
+          total_results(result_sets)
         end
       end
 
