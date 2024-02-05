@@ -21,8 +21,8 @@ module Hyrax
 
       ##
       # @return [String]
-      def self.inspect
-        return "Hyrax::ChangeSet(#{model_class})" if name.blank?
+      define_singleton_method :inspect do
+        return "Hyrax::ChangeSet(#{resource_class})" if name.blank?
         super
       end
     end
