@@ -294,6 +294,8 @@ module Hyrax
       solr_field = solr_docs.first["title_tesim"]
       return nil if solr_field.nil?
       solr_field.first
+    rescue Blacklight::Exceptions::RecordNotFound
+      nil
     end
 
     ##

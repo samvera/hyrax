@@ -15,7 +15,7 @@ module Hyrax
     #   types
     def attributes_for(schema:)
       definitions(schema).each_with_object({}) do |definition, hash|
-        hash[definition.name] = definition.type
+        hash[definition.name] = definition.type.meta(definition.config)
       end
     end
 
