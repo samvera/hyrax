@@ -87,9 +87,9 @@ module Wings
       # Why the up to date?  Consider the case of a complex adapter, where we write
       acl = begin
               acl_id = pcdm_object.access_control_id
-              acl_id = Valkyrie::ID.new(acl_id) unless acl_id.is_a?(Valkyrie::ID)
+              acl_id = ::Valkyrie::ID.new(acl_id) unless acl_id.is_a?(Valkyrie::ID)
               Hyrax.query_service.find_by(id: acl_id)
-            rescue Valkyrie::Persistence::ObjectNotFoundError
+            rescue ::Valkyrie::Persistence::ObjectNotFoundError
               pcdm_object.access_control.valkyrie_resource
             end
       resource.permission_manager.acl.permissions = acl.permissions
