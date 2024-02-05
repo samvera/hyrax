@@ -83,8 +83,16 @@ module Wings
       # otherwise, we can just rely on the `access_control_ids`.
       return unless resource.respond_to?(:permission_manager)
 
-      resource.permission_manager.acl.permissions =
-        pcdm_object.access_control.valkyrie_resource.permissions
+      # Let's get an up to date version of the ACLs; failing that we'll use what we have.
+      # Why the up to date?  Consider the case of a complex adapter, where we write
+      acl = begin
+              acl_id = pcdm_object.access_control_id
+              acl_id = Valkyrie::ID.new(acl_id) unless acl_id.is_a?(Valkyrie::ID)
+              Hyrax.query_service.find_by(id: acl_id)
+            rescue Valkyrie::Persistence::ObjectNotFoundError
+              pcdm_object.access_control.valkyrie_resource
+            end
+      resource.permission_manager.acl.permissions = acl.permissions
     end
 
     ##
