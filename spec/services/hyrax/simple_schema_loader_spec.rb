@@ -12,6 +12,15 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
                     depositor: Valkyrie::Types::String)
     end
 
+    it 'provides access to attribute metadata' do
+      expect(schema_loader.attributes_for(schema: :core_metadata)[:title].meta)
+        .to include({ "type" => "string",
+                      "form" => { "multiple" => true, "primary" => true, "required" => true },
+                      "index_keys" => ["title_sim", "title_tesim"],
+                      "multiple" => true,
+                      "predicate" => "http://purl.org/dc/terms/title" })
+    end
+
     context 'with generated resource' do
       it 'provides an attributes hash' do
         expect(schema_loader.attributes_for(schema: :sample_metadata))
