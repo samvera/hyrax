@@ -375,6 +375,7 @@ RSpec.describe HyraxHelper, type: :helper do
       allow(repository).to receive(:find).with("abcd12345").and_return(solr_response)
       allow(repository).to receive(:find).with("efgh67890").and_return(bad_solr_response)
       allow(repository).to receive(:find).with("bad-id").and_return(empty_solr_response)
+      allow(repository).to receive(:find).with("error-id").and_raise(Blacklight::Exceptions::RecordNotFound)
     end
 
     it "returns the first title of the collection" do
@@ -387,6 +388,10 @@ RSpec.describe HyraxHelper, type: :helper do
 
     it "returns nil if collection not found" do
       expect(helper.collection_title_by_id("bad-id")).to eq nil
+    end
+
+    it "returns nil if RecordNotFound is raised" do
+      expect(helper.collection_title_by_id("error-id")).to eq nil
     end
   end
 
