@@ -3,6 +3,8 @@ module Goddess
   class CustomQueryContainer < Valkyrie::Persistence::CustomQueryContainer
     ##
     # @note What do we do when we have an empty array returned in the first query service?
+    #
+    # rubocop:disable Metrics/MethodLength
     def method_missing(method_name, *args, **opts)
       # As we iterate through the services, we need to know if any of them responded to the given
       # method_name.
@@ -19,9 +21,9 @@ module Goddess
 
         # If we don't find the resource in the first service, we should try again in the second
         # service, and so forth
-        rescue Valkyrie::Persistence::ObjectNotFoundError => e
-          exception = e
-          next
+      rescue Valkyrie::Persistence::ObjectNotFoundError => e
+        exception = e
+        next
       end
 
       # None of the services responded to the method_name
@@ -33,6 +35,7 @@ module Goddess
 
       raise exception
     end
+    # rubocop:enable Metrics/MethodLength
 
     def respond_to_missing?(method_name, _include_private = false)
       query_service.services.each do |service|
