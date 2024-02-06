@@ -9,6 +9,9 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_object_deleted(event)
+        event = event.to_h
+        return unless event[:object]
+
         object = event[:object]
         return unless object.is_a?(Hyrax::Work)
 
