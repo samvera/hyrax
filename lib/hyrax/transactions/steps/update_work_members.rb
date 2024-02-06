@@ -29,6 +29,8 @@ module Hyrax
           obj.member_ids -= destroys.map { |id| Valkyrie::ID.new(id) }
 
           save_resource(obj, user)
+          Hyrax.publisher.publish('object.membership.updated', object: obj, user: user)
+
           Success(obj)
         end
 
