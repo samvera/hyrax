@@ -8,6 +8,7 @@ module Goddess
       # method_name.
       service_responds_to = false
       returning_value = nil
+      exception = nil
 
       query_service.services.each do |service|
         next unless service.custom_queries.respond_to?(method_name)
@@ -18,8 +19,9 @@ module Goddess
 
         # If we don't find the resource in the first service, we should try again in the second
         # service, and so forth
-      rescue Valkyrie::Persistence::ObjectNotFoundError
-        next
+        rescue Valkyrie::Persistence::ObjectNotFoundError => e
+          exception = e
+          next
       end
 
       # None of the services responded to the method_name
@@ -29,8 +31,7 @@ module Goddess
       # Is that okay?  What if we would have had a non-empty array in a later service?
       return returning_value if returning_value
 
-      # We didn't find anything so we need to re-raise the like error
-      raise Valkyrie::Persistence::ObjectNotFoundError, "#{self.class}#method_missing with method_name: #{method_name.inspect}, args: #{args.inspect}, opts: #{opts.inspect}"
+      raise exception
     end
 
     def respond_to_missing?(method_name, _include_private = false)
