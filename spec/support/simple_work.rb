@@ -28,11 +28,9 @@ end
 
 if defined?(Wings)
   Wings::ModelRegistry.register(Hyrax::Test::SimpleWork, Hyrax::Test::SimpleWorkLegacy)
-else
+elsif defined?(ActiveFedora) && ENV.key?('FCREPO_BASE_PATH')
   # We do not want to add the lazy migration for ActiveFedora to Valkyrie when we don't have a valid
   # Fedora end-point.  Now what is the best way to see if we have a valid and configured fedora
   # connection?
-  if defined?(ActiveFedora) && ENV.key?('FCREPO_BASE_PATH')
-    Hyrax::ValkyrieLazyMigration.migrating(Hyrax::Test::SimpleWork, from: Hyrax::Test::SimpleWorkLegacy)
-  end
+  Hyrax::ValkyrieLazyMigration.migrating(Hyrax::Test::SimpleWork, from: Hyrax::Test::SimpleWorkLegacy)
 end
