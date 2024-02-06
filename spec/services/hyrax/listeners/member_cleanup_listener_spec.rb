@@ -13,16 +13,20 @@ RSpec.describe Hyrax::Listeners::MemberCleanupListener do
   after  { Hyrax.publisher.unsubscribe(spy_listener) }
 
   describe '#on_object_deleted' do
-    let(:data)         { { object: work, user: user } }
+    let(:data)         { { object: child_work, user: user } }
     let(:event_type)   { :on_object_deleted }
-    let(:work)         { FactoryBot.valkyrie_create(:hyrax_work, member_ids: [file_set.id]) }
-    let(:file_set)     { FactoryBot.valkyrie_create(:hyrax_file_set) }
+    let(:child_work)   { FactoryBot.valkyrie_create(:hyrax_work) }
+    let(:parent_work)  { FactoryBot.valkyrie_create(:hyrax_work) }
 
-    # exited because we have moved the logic to a transaction
-    xit 'publishes events' do
+    before do
+      parent_work.member_ids << child_work.id
+      Hyrax.persister.save(resource: parent_work)
+    end
+
+    it "removes the child work id from the parent works' #member_ids" do
+      expect(Hyrax.query_service.find_by(id: parent_work.id).member_ids).to be_present
       listener.on_object_deleted(event)
-      expect(spy_listener.object_deleted&.payload)
-        .to include(id: file_set.id, object: file_set, user: user)
+      expect(Hyrax.query_service.find_by(id: parent_work.id).member_ids).to be_empty
     end
   end
 
