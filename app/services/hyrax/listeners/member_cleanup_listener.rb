@@ -8,7 +8,16 @@ module Hyrax
       # Called when 'object.deleted' event is published
       # @param [Dry::Events::Event] event
       # @return [void]
-      def on_object_deleted(event); end
+      def on_object_deleted(event)
+        object = event[:object]
+        return unless object.is_a?(Hyrax::Work)
+
+        Hyrax.query_service.find_parents(resource: object).each do |parent|
+          parent.member_ids -= [object.id]
+          Hyrax.persister.save(resource: parent)
+          Hyrax.index_adapter.save(resource: parent)
+        end
+      end
 
       # Called when 'collection.deleted' event is published
       # @param [Dry::Events::Event] event
