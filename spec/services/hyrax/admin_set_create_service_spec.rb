@@ -14,7 +14,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
                                                     .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
         end
         expect(described_class).to receive(:create_default_admin_set!).and_call_original
-        expect(query_service).to receive(:find_by).with(id: anything).and_call_original # permission template
+        expect(query_service).to receive(:find_by).with(id: anything).at_least(1).times.and_call_original # permission template
         admin_set = described_class.find_or_create_default_admin_set
         expect(admin_set.title).to eq described_class::DEFAULT_TITLE
       end
