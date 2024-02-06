@@ -6,6 +6,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "abstract_sim"
       - "abstract_tesim"
     predicate: http://purl.org/dc/terms/abstract
   access_right:
@@ -14,6 +15,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "access_right_sim"
       - "access_right_tesim"
     predicate: http://purl.org/dc/terms/accessRights
   alternative_title:
@@ -22,6 +24,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "alternative_title_sim"
       - "alternative_title_tesim"
     predicate: http://purl.org/dc/terms/alternative
   arkivo_checksum:
@@ -45,6 +48,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "bibliographic_citation_sim"
       - "bibliographic_citation_tesim"
     predicate: http://purl.org/dc/terms/bibliographicCitation
   contributor:
@@ -63,6 +67,7 @@ attributes:
       required: true
       primary: true
     index_keys:
+      - "creator_sim"
       - "creator_tesim"
     predicate: http://purl.org/dc/elements/1.1/creator
   date_created:
@@ -71,6 +76,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "date_created_sim"
       - "date_created_tesim"
     predicate: http://purl.org/dc/terms/created
   description:
@@ -79,6 +85,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "description_sim"
       - "description_tesim"
     predicate: http://purl.org/dc/elements/1.1/description
   identifier:
@@ -87,6 +94,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "identifier_sim"
       - "identifier_tesim"
     predicate: http://purl.org/dc/terms/identifier
   import_url:
@@ -107,6 +115,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "publisher_sim"
       - "publisher_tesim"
     predicate: http://purl.org/dc/elements/1.1/publisher
   label:
@@ -114,6 +123,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "label_sim"
       - "label_tesim"
     predicate: info:fedora/fedora-system:def/model#downloadFilename
   language:
@@ -122,6 +132,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "language_sim"
       - "language_tesim"
     predicate: http://purl.org/dc/elements/1.1/language
   license:
@@ -130,6 +141,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "license_sim"
       - "license_tesim"
     predicate: http://purl.org/dc/terms/license
   relative_path:
@@ -141,6 +153,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "related_url_sim"
       - "related_url_tesim"
     predicate: http://www.w3.org/2000/01/rdf-schema#seeAlso
   resource_type:
@@ -158,6 +171,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "rights_notes_sim"
       - "rights_notes_tesim"
     predicate: http://purl.org/dc/elements/1.1/rights
   rights_statement:
@@ -166,6 +180,7 @@ attributes:
     form:
       primary: true
     index_keys:
+      - "rights_statement_sim"
       - "rights_statement_tesim"
     predicate: http://www.europeana.eu/schemas/edm/rights
   source:
@@ -174,6 +189,7 @@ attributes:
     form:
       primary: false
     index_keys:
+      - "source_sim"
       - "source_tesim"
     predicate: http://purl.org/dc/terms/source
   subject:
