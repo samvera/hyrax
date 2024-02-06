@@ -27,4 +27,8 @@ module Hyrax
 end
 
 Wings::ModelRegistry.register(Hyrax::Test::SimpleWork, Hyrax::Test::SimpleWorkLegacy) if defined?(Wings)
-Hyrax::ValkyrieLazyMigration.migrating(Hyrax::Test::SimpleWork, from: Hyrax::Test::SimpleWorkLegacy) unless defined?(Wings)
+
+# We do not want to add the lazy migration for ActiveFedora to Valkyrie when we don't have a valid
+# Fedora end-point.  The best in test approximation of this is by way of whether or not we have
+# disabled wings; wings only makes sense when you have an ActiveFedora-based application.
+Hyrax::ValkyrieLazyMigration.migrating(Hyrax::Test::SimpleWork, from: Hyrax::Test::SimpleWorkLegacy) unless Hyrax.config.disable_wings
