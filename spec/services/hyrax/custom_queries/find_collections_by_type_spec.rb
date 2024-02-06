@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::CustomQueries::FindCollectionsByType, valkyrie_adapter: :test_adapter do
+RSpec.describe Hyrax::CustomQueries::FindCollectionsByType, valkyrie_adapter: :test_adapter, skip: !Hyrax.config.use_valkyrie? || !Hyrax.config.disable_wings do
   subject(:query_handler) { described_class.new(query_service: query_service) }
   let(:adapter)           { Valkyrie::MetadataAdapter.find(:test_adapter) }
   let(:collection_type)   { FactoryBot.create(:collection_type) }
