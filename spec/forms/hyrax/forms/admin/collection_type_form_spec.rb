@@ -6,7 +6,9 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm, :clean_repo do
   shared_context 'with a collection' do
     let(:collection_type) { FactoryBot.create(:collection_type) }
 
-    FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.to_global_id)
+    before do
+      FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.to_global_id)
+    end
   end
 
   it { is_expected.to delegate_method(:title).to(:collection_type) }
