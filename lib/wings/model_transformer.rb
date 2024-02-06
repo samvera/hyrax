@@ -77,7 +77,8 @@ module Wings
     end
 
     def ensure_current_permissions(resource)
-      return if pcdm_object.try(:access_control).blank?
+      # If the identifier is `nil`, later on, we can't possibly find the access control object.
+      return if pcdm_object.try(:access_control_id).blank?
 
       # set permissions on the locally cached permission manager if one is present,
       # otherwise, we can just rely on the `access_control_ids`.
