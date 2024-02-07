@@ -83,8 +83,25 @@ module Wings
       # otherwise, we can just rely on the `access_control_ids`.
       return unless resource.respond_to?(:permission_manager)
 
-      resource.permission_manager.acl.permissions =
-        pcdm_object.access_control.valkyrie_resource.permissions
+      # When the pcdm_object has an access_control (see above) but there's no access_control_id, we
+      # need to rely on the computed access_control object.  Why?  There are tests that fail.
+      acl = if pcdm_object.access_control_id.nil?
+              pcdm_object.access_control.valkyrie_resource
+            else
+              begin
+                # Given that we have an access_control AND an access_control_id, we want to ensure
+                # that we fetch the access_control from persistence.  Why?  Because when we update
+                # an ACL and are using those adapters, we will write the ACL to the Valkyrie adapter
+                # without writing the work to the Valkyrie adapter.  This might be a failing, but
+                # migrations in place are hard.
+                acl_id = pcdm_object.access_control_id
+                acl_id = ::Valkyrie::ID.new(acl_id) unless acl_id.is_a?(::Valkyrie::ID)
+                Hyrax.query_service.find_by(id: acl_id)
+              rescue ::Valkyrie::Persistence::ObjectNotFoundError
+                pcdm_object.access_control.valkyrie_resource
+              end
+            end
+      resource.permission_manager.acl.permissions = acl.permissions
     end
 
     ##

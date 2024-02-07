@@ -904,6 +904,11 @@ pt-BR:
             collection_title: Título da Coleção
           this_collection_in_other_collections_description: Você pode embutir esta coleção em outras coleções como uma sub-coleção.
         form_share:
+          access_options:
+            creator: O Criador
+            depositor: Depositante
+            manager: Gerente
+            viewer: Visualizador        
           add_group: Acrescentar Grupo
           add_sharing: Acrescentar Compartilhamento
           add_user: Acrescentar Usuário

@@ -241,7 +241,7 @@ RSpec.describe 'collection_type', type: :feature do
 
     context 'when collections exist of this type' do
       let!(:collection1) do
-        FactoryBot.valkyrie_create(:pcdm_collection, :public, user: create(:user), collection_type_gid: exhibit_collection_type.to_global_id)
+        FactoryBot.valkyrie_create(:hyrax_collection, :public, user: create(:user), collection_type_gid: exhibit_collection_type.to_global_id)
       end
 
       before do
@@ -340,7 +340,7 @@ RSpec.describe 'collection_type', type: :feature do
       include_examples 'tests the inability to delete collection types that are associated to persisted collections'
     end
 
-    context 'when collections exist of this type (Valkyrie)', pending: "This test should work after resolving https://github.com/samvera/hyrax/issues/6611" do
+    context 'when collections exist of this type (Valkyrie)' do
       include_examples 'tests the inability to delete collection types that are associated to persisted collections' if Hyrax.config.disable_wings
     end
   end
