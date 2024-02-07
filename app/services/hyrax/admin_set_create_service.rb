@@ -83,7 +83,9 @@ module Hyrax
 
       # Create an instance of `Hyrax::AdministrativeSet` with the suggested_id if supported.
       # @return [Hyrax::AdministrativeSet] the new admin set
+      # @raise [StandardError] if attempting to create via an invalid class
       def create_admin_set(suggested_id:, title:)
+        raise "Unable to create a default admin set of class #{Hyrax.config.admin_set_model}" unless Hyrax.config.admin_set_class < Hyrax::AdministrativeSet
         if suggested_id.blank? || Hyrax.config.disable_wings
           # allow persister to assign id
           Hyrax.config.admin_set_class.new(title: Array.wrap(title))
