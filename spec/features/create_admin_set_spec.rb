@@ -50,7 +50,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         expect(page).to have_xpath("//h4", text: "Admin Set")
         choose "collection_type", option: "AdminSet"
         click_button 'Create collection'
-        fill_in('Title', with: 'An Admin Set')
+        fill_in('admin_set_title', with: 'An Admin Set')
         click_on('Save')
         expect(page).to have_content("The administrative set 'An Admin Set' has been created. Use the additional tabs to define other aspects of the administrative set.")
 
@@ -150,7 +150,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         expect(page).to have_xpath("//h4", text: "Admin Set")
         choose "collection_type", option: "AdminSet"
         click_button 'Create collection'
-        fill_in('Title', with: 'An Admin Set')
+        fill_in('admin_set_title', with: 'An Admin Set')
         click_on('Save')
         expect(page).to have_content("The administrative set 'An Admin Set' has been created. Use the additional tabs to define other aspects of the administrative set.")
 
@@ -206,7 +206,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
       expect(page).to have_xpath("//h4", text: "Admin Set")
       choose "collection_type", option: "AdminSet"
       click_button 'Create collection'
-      fill_in('Title', with: 'An Admin Set')
+      fill_in('admin_set_title', with: 'An Admin Set')
       click_on('Save')
       expect(page).to have_content("The administrative set 'An Admin Set' has been created. Use the additional tabs to define other aspects of the administrative set.")
 
