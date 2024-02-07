@@ -874,7 +874,7 @@ module Hyrax
     # @return [#constantize] a string representation of the admin set
     #   model
     def admin_set_model
-      @admin_set_model ||= 'AdminSet'
+      @admin_set_model ||= 'Hyrax::AdministrativeSet'
     end
 
     ##
