@@ -69,10 +69,13 @@ module Hyrax
       end
 
       def save(env, use_valkyrie: false)
-        return env.curation_concern.save unless use_valkyrie
+        # NOTE: You must call env.curation_concern.save before you attempt to coerce the curation
+        # concern into a valkyrie resource.
+        is_valid = env.curation_concern.save
+        return is_valid unless use_valkyrie
 
         # don't run validations again on the converted object if they've already passed
-        resource = valkyrie_save(resource: env.curation_concern.valkyrie_resource, is_valid: env.curation_concern.save)
+        resource = valkyrie_save(resource: env.curation_concern.valkyrie_resource, is_valid: is_valid)
 
         # we need to manually set the id and reload, because the actor stack requires
         # `env.curation_concern` to be the exact same instance throughout.
@@ -83,7 +86,7 @@ module Hyrax
         # for now, just hit the validation error again
         # later we should capture the _err.obj and pass it back
         # through the environment
-        env.curation_concern.save
+        is_valid
       end
 
       def apply_save_data_to_curation_concern(env)
