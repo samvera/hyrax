@@ -48,7 +48,7 @@ module Hyrax
       solr_path = args.delete(:path) || Hyrax.config.solr_select_path
       args = args.merge(q: query) if query.present?
 
-      args = args.merge(qt: 'standard') unless query.blank? || use_valkyrie
+      args = args.merge(qt: 'standard') unless query.blank?
       connection.get(solr_path, params: args)
     end
 
@@ -68,7 +68,7 @@ module Hyrax
       solr_path = args.delete(:path) || Hyrax.config.solr_select_path
       args = args.merge(q: query) if query.present?
 
-      args = args.merge(qt: 'standard') unless query.blank? || use_valkyrie
+      args = args.merge(qt: 'standard') unless query.blank?
       connection.post(solr_path, data: args)
     end
 
