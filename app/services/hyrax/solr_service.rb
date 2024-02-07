@@ -46,9 +46,8 @@ module Hyrax
     def get(query = nil, **args)
       # Make Hyrax.config.solr_select_path the default SOLR path
       solr_path = args.delete(:path) || Hyrax.config.solr_select_path
-      args = args.merge(q: query) if query.present?
+      args = args.merge(q: query, qt: 'standard') if query.present?
 
-      args = args.merge(qt: 'standard') unless query.blank? || use_valkyrie
       connection.get(solr_path, params: args)
     end
 
@@ -66,9 +65,8 @@ module Hyrax
     def post(query = nil, **args)
       # Make Hyrax.config.solr_select_path the default SOLR path
       solr_path = args.delete(:path) || Hyrax.config.solr_select_path
-      args = args.merge(q: query) if query.present?
+      args = args.merge(q: query, qt: 'standard') if query.present?
 
-      args = args.merge(qt: 'standard') unless query.blank? || use_valkyrie
       connection.post(solr_path, data: args)
     end
 
