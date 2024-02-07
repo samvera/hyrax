@@ -47,14 +47,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       it "has collection type and visibility filters" do
+        debugger
         expect(page).to have_button 'Visibility'
         expect(page).to have_link 'Public',
                                   href: /visibility_ssi.+#{Regexp.escape(CGI.escape(collection3.visibility))}/
         expect(page).to have_button 'Collection Type'
         expect(page).to have_link collection_type.title,
                                   href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.to_global_id.to_s))}/
-        expect(page).to have_link Hyrax.config.admin_set_model,
-                                  href: /#{solr_model_field}.+#{Regexp.escape(CGI.escape(Hyrax.config.admin_set_model))}/
+        expect(page).to have_link Hyrax::CollectionType.find_or_create_admin_set_type.title,
+                                  href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(Hyrax::CollectionType.find_or_create_admin_set_type.to_s))}/
         expect(page).not_to have_link user_collection_type.title,
                                       href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.to_global_id.to_s))}/
         expect(page).not_to have_link 'Collection',
@@ -111,8 +112,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
                                   href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.to_global_id.to_s))}/
         expect(page).to have_link user_collection_type.title,
                                   href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.to_global_id.to_s))}/
-        expect(page).to have_link Hyrax.config.admin_set_model,
-                                  href: /#{solr_model_field}.+#{Regexp.escape(CGI.escape(Hyrax.config.admin_set_model))}/
+        expect(page).to have_link Hyrax::CollectionType.find_or_create_admin_set_type.title,
+                                  href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(Hyrax::CollectionType.find_or_create_admin_set_type.to_s))}/
         expect(page).not_to have_link 'Collection',
                                       href: /#{solr_model_field}.+#{Regexp.escape('Collection')}/
       end
@@ -155,8 +156,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
                                 href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.to_global_id.to_s))}/
       expect(page).to have_link user_collection_type.title,
                                 href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.to_global_id.to_s))}/
-      expect(page).to have_link Hyrax.config.admin_set_model,
-                                href: /#{solr_model_field}.+#{Regexp.escape(CGI.escape(Hyrax.config.admin_set_model))}/
+      expect(page).to have_link Hyrax::CollectionType.find_or_create_admin_set_type.title,
+                                href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(Hyrax::CollectionType.find_or_create_admin_set_type.to_s))}/
       expect(page).not_to have_link 'Collection',
                                     href: /#{solr_model_field}.+#{Regexp.escape('Collection')}/
     end
