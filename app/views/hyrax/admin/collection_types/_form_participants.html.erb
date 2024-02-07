@@ -1,6 +1,8 @@
 <h3><%= t('.add_participants') %></h3>
 <p><%= t('.instructions') %></p>
-<% access_options = options_for_select([['Manager', Hyrax::CollectionTypeParticipant::MANAGE_ACCESS], ['Creator', Hyrax::CollectionTypeParticipant::CREATE_ACCESS]]) %>
+<% access_options = options_for_select([
+    [t('hyrax.dashboard.collections.form_share.access_options.manager'), Hyrax::CollectionTypeParticipant::MANAGE_ACCESS],
+    [t('hyrax.dashboard.collections.form_share.access_options.creator'), Hyrax::CollectionTypeParticipant::CREATE_ACCESS]]) %>
 <% unless @collection_type_participant.nil? %>
 
   <section class="section-participants">

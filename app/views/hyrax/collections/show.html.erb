@@ -4,9 +4,9 @@
     <div class="col-md-12">
 
       <% if @presenter.banner_file.present? %>
-          <div class="hyc-banner" style="background-image:url(<%= @presenter.banner_file %>)">
+        <div class="hyc-banner" style="background-image:url(<%= @presenter.banner_file %>)">
       <% else %>
-          <div class="hyc-generic">
+        <div class="hyc-generic">
       <% end %>
 
       <div class="hyc-title">
@@ -80,11 +80,11 @@
   <!-- Search results label -->
   <% if @members_count > 0 || @presenter.subcollection_count > 0 %>
     <div class="hyc-blacklight hyc-bl-title">
-    <% if collection_search_parameters? %>
-      <h2>
-        <%= t('hyrax.dashboard.collections.show.search_results') %>
-      </h2>
-    <% end %>
+      <% if collection_search_parameters? %>
+        <h2>
+          <%= t('hyrax.dashboard.collections.show.search_results') %>
+        </h2>
+      <% end %>
     </div>
   <% end %>
 
@@ -125,6 +125,4 @@
   <% end # if @members_count > 0 %>
 </div>
 
-
 <span class='hide analytics-event' data-category="collection" data-action="collection-page-view" data-name="<%= @presenter.id %>" >
-

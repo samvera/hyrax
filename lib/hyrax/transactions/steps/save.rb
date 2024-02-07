@@ -40,7 +40,7 @@ module Hyrax
             save_lease_or_embargo(unsaved)
             saved = @persister.save(resource: unsaved)
           rescue StandardError => err
-            return Failure(["Failed save on #{change_set}\n\t#{err.message}", change_set.resource])
+            return Failure.new(["Failed save on #{change_set}\n\t#{err.message}", change_set.resource], err.backtrace.first)
           end
 
           # if we have a permission manager, it's acting as a local cache of another resource.
@@ -58,6 +58,7 @@ module Hyrax
         private
 
         def valid_future_date?(item, attribute)
+          return true if item.fields[attribute].blank?
           raise StandardError, "#{item.model} must use a future date" if item.fields[attribute] < Time.zone.now
         end
 
