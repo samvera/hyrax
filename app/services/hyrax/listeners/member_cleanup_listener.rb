@@ -13,12 +13,14 @@ module Hyrax
         return unless event[:object]
 
         object = event[:object]
+        user = event[:user]
         return unless object.is_a?(Hyrax::Work)
 
         Hyrax.query_service.find_parents(resource: object).each do |parent|
           parent.member_ids -= [object.id]
           Hyrax.persister.save(resource: parent)
           Hyrax.index_adapter.save(resource: parent)
+          Hyrax.publisher.publish('object.membership.updated', object: parent, user: user)
         end
       end
 
