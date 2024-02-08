@@ -19,7 +19,7 @@ module Hyrax
             Hyrax::CollectionTypes::PermissionsService.can_create_admin_set_collection_type?(ability: self)
 
           models.each { |admin_set_model| can :view_admin_show_any, admin_set_model } if
-            Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_collection?(ability: self)
+            Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_admin_set?(ability: self)
 
           # [:edit, :update, :destroy] for AdminSet is controlled by Hydra::Ability #edit_permissions
           models.each do |admin_set_model|
