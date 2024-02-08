@@ -47,7 +47,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       it "has collection type and visibility filters" do
-        debugger
         expect(page).to have_button 'Visibility'
         expect(page).to have_link 'Public',
                                   href: /visibility_ssi.+#{Regexp.escape(CGI.escape(collection3.visibility))}/
