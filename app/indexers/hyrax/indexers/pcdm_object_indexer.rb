@@ -3,29 +3,6 @@
 module Hyrax
   module Indexers
     ##
-    # Provides a model‐specific subclass for
-    # +Hyrax::Indexers::PcdmObjectIndexer+.
-    #
-    # The base Hyrax engine could get on without this, but it’s useful for
-    # downstream applications and reflects what we do for forms.
-    def self.PcdmObjectIndexer(work_class)
-      Class.new(Hyrax::Indexers::PcdmObjectIndexer) do
-        @model_class = work_class
-
-        class << self
-          attr_reader :model_class
-
-          ##
-          # @return [String]
-          def inspect
-            return "Hyrax::Indexers::PcdmObjectIndexer(#{model_class})" if name.blank?
-            super
-          end
-        end
-      end
-    end
-
-    ##
     # Indexes non‐fileset PCDM objects
     class PcdmObjectIndexer < Hyrax::Indexers::ResourceIndexer
       include Hyrax::PermissionIndexer
