@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Hyrax.publisher.subscribe(Hyrax::Listeners::ActiveFedoraAclIndexListener.new) unless Hyrax.config.disable_wings
+Hyrax.publisher.subscribe(Hyrax::Listeners::ActiveFedoraACLIndexListener.new) unless Hyrax.config.disable_wings
 
 Hyrax.publisher.default_listeners.each do |listener|
   Hyrax.publisher.subscribe(listener)
