@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module Forms
     ##
@@ -8,7 +10,7 @@ module Hyrax
     #     self.required_fields = [:title, :creator, :rights_statement]
     #     # other WorkForm-like configuration here
     #   end
-    def self.PcdmObjectForm(work_class)
+    def self.PcdmObjectForm(work_class) # rubocop:disable Naming/MethodName
       Class.new(Hyrax::Forms::PcdmObjectForm) do
         self.model_class = work_class
 
@@ -25,7 +27,7 @@ module Hyrax
     # @api public
     #
     # Returns the form class associated with a given model.
-    def self.ResourceForm(model_class) # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
+    def self.ResourceForm(model_class) # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity, Naming/MethodName
       @resource_forms ||= {}.compare_by_identity
       @resource_forms[model_class] ||=
         # +#respond_to?+ needs to be used here, not +#try+, because Dry::Types
