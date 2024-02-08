@@ -3,6 +3,8 @@ RSpec.describe FeaturedWork, type: :model do
   let(:feature) { described_class.create(work_id: "99") }
 
   describe '.feature_limit' do
+    subject { described_class.feature_limit }
+
     it { is_expected.to be_a(Integer) }
   end
 
