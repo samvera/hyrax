@@ -170,7 +170,7 @@ module Hyrax
     #  @return [Hash] of options like {ch12n_tool: :fits_servlet}
     attr_writer :characterization_options
     def characterization_options
-      @characterization_options ||= {}
+      @characterization_options ||= { ch12n_tool: ENV.fetch('CH12N_TOOL', 'fits').to_sym }
     end
 
     ##
