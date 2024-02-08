@@ -18,10 +18,6 @@ class Hyrax::RiiifGenerator < Rails::Generators::Base
 
   def add_to_gemfile
     gem 'riiif', '~> 2.1'
-
-    Bundler.with_clean_env do
-      run "bundle install"
-    end
   end
 
   def copy_initializer
@@ -30,6 +26,12 @@ class Hyrax::RiiifGenerator < Rails::Generators::Base
 
   def mount_route
     route "mount Riiif::Engine => 'images', as: :riiif if Hyrax.config.iiif_image_server?"
+  end
+
+  def enable_riiif_in_hyrax_config
+    insert_into_file 'config/initializers/hyrax.rb', before: /^  # config.iiif_image_server = false/ do
+      "  config.iiif_image_server = true\n"
+    end
   end
 
   def override_image_url_builder_in_hyrax_config

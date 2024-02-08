@@ -15,6 +15,7 @@ class Hyrax::ModelsGenerator < Rails::Generators::Base
   # Setup the database migrations
   def copy_migrations
     rake 'hyrax:install:migrations'
+    rake 'valkyrie_engine:install:migrations'
   end
 
   # Add behaviors to the user model
@@ -35,16 +36,6 @@ class Hyrax::ModelsGenerator < Rails::Generators::Base
     end
   end
   # rubocop:enable Metrics/MethodLength
-
-  def create_collection
-    copy_file 'app/models/collection.rb', 'app/models/collection.rb'
-    copy_file 'spec/models/collection_spec.rb', 'spec/models/collection_spec.rb' if rspec_installed?
-  end
-
-  def create_file_set
-    copy_file 'app/models/file_set.rb', 'app/models/file_set.rb'
-    copy_file 'spec/models/file_set_spec.rb', 'spec/models/file_set_spec.rb' if rspec_installed?
-  end
 
   # Adds clamav initializtion
   def clamav
