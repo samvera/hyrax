@@ -206,7 +206,7 @@ module Hyrax
     # @return Array[Object] the listeners Hyrax subscribes by default.
     def default_listeners
       @default_listeners ||=
-        [Hyrax::Listeners::AclIndexListener.new,
+        [Hyrax::Listeners::ACLIndexListener.new,
          Hyrax::Listeners::BatchNotificationListener.new,
          Hyrax::Listeners::FileMetadataListener.new,
          Hyrax::Listeners::FileSetLifecycleListener.new,

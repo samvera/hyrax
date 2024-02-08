@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::Listeners::AclIndexListener do
+RSpec.describe Hyrax::Listeners::ACLIndexListener do
   subject(:listener) { described_class.new }
   let(:acl)          { Hyrax::AccessControlList.new(resource: resource) }
   let(:data)         { { result: result, resource: resource, acl: acl } }

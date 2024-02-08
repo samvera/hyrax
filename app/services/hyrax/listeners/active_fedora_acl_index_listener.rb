@@ -7,7 +7,7 @@ module Hyrax
     #
     # Hyrax's `Ability` behavior depends on the index being up-to-date as
     # concerns-their read/write users/groups, and visibility.
-    class ActiveFedoraAclIndexListener
+    class ActiveFedoraACLIndexListener
       ##
       # Re-index the resource for the updated ACL.
       #
