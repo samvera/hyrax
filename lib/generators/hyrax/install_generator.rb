@@ -198,5 +198,16 @@ module Hyrax
       rake('hyrax:universal_viewer:install')
       rake('yarn:install')
     end
+
+    def lando
+      copy_file '.lando.yml'
+    end
+
+    def dotenv
+      copy_file '.env'
+      gem_group :development, :test do
+        gem 'dotenv-rails', '~> 2.8'
+      end
+    end
   end
 end
