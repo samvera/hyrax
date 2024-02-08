@@ -108,6 +108,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:translate_id_to_uri) }
   it { is_expected.to respond_to(:translate_uri_to_id) }
   it { is_expected.to respond_to(:upload_path) }
+  it { is_expected.to respond_to(:use_valkyrie?) }
+  it { is_expected.to respond_to(:use_valkyrie=) }
   it { is_expected.to respond_to(:registered_ingest_dirs) }
   it { is_expected.to respond_to(:registered_ingest_dirs=) }
   it { is_expected.to respond_to(:range_for_number_of_results_to_display_per_page) }
