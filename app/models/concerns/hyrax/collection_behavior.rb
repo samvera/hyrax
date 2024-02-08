@@ -17,7 +17,15 @@ module Hyrax
 
       self.indexer = Hyrax::CollectionIndexer
 
+      ##
+      # @!group Class Attributes
+      #
+      # @!attribute internal_resource
+      #   @return [String]
+      class_attribute :internal_resource, default: "Collection"
+
       class_attribute :index_collection_type_gid_as, instance_writer: false
+      ##
       self.index_collection_type_gid_as = [:symbol]
 
       property :collection_type_gid, predicate: ::RDF::Vocab::SCHEMA.additionalType, multiple: false do |index|
