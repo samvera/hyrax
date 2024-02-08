@@ -110,7 +110,6 @@ RSpec.describe AttachFilesToWorkJob, :active_fedora, perform_enqueued: [AttachFi
     shared_examples 'a file attacher', perform_enqueued: [described_class, IngestJob] do
       it 'attaches files, copies visibility and permissions and updates the uploaded files' do
         id = generic_work.id
-        expect(ValkyrieIngestJob).to receive(:perform_later).twice
         described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
         generic_work = Hyrax.query_service.find_by(id: id)
         file_sets = Hyrax.custom_queries.find_child_file_sets(resource: generic_work)
@@ -118,6 +117,7 @@ RSpec.describe AttachFilesToWorkJob, :active_fedora, perform_enqueued: [AttachFi
         expect(file_sets.map(&:visibility)).to all(eq 'open')
         expect(uploaded_file1.reload.file_set_uri).not_to be_nil
         expect(ImportUrlJob).not_to have_been_enqueued
+        expect(ValkyrieIngestJob).to have_been_enqueued.twice
       end
     end
 
