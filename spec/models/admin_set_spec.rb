@@ -8,6 +8,9 @@ RSpec.describe AdminSet, :active_fedora, type: :model do
 
   subject { described_class.new(title: ['Some title']) }
 
+  its(:internal_resource) { is_expected.to eq('AdminSet') }
+  its(:to_rdf_representation) { is_expected.to eq('AdminSet') }
+
   describe '#active_workflow' do
     it 'leverages Sipity::Workflow.find_active_workflow_for' do
       admin_set = build(:admin_set, id: 1234)
