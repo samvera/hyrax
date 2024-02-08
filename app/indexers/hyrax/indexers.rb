@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   module Indexers
     ##
@@ -6,7 +8,7 @@ module Hyrax
     #
     # The base Hyrax engine could get on without this, but it’s useful for
     # downstream applications and reflects what we do for forms.
-    def self.PcdmObjectIndexer(work_class)
+    def self.PcdmObjectIndexer(work_class) # rubocop:disable Naming/MethodName
       Class.new(Hyrax::Indexers::PcdmObjectIndexer) do
         @model_class = work_class
 
@@ -27,7 +29,7 @@ module Hyrax
     # @api public
     #
     # Returns the indexer class associated with a given model.
-    def self.ResourceIndexer(model_class) # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
+    def self.ResourceIndexer(model_class) # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity, Naming/MethodName
       @resource_indexers ||= {}.compare_by_identity
       @resource_indexers[model_class] ||=
         # +#respond_to?+ needs to be used here, not +#try+, because Dry::Types
