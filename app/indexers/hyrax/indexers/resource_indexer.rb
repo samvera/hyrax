@@ -5,32 +5,6 @@ module Hyrax
     ##
     # @api public
     #
-    # Returns the indexer class associated with a given model.
-    def self.ResourceIndexer(model_class) # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
-      @resource_indexers ||= {}.compare_by_identity
-      @resource_indexers[model_class] ||=
-        # +#respond_to?+ needs to be used here, not +#try+, because Dry::Types
-        # overrides the latter??
-        if model_class.respond_to?(:pcdm_collection?) && model_class.pcdm_collection?
-          if model_class <= Hyrax::AdministrativeSet
-            Hyrax.config.administrative_set_indexer
-          else
-            Hyrax.config.pcdm_collection_indexer
-          end
-        elsif model_class.respond_to?(:pcdm_object?) && model_class.pcdm_object?
-          if model_class.respond_to?(:file_set?) && model_class.file_set?
-            Hyrax.config.file_set_indexer
-          else
-            Hyrax.config.pcdm_object_indexer_builder.call(model_class)
-          end
-        else
-          Hyrax::Indexers::ResourceIndexer
-        end
-    end
-
-    ##
-    # @api public
-    #
     # Transforms +Valkyrie::Resource+ models to solr-ready key-value hashes. Use
     # {#to_solr} to retrieve the indexable hash.
     #
