@@ -3,7 +3,7 @@
 require 'spec_helper'
 require 'wings'
 
-RSpec.describe Hyrax::ValkyrieLazyMigration do
+RSpec.describe Hyrax::ValkyrieLazyMigration, :active_fedora do
   before do
     class MigratingFromWork < ActiveFedora::Base
       include Hyrax::WorkBehavior
