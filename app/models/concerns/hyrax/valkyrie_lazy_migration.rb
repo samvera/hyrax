@@ -18,12 +18,14 @@ module Hyrax
 
         legacy_model = Wings::ModelRegistry.lookup(klass)
         return unless legacy_model
+
         instance_variables.each do |ivar|
           next if ivar == :@name
-          next if ivar == :@singular
-          instance_variable_set(ivar, legacy_model.model_name.send("#{ivar[1..-1]}"))
+          next if ivar == :@klass
+          instance_variable_set(ivar, legacy_model.model_name.send(ivar[1..-1]))
         end
       end
+      attr_reader :klass
     end
     ##
     # This function helps configuration a work for a valkyrie migration; namely by helping re-use
@@ -46,6 +48,8 @@ module Hyrax
     #     Hyrax::ValkyrieLazyMigration.migrating(self, from: MyWork)
     #   end
     def self.migrating(klass, from:, name_class: Hyrax::ValkyrieLazyMigration::ResourceName)
+
+      Wings::ModelRegistry.register(klass, from)
       klass.singleton_class.define_method(:migrating_from) { from }
       klass.singleton_class.define_method(:_hyrax_default_name_class) { name_class }
       klass.singleton_class.define_method(:to_rdf_representation) { migrating_from.to_rdf_representation }
