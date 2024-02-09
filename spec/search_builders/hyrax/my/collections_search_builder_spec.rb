@@ -11,7 +11,7 @@ RSpec.describe Hyrax::My::CollectionsSearchBuilder do
   end
   let(:user) { create(:user) }
   let(:builder) { described_class.new(context) }
-  let(:admin_klass) { Hyrax.config.disable_wings ? Hyrax::AdministrativeSet : AdminSet }
+  let(:admin_klass) { Hyrax.config.admin_set_model }
 
   describe '#models' do
     subject { builder.models }
