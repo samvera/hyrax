@@ -15,7 +15,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
   end
   # Admin set model matches the fallback config value... setting explicitly here for clarity
   let(:as_model) { 'Hyrax::AdministrativeSet' }
-  
+
   before do
     allow(Hyrax.config).to receive(:admin_set_model).and_return(as_model)
   end
@@ -24,7 +24,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
     before { sign_in admin }
 
     describe 'edit AdminSet' do
-      let(:admin_set_af) {FactoryBot.create(:adminset_lw, with_permission_template: true) }
+      let(:admin_set_af) { FactoryBot.create(:adminset_lw, with_permission_template: true) }
       let(:as_model) { 'AdminSet' }
 
       it 'defines an ActiveFedora object form' do
