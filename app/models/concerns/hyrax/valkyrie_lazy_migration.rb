@@ -19,8 +19,8 @@ module Hyrax
         legacy_model = Wings::ModelRegistry.lookup(klass)
         return unless legacy_model
         instance_variables.each do |ivar|
-          next if iver == :@name
-          next if iver == :@singular
+          next if ivar == :@name
+          next if ivar == :@singular
           instance_variable_set(ivar, legacy_model.model_name.send("#{ivar[1..-1]}"))
         end
       end
