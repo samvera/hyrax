@@ -8,11 +8,41 @@ RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
   let(:ability) { ::Ability.new(manager) }
   let(:ability) { ::Ability.new(creator) }
   let(:ability) { ::Ability.new(user) }
-
   let!(:admin_set_type) do
     FactoryBot.create(:admin_set_collection_type,
                       manager_user: manager.user_key,
                       creator_user: creator.user_key)
+  end
+  # Admin set model matches the fallback config value... setting explicitly here for clarity
+  let(:as_model) { 'Hyrax::AdministrativeSet' }
+  
+  before do
+    allow(Hyrax.config).to receive(:admin_set_model).and_return(as_model)
+  end
+
+  context 'behavior varies due to config.admin_set_model' do
+    before { sign_in admin }
+
+    describe 'edit AdminSet' do
+      let(:admin_set_af) {FactoryBot.create(:adminset_lw, with_permission_template: true) }
+      let(:as_model) { 'AdminSet' }
+
+      it 'defines an ActiveFedora object form' do
+        get :edit, params: { id: admin_set_af }
+        expect(response).to be_successful
+        expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdminSetForm
+      end
+    end
+
+    context 'edit Hyrax::AdministrativeSet' do
+      let(:admin_set_valk) { valkyrie_create(:hyrax_admin_set, with_permission_template: true) }
+
+      it 'defines a Valkyrie object form' do
+        get :edit, params: { id: admin_set_valk }
+        expect(response).to be_successful
+        expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdministrativeSetForm
+      end
+    end
   end
 
   context "a guest" do
@@ -53,14 +83,8 @@ RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
       context "when user has access through public group" do
         # Even though the user can view this admin set, they should not be able to view
         # it on the admin page.
-        let(:admin_set) do
-          valkyrie_create(:hyrax_admin_set,
-                          with_permission_template: true,
-                          access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::GROUP,
-                                            agent_id: 'public',
-                                            access: Hyrax::PermissionTemplateAccess::VIEW }])
-        end
-
+        let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
+          
         it 'is unauthorized' do
           get :show, params: { id: admin_set }
           expect(response).to redirect_to root_path
@@ -115,7 +139,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
         sign_in user
       end
 
-      context "when user is directly granted manage access" do
+      context "when user is directly granted manage access to a valkyrie admin set" do
         # Even though the user can view this admin set, the should not be able to view
         # it on the admin page.
         let(:admin_set) do
@@ -131,11 +155,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
           it 'defines a form' do
             get :edit, params: { id: admin_set }
             expect(response).to be_successful
-            if Hyrax.config.disable_wings
-              expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdministrativeSetForm
-            else
-              expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdminSetForm
-            end
+            expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdministrativeSetForm
           end
         end
 
@@ -186,7 +206,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
           allow(Hyrax::AdminSetCreateService)
             .to receive(:call!).with(any_args).and_return(saved_admin_set)
         end
-        let(:admin_set) { FactoryBot.build(:hyrax_admin_set) }
+        let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
         let(:saved_admin_set) do
           FactoryBot.valkyrie_create(:hyrax_admin_set,
                                      title: 'Test title',
@@ -241,11 +261,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
         it 'defines a form' do
           get :edit, params: { id: admin_set }
           expect(response).to be_successful
-          if Hyrax.config.disable_wings
-            expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdministrativeSetForm
-          else
-            expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdminSetForm
-          end
+          expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdministrativeSetForm
         end
       end
 
