@@ -27,7 +27,7 @@ module Hyrax
     #   class MyWorkResource < Hyrax::Resource
     #     Hyrax::ValkyrieLazyMigration.migrating(self, from: MyWork)
     #   end
-    def self.migrating(klass, from:, name_class: Hyrax::Name)
+    def self.migrating(klass, from:, name_class: Hyrax::ResourceName)
       klass.singleton_class.define_method(:migrating_from) { from }
       klass.singleton_class.define_method(:_hyrax_default_name_class) { name_class }
       klass.singleton_class.define_method(:to_rdf_representation) { migrating_from.to_rdf_representation }
