@@ -50,7 +50,10 @@ module Hyrax
     def self.migrating(klass, from:, name_class: Hyrax::ValkyrieLazyMigration::ResourceName)
 
       Wings::ModelRegistry.register(klass, from)
+      from.singleton_class.define_method(:migrating_from) { from }
+      from.singleton_class.define_method(:migrating_to) { klass }
       klass.singleton_class.define_method(:migrating_from) { from }
+      klass.singleton_class.define_method(:migrating_to) { klass }
       klass.singleton_class.define_method(:_hyrax_default_name_class) { name_class }
       klass.singleton_class.define_method(:to_rdf_representation) { migrating_from.to_rdf_representation }
 

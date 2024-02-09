@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'wings'
 
 RSpec.describe Hyrax::ValkyrieLazyMigration do
   before do
@@ -24,10 +25,17 @@ RSpec.describe Hyrax::ValkyrieLazyMigration do
     subject { MigratingToResource }
 
     its(:migrating_from) { is_expected.to eq MigratingFromWork }
+    its(:migrating_to) { is_expected.to eq MigratingToResource }
     its(:to_rdf_representation) { is_expected.to eq MigratingFromWork.to_rdf_representation }
     its(:included_modules) { is_expected.to include described_class  }
     its(:_hyrax_default_name_class) { is_expected.to eq Hyrax::ValkyrieLazyMigration::ResourceName }
     its(:name) { is_expected.to eq("MigratingToResource") }
+
+    context 'the from adds new methods' do
+      subject { MigratingFromWork }
+      its(:migrating_from) { is_expected.to eq MigratingFromWork }
+      its(:migrating_to) { is_expected.to eq MigratingToResource }
+    end
   end
 
   describe 'resource.model_name' do
