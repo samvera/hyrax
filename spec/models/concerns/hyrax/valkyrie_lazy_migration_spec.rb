@@ -22,7 +22,7 @@ RSpec.describe Hyrax::ValkyrieLazyMigration do
     its(:migrating_from) { is_expected.to eq from }
     its(:to_rdf_representation) { is_expected.to eq from.to_rdf_representation }
     its(:included_modules) { is_expected.to include described_class  }
-    its(:_hyrax_default_name_class) { is_expected.to eq Hyrax::ResourceName }
+    its(:_hyrax_default_name_class) { is_expected.to eq Hyrax::ValkyrieLazyMigration::ResourceName }
     its(:name) { is_expected.to eq("MigratingResource") }
   end
 end
