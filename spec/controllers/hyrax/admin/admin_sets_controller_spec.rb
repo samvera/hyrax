@@ -84,7 +84,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
         # Even though the user can view this admin set, they should not be able to view
         # it on the admin page.
         let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
-   
+
         it 'is unauthorized' do
           get :show, params: { id: admin_set }
           expect(response).to redirect_to root_path
