@@ -27,6 +27,7 @@ module Hyrax
       end
       attr_reader :klass
     end
+
     ##
     # This function helps configuration a work for a valkyrie migration; namely by helping re-use
     # an existing SOLR document, by specifying that the given :klass is a migration :from another
@@ -48,7 +49,6 @@ module Hyrax
     #     Hyrax::ValkyrieLazyMigration.migrating(self, from: MyWork)
     #   end
     def self.migrating(klass, from:, name_class: Hyrax::ValkyrieLazyMigration::ResourceName)
-
       Wings::ModelRegistry.register(klass, from)
       from.singleton_class.define_method(:migrating_from) { from }
       from.singleton_class.define_method(:migrating_to) { klass }

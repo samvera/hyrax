@@ -91,7 +91,6 @@ module Hyrax
       require 'wings' unless Hyrax.config.disable_wings
       require 'freyja' unless Hyrax.config.disable_freyja
       require 'frigg' unless Hyrax.config.disable_frigg
-
     end
 
     initializer 'routing' do
