@@ -628,9 +628,11 @@ module Hyrax
     ##
     # @return [Boolean] whether to use experimental valkyrie storage features
     def use_valkyrie?
+      return @use_valkyrie unless @use_valkyrie.nil?
       return true if disable_wings # always return true if wings is disabled
       ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_VALKYRIE', false))
     end
+    attr_writer :use_valkyrie
     # @!endgroup
 
     attr_writer :feature_config_path
