@@ -5,6 +5,8 @@ services:
     build:
       context: .
       target: hyrax-engine-dev
+      platforms:
+        - linux/amd64
       args:
         - EXTRA_APK_PACKAGES=git less
     image: ghcr.io/samvera/dassie
@@ -41,6 +43,8 @@ services:
     build:
       context: .
       target: hyrax-engine-dev-worker
+      platforms:
+        - linux/amd64
     image: ghcr.io/samvera/dassie-worker
     command: sh -l -c 'bundle && bundle exec sidekiq'
     user: root
@@ -68,6 +72,8 @@ services:
     build:
       context: .
       target: hyrax-engine-dev
+      platforms:
+        - linux/amd64
       args:
         - EXTRA_APK_PACKAGES=git less
     image: ghcr.io/samvera/dassie
