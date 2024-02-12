@@ -80,7 +80,6 @@ module Hyrax
 
       def edit
         form
-        collection_type
       end
 
       def after_create
@@ -274,6 +273,7 @@ module Hyrax
       def collection_type
         @collection_type ||= CollectionType.find_by_gid!(collection.collection_type_gid)
       end
+      helper_method :collection_type
 
       def link_parent_collection(parent_id)
         child = collection.respond_to?(:valkyrie_resource) ? collection.valkyrie_resource : collection
