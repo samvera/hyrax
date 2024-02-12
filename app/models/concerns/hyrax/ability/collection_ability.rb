@@ -12,14 +12,23 @@ module Hyrax
             can :manage, collection_model
             can :manage_any, collection_model
             can :create_any, collection_model
+            can :create, collection_model
             can :view_admin_show_any, collection_model
           end
         else
-          collection_models.each { |collection_model| can :manage_any, collection_model } if
-            Hyrax::Collections::PermissionsService.can_manage_any_collection?(ability: self)
+          if Hyrax::Collections::PermissionsService.can_manage_any_collection?(ability: self)
+            collection_models.each do |collection_model|
+              can :manage_any, collection_model
+              can :manage, collection_model
+            end
+          end
 
-          collection_models.each { |collection_model| can :create_any, collection_model } if
-            Hyrax::CollectionTypes::PermissionsService.can_create_any_collection_type?(ability: self)
+          if Hyrax::CollectionTypes::PermissionsService.can_create_any_collection_type?(ability: self)
+            collection_models.each do |collection_model|
+              can :create, collection_model
+              can :create_any, collection_model
+            end
+          end
 
           collection_models.each { |collection_model| can :view_admin_show_any, collection_model } if
           Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_collection?(ability: self)
