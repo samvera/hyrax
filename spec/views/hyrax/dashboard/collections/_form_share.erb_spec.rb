@@ -12,7 +12,7 @@ RSpec.describe 'hyrax/dashboard/collections/_form_share.html.erb', type: :view d
 
   before do
     assign(:collection, collection)
-    assign(:collection_type, collection_type)
+    allow(view).to receive(:collection_type).and_return(collection_type)
     @form = instance_double(Hyrax::Forms::CollectionForm,
                             to_model: collection,
                             permission_template: pt_form,
