@@ -14,9 +14,7 @@ module Hyrax
           can :create_any, admin_set_models
           can :view_admin_show_any, admin_set_models
         else
-          if Hyrax::Collections::PermissionsService.can_manage_any_admin_set?(ability: self)
-            can :manage_any, admin_set_models
-          end
+          can :manage_any, admin_set_models if Hyrax::Collections::PermissionsService.can_manage_any_admin_set?(ability: self)
 
           if Hyrax::CollectionTypes::PermissionsService.can_create_admin_set_collection_type?(ability: self)
             can :create, admin_set_models

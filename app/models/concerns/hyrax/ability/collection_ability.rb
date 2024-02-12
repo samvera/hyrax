@@ -14,13 +14,9 @@ module Hyrax
           can :create, collection_models
           can :view_admin_show_any, collection_models
         else
-          if Hyrax::Collections::PermissionsService.can_manage_any_collection?(ability: self)
-            can :manage_any, collection_models
-          end
+          can :manage_any, collection_models if Hyrax::Collections::PermissionsService.can_manage_any_collection?(ability: self)
 
-          if Hyrax::CollectionTypes::PermissionsService.can_create_any_collection_type?(ability: self)
-            can :create_any, collection_models
-          end
+          can :create_any, collection_models if Hyrax::CollectionTypes::PermissionsService.can_create_any_collection_type?(ability: self)
 
           can(:view_admin_show_any, collection_models) if Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_collection?(ability: self)
 
