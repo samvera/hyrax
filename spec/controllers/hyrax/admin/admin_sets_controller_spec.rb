@@ -5,9 +5,6 @@ RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
   let(:manager) { FactoryBot.create(:user, email: 'manager@example.com') }
   let(:creator) { FactoryBot.create(:user, email: 'creator@example.com') }
   let(:user)    { FactoryBot.create(:user, email: 'user@example.com') }
-  let(:ability) { ::Ability.new(manager) }
-  let(:ability) { ::Ability.new(creator) }
-  let(:ability) { ::Ability.new(user) }
   let!(:admin_set_type) do
     FactoryBot.create(:admin_set_collection_type,
                       manager_user: manager.user_key,
@@ -223,7 +220,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
 
       context "when it fails" do
         before do
-          allow(Hyrax::AdminSetCreateService)
+          allow(described_class.admin_set_create_service)
             .to receive(:call!).with(any_args).and_raise(RuntimeError)
         end
 

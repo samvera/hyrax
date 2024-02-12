@@ -2,27 +2,38 @@
 module Hyrax
   module Ability
     module AdminSetAbility
+      def admin_set_models
+        @admin_set_models ||= [AdminSet, Hyrax::AdministrativeSet, Hyrax.config.admin_set_class].uniq
+      end
+
       def admin_set_abilities # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-        models = [AdminSet, Hyrax::AdministrativeSet, Hyrax.config.admin_set_class].uniq
         if admin?
-          models.each do |admin_set_model|
+          admin_set_models.each do |admin_set_model|
             can :manage, admin_set_model
             can :manage_any, admin_set_model
             can :create_any, admin_set_model
             can :view_admin_show_any, admin_set_model
           end
         else
-          models.each { |admin_set_model| can :manage_any, admin_set_model } if
-            Hyrax::Collections::PermissionsService.can_manage_any_admin_set?(ability: self)
+          if Hyrax::Collections::PermissionsService.can_manage_any_admin_set?(ability: self)
+            admin_set_models.each do |admin_set_model|
+              can :manage_any, admin_set_model
+              can :manage, admin_set_model
+            end
+          end
 
-          models.each { |admin_set_model| can :create_any, admin_set_model } if
-            Hyrax::CollectionTypes::PermissionsService.can_create_admin_set_collection_type?(ability: self)
+          if Hyrax::CollectionTypes::PermissionsService.can_create_admin_set_collection_type?(ability: self)
+            admin_set_models.each do |admin_set_model|
+              can :create, admin_set_model
+              can :create_any, admin_set_model
+            end
+          end
 
-          models.each { |admin_set_model| can :view_admin_show_any, admin_set_model } if
+          admin_set_models.each { |admin_set_model| can :view_admin_show_any, admin_set_model } if
             Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_admin_set?(ability: self)
 
           # [:edit, :update, :destroy] for AdminSet is controlled by Hydra::Ability #edit_permissions
-          models.each do |admin_set_model|
+          admin_set_models.each do |admin_set_model|
             can [:edit, :update, :destroy], admin_set_model do |admin_set| # for test by solr_doc, see solr_document_ability.rb
               test_edit(admin_set.id)
             end
