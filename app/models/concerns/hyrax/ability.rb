@@ -422,11 +422,11 @@ module Hyrax
 
     def curation_concerns_models
       @curation_concerns_models ||= [::FileSet, ::Hyrax::FileSet, Hyrax.config.collection_class] +
-                                   Hyrax.config.curation_concerns.flat_map do |model|
-        array = [model]
-        array += [model.migrating_to] if model.respond_to?(:migrating_to)
-        array
-      end.compact.uniq
+                                    Hyrax.config.curation_concerns.flat_map do |model|
+                                      array = [model]
+                                      array += [model.migrating_to] if model.respond_to?(:migrating_to)
+                                      array
+                                    end.compact.uniq
     end
 
     def can_review_submissions?
