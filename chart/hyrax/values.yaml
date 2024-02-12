@@ -226,7 +226,7 @@ fcrepo:
     enabled: false
     image:
       repository: bitnami/postgresql
-      tag: 12.11.0-debian-11-r12
+      tag: 12.17.0-debian-11-r28
 
 # configuration for an external/existing fits service;
 #   ignored if `fits.enabled` is true
