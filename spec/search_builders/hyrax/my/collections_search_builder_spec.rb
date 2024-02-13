@@ -21,7 +21,6 @@ RSpec.describe Hyrax::My::CollectionsSearchBuilder do
     end
   end
 
-
   describe ".default_processor_chain" do
     subject { described_class.default_processor_chain }
 
