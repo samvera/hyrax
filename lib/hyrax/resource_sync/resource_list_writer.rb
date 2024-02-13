@@ -32,7 +32,7 @@ module Hyrax
         end
       end
 
-      def build_collections(xml, searcher: AbstractTypeRelation.new(allowable_types: [::Collection, Hyrax.config.collection_class]))
+      def build_collections(xml, searcher: AbstractTypeRelation.new(allowable_types: Hyrax::ModelRegistry.collection_classes))
         searcher.search_in_batches(public_access) do |doc_set|
           build_resources(xml, doc_set, hyrax_routes)
         end
