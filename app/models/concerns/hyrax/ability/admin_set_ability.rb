@@ -10,16 +10,12 @@ module Hyrax
           can :create_any, models
           can :view_admin_show_any, models
         else
-          if Hyrax::Collections::PermissionsService.can_manage_any_admin_set?(ability: self)
-            can :manage_any, models
-          end
+          can :manage_any, models if Hyrax::Collections::PermissionsService.can_manage_any_admin_set?(ability: self)
           if Hyrax::CollectionTypes::PermissionsService.can_create_admin_set_collection_type?(ability: self)
             can :create, models
             can :create_any, models
           end
-          if Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_admin_set?(ability: self)
-            can :view_admin_show_any, models
-          end
+          can :view_admin_show_any, models if Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_admin_set?(ability: self)
           # [:edit, :update, :destroy] for AdminSet is controlled by Hydra::Ability #edit_permissions
           can [:edit, :update, :destroy], models do |admin_set| # for test by solr_doc, see solr_document_ability.rb
             test_edit(admin_set.id)
