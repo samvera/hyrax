@@ -9,7 +9,7 @@ RSpec.describe Hyrax::AdminAdminSetMemberSearchBuilder do
   let(:solr_params) { { fq: [] } }
 
   describe '#filter_models' do
-    before { allow(Hyrax.config).to receive(:curation_concerns).and_return([Monograph]) }
+    before { allow(Hyrax::ModelRegistry).to receive(:work_classes).and_return([Monograph]) }
 
     it 'searches for valid work types' do
       expect(builder.filter_models(solr_params))

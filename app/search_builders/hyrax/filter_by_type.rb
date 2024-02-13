@@ -48,7 +48,7 @@ module Hyrax
     #
     # @return [Array<Class>] the list of work types to include in searches
     def work_types
-      Hyrax.config.curation_concerns
+      Hyrax::ModelRegistry.work_classes
     end
 
     def work_classes
@@ -58,7 +58,8 @@ module Hyrax
 
     def collection_classes
       return [] if only_works?
-      ["Collection".safe_constantize, Hyrax::PcdmCollection, Hyrax.config.collection_class].uniq.compact
+
+      Hyrax::ModelRegistry.collection_classes
     end
   end
 end
