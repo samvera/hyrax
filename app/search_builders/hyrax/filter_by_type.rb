@@ -58,7 +58,7 @@ module Hyrax
 
     def collection_classes
       return [] if only_works?
-      ["Collection".safe_constantize,  Hyrax::PcdmCollection, Hyrax.config.collection_class].uniq.compact
+      ["Collection".safe_constantize, Hyrax::PcdmCollection, Hyrax.config.collection_class].uniq.compact
     end
   end
 end

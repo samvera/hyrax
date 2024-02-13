@@ -25,7 +25,7 @@ class Hyrax::My::CollectionsSearchBuilder < ::Hyrax::CollectionSearchBuilder
 
   def admin_set_models
     @admin_set_models ||= [
-     "::AdminSet".safe_constantize,
+      "::AdminSet".safe_constantize,
       Hyrax::AdministrativeSet,
       Hyrax.config.admin_set_class
     ].compact.uniq
