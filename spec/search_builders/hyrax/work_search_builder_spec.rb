@@ -13,7 +13,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
   end
 
   let(:class_filter_string) do
-    [Monograph, Collection, Hyrax.config.collection_class].uniq.join(',')
+    ([Monograph.to_s] + Hyrax::ModelRegistry.collection_rdf_representations).uniq.join(',')
   end
 
   describe "#query" do

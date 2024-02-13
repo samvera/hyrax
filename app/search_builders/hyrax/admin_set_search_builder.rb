@@ -14,7 +14,7 @@ module Hyrax
 
     # This overrides the models in FilterByType
     def models
-      [::AdminSet, Hyrax::AdministrativeSet]
+      Hyrax::ModelRegistry.admin_set_classes
     end
 
     # Overrides Hydra::AccessControlsEnforcement
