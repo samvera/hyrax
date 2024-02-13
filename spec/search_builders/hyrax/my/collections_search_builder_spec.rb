@@ -13,21 +13,6 @@ RSpec.describe Hyrax::My::CollectionsSearchBuilder do
   let(:builder) { described_class.new(context) }
   let(:admin_klass) { Hyrax.config.admin_set_model }
 
-  describe '#models' do
-    subject { builder.models }
-
-    it do
-      is_expected.to include(AdminSet,
-                             Hyrax::AdministrativeSet,
-                             Hyrax.config.collection_class)
-    end
-
-    context 'when collection class is something other than ::Collection' do
-      before { allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection') }
-      it { is_expected.to contain_exactly(AdminSet, Hyrax::AdministrativeSet, ::Collection, Hyrax::PcdmCollection) }
-    end
-  end
-
   describe ".default_processor_chain" do
     subject { described_class.default_processor_chain }
 
@@ -42,7 +27,7 @@ RSpec.describe Hyrax::My::CollectionsSearchBuilder do
     it "has filter that excludes depositor" do
       subject
       expect(solr_params[:fq]).to eq ["(_query_:\"{!terms f=depositor_ssim}#{user.user_key}\" " \
-                                      "OR (_query_:\"{!terms f=has_model_ssim}#{admin_klass}\" " \
+                                      "OR (_query_:\"{!terms f=has_model_ssim}#{Hyrax::ModelRegistry.admin_set_rdf_representations.join(',')}\" " \
                                       "AND _query_:\"{!terms f=creator_ssim}#{user.user_key}\"))"]
     end
   end

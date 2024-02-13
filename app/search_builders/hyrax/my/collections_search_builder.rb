@@ -18,31 +18,15 @@ class Hyrax::My::CollectionsSearchBuilder < ::Hyrax::CollectionSearchBuilder
   # This overrides the models in FilterByType
   # @return [Array<Class>] a list of classes to include
   def models
-    admin_set_models + collection_models
+    Hyrax::ModelRegistry.admin_set_classes + Hyrax::ModelRegistry.collection_classes
   end
 
   private
 
-  def admin_set_models
-    @admin_set_models ||= [
-      "::AdminSet".safe_constantize,
-      Hyrax::AdministrativeSet,
-      Hyrax.config.admin_set_class
-    ].compact.uniq
-  end
-
-  def collection_models
-    @collection_models ||= [
-      "::Collection".safe_constantize,
-      Hyrax::PcdmCollection,
-      Hyrax.config.collection_class
-    ].compact.uniq
-  end
-
   def query_for_my_collections
     query_service = Hyrax::SolrQueryService.new
     query_service.with_field_pairs(field_pairs: { depositor_ssim: current_user_key }, type: 'terms')
-    query_service.with_field_pairs(field_pairs: { has_model_ssim: models_to_solr_clause(admin_set_models),
+    query_service.with_field_pairs(field_pairs: { has_model_ssim: Hyrax::ModelRegistry.admin_set_rdf_representations.join(','),
                                                   creator_ssim: current_user_key }, type: 'terms')
     query_service.build(join_with: 'OR')
   end
