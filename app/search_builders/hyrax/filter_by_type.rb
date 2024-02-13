@@ -29,10 +29,14 @@ module Hyrax
       work_classes + collection_classes
     end
 
-    def models_to_solr_clause
-      models.map do |model|
+    ##
+    # @param given_models [Array<#to_rdf_represntation>] an array of classes that preferrably
+    #        respond to :to_rdf_represntation or :name
+    # @return [String] of those models joined by a ',' and thus viable for solr queries.
+    def models_to_solr_clause(given_models = models)
+      given_models.map do |model|
         model.respond_to?(:to_rdf_representation) ? model.to_rdf_representation : model.name
-      end.join(',')
+      end.uniq.join(',')
     end
 
     def generic_type_field
@@ -41,6 +45,7 @@ module Hyrax
 
     # Override this method if you want to limit some of the registered
     # types from appearing in search results
+    #
     # @return [Array<Class>] the list of work types to include in searches
     def work_types
       Hyrax.config.curation_concerns
@@ -53,7 +58,7 @@ module Hyrax
 
     def collection_classes
       return [] if only_works?
-      ["Collection".safe_constantize, Hyrax.config.collection_class].uniq.compact
+      ["Collection".safe_constantize,  Hyrax::PcdmCollection, Hyrax.config.collection_class].uniq.compact
     end
   end
 end
