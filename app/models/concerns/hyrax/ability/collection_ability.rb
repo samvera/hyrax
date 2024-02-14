@@ -2,26 +2,34 @@
 module Hyrax
   module Ability
     module CollectionAbility
-      def collection_models
-        @collection_models ||= ["::Collection".safe_constantize, Hyrax::PcdmCollection, Hyrax.config.collection_class].compact.uniq
-      end
-
       def collection_abilities # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        models = Hyrax::ModelRegistry.collection_classes
         if admin?
-          can :manage, collection_models
-          can :manage_any, collection_models
-          can :create_any, collection_models
-          can :create, collection_models
-          can :view_admin_show_any, collection_models
+          can :manage, models
+          can :manage_any, models
+          can :create_any, models
+          can :view_admin_show_any, models
         else
-          can :manage_any, collection_models if Hyrax::Collections::PermissionsService.can_manage_any_collection?(ability: self)
+          can :manage_any, models if Hyrax::Collections::PermissionsService.can_manage_any_collection?(ability: self)
 
-          can :create_any, collection_models if Hyrax::CollectionTypes::PermissionsService.can_create_any_collection_type?(ability: self)
+          can :create_any, models if Hyrax::CollectionTypes::PermissionsService.can_create_any_collection_type?(ability: self)
 
-          can(:view_admin_show_any, collection_models) if Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_collection?(ability: self)
+          can :view_admin_show_any, models if Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_collection?(ability: self)
 
-          can([:edit, :update, :destroy], collection_models) do |collection|
+          can [:edit, :update, :destroy], models do |collection|
             test_edit(collection.id)
+          end
+
+          can :deposit, models do |collection|
+            Hyrax::Collections::PermissionsService.can_deposit_in_collection?(ability: self, collection_id: collection.id)
+          end
+
+          can :view_admin_show, models do |collection| # admin show page
+            Hyrax::Collections::PermissionsService.can_view_admin_show_for_collection?(ability: self, collection_id: collection.id)
+          end
+
+          can :read, models do |collection| # public show page
+            test_read(collection.id)
           end
 
           can(:deposit, collection_models) do |collection|

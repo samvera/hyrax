@@ -18,9 +18,11 @@ module Hyrax
       def show_only_managed_collections_for_non_admins(solr_parameters)
         return if current_ability.admin?
         clauses = [
-          '-' + ActiveFedora::SolrQueryBuilder.construct_query_for_rel(depositor: current_user_key),
-          '-' + ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: Hyrax::ModelRegistry.admin_set_rdf_representations.join(','), creator: current_user_key)
+          '-' + ActiveFedora::SolrQueryBuilder.construct_query_for_rel(depositor: current_user_key)
         ]
+        Hyrax::ModelRegistry.admin_set_rdf_representations.each do |has_model|
+          clauses += ['-' + ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: has_model, creator: current_user_key)]
+        end
         solr_parameters[:fq] ||= []
         solr_parameters[:fq] += ["(#{clauses.join(' OR ')})"]
       end

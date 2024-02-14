@@ -7,7 +7,7 @@ module Hyrax
 
         def relation
           AbstractTypeRelation
-            .new(allowable_types: [Hyrax.config.collection_class])
+            .new(allowable_types: Hyrax::ModelRegistry.collection_classes)
         end
       end
     end

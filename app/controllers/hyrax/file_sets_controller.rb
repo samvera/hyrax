@@ -137,6 +137,7 @@ module Hyrax
       @parent ||=
         case file_set
         when Hyrax::FileSet
+          # TODO: Add Hyrax::FileSet#parent method
           Hyrax.query_service.find_parents(resource: file_set).first
         else
           file_set.parent
