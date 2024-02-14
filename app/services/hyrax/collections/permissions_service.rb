@@ -22,14 +22,16 @@ module Hyrax
 
       def self.filter_source(source_type:, ids:)
         return [] if ids.empty?
-        model = case source_type
+        models = case source_type
                 when 'admin_set'
-                  Hyrax::AdministrativeSet
+                  Hyrax::ModelRegistry.admin_set_classes
                 when 'collection'
-                  Hyrax::PcdmCollection
+                  Hyrax::ModelRegistry.collection_classes
                 end
 
-        Hyrax.custom_queries.find_ids_by_model(model: model, ids: ids).to_a
+        models.flat_map do |model|
+          Hyrax.custom_queries.find_ids_by_model(model: model, ids: ids).to_a
+        end
       end
       private_class_method :filter_source
 
