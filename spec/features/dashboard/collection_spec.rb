@@ -57,8 +57,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
                                   href: /#{solr_model_field}.+#{Regexp.escape(CGI.escape(Hyrax.config.admin_set_model))}/
         expect(page).not_to have_link user_collection_type.title,
                                       href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.to_global_id.to_s))}/
-        expect(page).not_to have_link 'Collection',
-                                      href: /#{solr_model_field}.+#{Regexp.escape('Collection')}/
+        expect(page).not_to have_link Hyrax.config.collection_model,
+                                      href: /#{solr_model_field}.+#{Regexp.escape(Hyrax.config.collection_model)}/
       end
     end
 
