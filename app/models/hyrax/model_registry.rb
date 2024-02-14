@@ -67,7 +67,7 @@ module Hyrax
     ##
     # @return [Array<String>]
     def self.file_set_class_names
-      ["::FileSet", "::Hyrax::FileSet"]
+      ["::FileSet", "::Hyrax::FileSet", Hyrax.config.file_set_model].uniq
     end
 
     def self.file_set_classes
