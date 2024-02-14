@@ -3,5 +3,5 @@
 #
 # That way, we can create extensions of those factories in the downstream application.
 Hyrax::Engine.root.glob("spec/factories").each do |path|
-  require path
+  require path.to_s
 end
