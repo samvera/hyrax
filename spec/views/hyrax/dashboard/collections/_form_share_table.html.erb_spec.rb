@@ -14,7 +14,8 @@ RSpec.describe 'hyrax/dashboard/collections/_form_share_table.html.erb', type: :
 
   before do
     assign(:collection, collection)
-    assign(:collection_type, collection_type)
+    allow(view).to receive(:collection_type).and_return(collection_type)
+
     @form = instance_double(Hyrax::Forms::CollectionForm,
                             to_model: stub_model(Collection),
                             permission_template: pt_form)
