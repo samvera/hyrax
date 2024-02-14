@@ -215,7 +215,7 @@ module Hyrax
     # @todo Refactor inner working of code as there's lots of branching logic with potential hidden assumptions.
     def qualifies_as_unauthorized_collection?(resource:)
       case resource
-      when Hyrax::ModelRegistry.admin_set_classes
+      when *Hyrax::ModelRegistry.admin_set_classes
         # Prior to this refactor, we looked at AdminSet only; However with the advent of the
         # Hyrax::AdministrativeSet, we need to test both cases.
         true
