@@ -23,11 +23,11 @@ module Hyrax
       def self.filter_source(source_type:, ids:)
         return [] if ids.empty?
         models = case source_type
-                when 'admin_set'
-                  Hyrax::ModelRegistry.admin_set_classes
-                when 'collection'
-                  Hyrax::ModelRegistry.collection_classes
-                end
+                 when 'admin_set'
+                   Hyrax::ModelRegistry.admin_set_classes
+                 when 'collection'
+                   Hyrax::ModelRegistry.collection_classes
+                 end
 
         models.flat_map do |model|
           Hyrax.custom_queries.find_ids_by_model(model: model, ids: ids).to_a
