@@ -90,5 +90,17 @@ RSpec.describe Hyrax::ValkyriePersistDerivatives, valkyrie_adapter: :test_adapte
           .to raise_error(/Could not extract fileset id from path/)
       end
     end
+
+    context 'with an id' do
+      let(:directives) do
+        { url: '123' }
+      end
+
+      it 'extracts the id' do
+        expect(Hyrax.metadata_adapter.query_service)
+          .to receive(:find_by).with(id: '123')
+        described_class.fileset_for_directives(directives)
+      end
+    end
   end
 end
