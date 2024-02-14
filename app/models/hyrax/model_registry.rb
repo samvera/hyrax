@@ -25,7 +25,7 @@ module Hyrax
   #
   # @note Due to the shift from ActiveFedora to Valkyrie, we are at a crossroads where we might have
   # multiple models for the versions: an ActiveFedora AdminSet and a Valkyrie AdminSet.
-  module ModelRegistry
+  class ModelRegistry
     ##
     # @return [Array<String>]
     def self.admin_set_class_names

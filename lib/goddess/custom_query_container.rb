@@ -16,7 +16,10 @@ module Goddess
     #
     # @note
     # - :find_ids_by_model is necessary for permissions of {Hyrax::Collections::PermissionsService.filter_source}
-    class_attribute :concatenate_results_of_these_queries, default: [:find_ids_by_model]
+    class_attribute :concatenate_results_of_these_queries,
+                    default: [
+                      :find_ids_by_model # For Hyrax::Collections::PermissionsService.filter_source
+                    ]
     # @!endgroup Class Attributes
     ##
 
@@ -37,6 +40,7 @@ module Goddess
     end
 
     def dispatch_concatentation_logic(method_name, *args, **opts, &block)
+      # I don't know how we'll handle sums; as we're looking for counts of distinct items.
       query_service.services.flat_map do |service|
         if service.custom_queries.respond_to?(method_name)
           service.custom_queries.public_send(method_name, *args, **opts, &block).to_a
