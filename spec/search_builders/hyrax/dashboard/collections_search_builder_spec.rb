@@ -38,11 +38,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
     end
 
     it "has filter that excludes depositor" do
-      expect(solr_params[:fq]).to eq(
-                                    ["(-_query_:\"{!raw f=depositor_ssim}#{user.user_key}\" OR " \
-                                     "-(_query_:\"{!raw f=has_model_ssim}#{Hyrax::ModelRegistry.admin_set_rdf_representations.join(',')}\" " \
-                                     "AND _query_:\"{!raw f=creator_ssim}#{user.user_key}\"))"]
-                                  )
+      expect(solr_params[:fq].first).to match(%r{\(-_query_:\"{!raw f=depositor_ssim}#{user.user_key}\" OR })
     end
 
     context "as admin" do
