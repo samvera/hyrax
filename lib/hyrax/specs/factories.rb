@@ -2,8 +2,11 @@
 # factories of the test suite to the downstream application (e.g. Hyku).
 #
 # That way, we can create extensions of those factories in the downstream application.
-Hyrax::Engine.root.glob("spec/support/**/*.rb").each do |path|
-  require path.to_s
+
+[
+  "spec/support/simple_work"
+].each do |partial|
+  require Hyrax::Engine.root.join(partial).to_s
 end
 
 Hyrax::Engine.root.glob("spec/factories/**/*.rb").each do |path|
