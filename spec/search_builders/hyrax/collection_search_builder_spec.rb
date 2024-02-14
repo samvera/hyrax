@@ -11,8 +11,7 @@ RSpec.describe Hyrax::CollectionSearchBuilder do
 
   describe '#models' do
     its(:models) do
-      is_expected
-        .to contain_exactly(*[::Collection, Hyrax.config.collection_class].uniq)
+      is_expected.to match_array(Hyrax::ModelRegistry.collection_classes)
     end
 
     context 'when collection class is not ::Collection' do

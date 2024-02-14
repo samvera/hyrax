@@ -5,7 +5,7 @@ module Hyrax
 
     # This overrides the models in FilterByType
     def models
-      [::FileSet, ::Hyrax::FileSet]
+      Hyrax::ModelRegistry.file_set_classes
     end
   end
 end

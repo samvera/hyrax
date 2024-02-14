@@ -267,6 +267,20 @@ module Hyrax
       @derivative_services ||= [Hyrax::FileSetDerivativesService]
     end
 
+    attr_writer :file_set_model
+    ##
+    # @return [#constantize] a string representation of the admin set
+    #   model
+    def file_set_model
+      @file_set_model ||= 'Hyrax::FileSet'
+    end
+
+    ##
+    # @return [Class] the configured admin set model class
+    def file_set_class
+      file_set_model.constantize
+    end
+
     ##
     # @!attribute [rw] file_set_file_service
     #   @return [Class] implementer of {Hyrax::FileSetFileService}
