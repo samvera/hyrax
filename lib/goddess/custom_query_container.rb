@@ -2,10 +2,52 @@
 module Goddess
   class CustomQueryContainer < Valkyrie::Persistence::CustomQueryContainer
     ##
+    # @!group Class Attributes
+    #
+    # @!attribute concatenate_results_of_these_queries [r|w]
+    #
+    #   Some methods need to take the union of entries found in each of the adapters.  As you might
+    #   guess this combinatorial banagrams introduces non-performant queries.
+    #
+    #   As you migrate items out of Fedora, you'll want to consider removing methods from this
+    #   array.
+    #
+    #   @return [Array<Symbol>]
+    #
+    # @note
+    # - :find_ids_by_model is necessary for permissions of {Hyrax::Collections::PermissionsService.filter_source}
+    class_attribute :concatenate_results_of_these_queries, default: [:find_ids_by_model]
+    # @!endgroup Class Attributes
+    ##
+
+    ##
     # @note What do we do when we have an empty array returned in the first query service?
     #
     # rubocop:disable Metrics/MethodLength
-    def method_missing(method_name, *args, **opts)
+    def method_missing(method_name, *args, **opts, &block)
+      # method_missing must always and reliably fallback on super.  Without this declaration, we run
+      # into stack level too deep errors.
+      return super unless query_service.services.detect { |service| service.custom_queries.respond_to?(method_name) }
+
+      if concatenate_results_of_these_queries.include?(method_name)
+        dispatch_concatentation_logic(method_name, *args, **opts, &block)
+      else
+        dispatch_non_concatentation_logic(method_name, *args, **opts, &block)
+      end
+    end
+
+    def dispatch_concatentation_logic(method_name, *args, **opts, &block)
+      query_service.services.flat_map do |service|
+        if service.custom_queries.respond_to?(method_name)
+          service.custom_queries.public_send(method_name, *args, **opts, &block).to_a
+        else
+          []
+        end
+      end.compact.uniq
+    end
+    private :dispatch_concatentation_logic
+
+    def dispatch_non_concatentation_logic(method_name, *args, **opts, &block)
       # As we iterate through the services, we need to know if any of them responded to the given
       # method_name.
       service_responds_to = false
@@ -15,7 +57,7 @@ module Goddess
       query_service.services.each do |service|
         next unless service.custom_queries.respond_to?(method_name)
         service_responds_to = true
-        returning_value = service.custom_queries.send(method_name, *args, **opts)
+        returning_value = service.custom_queries.public_send(method_name, *args, **opts, &block)
         # Note, an empty array is "true" in this case.  Should it be?
         break if returning_value
 
@@ -36,6 +78,7 @@ module Goddess
       raise exception
     end
     # rubocop:enable Metrics/MethodLength
+    private :dispatch_non_concatentation_logic
 
     def respond_to_missing?(method_name, _include_private = false)
       query_service.services.each do |service|
