@@ -5,7 +5,7 @@ module Hyrax
     ##
     # @api public
     # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
-    class PcdmCollectionForm < Valkyrie::ChangeSet # rubocop:disable Metrics/ClassLength
+    class PcdmCollectionForm < Hyrax::Forms::ResourceForm # rubocop:disable Metrics/ClassLength
       include Hyrax::FormFields(:core_metadata)
 
       BannerInfoPrepopulator = lambda do |**_options|
@@ -32,10 +32,6 @@ module Hyrax
           end
         end
       end
-
-      property :human_readable_type, writable: false
-      property :date_modified, readable: false
-      property :date_uploaded, readable: false
 
       property :depositor, required: true
       property :collection_type_gid, required: true

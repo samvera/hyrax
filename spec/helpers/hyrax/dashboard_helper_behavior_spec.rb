@@ -31,6 +31,29 @@ RSpec.describe Hyrax::DashboardHelperBehavior, type: :helper do
     end
   end
 
+  describe "#link_to_works" do
+    let(:user1) { User.new(email: "abc@test") }
+    let(:user2) { User.new(email: "abc@test.123") }
+
+    before do
+      create_models("GenericWork", user1, user2)
+    end
+
+    context 'when valkyrie is not used' do
+      it "generates a link to the user's works" do
+        expect(Hyrax.config).to receive(:use_valkyrie?).and_return(false)
+        expect(helper.link_to_works(user1)).to include 'generic_type_sim%5D%5B%5D=Work'
+      end
+    end
+
+    context 'when valkyrie is used' do
+      it "generates a link to the user's works" do
+        expect(Hyrax.config).to receive(:use_valkyrie?).and_return(true)
+        expect(helper.link_to_works(user1)).to include 'generic_type_si%5D%5B%5D=Work'
+      end
+    end
+  end
+
   describe "#number_of_files" do
     let(:user1) { User.new(email: "abc@test") }
     let(:user2) { User.new(email: "abc@test.123") }

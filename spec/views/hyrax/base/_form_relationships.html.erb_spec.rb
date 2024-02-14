@@ -3,7 +3,7 @@ RSpec.describe 'hyrax/base/_form_relationships.html.erb', type: :view do
   let(:ability) { double }
   let(:work) { FactoryBot.build(:monograph) }
   let(:form) do
-    Hyrax::Forms::ResourceForm.for(work).prepopulate!
+    Hyrax::Forms::ResourceForm.for(resource: work).prepopulate!
   end
   let(:service) { instance_double Hyrax::AdminSetService }
   let(:presenter) { instance_double Hyrax::AdminSetOptionsPresenter, select_options: [] }

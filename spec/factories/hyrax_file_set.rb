@@ -48,6 +48,50 @@ FactoryBot.define do
       Hyrax.index_adapter.save(resource: file_set) if evaluator.with_index
     end
 
+    trait :under_embargo do
+      association :embargo, factory: :hyrax_embargo
+
+      after(:create) do |fs, _e|
+        Hyrax::EmbargoManager.new(resource: fs).apply
+        fs.permission_manager.acl.save
+      end
+    end
+
+    trait :with_expired_enforced_embargo do
+      after(:build) do |fs, _evaluator|
+        fs.embargo = FactoryBot.valkyrie_create(:hyrax_embargo, :expired)
+      end
+
+      after(:create) do |fs, _evaluator|
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_return(10.days.ago)
+        Hyrax::EmbargoManager.new(resource: fs).apply
+        fs.permission_manager.acl.save
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_call_original
+      end
+    end
+
+    trait :under_lease do
+      association :lease, factory: :hyrax_lease
+
+      after(:create) do |fs, _e|
+        Hyrax::LeaseManager.new(resource: fs).apply
+        fs.permission_manager.acl.save
+      end
+    end
+
+    trait :with_expired_enforced_lease do
+      after(:build) do |fs, _evaluator|
+        fs.lease = FactoryBot.valkyrie_create(:hyrax_lease, :expired)
+      end
+
+      after(:create) do |fs, _evaluator|
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_return(10.days.ago)
+        Hyrax::LeaseManager.new(resource: fs).apply
+        fs.permission_manager.acl.save
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_call_original
+      end
+    end
+
     trait :public do
       transient do
         visibility_setting { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
@@ -62,7 +106,14 @@ FactoryBot.define do
 
     trait :with_files do
       transient do
-        files { [valkyrie_create(:hyrax_file_metadata), valkyrie_create(:hyrax_file_metadata)] }
+        ios { [File.open(Hyrax::Engine.root + 'spec/fixtures/image.png'), File.open(Hyrax::Engine.root + 'spec/fixtures/Example.ogg')] }
+
+        after(:create) do |file_set, evaluator|
+          evaluator.ios.each do |file|
+            filename = File.basename(file.path).to_s
+            Hyrax::ValkyrieUpload.file(filename: filename, file_set: file_set, io: file)
+          end
+        end
       end
     end
 

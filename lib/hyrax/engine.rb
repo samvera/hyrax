@@ -8,7 +8,6 @@ module Hyrax
     require 'breadcrumbs_on_rails'
     require 'clipboard/rails'
     require 'draper'
-    require 'dry/equalizer'
     require 'dry/events'
     require 'dry/struct'
     require 'dry/validation'

@@ -1,5 +1,8 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::UserStatImporter do
+
+# NOTE: This importer service seems to be ActiveFedora-specific. May need to be
+#   Valkyrized in the future.
+RSpec.describe Hyrax::UserStatImporter, :active_fedora do
   before do
     allow(Hyrax.config).to receive(:analytic_start_date) { dates[0] }
 

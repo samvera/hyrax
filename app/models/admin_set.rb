@@ -28,7 +28,26 @@ class AdminSet < ActiveFedora::Base
   DEFAULT_WORKFLOW_NAME = Hyrax.config.default_active_workflow_name
 
   validates_with Hyrax::HasOneTitleValidator
+
+  ##
+  # @!group Class Attributes
+  #
+  # @!attribute internal_resource
+  #   @return [String]
+  class_attribute :internal_resource, default: "AdminSet"
+
   class_attribute :human_readable_short_description
+  # @!endgroup Class Attributes
+  ##
+
+  def self.to_rdf_representation
+    internal_resource
+  end
+
+  def to_rdf_representation
+    internal_resource
+  end
+
   self.indexer = Hyrax::AdminSetIndexer
 
   property :title,             predicate: ::RDF::Vocab::DC.title
@@ -39,7 +58,7 @@ class AdminSet < ActiveFedora::Base
            predicate: Hyrax.config.admin_set_predicate,
            class_name: 'ActiveFedora::Base'
 
-  before_destroy :check_if_not_default_set, :check_if_empty
+  before_destroy :check_if_not_default_set, :check_if_empty, prepend: true
   after_destroy :destroy_permission_template
 
   def collection_type_gid

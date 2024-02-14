@@ -1,22 +1,18 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::FixityChecksController do
   routes { Hyrax::Engine.routes }
-  let(:user) { create(:user) }
-  let(:file_set) { create(:file_set, user: user) }
-  let(:binary) { File.open(fixture_path + '/world.png') }
-  let(:file) { Hydra::Derivatives::IoDecorator.new(binary, 'image/png', 'world.png') }
-
-  before { Hydra::Works::UploadFileToFileSet.call(file_set, file) }
-
+  let(:user) { FactoryBot.create(:user) }
+  let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, :with_files, depositor: user.user_key) }
   context "when signed in" do
     describe "POST create" do
-      before do
-        sign_in user
-        post :create, params: { file_set_id: file_set }, xhr: true
-      end
+      before { sign_in user }
+
       let(:json_response) { JSON.parse(response.body) }
 
       it "returns json with the result" do
+        pending 'Needs Valkyrie fixity support' if Hyrax.config.disable_wings
+        post :create, params: { file_set_id: file_set }, xhr: true
+
         expect(response).to be_successful
         # json is a structure like this:
         #   { file_id => [{ "checked_uri" => "...4-4d71-83ba-1bc52a5e4300/fcr:versions/version1", "passed" => true },
@@ -38,6 +34,7 @@ RSpec.describe Hyrax::FixityChecksController do
     describe "POST create" do
       it "returns json with the result" do
         post :create, params: { file_set_id: file_set }, xhr: true
+
         expect(response.code).to eq '401'
       end
     end

@@ -41,6 +41,7 @@ module Hyrax
     autoload :Configuration
     autoload :ControlledVocabularies
     autoload :EventStore
+    autoload :Forms
     autoload :RedisEventStore
     autoload :ResourceSync
     autoload :Zotero

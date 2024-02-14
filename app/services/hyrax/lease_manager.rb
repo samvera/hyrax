@@ -12,12 +12,13 @@ module Hyrax
   #       date is today or later.
   #    - "Applied" means the lease's pre-expiration visibility has been set on
   #      the resource.
-  #    - "Released" means the lease's post-expiration visibility has been set on
-  #      the resource.
   #    - "Enforced" means the object's visibility matches the pre-expiration
   #      visibility of the lease; i.e. the lease has been applied,
   #      but not released.
-  #    - "Deactivate" means that the existing lease will be removed
+  #    - "Released" means the leases's post-release visibility has been set on
+  #      the resource.
+  #    - "Deactivate" means that the existing lease will be removed, even if it
+  #      is active
   #
   class LeaseManager # rubocop:disable Metrics/ClassLength
     ##
@@ -53,11 +54,25 @@ module Hyrax
           .lease
       end
 
+      # @return [Boolean]
+      def deactivate_lease_for(resource:, query_service: Hyrax.query_service)
+        new(resource: resource, query_service: query_service)
+          .deactivate
+      end
+
+      # @return [Boolean]
+      def deactivate_lease_for!(resource:, query_service: Hyrax.query_service)
+        new(resource: resource, query_service: query_service)
+          .deactivate!
+      end
+
+      # @return [Boolean]
       def release_lease_for(resource:, query_service: Hyrax.query_service)
         new(resource: resource, query_service: query_service)
           .release
       end
 
+      # @return [Boolean]
       def release_lease_for!(resource:, query_service: Hyrax.query_service)
         new(resource: resource, query_service: query_service)
           .release!
@@ -93,20 +108,15 @@ module Hyrax
       # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
     end
 
+    def deactivate
+      release(force: true) &&
+        nullify(force: true)
+    end
+
     # Deactivates the lease and logs a message to the lease_history property
     def deactivate!
-      lease_state = lease.active? ? 'active' : 'expired'
-      lease_record = lease_history_message(
-        lease_state,
-        Time.zone.today,
-        lease.lease_expiration_date,
-        lease.visibility_during_lease,
-        lease.visibility_after_lease
-      )
-
       release(force: true)
       nullify(force: true)
-      lease.lease_history += [lease_record]
     end
 
     ##
@@ -153,14 +163,15 @@ module Hyrax
     ##
     # Drop the lease by setting its release date and visibility settings to `nil`.
     #
-    # @param force [boolean] force the nullify even when the lease period is current
-    # @return [void]
+    # @param force [Boolean] force the nullify even when the lease period is current
+    # @return [Boolean]
     def nullify(force: false)
       return false if !force && under_lease?
 
       lease.lease_expiration_date = nil
       lease.visibility_during_lease = nil
       lease.visibility_after_lease = nil
+      true
     end
 
     ##
@@ -172,6 +183,18 @@ module Hyrax
     # @return [Boolean]
     def release(force: false)
       return false if !force && under_lease?
+
+      lease_state = lease.active? ? 'active' : 'expired'
+      history_record = lease_history_message(
+        lease_state,
+        Hyrax::TimeService.time_in_utc,
+        lease.lease_expiration_date,
+        lease.visibility_during_lease,
+        lease.visibility_after_lease
+      )
+
+      lease.lease_history += [history_record]
+
       return true if lease.visibility_after_lease.nil?
 
       resource.visibility = lease.visibility_after_lease
@@ -202,7 +225,7 @@ module Hyrax
       [:visibility_after_lease, :visibility_during_lease, :lease_expiration_date]
     end
 
-    # Create the log message used when deactivating a lease
+    # Create the log message used when releasing a lease
     def lease_history_message(state, deactivate_date, expiration_date, visibility_during, visibility_after)
       I18n.t 'hydra.lease.history_message',
               state: state,

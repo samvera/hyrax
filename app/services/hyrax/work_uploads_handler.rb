@@ -93,7 +93,10 @@ module Hyrax
         event_payloads = files.each_with_object([]) { |file, arry| arry << make_file_set_and_ingest(file) }
         @persister.save(resource: work)
         Hyrax.publisher.publish('object.metadata.updated', object: work, user: files.first.user)
-        event_payloads.each { |payload| Hyrax.publisher.publish('file.set.attached', payload) }
+        event_payloads.each do |payload|
+          payload.delete(:job).enqueue
+          Hyrax.publisher.publish('file.set.attached', payload)
+        end
       end
     end
 
@@ -114,9 +117,7 @@ module Hyrax
       file_set.permission_manager.acl.save if file_set.permission_manager.acl.pending_changes?
       append_to_work(file_set)
 
-      ValkyrieIngestJob.perform_later(file)
-
-      { file_set: file_set, user: file.user }
+      { file_set: file_set, user: file.user, job: ValkyrieIngestJob.new(file) }
     end
 
     ##

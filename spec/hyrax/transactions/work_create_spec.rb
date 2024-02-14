@@ -7,6 +7,7 @@ RSpec.describe Hyrax::Transactions::WorkCreate, :clean_repo do
   subject(:tx)     { described_class.new }
   let(:change_set) { Hyrax::ChangeSet.for(resource) }
   let(:resource)   { build(:hyrax_work) }
+  let(:default_admin_set_id) { Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id }
 
   describe '#call' do
     it 'is a success' do
@@ -19,7 +20,7 @@ RSpec.describe Hyrax::Transactions::WorkCreate, :clean_repo do
 
     it 'sets the default admin set' do
       expect(tx.call(change_set).value!)
-        .to have_attributes admin_set_id: Valkyrie::ID.new('admin_set/default')
+        .to have_attributes admin_set_id: default_admin_set_id
     end
 
     context 'when an admin set is already assigned to the work' do

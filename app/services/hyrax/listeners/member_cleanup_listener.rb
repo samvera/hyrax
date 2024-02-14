@@ -9,37 +9,25 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_object_deleted(event)
-        return unless event.payload.key?(:object) # legacy callback
-        return if event[:object].is_a?(ActiveFedora::Base) # handled by legacy code
+        event = event.to_h
+        return unless event[:object]
 
-        Hyrax.custom_queries.find_child_file_sets(resource: event[:object]).each do |file_set|
-          Hyrax.persister.delete(resource: file_set)
-          Hyrax.publisher
-               .publish('object.deleted', object: file_set, id: file_set.id, user: event[:user])
-        rescue StandardError # we don't uncaught errors looping filesets
-          Hyrax.logger.warn "Failed to delete #{file_set.class}:#{file_set.id} " \
-                            "during cleanup for resource: #{event[:object]}. " \
-                            'This member may now be orphaned.'
+        object = event[:object]
+        user = event[:user]
+        return unless object.is_a?(Hyrax::Work)
+
+        Hyrax.query_service.find_parents(resource: object).each do |parent|
+          parent.member_ids -= [object.id]
+          Hyrax.persister.save(resource: parent)
+          Hyrax.index_adapter.save(resource: parent)
+          Hyrax.publisher.publish('object.membership.updated', object: parent, user: user)
         end
       end
 
       # Called when 'collection.deleted' event is published
       # @param [Dry::Events::Event] event
       # @return [void]
-      def on_collection_deleted(event)
-        return unless event.payload.key?(:collection) # legacy callback
-        return if event[:collection].is_a?(ActiveFedora::Base) # handled by legacy code
-
-        Hyrax.custom_queries.find_members_of(collection: event[:collection]).each do |resource|
-          resource.member_of_collection_ids -= [event[:collection].id]
-          Hyrax.persister.save(resource: resource)
-          Hyrax.publisher
-               .publish('collection.membership.updated', collection: event[:collection], user: event[:user])
-        rescue StandardError
-          Hyrax.logger.warn "Failed to remove collection reference from #{work.class}:#{work.id} " \
-                            "during cleanup for collection: #{event[:collection]}. "
-        end
-      end
+      def on_collection_deleted(event); end
     end
   end
 end

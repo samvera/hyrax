@@ -21,7 +21,7 @@ module Hyrax
         end
 
         ##
-        # @param [Valkyrie::Resource] resource
+        # @param [Hyrax::FileMetadata] FileMetadata resource
         # @param [::User] the user resposible for the delete action
         #
         # @return [Dry::Monads::Result]
@@ -29,7 +29,8 @@ module Hyrax
           return Failure(:resource_not_persisted) unless resource.persisted?
 
           @persister.delete(resource: resource)
-          Valkyrie::StorageAdapter.delete(id: resource.file_identifier)
+          @publisher.publish('file.metadata.deleted', metadata: resource)
+          Valkyrie::StorageAdapter.delete(id: resource.file_identifier) if resource.file_identifier.present?
 
           Success(resource)
         end

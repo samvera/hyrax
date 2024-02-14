@@ -17,7 +17,15 @@ SUMMARY
 
   spec.homepage      = "http://github.com/samvera/hyrax"
 
-  spec.files         = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR).select { |f| File.dirname(f) !~ %r{\A"?spec\/?} && f != 'bin/rails' }
+  spec.files         = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR).reject do |f|
+    f == 'bin/rails' ||
+      # We want for downstream implementations to be able to leverage the various Hyrax factories.
+      # As such we need them to be available in the .gem file.  See `./lib/hyrax/spec/factories.rb`
+      # for more details.
+      (File.dirname(f) =~ %r{\A"?spec\/?} &&
+        File.dirname(f) !~ %r{\A"?spec\/(factories|assets)\/?}
+      )
+  end
   spec.executables   = spec.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   spec.name          = "hyrax"
   spec.require_paths = ["lib"]
@@ -41,15 +49,14 @@ SUMMARY
   spec.add_dependency 'browse-everything', '>= 0.16', '< 2.0'
   spec.add_dependency 'carrierwave', '~> 1.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
+  spec.add_dependency 'concurrent-ruby', '~> 1.0'
   spec.add_dependency 'connection_pool', '~> 2.4'
   spec.add_dependency 'draper', '~> 4.0'
   spec.add_dependency 'dry-logic', '~> 1.5'
   spec.add_dependency 'dry-container', '~> 0.11'
-  spec.add_dependency 'dry-events', '~> 1.0.0'
-  spec.add_dependency 'dry-equalizer', '~> 0.2'
-  spec.add_dependency 'dry-monads', '~> 1.5'
-  spec.add_dependency 'dry-struct', '~> 1.0'
-  spec.add_dependency 'dry-validation', '~> 1.3'
+  spec.add_dependency 'dry-events', '~> 1.0', '>= 1.0.1'
+  spec.add_dependency 'dry-monads', '~> 1.6'
+  spec.add_dependency 'dry-validation', '~> 1.10'
   spec.add_dependency 'flipflop', '~> 2.3'
   # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'flot-rails', '~> 0.0.6'

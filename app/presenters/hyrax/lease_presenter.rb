@@ -27,5 +27,9 @@ module Hyrax
     def lease_history
       solr_document['lease_history_ssim']
     end
+
+    def enforced?
+      solr_document.lease_enforced?
+    end
   end
 end

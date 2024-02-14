@@ -25,9 +25,11 @@ RSpec.describe Hyrax::Transactions::ApplyChangeSet do
     end
 
     it 'sets modified and uploaded date' do
+      expected_time = Hyrax.config.disable_wings ? DateTime.parse(xmas) : xmas
+
       expect(tx.call(change_set).value!)
-        .to have_attributes(date_modified: xmas,
-                            date_uploaded: xmas)
+        .to have_attributes(date_modified: expected_time,
+                            date_uploaded: expected_time)
     end
 
     describe 'events' do

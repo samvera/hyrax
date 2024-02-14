@@ -17,7 +17,15 @@ module Hyrax
 
       self.indexer = Hyrax::CollectionIndexer
 
+      ##
+      # @!group Class Attributes
+      #
+      # @!attribute internal_resource
+      #   @return [String]
+      class_attribute :internal_resource, default: "Collection"
+
       class_attribute :index_collection_type_gid_as, instance_writer: false
+      ##
       self.index_collection_type_gid_as = [:symbol]
 
       property :collection_type_gid, predicate: ::RDF::Vocab::SCHEMA.additionalType, multiple: false do |index|
@@ -38,16 +46,6 @@ module Hyrax
         @collection_type = new_collection_type
         collection_type_gid
       end
-    end
-
-    delegate(*Hyrax::CollectionType.settings_attributes, to: :collection_type)
-    ActiveSupport::Deprecation.deprecate_methods(self, *Hyrax::CollectionType.settings_attributes)
-
-    # Get the collection_type when accessed
-    def collection_type
-      Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
-                         "Instead, use Hyrax::CollectionType.for(collection: collection).")
-      @collection_type ||= Hyrax::CollectionType.find_by_gid!(collection_type_gid)
     end
 
     def collection_type=(new_collection_type)

@@ -4,6 +4,11 @@ module Hyrax
     class ResourceBatchEditForm < Hyrax::Forms::ResourceForm
       include Hyrax::FormFields(:basic_metadata)
 
+      include Hyrax::ContainedInWorksBehavior
+      include Hyrax::DepositAgreementBehavior
+      include Hyrax::LeaseabilityBehavior
+      include Hyrax::PermissionBehavior
+
       self.required_fields = []
       self.model_class = Hyrax.primary_work_type
 
@@ -22,9 +27,9 @@ module Hyrax
         @batch_document_ids = batch_document_ids
         if @batch_document_ids.present?
           combined_fields = model_attributes(model, initialize_combined_fields)
-          super(model.class.new(combined_fields))
+          super(resource: model.class.new(combined_fields))
         else
-          super(model)
+          super(resource: model)
         end
       end
 

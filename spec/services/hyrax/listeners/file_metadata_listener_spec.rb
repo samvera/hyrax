@@ -47,7 +47,7 @@ RSpec.describe Hyrax::Listeners::FileMetadataListener, valkyrie_adapter: :test_a
       let(:metadata) do
         FactoryBot.valkyrie_create(:hyrax_file_metadata,
                                    file_set_id: file_set.id,
-                                   pcdm_use: Hyrax::FileMetadata::Use::THUMBNAIL)
+                                   pcdm_use: Hyrax::FileMetadata::Use::THUMBNAIL_IMAGE)
       end
 
       it 'does not index the file_set' do

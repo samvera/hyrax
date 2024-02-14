@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Short circuit loading if Wings is disabled
+return if Hyrax.config.disable_wings
+
 ##
 # Wings is a toolkit integrating Valkyrie into Hyrax as a bridge away from the
 # hard dependency on ActiveFedora.
@@ -14,6 +17,8 @@
 # a smooth code migration, much in the way it is being used in this engine.
 # However, these dependencies should be considered temprorary: this code will
 # be deprecated for removal in a future release.
+#
+# @deprecated Wings will be removed when ActiveFedora is no longer supported by Hyrax.
 #
 # @example casting an ActiveFedora model to Valkyrie
 #   work     = GenericWork.create(title: ['Comet in Moominland'])
@@ -56,6 +61,9 @@
 # @see https://wiki.duraspace.org/display/samvera/Hyrax-Valkyrie+Development+Working+Group
 #      for further context regarding the approach
 module Wings
+  Deprecation.warn(self, "ActiveFedora and Wings will be removed from a future major release of Hyrax in favor " \
+    "of Valkyrie resource models. Please migrate your models from ActiveFedora::Base to Hyrax::Resource.")
+
   ##
   # @api public
   #

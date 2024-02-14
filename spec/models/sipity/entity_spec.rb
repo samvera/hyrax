@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Sipity
-  RSpec.describe Entity, type: :model do
+  RSpec.describe Entity, type: :model, valkyrie_adapter: :test_adapter do
     subject(:entity) { described_class.new }
 
     describe 'database configuration' do
@@ -17,8 +17,8 @@ module Sipity
     end
 
     describe '#proxy_for' do
-      subject(:entity) { described_class.new(proxy_for_global_id: work.to_global_id) }
-      let(:work)       { FactoryBot.create(:generic_work) }
+      subject(:entity) { described_class.new(proxy_for_global_id: Hyrax::GlobalID(work).to_s) }
+      let(:work)       { valkyrie_create(:hyrax_work) }
 
       it 'will retrieve based on a GlobalID of the object' do
         expect(entity.proxy_for).to eq(work)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe "The homepage", :clean_repo do
-  let(:work1) { create(:work, :public, title: ["Work 1"], date_uploaded: (DateTime.current - 1.day)) }
-  let(:work2) { create(:work, :public, title: ["Work 2"], date_uploaded: (DateTime.current - 1.year)) }
+  let(:work1) { valkyrie_create(:monograph, :public, title: ["Work 1"], date_uploaded: (DateTime.current - 1.day)) }
+  let(:work2) { valkyrie_create(:monograph, :public, title: ["Work 2"], date_uploaded: (DateTime.current - 1.year)) }
 
   before do
     create(:featured_work, work_id: work1.id)
@@ -23,7 +23,9 @@ RSpec.describe "The homepage", :clean_repo do
       # Expect the system create of work2 to be later than that of work1.
       # This helps verify that 'recently uploaded' is looking at
       # 'date_uploaded_dtsi'  and not 'system_create_dtsi'.
-      expect(DateTime.parse(work2.to_solr['system_create_dtsi']).getlocal).to be >= DateTime.parse(work1.to_solr['system_create_dtsi']).getlocal
+      document1 = Hyrax::SolrService.get("id:#{work1.id}")["response"]["docs"].first
+      document2 = Hyrax::SolrService.get("id:#{work2.id}")["response"]["docs"].first
+      expect(DateTime.parse(document2['system_create_dtsi']).getlocal).to be >= DateTime.parse(document1['system_create_dtsi']).getlocal
     end
   end
 

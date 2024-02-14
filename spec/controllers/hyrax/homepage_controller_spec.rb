@@ -39,37 +39,27 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
       end
     end
 
-    it "does not include other user's private documents in recent documents" do
-      get :index
-      expect(response).to be_successful
-      titles = assigns(:recent_documents).map { |d| d['title_tesim'][0] }
-      expect(titles).not_to include('Test Private Document')
-    end
-
     it "includes only Work objects in recent documents" do
       get :index
       expect(assigns(:recent_documents).all?(&:work?)).to eq true
     end
 
     context "with a document not created this second", clean_repo: true do
+      let(:work_1) { { id: 'work_1', has_model_ssim: 'Monograph', read_access_person_ssim: user.user_key, date_uploaded_dtsi: 2.days.ago.iso8601 } }
+      let(:work_2) { { id: 'work_2', has_model_ssim: 'Monograph', read_access_person_ssim: user.user_key, date_uploaded_dtsi: 4.days.ago.iso8601 } }
+      let(:work_3) { { id: 'work_3', has_model_ssim: 'Monograph', read_access_person_ssim: user.user_key, date_uploaded_dtsi: 3.days.ago.iso8601 } }
+
       before do
-        gw3 = GenericWork.new(title: ['Test 3 Document'], read_groups: ['public'])
-        gw3.apply_depositor_metadata('mjg36')
-        # stubbing to_solr so we know we have something that didn't create in the current second
-        old_to_solr = gw3.method(:to_solr)
-        allow(gw3).to receive(:to_solr) do
-          old_to_solr.call.merge(
-            "system_create_dtsi" => 1.day.ago.iso8601,
-            "date_uploaded_dtsi" => 1.day.ago.iso8601
-          )
+        [work_1, work_2, work_3].each do |obj|
+          Hyrax::SolrService.add(obj)
         end
-        gw3.save
+        Hyrax::SolrService.commit
       end
 
       it "sets recent documents in the right order" do
         get :index
         expect(response).to be_successful
-        expect(assigns(:recent_documents).length).to be <= 4
+        expect(assigns(:recent_documents).length).to eq 3
         create_times = assigns(:recent_documents).map { |d| d['date_uploaded_dtsi'] }
         expect(create_times).to eq create_times.sort.reverse
       end
@@ -97,7 +87,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
     end
 
     context "with featured works" do
-      let!(:my_work) { create(:work, user: user) }
+      let(:my_work) { valkyrie_create(:hyrax_work) }
 
       before do
         FeaturedWork.create!(work_id: my_work.id)

@@ -33,7 +33,7 @@ module Hyrax
           if results.count > 1
             Hyrax.logger.warn("#{resource.work? ? 'Work' : 'File set'} " \
                               "#{resource.id} is in #{results.count} works when it " \
-                              "should be in no more than one.")
+                              "should be in no more than one. Found in #{results.map(&:id).join(', ')}.")
           end
           results.first
         end

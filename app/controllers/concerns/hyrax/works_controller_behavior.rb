@@ -18,9 +18,12 @@ module Hyrax
 
       class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class
       class_attribute :iiif_manifest_builder, instance_accessor: false
+      class_attribute :create_valkyrie_work_action
+
       self.show_presenter = Hyrax::WorkShowPresenter
       self.work_form_service = Hyrax::WorkFormService
       self.search_builder_class = WorkSearchBuilder
+      self.create_valkyrie_work_action = Hyrax::Action::CreateValkyrieWork
       self.iiif_manifest_builder = nil
       attr_accessor :curation_concern
       helper_method :curation_concern, :contextual_path
@@ -79,14 +82,11 @@ module Hyrax
         wants.html { presenter && parent_presenter }
         wants.json do
           # load @curation_concern manually because it's skipped for html
-          @curation_concern = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id])
+          @curation_concern = load_curation_concern
           curation_concern # This is here for authorization checks (we could add authorize! but let's use the same method for CanCanCan)
           render :show, status: :ok
         end
         additional_response_formats(wants)
-        wants.ttl { render body: presenter.export_as_ttl, mime_type: Mime[:ttl] }
-        wants.jsonld { render body: presenter.export_as_jsonld, mime_type: Mime[:jsonld] }
-        wants.nt { render body: presenter.export_as_nt, mime_type: Mime[:nt] }
       end
     end
     # rubocop:enable Metrics/AbcSize
@@ -114,9 +114,9 @@ module Hyrax
         Hyrax.config.callback.run(:after_destroy, curation_concern.id, current_user, warn: false)
       else
         transactions['work_resource.destroy']
-          .with_step_args('work_resource.delete' => { user: current_user })
-          .call(curation_concern)
-          .value!
+          .with_step_args('work_resource.delete' => { user: current_user },
+                          'work_resource.delete_all_file_sets' => { user: current_user })
+          .call(curation_concern).value!
 
         title = Array(curation_concern.title).first
       end
@@ -139,12 +139,19 @@ module Hyrax
       json = iiif_manifest_builder.manifest_for(presenter: iiif_manifest_presenter)
 
       respond_to do |wants|
-        wants.json { render json: json }
-        wants.html { render json: json }
+        wants.any { render json: json }
       end
     end
 
     private
+
+    def load_curation_concern
+      if Hyrax.config.disable_wings
+        Hyrax.query_service.find_by(id: params[:id])
+      else
+        Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id])
+      end
+    end
 
     def iiif_manifest_builder
       self.class.iiif_manifest_builder ||
@@ -183,20 +190,16 @@ module Hyrax
     # rubocop:disable Metrics/MethodLength
     def create_valkyrie_work
       form = build_form
-      # fallback to an empty hash to avoid: # NoMethodError: undefined method `has_key?` for nil:NilClass
-      original_input_params_for_form = params[hash_key_for_curation_concern] ? params[hash_key_for_curation_concern] : {}
-      return after_create_error(form_err_msg(form), original_input_params_for_form) unless form.validate(original_input_params_for_form)
+      action = create_valkyrie_work_action.new(form: form,
+                                               transactions: transactions,
+                                               user: current_user,
+                                               params: params,
+                                               work_attributes_key: hash_key_for_curation_concern)
 
-      result =
-        transactions['change_set.create_work']
-        .with_step_args(
-          'work_resource.add_to_parent' => { parent_id: params[:parent_id], user: current_user },
-          'work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: original_input_params_for_form[:file_set] },
-          'change_set.set_user_as_depositor' => { user: current_user },
-          'work_resource.change_depositor' => { user: ::User.find_by_user_key(form.on_behalf_of) },
-          'work_resource.save_acl' => { permissions_params: form.input_params["permissions"] }
-        )
-        .call(form)
+      return after_create_error(form_err_msg(action.form), action.work_attributes) unless action.validate
+
+      result = action.perform
+
       @curation_concern = result.value_or { return after_create_error(transaction_err_msg(result)) }
       after_create_response
     end
@@ -224,7 +227,13 @@ module Hyrax
     end
 
     def transaction_err_msg(result)
-      result.failure.first
+      msg = if result.failure[1].respond_to?(:full_messages)
+              "#{result.failure[1].full_messages.to_sentence} [#{result.failure[0]}]"
+            else
+              result.failure[0].to_s
+            end
+      Rails.logger.info("Transaction failed: #{msg}\n  #{result.trace}")
+      msg
     end
 
     def presenter
@@ -427,10 +436,47 @@ module Hyrax
     end
 
     def additional_response_formats(format)
+      respond_to_endnote(format)
+      respond_to_ttl(format)
+      respond_to_jsonld(format)
+      respond_to_nt(format)
+    end
+
+    def respond_to_endnote(format)
       format.endnote do
         send_data(presenter.solr_document.export_as_endnote,
                   type: "application/x-endnote-refer",
                   filename: presenter.solr_document.endnote_filename)
+      end
+    end
+
+    def respond_to_ttl(format)
+      format.ttl do
+        if presenter.valkyrie_presenter?
+          render plain: "Error: Not Implemented", status: :not_implemented
+        else
+          render body: presenter.export_as_ttl, mime_type: Mime[:ttl]
+        end
+      end
+    end
+
+    def respond_to_jsonld(format)
+      format.jsonld do
+        if presenter.valkyrie_presenter?
+          render plain: "Error: Not Implemented", status: :not_implemented
+        else
+          render body: presenter.export_as_jsonld, mime_type: Mime[:jsonld]
+        end
+      end
+    end
+
+    def respond_to_nt(format)
+      format.nt do
+        if presenter.valkyrie_presenter?
+          render plain: "Error: Not Implemented", status: :not_implemented
+        else
+          render body: presenter.export_as_nt, mime_type: Mime[:nt]
+        end
       end
     end
 

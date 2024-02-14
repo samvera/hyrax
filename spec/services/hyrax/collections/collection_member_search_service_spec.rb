@@ -6,12 +6,12 @@ RSpec.describe Hyrax::Collections::CollectionMemberSearchService, clean_repo: tr
 
   let(:current_ability) { instance_double(Ability, admin?: true) }
   let(:scope) { FakeSearchBuilderScope.new(current_ability: current_ability) }
-  let!(:subcollection) { create(:public_collection_lw, member_of_collections: [nestable_collection], collection_type_settings: [:nestable]) }
+  let!(:subcollection) { valkyrie_create(:hyrax_collection, :public) }
 
-  let!(:nestable_collection) { create(:public_collection_lw, collection_type_settings: [:nestable]) }
-  let!(:work1) { create(:generic_work, member_of_collections: [nestable_collection]) }
-  let!(:work2) { create(:generic_work) }
-  let!(:work3) { create(:generic_work, member_of_collections: [nestable_collection]) }
+  let!(:nestable_collection) { valkyrie_create(:hyrax_collection, :public, members: [subcollection, work1, work3]) }
+  let!(:work1) { valkyrie_create(:monograph) }
+  let!(:work2) { valkyrie_create(:monograph) }
+  let!(:work3) { valkyrie_create(:monograph) }
 
   describe '#available_member_subcollections' do
     it 'returns the members that are collections' do

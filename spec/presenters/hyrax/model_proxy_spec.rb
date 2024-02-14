@@ -54,7 +54,8 @@ RSpec.describe Hyrax::ModelProxy do
     end
   end
 
-  describe '#valid_child_concerns' do
+  # NOTE: This attribute is assigned to work classes only in Dassie.
+  describe '#valid_child_concerns', :active_fedora do
     it 'delegates to the has_model_ssim model' do
       expect(Hyrax::ChildTypes.for(parent: solr_document.hydra_model))
         .to contain_exactly(*model.valid_child_concerns)

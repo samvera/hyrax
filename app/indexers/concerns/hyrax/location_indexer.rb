@@ -14,11 +14,7 @@ module Hyrax
 
     def based_near_label_lookup(locations)
       locations.map do |loc|
-        if URI.parse(loc)
-          location_service.full_label(loc)
-        else
-          loc
-        end
+        location_service.full_label(loc)
       end
     end
 

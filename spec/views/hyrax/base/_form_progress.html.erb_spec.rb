@@ -3,7 +3,7 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
   let(:ability) { double }
   let(:user) { stub_model(User) }
   let(:form) do
-    Hyrax.config.disable_wings ? Hyrax::Forms::ResourceForm.for(work).prepopulate! : Hyrax::GenericWorkForm.new(work, ability, controller)
+    Hyrax.config.disable_wings ? Hyrax::Forms::ResourceForm.for(resource: work).prepopulate! : Hyrax::GenericWorkForm.new(work, ability, controller)
   end
   let(:page) do
     view.simple_form_for form do |f|

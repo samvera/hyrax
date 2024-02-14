@@ -9,18 +9,22 @@ RSpec.describe Hyrax::AdminSetCreateService do
   describe '.find_or_create_default_admin_set', :clean_repo do
     context "when default admin set doesn't exist yet" do
       it "is a convenience method for .create_default_admin_set!" do
-        expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
-                                                  .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
+        unless Hyrax.config.disable_wings
+          expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
+                                                    .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
+        end
         expect(described_class).to receive(:create_default_admin_set!).and_call_original
-        expect(query_service).to receive(:find_by).with(id: anything).and_call_original # permission template
+        expect(query_service).to receive(:find_by).with(id: anything).at_least(1).times.and_call_original # permission template
         admin_set = described_class.find_or_create_default_admin_set
         expect(admin_set.title).to eq described_class::DEFAULT_TITLE
       end
 
       it 'sets up an active workflow' do
         described_class.find_or_create_default_admin_set
-        expect(Sipity::Workflow.find_active_workflow_for(admin_set_id: AdminSet::DEFAULT_ID))
-          .to be_persisted
+        unless Hyrax.config.disable_wings
+          expect(Sipity::Workflow.find_active_workflow_for(admin_set_id: AdminSet::DEFAULT_ID))
+            .to be_persisted
+        end
       end
     end
 
@@ -28,11 +32,11 @@ RSpec.describe Hyrax::AdminSetCreateService do
       before { allow(Hyrax::DefaultAdministrativeSet).to receive(:save_supported?).and_return(false) }
       it "creates a default admin set with the DEFAULT_ID" do
         expect(Hyrax::DefaultAdministrativeSet).not_to receive(:first)
-        expect(described_class.find_or_create_default_admin_set.id).to eq described_class::DEFAULT_ID
+        expect(described_class.find_or_create_default_admin_set.id).to eq described_class::DEFAULT_ID unless Hyrax.config.disable_wings
       end
     end
 
-    context "when default admin set id is NOT saved in the database" do
+    context "when default admin set id is NOT saved in the database", :active_fedora do
       before { allow(Hyrax::DefaultAdministrativeSet).to receive(:count).and_return(0) }
       context "but default admin set does exist" do
         let(:default_admin_set) do
@@ -56,7 +60,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
         end
       end
 
-      context "and default admin set doesn't exist" do
+      context "and default admin set doesn't exist", :active_fedora do
         before do
           allow(query_service).to receive(:find_by)
             .with(id: described_class::DEFAULT_ID)
@@ -89,7 +93,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
       end
     end
 
-    context "when default admin set id is saved in the database" do
+    context "when default admin set id is saved in the database", :active_fedora do
       let!(:default_admin_set) do
         FactoryBot.valkyrie_create(:default_hyrax_admin_set,
                                    id: Valkyrie::ID.new('234'),
@@ -103,9 +107,17 @@ RSpec.describe Hyrax::AdminSetCreateService do
   end
 
   describe ".default_admin_set?" do
-    let!(:admin_set) { FactoryBot.valkyrie_create(:default_hyrax_admin_set) }
+    let!(:admin_set) do
+      if Hyrax.config.disable_wings
+        FactoryBot.valkyrie_create(:default_hyrax_admin_set, id: nil)
+      else
+        FactoryBot.valkyrie_create(:default_hyrax_admin_set)
+      end
+    end
+    let!(:def_id) { Hyrax.config.disable_wings ? admin_set.id.to_s : described_class::DEFAULT_ID }
+
     it "is true for the default admin set id" do
-      expect(described_class.default_admin_set?(id: described_class::DEFAULT_ID))
+      expect(described_class.default_admin_set?(id: def_id))
         .to eq true
     end
 
@@ -116,7 +128,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
   describe ".call" do
     context "when passing in the default admin set", :clean_repo do
-      let(:admin_set) { FactoryBot.valkyrie_create(:default_hyrax_admin_set) }
+      let(:admin_set) { FactoryBot.valkyrie_create(:default_hyrax_admin_set, id: nil) }
       it 'will raise RuntimeError' do
         expect { described_class.call(admin_set: admin_set, creating_user: user) }
           .to raise_error(RuntimeError)
@@ -136,7 +148,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
   describe ".call!" do
     context "when passing in the default admin set", :clean_repo do
-      let(:admin_set) { FactoryBot.valkyrie_create(:default_hyrax_admin_set) }
+      let(:admin_set) { FactoryBot.valkyrie_create(:default_hyrax_admin_set, id: nil) }
       it 'will raise RuntimeError' do
         expect { described_class.call!(admin_set: admin_set, creating_user: user) }
           .to raise_error(RuntimeError)

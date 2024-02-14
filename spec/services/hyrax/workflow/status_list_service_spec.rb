@@ -15,7 +15,7 @@ RSpec.describe Hyrax::Workflow::StatusListService do
     end
   end
 
-  describe "#each" do
+  context "#each with ActiveFedora objects", :active_fedora do
     let(:document) do
       { id: '33333',
         has_model_ssim: ['GenericWork'],

@@ -11,42 +11,35 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
   let(:another_collection_type) { create(:collection_type) }
 
   let(:coll_a) do
-    create(:public_collection,
-          id: 'Collection_A',
+    valkyrie_create(:hyrax_collection, :public,
           collection_type: collection_type)
   end
   let(:coll_b) do
-    create(:public_collection,
-          id: 'Collection_B',
+    valkyrie_create(:hyrax_collection, :public,
           collection_type: collection_type,
-          member_of_collections: [coll_a])
+          member_of_collection_ids: [coll_a.id])
   end
   let(:coll_c) do
-    create(:public_collection,
-          id: 'Collection_C',
+    valkyrie_create(:hyrax_collection, :public,
           collection_type: collection_type,
-          member_of_collections: [coll_b])
+          member_of_collection_ids: [coll_b.id])
   end
   let(:coll_d) do
-    create(:public_collection,
-          id: 'Collection_D',
+    valkyrie_create(:hyrax_collection, :public,
           collection_type: collection_type,
-          member_of_collections: [coll_c])
+          member_of_collection_ids: [coll_c.id])
   end
   let(:coll_e) do
-    create(:public_collection,
-          id: 'Collection_E',
+    valkyrie_create(:hyrax_collection, :public,
           collection_type: collection_type,
-          member_of_collections: [coll_d])
+          member_of_collection_ids: [coll_d.id])
   end
   let(:another) do
-    create(:public_collection,
-          id: 'Another_One',
+    valkyrie_create(:hyrax_collection, :public,
           collection_type: collection_type)
   end
   let(:wrong) do
-    create(:public_collection,
-          id: 'Wrong_Type',
+    valkyrie_create(:hyrax_collection, :public,
           collection_type: another_collection_type)
   end
 
@@ -113,57 +106,45 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
 
         # using create option here because permission template is required for testing :deposit access
         let(:coll_a) do
-          create(:public_collection_lw,
-                id: 'Collection_A',
+          valkyrie_create(:hyrax_collection, :public,
                 collection_type: collection_type,
-                user: user,
-                with_permission_template: true)
+                user: user)
         end
         let(:coll_b) do
-          create(:public_collection_lw,
-                id: 'Collection_B',
+          valkyrie_create(:hyrax_collection, :public,
                 collection_type: collection_type,
                 user: user,
-                with_permission_template: true,
-                member_of_collections: [coll_a])
+                member_of_collection_ids: [coll_a.id])
         end
         let(:coll_c) do
-          create(:public_collection_lw,
-                id: 'Collection_C',
+          valkyrie_create(:hyrax_collection, :public,
                 collection_type: collection_type,
                 user: user,
                 with_permission_template: true,
-                member_of_collections: [coll_b])
+                member_of_collection_ids: [coll_b.id])
         end
         let(:coll_d) do
-          create(:public_collection_lw,
-                id: 'Collection_D',
+          valkyrie_create(:hyrax_collection, :public,
                 collection_type: collection_type,
                 user: user,
-                with_permission_template: true,
-                member_of_collections: [coll_c])
+                member_of_collection_ids: [coll_c.id])
         end
         let(:coll_e) do
-          create(:public_collection_lw,
-                 id: 'Collection_E',
+          valkyrie_create(:hyrax_collection, :public,
+
                  collection_type: collection_type,
                  user: user,
-                 with_permission_template: true,
-                 member_of_collections: [coll_d])
+                 member_of_collection_ids: [coll_d.id])
         end
         let(:another) do
-          create(:public_collection_lw,
-                 id: 'Another_One',
+          valkyrie_create(:hyrax_collection, :public,
                  collection_type: collection_type,
-                 user: user,
-                 with_permission_template: true)
+                 user: user)
         end
         let(:wrong) do
-          create(:public_collection_lw,
-                id: 'Wrong_Type',
+          valkyrie_create(:hyrax_collection, :public,
                 collection_type: another_collection_type,
-                user: user,
-                with_permission_template: true)
+                user: user)
         end
 
         before do
@@ -205,18 +186,14 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
       describe 'and are of the same collection type' do
         # using create option here because permission template is required for testing :deposit access
         let!(:parent) do
-          create(:public_collection_lw,
-                 id: 'Parent_Collecton',
+          valkyrie_create(:hyrax_collection, :public,
                  collection_type: collection_type,
-                 user: user,
-                 with_permission_template: true)
+                 user: user)
         end
         let!(:child) do
-          create(:public_collection_lw,
-                 id: 'Child_Collection',
+          valkyrie_create(:hyrax_collection, :public,
                  collection_type: collection_type,
-                 user: user,
-                 with_permission_template: true)
+                 user: user)
         end
 
         it { is_expected.to eq(true) }
@@ -229,6 +206,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         it { is_expected.to eq(false) }
       end
       describe 'and are of different collection types' do
+        before { allow(parent).to receive(:==).and_return(false) }
         let(:parent) { double(nestable?: true, collection_type_gid: 'another', id: 'parent_collection') }
 
         it { is_expected.to eq(false) }
@@ -236,11 +214,13 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
     end
 
     describe 'given parent is not nestable?' do
+      before { allow(parent).to receive(:==).and_return(false) }
       let(:parent) { double(nestable?: false, collection_type_gid: 'same', id: 'parent_collection') }
 
       it { is_expected.to eq(false) }
     end
     describe 'given child is not nestable?' do
+      before { allow(parent).to receive(:==).and_return(false) }
       let(:child) { double(nestable?: false, collection_type_gid: 'same', id: 'child_collection') }
 
       it { is_expected.to eq(false) }

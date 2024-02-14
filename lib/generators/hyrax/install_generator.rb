@@ -26,13 +26,14 @@ module Hyrax
      * Generates mailboxer
   10. Adds Hyrax's abilities into the Ability class
   11. Adds controller behavior to the application controller
-  12. Copies the catalog controller into the local app
-  13. Installs hyrax assets
-  14. Updates simple_form to use browser validations
-  15. Installs Blacklight gallery (and removes it's scss)
-  16. Install jquery-datatables
-  17. Initializes the noid-rails database-backed minter
-  18. Generates RIIIF image server implementation
+  12. Adds listener template and publisher initializer
+  13. Copies the catalog controller into the local app
+  14. Installs hyrax assets
+  15. Updates simple_form to use browser validations
+  16. Installs Blacklight gallery (and removes it's scss)
+  17. Install jquery-datatables
+  18. Initializes the noid-rails database-backed minter
+  19. Generates RIIIF image server implementation
          """
 
     def run_required_generators
@@ -107,6 +108,12 @@ module Hyrax
         "  include Hyrax::Ability\n"\
         "  self.ability_logic += [:everyone_can_create_curation_concerns]\n\n"
       end
+    end
+
+    # add listener code to provide developers a hint that listening to events
+    # is a good development pattern
+    def inject_listeners
+      generate "hyrax:listeners"
     end
 
     # Add behaviors to the application controller

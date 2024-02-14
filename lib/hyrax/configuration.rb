@@ -267,6 +267,14 @@ module Hyrax
       @derivative_services ||= [Hyrax::FileSetDerivativesService]
     end
 
+    ##
+    # @!attribute [rw] file_set_file_service
+    #   @return [Class] implementer of {Hyrax::FileSetFileService}
+    attr_writer :file_set_file_service
+    def file_set_file_service
+      @file_set_file_service ||= Hyrax::FileSetFileService
+    end
+
     attr_writer :fixity_service
     def fixity_service
       @fixity_service ||= Hyrax::Fixity::ActiveFedoraFixityService
@@ -604,9 +612,11 @@ module Hyrax
     ##
     # @return [Boolean] whether to use experimental valkyrie storage features
     def use_valkyrie?
+      return @use_valkyrie unless @use_valkyrie.nil?
       return true if disable_wings # always return true if wings is disabled
       ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_VALKYRIE', false))
     end
+    attr_writer :use_valkyrie
     # @!endgroup
 
     attr_writer :feature_config_path
@@ -888,6 +898,70 @@ module Hyrax
     attr_writer :index_field_mapper
     def index_field_mapper
       @index_field_mapper ||= ActiveFedora.index_field_mapper
+    end
+
+    attr_writer :administrative_set_form
+    ##
+    # @return [Class]
+    def administrative_set_form
+      @administrative_set_form ||= Hyrax::Forms::AdministrativeSetForm
+    end
+
+    attr_writer :file_set_form
+    ##
+    # @return [Class]
+    def file_set_form
+      @file_set_form ||= Hyrax::Forms::FileSetForm
+    end
+
+    attr_writer :pcdm_collection_form
+    ##
+    # @return [Class]
+    def pcdm_collection_form
+      @pcdm_collection_form ||= Hyrax::Forms::PcdmCollectionForm
+    end
+
+    attr_writer :pcdm_object_form_builder
+    ##
+    # @return [Proc]
+    def pcdm_object_form_builder
+      return @pcdm_object_form_builder unless @pcdm_object_form_builder.nil?
+      "Hyrax::Forms::PcdmObjectForm".constantize # autoload
+      @pcdm_object_form_builder = lambda do |model_class|
+        Hyrax::Forms::PcdmObjectForm(model_class)
+      end
+    end
+
+    attr_writer :administrative_set_indexer
+    ##
+    # @return [Class]
+    def administrative_set_indexer
+      @administrative_set_indexer ||= Hyrax::Indexers::AdministrativeSetIndexer
+    end
+
+    attr_writer :file_set_indexer
+    ##
+    # @return [Class]
+    def file_set_indexer
+      @file_set_indexer ||= Hyrax::Indexers::FileSetIndexer
+    end
+
+    attr_writer :pcdm_collection_indexer
+    ##
+    # @return [Class]
+    def pcdm_collection_indexer
+      @pcdm_collection_indexer ||= Hyrax::Indexers::PcdmCollectionIndexer
+    end
+
+    attr_writer :pcdm_object_indexer_builder
+    ##
+    # @return [Proc]
+    def pcdm_object_indexer_builder
+      return @pcdm_object_indexer_builder unless @pcdm_object_indexer_builder.nil?
+      "Hyrax::Indexers::PcdmObjectIndexer".constantize # autoload
+      @pcdm_object_indexer_builder = lambda do |model_class|
+        Hyrax::Indexers::PcdmObjectIndexer(model_class)
+      end
     end
 
     # Should a button with "Share my work" show on the front page to users who are not logged in?

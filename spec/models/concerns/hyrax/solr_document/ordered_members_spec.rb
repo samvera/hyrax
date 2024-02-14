@@ -1,5 +1,8 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::SolrDocument::OrderedMembers do
+
+# NOTE: This class specifically queries `ordered_targets_ssim`, which is only
+#   indexed within Dassie.
+RSpec.describe Hyrax::SolrDocument::OrderedMembers, :active_fedora do
   subject(:decorated) { described_class.decorate(document) }
   let(:data) { { id: parent_id } }
   let(:document) { SolrDocument.new(data) }

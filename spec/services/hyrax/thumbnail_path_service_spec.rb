@@ -33,7 +33,7 @@ RSpec.describe Hyrax::ThumbnailPathService do
     end
   end
 
-  context "with a FileSet" do
+  context "with a FileSet", :active_fedora do
     let(:object) { build(:file_set, id: '999') }
 
     before do
@@ -44,7 +44,7 @@ RSpec.describe Hyrax::ThumbnailPathService do
     context "that has a thumbnail" do
       let(:original_file) { mock_file_factory(mime_type: 'image/jpeg') }
 
-      before { allow(File).to receive(:exist?).and_return(true) }
+      before { allow(described_class).to receive(:thumbnail?).and_return(true) }
       it { is_expected.to eq '/downloads/999?file=thumbnail' }
     end
 
@@ -68,7 +68,8 @@ RSpec.describe Hyrax::ThumbnailPathService do
       let(:original_file)  { mock_file_factory(mime_type: 'image/jpeg') }
 
       before do
-        allow(File).to receive(:exist?).and_return(true)
+        allow(described_class).to receive(:thumbnail?).and_return(true)
+        allow(ActiveFedora::Base).to receive(:find)
         allow(ActiveFedora::Base).to receive(:find).with('999').and_return(representative)
         allow(representative).to receive(:original_file).and_return(original_file)
       end

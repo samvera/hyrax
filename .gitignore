@@ -10,6 +10,10 @@ Gemfile*.lock
 fcrepo4-data
 fcrepo4-test-data
 
+## JS lock files
+yarn.lock
+package-lock.json
+
 ## MAC OS
 .DS_Store
 

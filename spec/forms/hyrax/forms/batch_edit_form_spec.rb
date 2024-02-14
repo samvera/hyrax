@@ -1,5 +1,8 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Forms::BatchEditForm do
+
+# NOTE: Valkyrie has it's own form class (Hyrax::Forms::ResourceBatchEditForm).
+#   This is the legacy ActiveFedora form.
+RSpec.describe Hyrax::Forms::BatchEditForm, :active_fedora do
   let(:model) { GenericWork.new }
   let(:work1) do
     create :generic_work,

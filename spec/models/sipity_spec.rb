@@ -24,7 +24,9 @@ RSpec.describe Sipity do
       it { expect(described_class.Entity(object)).to eq object }
     end
 
-    context "with a Sipity::Entity that doesn't match the globalID for a valkyrie object" do
+    # NOTE: Since this is testing an ActiveFedora object parsed into a Valkyrie object, this has been marked as
+    #   ActiveFedora-only.
+    context "with a Sipity::Entity that doesn't match the globalID for a valkyrie object", :active_fedora do
       let(:object) { FactoryBot.create(:generic_work, id: '9999').valkyrie_resource }
       let(:workflow_state) { create(:workflow_state) }
       let!(:entity) do
@@ -45,9 +47,15 @@ RSpec.describe Sipity do
 
     context "with a SolrDocument" do
       let(:object) { SolrDocument.new(id: '9999', has_model_ssim: ["GenericWork"]) }
-      let(:workflow_state) { create(:workflow_state) }
+      let(:workflow_state) { FactoryBot.create(:workflow_state) }
       let!(:entity) do
-        Sipity::Entity.create(proxy_for_global_id: "gid://#{GlobalID.app}/GenericWork/9999",
+        gid_class_string = if GenericWork < Valkyrie::Resource
+                             "Hyrax::ValkyrieGlobalIdProxy"
+                           else
+                             "GenericWork"
+                           end
+
+        Sipity::Entity.create(proxy_for_global_id: "gid://#{GlobalID.app}/#{gid_class_string}/9999",
                               workflow_state: workflow_state,
                               workflow: workflow_state.workflow)
       end
@@ -59,23 +67,23 @@ RSpec.describe Sipity do
       let(:workflow_state) { create(:workflow_state) }
 
       it 'will raise an conversion error if an id has not been assigned' do
-        object = build(:generic_work)
+        object = build(:hyrax_work)
 
         expect { described_class.Entity(object) }
           .to raise_error Sipity::ConversionError
       end
 
       it 'raises a conversion error when there is no matching entity' do
-        object = create(:generic_work)
+        object = valkyrie_create(:hyrax_work)
 
         expect { described_class.Entity(object) }
           .to raise_error Sipity::ConversionError
       end
 
       it 'gives a matching entity' do
-        object = create(:generic_work)
+        object = valkyrie_create(:hyrax_work)
 
-        entity = Sipity::Entity.create(proxy_for_global_id: object.to_global_id,
+        entity = Sipity::Entity.create(proxy_for_global_id: Hyrax::GlobalID(object).to_s,
                                        workflow_state: workflow_state,
                                        workflow: workflow_state.workflow)
 

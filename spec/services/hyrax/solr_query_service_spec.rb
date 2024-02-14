@@ -126,9 +126,11 @@ RSpec.describe Hyrax::SolrQueryService, :clean_repo do
   end
 
   describe "#with_model" do
+    let(:expected_collection_class) { Hyrax.config.disable_wings ? 'CollectionResource' : 'Collection' }
+
     it "generates and appends a query clause" do
       expect(solr_query_service.with_model(model: ::Collection).query)
-        .to match_array [initial_query, '_query_:"{!field f=has_model_ssim}Collection"']
+        .to match_array [initial_query, "_query_:\"{!field f=has_model_ssim}#{expected_collection_class}\""]
     end
   end
 

@@ -29,7 +29,7 @@ RSpec.describe Hyrax::CustomQueries::Navigators::ParentWorkNavigator, valkyrie_a
         let(:child_work3) { FactoryBot.valkyrie_create(:hyrax_work, id: 'cw3', title: ['Child Work 3']) }
         let(:member_ids) { [child_work3.id] }
         it 'logs warning about more than one parent and returns the first parent work as Valkyrie resources' do
-          expect(Hyrax.logger).to receive(:warn).with("Work cw3 is in 2 works when it should be in no more than one.")
+          expect(Hyrax.logger).to receive(:warn).with("Work cw3 is in 2 works when it should be in no more than one. Found in pw1, pw2.")
           parent = custom_query_service.find_parent_work(resource: child_work3)
           # There is no guarantee which of the parents will be returned.
           expect([work.id, parent_work.id]).to include parent.id
@@ -47,7 +47,7 @@ RSpec.describe Hyrax::CustomQueries::Navigators::ParentWorkNavigator, valkyrie_a
         let(:fileset3) { FactoryBot.valkyrie_create(:hyrax_file_set, id: 'fs3', title: ['Child File Set 3']) }
         let(:member_ids) { [fileset3.id] }
         it 'logs warning about more than one parent and returns the first parent work as Valkyrie resources' do
-          expect(Hyrax.logger).to receive(:warn).with("File set fs3 is in 2 works when it should be in no more than one.")
+          expect(Hyrax.logger).to receive(:warn).with("File set fs3 is in 2 works when it should be in no more than one. Found in pw1, pw2.")
           parent = custom_query_service.find_parent_work(resource: fileset3)
           # There is no guarantee which of the parents will be returned.
           expect([work.id, parent_work.id]).to include parent.id

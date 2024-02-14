@@ -26,7 +26,7 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
     it { is_expected.to respond_to(:persist_nested_collection_for) }
   end
 
-  context "when parent/child are ActiveFedora object" do
+  context "when parent/child are ActiveFedora object", :active_fedora do
     subject(:form) do
       described_class.new(parent: parent,
                           child: child,
@@ -93,28 +93,6 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
 
           expect(form.save).to eq :persisted
         end
-      end
-    end
-
-    describe '#available_child_collections' do
-      it 'delegates to the underlying query_service' do
-        expect(query_service)
-          .to receive(:available_child_collections)
-          .with(parent: parent, scope: context)
-          .and_return(:results)
-
-        expect(form.available_child_collections).to eq(:results)
-      end
-    end
-
-    describe '#available_parent_collections' do
-      it 'delegates to the underlying query_service' do
-        expect(query_service)
-          .to receive(:available_parent_collections)
-          .with(child: child, scope: context)
-          .and_return(:results)
-
-        expect(form.available_parent_collections).to eq(:results)
       end
     end
 
@@ -252,28 +230,6 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
 
           expect(form.save).to eq :persisted
         end
-      end
-    end
-
-    describe '#available_child_collections' do
-      it 'delegates to the underlying query_service' do
-        expect(query_service)
-          .to receive(:available_child_collections)
-          .with(parent: parent, scope: context)
-          .and_return(:results)
-
-        expect(form.available_child_collections).to eq(:results)
-      end
-    end
-
-    describe '#available_parent_collections' do
-      it 'delegates to the underlying query_service' do
-        expect(query_service)
-          .to receive(:available_parent_collections)
-          .with(child: child, scope: context)
-          .and_return(:results)
-
-        expect(form.available_parent_collections).to eq(:results)
       end
     end
 

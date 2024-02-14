@@ -66,7 +66,7 @@ module Hyrax
       if directives.key?(:container)
         "Hyrax::FileMetadata::Use::#{directives[:container].upcase}".constantize
       else
-        Hyrax::FileMetadata::Use::THUMBNAIL
+        Hyrax::FileMetadata::Use::THUMBNAIL_IMAGE
       end
     end
   end

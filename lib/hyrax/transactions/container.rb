@@ -25,6 +25,7 @@ module Hyrax
       require 'hyrax/transactions/collection_create'
       require 'hyrax/transactions/collection_destroy'
       require 'hyrax/transactions/collection_update'
+      require 'hyrax/transactions/file_metadata_destroy'
       require 'hyrax/transactions/file_set_destroy'
       require 'hyrax/transactions/file_set_update'
       require 'hyrax/transactions/work_create'
@@ -36,12 +37,17 @@ module Hyrax
       require 'hyrax/transactions/steps/apply_collection_type_permissions'
       require 'hyrax/transactions/steps/apply_permission_template'
       require 'hyrax/transactions/steps/change_depositor'
+      require 'hyrax/transactions/steps/check_for_default_admin_set'
       require 'hyrax/transactions/steps/check_for_empty_admin_set'
       require 'hyrax/transactions/steps/delete_access_control'
+      require 'hyrax/transactions/steps/delete_all_file_metadata'
+      require 'hyrax/transactions/steps/delete_all_file_sets'
       require 'hyrax/transactions/steps/delete_resource'
       require 'hyrax/transactions/steps/ensure_admin_set'
+      require 'hyrax/transactions/steps/file_metadata_delete'
       require 'hyrax/transactions/steps/set_collection_type_gid'
       require 'hyrax/transactions/steps/remove_file_set_from_work'
+      require 'hyrax/transactions/steps/remove_from_membership'
       require 'hyrax/transactions/steps/save'
       require 'hyrax/transactions/steps/save_access_control'
       require 'hyrax/transactions/steps/save_collection_banner'
@@ -53,9 +59,6 @@ module Hyrax
       require 'hyrax/transactions/steps/set_user_as_depositor'
       require 'hyrax/transactions/steps/update_work_members'
       require 'hyrax/transactions/steps/validate'
-      require 'hyrax/transactions/steps/delete_all_file_metadata'
-      require 'hyrax/transactions/steps/file_metadata_delete'
-      require 'hyrax/transactions/file_metadata_destroy'
 
       extend Dry::Container::Mixin
 
@@ -147,7 +150,7 @@ module Hyrax
         end
 
         ops.register 'delete_all_file_metadata' do
-          Steps::DeleteAllFileMetadata.new(property: :file_ids)
+          Steps::DeleteAllFileMetadata.new
         end
 
         ops.register 'destroy' do
@@ -158,12 +161,20 @@ module Hyrax
           Steps::RemoveFileSetFromWork.new
         end
 
+        ops.register 'delete_acl' do
+          Steps::DeleteAccessControl.new
+        end
+
         ops.register 'save_acl' do
           Steps::SaveAccessControl.new
         end
       end
 
       namespace 'admin_set_resource' do |ops| # Hyrax::AdministrativeSet resource
+        ops.register 'check_default' do
+          Steps::CheckForDefaultAdminSet.new
+        end
+
         ops.register 'check_empty' do
           Steps::CheckForEmptyAdminSet.new
         end
@@ -210,6 +221,10 @@ module Hyrax
           Steps::DeleteAccessControl.new
         end
 
+        ops.register 'remove_from_membership' do
+          Steps::RemoveFromMembership.new
+        end
+
         ops.register 'save_acl' do
           Steps::SaveAccessControl.new
         end
@@ -242,6 +257,10 @@ module Hyrax
 
         ops.register 'delete' do
           Steps::DeleteResource.new
+        end
+
+        ops.register 'delete_all_file_sets' do
+          Steps::DeleteAllFileSets.new
         end
 
         ops.register 'destroy' do

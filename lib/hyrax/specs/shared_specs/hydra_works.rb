@@ -19,11 +19,41 @@ RSpec.shared_examples 'a Hyrax::Resource' do
     end
   end
 
-  it { is_expected.to respond_to :collection? }
-  it { is_expected.to respond_to :file? }
-  it { is_expected.to respond_to :file_set? }
-  it { is_expected.to respond_to :pcdm_object? }
-  it { is_expected.to respond_to :work? }
+  describe '#class' do
+    subject(:klass) { resource.class }
+
+    it { is_expected.to respond_to :collection? }
+    it { is_expected.to respond_to :file? }
+    it { is_expected.to respond_to :file_set? }
+    it { is_expected.to respond_to :pcdm_collection? }
+    it { is_expected.to respond_to :pcdm_object? }
+    it { is_expected.to respond_to :work? }
+  end
+
+  it do
+    is_expected.to respond_to :collection?
+    expect(resource.collection?).to eq resource.class.collection?
+  end
+  it do
+    is_expected.to respond_to :file?
+    expect(resource.file?).to eq resource.class.file?
+  end
+  it do
+    is_expected.to respond_to :file_set?
+    expect(resource.file_set?).to eq resource.class.file_set?
+  end
+  it do
+    is_expected.to respond_to :pcdm_collection?
+    expect(resource.pcdm_collection?).to eq resource.class.pcdm_collection?
+  end
+  it do
+    is_expected.to respond_to :pcdm_object?
+    expect(resource.pcdm_object?).to eq resource.class.pcdm_object?
+  end
+  it do
+    is_expected.to respond_to :work?
+    expect(resource.work?).to eq resource.class.work?
+  end
 end
 
 RSpec.shared_examples 'belongs to collections' do
@@ -128,14 +158,20 @@ end
 RSpec.shared_examples 'a Hyrax::PcdmCollection' do
   subject(:collection) { described_class.new }
 
-  it { is_expected.to be_collection }
-  it { is_expected.to be_pcdm_object }
-  it { is_expected.not_to be_file_set }
-  it { is_expected.not_to be_work }
-
   it_behaves_like 'a Hyrax::Resource'
   it_behaves_like 'a model with core metadata'
   it_behaves_like 'has members'
+
+  describe '#class' do
+    subject(:klass) { collection.class }
+
+    it { is_expected.to be_collection }
+    it { is_expected.not_to be_file }
+    it { is_expected.not_to be_file_set }
+    it { is_expected.to be_pcdm_collection }
+    it { is_expected.not_to be_pcdm_object }
+    it { is_expected.not_to be_work }
+  end
 
   describe '#collection_type_gid' do
     let(:gid) { Hyrax::CollectionType.find_or_create_default_collection_type.to_global_id.to_s }
@@ -151,7 +187,19 @@ end
 RSpec.shared_examples 'a Hyrax::AdministrativeSet' do
   subject(:admin_set) { described_class.new }
 
+  it_behaves_like 'a Hyrax::Resource'
   it_behaves_like 'a model with core metadata'
+
+  describe '#class' do
+    subject(:klass) { admin_set.class }
+
+    it { is_expected.to be_collection }
+    it { is_expected.not_to be_file }
+    it { is_expected.not_to be_file_set }
+    it { is_expected.to be_pcdm_collection }
+    it { is_expected.not_to be_pcdm_object }
+    it { is_expected.not_to be_work }
+  end
 
   it 'has an #alternative_title' do
     expect { admin_set.alternative_title = ['Moomin'] }
@@ -191,11 +239,16 @@ RSpec.shared_examples 'a Hyrax::Work' do
   it_behaves_like 'belongs to collections'
   it_behaves_like 'has members'
 
-  it { is_expected.not_to be_collection }
-  it { is_expected.not_to be_file }
-  it { is_expected.not_to be_file_set }
-  it { is_expected.to be_pcdm_object }
-  it { is_expected.to be_work }
+  describe '#class' do
+    subject(:klass) { work.class }
+
+    it { is_expected.not_to be_collection }
+    it { is_expected.not_to be_file }
+    it { is_expected.not_to be_file_set }
+    it { is_expected.not_to be_pcdm_collection }
+    it { is_expected.to be_pcdm_object }
+    it { is_expected.to be_work }
+  end
 
   describe '#admin_set_id' do
     it 'is nil by default' do
@@ -259,11 +312,16 @@ RSpec.shared_examples 'a Hyrax::FileSet', valkyrie_adapter: :test_adapter do
   it_behaves_like 'a model with core metadata'
   it_behaves_like 'a model with basic metadata'
 
-  it { is_expected.not_to be_collection }
-  it { is_expected.not_to be_file }
-  it { is_expected.to be_file_set }
-  it { is_expected.to be_pcdm_object }
-  it { is_expected.not_to be_work }
+  describe '#class' do
+    subject(:klass) { fileset.class }
+
+    it { is_expected.not_to be_collection }
+    it { is_expected.not_to be_file }
+    it { is_expected.to be_file_set }
+    it { is_expected.not_to be_pcdm_collection }
+    it { is_expected.to be_pcdm_object }
+    it { is_expected.not_to be_work }
+  end
 
   describe 'files' do
     it 'has empty file_ids by default' do
@@ -313,6 +371,20 @@ RSpec.shared_examples 'a Hyrax::FileSet', valkyrie_adapter: :test_adapter do
       it 'returns an extracted_text' do
         expect(fileset.extracted_text).to eq extracted_text
         expect(fileset.extracted_text_id).to eq extracted_text.id
+      end
+
+      context 'with simulated original file' do
+        let(:file_metadata_double) { double("Fake Hyrax::FileMetadata", id: SecureRandom.uuid, file_identifier: SecureRandom.uuid, versions: [file_double]) }
+        let(:file_double) { double("Fake Valkyrie::StorageAdapter::File", id: SecureRandom.uuid, version_id: SecureRandom.uuid)}
+
+        before do
+          allow(fileset).to receive(:original_file).and_return(file_metadata_double)
+          fileset.id = Valkyrie::ID.new(SecureRandom.uuid)
+        end
+
+        it 'returns a iiif_id with matching ids' do
+          expect(fileset.iiif_id).to eq "#{fileset.id}/files/#{fileset.original_file_id}/#{Digest::MD5.hexdigest(file_double.version_id)}"
+        end
       end
     end
   end

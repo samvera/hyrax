@@ -8,7 +8,6 @@ services:
       args:
         - EXTRA_APK_PACKAGES=git less
         - APP_PATH=.koppie
-        - BUNDLE_GEMFILE=Gemfile.sirenia
     image: samvera/koppie
     entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
@@ -18,9 +17,10 @@ services:
     env_file:
       - .koppie/.env
     environment:
+      - APP_NAME=sirenia
       - RAILS_ROOT=/app/samvera/hyrax-webapp
-      - VALKYRIE_METADATA_ADAPTER=nurax_fedora_metadata_adapter
-      - VALKYRIE_STORAGE_ADAPTER=fedora
+      - VALKYRIE_METADATA_ADAPTER=fedora_metadata
+      - VALKYRIE_STORAGE_ADAPTER=fedora_storage
     depends_on:
       - chrome
       - db_migrate
@@ -46,22 +46,16 @@ services:
       - sirenia
 
   sidekiq:
-    build:
-      context: .
-      target: hyrax-engine-dev-worker
-      args:
-        - EXTRA_APK_PACKAGES=git less
-        - APP_PATH=.koppie
-        - BUNDLE_GEMFILE=Gemfile.sirenia
-    image: samvera/koppie-worker
+    image: samvera/koppie
     entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec sidekiq'
     user: root
     env_file:
       - .koppie/.env
     environment:
-      - VALKYRIE_METADATA_ADAPTER=nurax_fedora_metadata_adapter
-      - VALKYRIE_STORAGE_ADAPTER=fedora
+      - APP_NAME=sirenia
+      - VALKYRIE_METADATA_ADAPTER=fedora_metadata
+      - VALKYRIE_STORAGE_ADAPTER=fedora_storage
     depends_on:
       - db_migrate
       - memcached
@@ -76,8 +70,8 @@ services:
       - hyrax-storage:/app/samvera/hyrax-webapp/storage
       - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
-      - sidekiq-public:/app/samvera/hyrax-webapp/public
-      - sidekiq-tmp:/app/samvera/hyrax-webapp/tmp
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
       - sirenia
 
@@ -87,8 +81,9 @@ services:
     env_file:
       - .koppie/.env
     environment:
-      - VALKYRIE_METADATA_ADAPTER=nurax_fedora_metadata_adapter
-      - VALKYRIE_STORAGE_ADAPTER=fedora
+      - APP_NAME=sirenia
+      - VALKYRIE_METADATA_ADAPTER=fedora_metadata
+      - VALKYRIE_STORAGE_ADAPTER=fedora_storage
     entrypoint: dev-entrypoint.sh
     command: db-migrate-seed.sh
     depends_on:
@@ -134,8 +129,8 @@ services:
     image: fcrepo/fcrepo:6.4.0
     environment:
       - >-
-        CATALINA_OPTS=-Dfcrepo.home=/fcrepo-home -Djava.awt.headless=true -Dfile.encoding=UTF-8 
-        -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m 
+        CATALINA_OPTS=-Dfcrepo.home=/fcrepo-home -Djava.awt.headless=true -Dfile.encoding=UTF-8
+        -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m
         -XX:MaxPermSize=256m -XX:+DisableExplicitGC -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true
       - JAVA_OPTS=-Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true
     volumes:
@@ -175,7 +170,7 @@ services:
     command:
       - sh
       - "-c"
-      - "precreate-core koppie_test /opt/solr/server/configsets/hyraxconf; solr-precreate koppie /opt/solr/server/configsets/hyraxconf"
+      - "precreate-core hydra-test /opt/solr/server/configsets/hyraxconf; solr-precreate koppie /opt/solr/server/configsets/hyraxconf"
     volumes:
       - solr_home:/var/solr/data:cached
       - .koppie/solr/conf:/opt/solr/server/configsets/hyraxconf

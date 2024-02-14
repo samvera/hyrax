@@ -242,6 +242,38 @@ Hyrax.config do |config|
   # config.admin_set_model = 'AdminSet'
   # config.admin_set_model = 'Hyrax::AdministrativeSet'
 
+  # Identify the form that will be used for Admin Sets
+  # config.administrative_set_form = Hyrax::Forms::AdministrativeSetForm
+
+  # Identify the indexer that will be used for Admin Sets
+  # config.administrative_set_indexer = Hyrax::Indexers::AdministrativeSetIndexer
+
+  # Identify the form that will be used for File Sets
+  # config.file_set_form = Hyrax::Forms::FileSetForm
+
+  # Identify the indexer that will be used for File Sets
+  # config.file_set_indexer = Hyrax::Indexers::FileSetIndexer
+
+  # Service for resolving {FileMetadata} nodes by status, e.g. "primary", rather
+  # than use.
+  # config.file_set_file_service = Hyrax::FileSetFileService
+
+  # Identify the form that will be used for Collections
+  # config.pcdm_collection_form = Hyrax::Forms::PcdmCollectionForm
+
+  # Identify the indexer that will be used for Collections
+  # config.pcdm_collection_indexer = Hyrax::Indexers::PcdmCollectionIndexer
+
+  # Provide a proc for form generation for Objects
+  # config.pcdm_object_form_builder = lambda do |model_class|
+  #   Hyrax::Forms::PcdmObjectForm(model_class)
+  # end
+
+  # Provide a proc for indexer generation for Objects
+  # config.pcdm_object_indexer_builder = lambda do |model_class|
+  #   Hyrax::Indexers::PcdmObjectIndexer(model_class)
+  # end
+
   # When your application is ready to use the valkyrie index instead of the one
   # maintained by active fedora, you will need to set this to true. You will
   # also need to update your Blacklight configuration.

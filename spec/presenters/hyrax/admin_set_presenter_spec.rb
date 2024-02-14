@@ -1,28 +1,33 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::AdminSetPresenter do
+RSpec.describe Hyrax::AdminSetPresenter, :clean_repo do
   let(:admin_set) do
-    mock_model(AdminSet,
+    mock_model('MockAdminSet',
                id: '123',
                description: ['An example admin set.'],
                title: ['Example Admin Set Title'])
   end
 
-  let(:work) { build(:work, title: ['Example Work Title']) }
-  let(:solr_document) { SolrDocument.new(admin_set.to_solr) }
-  let(:ability) { double }
+  let(:work) { build(:hyrax_work, title: ['Example Work Title']) }
+  let(:solr_document) do
+    SolrDocument.new(Hyrax::AdministrativeSetIndexer.new(resource: admin_set).to_solr)
+  end
+  let(:ability) { Ability.new(user) }
+  let(:user) { build(:user) }
   let(:presenter) { described_class.new(solr_document, ability) }
 
   describe "total_items" do
     subject { presenter.total_items }
 
-    let(:admin_set) { create(:admin_set) }
+    let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
 
     context "empty admin set" do
       it { is_expected.to eq 0 }
     end
 
     context "admin set with work" do
-      let(:admin_set) { create(:admin_set, members: [work]) }
+      let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
+      let(:work) { valkyrie_create(:hyrax_work, title: ['Example Work Title'], admin_set_id: admin_set.id) }
+      before { work }
 
       it { is_expected.to eq 1 }
     end
@@ -32,26 +37,28 @@ RSpec.describe Hyrax::AdminSetPresenter do
     subject { presenter.disable_delete? }
 
     context "empty admin set" do
-      let(:admin_set) { create(:admin_set) }
+      let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
 
       it { is_expected.to be false }
     end
 
     context "non-empty admin set" do
-      let(:admin_set) { create(:admin_set, members: [work]) }
+      let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
+      let(:work) { valkyrie_create(:hyrax_work, title: ['Example Work Title'], admin_set_id: admin_set.id) }
+      before { work }
 
       it { is_expected.to be true }
     end
 
     context "default admin set" do
-      let(:admin_set) { FactoryBot.create(:default_adminset) }
+      let!(:admin_set) { Hyrax.query_service.find_by(id: Hyrax::EnsureWellFormedAdminSetService.call) }
 
       it { is_expected.to be true }
     end
   end
 
   describe '#collection_type' do
-    let(:admin_set) { FactoryBot.create(:default_adminset) }
+    let!(:admin_set) { Hyrax.query_service.find_by(id: Hyrax::EnsureWellFormedAdminSetService.call) }
 
     subject { presenter.collection_type }
 
@@ -59,9 +66,7 @@ RSpec.describe Hyrax::AdminSetPresenter do
   end
 
   describe '#show_path' do
-    let(:admin_set) do
-      build(:admin_set, id: 'sb397824g')
-    end
+    let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
 
     subject { presenter.show_path }
 
@@ -69,7 +74,8 @@ RSpec.describe Hyrax::AdminSetPresenter do
   end
 
   describe '#managed_access' do
-    let(:admin_set) { create(:admin_set, members: [work]) }
+    let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
+    let(:work) { valkyrie_create(:hyrax_work, title: ['Example Work Title'], admin_set_id: admin_set.id) }
 
     context 'when manager' do
       before do
@@ -103,7 +109,8 @@ RSpec.describe Hyrax::AdminSetPresenter do
   end
 
   describe '#allow_batch?' do
-    let(:admin_set) { create(:admin_set, members: [work]) }
+    let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
+    let(:work) { valkyrie_create(:hyrax_work, title: ['Example Work Title'], admin_set_id: admin_set.id) }
 
     context 'when user cannot edit' do
       before do
@@ -117,6 +124,7 @@ RSpec.describe Hyrax::AdminSetPresenter do
 
     context 'when user can edit' do
       before do
+        work
         allow(ability).to receive(:can?).with(:edit, solr_document).and_return(true)
       end
 

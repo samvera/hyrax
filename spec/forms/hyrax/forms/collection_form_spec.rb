@@ -149,7 +149,8 @@ RSpec.describe Hyrax::Forms::CollectionForm, skip: !(Hyrax.config.collection_cla
                          { related_url: [] },
                          :visibility,
                          :collection_type_gid,
-                         { permissions_attributes: [:type, :name, :access, :id, :_destroy] }]
+                         { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
+                         { based_near_attributes: [:id, :_destroy] }]
     end
   end
 

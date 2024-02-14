@@ -307,7 +307,7 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller, clean
       end
 
       context "when collections exist of this type" do
-        let!(:collection) { FactoryBot.create(:collection_lw, collection_type: collection_type_to_destroy) }
+        let!(:collection) { valkyrie_create(:hyrax_collection, collection_type_gid: collection_type_to_destroy.to_global_id.to_s) }
 
         it "doesn't delete the collection type or collection" do
           delete :destroy, params: { id: collection_type_to_destroy }
@@ -315,7 +315,7 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller, clean
           expect(response).to redirect_to(admin_collection_types_path)
           expect(flash[:alert]).to eq "Collection type cannot be altered as it has collections"
           expect(Hyrax::CollectionType.exists?(collection_type_to_destroy.id)).to be true
-          expect(Collection.exists?(collection.id)).to be true
+          expect(Hyrax.query_service.find_by(id: collection.id)).to be_present
         end
       end
     end

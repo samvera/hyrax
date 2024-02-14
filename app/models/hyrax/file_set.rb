@@ -73,6 +73,15 @@ module Hyrax
       original_file&.id
     end
 
+    # @return [String, Nil] versioned identifier suitable for use in a IIIF manifest
+    def iiif_id
+      orig_file = original_file
+      return nil if orig_file.nil? || orig_file.file_identifier.blank?
+      latest_file = Hyrax::VersioningService.latest_version_of(orig_file)
+      version = latest_file&.version_id ? Digest::MD5.hexdigest(latest_file.version_id) : nil
+      "#{id}/files/#{orig_file.id}#{'/' + version if version}"
+    end
+
     # @return [Hyrax::FileMetadata, nil]
     def thumbnail
       Hyrax.custom_queries.find_thumbnail(file_set: self)
@@ -105,13 +114,13 @@ module Hyrax
 
     ##
     # @return [Boolean] true
-    def pcdm_object?
+    def self.file_set?
       true
     end
 
     ##
     # @return [Boolean] true
-    def file_set?
+    def self.pcdm_object?
       true
     end
   end

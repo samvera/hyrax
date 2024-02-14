@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::CollectionsService do
+RSpec.describe Hyrax::CollectionsService, :clean_repo do
   let(:controller) { ::CatalogController.new }
 
   let(:context) do
@@ -10,31 +10,42 @@ RSpec.describe Hyrax::CollectionsService do
   end
 
   let(:service) { described_class.new(context) }
-  let(:user1) { build(:user) }
+  let(:user1) { create(:user) }
 
-  describe "#search_results", :clean_repo do
+  describe "#search_results" do
     subject { service.search_results(access) }
 
-    let(:user2) { build(:user) }
+    let(:user2) { create(:user) }
     let!(:collection1) do
-      build(:private_collection_lw, id: 'col-1-own', title: ['user1 created'], user: user1,
-                                    with_permission_template: true, with_solr_document: true)
+      valkyrie_create(:hyrax_collection, title: ['user1 created'], user: user1)
     end
     let!(:collection2) do
-      build(:private_collection_lw, id: 'col-2-mgr', title: ['user2 shares manage access with user1'], user: user2,
-                                    with_permission_template: { manage_users: [user1] }, with_solr_document: true)
+      valkyrie_create(:hyrax_collection, title: ['user2 shares manage access with user1'], user: user2,
+                                         access_grants: [{
+                                           agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                           agent_id: user1.user_key,
+                                           access: Hyrax::PermissionTemplateAccess::MANAGE
+                                         }])
     end
     let!(:collection3) do
-      build(:private_collection_lw, id: 'col-3-dep', title: ['user2 shares deposit access with user1'], user: user2,
-                                    with_permission_template: { deposit_users: [user1] }, with_solr_document: true)
+      valkyrie_create(:hyrax_collection, title: ['user2 shares deposit access with user1'], user: user2,
+                                         access_grants: [{
+                                           agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                           agent_id: user1.user_key,
+                                           access: Hyrax::PermissionTemplateAccess::DEPOSIT
+                                         }])
     end
     let!(:collection4) do
-      build(:private_collection_lw, id: 'col-4-view', title: ['user2 shares view access with user1'], user: user2,
-                                    with_permission_template: { view_users: [user1] }, with_solr_document: true)
+      valkyrie_create(:hyrax_collection, title: ['user2 shares view access with user1'], user: user2,
+                                         access_grants: [{
+                                           agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                           agent_id: user1.user_key,
+                                           access: Hyrax::PermissionTemplateAccess::VIEW
+                                         }])
     end
 
     before do
-      create(:admin_set, id: 'as-1', read_groups: ['public']) # this should never be returned.
+      valkyrie_create(:hyrax_admin_set, read_groups: ['public']) # this should never be returned.
     end
 
     context "with read access" do

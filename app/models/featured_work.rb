@@ -1,21 +1,29 @@
 # frozen_string_literal: true
 class FeaturedWork < ActiveRecord::Base
-  FEATURE_LIMIT = 5
+  ##
+  # @!group Class Attributes
+  #
+  # @!attribute feature_limit [r|w]
+  #   @return [Integer]
+  class_attribute :feature_limit, default: 5
+  # @!endgroup Class Attributes
+  ##
+
   validate :count_within_limit, on: :create
-  validates :order, inclusion: { in: proc { 0..FEATURE_LIMIT } }
+  validates :order, inclusion: { in: proc { 0..feature_limit } }
 
   default_scope { order(:order) }
 
   def count_within_limit
     return if FeaturedWork.can_create_another?
-    errors.add(:base, "Limited to #{FEATURE_LIMIT} featured works.")
+    errors.add(:base, "Limited to #{feature_limit} featured works.")
   end
 
   attr_accessor :presenter
 
   class << self
     def can_create_another?
-      FeaturedWork.count < FEATURE_LIMIT
+      FeaturedWork.count < feature_limit
     end
   end
 end

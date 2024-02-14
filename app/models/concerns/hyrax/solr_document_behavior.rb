@@ -53,19 +53,22 @@ module Hyrax
     ##
     # @return [Boolean]
     def collection?
-      hydra_model == Hyrax.config.collection_class
+      hydra_model == Hyrax.config.collection_class ||
+        ("Collection".safe_constantize == hydra_model)
     end
 
     ##
     # @return [Boolean]
     def file_set?
-      hydra_model == ::FileSet || hydra_model == Hyrax::FileSet
+      hydra_model == Hyrax::FileSet ||
+        ("::FileSet".safe_constantize == hydra_model)
     end
 
     ##
     # @return [Boolean]
     def admin_set?
-      hydra_model == Hyrax.config.admin_set_class
+      (hydra_model == Hyrax.config.admin_set_class) ||
+        ("AdminSet".safe_constantize == hydra_model)
     end
 
     ##
@@ -122,7 +125,16 @@ module Hyrax
     end
 
     def lease_enforced?
-      lease_expiration_date.present?
+      return false if lease_expiration_date.blank?
+
+      indexed_lease_visibility = first('visibility_during_lease_ssim')
+      # if we didn't index an embargo visibility, assume the release date means
+      # it's enforced
+      return true if indexed_lease_visibility.blank?
+
+      # if the visibility and the visibility during lease are the same, we're
+      # enforcing the lease
+      self['visibility_ssi'] == indexed_lease_visibility
     end
 
     private

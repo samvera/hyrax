@@ -7,88 +7,69 @@
 RSpec.describe Qa::Authorities::Collections, :clean_repo do
   subject(:service) { described_class.new }
   let(:controller) { Qa::TermsController.new }
-  let(:user1) { FactoryBot.build(:user) }
-  let(:user2) { FactoryBot.build(:user) }
+  let(:user1) { create(:user) }
+  let(:user2) { create(:user) }
 
-  let!(:collection1) do
-    FactoryBot.build(:private_collection_lw,
-                     title: ['foo foo'],
-                     user: user1,
-                     with_permission_template: true,
-                     with_solr_document: true)
-  end
+  let!(:collection1) { valkyrie_create(:hyrax_collection, title: ['foo foo'], user: user1) }
 
-  let!(:collection2) do
-    FactoryBot.build(:private_collection_lw,
-                     title: ['bar'],
-                     user: user1,
-                     with_permission_template: true,
-                     with_solr_document: true)
-  end
+  let!(:collection2) { valkyrie_create(:hyrax_collection, title: ['bar'], user: user1) }
 
-  let!(:collection3) do
-    FactoryBot.build(:private_collection_lw,
-                     title: ['another foo'],
-                     user: user1,
-                     with_permission_template: true,
-                     with_solr_document: true)
-  end
+  let!(:collection3) { valkyrie_create(:hyrax_collection, title: ['another foo'], user: user1) }
 
-  let!(:collection4) do
-    FactoryBot.build(:private_collection_lw,
-                     title: ['foo foo foo'],
-                     user: user2,
-                     with_permission_template: true,
-                     with_solr_document: true)
-  end
+  let!(:collection4) { valkyrie_create(:hyrax_collection, title: ['foo foo foo'], user: user2) }
 
   let!(:collection5) do
-    FactoryBot.build(:private_collection_lw,
-                     title: ['foo for you'],
-                     user: user2,
-                     with_permission_template: { manage_users: [user1] },
-                     with_solr_document: true)
+    valkyrie_create(:hyrax_collection,
+                    title: ['foo for you'],
+                    user: user2,
+                    access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                      agent_id: user1.user_key,
+                                      access: Hyrax::PermissionTemplateAccess::MANAGE }])
   end
 
   let!(:collection6) do
-    FactoryBot.build(:private_collection_lw,
-                     title: ['foo too'],
-                     user: user2,
-                     with_permission_template: { deposit_users: [user1] },
-                     with_solr_document: true)
+    valkyrie_create(:hyrax_collection,
+                    title: ['foo too'],
+                    user: user2,
+                    access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                      agent_id: user1.user_key,
+                                      access: Hyrax::PermissionTemplateAccess::DEPOSIT }])
   end
 
   let!(:collection7) do
-    FactoryBot.build(:private_collection_lw,
-                     title: ['foo bar baz'],
-                     user: user2,
-                     with_permission_template: { view_users: [user1] },
-                     with_solr_document: true)
+    valkyrie_create(:hyrax_collection,
+                    title: ['foo bar baz'],
+                    user: user2,
+                    access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                      agent_id: user1.user_key,
+                                      access: Hyrax::PermissionTemplateAccess::VIEW }])
   end
 
   let!(:collection8) do
-    FactoryBot.build(:private_collection_lw,
-                     id: 'col-8-mgr',
-                     title: ['bar for you'],
-                     user: user2,
-                     with_permission_template: { manage_users: [user1] },
-                     with_solr_document: true)
+    valkyrie_create(:hyrax_collection,
+                    title: ['bar for you'],
+                    user: user2,
+                    access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                      agent_id: user1.user_key,
+                                      access: Hyrax::PermissionTemplateAccess::MANAGE }])
   end
 
   let!(:collection9) do
-    FactoryBot.build(:private_collection_lw,
-                     title: ['bar too'],
-                     user: user2,
-                     with_permission_template: { deposit_users: [user1] },
-                     with_solr_document: true)
+    valkyrie_create(:hyrax_collection,
+                    title: ['bar too'],
+                    user: user2,
+                    access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                      agent_id: user1.user_key,
+                                      access: Hyrax::PermissionTemplateAccess::DEPOSIT }])
   end
 
   let!(:collection10) do
-    FactoryBot.build(:private_collection_lw,
-                     title: ['bar bar baz'],
-                     user: user2,
-                     with_permission_template: { view_users: [user1] },
-                     with_solr_document: true)
+    valkyrie_create(:hyrax_collection,
+                    title: ['bar bar baz'],
+                    user: user2,
+                    access_grants: [{ agent_type: Hyrax::PermissionTemplateAccess::USER,
+                                      agent_id: user1.user_key,
+                                      access: Hyrax::PermissionTemplateAccess::VIEW }])
   end
 
   before do

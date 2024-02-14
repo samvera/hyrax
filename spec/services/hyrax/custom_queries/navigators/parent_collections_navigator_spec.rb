@@ -3,18 +3,16 @@ RSpec.describe Hyrax::CustomQueries::Navigators::ParentCollectionsNavigator, :cl
   let(:custom_query_service) { Hyrax.custom_queries }
 
   let!(:collection1) do
-    FactoryBot.valkyrie_create(:hyrax_collection, id: 'col1',
-                                                  title: ['Parent Collection 1'],
+    FactoryBot.valkyrie_create(:hyrax_collection, title: ['Parent Collection 1'],
                                                   members: [collection3, work1, work2])
   end
   let!(:collection2) do
-    FactoryBot.valkyrie_create(:hyrax_collection, id: 'col2',
-                                                  title: ['Parent Collection 1'],
+    FactoryBot.valkyrie_create(:hyrax_collection, title: ['Parent Collection 1'],
                                                   members: [collection3, work1, work2])
   end
-  let(:collection3) { FactoryBot.valkyrie_create(:hyrax_collection, id: 'col3', title: ['Child Collection 3']) }
-  let(:work1) { FactoryBot.valkyrie_create(:hyrax_work, id: 'wk1', title: ['Child Work 1']) }
-  let(:work2) { FactoryBot.valkyrie_create(:hyrax_work, id: 'wk2', title: ['Child Work 2']) }
+  let(:collection3) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['Child Collection 3']) }
+  let(:work1) { FactoryBot.valkyrie_create(:hyrax_work, title: ['Child Work 1']) }
+  let(:work2) { FactoryBot.valkyrie_create(:hyrax_work, title: ['Child Work 2']) }
 
   describe '#find_parent_collections' do
     it 'returns parent collections as Valkyrie resources' do

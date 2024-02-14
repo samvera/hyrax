@@ -4,14 +4,14 @@ RSpec.describe Hyrax::WorkFormHelper do
   describe '.form_tabs_for' do
     context 'with a change set style form' do
       let(:work) { build(:hyrax_work) }
-      let(:form) { Hyrax::Forms::ResourceForm.for(work) }
+      let(:form) { Hyrax::Forms::ResourceForm.for(resource: work) }
 
       it 'returns a default tab list' do
         expect(form_tabs_for(form: form)).to eq ["metadata", "files", "relationships"]
       end
     end
 
-    context 'with a legacy GenericWork form' do
+    context 'with a legacy GenericWork form', :active_fedora do
       let(:work) { stub_model(GenericWork, id: '456') }
       let(:ability) { double }
       let(:form) { Hyrax::GenericWorkForm.new(work, ability, controller) }
@@ -21,7 +21,7 @@ RSpec.describe Hyrax::WorkFormHelper do
       end
     end
 
-    context 'with a batch upload form' do
+    context 'with a batch upload form', :active_fedora do
       let(:work) { stub_model(GenericWork, id: '456') }
       let(:ability) { double }
       let(:form) { Hyrax::Forms::BatchUploadForm.new(work, ability, controller) }
@@ -44,14 +44,14 @@ RSpec.describe Hyrax::WorkFormHelper do
   describe '.form_progress_sections_for' do
     context 'with a change set style form' do
       let(:work) { build(:hyrax_work) }
-      let(:form) { Hyrax::Forms::ResourceForm.for(work) }
+      let(:form) { Hyrax::Forms::ResourceForm.for(resource: work) }
 
       it 'returns an empty list' do
         expect(form_progress_sections_for(form: form)).to eq []
       end
     end
 
-    context 'with a legacy GenericWork form' do
+    context 'with a legacy GenericWork form', :active_fedora do
       let(:work) { stub_model(GenericWork, id: '456') }
       let(:ability) { double }
       let(:form) { Hyrax::GenericWorkForm.new(work, ability, controller) }
@@ -61,7 +61,7 @@ RSpec.describe Hyrax::WorkFormHelper do
       end
     end
 
-    context 'with a batch upload form' do
+    context 'with a batch upload form', :active_fedora do
       let(:work) { stub_model(GenericWork, id: '456') }
       let(:ability) { double }
       let(:form) { Hyrax::Forms::BatchUploadForm.new(work, ability, controller) }
@@ -83,7 +83,7 @@ RSpec.describe Hyrax::WorkFormHelper do
     end
 
     context 'with a ChangeSet-style ResourceForm' do
-      let(:form) { Hyrax::Forms::ResourceForm.for(work) }
+      let(:form) { Hyrax::Forms::ResourceForm.for(resource: work) }
       let(:work) { FactoryBot.build(:hyrax_work) }
 
       it 'gives an empty hash' do
@@ -119,7 +119,7 @@ RSpec.describe Hyrax::WorkFormHelper do
       end
     end
 
-    context 'with a legacy GenericWork form' do
+    context 'with a legacy GenericWork form', :active_fedora do
       let(:work) { stub_model(GenericWork, id: '456', member_ids: file_set_ids) }
       let(:ability) { double }
       let(:file_set_ids) { [] }

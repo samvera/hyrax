@@ -44,7 +44,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:current_ability) { ability }
 
     it 'is deprecated' do
-      expect(Deprecation).to receive(:warn)
+      expect(Deprecation).to receive(:warn).at_least(:once)
 
       presenter.user_can_perform_any_action?
     end
@@ -312,7 +312,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:file_metadata) { FactoryBot.valkyrie_create(:file_metadata, :original_file, :with_file, file: file) }
     let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
     let(:request) { double('request', base_url: 'http://test.host') }
-    let(:id) { "#{file_set.id}/files/#{file_metadata.id}" }
+    let(:id) { "#{file_set.id}/files/#{file_metadata.id}/#{Digest::MD5.hexdigest(file_metadata.file.version_id)}" }
 
     describe "#display_image" do
       context 'without a file' do
@@ -324,7 +324,6 @@ RSpec.describe Hyrax::FileSetPresenter do
       context 'with a file' do
         let(:file_set) do
           FactoryBot.valkyrie_create(:hyrax_file_set,
-                                     :with_files,
                                      files: [file_metadata],
                                      original_file: file_metadata)
         end

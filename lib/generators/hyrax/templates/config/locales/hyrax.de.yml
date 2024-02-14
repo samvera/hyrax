@@ -50,7 +50,7 @@ de:
     directory:
       suffix: "@ Example.org"
     footer:
-      copyright_html: "<strong>Copyright © 2022 Samvera lizenziert</strong> unter der Apache Lizenz, Version 2.0"
+      copyright_html: "<strong>Copyright &copy; %{current_year} Samvera lizenziert</strong> unter der Apache Lizenz, Version 2.0"
       service_html: Ein Dienst von <a href="http://samvera.org/" class="navbar-link" target="_blank">Samvera</a> .
     institution_name: Institution
     institution_name_full: Name des Instituts

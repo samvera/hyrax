@@ -19,7 +19,7 @@ RSpec.describe Hyrax::SolrQueryBuilderService do
 
   describe ".construct_query_for_model" do
     it "generates a query clause" do
-      expect(described_class.construct_query_for_model(::Collection, 'id' => "my:_ID1_")).to eq '(_query_:"{!field f=id}my:_ID1_" AND _query_:"{!field f=has_model_ssim}Collection")'
+      expect(described_class.construct_query_for_model(::Collection, 'id' => "my:_ID1_")).to eq "(_query_:\"{!field f=id}my:_ID1_\" AND _query_:\"{!field f=has_model_ssim}#{::Collection}\")"
     end
   end
 end

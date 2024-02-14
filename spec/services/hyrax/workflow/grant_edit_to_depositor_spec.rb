@@ -17,7 +17,7 @@ RSpec.describe Hyrax::Workflow::GrantEditToDepositor do
     end
 
     context 'with no depositor' do
-      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, depositor: nil) }
+      let(:work) { valkyrie_create(:hyrax_work, depositor: nil) }
 
       it 'does not change edit access' do
         expect { workflow_method.call(target: change_set, comment: "A pleasant read", user: user) }
@@ -27,37 +27,36 @@ RSpec.describe Hyrax::Workflow::GrantEditToDepositor do
     end
 
     context "with no additional editors" do
-      let(:work) { create(:work_without_access, depositor: depositor.user_key) }
+      let(:work) { valkyrie_create(:hyrax_work, depositor: depositor.user_key) }
 
       it "adds edit access" do
-        expect { subject }.to change { work.edit_users }.from([]).to([depositor.user_key])
-        expect(work).to be_valid
+        expect { subject }.to change { work.edit_users.to_a }.from([]).to([depositor.user_key])
+        expect(work).to be_persisted
       end
     end
 
     context "with an additional editor" do
       let(:editor) { create(:user) }
-      let(:work) { create(:work_without_access, depositor: depositor.user_key, edit_users: [editor.user_key]) }
+      let(:work) { valkyrie_create(:hyrax_work, depositor: depositor.user_key, edit_users: [editor.user_key]) }
 
       it "adds edit access" do
-        expect { subject }.to change { work.edit_users }.from([editor.user_key]).to([editor.user_key, depositor.user_key])
-        expect(work).to be_valid
+        expect { subject }.to change { work.edit_users.to_a }.from([editor.user_key]).to([editor.user_key, depositor.user_key])
+        expect(work).to be_persisted
       end
     end
 
     context "with attached FileSets", :perform_enqueued do
-      let(:work) { create(:work_with_one_file, user: depositor) }
-      let(:file_set) do
-        work.members.first.tap do |file_set|
-          # Manually remove edit_users to satisfy the pre-condition
-          file_set.update(edit_users: [])
-        end
-      end
+      let(:work) { valkyrie_create(:hyrax_work, :with_one_file_set, depositor: depositor.user_key) }
+      let(:file_set) { Hyrax.query_service.find_by(id: work.member_ids.first) }
 
       it "grants edit access" do
-        # We need to reload, because this work happens in a background job
-        expect { subject }.to change { file_set.reload.edit_users }.from([]).to([depositor.user_key])
-        expect(work).to be_valid
+        expect(file_set.edit_users.count).to be_zero
+
+        subject
+
+        reloaded_file_set = Hyrax.query_service.find_by(id: work.member_ids.first)
+        expect(reloaded_file_set.edit_users.count).to eq(1)
+        expect(work).to be_persisted
       end
     end
   end

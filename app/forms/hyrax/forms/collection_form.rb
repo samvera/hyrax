@@ -35,6 +35,12 @@ module Hyrax
         end
       end
 
+      # This describes the parameters we are expecting to receive from the client
+      # @return [Array] a list of parameters used by sanitize_params
+      def self.build_permitted_params
+        super + [{ based_near_attributes: [:id, :_destroy] }]
+      end
+
       # @param model [::Collection] the collection model that backs this form
       # @param current_ability [Ability] the capabilities of the current user
       # @param repository [Blacklight::Solr::Repository] the solr repository
@@ -123,19 +129,17 @@ module Hyrax
         collection_member_service.available_member_subcollections.documents
       end
 
-      ##
-      # @deprecated this implementation requires an extra db round trip, had a
-      #   buggy cacheing mechanism, and was largely duplicative of other code.
-      #   all versions of this code are replaced by
-      #   {CollectionsHelper#available_parent_collections_data}.
-      def available_parent_collections(scope:)
-        return @available_parents if @available_parents.present?
+      protected
 
-        collection = model_class.find(id)
-        colls = Hyrax::Collections::NestedCollectionQueryService.available_parent_collections(child: collection, scope: scope, limit_to_id: nil)
-        @available_parents = colls.map do |col|
-          { "id" => col.id, "title_first" => col.title.first }
-        end.to_json
+      def initialize_field(key)
+        # rubocop:disable Lint/AssignmentInCondition
+        if class_name = model_class.properties[key.to_s].try(:class_name)
+          # Initialize linked properties such as based_near
+          self[key] += [class_name.new]
+        else
+          super
+        end
+        # rubocop:enable Lint/AssignmentInCondition
       end
 
       private

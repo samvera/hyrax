@@ -50,6 +50,7 @@ attributes:
       primary: false
     index_keys:
       - "contributor_tesim"
+      - "contributor_sim"
     predicate: http://purl.org/dc/elements/1.1/contributor
   creator:
     type: string

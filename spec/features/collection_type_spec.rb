@@ -12,14 +12,20 @@ RSpec.describe 'collection_type', type: :feature do
   let(:admin_set_type) { FactoryBot.create(:admin_set_collection_type) }
   let(:solr_gid) { Hyrax.config.collection_type_index_field }
 
+  shared_context('sign in as admin and go to collection types index') do
+    before do
+      sign_in admin_user
+      visit '/admin/collection_types'
+    end
+  end
+
   describe 'index' do
     before do
       exhibit_collection_type
       user_collection_type
       admin_set_type
-      sign_in admin_user
-      visit '/admin/collection_types'
     end
+    include_context 'sign in as admin and go to collection types index'
 
     it 'has page title and lists collection types' do
       expect(page).to have_content 'Collection Types'
@@ -40,80 +46,31 @@ RSpec.describe 'collection_type', type: :feature do
     let(:title) { 'Test Type' }
     let(:description) { 'Description for collection type we are testing.' }
 
-    before do
-      sign_in admin_user
-      visit '/admin/collection_types'
-    end
+    include_context 'sign in as admin and go to collection types index'
 
     it 'makes a new collection type', :js do
-      click_link 'Create new collection type'
-
-      expect(page).to have_content 'Create New Collection Type'
-
-      # confirm only Description tab is visible
-      expect(page).to have_link('Description', href: '#metadata')
-      expect(page).not_to have_link('Settings', href: '#settings')
-      expect(page).not_to have_link('Participants', href: '#participants')
-
-      # confirm metadata fields exist
-      expect(page).to have_selector 'input#collection_type_title'
-      expect(page).to have_selector 'textarea#collection_type_description'
-
-      # set values and save
-      fill_in('Type name', with: title)
-      fill_in('Type description', with: description)
-
-      click_button('Save')
+      checks_for_standard_form_options
+      fill_in_and_save
 
       # confirm values were set
       expect(page).to have_selector "input#collection_type_title[value='#{title}']"
       expect(page).to have_selector 'textarea#collection_type_description', text: description
 
-      # confirm all edit tabs are now visible
-      expect(page).to have_link('Description', href: '#metadata')
-      expect(page).to have_link('Settings', href: '#settings')
-      expect(page).to have_link('Participants', href: '#participants')
+      all_edit_tabs_visible
     end
 
     it 'tries to make a collection type with existing title, and receives error message', :js do
-      click_link 'Create new collection type'
-
-      expect(page).to have_content 'Create New Collection Type'
-
-      # confirm only Description tab is visible
-      expect(page).to have_link('Description', href: '#metadata')
-      expect(page).not_to have_link('Settings', href: '#settings')
-      expect(page).not_to have_link('Participants', href: '#participants')
-
-      # confirm metadata fields exist
-      expect(page).to have_selector 'input#collection_type_title'
-      expect(page).to have_selector 'textarea#collection_type_description'
-
-      # set values and save
-      fill_in('Type name', with: title)
-      fill_in('Type description', with: description)
-
-      click_button('Save')
+      checks_for_standard_form_options
+      fill_in_and_save
 
       visit '/admin/collection_types'
       click_link 'Create new collection type'
 
       expect(page).to have_content 'Create New Collection Type'
 
-      # confirm only Description tab is visible
-      expect(page).to have_link('Description', href: '#metadata')
-      expect(page).not_to have_link('Settings', href: '#settings')
-      expect(page).not_to have_link('Participants', href: '#participants')
+      only_description_tab_and_metadata_fields_visible
 
-      # confirm metadata fields exist
-      expect(page).to have_selector 'input#collection_type_title'
-      expect(page).to have_selector 'textarea#collection_type_description'
-
-      # set values and save
-      fill_in('Type name', with: title)
-      fill_in('Type description', with: description)
-
-      click_button('Save')
+      fill_in_and_save
 
       # Confirm error message is displayed.
       expect(page).to have_content 'Save was not successful because title has already been taken, and machine_id has already been taken.'
@@ -131,10 +88,7 @@ RSpec.describe 'collection_type', type: :feature do
       it 'modifies metadata values of a collection type', :js do
         expect(page).to have_content "Edit Collection Type: Exhibit"
 
-        # confirm all tabs are visible
-        expect(page).to have_link('Description', href: '#metadata')
-        expect(page).to have_link('Settings', href: '#settings')
-        expect(page).to have_link('Participants', href: '#participants')
+        all_edit_tabs_visible
 
         # confirm metadata fields have original values
         expect(page).to have_selector "input#collection_type_title[value='Exhibit']"
@@ -162,10 +116,7 @@ RSpec.describe 'collection_type', type: :feature do
         expect(page).to have_checked_field('collection_type_share_applies_to_new_works')
         expect(page).to have_checked_field('collection_type_allow_multiple_membership')
 
-        # confirm all admin_set only checkboxes are off and disabled
-        expect(page).to have_unchecked_field('collection_type_require_membership', disabled: true)
-        expect(page).to have_unchecked_field('collection_type_assigns_workflow', disabled: true)
-        expect(page).to have_unchecked_field('collection_type_assigns_visibility', disabled: true)
+        all_admin_set_checkboxes_off_and_disabled
 
         # change settings
         page.uncheck('NESTING')
@@ -239,10 +190,7 @@ RSpec.describe 'collection_type', type: :feature do
           expect(page).to have_unchecked_field('collection_type_share_applies_to_new_works', disabled: true)
           expect(page).to have_checked_field('collection_type_allow_multiple_membership', disabled: true)
 
-          # confirm all admin_set only checkboxes are off and disabled
-          expect(page).to have_unchecked_field('collection_type_require_membership', disabled: true)
-          expect(page).to have_unchecked_field('collection_type_assigns_workflow', disabled: true)
-          expect(page).to have_unchecked_field('collection_type_assigns_visibility', disabled: true)
+          all_admin_set_checkboxes_off_and_disabled
         end
       end
 
@@ -327,10 +275,7 @@ RSpec.describe 'collection_type', type: :feature do
       let!(:delete_modal_text) { 'Deleting this collection type will permanently remove the type and its settings from the repository. Are you sure you want to delete this collection type?' }
       let!(:deleted_flash_text) { "The collection type #{empty_collection_type.title} has been deleted." }
 
-      before do
-        sign_in admin_user
-        visit '/admin/collection_types'
-      end
+      include_context 'sign in as admin and go to collection types index'
 
       it 'shows warning, deletes collection type, and shows flash message on success', :js do
         expect(page).to have_content(empty_collection_type.title)
@@ -352,7 +297,7 @@ RSpec.describe 'collection_type', type: :feature do
       end
     end
 
-    context 'when collections exist of this type' do
+    shared_examples('tests the inability to delete collection types that are associated to persisted collections') do
       let!(:not_empty_collection_type) { FactoryBot.create(:collection_type, title: 'Not Empty Type', creator_user: admin_user) }
       let!(:collection1) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: admin_user, collection_type_gid: not_empty_collection_type.to_global_id) }
 
@@ -361,10 +306,7 @@ RSpec.describe 'collection_type', type: :feature do
         'To delete this collection type, first ensure that all collections of this type have been deleted.'
       end
 
-      before do
-        sign_in admin_user
-        visit '/admin/collection_types'
-      end
+      include_context 'sign in as admin and go to collection types index'
 
       it 'shows unable to delete dialog and forwards to All Collections with filter applied', :js do
         expect(page).to have_content(not_empty_collection_type.title)
@@ -393,5 +335,54 @@ RSpec.describe 'collection_type', type: :feature do
         expect(page).to have_content(collection1.title.first)
       end
     end
+
+    context 'when collections exist of this type (ActiveFedora)', :active_fedora do
+      include_examples 'tests the inability to delete collection types that are associated to persisted collections'
+    end
+
+    context 'when collections exist of this type (Valkyrie)' do
+      include_examples 'tests the inability to delete collection types that are associated to persisted collections' if Hyrax.config.disable_wings
+    end
+  end
+
+  def only_description_tab_and_metadata_fields_visible
+    # confirm only Description tab is visible
+    expect(page).to have_link('Description', href: '#metadata')
+    expect(page).not_to have_link('Settings', href: '#settings')
+    expect(page).not_to have_link('Participants', href: '#participants')
+
+    # confirm metadata fields exist
+    expect(page).to have_selector 'input#collection_type_title'
+    expect(page).to have_selector 'textarea#collection_type_description'
+  end
+
+  def all_edit_tabs_visible
+    # confirm all edit tabs are now visible
+    expect(page).to have_link('Description', href: '#metadata')
+    expect(page).to have_link('Settings', href: '#settings')
+    expect(page).to have_link('Participants', href: '#participants')
+  end
+
+  def checks_for_standard_form_options
+    click_link 'Create new collection type'
+
+    expect(page).to have_content 'Create New Collection Type'
+
+    only_description_tab_and_metadata_fields_visible
+  end
+
+  def fill_in_and_save
+    # set values and save
+    fill_in('Type name', with: title)
+    fill_in('Type description', with: description)
+
+    click_button('Save')
+  end
+
+  def all_admin_set_checkboxes_off_and_disabled
+    # confirm all admin_set only checkboxes are off and disabled
+    expect(page).to have_unchecked_field('collection_type_require_membership', disabled: true)
+    expect(page).to have_unchecked_field('collection_type_assigns_workflow', disabled: true)
+    expect(page).to have_unchecked_field('collection_type_assigns_visibility', disabled: true)
   end
 end
