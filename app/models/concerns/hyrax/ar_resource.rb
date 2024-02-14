@@ -40,6 +40,15 @@ module Hyrax
     end
 
     ##
+    # @param query_service [#find_parents]
+    #
+    # @return [NilClass] when this object does not have a parent.
+    # @return [Valkyrie::Resource] when this object has at least one parent.
+    def parent(query_service: Hyrax.query_service)
+      query_service.find_parents(resource: self).first
+    end
+
+    ##
     # This will persist the object to the repository. Not a complete transaction set up, but will
     # index and notify listeners of metadata update
     #

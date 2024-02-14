@@ -18,6 +18,8 @@ module Goddess
     # - :find_ids_by_model is necessary for permissions of {Hyrax::Collections::PermissionsService.filter_source}
     class_attribute :concatenate_results_of_these_queries,
                     default: [
+                      :find_parents, # Some parents are old fashioned, and like the old ways.  Let's
+                                     # at least acknowledge them.
                       :find_ids_by_model # For Hyrax::Collections::PermissionsService.filter_source
                     ]
     # @!endgroup Class Attributes
