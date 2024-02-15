@@ -76,6 +76,7 @@ WebMock.disable_net_connect!(allow_localhost: true, allow: allowed_hosts)
 require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ci_build?
 
+require 'hyrax/specs/factory_name'
 require 'hyrax/specs/shared_specs/factories/strategies/json_strategy'
 require 'hyrax/specs/shared_specs/factories/strategies/valkyrie_resource'
 FactoryBot.register_strategy(:valkyrie_create, ValkyrieCreateStrategy)

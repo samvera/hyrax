@@ -57,7 +57,7 @@ FactoryBot.define do
 
   factory :adminset_lw, class: AdminSet do
     transient do
-      user { create(:user) }
+      user { create(Hyrax::Specs::FactoryName.user) }
 
       with_permission_template { false }
       with_solr_document { false }
@@ -105,7 +105,7 @@ FactoryBot.define do
     # Builds a pre-Hyrax 2.1.0 adminset without edit/view grants on the admin set.
     # Do not use with create because the save will cause the solr grants to be created.
     transient do
-      user { create(:user) }
+      user { create(Hyrax::Specs::FactoryName.user) }
       with_permission_template { true }
       with_solr_document { true }
     end
@@ -184,7 +184,7 @@ FactoryBot.define do
       attributes = { source_id: adminset.id }
       attributes[:manage_users] = user_managers(evaluator.with_permission_template, evaluator.user)
       attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
-      FactoryBot.create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: adminset.id)
+      FactoryBot.create(Hyrax::Specs::FactoryName.permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: adminset.id)
     end
 
     # Process the with_solr_document transient property such that...

@@ -62,9 +62,9 @@ FactoryBot.define do
 
     trait :with_file do
       transient do
-        file { FactoryBot.create(:uploaded_file, file: File.open(Hyrax::Engine.root + 'spec/fixtures/world.png')) }
-        file_set { FactoryBot.valkyrie_create(:hyrax_file_set) }
-        user { FactoryBot.create(:user) }
+        file { FactoryBot.create(Hyrax::Specs::FactoryName.uploaded_file, file: File.open(Hyrax::Engine.root + 'spec/fixtures/world.png')) }
+        file_set { FactoryBot.valkyrie_create(Hyrax::Specs::FactoryName.hyrax_file_set) }
+        user { FactoryBot.create(Hyrax::Specs::FactoryName.user) }
       end
 
       after(:build) do |file_metadata, evaluator|

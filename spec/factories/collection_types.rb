@@ -101,7 +101,7 @@ FactoryBot.define do
                          access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
                          agent_id: user,
                          agent_type: Hyrax::CollectionTypeParticipant::USER_TYPE }
-          FactoryBot.create(:collection_type_participant, attributes)
+          FactoryBot.create(Hyrax::Specs::FactoryName.collection_type_participant, attributes)
         end
       end
 
@@ -111,7 +111,7 @@ FactoryBot.define do
                          access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
                          agent_id: group,
                          agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
-          FactoryBot.create(:collection_type_participant, attributes)
+          FactoryBot.create(Hyrax::Specs::FactoryName.collection_type_participant, attributes)
         end
       end
 
@@ -121,7 +121,7 @@ FactoryBot.define do
                          access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
                          agent_id: user,
                          agent_type: Hyrax::CollectionTypeParticipant::USER_TYPE }
-          FactoryBot.create(:collection_type_participant, attributes)
+          FactoryBot.create(Hyrax::Specs::FactoryName.collection_type_participant, attributes)
         end
       end
 
@@ -132,7 +132,7 @@ FactoryBot.define do
                        access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
                        agent_id: group,
                        agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
-        FactoryBot.create(:collection_type_participant, attributes)
+        FactoryBot.create(Hyrax::Specs::FactoryName.collection_type_participant, attributes)
       end
     end
   end

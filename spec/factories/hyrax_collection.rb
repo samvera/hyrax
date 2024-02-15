@@ -11,7 +11,7 @@ FactoryBot.define do
       with_permission_template { true }
       collection_type { nil }
       with_index { true }
-      user { create(:user) }
+      user { create(Hyrax::Specs::FactoryName.user) }
       edit_groups { [] }
       edit_users { [] }
       read_groups { [] }
@@ -56,25 +56,25 @@ FactoryBot.define do
 
     trait :with_member_works do
       transient do
-        members { [valkyrie_create(:hyrax_work), valkyrie_create(:hyrax_work)] }
+        members { [valkyrie_create(Hyrax::Specs::FactoryName.hyrax_work), valkyrie_create(Hyrax::Specs::FactoryName.hyrax_work)] }
       end
     end
 
     trait :with_member_collections do
       transient do
-        members { [valkyrie_create(:hyrax_collection), valkyrie_create(:hyrax_collection)] }
+        members { [valkyrie_create(Hyrax::Specs::FactoryName.hyrax_collection), valkyrie_create(Hyrax::Specs::FactoryName.hyrax_collection)] }
       end
     end
 
     trait :as_collection_member do
-      member_of_collection_ids { [valkyrie_create(:hyrax_collection).id] }
+      member_of_collection_ids { [valkyrie_create(Hyrax::Specs::FactoryName.hyrax_collection).id] }
     end
 
     trait :as_member_of_multiple_collections do
       member_of_collection_ids do
-        [valkyrie_create(:hyrax_collection).id,
-         valkyrie_create(:hyrax_collection).id,
-         valkyrie_create(:hyrax_collection).id]
+        [valkyrie_create(Hyrax::Specs::FactoryName.hyrax_collection).id,
+         valkyrie_create(Hyrax::Specs::FactoryName.hyrax_collection).id,
+         valkyrie_create(Hyrax::Specs::FactoryName.hyrax_collection).id]
       end
     end
 

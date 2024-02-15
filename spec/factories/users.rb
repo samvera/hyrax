@@ -6,7 +6,7 @@ FactoryBot.define do
 
     transient do
       # Allow for custom groups when a user is instantiated.
-      # @example create(:user, groups: 'avacado')
+      # @example create(Hyrax::Specs::FactoryName.user, groups: 'avacado')
       groups { [] }
     end
 

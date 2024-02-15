@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 FactoryBot.define do
   factory :access_control, class: Hyrax::AccessControl do
-    permissions { build(:permission) }
+    permissions { build(Hyrax::Specs::FactoryName.permission) }
 
     trait :with_target do
-      access_to { valkyrie_create(:hyrax_resource).id }
+      access_to { valkyrie_create(Hyrax::Specs::FactoryName.hyrax_resource).id }
 
-      permissions { build(:permission, access_to: access_to) }
+      permissions { build(Hyrax::Specs::FactoryName.permission, access_to: access_to) }
     end
   end
 end

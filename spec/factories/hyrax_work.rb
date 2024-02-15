@@ -15,7 +15,7 @@ FactoryBot.define do
 
     trait :with_expired_enforced_embargo do
       after(:build) do |work, _evaluator|
-        work.embargo = FactoryBot.valkyrie_create(:hyrax_embargo, :expired)
+        work.embargo = FactoryBot.valkyrie_create(Hyrax::Specs::FactoryName.hyrax_embargo, :expired)
       end
 
       after(:create) do |work, _evaluator|
@@ -37,7 +37,7 @@ FactoryBot.define do
 
     trait :with_expired_enforced_lease do
       after(:build) do |work, _evaluator|
-        work.lease = FactoryBot.valkyrie_create(:hyrax_lease, :expired)
+        work.lease = FactoryBot.valkyrie_create(Hyrax::Specs::FactoryName.hyrax_lease, :expired)
       end
 
       after(:create) do |work, _evaluator|
@@ -112,7 +112,7 @@ FactoryBot.define do
 
     trait :with_admin_set do
       transient do
-        admin_set { valkyrie_create(:hyrax_admin_set) }
+        admin_set { valkyrie_create(Hyrax::Specs::FactoryName.hyrax_admin_set) }
       end
 
       after(:build) do |work, evaluator|
@@ -130,7 +130,7 @@ FactoryBot.define do
           # If you set a depositor on the containing work, propogate that into these members
           additional_attributes = {}
           additional_attributes[:depositor] = depositor if depositor
-          [valkyrie_create(:hyrax_work, additional_attributes), valkyrie_create(:hyrax_work, additional_attributes)]
+          [valkyrie_create(Hyrax::Specs::FactoryName.hyrax_work, additional_attributes), valkyrie_create(Hyrax::Specs::FactoryName.hyrax_work, additional_attributes)]
         end
       end
     end
@@ -141,7 +141,7 @@ FactoryBot.define do
           # If you set a depositor on the containing work, propogate that into these members
           additional_attributes = {}
           additional_attributes[:depositor] = depositor if depositor
-          [valkyrie_create(:hyrax_file_set, additional_attributes), valkyrie_create(:hyrax_work, additional_attributes)]
+          [valkyrie_create(Hyrax::Specs::FactoryName.hyrax_file_set, additional_attributes), valkyrie_create(Hyrax::Specs::FactoryName.hyrax_work, additional_attributes)]
         end
       end
     end
@@ -152,7 +152,7 @@ FactoryBot.define do
           # If you set a depositor on the containing work, propogate that into this member
           additional_attributes = {}
           additional_attributes[:depositor] = depositor if depositor
-          [valkyrie_create(:hyrax_file_set, additional_attributes)]
+          [valkyrie_create(Hyrax::Specs::FactoryName.hyrax_file_set, additional_attributes)]
         end
       end
     end
@@ -163,7 +163,7 @@ FactoryBot.define do
           # If you set a depositor on the containing work, propogate that into these members
           additional_attributes = {}
           additional_attributes[:depositor] = depositor if depositor
-          [valkyrie_create(:hyrax_file_set, additional_attributes), valkyrie_create(:hyrax_file_set, additional_attributes)]
+          [valkyrie_create(Hyrax::Specs::FactoryName.hyrax_file_set, additional_attributes), valkyrie_create(Hyrax::Specs::FactoryName.hyrax_file_set, additional_attributes)]
         end
       end
     end
@@ -171,7 +171,7 @@ FactoryBot.define do
     trait :with_thumbnail do
       thumbnail_id do
         file_set = members.find(&:file_set?) ||
-                   valkyrie_create(:hyrax_file_set)
+                   valkyrie_create(Hyrax::Specs::FactoryName.hyrax_file_set)
         file_set.id
       end
     end
@@ -179,7 +179,7 @@ FactoryBot.define do
     trait :with_representative do
       representative_id do
         file_set = members&.find(&:file_set?) ||
-                   valkyrie_create(:hyrax_file_set)
+                   valkyrie_create(Hyrax::Specs::FactoryName.hyrax_file_set)
         file_set.id
       end
     end
@@ -187,20 +187,20 @@ FactoryBot.define do
     trait :with_renderings do
       rendering_ids do
         file_set = members.find(&:file_set?) ||
-                   valkyrie_create(:hyrax_file_set)
+                   valkyrie_create(Hyrax::Specs::FactoryName.hyrax_file_set)
         file_set.id
       end
     end
 
     trait :as_collection_member do
-      member_of_collection_ids { [valkyrie_create(:hyrax_collection).id] }
+      member_of_collection_ids { [valkyrie_create(Hyrax::Specs::FactoryName.hyrax_collection).id] }
     end
 
     trait :as_member_of_multiple_collections do
       member_of_collection_ids do
-        [valkyrie_create(:hyrax_collection).id,
-         valkyrie_create(:hyrax_collection).id,
-         valkyrie_create(:hyrax_collection).id]
+        [valkyrie_create(Hyrax::Specs::FactoryName.hyrax_collection).id,
+         valkyrie_create(Hyrax::Specs::FactoryName.hyrax_collection).id,
+         valkyrie_create(Hyrax::Specs::FactoryName.hyrax_collection).id]
       end
     end
 
@@ -213,7 +213,7 @@ FactoryBot.define do
 
       trait :with_member_works do
         transient do
-          members { [valkyrie_create(:monograph), valkyrie_create(:monograph)] }
+          members { [valkyrie_create(Hyrax::Specs::FactoryName.monograph), valkyrie_create(Hyrax::Specs::FactoryName.monograph)] }
         end
       end
     end

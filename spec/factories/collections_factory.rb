@@ -5,11 +5,11 @@ FactoryBot.define do
     # light weight collection factory.  DO NOT ADD tests using this factory.
     #
     # rubocop:disable Layout/LineLength
-    # @example let(:collection) { build(:collection, collection_type_settings: [:not_nestable, :discoverable, :sharable, :allow_multiple_membership]) }
+    # @example let(:collection) { build(Hyrax::Specs::FactoryName.collection, collection_type_settings: [:not_nestable, :discoverable, :sharable, :allow_multiple_membership]) }
     # rubocop:enable Layout/LineLength
 
     transient do
-      user { create(:user) }
+      user { create(Hyrax::Specs::FactoryName.user) }
       # allow defaulting to default user collection
       collection_type_settings { nil }
       with_permission_template { false }
@@ -20,9 +20,9 @@ FactoryBot.define do
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)
       if evaluator.collection_type_settings.present?
-        collection.collection_type = create(:collection_type, *evaluator.collection_type_settings)
+        collection.collection_type = create(Hyrax::Specs::FactoryName.collection_type, *evaluator.collection_type_settings)
       elsif collection.collection_type_gid.nil?
-        collection.collection_type = create(:user_collection_type)
+        collection.collection_type = create(Hyrax::Specs::FactoryName.user_collection_type)
       end
     end
 
@@ -32,7 +32,7 @@ FactoryBot.define do
         attributes = { source_id: collection.id }
         attributes[:manage_users] = CollectionFactoryHelper.user_managers(evaluator.with_permission_template, evaluator.user, evaluator.create_access)
         attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
-        create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
+        create(Hyrax::Specs::FactoryName.permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
         collection.permission_template.reset_access_controls_for(collection: collection, interpret_visibility: true)
       end
     end
@@ -59,8 +59,8 @@ FactoryBot.define do
 
   factory :user_collection, class: Collection do
     transient do
-      user { create(:user) }
-      collection_type { create(:user_collection_type) }
+      user { create(Hyrax::Specs::FactoryName.user) }
+      collection_type { create(Hyrax::Specs::FactoryName.user_collection_type) }
     end
 
     sequence(:title) { |n| ["User Collection Title #{n}"] }
@@ -72,10 +72,10 @@ FactoryBot.define do
 
   factory :typeless_collection, class: Collection do
     # To create a pre-Hyrax 2.1.0 collection without a collection type gid...
-    #   col = build(:typeless_collection, ...)
+    #   col = build(Hyrax::Specs::FactoryName.typeless_collection, ...)
     #   col.save(validate: false)
     transient do
-      user { create(:user) }
+      user { create(Hyrax::Specs::FactoryName.user) }
       with_permission_template { false }
       create_access { false }
       do_save { false }
@@ -90,7 +90,7 @@ FactoryBot.define do
         attributes = { source_id: collection.id }
         attributes[:manage_users] = [evaluator.user] if evaluator.create_access
         attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
-        create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
+        create(Hyrax::Specs::FactoryName.permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
       end
     end
   end

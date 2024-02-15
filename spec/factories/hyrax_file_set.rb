@@ -59,7 +59,7 @@ FactoryBot.define do
 
     trait :with_expired_enforced_embargo do
       after(:build) do |fs, _evaluator|
-        fs.embargo = FactoryBot.valkyrie_create(:hyrax_embargo, :expired)
+        fs.embargo = FactoryBot.valkyrie_create(Hyrax::Specs::FactoryName.hyrax_embargo, :expired)
       end
 
       after(:create) do |fs, _evaluator|
@@ -81,7 +81,7 @@ FactoryBot.define do
 
     trait :with_expired_enforced_lease do
       after(:build) do |fs, _evaluator|
-        fs.lease = FactoryBot.valkyrie_create(:hyrax_lease, :expired)
+        fs.lease = FactoryBot.valkyrie_create(Hyrax::Specs::FactoryName.hyrax_lease, :expired)
       end
 
       after(:create) do |fs, _evaluator|
@@ -119,7 +119,7 @@ FactoryBot.define do
 
     trait :in_work do
       transient do
-        work { build(:hyrax_work) }
+        work { build(Hyrax::Specs::FactoryName.hyrax_work) }
       end
 
       after(:create) do |file_set, evaluator|

@@ -5,7 +5,7 @@ FactoryBot.define do
 
     transient do
       with_permission_template { false }
-      user { create(:user) }
+      user { create(Hyrax::Specs::FactoryName.user) }
       access_grants { [] }
       with_index { true }
     end

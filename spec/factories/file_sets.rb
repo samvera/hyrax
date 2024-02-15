@@ -2,7 +2,7 @@
 FactoryBot.define do
   factory :file_set do
     transient do
-      user { create(:user) }
+      user { create(Hyrax::Specs::FactoryName.user) }
       content { nil }
     end
     after(:build) do |fs, evaluator|
@@ -38,7 +38,7 @@ FactoryBot.define do
       end
       after(:create) do |file, evaluator|
         Hydra::Works::UploadFileToFileSet.call(file, evaluator.content) if evaluator.content
-        create(:work, user: evaluator.user).members << file
+        create(Hyrax::Specs::FactoryName.work, user: evaluator.user).members << file
       end
     end
   end

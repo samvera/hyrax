@@ -74,7 +74,7 @@ FactoryBot.define do
 
   factory :collection_lw, class: Collection do
     transient do
-      user { create(:user) }
+      user { create(Hyrax::Specs::FactoryName.user) }
 
       collection_type { nil }
       collection_type_settings { nil }
@@ -135,8 +135,8 @@ FactoryBot.define do
 
   factory :user_collection_lw, class: Collection do
     transient do
-      user { create(:user) }
-      collection_type { create(:user_collection_type) }
+      user { create(Hyrax::Specs::FactoryName.user) }
+      collection_type { create(Hyrax::Specs::FactoryName.user_collection_type) }
     end
 
     sequence(:title) { |n| ["User Collection Title #{n}"] }
@@ -148,10 +148,10 @@ FactoryBot.define do
 
   factory :typeless_collection_lw, class: Collection do
     # To create a pre-Hyrax 2.1.0 collection without a collection type gid...
-    #   col = build(:typeless_collection, ...)
+    #   col = build(Hyrax::Specs::FactoryName.typeless_collection, ...)
     #   col.save(validate: false)
     transient do
-      user { create(:user) }
+      user { create(Hyrax::Specs::FactoryName.user) }
       with_permission_template { false }
       do_save { false }
     end
@@ -165,7 +165,7 @@ FactoryBot.define do
         attributes = { source_id: collection.id }
         attributes[:manage_users] = [evaluator.user]
         attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
-        create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
+        create(Hyrax::Specs::FactoryName.permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
       end
     end
   end
@@ -229,9 +229,9 @@ FactoryBot.define do
     # @param [Class] evaluator holding the transient properties for the current build/creation process
     def self.process_collection_type_settings(collection, evaluator)
       if evaluator.collection_type_settings.present?
-        collection.collection_type = FactoryBot.create(:collection_type, *evaluator.collection_type_settings)
+        collection.collection_type = FactoryBot.create(Hyrax::Specs::FactoryName.collection_type, *evaluator.collection_type_settings)
       elsif collection.collection_type_gid.blank?
-        collection.collection_type = FactoryBot.create(:user_collection_type)
+        collection.collection_type = FactoryBot.create(Hyrax::Specs::FactoryName.user_collection_type)
       end
     end
 
@@ -249,7 +249,7 @@ FactoryBot.define do
       attributes = { source_id: collection.id }
       attributes[:manage_users] = user_managers(evaluator.with_permission_template, evaluator.user)
       attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
-      FactoryBot.create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
+      FactoryBot.create(Hyrax::Specs::FactoryName.permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
     end
 
     # Process the with_solr_document transient property such that...

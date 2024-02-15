@@ -25,10 +25,10 @@ FactoryBot.define do
             begin
               Collection.find(source_id)
             rescue ActiveFedora::ObjectNotFoundError
-              create(:collection, id: source_id)
+              create(Hyrax::Specs::FactoryName.collection, id: source_id)
             end
           else
-            create(:collection)
+            create(Hyrax::Specs::FactoryName.collection)
           end
         permission_template.source_id = collection.id
       end
@@ -40,8 +40,8 @@ FactoryBot.define do
         Sipity::Workflow.activate!(permission_template: permission_template, workflow_id: permission_template.available_workflows.pick(:id))
       end
       if evaluator.with_active_workflow
-        workflow = create(:workflow, active: true, permission_template: permission_template)
-        create(:workflow_action, workflow: workflow) # Need to create a single action that can be taken
+        workflow = create(Hyrax::Specs::FactoryName.workflow, active: true, permission_template: permission_template)
+        create(Hyrax::Specs::FactoryName.workflow_action, workflow: workflow) # Need to create a single action that can be taken
       end
       AccessHelper.create_access(permission_template, 'user', :manage, evaluator.manage_users) if evaluator.manage_users.present?
       AccessHelper.create_access(permission_template, 'group', :manage, evaluator.manage_groups) if evaluator.manage_groups.present?
@@ -68,7 +68,7 @@ FactoryBot.define do
   class AccessHelper
     def self.create_access(permission_template_id, agent_type, access, agent_ids)
       agent_ids.each do |agent_id|
-        FactoryBot.create(:permission_template_access,
+        FactoryBot.create(Hyrax::Specs::FactoryName.permission_template_access,
                           access,
                           permission_template: permission_template_id,
                           agent_type: agent_type,
@@ -87,10 +87,10 @@ FactoryBot.define do
         begin
           AdminSet.find(source_id)
         rescue ActiveFedora::ObjectNotFoundError
-          FactoryBot.create(:admin_set, id: source_id)
+          FactoryBot.create(Hyrax::Specs::FactoryName.admin_set, id: source_id)
         end
       else
-        FactoryBot.create(:admin_set)
+        FactoryBot.create(Hyrax::Specs::FactoryName.admin_set)
       end
     end
 
@@ -101,10 +101,10 @@ FactoryBot.define do
         rescue Valkyrie::Persistence::ObjectNotFoundError
           # Creating an Administrative set with a pre-determined id will not work for all adapters
           # so we're letting the adapter assign the id
-          FactoryBot.valkyrie_create(:hyrax_admin_set)
+          FactoryBot.valkyrie_create(Hyrax::Specs::FactoryName.hyrax_admin_set)
         end
       else
-        FactoryBot.valkyrie_create(:hyrax_admin_set)
+        FactoryBot.valkyrie_create(Hyrax::Specs::FactoryName.hyrax_admin_set)
       end
     end
   end

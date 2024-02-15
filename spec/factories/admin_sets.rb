@@ -14,7 +14,7 @@ FactoryBot.define do
         attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
         # There is a unique constraint on permission_templates.source_id; I don't want to
         # create a permission template if one already exists for this admin_set
-        create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: admin_set.id)
+        create(Hyrax::Specs::FactoryName.permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: admin_set.id)
       end
     end
 
