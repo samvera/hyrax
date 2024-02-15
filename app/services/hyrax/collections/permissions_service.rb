@@ -31,7 +31,7 @@ module Hyrax
 
         models.flat_map do |model|
           Hyrax.custom_queries.find_ids_by_model(model: model, ids: ids).to_a
-        end
+        end.uniq
       end
       private_class_method :filter_source
 
