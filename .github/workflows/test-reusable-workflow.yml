@@ -153,7 +153,6 @@ jobs:
           cd ${{ inputs.subdir }};
           docker compose exec -T web sh -c
           "${{ inputs.rspec_cmd }}"
-
       # you need TB_RSPEC_OPTIONS: --format RspecJunitFormatter --out rspec.xml and TB_RSPEC_FORMATTER: progress in your .env for this to work
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
@@ -163,3 +162,8 @@ jobs:
           fail_on_failure: true
           require_passed_tests: true
           detailed_summary: true
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ failure() }}
+        with:
+          limit-access-to-actor: true
