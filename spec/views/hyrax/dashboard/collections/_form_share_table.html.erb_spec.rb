@@ -14,10 +14,11 @@ RSpec.describe 'hyrax/dashboard/collections/_form_share_table.html.erb', type: :
 
   before do
     assign(:collection, collection)
-    allow(view).to receive(:collection_type).and_return(collection_type)
     @form = instance_double(Hyrax::Forms::CollectionForm,
                             to_model: stub_model(Collection),
                             permission_template: pt_form)
+    # A collection_type helper method normally provided by the controller
+    allow(view).to receive(:collection_type).and_return(collection_type)
     # Ignore the delete button link
     allow(view).to receive(:admin_permission_template_access_path).and_return("/admin/permission_template_accesses/123")
   end
