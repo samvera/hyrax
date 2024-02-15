@@ -22,9 +22,7 @@ FactoryBot.define do
     transient do
       # false, true, or Hash with keys for permission_template
       with_permission_template { false }
-
-      # Additional attributes that downstream apps might set
-      permission_template_attributes { nil }
+      permission_template_attributes { {} }
     end
 
     factory :complete_admin_set do
