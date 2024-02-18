@@ -19,7 +19,7 @@ FactoryBot.define do
       with_permission_template { true }
       collection_type { nil }
       with_index { true }
-      user { create(:user) }
+      user { FactoryBot.create(:user) }
       edit_groups { [] }
       edit_users { [] }
       read_groups { [] }
