@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :work, aliases: [:generic_work, :private_generic_work], class: 'GenericWork' do
     transient do
-      user { create(:user) }
+      user { FactoryBot.create(:user) }
       # Set to true (or a hash) if you want to create an admin set
       with_admin_set { false }
     end

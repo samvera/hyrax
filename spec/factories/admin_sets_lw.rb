@@ -57,7 +57,7 @@ FactoryBot.define do
 
   factory :adminset_lw, class: AdminSet do
     transient do
-      user { create(:user) }
+      user { FactoryBot.create(:user) }
 
       with_permission_template { false }
       with_solr_document { false }
@@ -105,7 +105,7 @@ FactoryBot.define do
     # Builds a pre-Hyrax 2.1.0 adminset without edit/view grants on the admin set.
     # Do not use with create because the save will cause the solr grants to be created.
     transient do
-      user { create(:user) }
+      user { FactoryBot.create(:user) }
       with_permission_template { true }
       with_solr_document { true }
     end

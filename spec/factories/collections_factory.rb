@@ -9,7 +9,7 @@ FactoryBot.define do
     # rubocop:enable Layout/LineLength
 
     transient do
-      user { create(:user) }
+      user { FactoryBot.create(:user) }
       # allow defaulting to default user collection
       collection_type_settings { nil }
       with_permission_template { false }
@@ -59,7 +59,7 @@ FactoryBot.define do
 
   factory :user_collection, class: Collection do
     transient do
-      user { create(:user) }
+      user { FactoryBot.create(:user) }
       collection_type { create(:user_collection_type) }
     end
 
@@ -75,7 +75,7 @@ FactoryBot.define do
     #   col = build(:typeless_collection, ...)
     #   col.save(validate: false)
     transient do
-      user { create(:user) }
+      user { FactoryBot.create(:user) }
       with_permission_template { false }
       create_access { false }
       do_save { false }
