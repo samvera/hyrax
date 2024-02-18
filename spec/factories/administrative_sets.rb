@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 FactoryBot.define do
-  factory :hyrax_admin_set, class: 'Hyrax::AdministrativeSet' do
+  factory :hyrax_admin_set, class: Hyrax.config.admin_set_class do
     title { ['My Admin Set'] }
 
     transient do
