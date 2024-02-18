@@ -11,7 +11,7 @@
 # Downstream applications might implement a different collection class and the downstream
 # application might leverage other Hyrax factories that create a `:hyrax_collection`
 FactoryBot.define do
-  factory :hyrax_collection, class: ((Hyrax.config.collection_class < Valkyrie::Resource) ? Hyrax.config.collection_class : 'CollectionResource'), aliases: [:collection_resource] do
+  factory :hyrax_collection, class: (Hyrax.config.collection_class < Valkyrie::Resource ? Hyrax.config.collection_class : 'CollectionResource'), aliases: [:collection_resource] do
     sequence(:title) { |n| ["The Tove Jansson Collection #{n}"] }
     collection_type_gid { Hyrax::CollectionType.find_or_create_default_collection_type.to_global_id.to_s }
 
