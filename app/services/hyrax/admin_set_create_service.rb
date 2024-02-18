@@ -84,12 +84,16 @@ module Hyrax
       # Create an instance of `Hyrax::AdministrativeSet` with the suggested_id if supported.
       # @return [Hyrax::AdministrativeSet] the new admin set
       def create_admin_set(suggested_id:, title:)
+        # Leverage the configured admin class, if it is a Valkyrie resource, otherwise fallback.
+        # Until we have fully moved to Valkyrie, we will need this logic.  Once past, we can
+        # use `Hyrax.config.admin_set_class`
+        klass = Hyrax.config.admin_set_class < Valkyrie::Resource ? Hyrax.config.admin_set_class : Hyrax::AdministrativeSet
         if suggested_id.blank? || Hyrax.config.disable_wings
           # allow persister to assign id
-          Hyrax::AdministrativeSet.new(title: Array.wrap(title))
+          klass.new(title: Array.wrap(title))
         else
           # use suggested_id
-          Hyrax::AdministrativeSet.new(id: suggested_id, title: Array.wrap(title))
+          klass.new(id: suggested_id, title: Array.wrap(title))
         end
       end
 
