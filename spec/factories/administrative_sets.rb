@@ -10,7 +10,7 @@ FactoryBot.define do
   # Downstream applications might implement a different # administrative set and the downstream
   # application might leverage other Hyrax factories that create a `:hyrax_admin_set`
   # (e.g. `:permission_template`)
-  factory :hyrax_admin_set, class: ((Hyrax.config.admin_set_class < Valkyrie::Resource) ? Hyrax.config.admin_set_class : Hyrax::AdministrativeSet) do
+  factory :hyrax_admin_set, class: (Hyrax.config.admin_set_class < Valkyrie::Resource ? Hyrax.config.admin_set_class : Hyrax::AdministrativeSet) do
     title { ['My Admin Set'] }
 
     transient do
