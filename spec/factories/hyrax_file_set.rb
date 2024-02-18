@@ -2,8 +2,16 @@
 
 ##
 # Use this factory for generic Hyrax/HydraWorks FileSets in valkyrie.
+#
+# This factory creates a Valkyrized file set; by default a Hyrax::FileSet
+#
+# Why the antics around the class?  Because of the Hyrax needs and potential downstream
+# applciation needs.
+#
+# Downstream applications might implement a different file set class and the downstream
+# application might leverage other Hyrax factories that create a `:hyrax_file_set`
 FactoryBot.define do
-  factory :hyrax_file_set, class: 'Hyrax::FileSet' do
+  factory :hyrax_file_set, class: ((Hyrax.config.file_set_class < Valkyrie::Resource) ? Hyrax.config.file_set_class : 'Hyrax::FileSet') do
     transient do
       files              { nil }
       original_file      { nil }
