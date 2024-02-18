@@ -17,7 +17,7 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
     let(:solr_params) { { fq: [] } }
 
     it 'adds AdminSet to query' do
-      expect(solr_params[:fq].first).to include('{!terms f=has_model_ssim}AdminSet')
+      expect(solr_params[:fq].first).to include("{!terms f=has_model_ssim}#{Hyrax::ModelRegistry.admin_set_rdf_representations.join(',')}")
     end
   end
 
@@ -61,7 +61,7 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
         expect(subject['fq']).to eq ["edit_access_person_ssim:#{user.user_key} OR " \
                                        "discover_access_person_ssim:#{user.user_key} OR " \
                                        "read_access_person_ssim:#{user.user_key}",
-                                     "{!terms f=has_model_ssim}AdminSet,Hyrax::AdministrativeSet"]
+                                     "{!terms f=has_model_ssim}#{Hyrax::ModelRegistry.admin_set_rdf_representations.join(',')}"]
       end
     end
 
@@ -73,7 +73,7 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
       end
 
       it 'is successful' do
-        expect(subject['fq']).to eq ["{!terms f=id}7,8", "{!terms f=has_model_ssim}AdminSet,Hyrax::AdministrativeSet"]
+        expect(subject['fq']).to eq ["{!terms f=id}7,8", "{!terms f=has_model_ssim}#{Hyrax::ModelRegistry.admin_set_rdf_representations.join(',')}"]
       end
     end
   end

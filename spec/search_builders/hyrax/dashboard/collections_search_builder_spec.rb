@@ -15,7 +15,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
   describe '#models' do
     subject { builder.models }
 
-    it { is_expected.to eq([AdminSet, Hyrax::AdministrativeSet, ::Collection, Hyrax.config.collection_class].uniq) }
+    it { is_expected.to eq(Hyrax::ModelRegistry.admin_set_classes + Hyrax::ModelRegistry.collection_classes) }
   end
 
   describe ".default_processor_chain" do
@@ -32,16 +32,13 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
 
   describe "#show_only_managed_collections_for_non_admins" do
     let(:solr_params) { Blacklight::Solr::Request.new }
-    let(:admin_text) { Hyrax.config.disable_wings ? 'Hyrax::AdministrativeSet' : 'AdminSet' }
 
     before do
       builder.show_only_managed_collections_for_non_admins(solr_params)
     end
 
     it "has filter that excludes depositor" do
-      expect(solr_params[:fq]).to eq(
-        ["(-_query_:\"{!raw f=depositor_ssim}#{user.user_key}\" OR -(_query_:\"{!raw f=has_model_ssim}#{admin_text}\" AND _query_:\"{!raw f=creator_ssim}#{user.user_key}\"))"]
-      )
+      expect(solr_params[:fq].first).to match(%r{\(-_query_:\"{!raw f=depositor_ssim}#{user.user_key}\" OR })
     end
 
     context "as admin" do

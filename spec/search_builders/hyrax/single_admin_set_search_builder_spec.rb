@@ -16,7 +16,7 @@ RSpec.describe Hyrax::SingleAdminSetSearchBuilder do
 
     it do
       is_expected.to match_array ["",
-                                  "{!terms f=has_model_ssim}AdminSet,Hyrax::AdministrativeSet"]
+                                  "{!terms f=has_model_ssim}#{Hyrax::ModelRegistry.admin_set_rdf_representations.join(',')}"]
     end
   end
 end

@@ -53,28 +53,25 @@ module Hyrax
     ##
     # @return [Boolean]
     def collection?
-      hydra_model == Hyrax.config.collection_class ||
-        ("Collection".safe_constantize == hydra_model)
+      Hyrax::ModelRegistry.collection_classes.include?(hydra_model)
     end
 
     ##
     # @return [Boolean]
     def file_set?
-      hydra_model == Hyrax::FileSet ||
-        ("::FileSet".safe_constantize == hydra_model)
+      Hyrax::ModelRegistry.file_set_classes.include?(hydra_model)
     end
 
     ##
     # @return [Boolean]
     def admin_set?
-      (hydra_model == Hyrax.config.admin_set_class) ||
-        ("AdminSet".safe_constantize == hydra_model)
+      Hyrax::ModelRegistry.admin_set_classes.include?(hydra_model)
     end
 
     ##
     # @return [Boolean]
     def work?
-      Hyrax.config.curation_concerns.include? hydra_model
+      Hyrax::ModelRegistry.work_classes.include?(hydra_model)
     end
 
     # Method to return the model
@@ -89,6 +86,7 @@ module Hyrax
     end
 
     def creator
+      # TODO: should we replace "hydra_model == AdminSet" with by #admin_set?
       solr_term = hydra_model == AdminSet ? "creator_ssim" : "creator_tesim"
       fetch(solr_term, [])
     end
