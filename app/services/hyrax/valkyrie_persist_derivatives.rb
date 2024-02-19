@@ -43,9 +43,16 @@ module Hyrax
     # @return [Hyrax::FileSet]
     def self.fileset_for_directives(directives)
       path = URI(directives.fetch(:url)).path
-      id = path.sub(Hyrax.config.derivatives_path.to_s, "")
-               .delete('/')
-               .match(/^(.*)-\w*(\.\w+)*$/) { |m| m[1] }
+      # checks if it's a file path, else assuming it is already an id
+      # Hyrax::FileSetDerivativesService#extract_full_text passes in the raw uri
+      # and not a derivative_url like the other derivative formats
+      id = if path.include?("/")
+             path.sub(Hyrax.config.derivatives_path.to_s, "")
+                 .delete('/')
+                 .match(/^(.*)-\w*(\.\w+)*$/) { |m| m[1] }
+           else
+             path
+           end
       raise "Could not extract fileset id from path #{path}" unless id
 
       Hyrax.metadata_adapter.query_service.find_by(id: id)
