@@ -43,8 +43,8 @@ module Hyrax
           can :view_admin_show, ::SolrDocument do |solr_doc| # admin show page
             Hyrax::Collections::PermissionsService.can_view_admin_show_for_collection?(ability: self, collection_id: solr_doc.id) # checks collections and admin_sets
           end
-          c
-          an :view_admin_show, [::String, ::Valkyrie::ID] do |collection_id| # admin show page
+
+          can :view_admin_show, [::String, ::Valkyrie::ID] do |collection_id| # admin show page
             Hyrax::Collections::PermissionsService.can_view_admin_show_for_collection?(ability: self, collection_id: collection_id.to_s) # checks collections and admin_sets
           end
         end
