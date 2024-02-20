@@ -13,7 +13,7 @@ module Hyrax
     def to_solr
       super.tap do |index_document|
         config      = Hydra.config.permissions
-        permissions = resource.permission_manager
+        permissions = resource.permission_manager || Hyrax::PermissionManager.new(resource: resource)
 
         index_document[config.edit.group] = permissions.edit_groups.to_a
         index_document[config.edit.individual] = permissions.edit_users.to_a
