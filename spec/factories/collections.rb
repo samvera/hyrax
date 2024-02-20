@@ -74,7 +74,7 @@ FactoryBot.define do
 
   factory :collection_lw, class: Collection do
     transient do
-      user { create(:user) }
+      user { FactoryBot.create(:user) }
 
       collection_type { nil }
       collection_type_settings { nil }
@@ -135,7 +135,7 @@ FactoryBot.define do
 
   factory :user_collection_lw, class: Collection do
     transient do
-      user { create(:user) }
+      user { FactoryBot.create(:user) }
       collection_type { create(:user_collection_type) }
     end
 
@@ -151,7 +151,7 @@ FactoryBot.define do
     #   col = build(:typeless_collection, ...)
     #   col.save(validate: false)
     transient do
-      user { create(:user) }
+      user { FactoryBot.create(:user) }
       with_permission_template { false }
       do_save { false }
     end
