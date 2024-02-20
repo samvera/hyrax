@@ -25,6 +25,7 @@ module Hyrax
 
           user ||= ::User.find_by_user_key(obj.depositor)
           Hyrax.publisher.publish('object.metadata.updated', object: parent, user: user)
+          Hyrax.publisher.publish('object.membership.updated', object: parent, user: user)
 
           Success(obj)
         rescue Valkyrie::Persistence::ObjectNotFoundError => _err
