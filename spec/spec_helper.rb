@@ -66,6 +66,25 @@ Valkyrie::StorageAdapter.register(
   :fixture_disk
 )
 
+# Because we're relying on shared specs from Valkyrie, and assuming that all of the classes will
+# respond to #to_rdf_representation and the base Valkyrie::Resource does not do that nor does the
+# dynamic classes generated for the shared specs; we need the following coercion.
+module Hyrax::Resource::Coercible
+  extend ActiveSupport::Concern
+
+  class_methods do
+    def to_rdf_representation
+      name.to_s
+    end
+  end
+
+  def to_rdf_representation
+    self.class.to_rdf_representation
+  end
+end
+
+Valkyrie::Resource.include(Hyrax::Resource::Coercible)
+
 # Require supporting ruby files from spec/support/ and subdirectories.  Note: engine, not Rails.root context.
 Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each { |f| require f }
 
