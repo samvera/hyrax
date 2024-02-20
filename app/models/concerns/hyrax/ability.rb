@@ -124,8 +124,8 @@ module Hyrax
     #
     # Overrides hydra-head, (and restores the method from blacklight-access-controls)
     def download_permissions
-      can :download, String do |id|
-        test_download(id)
+      can :download, [::String, ::Valkyrie::ID] do |id|
+        test_download(id.to_s)
       end
 
       can :download, ::SolrDocument do |obj|
@@ -189,8 +189,8 @@ module Hyrax
     #   self.ability_logic += [:proxy_deposit_abilities]
     def proxy_deposit_abilities
       if Flipflop.transfer_works?
-        can :transfer, String do |id|
-          user_is_depositor?(id)
+        can :transfer, [::String, Valkyrie::ID] do |id|
+          user_is_depositor?(id.to_s)
         end
       end
 
@@ -368,7 +368,7 @@ module Hyrax
       alias_action :show, to: :read
       alias_action :discover, to: :read
       can :update, :appearance
-      can :manage, String # The identifier of a work or FileSet
+      can :manage, [String, Valkyrie::ID] # The identifier of a work or FileSet
       can :manage, curation_concerns_models
       can :manage, Sipity::WorkflowResponsibility
       can :manage, :collection_types
@@ -414,9 +414,9 @@ module Hyrax
     end
 
     # Returns true if the current user is the depositor of the specified work
-    # @param document_id [String] the id of the document.
+    # @param document_id [String, Valkyrie::ID] the id of the document.
     def user_is_depositor?(document_id)
-      doc = Hyrax::SolrService.search_by_id(document_id, fl: 'depositor_ssim')
+      doc = Hyrax::SolrService.search_by_id(document_id.to_s, fl: 'depositor_ssim')
       current_user.user_key == doc['depositor_ssim']&.first
     end
 
