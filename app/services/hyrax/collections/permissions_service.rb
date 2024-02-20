@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Hyrax
   module Collections
+    # rubocop:disable Metrics/ClassLength
     class PermissionsService
       # @api private
       #
@@ -20,17 +21,34 @@ module Hyrax
       end
       private_class_method :source_ids_for_user
 
+      # rubocop:disable Metrics/MethodLength
       def self.filter_source(source_type:, ids:)
         return [] if ids.empty?
-        model = case source_type
-                when 'admin_set'
-                  Hyrax::AdministrativeSet
-                when 'collection'
-                  Hyrax::PcdmCollection
-                end
+        models = case source_type
+                 when 'admin_set'
+                   Hyrax::ModelRegistry.admin_set_classes
+                 when 'collection'
+                   Hyrax::ModelRegistry.collection_classes
+                 end
 
-        Hyrax.custom_queries.find_ids_by_model(model: model, ids: ids).to_a
+        # Antics to cope with all of the how the custom queries work.
+        if defined?(Wings::ModelRegistry)
+          models = models.map do |model|
+            Wings::ModelRegistry.reverse_lookup(model)
+                   rescue NoMethodError
+                     nil
+          end.compact
+        end
+
+        models.flat_map do |model|
+          if model
+            Hyrax.custom_queries.find_ids_by_model(model: model, ids: ids).to_a
+          else
+            []
+          end
+        end.uniq
       end
+      # rubocop:enable Metrics/MethodLength
       private_class_method :filter_source
 
       # @api private
@@ -249,5 +267,6 @@ module Hyrax
       end
       private_class_method :access_to_collection?
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end
