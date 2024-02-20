@@ -77,11 +77,10 @@ module Wings
     # default work class builder
     def self.DefaultWork(resource_class) # rubocop:disable Naming/MethodName
       class_cache[resource_class] ||= Class.new(DefaultWork) do
-        self.valkyrie_class = resource_class
-
+        self.valkyrie_class = resource_class.respond_to?(:valkyrie_class) ? resource_class.valkyrie_class : resource_class
         # skip reserved attributes, we assume we don't need to translate valkyrie internals
-        schema = resource_class.schema.reject do |key|
-          resource_class.reserved_attributes.include?(key.name)
+        schema = valkyrie_class.schema.reject do |key|
+          valkyrie_class.reserved_attributes.include?(key.name)
         end
 
         Wings::ActiveFedoraConverter.apply_properties(self, schema)
