@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-##
-# Use this factory for generic Hyrax/HydraWorks FileSets in valkyrie.
 FactoryBot.define do
   factory :hyrax_file_set, class: 'Hyrax::FileSet' do
     transient do

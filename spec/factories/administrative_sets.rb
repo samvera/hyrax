@@ -1,6 +1,16 @@
 # frozen_string_literal: true
+
 FactoryBot.define do
-  factory :hyrax_admin_set, class: 'Hyrax::AdministrativeSet' do
+  ##
+  # This factory creates a Valkyrized adminstrative set; by default a Hyrax::AdministrativeSet
+  #
+  # Why the antics around the class?  Because of the Hyrax needs and potential downstream
+  # applciation needs.
+  #
+  # Downstream applications might implement a different # administrative set and the downstream
+  # application might leverage other Hyrax factories that create a `:hyrax_admin_set`
+  # (e.g. `:permission_template`)
+  factory :hyrax_admin_set, class: (Hyrax.config.admin_set_class < Valkyrie::Resource ? Hyrax.config.admin_set_class : Hyrax::AdministrativeSet) do
     title { ['My Admin Set'] }
 
     transient do
