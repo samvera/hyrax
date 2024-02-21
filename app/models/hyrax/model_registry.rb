@@ -101,11 +101,9 @@ module Hyrax
     def self.classes_from(strings)
       strings.map(&:safe_constantize).flatten.uniq
     end
-    private_class_method :classes_from
 
     def self.rdf_representations_from(klasses)
       klasses.map { |klass| klass.respond_to?(:to_rdf_represntation) ? klass.to_rdf_represntation : klass.name }.uniq
     end
-    private_class_method :rdf_representations_from
   end
 end
