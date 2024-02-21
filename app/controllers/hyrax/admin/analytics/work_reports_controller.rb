@@ -54,7 +54,7 @@ module Hyrax
         end
 
         def accessible_file_sets
-          file_set_model_clause = "has_model_ssim:\"#{Hyrax::ModelRegistry.rdf_representations_from.join("\" OR \"")}\""
+          file_set_model_clause = "has_model_ssim:\"#{Hyrax::ModelRegistry.rdf_representations_from.join('" OR "')}\""
           if current_user.ability.admin?
             Hyrax::SolrService.query(
               file_set_model_clause,
