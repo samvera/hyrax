@@ -103,7 +103,7 @@ module Hyrax
     end
 
     def self.rdf_representations_from(klasses)
-      klasses.map { |klass| klass.respond_to?(:to_rdf_represntation) ? klass.to_rdf_represntation : klass.name }.uniq
+      klasses.map { |klass| klass.respond_to?(:to_rdf_representation) ? klass.to_rdf_representation : klass.name }.uniq
     end
   end
 end
