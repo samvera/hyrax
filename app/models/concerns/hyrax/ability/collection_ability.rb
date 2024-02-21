@@ -35,12 +35,17 @@ module Hyrax
           can :deposit, ::SolrDocument do |solr_doc|
             Hyrax::Collections::PermissionsService.can_deposit_in_collection?(ability: self, collection_id: solr_doc.id) # checks collections and admin_sets
           end
-          can :deposit, String do |collection_id|
-            Hyrax::Collections::PermissionsService.can_deposit_in_collection?(ability: self, collection_id: collection_id)
+
+          can :deposit, [::String, ::Valkyrie::ID] do |collection_id|
+            Hyrax::Collections::PermissionsService.can_deposit_in_collection?(ability: self, collection_id: collection_id.to_s)
           end
 
           can :view_admin_show, ::SolrDocument do |solr_doc| # admin show page
             Hyrax::Collections::PermissionsService.can_view_admin_show_for_collection?(ability: self, collection_id: solr_doc.id) # checks collections and admin_sets
+          end
+
+          can :view_admin_show, [::String, ::Valkyrie::ID] do |collection_id| # admin show page
+            Hyrax::Collections::PermissionsService.can_view_admin_show_for_collection?(ability: self, collection_id: collection_id.to_s) # checks collections and admin_sets
           end
         end
       end
