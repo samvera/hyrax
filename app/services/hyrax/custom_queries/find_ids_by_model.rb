@@ -8,8 +8,8 @@ module Hyrax
         [:find_ids_by_model]
       end
 
-      def initialize(query_service:)
-        @query_service = query_service
+      def initialize(*)
+        @query_service = Hyrax.query_service
       end
 
       attr_reader :query_service

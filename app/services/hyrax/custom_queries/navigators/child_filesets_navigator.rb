@@ -17,8 +17,8 @@ module Hyrax
 
         attr_reader :query_service
 
-        def initialize(query_service:)
-          @query_service = query_service
+        def initialize(*)
+          @query_service = Hyrax.query_service
         end
 
         ##
@@ -30,7 +30,7 @@ module Hyrax
         # @deprecated
         def find_child_filesets(resource:)
           Deprecation.warn("Custom query find_child_filesets is deprecated; use find_child_file_sets instead.")
-          Hyrax.custom_queries.find_child_file_sets(resource: resource)
+          query_service.custom_queries.find_child_file_sets(resource: resource)
         end
 
         ##
@@ -42,7 +42,7 @@ module Hyrax
         # @deprecated
         def find_child_fileset_ids(resource:)
           Deprecation.warn("Custom query find_child_fileset_ids is deprecated; use find_child_file_set_ids instead.")
-          Hyrax.custom_queries.find_child_file_set_ids(resource: resource)
+          query_service.custom_queries.find_child_file_set_ids(resource: resource)
         end
       end
     end

@@ -8,8 +8,8 @@ module Wings
         [:find_collections_by_type]
       end
 
-      def initialize(query_service:)
-        @query_service = query_service
+      def initialize(*)
+        @query_service = Hyrax.query_service
       end
 
       attr_reader :query_service
@@ -19,7 +19,7 @@ module Wings
       # @param global_id [GlobalID] global id for a Hyrax::CollectionType
       #
       # @return [Enumerable<PcdmCollection>]
-      def find_collections_by_type(global_id:)
+      def find_collections_by_type(global_id:, **)
         ::Collection.where(Hyrax.config.collection_type_index_field.to_sym => global_id.to_s).map(&:valkyrie_resource)
       end
     end

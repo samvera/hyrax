@@ -16,8 +16,8 @@ module Hyrax
 
         attr_reader :query_service
 
-        def initialize(query_service:)
-          @query_service = query_service
+        def initialize(*)
+          @query_service = Hyrax.query_service
         end
 
         ##
@@ -28,8 +28,8 @@ module Hyrax
         #
         # @return [Array<Valkyrie::Resource>]
         def find_parent_work(resource:)
-          results = Hyrax.query_service.find_inverse_references_by(resource: resource,
-                                                                   property: :member_ids).select(&:work?)
+          results = query_service.find_inverse_references_by(resource: resource,
+                                                             property: :member_ids).select(&:work?)
           if results.count > 1
             Hyrax.logger.warn("#{resource.work? ? 'Work' : 'File set'} " \
                               "#{resource.id} is in #{results.count} works when it " \

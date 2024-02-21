@@ -9,8 +9,8 @@ module Wings
         [:find_ids_by_model]
       end
 
-      def initialize(query_service:, query_rows: 1_000)
-        @query_service = query_service
+      def initialize(query_rows: 1_000, **)
+        @query_service = Hyrax.query_service
         @query_rows = query_rows
       end
 

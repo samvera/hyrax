@@ -11,8 +11,8 @@ module Hyrax
 
       attr_reader :query_service
 
-      def initialize(query_service:)
-        @query_service = query_service
+      def initialize(*)
+        @query_service = Hyrax.query_service
       end
 
       # implements a combination of two Valkyrie queries:

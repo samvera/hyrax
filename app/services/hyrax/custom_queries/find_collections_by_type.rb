@@ -12,8 +12,8 @@ module Hyrax
         [:find_collections_by_type]
       end
 
-      def initialize(query_service:)
-        @query_service = query_service
+      def initialize(*)
+        @query_service = Hyrax.query_service
       end
 
       attr_reader :query_service
@@ -26,11 +26,14 @@ module Hyrax
       #   it's advisable to provide an optimized query for the specific adapter.
       #
       # @param global_id [GlobalID] global id for a Hyrax::CollectionType
+      # @param model [Class] the collection model we want to filter on.
       #
       # @return [Enumerable<PcdmCollection>]
-      def find_collections_by_type(global_id:)
+      def find_collections_by_type(global_id:, model: Hyrax.config.collection_class)
+        # TODO: Were we to reverse these method calls and look for the collection_type_gid value, we
+        #       would not end up searching through what could be many records.
         query_service
-          .find_all_of_model(model: Hyrax.config.collection_model.safe_constantize)
+          .find_all_of_model(model:)
           .select { |collection| collection.collection_type_gid == global_id }
       end
     end

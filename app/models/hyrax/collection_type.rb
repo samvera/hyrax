@@ -102,8 +102,11 @@ module Hyrax
     # @return [Enumerable<Collection, PcdmCollection>]
     def collections(use_valkyrie: Hyrax.config.use_valkyrie?)
       return [] unless id
-      return Hyrax.custom_queries.find_collections_by_type(global_id: to_global_id.to_s) if use_valkyrie
-      ActiveFedora::Base.where(Hyrax.config.collection_type_index_field.to_sym => to_global_id.to_s)
+      if use_valkyrie
+        Hyrax.custom_queries.find_collections_by_type(global_id: to_global_id.to_s, model: Hyrax.config.collection_class)
+      else
+        ActiveFedora::Base.where(Hyrax.config.collection_type_index_field.to_sym => to_global_id.to_s)
+      end
     end
 
     # @return [Boolean] True if this is the Admin Set type
