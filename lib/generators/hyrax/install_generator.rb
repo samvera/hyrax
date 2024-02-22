@@ -141,6 +141,12 @@ module Hyrax
       generate 'qa:local:tables'
     end
 
+    def inject_required_seeds
+      insert_into_file 'db/seeds.rb' do
+        'Hyrax::RequiredDataSeeder.new.generate_seed_data'
+      end
+    end
+
     def install_assets
       generate "hyrax:assets"
     end
@@ -182,9 +188,26 @@ module Hyrax
       generate 'hyrax:riiif' unless options[:'skip-riiif']
     end
 
+    def insert_env_queue_adapter
+      insert_into_file 'config/application.rb', after: /config\.load_defaults [0-9.]+$/ do
+        "\n    config.active_job.queue_adapter = ENV.fetch('HYRAX_ACTIVE_JOB_QUEUE') { 'async' }.to_sym\n"
+      end
+    end
+
     def universalviewer_files
       rake('hyrax:universal_viewer:install')
       rake('yarn:install')
+    end
+
+    def lando
+      copy_file '.lando.yml'
+    end
+
+    def dotenv
+      copy_file '.env'
+      gem_group :development, :test do
+        gem 'dotenv-rails', '~> 2.8'
+      end
     end
   end
 end

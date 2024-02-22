@@ -29,6 +29,8 @@ A Hyrax-based application includes lots of dependencies. We provide a [Docker im
 
 You can also try [Running Hyrax-based application in local VM](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide#running-hyrax-based-application-in-local-vm) which uses Ubuntu.
 
+During development, running only the dependent services in a container environment may be beneficial. This avoids potential headaches concerning file permissions and eases the use of debugging tools. The application generation instructions below use [Lando](https://lando.dev) to achieve this setup.
+
 This document contains instructions specific to setting up an app with __Hyrax
 v5.0.0.rc2__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
@@ -44,8 +46,8 @@ Prerequisites are required for both creating a Hyrax\-based app and contributing
 Hyrax requires the following software to work:
 
 1. [Solr](http://lucene.apache.org/solr/) version >= 5.x (tested up to 8.11.1, which includes the log4j library update)
-1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.7.5)
-1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
+1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.7.6 (if not using the Valkyrie Postgres adapter)
+1. A SQL RDBMS ([PostgreSQL](https://www.postgresql.org) recommended)
 1. [Redis](http://redis.io/), a key-value store
 1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
 1. [FITS](#characterization) (tested up to version 1.5.0 -- avoid version 1.1.0)
@@ -55,7 +57,12 @@ Hyrax requires the following software to work:
 **NOTE: The [Hyrax Development Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide) has instructions for installing Solr and Fedora in a development environment.**
 
 ### Characterization
+#### Servlet FITS
+FITS can be run as a web service. This has the benefit of improved performance by avoiding the slow startup time inherent to the local option below.
 
+A container image is available for this purpose: [ghcr.io/samvera/fitsservlet](https://ghcr.io/samvera/fitsservlet)
+
+#### Local FITS
 FITS can be installed on OSX using Homebrew by running the command: `brew install fits`
 
 **OR**
@@ -122,10 +129,21 @@ NOTE: [nodejs](https://nodejs.org/en/) is preinstalled on most Mac computers and
 
 NOTE: The steps need to be done in order to create a new Hyrax based app.
 
+### Development Prerequisites
+
+These instructions assume the use of [Lando](https://lando.dev) and [Docker](https://docker.io) to manage the backend services needed by your Hyrax application. Follow the Lando installation instructions before proceeding, or have alternate providers for the services listed in the generated `.lando.yml`:
+- Solr
+- Postgres
+- Redis
+- FITS servlet
+- Fedora (if not using Postgres)
+
+### Generate the application
+
 Generate a new Rails application using the template.
 
-```
-rails _6.1.7.6_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/hyrax-v5.0.0.rc2/template.rb
+```shell
+rails _6.1.7.6_ new my_app --database=postgresql -m https://raw.githubusercontent.com/samvera/hyrax/hyrax-v5.0.0.rc2/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
@@ -133,23 +151,65 @@ Generating a new Rails application using Hyrax's template above takes cares of a
 * Adding Hyrax (and any of its dependencies) to your application `Gemfile`, to declare that Hyrax is a dependency of your application
 * Running `bundle install`, to install Hyrax and its dependencies
 * Running Hyrax's install generator, to add a number of files that Hyrax requires within your Rails app, including e.g. database migrations
+
+### Start Services
+
+Start the background services managed by Lando. The
+
+```shell
+cd my_app
+lando start
+```
+
+### Run Migrations/Seeds
+
+This performs the following actions:
+
 * Loading all of Hyrax's database migrations into your application's database
-* Loading Hyrax's default workflows into your application's database
 * Create default collection types (e.g. Admin Set, User Collection)
+* Loading Hyrax's default workflows into your application's database
 
-### Start servers
+```shell
+rails db:migrate
+rails db:seed
+```
 
-To test-drive your new Hyrax application in development mode, spin up the servers that Hyrax needs (Solr, Fedora, and Rails):
+**NOTE**: You will want to run these commands the first time this code is deployed to a new environment as well.
+
+This creates the default administrative set -- into which all works will be deposited unless assigned to other administrative sets.
+This command also makes sure that Hyrax's built-in workflows are loaded for your application and available for the default administrative set.
+
+### Generate a work type
+
+Using Hyrax requires generating at least one type of repository object, or "work type." Hyrax allows you to generate the work types required in your application by using a Rails generator-based tool. You may generate one or more of these work types.
+
+Pass a (CamelCased) model name to Hyrax's work generator to get started, e.g.:
 
 ```
-bin/rails hydra:server
+rails generate hyrax:work_resource MovingImage
+```
+
+If your applications requires your work type to be namespaced, namespaces can be included by adding a slash to the model name which creates a new class called `MovingImage` within the `My` namespace:
+
+```shell
+rails generate hyrax:work_resource My/MovingImage
+```
+
+You may wish to [customize your work type](https://github.com/samvera/hyrax/wiki/Customizing-your-work-types) now that it's been generated.
+
+### Start Hyrax web server
+
+Test-drive your new Hyrax application in development mode:
+
+```shell
+rails s
 ```
 
 And now you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application.
 
 Notes:
 * This web server is purely for development purposes. You will want to use a more fully featured [web server](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide#web-server) for production-like environments.
-* You have the option to start each of these services individually.  More information on [solr_wrapper](https://github.com/cbeer/solr_wrapper) and [fcrepo_wrapper](https://github.com/cbeer/fcrepo_wrapper) will help you set this up.  Start rails with `rails s`.
+* For a fresh start, the data persisted in Lando can be wiped using `lando destroy`.
 
 ### Start background workers
 
@@ -163,14 +223,10 @@ Many of the services performed by Hyrax are resource intensive, and therefore ar
 
 Hyrax implements these jobs using the Rails [ActiveJob](http://edgeguides.rubyonrails.org/active_job_basics.html) framework, allowing you to choose the message queue system of your choice.
 
-For initial development, it is recommended that you change the default ActiveJob adapter from `:async` to `:inline`. This adapter will execute jobs immediately (in the foreground) as they are received. This can be accomplished by adding the following to your `config/environments/development.rb`
+For initial development, it is recommended that you change the default ActiveJob adapter from `:async` to `:inline`. This adapter will execute jobs immediately (in the foreground) as they are received. This can be accomplished by modifying the `.env` file:
 
-```
-class Application < Rails::Application
-  # ...
-  config.active_job.queue_adapter = :inline
-  # ...
-end
+```dotenv
+HYRAX_ACTIVE_JOB_QUEUE=inline
 ```
 
 For testing, it is recommended that you use the [built-in `:test` adapter](http://api.rubyonrails.org/classes/ActiveJob/QueueAdapters/TestAdapter.html) which stores enqueued and performed jobs, running only those configured to run during test setup. To do this, add the following to `config/environments/test.rb`:
@@ -185,53 +241,14 @@ end
 
 **For production applications** you will want to use a more robust message queue system such as [Sidekiq](http://sidekiq.org/). The Hyrax Development Guide has a detailed walkthrough of [installing and configuring Sidekiq](https://github.com/samvera/hyrax/wiki/Using-Sidekiq-with-Hyrax).
 
-### Create default administrative set
+### Create an Admin User
 
-**After** Fedora and Solr are running, create the default administrative set -- into which all works will be deposited unless assigned to other administrative sets -- by running the following command:
-
-```
-rails hyrax:default_admin_set:create
-```
-
-This command also makes sure that Hyrax's built-in workflows are loaded for your application and available for the default administrative set.
-
-**NOTE**: You will want to run this command the first time this code is deployed to a new environment as well.
-
-### Generate a work type
-
-Using Hyrax requires generating at least one type of repository object, or "work type." Hyrax allows you to generate the work types required in your application by using a Rails generator-based tool. You may generate one or more of these work types.
-
-Pass a (CamelCased) model name to Hyrax's work generator to get started, e.g.:
-
-```
-rails generate hyrax:work Work
-```
-
-or
-
-```
-rails generate hyrax:work MovingImage
-```
-
-If your applications requires your work type to be namespaced, namespaces can be included by adding a slash to the model name which creates a new class called `MovingImage` within the `My` namespace:
-
-```
-rails generate hyrax:work My/MovingImage
-```
-
-You may wish to [customize your work type](https://github.com/samvera/hyrax/wiki/Customizing-your-work-types) now that it's been generated.
-
-### Enable notifications
-
-Hyrax 2+ uses a WebSocket-based user notifications system, which requires Redis. To enable user notifications, make sure that you have configured ActionCable to use Redis as the adapter in your application's `config/cable.yml`. E.g., for the `development` Rails environment:
-
+To access all of Hyrax's features you must be signed in as a user in the `admin` role. The default role management system uses the `config/role_map.yml` file to assign users to roles. For example:
 ```yaml
 development:
-  adapter: redis
-  url: redis://localhost:6379
+  admin:
+    - dev@test.internal
 ```
-
-Note that the Hyrax Management Guide contains additional information on [how to configure ActionCable in production environments](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide#notifications).
 
 ## Managing a Hyrax-based app
 
