@@ -115,7 +115,7 @@ module Goddess
     class_methods do # rubocop:disable Metrics/BlockLength
       def count_multiple(method_name)
         # look in all services, combine and uniq results
-        define_method method_name do |*args, **opts|
+        define_method method_name do |*args, **opts, &block|
           query_strategy_for_count_multiple(__method__, *args, **opts, &block)
         end
       end
