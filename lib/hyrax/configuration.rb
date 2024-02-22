@@ -55,7 +55,7 @@ module Hyrax
   #
   # == Valkyrie
   #
-  # *Experimental:* Options for toggling Hyrax's experimental "Wings" valkyrie
+  # Options for toggling Hyrax's "Wings" valkyrie
   # adapter and configuring valkyrie.
   #
   # @see Hyrax.config
@@ -617,14 +617,14 @@ module Hyrax
     end
 
     ##
-    # @return [Boolean] whether to use the experimental valkyrie index
+    # @return [Boolean] whether to use the valkyrie index
     def query_index_from_valkyrie
       @query_index_from_valkyrie ||= false
     end
     attr_writer :query_index_from_valkyrie
 
     ##
-    # @return [Boolean] whether to use experimental valkyrie storage features
+    # @return [Boolean] whether to use valkyrie storage features
     def use_valkyrie?
       return @use_valkyrie unless @use_valkyrie.nil?
       return true if disable_wings # always return true if wings is disabled
@@ -860,7 +860,7 @@ module Hyrax
     # @return [#constantize] a string representation of the collection
     #   model
     def collection_model
-      @collection_model ||= '::Collection'
+      @collection_model ||= 'Hyrax::PcdmCollection'
     end
 
     ##
@@ -874,7 +874,7 @@ module Hyrax
     # @return [#constantize] a string representation of the admin set
     #   model
     def admin_set_model
-      @admin_set_model ||= 'AdminSet'
+      @admin_set_model ||= 'Hyrax::AdministrativeSet'
     end
 
     ##

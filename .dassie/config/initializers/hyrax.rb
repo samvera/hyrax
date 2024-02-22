@@ -63,6 +63,11 @@ Hyrax.config do |config|
   # config.collection_model = 'Hyrax::PcdmCollection' # collection without basic metadata
   # config.collection_model = 'CollectionResource'    # collection with basic metadata
   # config.admin_set_model = 'Hyrax::AdministrativeSet'
+
+  # dassie needs legacy AF models
+  config.collection_model = '::Collection'
+  config.admin_set_model = 'AdminSet'
+  config.file_set_model = '::FileSet'
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"
