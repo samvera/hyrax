@@ -20,7 +20,7 @@ module Wings
       #
       # @return [Enumerable<PcdmCollection>]
       def find_collections_by_type(global_id:, **)
-        # TODO Consider how to do this without the hard-coded Collection
+        # TODO: Consider how to do this without the hard-coded Collection
         ::Collection.where(Hyrax.config.collection_type_index_field.to_sym => global_id.to_s).map(&:valkyrie_resource)
       end
     end
