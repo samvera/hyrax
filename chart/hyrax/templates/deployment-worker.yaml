@@ -29,7 +29,9 @@ spec:
             - secretRef:
                 name: {{ template "hyrax.fullname" . }}
           env:
-            {{- toYaml .Values.worker.extraEnvVars | nindent 12 }}
+            {{- if .Values.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
           command:
             - sh
             - -c
@@ -63,7 +65,9 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           env:
-            {{- toYaml .Values.worker.extraEnvVars | nindent 12 }}
+            {{- if .Values.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
           {{- if .Values.worker.readinessProbe.enabled }}
           readinessProbe:
             exec:

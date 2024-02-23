@@ -38,7 +38,9 @@ spec:
                 name: {{ .Values.solrExistingSecret }}
             {{- end }}
           env:
-            {{- toYaml .Values.extraEnvVars | nindent 12 }}
+            {{- if .Values.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
           command:
             - sh
             - -c
@@ -66,7 +68,9 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           env:
-            {{- toYaml .Values.extraEnvVars | nindent 12 }}
+            {{- if .Values.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
           command:
             - sh
             - -c
@@ -101,7 +105,9 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           env:
-            {{- toYaml .Values.extraEnvVars | nindent 12 }}
+            {{- if .Values.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 3000
