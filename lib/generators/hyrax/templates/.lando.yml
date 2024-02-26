@@ -1,0 +1,50 @@
+name: hyrax-app
+app_mount: false
+services:
+  solr:
+    app_mount: false
+    type: solr:8
+    portforward: 8988
+    core: hyrax-dev
+    config:
+      dir: solr/conf
+  database:
+    app_mount: false
+    type: postgres:15
+    portforward: 5437
+    creds:
+      database: hyrax-dev
+  redis:
+    app_mount: false
+    type: redis:6
+    portforward: 6384
+    persist: true
+  fits:
+    api: 3
+    type: lando
+    app_mount: false
+    services:
+      image: ghcr.io/samvera/fitsservlet:1.6.0
+      command:
+        - "catalina.sh"
+        - "run"
+      ports:
+        - 8085:8080
+#  fedora:
+#    api: 3
+#    type: lando
+#    app_mount: false
+#    volumes:
+#      fedora6:
+#    services:
+#      image: fcrepo/fcrepo:6.4.0
+#      command:
+#        - "catalina.sh"
+#        - "run"
+#      volumes:
+#        - fedora6:/data
+#      ports:
+#        - 8989:8080
+#      environment:
+#        CATALINA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"
+#        JAVA_OPTS: "-Dfcrepo.dynamic.jms.port=61619 -Dfcrepo.dynamic.stomp.port=61615 -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"

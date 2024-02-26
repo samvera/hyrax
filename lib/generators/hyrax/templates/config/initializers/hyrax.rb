@@ -59,7 +59,7 @@ Hyrax.config do |config|
 
   # Hyrax uses NOIDs for files and collections instead of Fedora UUIDs
   # where NOID = 10-character string and UUID = 32-character string w/ hyphens
-  # config.enable_noids = true
+  config.enable_noids = false
 
   # Template for your repository's NOID IDs
   # config.noid_template = ".reeddeeddk"
@@ -235,12 +235,12 @@ Hyrax.config do |config|
   # Identify the model class name that will be used for Collections in your app
   # (i.e. ::Collection for ActiveFedora, Hyrax::PcdmCollection for Valkyrie)
   # config.collection_model = '::Collection'
-  # config.collection_model = 'Hyrax::PcdmCollection'
+  config.collection_model = 'Hyrax::PcdmCollection'
 
   # Identify the model class name that will be used for Admin Sets in your app
   # (i.e. AdminSet for ActiveFedora, Hyrax::AdministrativeSet for Valkyrie)
   # config.admin_set_model = 'AdminSet'
-  # config.admin_set_model = 'Hyrax::AdministrativeSet'
+  config.admin_set_model = 'Hyrax::AdministrativeSet'
 
   # Identify the form that will be used for Admin Sets
   # config.administrative_set_form = Hyrax::Forms::AdministrativeSetForm
@@ -274,13 +274,17 @@ Hyrax.config do |config|
   #   Hyrax::Indexers::PcdmObjectIndexer(model_class)
   # end
 
+  ## Enable Valkyrie only mode
+  config.use_valkyrie = true
+  config.disable_wings true
+
   # When your application is ready to use the valkyrie index instead of the one
   # maintained by active fedora, you will need to set this to true. You will
   # also need to update your Blacklight configuration.
-  # config.query_index_from_valkyrie = false
+  config.query_index_from_valkyrie = true
 
   ## Configure index adapter for Valkyrie::Resources to use solr readonly indexer
-  # config.index_adapter = :solr_index
+  config.index_adapter = :solr_index
 
   ## Fedora import/export tool
   #
