@@ -66,6 +66,11 @@ FactoryBot.define do
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
 
+      if evaluator.admin_set
+        template = Hyrax::PermissionTemplate.find_by(source_id: evaluator.admin_set.id)
+        Hyrax::PermissionTemplateApplicator.apply(template).to(model: work) if template
+      end
+
       work.permission_manager.edit_groups = work.permission_manager.edit_groups.to_a + evaluator.edit_groups
       work.permission_manager.edit_users  = work.permission_manager.edit_users.to_a + evaluator.edit_users
       work.permission_manager.read_users  = work.permission_manager.read_users.to_a + evaluator.read_users
@@ -80,6 +85,12 @@ FactoryBot.define do
           .new(resource: work)
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
+
+      if evaluator.admin_set
+        template = Hyrax::PermissionTemplate.find_by(source_id: evaluator.admin_set.id)
+        Hyrax::PermissionTemplateApplicator.apply(template).to(model: work) if template
+      end
+
       work.permission_manager.edit_groups = work.permission_manager.edit_groups.to_a + evaluator.edit_groups
       work.permission_manager.edit_users  = work.permission_manager.edit_users.to_a + evaluator.edit_users
       work.permission_manager.read_users  = work.permission_manager.read_users.to_a + evaluator.read_users
