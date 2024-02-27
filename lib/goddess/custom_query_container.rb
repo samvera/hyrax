@@ -13,7 +13,8 @@ module Goddess
                     default: {
                       find_parents: :find_multiple,
                       find_ids_by_model: :find_multiple,
-                      find_collections_by_type: :find_multiple
+                      find_collections_by_type: :find_multiple,
+                      find_parent_work: :find_single_or_nil
                     })
     class_attribute(:fallback_query_strategy, default: :find_single)
     # @!endgroup Class Attributes

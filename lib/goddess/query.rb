@@ -74,6 +74,7 @@ module Goddess
         opts[:model] = setup_model(opts[:model]) if opts[:model]
         result = nil
         services.each do |service|
+          next unless service.respond_to?(method_name)
           result = service.send(method_name, *args, **opts, &block)
           return result if result.present?
         rescue Valkyrie::Persistence::ObjectNotFoundError
@@ -82,6 +83,12 @@ module Goddess
 
         return result unless result.nil?
         raise Valkyrie::Persistence::ObjectNotFoundError
+      end
+
+      def query_strategy_for_find_single_or_nil(method_name, *args, **opts, &block)
+        query_strategy_for_find_single(method_name, *args, **opts, &block)
+      rescue Valkyrie::Persistence::ObjectNotFoundError
+        nil
       end
     end
 
