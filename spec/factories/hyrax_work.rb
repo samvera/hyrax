@@ -66,7 +66,7 @@ FactoryBot.define do
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
 
-      if evaluator.admin_set
+      if evaluator.respond_to?(:admin_set) && evaluator.admin_set.present?
         template = Hyrax::PermissionTemplate.find_by(source_id: evaluator.admin_set.id)
         Hyrax::PermissionTemplateApplicator.apply(template).to(model: work) if template
       end
@@ -86,7 +86,7 @@ FactoryBot.define do
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
 
-      if evaluator.admin_set
+      if evaluator.respond_to?(:admin_set) && evaluator.admin_set.present?
         template = Hyrax::PermissionTemplate.find_by(source_id: evaluator.admin_set.id)
         Hyrax::PermissionTemplateApplicator.apply(template).to(model: work) if template
       end
