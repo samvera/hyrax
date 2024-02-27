@@ -40,6 +40,7 @@ module Goddess
         opts[:model] = setup_model(opts[:model]) if opts[:model]
         result_sets = []
         services.each do |service|
+          next unless service.respond_to?(method_name)
           result = service.send(method_name, *args, **opts, &block)
           result_sets << result.to_a if result.present? && result.respond_to?(:any?) && result.any?
         rescue Valkyrie::Persistence::ObjectNotFoundError
