@@ -87,8 +87,13 @@ FactoryBot.define do
       end
 
       if evaluator.respond_to?(:admin_set) && evaluator.admin_set.present?
+        # We're likely going to want to apply permissions
         template = Hyrax::PermissionTemplate.find_by(source_id: evaluator.admin_set.id)
-        Hyrax::PermissionTemplateApplicator.apply(template).to(model: work) if template
+        if template
+          Hyrax::PermissionTemplateApplicator.apply(template).to(model: work)
+          user = User.find_by(Hydra.config.user_key_field => work.depositor)
+          Hyrax::Workflow::WorkflowFactory.create(work, {}, user)
+        end
       end
 
       work.permission_manager.edit_groups = work.permission_manager.edit_groups.to_a + evaluator.edit_groups
