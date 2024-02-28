@@ -91,8 +91,10 @@ FactoryBot.define do
         template = Hyrax::PermissionTemplate.find_by(source_id: evaluator.admin_set.id)
         if template
           Hyrax::PermissionTemplateApplicator.apply(template).to(model: work)
-          user = User.find_by(Hydra.config.user_key_field => work.depositor)
-          Hyrax::Workflow::WorkflowFactory.create(work, {}, user)
+          if template.active_workflow.present?
+            user = User.find_by(Hydra.config.user_key_field => work.depositor)
+            Hyrax::Workflow::WorkflowFactory.create(work, {}, user)
+          end
         end
       end
 
