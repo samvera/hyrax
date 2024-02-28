@@ -38,7 +38,7 @@ module Goddess
     end
 
     def respond_to_missing?(method_name, _include_private = false)
-      services.detect { service.respond_to?(method_name) }.present? || super
+      services.detect { |service| service.respond_to?(method_name) }.present? || super
     end
   end
 end
