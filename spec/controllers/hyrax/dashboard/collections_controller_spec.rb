@@ -586,21 +586,31 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       end
 
       describe "#show" do
+        before do
+          if collection.is_a? Valkyrie::Resource
+            Hyrax::Collections::CollectionMemberService
+              .add_members(collection_id: collection.id,
+                           new_members: [asset1, asset2, asset3, asset4, asset5],
+                           user: user)
+          else
+            [asset1, asset2, asset3, asset4, asset5].each do |asset|
+              asset.member_of_collections << collection
+              asset.save!
+            end
+          end
+        end
+
+        context "when not signed in" do
+          it "is not successful" do
+            get :show, params: { id: collection }
+
+            expect(response).not_to be_successful
+          end
+        end
+
         context "when signed in" do
           before do
             sign_in user
-
-            if collection.is_a? Valkyrie::Resource
-              Hyrax::Collections::CollectionMemberService
-                .add_members(collection_id: collection.id,
-                             new_members: [asset1, asset2, asset3, asset4, asset5],
-                             user: user)
-            else
-              [asset1, asset2, asset3, asset4, asset5].each do |asset|
-                asset.member_of_collections << collection
-                asset.save!
-              end
-            end
           end
 
           it "returns the collection and its members" do
@@ -801,6 +811,29 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
           get :files, params: { id: collection }, format: :json
 
           expect(response).to be_successful
+        end
+      end
+
+      describe "#index" do
+        context "when not signed in" do
+          it "is not successful" do
+            get :index, params: { id: collection }
+
+            expect(response).not_to be_successful
+          end
+        end
+
+        context "when signed in" do
+          before do
+            sign_in user
+          end
+
+          it "sets breadcrumbs" do
+            expect(controller).to receive(:add_breadcrumb).with('Home', root_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Collections', my_collections_path(locale: 'en'))
+            get :index, params: { per_page: 1 }
+          end
         end
       end
     end
