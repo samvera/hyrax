@@ -2,11 +2,12 @@
 module Goddess
   module Query
     ##
-    # This module provides the mechanisms for the three different query strategies:
+    # This module provides the mechanisms for the four different query strategies:
     #
-    # - find_multiple
-    # - find_single
-    # - count_multiple
+    # - {#find_multiple}
+    # - {#find_single} :: find an instance and if none is found, raise an exception
+    # - {#count_multiple}
+    # - {#find_single_or_nil} :: as {#find_single} but if no instance is found return nil
     #
     # These private methods are responsible for querying the various inner services of the
     # QueryService adapter.
