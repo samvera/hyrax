@@ -276,7 +276,7 @@ Hyrax.config do |config|
 
   ## Enable Valkyrie only mode
   config.use_valkyrie = true
-  config.disable_wings true
+  config.disable_wings = true
 
   # When your application is ready to use the valkyrie index instead of the one
   # maintained by active fedora, you will need to set this to true. You will
