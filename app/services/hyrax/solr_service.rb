@@ -149,6 +149,13 @@ module Hyrax
       result.first
     end
 
+    ##
+    # @api private
+    def connection
+      return self.class.instance.conn unless use_valkyrie
+      valkyrie_index.connection
+    end
+
     private
 
     ##
@@ -161,13 +168,6 @@ module Hyrax
     # functioning `rsolr` connection.
     def valkyrie_index
       Hyrax.index_adapter
-    end
-
-    ##
-    # @api private
-    def connection
-      return self.class.instance.conn unless use_valkyrie
-      valkyrie_index.connection
     end
 
     def rows_warning
