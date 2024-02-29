@@ -25,7 +25,7 @@
 
 A Hyrax-based application includes lots of dependencies. We provide a [Docker image for getting started with your Hyrax-based application](/CONTAINERS.md#docker-image-for-hyrax-based-applications).
 
-<aside><p><em><strong>Note:</em></strong> The Docker image describes the canonical dependencies. In a way, it is executable documentation. The following documentation is our best effort to transcribe that executable documentation into a narrative. In other words, this documentation may drift away from the Docker details.</p></aside>
+**NOTE:** The Docker image describes the canonical dependencies. In a way, it is executable documentation. The following documentation is our best effort to transcribe that executable documentation into a narrative. In other words, this documentation may drift away from the Docker details.
 
 You can also try [Running Hyrax-based application in local VM](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide#running-hyrax-based-application-in-local-vm) which uses Ubuntu.
 
@@ -54,7 +54,7 @@ Hyrax requires the following software to work:
 1. [LibreOffice](#derivatives)
 1. [ffmpeg](#transcoding)
 
-**NOTE: The [Hyrax Development Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide) has instructions for installing Solr and Fedora in a development environment.**
+**NOTE:** The [Hyrax Development Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide) has instructions for installing Solr and Fedora in a development environment.
 
 ### Characterization
 #### Servlet FITS
@@ -96,7 +96,7 @@ Once ffmpeg has been installed, enable transcoding by setting `config.enable_ffm
 
 ## Environments
 
-Note here that the following commands assume you're setting up Hyrax in a development environment (using the Rails built-in development environment). If you're setting up a production or production-like environment, you may wish to tell Rails that by prepending `RAILS_ENV=production` to the commands that follow, e.g., `rails`, `rake`, `bundle`, and so on.
+**NOTE:** The following commands assume you're setting up Hyrax in a development environment (using the Rails built-in development environment). If you're setting up a production or production-like environment, you may wish to tell Rails that by prepending `RAILS_ENV=production` to the commands that follow, e.g., `rails`, `rake`, `bundle`, and so on.
 
 ## Ruby
 
@@ -116,18 +116,21 @@ Hyrax requires Rails 6. We recommend the latest Rails 6.1 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 6.1.7.6
+gem install rails -v 6.1.7.7
 ```
 
 ### JavaScript runtime
 
 Rails requires that you have a JavaScript runtime installed (e.g. nodejs or rubyracer). Either install nodejs or uncomment the `rubyracer` line in your Gemfile and run `bundle install` before running Hyrax's install generator.
 
-NOTE: [nodejs](https://nodejs.org/en/) is preinstalled on most Mac computers and doesn't require a gem.  To test if nodejs is already installed, execute `node -v` in the terminal and the version of nodejs will be displayed if it is installed.
+**NOTE:** [nodejs](https://nodejs.org/en/) is preinstalled on most Mac computers and doesn't require a gem.  To test if nodejs is already installed, execute `node -v` in the terminal and the version of nodejs will be displayed if it is installed.
 
 ## Creating a Hyrax-based app
 
-NOTE: The steps need to be done in order to create a new Hyrax based app.
+Create a new Hyrax-based application by following these steps in order.
+
+**NOTE:** Starting with Hyrax v5, the generated application will use [Valkyrie](https://github.com/samvera/valkyrie) for repository persistence.
+Use of [ActiveFedora](https://github.com/samvera/active_fedora) (instead of Valkyrie) is deprecated, but it should still be possible to reconfigure the generated application to use it. 
 
 ### Development Prerequisites
 
@@ -142,8 +145,10 @@ These instructions assume the use of [Lando](https://lando.dev) and [Docker](htt
 
 Generate a new Rails application using the template.
 
+**NOTE:** `HYRAX_SKIP_WINGS` is needed here to avoid loading the Wings compatibility layer during the application generation process. 
+
 ```shell
-rails _6.1.7.6_ new my_app --database=postgresql -m https://raw.githubusercontent.com/samvera/hyrax/hyrax-v5.0.0.rc3/template.rb
+HYRAX_SKIP_WINGS=true rails _6.1.7.7_ new my_app --database=postgresql -m https://raw.githubusercontent.com/samvera/hyrax/hyrax-v5.0.0.rc3/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
@@ -207,7 +212,7 @@ rails s
 
 And now you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application.
 
-Notes:
+**NOTE:**
 * This web server is purely for development purposes. You will want to use a more fully featured [web server](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide#web-server) for production-like environments.
 * For a fresh start, the data persisted in Lando can be wiped using `lando destroy`.
 
