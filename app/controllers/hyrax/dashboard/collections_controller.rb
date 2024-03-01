@@ -26,9 +26,6 @@ module Hyrax
       # Catch permission errors
       rescue_from Hydra::AccessDenied, CanCan::AccessDenied, with: :deny_collection_access
 
-      # actions: index, create, new, edit, show, update, destroy, permissions, citation
-      before_action :authenticate_user!, except: [:index]
-
       class_attribute :presenter_class,
                       :form_class,
                       :single_item_search_builder_class,
