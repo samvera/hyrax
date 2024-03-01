@@ -38,7 +38,7 @@ RSpec.describe CatalogController, :clean_repo, type: :controller do
       let(:objects) { [collection, rocks, clouds] }
 
       it 'finds collections' do
-        get :index, params: { q: 'rocks' }, xhr: true
+        get :index, params: { q: 'rocks', search_field: 'all_fields' }, xhr: true
         expect(response).to be_successful
         doc_list = assigns(:response).documents
         expect(doc_list.map(&:id)).to match_array [collection.id, rocks.id]
@@ -46,10 +46,14 @@ RSpec.describe CatalogController, :clean_repo, type: :controller do
     end
 
     describe 'term search' do
-      let(:objects) { [rocks, clouds] }
+      # An attached fileset needs to be present in the index to trigger the
+      # {!join} in Hyrax::CatalogSearchBuilder#join_for_works_from_files
+      # and ensure it does not interfere with query results
+      let(:unrelated) { valkyrie_create(:monograph, :with_one_file_set, title: ['Unrelated'], read_groups: ['public']) }
+      let(:objects) { [rocks, clouds, unrelated] }
 
       it 'finds works with the given search term' do
-        get :index, params: { q: 'rocks', owner: 'all' }
+        get :index, params: { q: 'rocks', search_field: 'all_fields' }
         expect(response).to be_successful
         expect(response).to render_template('catalog/index')
         expect(assigns(:response).documents.map(&:id)).to contain_exactly(rocks.id)
@@ -74,7 +78,7 @@ RSpec.describe CatalogController, :clean_repo, type: :controller do
       let(:objects) { [rocks, clouds] }
 
       it 'finds matching records' do
-        get :index, params: { q: 'full_textfull_text' }
+        get :index, params: { q: 'full_textfull_text', search_field: 'all_fields' }
         expect(response).to be_successful
         expect(response).to render_template('catalog/index')
         expect(assigns(:response).documents.map(&:id)).to contain_exactly(clouds.id)
