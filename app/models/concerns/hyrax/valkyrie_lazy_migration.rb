@@ -55,7 +55,7 @@ module Hyrax
       klass.singleton_class.define_method(:migrating_from) { from }
       klass.singleton_class.define_method(:migrating_to) { klass }
       klass.singleton_class.define_method(:_hyrax_default_name_class) { name_class }
-      klass.singleton_class.define_method(:to_rdf_representation) { migrating_from.try(:to_rdf_representation) || migrating_from.try(:internal_resource) || migrating_from.to_s }
+      klass.singleton_class.define_method(:to_rdf_representation) { migrating_from.to_rdf_representation }
 
       klass.include(self)
     end
@@ -63,7 +63,7 @@ module Hyrax
     extend ActiveSupport::Concern
 
     included do
-      class_attribute :internal_resource, default: to_rdf_representation
+      attribute :internal_resource, Valkyrie::Types::Any.default(to_rdf_representation.freeze), internal: true
     end
 
     def members
