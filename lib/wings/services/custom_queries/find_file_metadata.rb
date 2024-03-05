@@ -109,6 +109,7 @@ module Wings
       def find_many_file_metadata_by_use(resource:, use:, use_valkyrie: true)
         pcdm_files = find_many_file_metadata_by_ids(ids: resource.file_ids, use_valkyrie: false)
         pcdm_files.select! { |pcdm_file| pcdm_file.metadata_node.type.include?(use) }
+        raise Hyrax::ObjectNotFoundError if pcdm_files.empty?
 
         if use_valkyrie == false
           warn_about_deprecation
