@@ -18,9 +18,10 @@ module Hyrax
 
     rescue Hyrax::ObjectNotFoundError
       logger.info "No PCDM File found for type #{params[:file]}, looking in derivative directory."
-    ensure 
+    ensure
       show_af
     end
+
     private
 
     def show_af

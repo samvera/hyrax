@@ -12,7 +12,7 @@ module Goddess
     #   @todo Audit the current custom queries and assign strategies.
     class_attribute(:known_custom_queries_and_their_strategies,
                     default: {
-                       find_by_date_range: :find_multiple,
+                      find_by_date_range: :find_multiple,
                       find_child_collection_ids: :find_multiple,
                       find_child_collections: :find_multiple,
                       find_child_file_set_ids: :find_multiple,
@@ -41,7 +41,7 @@ module Goddess
                       find_parent_work_id: :find_single_or_nil,
                       find_parents: :find_multiple,
                       find_thumbnail: :find_single,
-                     find_access_control_for: :find_single,
+                      find_access_control_for: :find_single
                     })
     class_attribute(:fallback_query_strategy, default: :find_single)
     # @!endgroup Class Attributes

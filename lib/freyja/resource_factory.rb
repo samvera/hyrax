@@ -13,7 +13,7 @@ module Freyja
       if resource.respond_to?(:file_ids)
         files = Hyrax.custom_queries.find_many_file_metadata_by_ids(ids: resource.file_ids)
         files.each do |file|
-          next unless file.file_identifier.to_s.match(/^fedora:/)
+          next unless /^fedora:/.match?(file.file_identifier.to_s)
 
           tempfile = Tempfile.new
           tempfile.binmode
