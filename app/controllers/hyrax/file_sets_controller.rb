@@ -8,7 +8,8 @@ module Hyrax
     include Hyrax::Breadcrumbs
 
     before_action :authenticate_user!, except: [:show, :citation, :stats]
-    load_and_authorize_resource class: ::FileSet, except: :show
+    load_and_authorize_resource class: ::FileSet, except: :show, unless: -> { Hyrax.config.use_valkyrie? }
+    load_and_authorize_resource class: Hyrax::FileSet, except: :show, if: -> { Hyrax.config.use_valkyrie? }
     before_action :build_breadcrumbs, only: [:show, :edit, :stats]
     before_action do
       blacklight_config.track_search_session = false
