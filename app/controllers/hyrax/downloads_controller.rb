@@ -14,6 +14,17 @@ module Hyrax
     # Render the 404 page if the file doesn't exist.
     # Otherwise renders the file.
     def show
+      # We will use the thumbnail from our file system first, if one exists
+      # Otherwise we will fallback to Valkyrie, then the default implementations
+      use = params.fetch(:file, :original_file).to_sym
+      if use == :thumbnail
+        thumbnail = Hyrax::DerivativePath.derivative_path_for_reference(params[:id], 'thumbnail')
+        if thumbnail.present? && File.exist?(thumbnail)
+          @file = thumbnail
+          return send_local_content
+        end
+      end
+
       return show_valkyrie if Hyrax.config.use_valkyrie?
 
       show_active_fedora
