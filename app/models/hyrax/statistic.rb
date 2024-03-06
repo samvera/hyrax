@@ -48,7 +48,7 @@ module Hyrax
 
       def work_types
         results = query_works("human_readable_type_tesim")
-        results.group_by { |result| result['human_readable_type_tesim'].join('') }.transform_values(&:count)
+        results.group_by { |result| result['human_readable_type_tesim']&.join('') || "Unknown" }.transform_values(&:count)
       end
 
       def resource_types
