@@ -16,15 +16,12 @@ module Hyrax
     def show
       return show_valkyrie if Hyrax.config.use_valkyrie?
 
-    rescue Hyrax::ObjectNotFoundError
-      logger.info "No PCDM File found for type #{params[:file]}, looking in derivative directory."
-    ensure
-      show_af
+      show_active_fedora
     end
 
     private
 
-    def show_af
+    def show_active_fedora
       case file
       when ActiveFedora::File
         # For original files that are stored in fedora
