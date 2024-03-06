@@ -10,7 +10,39 @@ module Freyja
     def to_resource(object:)
       resource = ::Valkyrie::Persistence::Postgres::ORMConverter.new(object, resource_factory: self).convert!
 
-      if resource.respond_to?(:file_ids)
+      if resource.respond_to?(:file_ids) # this is a filset if it responds to file_ids
+        # use path from downloads controller. check file. if it exists, upload the file to valkyrie. 
+        # 1. move file into backup directory (that we need to create)
+        # 2. upload it to valkyrie with the thumbnail use
+        #  GOAL: persist a file - 
+        # check if we've already migrated the thumbnail 
+        # if we have, don't do the following logic
+        
+        # thumbnail section
+        # get a temp file of the thumbnail (copy)
+        # we want a valkyrie file using the valkyrie upload 
+        thumbnail = Hyrax::DerivativePath.derivative_path_for_reference(resource, 'thumbnail') # if this includes the backup directory, don't do the next bit of work
+        # target should be based off of the above path
+        unless thumbnail_path_moved?(thumbnail)
+
+          if thumbnail.present? && File.exist?(thumbnail)
+            tempfile = Tempfile.new
+            tempfile.binmode
+            tempfile.write(File.read(thumbnail))
+
+            Hyrax::ValkyrieUpload.file(
+                                  filename: resource.label,
+                                  file_set: resource,
+                                  io: tempfile,
+                                  use: Hyrax::FileMetadata::Use::THUMBNAIL_IMAGE,
+                                  user: User.find_or_initialize_by(User.user_key_field => resource.depositor)
+                                )
+            move_thumbnail_to_backup(thumbnail)
+          end
+
+        end
+
+        # files section
         files = Hyrax.custom_queries.find_many_file_metadata_by_ids(ids: resource.file_ids)
         files.each do |file|
           next unless /^fedora:/.match?(file.file_identifier.to_s)
@@ -27,6 +59,16 @@ module Freyja
       end
 
       super
+    end
+
+    private
+
+    def thumbnail_path_moved?(thumbnail)
+
+    end
+
+    def move_thumbnail_to_backup(thumbnail)
+
     end
   end
 end
