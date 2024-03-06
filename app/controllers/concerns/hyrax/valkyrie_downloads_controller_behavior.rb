@@ -11,6 +11,15 @@ module Hyrax
 
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def send_file_contents_valkyrie(file_set)
+      # TODO: Refactor for goddess adapter usage
+      # This determines if we're dealing with active fedora or not. If we are,
+      # fallback to the original implementation. 
+      begin
+        ::Valkyrie::StorageAdapter.adapter_for(id: file_set.id)
+      rescue Valkyrie::StorageAdapter::AdapterNotFoundError
+        return show_active_fedora
+      end
+         
       response.headers["Accept-Ranges"] = "bytes"
       self.status = 200
       mime_type = params[:mime_type]
