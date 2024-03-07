@@ -66,8 +66,13 @@ module Hyrax
           end
         end
 
+        ##
         # Generate an OAuth2 token for Google Analytics
+        #
+        # @param scope [String]
         # @return [OAuth2::AccessToken] An OAuth2 access token for GA
+        #
+        # @see https://developers.google.com/identity/protocols/oauth2/scopes#analyticsreporting Google Scopes
         def token(scope = 'https://www.googleapis.com/auth/analytics.readonly')
           access_token = auth_client(scope).fetch_access_token!
           OAuth2::AccessToken.new(oauth_client, access_token['access_token'], expires_in: access_token['expires_in'])

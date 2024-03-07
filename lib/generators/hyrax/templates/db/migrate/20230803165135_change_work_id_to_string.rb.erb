@@ -1,0 +1,5 @@
+class ChangeWorkIdToString < ActiveRecord::Migration<%= migration_version %>
+  def change
+    change_column :hyrax_counter_metrics, :work_id, :string
+  end
+end
