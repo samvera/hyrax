@@ -159,13 +159,19 @@ module Hyrax
         # The number of events by day for an action
         def daily_events(action, date = default_date_range)
           date = date.split(",")
-          EventsDaily.summary(profile, date[0], date[1], action)
+          # TODO: remove the early return when GA is fully functioning
+          return Hyrax::Analytics::Results.new([])
+
+          Hyrax::Analytics::Google::EventsDaily.summary(profile, date[0], date[1], action)
         end
 
         # The number of events by day for an action and ID
         def daily_events_for_id(id, action, date = default_date_range)
           date = date.split(",")
-          EventsDaily.by_id(profile, date[0], date[1], id, action)
+          # TODO: remove the early return when GA is fully functioning
+          return Hyrax::Analytics::Results.new([])
+
+          Hyrax::Analytics::Google::EventsDaily.by_id(profile, date[0], date[1], id, action)
         end
 
         # A list of events sorted by highest event count
