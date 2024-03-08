@@ -52,13 +52,13 @@ module Freyja
 
         # NOTE: Should we pass the objec tand re-convert it?  We'll see how this all
         # works.
-        perform_later(thumbnail_path:, resource:)
+        perform_later(thumbnail_path, resource)
       end
 
       ##
       # @param thumbnail_path [Object]
       # @param resource [Object]
-      def initialize(thumbnail_path:, resource:)
+      def initialize(thumbnail_path, resource)
         @thumbnail_path = thumbnail_path
         @resource = resource
         super()
