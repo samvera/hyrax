@@ -8,7 +8,7 @@ module Freyja
     #   record to be converted.
     # @return [Valkyrie::Resource] Model representation of the AR record.
     def to_resource(object:)
-      MigrateFilesFromFedoraJob.conditionally_perform_later(object:, resource_factory:)
+      MigrateFilesFromFedoraJob.conditionally_perform_later(object:, resource_factory: self)
       super
     end
 
@@ -52,13 +52,13 @@ module Freyja
 
         # NOTE: Should we pass the objec tand re-convert it?  We'll see how this all
         # works.
-        perform_later(thumbnail_path:, resource:)
+        perform_later(thumbnail_path, resource)
       end
 
       ##
       # @param thumbnail_path [Object]
       # @param resource [Object]
-      def initialize(thumbnail_path:, resource:)
+      def initialize(thumbnail_path, resource)
         @thumbnail_path = thumbnail_path
         @resource = resource
         super()
