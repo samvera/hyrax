@@ -8,7 +8,7 @@ module Freyja
     #   record to be converted.
     # @return [Valkyrie::Resource] Model representation of the AR record.
     def to_resource(object:)
-      MigrateFilesFromFedoraJob.conditionally_perform_later(object:, resource_factory:)
+      MigrateFilesFromFedoraJob.conditionally_perform_later(object:, resource_factory: self)
       super
     end
 
