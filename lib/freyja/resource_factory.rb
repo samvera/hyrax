@@ -56,27 +56,19 @@ module Freyja
       end
 
       ##
-      # @param thumbnail_path [Object]
-      # @param resource [Object]
-      def initialize(thumbnail_path, resource)
-        @thumbnail_path = thumbnail_path
-        @resource = resource
-        super()
-      end
-
-      attr_reader :thumbnail_path, :resource
-
-      ##
       # Favor {.conditionally_perform_later} as it performs guards on the
       # resource submission.
-      def perform
-        migrate_thumbnail!
-        migrate_files!
+      #
+      # @param thumbnail_path [Object]
+      # @param resource [Object]
+      def perform(thumbnail_path, resource)
+        migrate_thumbnail!(thumbnail_path:, resource:)
+        migrate_files!(thumbnail_path:, resource:)
       end
 
       private
 
-      def migrate_thumbnail!
+      def migrate_thumbnail!(thumbnail_path:, resource:)
         return unless self.class.thumbnail_exists?(thumbnail_path)
 
         tempfile = Tempfile.new
@@ -102,7 +94,7 @@ module Freyja
       ##
       # Move the ActiveFedora files out of ActiveFedora's domain and into the
       # configured {Hyrax.storage_adapter}'s domain.
-      def migrate_files!
+      def migrate_files!(thumbnail_path:, resource:)
         return unless resource.respond_to?(:file_ids)
 
         files = Hyrax.custom_queries.find_many_file_metadata_by_ids(ids: resource.file_ids)
