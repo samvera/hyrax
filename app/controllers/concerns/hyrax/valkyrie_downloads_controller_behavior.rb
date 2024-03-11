@@ -14,16 +14,16 @@ module Hyrax
       # TODO: Refactor for goddess adapter usage
       # This determines if we're dealing with active fedora or not. If we are,
       # fallback to the original implementation.
+      mime_type = params[:mime_type]
+      file_metadata = find_file_metadata(file_set: file_set, use: use, mime_type: mime_type)
       begin
-        ::Valkyrie::StorageAdapter.adapter_for(id: file_set.id)
+        ::Valkyrie::StorageAdapter.adapter_for(id: file_metadata.file_identifier)
       rescue Valkyrie::StorageAdapter::AdapterNotFoundError
         return show_active_fedora
       end
 
       response.headers["Accept-Ranges"] = "bytes"
       self.status = 200
-      mime_type = params[:mime_type]
-      file_metadata = find_file_metadata(file_set: file_set, use: use, mime_type: mime_type)
       return unless stale?(last_modified: file_metadata.updated_at, template: false)
 
       file = Valkyrie::StorageAdapter.find_by(id: file_metadata.file_identifier)

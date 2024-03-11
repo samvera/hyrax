@@ -11,6 +11,12 @@ module Hyrax
       :original_file
     end
 
+    # We want to alias the show method for a later use with #show_active_fedora;
+    # because we're adding quite a bit of logic and need a good alias.  Why the
+    # alias?  Because we were using `super' for the show method and that just
+    # doesn't quite work with all of the antics we're performing.
+    alias hydra_show_active_fedora_file show
+
     # Render the 404 page if the file doesn't exist.
     # Otherwise renders the file.
     def show
@@ -36,7 +42,7 @@ module Hyrax
       case file
       when ActiveFedora::File
         # For original files that are stored in fedora
-        super
+        hydra_show_active_fedora_file
       when String
         # For derivatives stored on the local file system
         send_local_content
