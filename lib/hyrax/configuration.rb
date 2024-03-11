@@ -885,6 +885,21 @@ module Hyrax
       collection_model.safe_constantize
     end
 
+    ##
+    # @api private
+    #
+    # There are assumptions baked into {Wings} and tests regarding what the
+    # correct conceptual collection will be.  This helps provide that connective
+    # tissue.
+    #
+    # It is definitely a hack to appease tests and the Double Combo/Goddess
+    # adapter migration.
+    def collection_class_for_wings
+      return collection_class if collection_class < Hyrax::Resource
+
+      Hyrax::Collection
+    end
+
     attr_writer :admin_set_model
     ##
     # @return [#constantize] a string representation of the admin set
@@ -897,6 +912,21 @@ module Hyrax
     # @return [Class] the configured admin set model class
     def admin_set_class
       admin_set_model.constantize
+    end
+
+    ##
+    # @api private
+    #
+    # There are assumptions baked into {Wings} and tests regarding what the
+    # correct conceptual admin set will be.  This helps provide that connective
+    # tissue.
+    #
+    # It is definitely a hack to appease tests and the Double Combo/Goddess
+    # adapter migration.
+    def admin_set_class_for_wings
+      return admin_set_class if admin_set_class < Hyrax::Resource
+
+      Hyrax::AdministrativeSet
     end
 
     ##

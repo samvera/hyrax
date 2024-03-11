@@ -128,8 +128,8 @@ custom_queries.each do |query_handler|
 end
 
 Wings::ModelRegistry.register(Hyrax::AccessControl, Hydra::AccessControl)
-Wings::ModelRegistry.register(Hyrax.config.admin_set_class, AdminSet)
-Wings::ModelRegistry.register(Hyrax.config.collection_class, ::Collection)
+Wings::ModelRegistry.register(Hyrax.config.admin_set_class_for_wings, AdminSet)
+Wings::ModelRegistry.register(Hyrax.config.collection_class_for_wings, ::Collection)
 Wings::ModelRegistry.register(Hyrax::FileSet,           FileSet)
 Wings::ModelRegistry.register(Hyrax::Embargo,           Hydra::AccessControls::Embargo)
 Wings::ModelRegistry.register(Hyrax::Lease,             Hydra::AccessControls::Lease)
