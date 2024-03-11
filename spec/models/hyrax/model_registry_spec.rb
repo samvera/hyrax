@@ -29,4 +29,11 @@ RSpec.describe Hyrax::ModelRegistry do
       it { is_expected.to all(be_kind_of(String)) }
     end
   end
+
+  describe ".classes_from" do
+    subject { described_class.send("classes_from", ["DefinitelyNotARealClass", "Hyrax"]) }
+
+    it { is_expected.to be_a(Array) }
+    it { is_expected.not_to include(nil) }
+  end
 end

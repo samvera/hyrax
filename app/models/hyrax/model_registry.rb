@@ -99,7 +99,7 @@ module Hyrax
     end
 
     def self.classes_from(strings)
-      strings.map(&:safe_constantize).flatten.uniq
+      strings.map(&:safe_constantize).compact.uniq
     end
     private_class_method :classes_from
 
