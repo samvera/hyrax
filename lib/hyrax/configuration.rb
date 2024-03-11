@@ -897,7 +897,7 @@ module Hyrax
     def collection_class_for_wings
       return collection_class if collection_class < Hyrax::Resource
 
-      Hyrax::Collection
+      Hyrax::PcdmCollection
     end
 
     attr_writer :admin_set_model
