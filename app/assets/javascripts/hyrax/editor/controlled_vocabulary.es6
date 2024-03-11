@@ -31,6 +31,8 @@ export default class ControlledVocabulary extends FieldManager {
       this.paramKey = paramKey
       this.fieldName = this.element.data('fieldName')
       this.searchUrl = this.element.data('autocompleteUrl')
+      // Used to prevent index collisions for existing words when removing and adding back in values.
+      this.postRemovalAdjustment = 0
   }
 
   // Overrides FieldManager, because field manager uses the wrong selector
@@ -48,6 +50,15 @@ export default class ControlledVocabulary extends FieldManager {
   //
   //         this._manageFocus()
   // }
+
+  // Overrides FieldManager in order to display Remove button for values that exist at initial load time
+  _createRemoveControl() {
+    if (this.element.find('input.multi-text-field').val()) {
+      this.remover.addClass('d-block')
+      this.remover.addClass('has-existing-value')
+    }
+    $(this.fieldWrapperClass + ' .field-controls', this.element).append(this.remover)
+  }
 
   // Overrides FieldManager in order to avoid doing a clone of the existing field
   createNewField($activeField) {
@@ -68,20 +79,24 @@ export default class ControlledVocabulary extends FieldManager {
   }
 
   _newFieldTemplate() {
-      let index = this._maxIndex()
+      let index = this._maxIndex() + this.postRemovalAdjustment
       let rowTemplate = this._template()
       let controls = this.controls.clone()//.append(this.remover)
       let row =  $(rowTemplate({ "paramKey": this.paramKey,
                                  "name": this.fieldName,
                                  "index": index,
-                                 "class": "controlled_vocabulary" }))
+                                 "class": "controlled_vocabulary",
+                                 "placeholder": "Search for a location..." }))
                   .append(controls)
+      let removeButton = row.find('.remove');
+      removeButton.removeClass('d-block')
+      removeButton.removeClass('has-existing-value')
       return row
   }
 
   get _source() {
       return "<li class=\"field-wrapper input-group input-append\">" +
-        "<input class=\"string {{class}} optional form-control {{paramKey}}_{{name}} form-control multi-text-field\" name=\"{{paramKey}}[{{name}}_attributes][{{index}}][hidden_label]\" value=\"\" id=\"{{paramKey}}_{{name}}_attributes_{{index}}_hidden_label\" data-attribute=\"{{name}}\" type=\"text\">" +
+        "<input class=\"string {{class}} optional form-control {{paramKey}}_{{name}} form-control multi-text-field\" name=\"{{paramKey}}[{{name}}_attributes][{{index}}][hidden_label]\" value=\"\" id=\"{{paramKey}}_{{name}}_attributes_{{index}}_hidden_label\" data-attribute=\"{{name}}\" type=\"text\" placeholder=\"{{placeholder}}\">" +
         "<input name=\"{{paramKey}}[{{name}}_attributes][{{index}}][id]\" value=\"\" id=\"{{paramKey}}_{{name}}_attributes_{{index}}_id\" type=\"hidden\" data-id=\"remote\">" +
         "<input name=\"{{paramKey}}[{{name}}_attributes][{{index}}][_destroy]\" id=\"{{paramKey}}_{{name}}_attributes_{{index}}__destroy\" value=\"\" data-destroy=\"true\" type=\"hidden\"></li>"
   }
@@ -114,9 +129,27 @@ export default class ControlledVocabulary extends FieldManager {
   // '_destroy' hidden parameter
   removeFromList( event ) {
       event.preventDefault()
+      // Changing behavior of the remove button to add a new field if the last field is removed
+      // Using querySelector to find elements with data-attribute="based_near"
+      const inputElements = this.element.find('input' + this.inputTypeClass)
+      const parentsArray = Array.from(inputElements).map(element => element.parentElement)
+      const nonHiddenElements = parentsArray.filter(element => element.style.display !== 'none')
+      const nonHiddenCount = nonHiddenElements.length
+      if (nonHiddenCount < 2){
+        let $listing = $(event.target).closest(this.inputTypeClass).find(this.listClass)
+        let $activeField = $listing.children('li').last()
+        $listing.append(this.createNewField($activeField))
+        this.postRemovalAdjustment += 1
+      }
       let field = $(event.target).parents(this.fieldWrapperClass)
-      field.find('[data-destroy]').val('true')
-      field.hide()
+      // Removes field if a value hasn't been selected, otherwise marks it for destruction. 
+      // Prevents bug caused by marking empty fields for destruction.
+      if (field.find('.has-existing-value').length > 0) {
+        field.find('[data-destroy]').val('true')
+        field.hide()
+      } else {
+        field.remove()
+      }
       this.element.trigger("managed_field:remove", field)
   }
 }
