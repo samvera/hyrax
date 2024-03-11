@@ -98,9 +98,9 @@ module Hyrax
     def presenter_for(document:, ability:)
       case document['has_model_ssim'].first
       when *Hyrax::ModelRegistry.file_set_rdf_representations
-        Hyrax::FileSetPresenter.new(document, ability)
+        file_presenter_class.new(document, ability)
       else
-        Hyrax::WorkShowPresenter.new(document, ability)
+        work_presenter_class.new(document, ability)
       end
     end
 
