@@ -123,6 +123,21 @@ module Hyrax
     def valkyrie_update_metadata
       change_set = Hyrax::Forms::ResourceForm.for(resource: file_set)
 
+      attributes = coerce_valkyrie_params
+
+      # TODO: We are not performing any error checks.  So that's something to
+      # correct.
+      result =
+        change_set.validate(attributes) &&
+        transactions['change_set.update_file_set']
+        .with_step_args(
+          'file_set.save_acl' => { permissions_params: change_set.input_params["permissions"] }
+        )
+        .call(change_set).value_or { false }
+      @file_set = result if result
+    end
+
+    def coerce_valkyrie_params
       attrs = attributes
       # The HTML form might not submit the required data structure for reform;
       # namely instead of a hash with positional arguments for nested attributes
@@ -141,15 +156,7 @@ module Hyrax
 
         attrs["#{name}_attributes"] = new_perm_attrs
       end
-
-      result =
-        change_set.validate(attrs) &&
-        transactions['change_set.update_file_set']
-        .with_step_args(
-          'file_set.save_acl' => { permissions_params: change_set.input_params["permissions"] }
-        )
-        .call(change_set).value_or { false }
-      @file_set = result if result
+      attrs
     end
 
     def parent(file_set: curation_concern)
