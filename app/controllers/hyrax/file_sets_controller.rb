@@ -131,8 +131,8 @@ module Hyrax
         change_set.validate(attributes) &&
         transactions['change_set.update_file_set']
         .with_step_args(
-          'file_set.save_acl' => { permissions_params: change_set.input_params["permissions"] }
-        )
+            'file_set.save_acl' => { permissions_params: change_set.input_params["permissions"] }
+          )
         .call(change_set).value_or { false }
       @file_set = result if result
     end
