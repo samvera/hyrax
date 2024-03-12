@@ -72,9 +72,13 @@ RSpec.describe Hyrax::FileSetsController do
           get :edit, params: { id: file_set }
 
           expect(response).to be_successful
-          expect(assigns[:file_set]).to eq file_set
+          # With the Goddess adapter, we might be coercing an object to a
+          # different class.
+          expect(assigns[:file_set].id.to_s).to eq file_set.id.to_s
           expect(assigns[:version_list]).to be_kind_of Hyrax::VersionListPresenter
-          expect(assigns[:parent]).to eq parent
+          # With the Goddess adapter, we might be coercing an object to a
+          # different class.
+          expect(assigns[:parent].id.to_s).to eq parent.id.to_s
           expect(response).to render_template(:edit)
           expect(response).to render_template('dashboard')
         end
@@ -84,7 +88,7 @@ RSpec.describe Hyrax::FileSetsController do
         let(:parent) { FactoryBot.create(:work, :public, user: user) }
 
         let(:file_set) do
-          FactoryBot.create(:file_set, user: user, title: ['test title']).tap do |file_set|
+          FactoryBot.create(:file_set, user: user, title: ['test title'], creator: ["Special Person"]).tap do |file_set|
             parent.ordered_members << file_set
             parent.save!
           end
@@ -216,11 +220,10 @@ RSpec.describe Hyrax::FileSetsController do
                           { type: 'person', name: 'user1', access: 'edit' },
                           { type: 'group', name: 'group1', access: 'read' }
                         ] }
-          }
+               }
 
-          expect(assigns[:file_set])
-            .to have_attributes(read_groups: contain_exactly("group1"),
-                                edit_users: include("user1", user.user_key))
+          expect(assigns[:file_set].edit_users.to_a).to include("user1", user.user_key)
+          expect(assigns[:file_set].read_groups.to_a).to contain_exactly("group1")
         end
 
         it "updates existing groups and users" do
@@ -252,7 +255,7 @@ RSpec.describe Hyrax::FileSetsController do
           let(:parent) { FactoryBot.create(:work, :public, user: user) }
 
           let(:file_set) do
-            FactoryBot.create(:file_set, user: user).tap do |file_set|
+            FactoryBot.create(:file_set, user: user, creator: ["Somebody Cool"]).tap do |file_set|
               parent.ordered_members << file_set
               parent.save!
             end
@@ -266,7 +269,9 @@ RSpec.describe Hyrax::FileSetsController do
             expect(response.code).to eq '422'
             expect(response).to render_template('edit')
             expect(response).to render_template('dashboard')
-            expect(assigns[:file_set]).to eq file_set
+            # With the Goddess adapter, we might be coercing an object to a
+            # different class.
+            expect(assigns[:file_set].id.to_s).to eq file_set.id.to_s
           end
         end
       end
