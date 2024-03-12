@@ -8,8 +8,7 @@ module Hyrax
     include Hyrax::Breadcrumbs
 
     before_action :authenticate_user!, except: [:show, :citation, :stats]
-    load_and_authorize_resource class: ::FileSet, except: :show, unless: -> { Hyrax.config.use_valkyrie? }
-    load_and_authorize_resource class: Hyrax::FileSet, except: :show, if: -> { Hyrax.config.use_valkyrie? }
+    load_and_authorize_resource class: Hyrax.config.file_set_class
     before_action :build_breadcrumbs, only: [:show, :edit, :stats]
     before_action do
       blacklight_config.track_search_session = false
@@ -95,7 +94,7 @@ module Hyrax
     # @api public
     def delete(file_set:)
       case file_set
-      when Valkyrie::Resource
+      when Hyrax::Resource
         transactions['file_set.destroy']
           .with_step_args('file_set.remove_from_work' => { user: current_user },
                           'file_set.delete' => { user: current_user })
@@ -124,8 +123,28 @@ module Hyrax
     def valkyrie_update_metadata
       change_set = Hyrax::Forms::ResourceForm.for(resource: file_set)
 
+      attrs = attributes
+      # The HTML form might not submit the required data structure for reform;
+      # namely instead of a hash with positional arguments for nested attributes
+      # of a collection, it is an array.  So we conditionally coerce that Array
+      # to a Hash.
+
+      # TODO: Do we need to concern ourself with embargo_attributes and
+      # lease_attributes?  My suspicion is that since these are singular (for
+      # now), we don't.  But it's a quick add.
+      [:permissions].each do |name|
+        if attrs["#{name}_attributes"].is_a?(Array)
+          new_perm_attrs = {}
+          attrs["#{name}_attributes"].each_with_index do |el, i|
+            new_perm_attrs[i] = el
+          end
+
+          attrs["#{name}_attributes"] = new_perm_attrs
+        end
+      end
+
       result =
-        change_set.validate(attributes) &&
+        change_set.validate(attrs) &&
         transactions['change_set.update_file_set']
         .with_step_args(
           'file_set.save_acl' => { permissions_params: change_set.input_params["permissions"] }
@@ -137,7 +156,7 @@ module Hyrax
     def parent(file_set: curation_concern)
       @parent ||=
         case file_set
-        when Hyrax::FileSet
+        when Hyrax::Resource
           # TODO: Add Hyrax::FileSet#parent method
           Hyrax.query_service.find_parents(resource: file_set).first
         else
@@ -146,7 +165,7 @@ module Hyrax
     end
 
     def attempt_update
-      return attempt_update_valkyrie if ::FileSet < Hyrax::Resource
+      return attempt_update_valkyrie if curation_concern.is_a?(Hyrax::Resource)
       if wants_to_revert?
         actor.revert_content(params[:revision])
       elsif params.key?(:file_set)
