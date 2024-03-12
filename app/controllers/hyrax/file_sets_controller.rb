@@ -133,14 +133,13 @@ module Hyrax
       # lease_attributes?  My suspicion is that since these are singular (for
       # now), we don't.  But it's a quick add.
       [:permissions].each do |name|
-        if attrs["#{name}_attributes"].is_a?(Array)
-          new_perm_attrs = {}
-          attrs["#{name}_attributes"].each_with_index do |el, i|
-            new_perm_attrs[i] = el
-          end
-
-          attrs["#{name}_attributes"] = new_perm_attrs
+        next unless attrs["#{name}_attributes"].is_a?(Array)
+        new_perm_attrs = {}
+        attrs["#{name}_attributes"].each_with_index do |el, i|
+          new_perm_attrs[i] = el
         end
+
+        attrs["#{name}_attributes"] = new_perm_attrs
       end
 
       result =

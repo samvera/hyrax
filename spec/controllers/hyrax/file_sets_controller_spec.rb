@@ -220,7 +220,7 @@ RSpec.describe Hyrax::FileSetsController do
                           { type: 'person', name: 'user1', access: 'edit' },
                           { type: 'group', name: 'group1', access: 'read' }
                         ] }
-               }
+          }
 
           expect(assigns[:file_set].edit_users.to_a).to include("user1", user.user_key)
           expect(assigns[:file_set].read_groups.to_a).to contain_exactly("group1")
