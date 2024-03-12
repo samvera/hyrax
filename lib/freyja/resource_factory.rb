@@ -16,18 +16,15 @@ module Freyja
     # Responsible for conditionally enqueuing the file and thumbnail migration
     # logic of an ActiveFedora object.
     class MigrateFilesFromFedoraJob < Hyrax::ApplicationJob
-      ##
-      # @param path [String] path to the expected thumbnail
-      #
-      # @return [TrueClass] when the thumbnail at the given path has not been
-      #         moved to the Valkyrie storage adapter.
-      # @return [FalseClass] when the thumbnail has been moved to the Valkyrie
-      #         storage adapter.
-      # @see #move_thumbnail_to_backup
-      def self.thumbnail_exists?(path)
-        path.present? && File.exist?(path)
-      end
+      def self.already_migrated?(resource:)
+        # NOTE: Because we're writing this code in a Freyja adapter, we're
+        # assuming that we're using a Goddess strategy for lazy migration.
+        query_service_for_migrating_to = Hyrax.query_service.services.first
 
+        # TODO: Consider writing a custom query as this is slow compared to a
+        # simple `SELECT COUNT(id) WHERE ids IN (?)'
+        query_service_for_migrating_to.find_many_by_ids(ids: resource.file_ids).any?
+      end
       ##
       # Check the conditions of the given object to see if it should be
       # enqueued.  Given how frequently the logic could fire, we don't want to
@@ -44,32 +41,52 @@ module Freyja
         # Only migrate files for file sets objects
         return :not_a_fileset unless resource.respond_to?(:file_ids)
 
-        thumbnail_path = Hyrax::DerivativePath.derivative_path_for_reference(resource, 'thumbnail')
-
         # Looking for low hanging fruit (e.g. not overly costly to perform) to
         # avoid flooding the job queue.
-        return :already_migrated unless thumbnail_exists?(thumbnail_path)
+        #
+        # TODO: Is there a better logic for this?  Maybe check if one or more of
+        # the file_ids is in the storage adapter?
+        return :already_migrated if already_migrated?(resource:)
 
         # NOTE: Should we pass the objec tand re-convert it?  We'll see how this all
         # works.
-        perform_later(thumbnail_path, resource)
+        perform_later(object)
       end
 
       ##
       # Favor {.conditionally_perform_later} as it performs guards on the
       # resource submission.
       #
-      # @param thumbnail_path [Object]
       # @param resource [Object]
-      def perform(thumbnail_path, resource)
-        migrate_thumbnail!(thumbnail_path:, resource:)
-        migrate_files!(thumbnail_path:, resource:)
+      def perform(object)
+        # TODO: Somewhere this variable must exist in some visible manner beside
+        # digging deep into a method chain and asking for a none puplic instance
+        # variable.
+        resource_factory = Hyrax.query_service.services.first.instance_variable_get(:@resource_factory)
+
+        resource = ::Valkyrie::Persistence::Postgres::ORMConverter.new(object, resource_factory:).convert!
+        migrate_thumbnail!(resource:)
+        migrate_files!(resource:)
       end
 
       private
 
-      def migrate_thumbnail!(thumbnail_path:, resource:)
-        return unless self.class.thumbnail_exists?(thumbnail_path)
+      ##
+      # @param path [String] path to the expected thumbnail
+      #
+      # @return [TrueClass] when the thumbnail at the given path has not been
+      #         moved to the Valkyrie storage adapter.
+      # @return [FalseClass] when the thumbnail has been moved to the Valkyrie
+      #         storage adapter.
+      # @see #move_thumbnail_to_backup
+      def thumbnail_exists?(path)
+        path.present? && File.exist?(path)
+      end
+
+      def migrate_thumbnail!(resource:)
+        return true # JEREMY and SHANA hacking away
+        thumbnail_path = Hyrax::DerivativePath.derivative_path_for_reference(resource, 'thumbnail')
+        return unless thumbnail_exists?(thumbnail_path)
 
         tempfile = Tempfile.new
         tempfile.binmode
@@ -94,7 +111,7 @@ module Freyja
       ##
       # Move the ActiveFedora files out of ActiveFedora's domain and into the
       # configured {Hyrax.storage_adapter}'s domain.
-      def migrate_files!(thumbnail_path:, resource:)
+      def migrate_files!(resource:)
         return unless resource.respond_to?(:file_ids)
 
         files = Hyrax.custom_queries.find_many_file_metadata_by_ids(ids: resource.file_ids)
