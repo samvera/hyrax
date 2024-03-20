@@ -38,4 +38,4 @@ jobs:
     uses: scientist-softserv/actions/.github/workflows/lint.yaml@v0.0.16
     with:
       webTarget: hyrax-engine-dev
-      rubocop_cmd: 'cd /app/samvera/hyrax-engine && bundle exec rubocop --parallel --format progress'
+      rubocop_cmd: 'cd /app/samvera/hyrax-engine && bundle install && bundle exec rubocop --parallel --format progress'
