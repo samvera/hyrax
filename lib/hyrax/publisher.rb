@@ -124,6 +124,16 @@ module Hyrax
 
     # @since 3.5.0
     # @macro a_registered_event
+    #   @note this event SHOULD be published file is characteried by the
+    #     characterization service. Normally, this should happen close to
+    #     when the `file.metadata.updated` event (since characterization
+    #     typically involves updating the metadata). Listeners that intend
+    #     to track updates to file metadata should listen on that event
+    #     topic.
+    #     The event payload MUST include a `:file_set` ({Hyrax::FileSet}),
+    #     a `:file_id` (the id of the {Valkyrie::StorageAdapter::File}),
+    #     and MAY have a `path_hint` for a local path / cache for the
+    #     file.
     register_event('file.characterized')
 
     # @since 3.3.0
@@ -208,6 +218,7 @@ module Hyrax
       @default_listeners ||=
         [Hyrax::Listeners::ACLIndexListener.new,
          Hyrax::Listeners::BatchNotificationListener.new,
+         Hyrax::Listener::FileListener.new,
          Hyrax::Listeners::FileMetadataListener.new,
          Hyrax::Listeners::FileSetLifecycleListener.new,
          Hyrax::Listeners::FileSetLifecycleNotificationListener.new,
