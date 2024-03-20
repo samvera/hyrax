@@ -26,7 +26,8 @@ module Hyrax
       #   only includes ids of ordered members.
       def ordered_member_ids
         return [] if id.blank?
-        @ordered_member_ids ||= query_for_ordered_ids
+        # Valkyrie members are always ordered
+        @ordered_member_ids ||= valkyrie? ? member_ids : query_for_ordered_ids
       end
 
       private

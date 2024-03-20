@@ -27,8 +27,9 @@ module Hyrax
           if @handler.new(work: obj).add(files: uploaded_files, file_set_params: file_set_params).attach
             file_sets = obj.member_ids.map do |member|
               Hyrax.query_service.find_by(id: member) if Hyrax.query_service.find_by(id: member).is_a? Hyrax::FileSet
-            end
+            end.compact
 
+            # TODO: improve queries - Non performant to perform single queries. Perhapds queries ids then reject.
             Hyrax::LeaseManager.create_or_update_lease_on_members(file_sets, obj) if obj.lease
             Hyrax::EmbargoManager.create_or_update_embargo_on_members(file_sets, obj) if obj.embargo
             Success(obj)

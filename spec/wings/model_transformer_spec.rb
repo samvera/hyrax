@@ -74,16 +74,36 @@ RSpec.describe Wings::ModelTransformer, :active_fedora, :clean_repo do
 
     it 'round trips attributes' do # rubocop:disable RSpec/ExampleLength
       persister.save(resource: factory.build)
+      resource = adapter.query_service.find_by_alternate_identifier(alternate_identifier: work.id)
 
-      expect(adapter.query_service.find_by_alternate_identifier(alternate_identifier: work.id))
-        .to have_attributes title: work.title,
-                            date_created: work.date_created,
-                            depositor: work.depositor,
-                            description: work.description,
-                            import_url: work.import_url,
-                            publisher: work.publisher,
-                            related_url: work.related_url,
-                            source: work.source
+      # Why these antics?  Because there are minor differences that become errors in the
+      # have_attributes matcher.  Those differences as printed by Rspec's expectation matcher are as
+      # follows:
+      #
+      #   -:date_created => [Thu, 25 Jan 2024 15:44:23 +0000],
+      #   +:date_created => [Thu, 25 Jan 2024 15:44:23.381956010 +0000],
+      #    :depositor => "user1",
+      #    :description => ["a description"],
+      #   -:import_url => #<ActiveTriples::Resource:0x5eaec ID:<http://example.com/fake1>>,
+      #   -:publisher => [false],
+      #   -:related_url => [#<ActiveTriples::Resource:0x5eb00 ID:<http://example.com/fake1>>, #<ActiveTriples::Resource:0x5eb14 ID:<http://example.com/fake2>>],
+      #   +:import_url => #<RDF::URI:0x5eab0 URI:http://example.com/fake1>,
+      #   +:publisher => [],
+      #   +:related_url => [#<RDF::URI:0x5eac4 URI:http://example.com/fake1>, #<RDF::URI:0x5ead8 URI:http://example.com/fake2>],
+      #    :source => [1.125, :moomin],
+      #    :title => ["fake title"],
+      #
+      # The date created is for purposes of a date, equal.  The ActiveTriple ID and URI are the
+      # same, and as the spec below illustrates, they are equal (according to their equality
+      # matchers).
+      errors = []
+      [:title, :date_created, :depositor, :description, :import_url, :related_url, :source].each do |attr|
+        next if work.public_send(attr) == resource.public_send(attr)
+        errors << { attr => [work.public_send(attr), resource.public_send(attr)] }
+      end
+      errors << { publisher: [work.publisher, resource.publisher] } unless work.publisher.select(&:present?) == resource.publisher.select(&:present?)
+
+      expect(errors).to be_empty
     end
 
     context 'when handling an auto-generated object' do

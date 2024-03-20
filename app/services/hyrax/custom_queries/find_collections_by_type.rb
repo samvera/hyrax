@@ -28,9 +28,9 @@ module Hyrax
       # @param global_id [GlobalID] global id for a Hyrax::CollectionType
       #
       # @return [Enumerable<PcdmCollection>]
-      def find_collections_by_type(global_id:)
+      def find_collections_by_type(global_id:, model: Hyrax.config.collection_class)
         query_service
-          .find_all_of_model(model: Hyrax.config.collection_model.safe_constantize)
+          .find_all_of_model(model:)
           .select { |collection| collection.collection_type_gid == global_id }
       end
     end

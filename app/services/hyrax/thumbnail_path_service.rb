@@ -31,6 +31,8 @@ module Hyrax
         return object if object.thumbnail_id == object.id ||
                          object.try(:file_ids)&.detect { |fid| fid == object.thumbnail_id }
         begin
+          # In some implmentations (e.g. Wings), `find_by(id:)` aliases
+          # `find_by_alternate_identifier`  but that is not guaranteed.
           return Hyrax.query_service.find_by(id: object.thumbnail_id)
         rescue
           nil

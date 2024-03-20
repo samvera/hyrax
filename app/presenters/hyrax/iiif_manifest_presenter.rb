@@ -56,7 +56,8 @@ module Hyrax
     ##
     # @return [Boolean]
     def file_set?
-      model.try(:file_set?) || Array(model[:has_model_ssim]).include?('FileSet') || Array(model[:has_model_ssim]).include?('Hyrax::FileSet')
+      return true if model.try(:file_set?)
+      (Array(model[:has_model_ssim]) & Hyrax::ModelRegistry.file_set_rdf_representations).any?
     end
 
     ##

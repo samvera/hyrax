@@ -74,6 +74,12 @@ module Hyrax
       Hyrax::ModelRegistry.work_classes.include?(hydra_model)
     end
 
+    ##
+    # @return [Boolean]
+    def valkyrie?
+      self['valkyrie_bsi']
+    end
+
     # Method to return the model
     def hydra_model(classifier: nil)
       first('has_model_ssim')&.safe_constantize ||

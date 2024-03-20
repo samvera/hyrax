@@ -556,6 +556,22 @@ module Hyrax
     end
     attr_writer :disable_wings
 
+    ##
+    # @return [Boolean]
+    def disable_freyja
+      return @disable_freyja unless @disable_freyja.nil?
+      ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_SKIP_FREYJA', false))
+    end
+    attr_writer :disable_freyja
+
+    ##
+    # @return [Boolean]
+    def disable_frigg
+      return @disable_frigg unless @disable_frigg.nil?
+      ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_SKIP_FRIGG', false))
+    end
+    attr_writer :disable_frigg
+
     attr_writer :display_media_download_link
     # @return [Boolean]
     def display_media_download_link?
@@ -869,6 +885,21 @@ module Hyrax
       collection_model.safe_constantize
     end
 
+    ##
+    # @api private
+    #
+    # There are assumptions baked into {Wings} and tests regarding what the
+    # correct conceptual collection will be.  This helps provide that connective
+    # tissue.
+    #
+    # It is definitely a hack to appease tests and the Double Combo/Goddess
+    # adapter migration.
+    def collection_class_for_wings
+      return collection_class if collection_class < Hyrax::Resource
+
+      Hyrax::PcdmCollection
+    end
+
     attr_writer :admin_set_model
     ##
     # @return [#constantize] a string representation of the admin set
@@ -881,6 +912,21 @@ module Hyrax
     # @return [Class] the configured admin set model class
     def admin_set_class
       admin_set_model.constantize
+    end
+
+    ##
+    # @api private
+    #
+    # There are assumptions baked into {Wings} and tests regarding what the
+    # correct conceptual admin set will be.  This helps provide that connective
+    # tissue.
+    #
+    # It is definitely a hack to appease tests and the Double Combo/Goddess
+    # adapter migration.
+    def admin_set_class_for_wings
+      return admin_set_class if admin_set_class < Hyrax::Resource
+
+      Hyrax::AdministrativeSet
     end
 
     ##

@@ -30,9 +30,7 @@ module Hyrax
     end
 
     def models_to_solr_clause
-      models.map do |model|
-        model.respond_to?(:to_rdf_representation) ? model.to_rdf_representation : model.name
-      end.join(',')
+      Hyrax::ModelRegistry.rdf_representations_from(models).join(',')
     end
 
     def generic_type_field

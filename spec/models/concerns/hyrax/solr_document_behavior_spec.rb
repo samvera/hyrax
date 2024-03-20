@@ -254,4 +254,23 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       end
     end
   end
+
+  describe '#valkyrie?' do
+    subject { solr_document.valkyrie? }
+
+    context 'when valkyrie_bsi is present in the document and false' do
+      let(:solr_hash) { { "valkyrie_bsi" => false } }
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when valkyrie_bsi is present in the document and true' do
+      let(:solr_hash) { { "valkyrie_bsi" => true } }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when valkyrie_bsi is not present in the document' do
+      let(:solr_hash) { {} }
+      it { is_expected.to be_falsey }
+    end
+  end
 end
