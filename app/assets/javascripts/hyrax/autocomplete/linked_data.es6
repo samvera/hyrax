@@ -18,6 +18,9 @@ export default class LinkedData {
     let result = this.element.select2("data")
     this.element.select2("destroy")
     this.element.val(result.label).attr("readonly", "readonly")
+    // Adding d-block class to the remove button to show it after a selection is made.
+    let removeButton = this.element.closest('.field-wrapper').find('.input-group-btn.field-controls .remove')
+    removeButton.addClass('d-block')
     this.setIdentifier(result.id)
   }
 
