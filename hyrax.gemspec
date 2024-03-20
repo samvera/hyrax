@@ -18,13 +18,7 @@ SUMMARY
   spec.homepage      = "http://github.com/samvera/hyrax"
 
   spec.files         = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR).reject do |f|
-    f == 'bin/rails' ||
-      # We want for downstream implementations to be able to leverage the various Hyrax factories.
-      # As such we need them to be available in the .gem file.  See `./lib/hyrax/spec/factories.rb`
-      # for more details.
-      (File.dirname(f) =~ %r{\A"?spec\/?} &&
-        File.dirname(f) !~ %r{\A"?spec\/(factories|assets|support)\/?}
-      )
+    f == 'bin/rails' || File.dirname(f) =~ %r{\A"?spec\/?}
   end
   spec.executables   = spec.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   spec.name          = "hyrax"
