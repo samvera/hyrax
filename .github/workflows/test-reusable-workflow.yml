@@ -126,19 +126,19 @@ jobs:
           cd ${{ inputs.subdir }};
           [ -f "db/schema.rb" ] && chmod 777 db/schema.rb;
           [ -f "bin/checkout_all.sh" ] && ./bin/checkout_all.sh;
-          docker compose pull --ignore-pull-failures;
-          docker compose up -d
+          docker compose -f docker-compose-koppie.yml pull --ignore-pull-failures;
+          docker compose -f docker-compose-koppie.yml up -d
       - name: Setup Solr
         if: ${{ inputs.solrTarget != '' }}
         shell: bash
         run: >-
           cd ${{ inputs.subdir }};
-          docker compose exec -T solr sh -c
+          docker compose -f docker-compose-koppie.yml exec -T solr sh -c
           "${{ inputs.setup_solr_cmd }}"
       - name: Setup db
         run: >-
           cd ${{ inputs.subdir }};
-          docker compose exec -T web sh -c
+          docker compose -f docker-compose-koppie.yml exec -T web sh -c
           "${{ inputs.setup_db_cmd }}"
       - name: Run Specs
         id: run-specs
@@ -151,7 +151,7 @@ jobs:
         continue-on-error: true
         run: >-
           cd ${{ inputs.subdir }};
-          docker compose exec -T web sh -c
+          docker compose -f docker-compose-koppie.yml exec -T web sh -c
           "${{ inputs.rspec_cmd }}"
       # you need TB_RSPEC_OPTIONS: --format RspecJunitFormatter --out rspec.xml and TB_RSPEC_FORMATTER: progress in your .env for this to work
       - name: Capture Container Logs
