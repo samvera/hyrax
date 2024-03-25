@@ -1,7 +1,7 @@
 # Requires Docker Compose v2
 name: koppie
 services:
-  app: &app
+  web:
     build:
       context: .
       target: hyrax-engine-dev
@@ -9,7 +9,7 @@ services:
         - EXTRA_APK_PACKAGES=git less
         - APP_PATH=.koppie
         - BUNDLE_GEMFILE=Gemfile.koppie
-    image: samvera/koppie
+    image: ghcr.io/samvera/hyrax/koppie-dev
     entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
     stdin_open: true
@@ -43,8 +43,8 @@ services:
     networks:
       - koppie
 
-  sidekiq:
-    image: samvera/koppie
+  worker:
+    image: ghcr.io/samvera/hyrax/koppie-dev
     entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec sidekiq'
     user: root
@@ -70,7 +70,7 @@ services:
       - koppie
 
   db_migrate:
-    image: samvera/koppie
+    image: ghcr.io/samvera/hyrax/koppie-dev
     user: root
     env_file:
       - .koppie/.env
@@ -90,11 +90,11 @@ services:
       - koppie
 
   chrome:
-    image: seleniarm/standalone-chromium:114.0
+    image: seleniarm/standalone-chromium:4.18
     environment:
       - START_XVFB=false
-    logging:
-      driver: none
+#    logging:
+#      driver: none
     volumes:
       - /dev/shm:/dev/shm
     shm_size: 2G
