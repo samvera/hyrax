@@ -172,3 +172,6 @@ jobs:
         if: ${{ failure() }}
         with:
           limit-access-to-actor: true
+      - name: Check For Failure
+        if: ${{ failure() }}
+        run: echo 'Actions failure detected'; exit 1
