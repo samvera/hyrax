@@ -87,11 +87,11 @@ services:
       - hyrax
 
   chrome:
-    image: seleniarm/standalone-chromium:114.0
+    image: seleniarm/standalone-chromium:4.18
     environment:
       - START_XVFB=false
-    logging:
-      driver: none
+#    logging:
+#      driver: none
     volumes:
       - /dev/shm:/dev/shm
     shm_size: 2G

@@ -155,7 +155,7 @@ jobs:
           "${{ inputs.rspec_cmd }}"
       # you need TB_RSPEC_OPTIONS: --format RspecJunitFormatter --out rspec.xml and TB_RSPEC_FORMATTER: progress in your .env for this to work
       - name: Capture Container Logs
-        if: failure()
+#        if: failure()
         uses: jwalton/gh-docker-logs@v2
         with:
           images: 'chrome'
