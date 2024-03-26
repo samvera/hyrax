@@ -218,7 +218,7 @@ module Hyrax
       @default_listeners ||=
         [Hyrax::Listeners::ACLIndexListener.new,
          Hyrax::Listeners::BatchNotificationListener.new,
-         Hyrax::Listener::FileListener.new,
+         Hyrax::Listeners::FileListener.new,
          Hyrax::Listeners::FileMetadataListener.new,
          Hyrax::Listeners::FileSetLifecycleListener.new,
          Hyrax::Listeners::FileSetLifecycleNotificationListener.new,
