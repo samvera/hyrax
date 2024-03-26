@@ -15,27 +15,94 @@ on:
         required: false
         default: false
 
+env:
+  REGISTRY: ghcr.io
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          cache-version: 1
+      - name: Rubocop
+        run: bundle install && rubocop
+
   build:
-    uses: scientist-softserv/actions/.github/workflows/build.yaml@v0.0.16
-    secrets: inherit
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and export
+        uses: docker/build-push-action@v5
+        with:
+          build-args: |
+            APP_PATH=.koppie
+          context: .
+          target: hyrax-engine-dev
+          tags: koppie-test:${{ github.sha }}
+          outputs: type=docker,dest=/tmp/koppie-test-${{ github.sha }}.tar
+      - name: Upload built image artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: koppie-test
+          path: /tmp/koppie-test-${{ github.sha }}.tar
     with:
       platforms: 'linux/amd64'
       webTarget: hyrax-engine-dev
 
   test:
     needs: build
-    uses: ./.github/workflows/test-reusable-workflow.yml
-    with:
-      confdir: '/app/samvera/hyrax-webapp/solr/conf'
-      webTarget: hyrax-engine-dev
-      rspec_cmd: 'cd /app/samvera/hyrax-engine && gem install semaphore_test_boosters && bundle install && rspec_booster --job $CI_NODE_INDEX/$CI_NODE_TOTAL'
-      setup_db_cmd: 'true'
-      debug_enabled: false
-
-  lint:
-    needs: build
-    uses: scientist-softserv/actions/.github/workflows/lint.yaml@v0.0.16
-    with:
-      webTarget: hyrax-engine-dev
-      rubocop_cmd: 'cd /app/samvera/hyrax-engine && bundle install && bundle exec rubocop --parallel --format progress'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ci_node_total: [1]
+        ci_node_index: [0]
+    steps:
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          detached: true
+          limit-access-to-actor: true
+      - name: Download built image artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: koppie-test
+          path: /tmp
+      - name: Load image
+        run: |
+          docker load --input /tmp/koppie-test-${{ github.sha }}.tar
+          docker image ls -a
+      - name: Start containers
+        run: >-
+          docker compose -f docker-compose-koppie.yml pull --quiet --ignore-pull-failures;
+          docker compose -f docker-compose-koppie.yml up -d
+      - name: RSpec
+        env:
+          CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
+          CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+        continue-on-error: true
+        run: >-
+          docker compose -f docker-compose-koppie.yml exec -T web sh -c
+          "gem install semaphore_test_boosters && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
+      - name: Capture Container Logs
+        uses: jwalton/gh-docker-logs@v2
+        with:
+          images: 'seleniarm/standalone-chromium'
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v4
+        if: success() || failure()
+        with:
+          report_paths: '**/rspec*.xml'
+          fail_on_failure: true
+          require_passed_tests: true
+          detailed_summary: true
