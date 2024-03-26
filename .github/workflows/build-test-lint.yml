@@ -55,9 +55,6 @@ jobs:
         with:
           name: koppie-test
           path: /tmp/koppie-test-${{ github.sha }}.tar
-    with:
-      platforms: 'linux/amd64'
-      webTarget: hyrax-engine-dev
 
   test:
     needs: build
