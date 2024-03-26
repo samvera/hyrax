@@ -91,7 +91,7 @@ jobs:
         continue-on-error: true
         run: >-
           docker compose -f docker-compose-koppie.yml exec -T web sh -c
-          "bundle add semaphore_test_boosters && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
+          "bundle install && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
       - name: Capture Container Logs
         uses: jwalton/gh-docker-logs@v2
         with:
