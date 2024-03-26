@@ -31,7 +31,7 @@ jobs:
           bundler-cache: true
           cache-version: 1
       - name: Rubocop
-        run: bundle install && rubocop
+        run: bundle install && bundle exec rubocop
 
   build:
     needs: lint
