@@ -50,13 +50,13 @@ jobs:
           cache-to: type=gha, mode=max
           context: .
           target: hyrax-engine-dev
-          tags: koppie-test:${{ github.sha }}
-          outputs: type=docker,dest=/tmp/koppie-test-${{ github.sha }}.tar
+          tags: samvera/koppie:latest,samvera/koppie:${{ github.sha }}
+          outputs: type=docker,dest=/tmp/koppie-${{ github.sha }}.tar
       - name: Upload built image artifact
         uses: actions/upload-artifact@v4
         with:
-          name: koppie-test
-          path: /tmp/koppie-test-${{ github.sha }}.tar
+          name: koppie-image
+          path: /tmp/koppie-${{ github.sha }}.tar
 
   test:
     needs: build
@@ -77,16 +77,16 @@ jobs:
       - name: Download built image artifact
         uses: actions/download-artifact@v4
         with:
-          name: koppie-test
+          name: koppie-image
           path: /tmp
-      - name: Load image
-        run: |
-          docker load --input /tmp/koppie-test-${{ github.sha }}.tar
-          docker image ls -a
-      - name: Start containers
+      - name: Load images
         run: >-
-          docker compose -f docker-compose-koppie.yml pull --quiet --ignore-pull-failures;
-          docker compose -f docker-compose-koppie.yml up -d
+          docker load --input /tmp/koppie-${{ github.sha }}.tar
+          docker compose -f docker-compose-koppie.yml pull --quiet --policy missing --ignore-buildable
+          docker image ls -a
+          echo "Commit sha: ${{ github.sha }}"
+      - name: Start containers
+        run: docker compose -f docker-compose-koppie.yml up -d
       - name: RSpec
         env:
           CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
