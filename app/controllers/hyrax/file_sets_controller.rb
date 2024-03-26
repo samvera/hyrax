@@ -292,7 +292,7 @@ module Hyrax
     end
 
     def file_metadata
-      @file_metadata ||= Hyrax.query_service.custom_queries.find_file_metadata_by(id: curation_concern.original_file_id)
+      @file_metadata ||= Hyrax.config.file_set_file_service.primary_file_for(file_set: file_set)
     end
 
     # Override this method to add additional response formats to your local app
