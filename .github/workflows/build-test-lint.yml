@@ -80,7 +80,7 @@ jobs:
           name: koppie-image
           path: /tmp
       - name: Load images
-        run: >-
+        run: |
           docker load --input /tmp/koppie-${{ github.sha }}.tar
           docker compose -f docker-compose-koppie.yml pull --quiet --policy missing --ignore-buildable
           docker image ls -a
