@@ -46,12 +46,14 @@ jobs:
         with:
           build-args: |
             APP_PATH=.koppie
+          cache-from: type=gha
+          cache-to: type=gha, mode=max
           context: .
           target: hyrax-engine-dev
           tags: koppie-test:${{ github.sha }}
           outputs: type=docker,dest=/tmp/koppie-test-${{ github.sha }}.tar
       - name: Upload built image artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: koppie-test
           path: /tmp/koppie-test-${{ github.sha }}.tar
@@ -65,13 +67,15 @@ jobs:
         ci_node_total: [1]
         ci_node_index: [0]
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
         with:
           detached: true
           limit-access-to-actor: true
       - name: Download built image artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: koppie-test
           path: /tmp
