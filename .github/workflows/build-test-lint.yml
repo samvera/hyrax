@@ -79,14 +79,11 @@ jobs:
         with:
           name: koppie-image
           path: /tmp
-      - name: Load images
+      - name: Start containers
         run: |
           docker load --input /tmp/koppie-${{ github.sha }}.tar
-          docker compose -f docker-compose-koppie.yml pull --quiet --policy missing --ignore-buildable
           docker image ls -a
-          echo "Commit sha: ${{ github.sha }}"
-      - name: Start containers
-        run: docker compose -f docker-compose-koppie.yml up -d
+          docker compose -f docker-compose-koppie.yml up -d --quiet-pull --pull missing --no-build
       - name: RSpec
         env:
           CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
