@@ -90,7 +90,7 @@ jobs:
           CI_NODE_INDEX: ${{ matrix.ci_node_index }}
         continue-on-error: true
         run: >-
-          docker compose -f docker-compose-koppie.yml exec -T web sh -c
+          docker compose -f docker-compose-koppie.yml exec -T -w /app/samvera/hyrax-engine web sh -c
           "bundle install && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
       - name: Capture Container Logs
         uses: jwalton/gh-docker-logs@v2
