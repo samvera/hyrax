@@ -30,8 +30,8 @@ module Hyrax
     rescue ConnectionPool::TimeoutError => err
       Hyrax.logger.error(err.message)
       raise(ConnectionPool::TimeoutError,
-            "Failed to aquire a lock from Redlock due to a Redis connection " /
-            "timeout: #{err}. If you are using Redis via `ConnectionPool` " /
+            "Failed to acquire a lock from Redlock due to a Redis connection " \
+            "timeout: #{err}. If you are using Redis via `ConnectionPool` " \
             "you may wish to increase the pool size.")
     end
 
