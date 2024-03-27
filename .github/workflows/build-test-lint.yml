@@ -64,16 +64,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ci_node_total: [1]
-        ci_node_index: [0]
+        ci_node_total: [4]
+        ci_node_index: [0,1,2,3]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          detached: true
-          limit-access-to-actor: true
       - name: Download built image artifact
         uses: actions/download-artifact@v4
         with:
@@ -91,7 +86,7 @@ jobs:
         continue-on-error: true
         run: >-
           docker compose -f docker-compose-koppie.yml exec -T -w /app/samvera/hyrax-engine web sh -c
-          "bundle install && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
+          "bundle install && yarn install && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
       - name: Capture Container Logs
         uses: jwalton/gh-docker-logs@v2
         with:
@@ -104,3 +99,8 @@ jobs:
           fail_on_failure: true
           require_passed_tests: true
           detailed_summary: true
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: failure()
+        with:
+          limit-access-to-actor: true
