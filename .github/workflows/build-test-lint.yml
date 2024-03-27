@@ -17,7 +17,7 @@ on:
 
 jobs:
   build:
-    uses: scientist-softserv/actions/.github/workflows/build.yaml@v0.0.16
+    uses: scientist-softserv/actions/.github/workflows/build.yaml@v0.0.18
     secrets: inherit
     with:
       platforms: 'linux/amd64'
@@ -25,7 +25,7 @@ jobs:
 
   test:
     needs: build
-    uses: ./.github/workflows/test-reusable-workflow.yml
+    uses: scientist-softserv/actions/.github/workflows/test.yaml@v0.0.18
     with:
       confdir: '/app/samvera/hyrax-webapp/solr/conf'
       webTarget: hyrax-engine-dev
@@ -35,7 +35,12 @@ jobs:
 
   lint:
     needs: build
-    uses: scientist-softserv/actions/.github/workflows/lint.yaml@v0.0.16
+    uses: scientist-softserv/actions/.github/workflows/lint.yaml@v0.0.18
     with:
       webTarget: hyrax-engine-dev
       rubocop_cmd: 'cd /app/samvera/hyrax-engine && bundle install && bundle exec rubocop --parallel --format progress'
+
+  reports:
+    if: always()
+    needs: [test, lint]
+    uses: scientist-softserv/actions/.github/workflows/report.yaml@v0.0.18
