@@ -1,20 +1,20 @@
 <!-- The template to display files available for upload -->
-<% fade_class_if_not_test = Rails.env.test? ? 'show' : 'fade show' %>
+<% fade_class_if_not_test = Rails.env.test? ? '' : 'fade' %>
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-upload <%= fade_class_if_not_test %>">
-        <span>
+        <td>
             <span class="preview"></span>
-        </span>
-        <span>
+        </td>
+        <td>
             <p class="name">{%=file.name%}</p>
             <strong class="error text-danger"></strong>
-        </span>
-        <span>
+        </td>
+        <td>
             <p class="size">Processing...</p>
             <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%;"></div></div>
-        </span>
-        <span class="text-right">
+        </td>
+        <td class="text-right">
             {% if (!i && !o.options.autoUpload) { %}
                 <button class="btn btn-primary start" disabled>
                     <span class="fa fa-upload"></span>
@@ -27,7 +27,7 @@
                     <span><%= t('helpers.action.cancel') %></span>
                 </button>
             {% } %}
-        </span>
+        </td>
     </tr>
 {% } %}
 </script>
