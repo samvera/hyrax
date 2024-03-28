@@ -42,7 +42,7 @@ module Hyrax
       end
 
       def query_works(query)
-        models = Hyrax.config.curation_concerns.map { |m| "\"#{m}\"" }
+        models = Hyrax::ModelRegistry.work_rdf_representations.map { |m| "\"#{m}\"" }
         Hyrax::SolrService.query("has_model_ssim:(#{models.join(' OR ')})", fl: query, rows: 100_000)
       end
 
