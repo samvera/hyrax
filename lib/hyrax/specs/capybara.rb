@@ -21,6 +21,7 @@ Capybara.save_path = ENV['CI'] ? "/tmp/test-results" : Rails.root.join('tmp', 'c
 options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
   opts.add_argument("--headless") if ENV["CHROME_HEADLESS_MODE"]
   opts.add_argument("--disable-gpu") if Gem.win_platform?
+  opts.add_argument("--no-sandbox")
   # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
   opts.add_argument("--disable-site-isolation-trials")
   opts.add_argument("--window-size=1440,1440")

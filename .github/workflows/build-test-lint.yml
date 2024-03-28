@@ -28,7 +28,7 @@ jobs:
     uses: scientist-softserv/actions/.github/workflows/test.yaml@main
     with:
       confdir: '/app/samvera/hyrax-webapp/solr/conf'
-      rspec_cmd: 'cd /app/samvera/hyrax-engine && gem install semaphore_test_boosters && bundle install && rspec_booster --job $CI_NODE_INDEX/$CI_NODE_TOTAL'
+      rspec_cmd: 'cd /app/samvera/hyrax-engine && gem install semaphore_test_boosters && bundle install && yarn install && rspec_booster --job $CI_NODE_INDEX/$CI_NODE_TOTAL'
       setup_db_cmd: 'true'
       node_index: '[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]'
       node_total: '[10]'
@@ -38,7 +38,7 @@ jobs:
     uses: scientist-softserv/actions/.github/workflows/lint.yaml@v0.0.18
     with:
       webTarget: hyrax-engine-dev
-      rubocop_cmd: 'cd /app/samvera/hyrax-engine && bundle install && npm install && bundle exec rubocop --parallel --format progress'
+      rubocop_cmd: 'cd /app/samvera/hyrax-engine && bundle install && bundle exec rubocop --parallel --format progress'
 
   reports:
     if: always()
