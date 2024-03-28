@@ -71,7 +71,7 @@ Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each { |f| require f }
 
 require 'webmock/rspec'
 allowed_hosts = %w[chrome chromedriver.storage.googleapis.com fcrepo solr]
-WebMock.disable_net_connect!(allow_localhost: true, allow: allowed_hosts)
+#WebMock.disable_net_connect!(allow_localhost: true, allow: allowed_hosts)
 
 require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ci_build?
@@ -154,9 +154,9 @@ RSpec.configure do |config|
     # disable analytics except for specs which will have proper api mocks
   end
 
-  config.after(:suite) do
-    WebMock.allow_net_connect!
-  end
+  # config.after(:suite) do
+  #   WebMock.allow_net_connect!
+  # end
 
   config.before :all do
     Hyrax.config.analytics = false
