@@ -31,7 +31,13 @@ jobs:
           bundler-cache: true
           cache-version: 1
       - name: Rubocop
-        run: bundle install && bundle exec rubocop
+        run: bundle install && bundle exec rubocop --parallel --format progress --format junit --out rubocop.xml --display-only-failed
+      - name: Archive rubocop reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rubocop-reports
+          path: 'rubocop*.xml'
 
   build:
     needs: lint
@@ -83,24 +89,49 @@ jobs:
         env:
           CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
           CI_NODE_INDEX: ${{ matrix.ci_node_index }}
-        continue-on-error: true
         run: >-
           docker compose -f docker-compose-koppie.yml exec -T -w /app/samvera/hyrax-engine web sh -c
           "bundle install && yarn install && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
       - name: Capture Container Logs
+        if: always()
         uses: jwalton/gh-docker-logs@v2
         with:
           images: 'seleniarm/standalone-chromium'
-      - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v4
-        if: success() || failure()
+      - name: Move Test Files
+        if: always()
+        env:
+          CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
+          CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+        run: >-
+          mv rspec.xml rspec-${CI_NODE_INDEX}.xml
+      - name: Archive spec reports
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          report_paths: '**/rspec*.xml'
-          fail_on_failure: true
-          require_passed_tests: true
-          detailed_summary: true
+          name: spec-reports-${{ matrix.ci_node_index }}
+          path: '**/rspec*.xml'
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
         if: failure()
         with:
           limit-access-to-actor: true
+
+  report:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      # only needed unless run with comment_mode: off
+      pull-requests: write
+    if: always()
+    steps:
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Publish Test Report
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: "artifacts/**/*.xml"
+          action_fail_on_inconclusive: true
+          fail_on: "test failures"
