@@ -41,7 +41,7 @@ executors:
       POSTGRES_USER: postgres
     docker:
       - image: "ghcr.io/samvera/hyrax/<< parameters.hyrax_app >>-dev:<< pipeline.git.revision >>"
-      - image: seleniarm/standalone-chromium:114.0
+      - image: seleniarm/standalone-chromium:4.18.1
         environment:
           SE_NODE_SESSION_TIMEOUT: 1200
           START_XVFB: "false"
