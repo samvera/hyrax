@@ -26,6 +26,7 @@ jobs:
   test:
     needs: build
     uses: scientist-softserv/actions/.github/workflows/test.yaml@main
+
     with:
       confdir: '/app/samvera/hyrax-webapp/solr/conf'
       webTarget: hyrax-engine-dev
