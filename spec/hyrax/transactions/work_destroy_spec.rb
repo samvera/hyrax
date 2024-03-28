@@ -44,7 +44,7 @@ RSpec.describe Hyrax::Transactions::WorkDestroy do
     context "with attached files" do
       let(:work) { FactoryBot.valkyrie_create(:hyrax_work, uploaded_files: [FactoryBot.create(:uploaded_file)], edit_users: [user]) }
       let(:file_set) { query_service.find_members(resource: work).first }
-      let(:file_metadata) { query_service.custom_queries.find_file_metadata_by(id: file_set.file_ids.first) }
+      let(:file_metadata) { query_service.custom_queries.find_files(file_set: file_set).first }
       let(:uploaded) { storage_adapter.find_by(id: file_metadata.file_identifier) }
       let(:storage_adapter) { Hyrax.storage_adapter }
       let(:query_service) { Hyrax.query_service }
