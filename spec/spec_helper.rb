@@ -154,6 +154,10 @@ RSpec.configure do |config|
     # disable analytics except for specs which will have proper api mocks
   end
 
+  config.after(:suite) do
+    WebMock.allow_net_connect!
+  end
+
   config.before :all do
     Hyrax.config.analytics = false
   end
