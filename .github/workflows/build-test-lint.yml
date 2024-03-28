@@ -1,0 +1,46 @@
+name: 'Build Test Lint'
+run-name: Build Test Lint of ${{ github.ref_name }} by @${{ github.actor }}
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
+
+jobs:
+  build:
+    uses: scientist-softserv/actions/.github/workflows/build.yaml@v0.0.18
+    secrets: inherit
+    with:
+      platforms: 'linux/amd64'
+      webTarget: hyrax-engine-dev
+
+  test:
+    needs: build
+    uses: scientist-softserv/actions/.github/workflows/test.yaml@main
+    with:
+      confdir: '/app/samvera/hyrax-webapp/solr/conf'
+      rspec_cmd: 'cd /app/samvera/hyrax-engine && gem install semaphore_test_boosters && bundle install && yarn install && rspec_booster --job $CI_NODE_INDEX/$CI_NODE_TOTAL'
+      setup_db_cmd: 'true'
+      node_index: '[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]'
+      node_total: '[10]'
+
+  lint:
+    needs: build
+    uses: scientist-softserv/actions/.github/workflows/lint.yaml@v0.0.18
+    with:
+      webTarget: hyrax-engine-dev
+      rubocop_cmd: 'cd /app/samvera/hyrax-engine && bundle install && bundle exec rubocop --parallel --format progress'
+
+  reports:
+    if: always()
+    needs: [test, lint]
+    uses: scientist-softserv/actions/.github/workflows/report.yaml@v0.0.18
