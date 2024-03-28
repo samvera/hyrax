@@ -93,7 +93,6 @@ services:
     image: seleniarm/standalone-chromium:4
     environment:
       - START_XVFB=false
-      - SE_OPTS=--log-level FINE
 #    logging:
 #      driver: none
     volumes:
