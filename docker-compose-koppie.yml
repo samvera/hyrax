@@ -1,7 +1,7 @@
 # Requires Docker Compose v2
 name: koppie
 services:
-  app: &app
+  web:
     build:
       context: .
       target: hyrax-engine-dev
@@ -43,7 +43,7 @@ services:
     networks:
       - koppie
 
-  sidekiq:
+  worker:
     image: samvera/koppie
     entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec sidekiq'
@@ -90,11 +90,11 @@ services:
       - koppie
 
   chrome:
-    image: seleniarm/standalone-chromium:114.0
+    image: seleniarm/standalone-chromium:4
     environment:
       - START_XVFB=false
-    logging:
-      driver: none
+#    logging:
+#      driver: none
     volumes:
       - /dev/shm:/dev/shm
     shm_size: 2G

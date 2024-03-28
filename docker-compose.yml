@@ -1,14 +1,14 @@
 version: '3.7'
 
 services:
-  app: &app
+  web:
     build:
       context: .
       target: hyrax-engine-dev
       args:
         - EXTRA_APK_PACKAGES=git less
         - BUNDLE_GEMFILE=Gemfile.dassie
-    image: samvera/dassie
+    image: ghcr.io/samvera/hyrax/dassie-dev
     entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
     stdin_open: true
@@ -41,8 +41,8 @@ services:
     networks:
       - hyrax
 
-  sidekiq:
-    image: samvera/dassie
+  worker:
+    image: ghcr.io/samvera/hyrax/dassie-dev
     entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec sidekiq'
     user: root
@@ -68,7 +68,7 @@ services:
       - hyrax
 
   db_migrate:
-    image: samvera/dassie
+    image: ghcr.io/samvera/hyrax/dassie-dev
     user: root
     env_file:
       - .dassie/.env
@@ -87,11 +87,11 @@ services:
       - hyrax
 
   chrome:
-    image: seleniarm/standalone-chromium:114.0
+    image: seleniarm/standalone-chromium:4.18
     environment:
       - START_XVFB=false
-    logging:
-      driver: none
+#    logging:
+#      driver: none
     volumes:
       - /dev/shm:/dev/shm
     shm_size: 2G
