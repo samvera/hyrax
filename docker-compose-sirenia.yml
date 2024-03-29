@@ -1,7 +1,7 @@
 # Requires Docker Compose v2
 name: sirenia
 services:
-  app: &app
+  web:
     build:
       context: .
       target: hyrax-engine-dev
@@ -45,7 +45,7 @@ services:
     networks:
       - sirenia
 
-  sidekiq:
+  worker:
     image: samvera/koppie
     entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec sidekiq'
@@ -126,7 +126,7 @@ services:
       - sirenia
 
   fcrepo:
-    image: fcrepo/fcrepo:6.4.0
+    image: fcrepo/fcrepo:6.5-tomcat9
     environment:
       - >-
         CATALINA_OPTS=-Dfcrepo.home=/fcrepo-home -Djava.awt.headless=true -Dfile.encoding=UTF-8
