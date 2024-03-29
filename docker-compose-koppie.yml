@@ -145,7 +145,7 @@ services:
     command:
       - sh
       - "-c"
-      - "precreate-core hydra-test /opt/solr/server/configsets/hyraxconf; solr-precreate koppie /opt/solr/server/configsets/hyraxconf"
+      - "precreate-core koppie-test /opt/solr/server/configsets/hyraxconf; solr-precreate koppie /opt/solr/server/configsets/hyraxconf"
     volumes:
       - solr_home:/var/solr/data:cached
       - .koppie/solr/conf:/opt/solr/server/configsets/hyraxconf
