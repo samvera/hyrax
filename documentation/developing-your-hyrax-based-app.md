@@ -32,7 +32,7 @@ You can also try [Running Hyrax-based application in local VM](https://github.co
 During development, running only the dependent services in a container environment may be beneficial. This avoids potential headaches concerning file permissions and eases the use of debugging tools. The application generation instructions below use [Lando](https://lando.dev) to achieve this setup.
 
 This document contains instructions specific to setting up an app with __Hyrax
-v5.0.0__. If you are looking for instructions on installing a different
+v5.0.1__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -130,7 +130,7 @@ Rails requires that you have a JavaScript runtime installed (e.g. nodejs or ruby
 Create a new Hyrax-based application by following these steps in order.
 
 **NOTE:** Starting with Hyrax v5, the generated application will use [Valkyrie](https://github.com/samvera/valkyrie) for repository persistence.
-Use of [ActiveFedora](https://github.com/samvera/active_fedora) (instead of Valkyrie) is deprecated, but it should still be possible to reconfigure the generated application to use it. 
+Use of [ActiveFedora](https://github.com/samvera/active_fedora) (instead of Valkyrie) is deprecated, but it should still be possible to reconfigure the generated application to use it.
 
 ### Development Prerequisites
 
@@ -145,10 +145,10 @@ These instructions assume the use of [Lando](https://lando.dev) and [Docker](htt
 
 Generate a new Rails application using the template.
 
-**NOTE:** `HYRAX_SKIP_WINGS` is needed here to avoid loading the Wings compatibility layer during the application generation process. 
+**NOTE:** `HYRAX_SKIP_WINGS` is needed here to avoid loading the Wings compatibility layer during the application generation process.
 
 ```shell
-HYRAX_SKIP_WINGS=true rails _6.1.7.7_ new my_app --database=postgresql -m https://raw.githubusercontent.com/samvera/hyrax/hyrax-v5.0.0/template.rb
+HYRAX_SKIP_WINGS=true rails _6.1.7.7_ new my_app --database=postgresql -m https://raw.githubusercontent.com/samvera/hyrax/hyrax-v5.0.1/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
