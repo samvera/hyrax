@@ -32,7 +32,16 @@ module Hyrax
     end
 
     ##
-    # Return the Hyrax::FileMetadata which should be considered “primary” for
+    # Return the {Hyrax::FileMetadata} which should be considered “primary” for
+    # indexing and version‐tracking.
+    #
+    # @return [Hyrax::FileMetadata]
+    def self.primary_file_for(file_set:, query_service: Hyrax.query_service)
+      new(file_set: file_set, query_service: query_service).primary_file
+    end
+
+    ##
+    # Return the {Hyrax::FileMetadata} which should be considered “primary” for
     # indexing and version‐tracking.
     #
     # If +file_set.original_file_id+ is defined, it will be used; otherwise,

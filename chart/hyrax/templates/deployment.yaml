@@ -112,6 +112,18 @@ spec:
             - name: http
               containerPort: 3000
               protocol: TCP
+          {{- if .Values.startupProbe.enabled }}
+          startupProbe:
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds | default 5 }}
+            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds | default 5 }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold | default 3 }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds | default 10}}
+            successThreshold: {{ .Values.startupProbe.successThreshold | default 1 }}
+            httpGet:
+              scheme: "HTTP"
+              path: {{ .Values.startupProbe.path | default "/" }}
+              port: 3000
+          {{- end }}
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds | default 5 }}

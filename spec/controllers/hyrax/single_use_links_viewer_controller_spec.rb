@@ -64,5 +64,19 @@ RSpec.describe Hyrax::SingleUseLinksViewerController do
         expect(response).to render_template("hyrax/single_use_links_viewer/single_use_error", "layouts/error")
       end
     end
+
+    describe "#current_ability" do
+      context "when the key is not found" do
+        before { SingleUseLink.find_by_download_key!(show_link_hash).destroy }
+
+        it "returns the current ability" do
+          expect(subject.send(:current_ability)).to be_present
+        end
+
+        it "returns the current user" do
+          expect(subject.send(:current_ability).current_user).to be_present
+        end
+      end
+    end
   end
 end
