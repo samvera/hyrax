@@ -27,7 +27,7 @@ module Hyrax
     end
 
     # We cannot rely on the method missing to catch this delegation.  Because
-    # most all objects implicitly implicitly implement #to_s
+    # most all objects implicitly implement #to_s
     delegate :to_s, to: :solr_document
 
     def page_title
