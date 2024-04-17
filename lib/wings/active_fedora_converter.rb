@@ -145,15 +145,21 @@ module Wings
 
     def parse_attributes(af_object)
       converted_attrs = normal_attributes
-      members = Array.wrap(converted_attrs.delete(:members))
-      files = converted_attrs.delete(:files)
-      af_object.attributes = converted_attrs
+      af_object.attributes = converted_attrs.except(:members, :files)
       af_object.extracted_text = create_extrated_text(af_object) if resource.attributes[:extracted_text_id].present?
       perform_lease_conversion(af_object: af_object, resource: resource)
       perform_embargo_conversion(af_object: af_object, resource: resource)
-      members.empty? ? af_object.try(:ordered_members)&.clear : af_object.try(:ordered_members=, members)
-      af_object.try(:members)&.replace(members)
-      af_object.files.build_or_set(files) if files
+
+      if converted_attrs.keys.include?(:members)
+        members = Array.wrap(converted_attrs.delete(:members))
+        members.empty? ? af_object.try(:ordered_members)&.clear : af_object.try(:ordered_members=, members)
+        af_object.try(:members)&.replace(members)
+      end
+
+      if converted_attrs.keys.include?(:files)
+        files = converted_attrs.delete(:files)
+        af_object.files.build_or_set(files) if files
+      end
     end
 
     def create_extrated_text(af_object)
