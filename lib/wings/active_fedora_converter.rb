@@ -156,10 +156,9 @@ module Wings
         af_object.try(:members)&.replace(members)
       end
 
-      if converted_attrs.keys.include?(:files)
-        files = converted_attrs.delete(:files)
-        af_object.files.build_or_set(files) if files
-      end
+      return unless converted_attrs.keys.include?(:files)
+      files = converted_attrs.delete(:files)
+      af_object.files.build_or_set(files) if files
     end
 
     def create_extrated_text(af_object)
