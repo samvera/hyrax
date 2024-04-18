@@ -17,6 +17,7 @@ module Hyrax
     # @since 2.4.0
     #
     # @see https://dry-rb.org/gems/dry-container/
+    # @see Hyrax::Transactions::Grapher
     class Container # rubocop:disable Metrics/ClassLength
       require 'hyrax/transactions/admin_set_create'
       require 'hyrax/transactions/admin_set_destroy'
