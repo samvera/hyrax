@@ -400,42 +400,42 @@ RSpec.describe Freyja::Persister, :active_fedora do
     end
 
     context 'ordered properties' do
-      xit "orders string values and returns them in the appropriate order" do
+      it "orders string values and returns them in the appropriate order" do
         validate_order ["a", "b", "a"]
       end
 
-      xit "orders boolean values and returns them in the appropriate order" do
+      it "orders boolean values and returns them in the appropriate order" do
         validate_order [true, false, true]
       end
 
-      xit "orders integer values and returns them in the appropriate order" do
+      it "orders integer values and returns them in the appropriate order" do
         validate_order [1, 2, 1]
       end
 
-      xit "orders date values and returns them in the appropriate order" do
+      it "orders date values and returns them in the appropriate order" do
         now = Time.now.round(0).utc
         validate_order [now, now - 3.hours, now - 1.hour]
       end
 
-      xit "orders URIs and returns them in the appropriate order" do
+      it "orders URIs and returns them in the appropriate order" do
         uri1 = RDF::URI("http://example.com/foo")
         uri2 = RDF::URI("http://example.com/bar")
         uri3 = RDF::URI("http://example.com/baz")
         validate_order [uri1, uri2, uri3]
       end
 
-      xit "orders IDs and returns them in the appropriate order" do
+      it "orders IDs and returns them in the appropriate order" do
         page1 = persister.save(resource: resource_class.new(authors: ["Page 1"]))
         page2 = persister.save(resource: resource_class.new(authors: ["Page 2"]))
         page3 = persister.save(resource: resource_class.new(authors: ["Page 3"]))
         validate_order [page1.id, page2.id, page3.id]
       end
 
-      xit "orders floating point values and returns them in the appropriate order" do
+      it "orders floating point values and returns them in the appropriate order" do
         validate_order [1.123, 2.222, 1.123]
       end
 
-      xit "orders different types of objects together" do
+      it "orders different types of objects together" do
         validate_order [
           RDF::URI("http://example.com/foo", language: :ita),
           RDF::URI("http://example.com/foo", datatype: RDF::URI("http://datatype")),
@@ -445,7 +445,7 @@ RSpec.describe Freyja::Persister, :active_fedora do
         ]
       end
 
-      xit "orders nested objects with strings" do
+      it "orders nested objects with strings" do
         nested1 = resource_class.new(id: Valkyrie::ID.new("resource1"))
 
         resource.ordered_authors = [nested1, "test"]
@@ -455,7 +455,7 @@ RSpec.describe Freyja::Persister, :active_fedora do
         expect(output.ordered_authors[1]).to eq "test"
       end
 
-      xit "orders nested objects" do
+      it "orders nested objects" do
         nested1 = resource_class.new(id: Valkyrie::ID.new("resource1"), authors: ["Resource 1"])
         nested2 = resource_class.new(id: Valkyrie::ID.new("resource2"), authors: ["Resource 2"])
         nested3 = resource_class.new(id: Valkyrie::ID.new("resource3"), authors: ["Resource 3"])
