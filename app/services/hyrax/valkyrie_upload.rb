@@ -30,8 +30,10 @@ class Hyrax::ValkyrieUpload
   attr_reader :storage_adapter
   ##
   # @param [Valkyrie::StorageAdapter] storage_adapter
-  def initialize(storage_adapter: Hyrax.storage_adapter)
+  # @param [Class] file_set_file_service implementer of {Hyrax::FileSetFileService}
+  def initialize(storage_adapter: Hyrax.storage_adapter, file_set_file_service: Hyrax.config.file_set_file_service)
     @storage_adapter = storage_adapter
+    @file_set_file_service = file_set_file_service
   end
 
   def upload(filename:, file_set:, io:, use: Hyrax::FileMetadata::Use::ORIGINAL_FILE, user: nil, mime_type: nil) # rubocop:disable Metrics/AbcSize
@@ -67,7 +69,8 @@ class Hyrax::ValkyrieUpload
   end
 
   def version_upload(file_set:, io:, user:)
-    file_metadata = Hyrax.query_service.custom_queries.find_file_metadata_by(id: file_set.original_file_id)
+    file_metadata = @file_set_file_service.primary_file_for(file_set: file_set)
+
     Hyrax::VersioningService.create(file_metadata, user, io)
     Hyrax.publisher.publish("file.uploaded", metadata: file_metadata)
     ContentNewVersionEventJob.perform_later(file_set, user)

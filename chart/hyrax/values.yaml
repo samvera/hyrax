@@ -188,6 +188,16 @@ readinessProbe:
   # failureThreshold: 6
   # successThreshold: 1
 
+# consider enabling if you are experiencing slow startup times
+startupProbe:
+  enabled: false
+  # path: "/healthz"
+  # initialDelaySeconds: 30
+  # periodSeconds: 30
+  # timeoutSeconds: 5
+  # failureThreshold: 3
+  # successThreshold: 1
+
 resources: {}
 
 worker:

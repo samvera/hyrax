@@ -84,7 +84,13 @@ module Hyrax
     end
 
     def current_ability
-      @current_ability ||= SingleUseLinksViewerController::Ability.new current_user, single_use_link
+      link_instance = nil
+      begin
+        link_instance = single_use_link
+      rescue ActiveRecord::RecordNotFound
+        Rails.logger.debug("Single user link was not found while getting current ability")
+      end
+      @current_ability ||= SingleUseLinksViewerController::Ability.new current_user, link_instance
     end
 
     def render_single_use_error(exception)
@@ -102,9 +108,10 @@ module Hyrax
       include CanCan::Ability
 
       attr_reader :single_use_link
+      attr_reader :current_user
 
       def initialize(user, single_use_link)
-        @user = user || ::User.new
+        @current_user = user || ::User.new
         return unless single_use_link
 
         @single_use_link = single_use_link

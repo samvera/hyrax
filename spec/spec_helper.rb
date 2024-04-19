@@ -50,6 +50,9 @@ require 'hyrax/specs/capybara'
 require 'hyrax/specs/clamav'
 require 'hyrax/specs/engine_routes'
 
+require 'rubocop'
+require 'rubocop/rspec/support'
+
 # ensure Hyrax::Schema gets loaded is resolvable for `support/` models
 Hyrax::Schema # rubocop:disable Lint/Void
 
@@ -99,7 +102,7 @@ require 'hyrax/specs/shared_specs/factories/strategies/json_strategy'
 require 'hyrax/specs/shared_specs/factories/strategies/valkyrie_resource'
 FactoryBot.register_strategy(:valkyrie_create, ValkyrieCreateStrategy)
 FactoryBot.register_strategy(:json, JsonStrategy)
-FactoryBot.definition_file_paths = [File.expand_path("../factories", __FILE__)]
+FactoryBot.definition_file_paths = [File.expand_path("../../lib/hyrax/specs/shared_specs/factories", __FILE__)]
 FactoryBot.find_definitions
 require 'rspec/mocks'
 
@@ -364,4 +367,6 @@ RSpec.configure do |config|
       .to receive(:storage_adapter)
       .and_return(Valkyrie::StorageAdapter.find(adapter_name))
   end
+
+  config.include RuboCop::RSpec::ExpectOffense
 end
