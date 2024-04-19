@@ -19,5 +19,6 @@ group :development, :test do
   gem 'pry-byebug' unless ENV['CI']
   gem 'rspec'
   gem 'ruby-prof', require: false
+  gem 'semaphore_test_boosters'
   gem "simplecov", require: false
 end
