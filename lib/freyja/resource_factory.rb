@@ -84,7 +84,6 @@ module Freyja
       end
 
       def migrate_thumbnail!(resource:)
-        return true # JEREMY and SHANA hacking away
         thumbnail_path = Hyrax::DerivativePath.derivative_path_for_reference(resource, 'thumbnail')
         return unless thumbnail_exists?(thumbnail_path)
 
