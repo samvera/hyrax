@@ -1,5 +1,5 @@
 <% if (can?(:download, file_set.id) || can?(:destroy, file_set.id) || can?(:edit, file_set.id)) && !workflow_restriction?(@parent) %>
-  <% if can?(:download, file_set.id) && !(can?(:edit, file_set.id) || can?(:destroy, file_set.id)) %>
+  <% if Hyrax.config.display_media_download_link? && (can?(:download, file_set.id) && !(can?(:edit, file_set.id) || can?(:destroy, file_set.id))) %>
   <%= link_to t('.download'),
               hyrax.download_path(file_set),
               class: 'btn btn-secondary btn-sm',
@@ -35,7 +35,7 @@
       </li>
     <% end %>
 
-    <% if can?(:download, file_set.id) %>
+    <% if Hyrax.config.display_media_download_link? && can?(:download, file_set.id) %>
       <li class="dropdown-item" role="menuitem" tabindex="-1">
         <%= link_to t('.download'),
                     hyrax.download_path(file_set),

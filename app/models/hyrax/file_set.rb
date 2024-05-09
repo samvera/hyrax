@@ -107,6 +107,17 @@ module Hyrax
     end
 
     ##
+    # @return [Hash] All extensions & their mime types
+    def extensions_and_mime_types
+      @extensions_and_mime_types = {}
+      file_ids.each do |file_id|
+       fm = Hyrax.query_service.find_by(id: file_id)
+       @extensions_and_mime_types[fm.mime_type] = File.extname(fm.original_filename)[1..]
+      end
+      @extensions_and_mime_types
+    end
+
+    ##
     # @return [Valkyrie::ID]
     def representative_id
       id
