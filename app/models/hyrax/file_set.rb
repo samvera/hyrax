@@ -107,6 +107,28 @@ module Hyrax
     end
 
     ##
+    # @return [Array] All ids, extensions, mime types, names, and uses
+    # @example
+    #   [{:id=>"123", :extension=>"pdf", :mime_type=>"application/pdf", :name=>nil, :use=>"OriginalFile"},
+    #    {:id=>"234", :extension=>"jpeg", :mime_type=>"application/octet-stream", :name=>"thumbnail", :use=>"ThumbnailImage"}]
+    def extensions_and_mime_types
+      Hyrax.query_service.find_many_by_ids(ids: file_ids).each_with_object([]) do |fm, arr|
+        extension = File.extname(fm.original_filename)
+        next if extension.empty?
+
+        use = fm.pcdm_use.first.to_s.split("#").last
+        name = use == 'OriginalFile' ? nil : File.basename(fm.original_filename, extension).split('-').last
+        arr << {
+          id: fm.id.to_s,
+          extension: extension[1..], # remove leading '.'
+          mime_type: fm.mime_type,
+          name: name,
+          use: use
+        }
+      end
+    end
+
+    ##
     # @return [Valkyrie::ID]
     def representative_id
       id

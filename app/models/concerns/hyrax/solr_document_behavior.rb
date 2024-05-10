@@ -135,6 +135,12 @@ module Hyrax
       self['visibility_ssi'] == indexed_lease_visibility
     end
 
+    def extensions_and_mime_types
+      if self['extensions_and_mime_types_ssim']
+        JSON.parse(self['extensions_and_mime_types_ssim'].first).map(&:with_indifferent_access)
+      end
+    end
+
     private
 
     def model_classifier(classifier)
