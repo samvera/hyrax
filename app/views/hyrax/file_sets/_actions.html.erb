@@ -46,16 +46,15 @@
                     data: { label: file_set.id, work_id: @presenter.id, collection_ids: @presenter.member_of_collection_ids } %>
       </li>
       <%# @TODO: This needs to be updated to find the derivatives appropriately %>
-      <% work_deriv = IiifPrint::Data::WorkDerivatives.new(fileset: file_set) %>
-      <% work_deriv.keys.each do |name| %>
-        <li role="menuitem" tabindex="-1">
-          <a href="<%= "/downloads/#{file_set.id}?locale=en&file=#{name}" %>" download>
-            Download <em>(as <%= name %>)</em>
+      <% file_set.extensions_and_mime_types&.each do |hash| %>
+        <% next unless hash[:name] %>
+        <li class ="dropdown-item" role="menuitem" tabindex="-1">
+          <a href="<%= "/downloads/#{file_set.id}?locale=en&file=#{hash[:name]}&mime_type=#{hash[:mime_type]}" %>" download>
+            Download <em>(as <%= hash[:name] %>)</em>
           </a>
         </li>
       <% end %>
     <% end %>
-
     </ul>
   </div>
   <% end %>
