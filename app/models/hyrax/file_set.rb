@@ -113,7 +113,7 @@ module Hyrax
     #    {:id=>"234", :extension=>"jpeg", :mime_type=>"application/octet-stream", :name=>"thumbnail", :use=>"ThumbnailImage"}]
     # rubocop:disable Metrics/MethodLength
     def extensions_and_mime_types
-      return {} if file_ids.empty?
+      return [] if file_ids.empty?
       Hyrax.query_service.find_many_by_ids(ids: file_ids).each_with_object([]) do |fm, arr|
         next unless fm.original_filename
         extension = File.extname(fm.original_filename)
