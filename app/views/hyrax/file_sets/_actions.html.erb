@@ -49,7 +49,7 @@
       <% file_set.extensions_and_mime_types&.each do |hash| %>
         <% next unless hash[:name] %>
         <li class ="dropdown-item" role="menuitem" tabindex="-1">
-          <a href="<%= "/downloads/#{file_set.id}?locale=en&file=#{hash[:name]}&mime_type=#{hash[:mime_type]}" %>" download>
+          <a href="<%= download_url(id: file_set.id, locale: 'en', file: hash[:name], mime_type: hash[:mime_type]) %>" download>
             Download <em>(as <%= hash[:name] %>)</em>
           </a>
         </li>

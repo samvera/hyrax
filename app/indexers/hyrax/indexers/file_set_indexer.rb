@@ -103,7 +103,8 @@ module Hyrax
           solr_doc['aspect_ratio_tesim']      = file_metadata.aspect_ratio if file_metadata.aspect_ratio.present?
 
           # support for derivatives download
-          solr_doc['extensions_and_mime_types_ssim'] = resource.extensions_and_mime_types.to_json if resource.extensions_and_mime_types.present?
+          derivatives = resource.extensions_and_mime_types
+          solr_doc['extensions_and_mime_types_ssm'] = derivatives if derivatives.present?
         end
       end
 

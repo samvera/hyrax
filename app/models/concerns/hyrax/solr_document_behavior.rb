@@ -136,7 +136,7 @@ module Hyrax
     end
 
     def extensions_and_mime_types
-      JSON.parse(self['extensions_and_mime_types_ssim'].first).map(&:with_indifferent_access) if self['extensions_and_mime_types_ssim']
+      JSON.parse(self['extensions_and_mime_types_ssm'].first).map(&:with_indifferent_access) if self['extensions_and_mime_types_ssm']
     end
 
     private
