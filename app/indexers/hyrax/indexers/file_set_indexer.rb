@@ -104,7 +104,7 @@ module Hyrax
 
           # support for derivatives download
           derivatives = resource.extensions_and_mime_types
-          solr_doc['extensions_and_mime_types_ssm'] = derivatives if derivatives.present?
+          solr_doc['extensions_and_mime_types_ssm'] = derivatives.to_json if derivatives.present?
         end
       end
 
