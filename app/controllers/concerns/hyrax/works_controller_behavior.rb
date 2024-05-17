@@ -496,13 +496,14 @@ module Hyrax
     end
 
     def permissions_changed?
-      @saved_permissions !=
-        case curation_concern
-        when ActiveFedora::Base
-          curation_concern.permissions.map(&:to_hash)
-        else
-          Hyrax::AccessControl.for(resource: curation_concern).permissions
-        end
+      case curation_concern
+      when ActiveFedora::Base
+        @saved_permissions != curation_concern.permissions.map(&:to_hash)
+      else 
+        new_permissions = Hyrax::AccessControl.for(resource: curation_concern).permissions
+        saved_permissions_set = @saved_permissions.to_set
+        new_permissions.size != @saved_permissions.size || new_permissions.any? { |e| !saved_permissions_set.include? e }
+      end
     end
 
     def concern_has_file_sets?
