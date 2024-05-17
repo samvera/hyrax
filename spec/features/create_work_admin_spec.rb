@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe 'Creating a new Work as admin', :js, :workflow, perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
+RSpec.describe 'Creating a new Work as admin', :js, :workflow, :clean_repo, perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
   let(:user) { create(:admin) }
 
   before do

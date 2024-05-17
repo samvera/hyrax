@@ -29,7 +29,7 @@ RUN apk --no-cache upgrade && \
   $EXTRA_APK_PACKAGES
 
 RUN setfacl -d -m o::rwx /usr/local/bundle && \
-  gem update --system $RUBYGEMS_VERSION
+  gem update --silent --system $RUBYGEMS_VERSION
 
 RUN addgroup -S --gid 101 app && \
   adduser -S -G app -u 1001 -s /bin/sh -h /app app
@@ -111,7 +111,7 @@ RUN bundle -v && \
   bundle install --jobs "$(nproc)" && \
   cd $HYRAX_ENGINE_PATH && \
   bundle install --jobs "$(nproc)" && \
-  yarn
+  yarn && yarn cache clean
 
 RUN RAILS_ENV=production SECRET_KEY_BASE='fakesecret1234' DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
