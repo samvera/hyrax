@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe 'Deposit Agreement options', :js, :workflow, :clean_repo do
   let(:user) { create(:user) }
-  let(:admin_user) { create(:admin) }
-  # let(:adminset) { create(:admin_set) }
   let!(:ability) { ::Ability.new(user) }
   let(:permission_template) { create(:permission_template, with_admin_set: true, with_active_workflow: true) }
 
@@ -15,19 +13,15 @@ RSpec.describe 'Deposit Agreement options', :js, :workflow, :clean_repo do
 
   context "with activate deposit agreement off" do
     before do
-      sign_in admin_user
-      # Disable active agreements
-      visit "/admin/features"
-      first("tr[data-feature='active-deposit-agreement-acceptance'] input[value='off']").click
-
+      allow(Flipflop).to receive(:active_deposit_agreement_acceptance?).and_return(false)
       sign_in user
+    end
+
+    it "allows saving work when active deposit agreement is off" do
       click_link 'Works'
       find('#add-new-work-button').click
       choose "payload_concern", option: "GenericWork"
       click_button 'Create work'
-    end
-
-    it "allows saving work when active deposit agreement is off" do
       expect(page).to have_selector('input[name="save_with_files"][disabled]')
 
       # Fill in required metadata
