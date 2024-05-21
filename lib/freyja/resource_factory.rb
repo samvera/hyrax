@@ -48,7 +48,7 @@ module Freyja
         # the file_ids is in the storage adapter?
         return :already_migrated if already_migrated?(resource:)
 
-        # NOTE: Should we pass the objec tand re-convert it?  We'll see how this all
+        # NOTE: Should we pass the object and re-convert it?  We'll see how this all
         # works.
         perform_later(object)
       end
@@ -65,46 +65,37 @@ module Freyja
         resource_factory = Hyrax.query_service.services.first.instance_variable_get(:@resource_factory)
 
         resource = ::Valkyrie::Persistence::Postgres::ORMConverter.new(object, resource_factory:).convert!
-        migrate_thumbnail!(resource:)
+
+        migrate_derivatives!(resource:)
         migrate_files!(resource:)
       end
 
       private
 
-      ##
-      # @param path [String] path to the expected thumbnail
-      #
-      # @return [TrueClass] when the thumbnail at the given path has not been
-      #         moved to the Valkyrie storage adapter.
-      # @return [FalseClass] when the thumbnail has been moved to the Valkyrie
-      #         storage adapter.
-      # @see #move_thumbnail_to_backup
-      def thumbnail_exists?(path)
-        path.present? && File.exist?(path)
-      end
+      def migrate_derivatives!(resource:)
+        member_ids = resource.member_ids
+        members = Hyrax.query_service.find_many_by_ids(ids: member_ids)
 
-      def migrate_thumbnail!(resource:)
-        thumbnail_path = Hyrax::DerivativePath.derivative_path_for_reference(resource, 'thumbnail')
-        return unless thumbnail_exists?(thumbnail_path)
+        members.each do |object|
+          # @todo should we trigger a job if the member is a child work?
+          next unless object.is_a?(FileSet) || object.is_a?(Hyrax::FileSet)
 
-        tempfile = Tempfile.new
-        tempfile.binmode
-        tempfile.write(File.read(thumbnail_path))
+          paths = Hyrax::DerivativePath.derivatives_for_reference(object)
+          paths.each do |path|
+            next unless path.present?
+            path.each_child do |file|
+              file_path = path + '/' + file
+              File.open(file_path, 'rb') do |content|
+                container = container_for(file)
+                mime_type = Marcel::MimeType.for(extension: File.extname(file))
+                directives = { url: file_path, container: container, mime_type: mime_type }
+                Hyrax::ValkyriePersistDerivatives.call(content, directives)
+              end
 
-        # NOTE: There are published events that may or may not be appropriate
-        # for this to call.  It's hard to know, given that ActiveFedora's
-        # thumbnail was never a "File" on a FileSet but was a unique creature.
-        # With Valkyrie that changes and we have a right and proper
-        # "Hyrax::PCDM::File" for the thumbnail.
-        Hyrax::ValkyrieUpload.file(
-          filename: resource.label,
-          file_set: resource,
-          io: tempfile,
-          use: Hyrax::FileMetadata::Use::THUMBNAIL_IMAGE,
-          user: User.find_or_initialize_by(User.user_key_field => resource.depositor)
-        )
-
-        move_thumbnail_to_backup(thumbnail_path)
+              move_derivative_to_backup(file_path)
+            end
+          end
+        end
       end
 
       ##
@@ -131,16 +122,37 @@ module Freyja
 
       ##
       # Move the given file to a backup directory, which is derived by injecting
-      # "backup-thumbnails" into the :path after the
+      # "backup-paths" into the :path after the
       # {Hyrax.config.derivatives_path} and before the other subdirectories.
       #
       # @param path [String]
-      def move_thumbnail_to_backup(path)
+      def move_derivative_to_backup(path)
         base_path = Hyrax.config.derivatives_path
-        target_dirname = File.dirname(path).sub(base_path, File.join(base_path, "backup-paths"))
+        target_dirname = File.dirname(path).sub(base_path, File.join(base_path, "backup-paths/"))
         FileUtils.mkdir_p(target_dirname)
         target = File.join(target_dirname, File.basename(path))
         FileUtils.mv(path, target)
+      end
+
+      ##
+      # Map from the file name used for the derivative to a valid option for
+      # container that ValkyriePersistDerivatives can convert into a 
+      # Hyrax::Metadata::Use
+      #
+      # @param filename [String] the name of the derivative file: i.e. 'x-thumbnail.jpg'
+      # @return [String]
+      def container_for(filename)
+        # we want the portion between the '-' and the '.'
+        file_blob = File.basename(file.split('-').last,'.*')
+
+        case file_blob
+        when 'thumbnail'
+          'thumbnail_image'
+        when 'txt', 'json', 'xml'
+          'extracted_text'
+        else
+          'service_file'
+        end
       end
     end
   end
