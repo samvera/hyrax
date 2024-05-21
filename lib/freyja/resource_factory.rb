@@ -73,7 +73,7 @@ module Freyja
       private
 
       def migrate_derivatives!(resource:)
-        member_ids = resource.member_ids
+        member_ids = resource.file_ids
         members = Hyrax.query_service.find_many_by_ids(ids: member_ids)
 
         members.each do |object|
