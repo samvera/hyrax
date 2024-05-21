@@ -85,11 +85,12 @@ module Freyja
             next unless path.present?
             path.each_child do |file|
               file_path = path + '/' + file
-              content = File.read(file_path)
-              container = container_for(file)
-              mime_type = Marcel::MimeType.for(extension: File.extname(file))
-              directives = { url: file_path, container: container, mime_type: mime_type }
-              Hyrax::ValkyriePersistDerivatives.call(content, directives)
+              File.open(file_path, 'rb') do |content|
+                container = container_for(file)
+                mime_type = Marcel::MimeType.for(extension: File.extname(file))
+                directives = { url: file_path, container: container, mime_type: mime_type }
+                Hyrax::ValkyriePersistDerivatives.call(content, directives)
+              end
 
               move_derivative_to_backup(file_path)
             end
