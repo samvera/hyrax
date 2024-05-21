@@ -109,14 +109,16 @@ module Freyja
           # If it doesn't start with fedora, we've likely already migrated it.
           next unless /^fedora:/.match?(file.file_identifier.to_s)
 
-          tempfile = Tempfile.new
-          tempfile.binmode
-          tempfile.write(URI.open(file.file_identifier.to_s.gsub("fedora:", "http:")).read)
+          Tempfile.create do |tempfile|
+            tempfile.binmode
+            tempfile.write(URI.open(file.file_identifier.to_s.gsub("fedora:", "http:")).read)
+            tempfile.rewind
 
-          valkyrie_file = Hyrax.storage_adapter.upload(resource: resource, file: tempfile, original_filename: file.original_filename)
-          file.file_identifier = valkyrie_file.id
+            valkyrie_file = Hyrax.storage_adapter.upload(resource: resource, file: tempfile, original_filename: file.original_filename)
+            file.file_identifier = valkyrie_file.id
 
-          Hyrax.persister.save(resource: file)
+            Hyrax.persister.save(resource: file)
+          end
         end
       end
 
