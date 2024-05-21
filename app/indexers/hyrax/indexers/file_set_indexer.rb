@@ -101,6 +101,10 @@ module Hyrax
 
           # attributes set by fits for video
           solr_doc['aspect_ratio_tesim']      = file_metadata.aspect_ratio if file_metadata.aspect_ratio.present?
+
+          # support for derivatives download
+          derivatives = resource.extensions_and_mime_types
+          solr_doc['extensions_and_mime_types_ssm'] = derivatives.to_json if derivatives.present?
         end
       end
 
