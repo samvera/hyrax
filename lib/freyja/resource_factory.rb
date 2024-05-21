@@ -127,7 +127,7 @@ module Freyja
       # @param path [String]
       def move_derivative_to_backup(path)
         base_path = Hyrax.config.derivatives_path
-        target_dirname = File.dirname(path).sub(base_path, File.join(base_path, "backup-paths"))
+        target_dirname = File.dirname(path).sub(base_path, File.join(base_path, "backup-paths/"))
         FileUtils.mkdir_p(target_dirname)
         target = File.join(target_dirname, File.basename(path))
         FileUtils.mv(path, target)
