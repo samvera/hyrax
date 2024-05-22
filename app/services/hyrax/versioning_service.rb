@@ -20,8 +20,16 @@ module Hyrax
 
     ##
     # @param resource [ActiveFedora::File | Hyrax::FileMetadata | NilClass]
-    def initialize(resource:, storage_adapter: Hyrax.storage_adapter)
-      @storage_adapter = storage_adapter
+    def initialize(resource:, storage_adapter: nil)
+      @storage_adapter = if storage_adapter.nil?
+                           if resource.respond_to(:file_identifier)
+                             Valkyrie::StorageAdapter.adapter_for(id: resource.file_identifier)
+                           else
+                             Hyrax.storage_adapter
+                           end
+                         else
+                           storage_adapter
+                         end
       self.resource = resource
     end
 
@@ -95,7 +103,7 @@ module Hyrax
 
       # @param [ActiveFedora::File | Hyrax::FileMetadata] file
       def latest_version_of(file)
-        Hyrax::VersioningService.new(resource: file).latest_version
+        Hyrax::VersioningService.new(resource: file, storage_adapter: ::Valkyrie::StorageAdapter.adapter_for(id: file.file_identifier)).latest_version
       end
 
       # @param [ActiveFedora::File | Hyrax::FileMetadata] file

@@ -18,10 +18,11 @@ class Hyrax::ValkyrieUpload
     io:,
     storage_adapter: Hyrax.storage_adapter,
     use: Hyrax::FileMetadata::Use::ORIGINAL_FILE,
-    user: nil
+    user: nil,
+    mime_type: nil
   )
     new(storage_adapter: storage_adapter)
-      .upload(filename: filename, file_set: file_set, io: io, use: use, user: user)
+      .upload(filename: filename, file_set: file_set, io: io, use: use, user: user, mime_type: mime_type)
   end
 
   ##
@@ -41,8 +42,8 @@ class Hyrax::ValkyrieUpload
     streamfile = storage_adapter.upload(file: io, original_filename: filename, resource: file_set)
     file_metadata = Hyrax::FileMetadata(streamfile)
     file_metadata.file_set_id = file_set.id
-    file_metadata.pcdm_use = [use]
-    file_metadata.recorded_size = [io.size]
+    file_metadata.pcdm_use = Array(use)
+    file_metadata.recorded_size = Array(io.size)
     file_metadata.mime_type = mime_type if mime_type
     file_metadata.original_filename = File.basename(filename).to_s || File.basename(io)
 

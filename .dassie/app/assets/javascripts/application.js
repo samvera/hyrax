@@ -12,7 +12,6 @@
 //
 //= 
 //= require activestorage
-//= require turbolinks
 //
 // Required by Blacklight
 //= require jquery3

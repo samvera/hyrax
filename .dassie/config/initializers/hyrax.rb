@@ -67,9 +67,10 @@ Hyrax.config do |config|
   # config.admin_set_model = 'Hyrax::AdministrativeSet'
 
   # dassie needs legacy AF models
-  config.collection_model = '::Collection'
-  config.admin_set_model = 'AdminSet'
-  config.file_set_model = '::FileSet'
+  # If using Frayja/Frigg then use the resource they provide
+  config.collection_model = 'CollectionResource'
+  config.admin_set_model = 'AdminSetResource'
+  config.file_set_model = 'Hyrax::FileSet'
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"

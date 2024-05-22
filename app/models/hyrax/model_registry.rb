@@ -85,7 +85,8 @@ module Hyrax
     #
     # @todo Consider the Wings::ModelRegistry and how we perform mappings.
     def self.work_class_names
-      Hyrax.config.registered_curation_concern_types
+      @work_class_names ||= (Hyrax.config.registered_curation_concern_types +
+        Dassie::Application.work_types.map(&:to_s)).uniq # FIXME Dassie reference in hyrax
     end
 
     def self.work_classes

@@ -36,6 +36,10 @@ module Freyja
         # TODO How might we consider handling a failed convert?  I believe we
         # should raise a loud exception as this is almost certainly a
         # configuration error.
+
+        # Prevent infinite looping when converting a FileSet
+        return :in_progress if Thread.current[:hyrax_migration_fileset_id] == object.id.to_s
+
         resource = ::Valkyrie::Persistence::Postgres::ORMConverter.new(object, resource_factory:).convert!
 
         # Only migrate files for file sets objects
@@ -59,6 +63,7 @@ module Freyja
       #
       # @param resource [Object]
       def perform(object)
+        Thread.current[:hyrax_migration_fileset_id] = object.id.to_s
         # TODO: Somewhere this variable must exist in some visible manner beside
         # digging deep into a method chain and asking for a none puplic instance
         # variable.
@@ -68,33 +73,23 @@ module Freyja
 
         migrate_derivatives!(resource:)
         migrate_files!(resource:)
+      ensure
+        Thread.current[:hyrax_migration_fileset_id] = nil
       end
 
       private
 
       def migrate_derivatives!(resource:)
-        member_ids = resource.file_ids
-        members = Hyrax.query_service.find_many_by_ids(ids: member_ids)
-
-        members.each do |object|
-          # @todo should we trigger a job if the member is a child work?
-          next unless object.is_a?(FileSet) || object.is_a?(Hyrax::FileSet)
-
-          paths = Hyrax::DerivativePath.derivatives_for_reference(object)
-          paths.each do |path|
-            next unless path.present?
-            path.each_child do |file|
-              file_path = path + '/' + file
-              File.open(file_path, 'rb') do |content|
-                container = container_for(file)
-                mime_type = Marcel::MimeType.for(extension: File.extname(file))
-                directives = { url: file_path, container: container, mime_type: mime_type }
-                Hyrax::ValkyriePersistDerivatives.call(content, directives)
-              end
-
-              move_derivative_to_backup(file_path)
-            end
+        # @todo should we trigger a job if the member is a child work?
+        paths = Hyrax::DerivativePath.derivatives_for_reference(resource)
+        paths.each do |path|
+          container = container_for(path)
+          mime_type = Marcel::MimeType.for(extension: File.extname(path))
+          directives = { url: path, container: container, mime_type: mime_type }
+          File.open(path, 'rb') do |content|
+            Hyrax::ValkyriePersistDerivatives.call(content, directives)
           end
+          move_derivative_to_backup(path)
         end
       end
 
@@ -114,7 +109,16 @@ module Freyja
             tempfile.write(URI.open(file.file_identifier.to_s.gsub("fedora:", "http:")).read)
             tempfile.rewind
 
-            valkyrie_file = Hyrax.storage_adapter.upload(resource: resource, file: tempfile, original_filename: file.original_filename)
+            # valkyrie_file = Hyrax.storage_adapter.upload(resource: resource, file: tempfile, original_filename: file.original_filename)
+            Hyrax::ValkyrieUpload.file(
+              filename: resource.label,
+              file_set: resource,
+              io: tempfile,
+              use: file.pcdm_use.select {|use| Hyrax::FileMetadata::Use.use_list.include?(use)},
+              user: User.find_or_initialize_by(User.user_key_field => resource.depositor),
+              mime_type: file.mime_type
+            )
+
             file.file_identifier = valkyrie_file.id
 
             Hyrax.persister.save(resource: file)
@@ -145,7 +149,7 @@ module Freyja
       # @return [String]
       def container_for(filename)
         # we want the portion between the '-' and the '.'
-        file_blob = File.basename(file.split('-').last,'.*')
+        file_blob = File.basename(filename, '.*').split('-').last
 
         case file_blob
         when 'thumbnail'
