@@ -156,7 +156,7 @@ module Hyrax
 
         # TODO implement
         def page_statistics(start_date, object)
-
+          []
         end
 
         def results_array(response, metric)
