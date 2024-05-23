@@ -77,7 +77,7 @@ module Hyrax
 
       def each
         results.each do |result|
-          yield({date: result[0], pageviews: result[1]})
+          yield({ date: result[0], pageviews: result[1] })
         end
       end
     end

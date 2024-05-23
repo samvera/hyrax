@@ -4,10 +4,10 @@ module Hyrax
     module Ga4
       class Events < Hyrax::Analytics::Ga4::Base
         def initialize(start_date:,
-          end_date:,
-          dimensions: [{name: 'eventName'}, {name: 'contentType'}, {name: 'contentId'}],
-          metrics: [{ name: 'eventCount' }]
-        )
+                       end_date:,
+                       dimensions: [{ name: 'eventName' }, { name: 'contentType' }, { name: 'contentId' }],
+                       metrics: [{ name: 'eventCount' }])
+          super
           @start_date = start_date.to_date
           @end_date = end_date.to_date
           @dimensions = dimensions
@@ -21,7 +21,7 @@ module Hyrax
         end
 
         def top_result_array
-          results.map { |r| [unwrap_dimension(metric: r, dimension: 2), unwrap_metric(r)]}.sort_by { |r| r[1] }
+          results.map { |r| [unwrap_dimension(metric: r, dimension: 2), unwrap_metric(r)] }.sort_by { |r| r[1] }
         end
       end
     end

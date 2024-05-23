@@ -3,7 +3,8 @@ module Hyrax
   module Analytics
     module Ga4
       class VisitsDaily < Hyrax::Analytics::Ga4::Base
-        def initialize(start_date:, end_date:, dimensions: [{name: 'date'}, { name: 'newVsReturning' }], metrics: [{ name: 'sessions' }])
+        def initialize(start_date:, end_date:, dimensions: [{ name: 'date' }, { name: 'newVsReturning' }], metrics: [{ name: 'sessions' }])
+          super
           @start_date = start_date.to_date
           @end_date = end_date.to_date
           @dimensions = dimensions

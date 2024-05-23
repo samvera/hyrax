@@ -35,7 +35,7 @@ module Hyrax
         end
 
         def dimension_filter
-          return nil unless filters.present?
+          return nil if filters.blank?
           {
             and_group: {
               expressions: dimension_expressions
