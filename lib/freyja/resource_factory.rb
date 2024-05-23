@@ -71,8 +71,8 @@ module Freyja
 
         resource = ::Valkyrie::Persistence::Postgres::ORMConverter.new(object, resource_factory:).convert!
 
-        migrate_derivatives!(resource:)
         migrate_files!(resource:)
+        migrate_derivatives!(resource:)
       ensure
         Thread.current[:hyrax_migration_fileset_id] = nil
       end
@@ -103,21 +103,21 @@ module Freyja
         files.each do |file|
           # If it doesn't start with fedora, we've likely already migrated it.
           next unless /^fedora:/.match?(file.file_identifier.to_s)
+          resource.file_ids.delete(file.id)
 
           Tempfile.create do |tempfile|
             tempfile.binmode
             tempfile.write(URI.open(file.file_identifier.to_s.gsub("fedora:", "http:")).read)
             tempfile.rewind
 
-            # valkyrie_file = Hyrax.storage_adapter.upload(resource: resource, file: tempfile, original_filename: file.original_filename)
-            Hyrax::ValkyrieUpload.file(
-              filename: resource.label,
-              file_set: resource,
-              io: tempfile,
-              use: file.pcdm_use.select {|use| Hyrax::FileMetadata::Use.use_list.include?(use)},
-              user: User.find_or_initialize_by(User.user_key_field => resource.depositor),
-              mime_type: file.mime_type
-            )
+            valkyrie_file = Hyrax::ValkyrieUpload.file(
+                              filename: resource.label,
+                              file_set: resource,
+                              io: tempfile,
+                              use: file.pcdm_use.select {|use| Hyrax::FileMetadata::Use.use_list.include?(use)},
+                              user: User.find_or_initialize_by(User.user_key_field => resource.depositor),
+                              mime_type: file.mime_type
+                            )
 
             file.file_identifier = valkyrie_file.id
 
