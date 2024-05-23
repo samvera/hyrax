@@ -39,7 +39,7 @@ module Hyrax
   private
 
         def accessible_works
-          models = Hyrax.config.curation_concerns.map { |m| "\"#{m}\"" }
+          models = Hyrax::ModelRegistry.work_rdf_representations.map { |m| "\"#{m}\"" }
           if current_user.ability.admin?
             Hyrax::SolrService.query("has_model_ssim:(#{models.join(' OR ')})",
               fl: 'title_tesim, id, member_of_collections',
@@ -54,15 +54,16 @@ module Hyrax
         end
 
         def accessible_file_sets
+          file_set_model_clause = "has_model_ssim:\"#{Hyrax::ModelRegistry.file_set_rdf_representations.join('" OR "')}\""
           if current_user.ability.admin?
             Hyrax::SolrService.query(
-              "has_model_ssim:FileSet",
+              file_set_model_clause,
               fl: 'title_tesim, id',
               rows: 50_000
             )
           else
             Hyrax::SolrService.query(
-              "edit_access_person_ssim:#{current_user} AND has_model_ssim:FileSet",
+              "edit_access_person_ssim:#{current_user} AND #{file_set_model_clause}",
               fl: 'title_tesim, id',
               rows: 50_000
             )

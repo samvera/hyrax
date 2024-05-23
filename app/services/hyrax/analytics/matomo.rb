@@ -154,6 +154,11 @@ module Hyrax
           response["nb_visits_returning"].to_i + response["nb_visits_new"].to_i
         end
 
+        # TODO implement
+        def page_statistics(start_date, object)
+
+        end
+
         def results_array(response, metric)
           results = []
           response.each do |result|

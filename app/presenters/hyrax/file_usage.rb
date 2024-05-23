@@ -5,7 +5,7 @@ module Hyrax
   # and prepares it for visualization in /app/views/stats/file.html.erb
   class FileUsage < StatsUsagePresenter
     def initialize(id)
-      self.model = ::FileSet.find(id)
+      self.model = Hyrax.query_service.find_by(id: id)
     end
 
     alias file model
