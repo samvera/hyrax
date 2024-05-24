@@ -75,6 +75,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup tmate debug session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+        with:
+          limit-access-to-actor: true
+          detached: true
       - name: Download built image artifact
         uses: actions/download-artifact@v4
         with:
@@ -110,11 +116,6 @@ jobs:
         with:
           name: spec-reports-${{ matrix.ci_node_index }}
           path: '**/rspec*.xml'
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        if: failure()
-        with:
-          limit-access-to-actor: true
 
   report:
     needs: test
