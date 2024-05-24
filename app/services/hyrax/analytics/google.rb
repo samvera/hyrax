@@ -207,7 +207,7 @@ module Hyrax
         # Hyrax::Download is sent to Hyrax::Analytics.profile as #hyrax__download
         # see Legato::ProfileMethods.method_name_from_klass
         def page_statistics(start_date, object)
-          path = polymorphic_path(object)
+          path = Rails.application.routes.url_helpers.polymorphic_path(object)
           profile = Hyrax::Analytics.profile
           unless profile
             Hyrax.logger.error("Google Analytics profile has not been established. Unable to fetch statistics.")

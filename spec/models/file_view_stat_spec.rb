@@ -46,7 +46,7 @@ RSpec.describe FileViewStat, type: :model do
 
     describe "cache empty" do
       let(:stats) do
-        expect(described_class).to receive(:ga_statistics).and_return(sample_pageview_statistics)
+        expect(Hyrax::Analytics).to receive(:page_statistics).and_return(sample_pageview_statistics)
         described_class.statistics(file, Time.zone.today - 4.days, user_id)
       end
 
@@ -70,7 +70,7 @@ RSpec.describe FileViewStat, type: :model do
       let!(:file_view_stat) { described_class.create(date: (Time.zone.today - 5.days).to_datetime, file_id: file_id, views: "25") }
 
       let(:stats) do
-        expect(described_class).to receive(:ga_statistics).and_return(sample_pageview_statistics)
+        expect(Hyrax::Analytics).to receive(:page_statistics).and_return(sample_pageview_statistics)
         described_class.statistics(file, Time.zone.today - 5.days)
       end
 
