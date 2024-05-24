@@ -74,6 +74,12 @@ module Hyrax
         fields = [:date, :pageviews]
         results.map { |row| fields.zip(row).to_h }
       end
+
+      def each
+        results.each do |result|
+          yield({ date: result[0], pageviews: result[1] })
+        end
+      end
     end
   end
 end
