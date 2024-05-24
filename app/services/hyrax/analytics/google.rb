@@ -55,7 +55,6 @@ module Hyrax
           # @return [Boolean] are all the required values present?
           def valid?
             return false unless @config['privkey_value'].present? || @config['privkey_path'].present?
-
             REQUIRED_KEYS.all? { |required| @config[required].present? }
           end
 
@@ -225,4 +224,3 @@ module Hyrax
     # rubocop:enable Metrics/ModuleLength
   end
 end
-# rubocop:enable Metrics/ModuleLength
