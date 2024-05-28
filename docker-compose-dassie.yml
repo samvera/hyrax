@@ -85,7 +85,7 @@ services:
       - hyrax
 
   chrome:
-    image: seleniarm/standalone-chromium:4.18
+    image: seleniarm/standalone-chromium:4
     environment:
       - START_XVFB=false
 #    logging:
