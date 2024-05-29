@@ -101,6 +101,7 @@ module Freyja
           # If it doesn't start with fedora, we've likely already migrated it.
           next unless /^fedora:/.match?(file.file_identifier.to_s)
           resource.file_ids.delete(file.id)
+
           Tempfile.create do |tempfile|
             tempfile.binmode
             tempfile.write(URI.open(file.file_identifier.to_s.gsub("fedora:", "http:")).read)
