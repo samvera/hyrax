@@ -19,10 +19,11 @@ class Hyrax::ValkyrieUpload
     storage_adapter: Hyrax.storage_adapter,
     use: Hyrax::FileMetadata::Use::ORIGINAL_FILE,
     user: nil,
-    mime_type: nil
+    mime_type: nil,
+    skip_derivatives: false
   )
     new(storage_adapter: storage_adapter)
-      .upload(filename: filename, file_set: file_set, io: io, use: use, user: user, mime_type: mime_type)
+      .upload(filename: filename, file_set: file_set, io: io, use: use, user: user, mime_type: mime_type, skip_derivatives: skip_derivatives)
   end
 
   ##
@@ -37,7 +38,7 @@ class Hyrax::ValkyrieUpload
     @file_set_file_service = file_set_file_service
   end
 
-  def upload(filename:, file_set:, io:, use: Hyrax::FileMetadata::Use::ORIGINAL_FILE, user: nil, mime_type: nil) # rubocop:disable Metrics/AbcSize
+  def upload(filename:, file_set:, io:, use: Hyrax::FileMetadata::Use::ORIGINAL_FILE, user: nil, mime_type: nil, skip_derivatives: false) # rubocop:disable Metrics/AbcSize
     return version_upload(file_set: file_set, io: io, user: user) if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE && file_set.original_file_id && storage_adapter.supports?(:versions)
     streamfile = storage_adapter.upload(file: io, original_filename: filename, resource: file_set)
     file_metadata = Hyrax::FileMetadata(streamfile)
@@ -63,8 +64,8 @@ class Hyrax::ValkyrieUpload
                          file_metadata: saved_metadata,
                          user: user)
 
-    Hyrax.publisher.publish("file.uploaded", metadata: saved_metadata)
-    Hyrax.publisher.publish('file.metadata.updated', metadata: saved_metadata, user: user)
+    Hyrax.publisher.publish("file.uploaded", metadata: saved_metadata, skip_derivatives: skip_derivatives)
+    Hyrax.publisher.publish('file.metadata.updated', metadata: saved_metadata, user: user, skip_derivatices: skip_derivatives)
 
     saved_metadata
   end

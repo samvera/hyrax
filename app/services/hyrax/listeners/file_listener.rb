@@ -29,8 +29,8 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_file_uploaded(event)
-        # Run characterization for original file only
-        return unless event[:metadata]&.original_file?
+        # Run characterization for original file only and allow optional skip paramater
+        return if event.payload[:skip_derivatives] || !event[:metadata]&.original_file?
 
         ValkyrieCharacterizationJob.perform_later(event[:metadata].id.to_s)
       end

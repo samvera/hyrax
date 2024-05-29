@@ -43,7 +43,7 @@ module Freyja
         resource = ::Valkyrie::Persistence::Postgres::ORMConverter.new(object, resource_factory:).convert!
 
         # Only migrate files for file sets objects
-        return :not_a_fileset unless resource.respond_to?(:file_ids)
+        return :not_a_fileset unless resource.is_a?(Hyrax::FileSet) && resource.respond_to?(:file_ids)
 
         # Looking for low hanging fruit (e.g. not overly costly to perform) to
         # avoid flooding the job queue.
@@ -64,15 +64,13 @@ module Freyja
       # @param resource [Object]
       def perform(object)
         Thread.current[:hyrax_migration_fileset_id] = object.id.to_s
-        # TODO: Somewhere this variable must exist in some visible manner beside
-        # digging deep into a method chain and asking for a none puplic instance
-        # variable.
-        resource_factory = Hyrax.query_service.services.first.instance_variable_get(:@resource_factory)
+        resource_factory = Hyrax.metadata_adapter.resource_factory
 
         resource = ::Valkyrie::Persistence::Postgres::ORMConverter.new(object, resource_factory:).convert!
-
         migrate_derivatives!(resource:)
-        migrate_files!(resource:)
+        # need to reload file_set to get the derivative ids
+        resource = Hyrax.query_service.find_by(id: resource.id)
+        migrate_files!(resource: resource)
       ensure
         Thread.current[:hyrax_migration_fileset_id] = nil
       end
@@ -89,7 +87,6 @@ module Freyja
           File.open(path, 'rb') do |content|
             Hyrax::ValkyriePersistDerivatives.call(content, directives)
           end
-          move_derivative_to_backup(path)
         end
       end
 
@@ -103,46 +100,29 @@ module Freyja
         files.each do |file|
           # If it doesn't start with fedora, we've likely already migrated it.
           next unless /^fedora:/.match?(file.file_identifier.to_s)
-
+          resource.file_ids.delete(file.id)
           Tempfile.create do |tempfile|
             tempfile.binmode
             tempfile.write(URI.open(file.file_identifier.to_s.gsub("fedora:", "http:")).read)
             tempfile.rewind
 
             # valkyrie_file = Hyrax.storage_adapter.upload(resource: resource, file: tempfile, original_filename: file.original_filename)
-            Hyrax::ValkyrieUpload.file(
+            valkyrie_file = Hyrax::ValkyrieUpload.file(
               filename: resource.label,
               file_set: resource,
               io: tempfile,
               use: file.pcdm_use.select {|use| Hyrax::FileMetadata::Use.use_list.include?(use)},
               user: User.find_or_initialize_by(User.user_key_field => resource.depositor),
-              mime_type: file.mime_type
+              mime_type: file.mime_type,
+              skip_derivatives: true
             )
-
-            file.file_identifier = valkyrie_file.id
-
-            Hyrax.persister.save(resource: file)
           end
         end
       end
 
       ##
-      # Move the given file to a backup directory, which is derived by injecting
-      # "backup-paths" into the :path after the
-      # {Hyrax.config.derivatives_path} and before the other subdirectories.
-      #
-      # @param path [String]
-      def move_derivative_to_backup(path)
-        base_path = Hyrax.config.derivatives_path
-        target_dirname = File.dirname(path).sub(base_path, File.join(base_path, "backup-paths/"))
-        FileUtils.mkdir_p(target_dirname)
-        target = File.join(target_dirname, File.basename(path))
-        FileUtils.mv(path, target)
-      end
-
-      ##
       # Map from the file name used for the derivative to a valid option for
-      # container that ValkyriePersistDerivatives can convert into a 
+      # container that ValkyriePersistDerivatives can convert into a
       # Hyrax::Metadata::Use
       #
       # @param filename [String] the name of the derivative file: i.e. 'x-thumbnail.jpg'
