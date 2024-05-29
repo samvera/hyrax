@@ -25,22 +25,6 @@ module Hyrax
         combined_stats object, start_date, cache_column, event_type, user_id
       end
 
-      # Hyrax::Download is sent to Hyrax::Analytics.profile as #hyrax__download
-      # see Legato::ProfileMethods.method_name_from_klass
-      def ga_statistics(start_date, object)
-        path = polymorphic_path(object)
-        profile = Hyrax::Analytics.profile
-        unless profile
-          Hyrax.logger.error("Google Analytics profile has not been established. Unable to fetch statistics.")
-          return []
-        end
-        profile.hyrax__pageview(sort: 'date',
-                                start_date: start_date,
-                                end_date: Date.yesterday,
-                                limit: 10_000)
-               .for_path(path)
-      end
-
       def query_works(query)
         models = Hyrax::ModelRegistry.work_rdf_representations.map { |m| "\"#{m}\"" }
         Hyrax::SolrService.query("has_model_ssim:(#{models.join(' OR ')})", fl: query, rows: 100_000)
@@ -80,10 +64,10 @@ module Hyrax
         stat_cache_info = cached_stats(object, start_date, object_method)
         stats = stat_cache_info[:cached_stats]
         if stat_cache_info[:ga_start_date] < Time.zone.today
-          ga_stats = ga_statistics(stat_cache_info[:ga_start_date], object)
-          ga_stats.each do |stat|
+          page_stats = Hyrax::Analytics.page_statistics(stat_cache_info[:ga_start_date], object)
+          page_stats.each do |stat|
             lstat = build_for(object, date: stat[:date], object_method => stat[ga_key], user_id: user_id)
-            lstat.save unless Date.parse(stat[:date]) == Time.zone.today
+            lstat.save unless stat[:date].to_date == Time.zone.today
             stats << lstat
           end
         end
