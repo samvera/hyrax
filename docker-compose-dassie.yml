@@ -88,6 +88,7 @@ services:
     image: seleniarm/standalone-chromium:4
     environment:
       - START_XVFB=false
+      - SE_NODE_SESSION_TIMEOUT=800
 #    logging:
 #      driver: none
     volumes:
