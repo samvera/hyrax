@@ -8,7 +8,7 @@ module Hyrax
   # and prepares it for visualization in /app/views/stats/work.html.erb
   class WorkUsage < StatsUsagePresenter
     def initialize(id)
-      self.model = Hyrax::WorkRelation.new.find(id)
+      self.model = Hyrax.query_service.find_by(id: id)
     end
 
     alias work model
