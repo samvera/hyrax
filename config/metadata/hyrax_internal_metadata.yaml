@@ -7,14 +7,28 @@ attributes:
     predicate: http://purl.org/dc/terms/isPartOf
   agent:
     predicate: http://www.w3.org/ns/auth/acl#agent
+  aspect_ratio:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#aspectRatio
+  bit_depth:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#bitDepth
+  bit_rate:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#bitRate
   byte_order:
     predicate: http://sweet.jpl.nasa.gov/2.2/reprDataFormat.owl#byteOrder
+  channels:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#audioChannelNumber
+  character_count:
+    predicate: https://www.semanticdesktop.org/ontologies/2007/03/22/nfo/#characterCount
+  character_set:
+    predicate: http://www.w3.org/2011/content#characterEncoding
   color_space:
     predicate: http://www.w3.org/2003/12/exif/ns#colorSpace
   compression:
     predicate: http://vocabulary.samvera.org/ns#compressionScheme
   created_at:
     predicate: http://purl.org/dc/terms/created
+  duration:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#duration
   file_identifier:
     predicate: http://vocabulary.samvera.org/ns#fileIdentifier
   file_ids:
@@ -23,28 +37,54 @@ attributes:
     predicate: http://vocabulary.samvera.org/ns#fileSetId
   format_label:
     predicate: http://www.loc.gov/premis/rdf/v1#hasFormatName
+  frame_rate:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#frameRate
+  graphics_count:
+    predicate: http://projecthydra.org/ns/odf/graphicsCount
   height:
     predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#height
   id:
     predicate: http://purl.org/dc/terms/id
   internal_resource:
     predicate: info:fedora/fedora-system:def/model#hasModel
+  line_count:
+    predicate: https://www.semanticdesktop.org/ontologies/2007/03/22/nfo/#lineCount
+  markup_basis:
+    predicate: http://www.w3.org/2011/content#doctypeName
+  markup_language:
+    predicate: http://www.w3.org/2011/content#systemId
   mime_type:
     predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasMimeType
   mode:
     predicate: http://www.w3.org/ns/auth/acl#mode
+  offset:
+    predicate: http://projecthydra.org/ns/audio/offset
+  original_checksum:
+    predicate: https://www.semanticdesktop.org/ontologies/2007/03/22/nfo/#hashValue
   original_filename:
     predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename
+  page_count:
+    predicate: http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount
+  paragraph_count:
+    predicate: http://projecthydra.org/ns/odf/paragraphCount
   pcdm_use:
     predicate: http://vocabulary.samvera.org/ns#pcdmUse
   permissions:
     predicate: http://vocabulary.samvera.org/ns#permissions
+  profile_name:
+    predicate: http://projecthydra.org/ns/mix/colorProfileName
+  profile_version:
+    predicate: http://projecthydra.org/ns/mix/colorProfileVersion
   recorded_size:
     predicate: http://www.loc.gov/premis/rdf/v1#hasSize
   representative_id:
     predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasRelatedMediaFragment
+  sample_rate:
+    predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#sampleRate
   state:
     predicate: http://fedora.info/definitions/1/0/access/ObjState#objState
+  table_count:
+    predicate: http://projecthydra.org/ns/odf/tableCount
   thumbnail_id:
     predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasRelatedImage
   updated_at:
@@ -55,3 +95,5 @@ attributes:
     predicate: http://vocabulary.samvera.org/ns#wellFormed
   width:
     predicate: http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#width
+  word_count:
+    predicate: https://www.semanticdesktop.org/ontologies/2007/03/22/nfo/#wordCount
