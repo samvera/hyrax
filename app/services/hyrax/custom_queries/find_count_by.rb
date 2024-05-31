@@ -25,7 +25,7 @@ module Hyrax
       # @param hash [Hash] the hash representation of the query
       def find_count_by(hash = {}, models: nil)
         return nil if models.empty? && hash.blank?
-        return find_count_by_af(hash, models: models) if !query_service.respond_to?(:orm_class)
+        return find_count_by_af(hash, models: models) unless query_service.respond_to?(:orm_class)
 
         internal_array = ["{ #{hash.map { |k, v| "\"#{k}\": #{v}" }.join(', ')} }"] if hash.present?
         if models.empty?
