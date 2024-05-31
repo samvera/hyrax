@@ -6,6 +6,7 @@ module Freyja
     def orm_class
       services.first.orm_class
     end
+
     ##
     # Constructs a Valkyrie::Persistence::CustomQueryContainer using this
     # query service
