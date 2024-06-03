@@ -23,9 +23,12 @@ module Hyrax
     ##
     # @return [Array<String>] the list of all user groups
     def available_user_groups(ability:)
-      return ::User.group_service.role_names if ability.admin?
-
-      ability.user_groups
+      user_groups = ability.user_groups.dup
+      return user_groups if ability.admin?
+      # Excluding "public" and "registered" groups if non-admin user
+      user_groups.delete("public")
+      user_groups.delete("registered")
+      user_groups
     end
 
     # Which translations are available for the user to select
