@@ -74,7 +74,9 @@ RSpec.describe Hyrax::FileSetsController do
           expect(response).to be_successful
           expect(assigns[:file_set]).to eq file_set
           expect(assigns[:version_list]).to be_kind_of Hyrax::VersionListPresenter
-          expect(assigns[:parent]).to eq parent
+          parent_solr_document = assigns[:parent].solr_document
+          parent_work = ActiveFedora::Base.find(parent_solr_document.id)
+          expect(parent_work).to eq parent
           expect(response).to render_template(:edit)
           expect(response).to render_template('dashboard')
         end
