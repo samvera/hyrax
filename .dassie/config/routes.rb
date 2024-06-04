@@ -1,11 +1,6 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  # ['generic_work'].each do |resource|
-  #   get "/concern/#{resource}s/:id/edit", to: redirect("/concern/#{resource}_resources/%{id}/edit")
-  #   get "/concern/#{resource}s/:id", to: redirect("/concern/#{resource}_resources/%{id}")
-  # end
-
   mount Sidekiq::Web => '/sidekiq' # for sidekik monitoring; completely public
   mount Riiif::Engine => 'images', as: :riiif if Hyrax.config.iiif_image_server?
         mount BrowseEverything::Engine => '/browse'

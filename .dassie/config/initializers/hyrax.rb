@@ -14,7 +14,7 @@ Hyrax.config do |config|
   # Injected via `rails g hyrax:work_resource Monograph`
   config.register_curation_concern :monograph
   # Injected via `rails g hyrax:work_resource GenericWorkResource`
-  config.register_curation_concern :generic_work_resource
+  # config.register_curation_concern :generic_work_resource
 
   config.iiif_image_server = true
   config.work_requires_files = false
