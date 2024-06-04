@@ -1,7 +1,9 @@
 <!-- Including non-visible admin set dropdown to trigger VisibilityComponent JavaScript. -->
 <% if Flipflop.assign_admin_set? %>
+  <% if @file_set_admin_set_option.present? %>
   <%= select_tag :admin_set_id,
                 options_for_select(@file_set_admin_set_option.map { |option| [option[0], option[1], option[2]] }),
                 include_blank: false,
                 class: 'form-control d-none' %>
+  <% end %>
 <% end %>
