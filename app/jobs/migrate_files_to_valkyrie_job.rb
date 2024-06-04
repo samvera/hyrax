@@ -54,8 +54,19 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
           mime_type: file.mime_type,
           skip_derivatives: true
         )
+        valkyrie_file = copy_attributes(valkyrie_file:, original_file: file)
+        Hyrax.persister.save(resource: valkyrie_file)
       end
     end
+  end
+
+  def copy_attributes(valkyrie_file:, original_file:)
+    TRANSFERABLE_ATTRIBUTES.each do |attr|
+      valkyrie_file.set_value(attr, original_file[attr])
+    end
+    valkyrie_file.set_value(:channels, original_file.alpha_channels) if valkyrie_file.channels.blank?
+    valkyrie_file.set_value(:checksum, original_file.original_checksum)
+    valkyrie_file
   end
 
   ##
@@ -78,4 +89,50 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
       'service_file'
     end
   end
+
+  TRANSFERABLE_ATTRIBUTES = %w[
+    format_label
+    recorded_size
+    well_formed
+    fits_version
+    exif_version
+    checksum
+    frame_rate
+    bit_rate
+    duration
+    sample_rate
+    height
+    width
+    bit_depth
+    channels
+    data_format
+    offset
+    file_title
+    creator
+    page_count
+    language
+    word_count
+    character_count
+    line_count
+    character_set
+    markup_basis
+    markup_language
+    paragraph_count
+    table_count
+    graphics_count
+    byte_order
+    compression
+    color_space
+    profile_name
+    profile_version
+    orientation
+    color_map
+    image_producer
+    capture_device
+    scanning_software
+    gps_timestamp
+    latitude
+    longitude
+    aspect_ratio
+  ]
 end
