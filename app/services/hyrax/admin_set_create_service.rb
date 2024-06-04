@@ -10,7 +10,7 @@ module Hyrax
   # @see Hyrax::PermissionTemplate
   # @see Sipity::Workflow
   class AdminSetCreateService # rubocop:disable Metrics/ClassLength
-    DEFAULT_ID = 'admin_set/default'
+    DEFAULT_ID = 'admin_set_default'
     DEFAULT_TITLE = ['Default Admin Set'].freeze
 
     class_attribute :permissions_create_service, :default_admin_set_persister
@@ -124,11 +124,19 @@ module Hyrax
       #       do not support hardcoded IDs (e.g. postgres)
       # @return [Hyrax::AdministrativeSet] the default admin set; nil if not found
       def find_unsaved_default_admin_set
-        admin_set = Hyrax.query_service.find_by(id: DEFAULT_ID)
-        default_admin_set_persister.update(default_admin_set_id: DEFAULT_ID) if save_default?
+        admin_set = begin
+                      # to support repositories still using the deprecated 'admin_set/default' as DEFAULT_ID
+                      Hyrax.query_service.find_by(id: 'admin_set/default')
+                    rescue Ldp::BadRequest, Valkyrie::Persistence::ObjectNotFoundError
+                      # Fedora 6.5+ does not support slashes in IDs, hence the need to rescue Ldp::BadRequest
+                      Hyrax.query_service.find_by(id: DEFAULT_ID)
+                    rescue Valkyrie::Persistence::ObjectNotFoundError
+                      nil
+                    end
+
+        default_admin_set_persister.update(default_admin_set_id: admin_set.id.to_s) if admin_set.present? && save_default?
+
         admin_set
-      rescue Valkyrie::Persistence::ObjectNotFoundError
-        # a default admin set hasn't been created yet
       end
 
       # @return [String | nil] the default admin set id; returns nil if not set
