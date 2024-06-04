@@ -92,48 +92,48 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
 
   TRANSFERABLE_ATTRIBUTES = %w[
     alternate_ids
-    format_label
-    recorded_size
-    well_formed
-    fits_version
-    exif_version
-    checksum
-    frame_rate
-    bit_rate
-    duration
-    sample_rate
-    height
-    width
+    aspect_ratio
     bit_depth
+    bit_rate
+    byte_order
+    capture_device
     channels
-    data_format
-    offset
-    file_title
-    creator
-    page_count
-    language
-    word_count
     character_count
-    line_count
     character_set
+    checksum
+    color_map
+    color_space
+    compression
+    creator
+    data_format
+    duration
+    exif_version
+    file_title
+    fits_version
+    format_label
+    frame_rate
+    gps_timestamp
+    graphics_count
+    height
+    image_producer
+    language
+    latitude
+    line_count
+    longitude
     markup_basis
     markup_language
+    offset
+    orientation
+    page_count
     paragraph_count
-    table_count
-    graphics_count
-    byte_order
-    compression
-    color_space
     profile_name
     profile_version
-    orientation
-    color_map
-    image_producer
-    capture_device
+    recorded_size
+    sample_rate
     scanning_software
-    gps_timestamp
-    latitude
-    longitude
-    aspect_ratio
+    table_count
+    well_formed
+    width
+    word_count
   ]
 end
