@@ -18,6 +18,16 @@
       <% end %>
     </li>
     <%= render 'hyrax/dashboard/sidebar/activity', menu: menu %>
+
+    <% if current_ability.admin? %>
+      <li class="h5 nav-item"><%= t('hyrax.admin.sidebar.metadata_profiles') %></li>
+
+      <%= menu.nav_link(hyrax.metadata_profiles_path,
+                        title: t('hyrax.admin.sidebar.metadata_profiles')) do %>
+        <span class="fa fa-table" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.metadata_profiles') %></span>
+      <% end %>
+    <% end %>
+
     <%= render 'hyrax/dashboard/sidebar/repository_content', menu: menu %>
     <%= render 'hyrax/dashboard/sidebar/tasks', menu: menu %>
     <%= render 'hyrax/dashboard/sidebar/configuration', menu: menu %>

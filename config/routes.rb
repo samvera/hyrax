@@ -272,4 +272,11 @@ Hyrax::Engine.routes.draw do
   %w[zotero mendeley].each do |action|
     get action, controller: 'static', action: action, as: action
   end
+
+  # Metadata profiles routes
+  resources :metadata_profiles, except: :update do
+    collection { post :import }
+    member { post :unlock }
+    get 'export'
+  end
 end

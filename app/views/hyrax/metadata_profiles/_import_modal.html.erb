@@ -1,0 +1,7 @@
+<%= form_tag(hyrax.import_metadata_profiles_path, :multipart => true, :class => "form-inline") do %>
+  <%= file_field_tag :file %>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('hyrax.dashboard.heading_actions.close') %></button>
+    <%= submit_tag "Import Metadata Schema Profile", name: nil, class: "btn btn-primary" %>
+  </div>
+<% end %>

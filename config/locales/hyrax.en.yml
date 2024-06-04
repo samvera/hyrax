@@ -53,6 +53,8 @@ en:
       delete: Delete
       edit: Edit
       less: Less
+      hyrax_metadata_profiles:
+        import_profile: Import Profile
       more: More
       refresh: Refresh
       remove: Remove
@@ -398,6 +400,7 @@ en:
         content_blocks: Content Blocks
         dashboard: Dashboard
         delete_all: Delete All
+        metadata_profiles: Metadata Profiles
         notifications: Notifications
         pages: Pages
         profile: Profile
