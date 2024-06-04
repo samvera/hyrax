@@ -23,10 +23,17 @@ module Freyja
                 "Called from #{Gem.location_of_caller.join(':')}"
         end
       end
-      resource_factory.to_resource(object: orm_object)
+      convert_and_migrate_resource(orm_object)
+
     rescue ActiveRecord::StaleObjectError
       raise Valkyrie::Persistence::StaleObjectError, "The object #{resource.id} has been updated by another process."
     end
     # rubocop:enable Lint/UnusedMethodArgument
+
+    def convert_and_migrate_resource(orm_object)
+      new_resource = resource_factory.to_resource(object: orm_object)
+      MigrateFilesToValkyrieJob.perform_later(new_resource) if new_resource.is_a?(Hyrax::FileSet) && new_resource.file_ids.size == 1 && new_resource.file_ids.first.id.to_s.match('/files/')
+      new_resource
+    end
   end
 end

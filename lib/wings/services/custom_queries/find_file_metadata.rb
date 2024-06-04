@@ -63,7 +63,7 @@ module Wings
       def find_file_metadata_by_alternate_identifier(alternate_identifier:, use_valkyrie: true)
         alternate_identifier = ::Valkyrie::ID.new(alternate_identifier).to_s
         object = Hydra::PCDM::File.find(alternate_identifier)
-        raise Hyrax::ObjectNotFoundError if object.new_record?
+        raise Hyrax::ObjectNotFoundError if object.new_record? || object.empty?
 
         if use_valkyrie == false
           warn_about_deprecation
@@ -108,7 +108,7 @@ module Wings
       #
       def find_many_file_metadata_by_use(resource:, use:, use_valkyrie: true)
         pcdm_files = find_many_file_metadata_by_ids(ids: resource.file_ids, use_valkyrie: false)
-        pcdm_files.select! { |pcdm_file| pcdm_file.metadata_node.type.include?(use) }
+        pcdm_files.select! { |pcdm_file| !pcdm_file.empty? && pcdm_file.metadata_node.type.include?(use) }
 
         if use_valkyrie == false
           warn_about_deprecation

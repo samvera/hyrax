@@ -42,6 +42,18 @@ module Hyrax
 
       THUMBNAIL = ::Valkyrie::Vocab::PCDMUse.ThumbnailImage # for compatibility with earlier versions of Hyrax; prefer +THUMBNAIL_IMAGE+
 
+      # @return [Array<RDF::URI>] list of all uses
+      def use_list
+        [ORIGINAL_FILE,
+         THUMBNAIL_IMAGE,
+         EXTRACTED_TEXT,
+         INTERMEDIATE_FILE,
+         PRESERVATION_FILE,
+         SERVICE_FILE,
+         TRANSCRIPT]
+      end
+      module_function :use_list
+
       ##
       # @param use [RDF::URI, Symbol]
       #
