@@ -91,6 +91,7 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
   end
 
   TRANSFERABLE_ATTRIBUTES = %w[
+    alternate_ids
     format_label
     recorded_size
     well_formed
