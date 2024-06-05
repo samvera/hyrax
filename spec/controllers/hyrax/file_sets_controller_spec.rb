@@ -15,7 +15,13 @@ RSpec.describe Hyrax::FileSetsController do
 
       describe "#destroy" do
         context "file_set with a parent" do
-          let(:file_set) { FactoryBot.create(:file_set, user: user) }
+          let(:file_set) do
+            FactoryBot.create(:file_set, user: user).tap do |fs|
+              fs.edit_users = [user.user_key]
+              fs.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+              fs.save
+            end
+          end          
           let(:work) { FactoryBot.create(:work, title: ['test title'], user: user) }
 
           before do
