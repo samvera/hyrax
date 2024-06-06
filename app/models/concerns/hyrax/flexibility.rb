@@ -3,6 +3,10 @@
 module Hyrax
   module Flexibility
     extend ActiveSupport::Concern
+    included do
+      attribute :schema_version,       Valkyrie::Types::String
+    end
+
     class_methods do
       ## Override dry-struct 1.6.0 to enable redefining schemas on the fly
       def attributes(new_schema)
@@ -55,10 +59,10 @@ module Hyrax
 
       ## Read the schema from the database and load the correct schemas for the instance in to the class
       def load(attributes, safe = false)
-        attributes[:schemas] ||= 'core_metadata:1'
+        attributes[:schema_version] ||=  Hyrax::FlexibleSchema.order('created_at DESC').pick(:version)
         struct = allocate
-        schema_name, schema_version = attributes[:schemas].split(':')
-        struct.singleton_class.attributes(Hyrax::Schema(schema_name, schema_version:).attributes)
+        schema_version = attributes[:schema_version]
+        struct.singleton_class.attributes(Hyrax::Schema(self, schema_version:).attributes)
         clean_attributes = safe ? struct.singleton_class.schema.call_safe(attributes) { |output = attributes| return yield output } : struct.singleton_class.schema.call_unsafe(attributes)
         struct.__send__(:initialize, clean_attributes)
         struct
