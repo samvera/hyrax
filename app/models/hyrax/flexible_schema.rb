@@ -11,15 +11,22 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     profile['classes'].keys.each do |class_name|
       @class_names[class_name] = {}
     end
-    profile['properties'].each do |key, value|
-      value['available_on']['class'].each do |property_class|
+    profile['properties'].each do |key, values|
+      values['available_on']['class'].each do |property_class|
         # map some m3 items to what Hyrax expects
-        value['type'] = lookup_type(value['range'])
-        value['predicate'] = value['property_uri']
-        @class_names[property_class][key] = value
+        values = values_map(values)
+        @class_names[property_class][key] = values
       end
     end
     @class_names
+  end
+
+  def values_map(values)
+    values['type'] = lookup_type(value['range'])
+    values['predicate'] = value['property_uri']
+    values['index_keys'] = values['indexing']
+    values['multiple'] = values['multi_value']
+    values
   end
 
   def lookup_type(range)
