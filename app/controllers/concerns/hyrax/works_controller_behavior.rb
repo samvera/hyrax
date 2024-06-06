@@ -58,7 +58,7 @@ module Hyrax
       @admin_set_options = available_admin_sets
       # TODO: move these lines to the work form builder in Hyrax
       curation_concern.depositor = current_user.user_key
-      curation_concern.admin_set_id = admin_set_id_for_new
+      curation_concern.admin_set_id = params[:admin_set_id] || admin_set_id_for_new
       build_form
     end
 
