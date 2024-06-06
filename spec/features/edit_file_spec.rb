@@ -3,6 +3,7 @@ RSpec.describe "Editing a file:", type: :feature do
   let(:user) { create(:user) }
   let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
   let!(:workflow) { create(:workflow, allows_access_grant: true, active: true, permission_template_id: permission_template.id) }
+  let(:options_presenter) { double(select_options: []) }
 
   let(:admin_set) do
     if Hyrax.config.disable_wings
@@ -32,6 +33,8 @@ RSpec.describe "Editing a file:", type: :feature do
 
   before do
     sign_in user
+    # mock the admin set options presenter to avoid hitting Solr
+    allow(Hyrax::AdminSetOptionsPresenter).to receive(:new).and_return(options_presenter)
 
     unless Hyrax.config.disable_wings
       Hydra::Works::AddFileToFileSet.call(file_set, file, :original_file)

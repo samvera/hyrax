@@ -21,7 +21,7 @@ RSpec.describe Hyrax::FileSetsController do
               fs.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
               fs.save
             end
-          end          
+          end
           let(:work) { FactoryBot.create(:work, title: ['test title'], user: user) }
 
           before do
