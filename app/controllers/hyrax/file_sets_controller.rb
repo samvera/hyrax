@@ -43,6 +43,7 @@ module Hyrax
 
     # GET /concern/file_sets/:id
     def edit
+      @file_set_admin_set_option = file_set_admin_set_option
       initialize_edit_form
     end
 
@@ -227,6 +228,19 @@ module Hyrax
         add_breadcrumb presenter.parent.to_s, main_app.polymorphic_path(presenter.parent) if presenter.parent.present?
         add_breadcrumb presenter.to_s, main_app.polymorphic_path(presenter)
       end
+    end
+
+    # Retrieves the admin set the file_set belongs to
+    def file_set_admin_set_option
+      return @admin_set_option if @admin_set_option
+      parent_work = parent(file_set: presenter)
+      admin_set_tesim = parent_work.solr_document[:admin_set_tesim].first
+
+      service = Hyrax::AdminSetService.new(self)
+      admin_set_option = Hyrax::AdminSetOptionsPresenter.new(service).select_options.reject do |option|
+        option[0] != admin_set_tesim
+      end
+      admin_set_option
     end
 
     def initialize_edit_form
