@@ -31,12 +31,14 @@ module Hyrax
   #   implementations).
   #
   class Resource < Valkyrie::Resource
+    include Hyrax::Flexibility if ENV.fetch('HYRAX_FLEXIBLE', false)
     include Hyrax::Naming
     include Hyrax::WithEvents
 
     attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
     attribute :embargo_id,    Valkyrie::Types::Params::ID
     attribute :lease_id,      Valkyrie::Types::Params::ID
+    attribute :schemas,       Valkyrie::Types::String
 
     delegate :edit_groups, :edit_groups=,
              :edit_users,  :edit_users=,

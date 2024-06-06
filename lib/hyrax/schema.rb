@@ -59,13 +59,19 @@ module Hyrax
     attr_reader :name
 
     ##
+    # Pick the default schema loader based on whether flex is on or not
+    def self.default_schema_loader
+      ENV.fetch('HYRAX_FLEXIBLE', false) ? SimpleSchemaLoader.new : SimpleSchemaLoader.new
+    end
+    ##
     # @param [Symbol] schema_name
     #
     # @note use Hyrax::Schema(:my_schema) instead
     #
     # @api private
-    def initialize(schema_name, schema_loader: SimpleSchemaLoader.new)
+    def initialize(schema_name, schema_loader: Hyrax::Schema.default_schema_loader, schema_version: '1')
       @name = schema_name
+      @version = schema_version
       @schema_loader = schema_loader
     end
 
