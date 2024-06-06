@@ -30,8 +30,8 @@ class CollectionResource < Hyrax::PcdmCollection
   # * add Valkyrie attributes to this class
   # * update form and indexer to process the attributes
   #
-  include Hyrax::Schema(:basic_metadata)
-  include Hyrax::Schema(:collection_resource)
+  include Hyrax::Schema(:basic_metadata) unless ENV.fetch('HYRAX_FLEXIBLE', false)
+  include Hyrax::Schema(:collection_resource) unless ENV.fetch('HYRAX_FLEXIBLE', false)
 
   Hyrax::ValkyrieLazyMigration.migrating(self, from: ::Collection)
 end
