@@ -543,7 +543,9 @@ RSpec.describe Hyrax::FileSetsController do
       let(:user)  { FactoryBot.create(:user) }
       before { sign_in user }
       let(:file) { fixture_file_upload('/world.png', 'image/png') }
-      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, title: "test title",  admin_set_id: admin_set.id, uploaded_files: [FactoryBot.create(:uploaded_file, user: work_user)], edit_users: [work_user]) }
+      let(:work) do
+        FactoryBot.valkyrie_create(:hyrax_work, title: "test title", admin_set_id: admin_set.id, uploaded_files: [FactoryBot.create(:uploaded_file, user: work_user)], edit_users: [work_user])
+      end
       let(:file_set) { query_service.find_members(resource: work).first }
       let(:file_metadata) { query_service.custom_queries.find_files(file_set: file_set).first }
       let(:uploaded) { storage_adapter.find_by(id: file_metadata.file_identifier) }
