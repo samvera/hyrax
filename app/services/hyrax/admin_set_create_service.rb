@@ -129,9 +129,12 @@ module Hyrax
                       Hyrax.query_service.find_by(id: 'admin_set/default')
                     rescue Ldp::BadRequest, Valkyrie::Persistence::ObjectNotFoundError
                       # Fedora 6.5+ does not support slashes in IDs, hence the need to rescue Ldp::BadRequest
-                      Hyrax.query_service.find_by(id: DEFAULT_ID)
-                    rescue Valkyrie::Persistence::ObjectNotFoundError
-                      nil
+                      # if an admin set with deprecated ID 'admin_set/default' does not exist, check again for admin set with DEFAULT_ID
+                      begin
+                        Hyrax.query_service.find_by(id: DEFAULT_ID)
+                      rescue Valkyrie::Persistence::ObjectNotFoundError
+                        nil
+                      end
                     end
 
         default_admin_set_persister.update(default_admin_set_id: admin_set.id.to_s) if admin_set.present? && save_default?
