@@ -4,4 +4,4 @@ class FileSet < ActiveFedora::Base
   include ::Hyrax::FileSetBehavior
 end
 
-Hyrax::ValkyrieLazyMigration.migrating(Hyrax::FileSet, from: ::FileSet)
+Hyrax::ValkyrieLazyMigration.migrating(Hyrax::FileSet, from: ::FileSet) if ENV.fetch('VALKYRIE_TRANSITION', false)

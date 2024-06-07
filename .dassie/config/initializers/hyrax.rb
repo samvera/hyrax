@@ -68,9 +68,16 @@ Hyrax.config do |config|
 
   # dassie needs legacy AF models
   # If using Frayja/Frigg then use the resource they provide
-  config.collection_model = 'CollectionResource'
-  config.admin_set_model = 'AdminSetResource'
-  config.file_set_model = 'Hyrax::FileSet'
+  if ENV.fetch('VALKYRIE_TRANSITION', false)
+    config.collection_model = 'CollectionResource'
+    config.admin_set_model = 'AdminSetResource'
+    config.file_set_model = 'Hyrax::FileSet'
+  else
+    # dassie needs legacy AF models
+    config.collection_model = '::Collection'
+    config.admin_set_model = 'AdminSet'
+    config.file_set_model = '::FileSet'
+  end
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"
