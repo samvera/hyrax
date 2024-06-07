@@ -1,0 +1,137 @@
+name: 'Build Test Lint'
+run-name: Build Test Lint of ${{ github.ref_name }} by @${{ github.actor }}
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
+
+env:
+  REGISTRY: ghcr.io
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          cache-version: 1
+      - name: Rubocop
+        run: bundle install && bundle exec rubocop --parallel --format progress --format junit --out rubocop.xml --display-only-failed
+      - name: Archive rubocop reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rubocop-reports
+          path: 'rubocop*.xml'
+
+  build:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and export
+        uses: docker/build-push-action@v5
+        with:
+          build-args: |
+            APP_PATH=.koppie
+          cache-from: type=gha
+          cache-to: type=gha, mode=max
+          context: .
+          target: hyrax-engine-dev
+          tags: samvera/koppie:latest,samvera/koppie:${{ github.sha }}
+          outputs: type=docker,dest=/tmp/koppie-${{ github.sha }}.tar
+      - name: Upload built image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: koppie-image
+          path: /tmp/koppie-${{ github.sha }}.tar
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ci_node_total: [8]
+        ci_node_index: [0,1,2,3,4,5,6,7]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download built image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: koppie-image
+          path: /tmp
+      - name: Start containers
+        run: |
+          docker load --input /tmp/koppie-${{ github.sha }}.tar
+          docker image ls -a
+          docker compose -f docker-compose-koppie.yml up -d --quiet-pull --pull missing --no-build
+      - name: RSpec
+        env:
+          CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
+          CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+        run: >-
+          docker compose -f docker-compose-koppie.yml exec -T -w /app/samvera/hyrax-engine web sh -c
+          "bundle install && yarn install && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
+      - name: Capture Container Logs
+        if: always()
+        uses: jwalton/gh-docker-logs@v2
+        with:
+          images: 'seleniarm/standalone-chromium'
+      - name: Move Test Files
+        if: always()
+        env:
+          CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
+          CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+        run: >-
+          mv rspec.xml rspec-${CI_NODE_INDEX}.xml
+      - name: Archive spec reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: spec-reports-${{ matrix.ci_node_index }}
+          path: '**/rspec*.xml'
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: failure()
+        with:
+          limit-access-to-actor: true
+
+  report:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      # only needed unless run with comment_mode: off
+      pull-requests: write
+    if: always()
+    steps:
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Publish Test Report
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: "artifacts/**/*.xml"
+          action_fail_on_inconclusive: true
+          fail_on: "test failures"

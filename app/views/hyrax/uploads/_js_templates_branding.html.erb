@@ -1,7 +1,7 @@
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
-    <tr class="template-upload fade show">
+    <tr class="template-upload fade">
       <td>
         <span class="preview"></span>
       </td>
@@ -37,7 +37,7 @@
 <!-- The template to display the banner once upload is complete -->
 <script id="template-download" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
-        <span class="template-download fade show">
+        <span class="template-download fade">
           <div id="banner">
             <div class="row branding-banner-row">
               <div class="col-sm-3">
@@ -69,7 +69,7 @@
 <!-- The template to display logo in the table once upload is complete -->
 <script id="logo-template-download" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
-            <span class="template-download fade show">
+            <span class="template-download fade">
             <div class="row branding-logo-row">
               <div class="col-sm-3">
                 <span class="preview">

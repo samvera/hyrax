@@ -12,7 +12,14 @@ RSpec.describe 'The default Hyrax workflow', type: :feature, valkyrie_adapter: :
     let(:attributes) { :LEGACY_UNUSED_ARGUMENT_WITH_NO_KNOWN_USE_CASE_SHOULD_NEVER_BE_REQUIRED }
     let(:workflow_factory) { Hyrax::Workflow::WorkflowFactory }
 
-    before { Hyrax::EnsureWellFormedAdminSetService.call }
+    before do
+      admin_set_id = Hyrax::EnsureWellFormedAdminSetService.call
+      begin
+        Sipity::Workflow.find_active_workflow_for(admin_set_id: admin_set_id)
+      rescue NoActiveWorkflowError => _
+        Hyrax::Workflow::WorkflowImporter.load_workflows
+      end
+    end
 
     it 'sets state to "deposited"' do
       workflow_factory.create(work, attributes, depositor)

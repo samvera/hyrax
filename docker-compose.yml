@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  app: &app
+  web:
     build:
       context: .
       target: hyrax-engine-dev
@@ -41,7 +41,7 @@ services:
     networks:
       - hyrax
 
-  sidekiq:
+  worker:
     image: samvera/dassie
     entrypoint: dev-entrypoint.sh
     command: sh -c 'bundle exec sidekiq'
@@ -87,11 +87,11 @@ services:
       - hyrax
 
   chrome:
-    image: seleniarm/standalone-chromium:114.0
+    image: seleniarm/standalone-chromium:4.18
     environment:
       - START_XVFB=false
-    logging:
-      driver: none
+#    logging:
+#      driver: none
     volumes:
       - /dev/shm:/dev/shm
     shm_size: 2G

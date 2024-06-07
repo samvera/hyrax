@@ -99,7 +99,7 @@ require 'hyrax/specs/shared_specs/factories/strategies/json_strategy'
 require 'hyrax/specs/shared_specs/factories/strategies/valkyrie_resource'
 FactoryBot.register_strategy(:valkyrie_create, ValkyrieCreateStrategy)
 FactoryBot.register_strategy(:json, JsonStrategy)
-FactoryBot.definition_file_paths = [File.expand_path("../factories", __FILE__)]
+FactoryBot.definition_file_paths = [File.expand_path("../../lib/hyrax/specs/shared_specs/factories", __FILE__)]
 FactoryBot.find_definitions
 require 'rspec/mocks'
 

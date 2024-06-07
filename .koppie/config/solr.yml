@@ -2,6 +2,6 @@
 development:
   url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:8983/solr/nurax-pg-solr-dev" %>
 test: &test
-  url: <%= ENV['TEST_SOLR_URL'] ||ENV['SOLR_URL'] || "http://127.0.0.1:#{ENV.fetch('SOLR_TEST_PORT', 8985)}/solr/nurax-pg-test" %>
+  url: <%= ENV['SOLR_TEST_URL'] ||ENV['SOLR_URL'] || "http://127.0.0.1:#{ENV.fetch('SOLR_TEST_PORT', 8985)}/solr/nurax-pg-test" %>
 production:
   url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:8983/solr/nurax-pg" %>

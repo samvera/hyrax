@@ -16,32 +16,6 @@ RSpec.describe WorkViewStat, :clean_repo, type: :model do
     expect(work_stat.user_id).to eq(user_id)
   end
 
-  describe ".ga_statistic" do
-    let(:start_date) { 2.days.ago }
-    let(:expected_path) { "/concern/monographs/#{work_id}" }
-
-    before do
-      allow(Hyrax::Analytics).to receive(:profile).and_return(profile)
-    end
-    context "when a profile is available" do
-      let(:views) { double }
-      let(:profile) { double(hyrax__pageview: views) }
-
-      it "calls the Legato method with the correct path" do
-        expect(views).to receive(:for_path).with(expected_path)
-        described_class.ga_statistics(start_date, work)
-      end
-    end
-
-    context "when a profile not available" do
-      let(:profile) { nil }
-
-      it "calls the Legato method with the correct path" do
-        expect(described_class.ga_statistics(start_date, work)).to be_empty
-      end
-    end
-  end
-
   describe "#statistics" do
     let(:dates) do
       ldates = []
@@ -72,7 +46,7 @@ RSpec.describe WorkViewStat, :clean_repo, type: :model do
 
     describe "cache empty" do
       let(:stats) do
-        expect(described_class).to receive(:ga_statistics).and_return(sample_work_pageview_statistics)
+        expect(Hyrax::Analytics).to receive(:page_statistics).and_return(sample_work_pageview_statistics)
         described_class.statistics(work, Time.zone.today - 4.days, user_id)
       end
 
@@ -96,7 +70,7 @@ RSpec.describe WorkViewStat, :clean_repo, type: :model do
       let!(:work_view_stat) { described_class.create(date: (Time.zone.today - 5.days).to_datetime, work_id: work_id, work_views: "25") }
 
       let(:stats) do
-        expect(described_class).to receive(:ga_statistics).and_return(sample_work_pageview_statistics)
+        expect(Hyrax::Analytics).to receive(:page_statistics).and_return(sample_work_pageview_statistics)
         described_class.statistics(work, Time.zone.today - 5.days)
       end
 
