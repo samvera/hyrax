@@ -14,14 +14,12 @@ module Hyrax
       end
     end
 
-    class UndefinedSchemaError < ArgumentError; end
-
     private
 
     ##
     # @param [#to_s] schema_name
     # @return [Enumerable<AttributeDefinition]
-    def definitions(schema_name)
+    def definitions(schema_name, _version)
       schema_config(schema_name)['attributes'].map do |name, config|
         AttributeDefinition.new(name, config)
       end

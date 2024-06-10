@@ -14,9 +14,11 @@ module Hyrax
     # @param [#to_s] schema_name
     # @return [Enumerable<AttributeDefinition]
     def definitions(schema_name, version)
-      Hyrax::FlexibleSchema.find_by(version: version).attributes_for(schema_name).map do |name, config|
+      Hyrax::FlexibleSchema.find(version).attributes_for(schema_name).map do |name, config|
         AttributeDefinition.new(name, config)
       end
+    rescue NoMethodError
+      raise UndefinedSchemaError, "Flexible schema not found in version #{version} for #{schema_name}"
     end
   end
 end

@@ -8,13 +8,15 @@ module Hyrax
   #
   # @see config/metadata/basic_metadata.yaml for an example configuration
   class SchemaLoader
+    class UndefinedSchemaError < ArgumentError; end
+
     ##
     # @param [Symbol] schema
     #
     # @return [Hash<Symbol, Dry::Types::Type>] a map from attribute names to
     #   types
     def attributes_for(schema:, version: 1)
-      definitions(schema).each_with_object({}) do |definition, hash|
+      definitions(schema, version).each_with_object({}) do |definition, hash|
         hash[definition.name] = definition.type.meta(definition.config)
       end
     end
@@ -24,7 +26,7 @@ module Hyrax
     #
     # @return [Hash{Symbol => Hash{Symbol => Object}}]
     def form_definitions_for(schema:, version: 1)
-      definitions(schema).each_with_object({}) do |definition, hash|
+      definitions(schema, version).each_with_object({}) do |definition, hash|
         next if definition.form_options.empty?
 
         hash[definition.name] = definition.form_options
@@ -36,7 +38,7 @@ module Hyrax
     #
     # @return [{Symbol => Symbol}] a map from index keys to attribute names
     def index_rules_for(schema:, version: 1)
-      definitions(schema).each_with_object({}) do |definition, hash|
+      definitions(schema, version).each_with_object({}) do |definition, hash|
         definition.index_keys.each do |key|
           hash[key] = definition.name
         end

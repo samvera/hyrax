@@ -59,7 +59,7 @@ module Hyrax
 
       ## Read the schema from the database and load the correct schemas for the instance in to the class
       def load(attributes, safe = false)
-        attributes[:schema_version] ||=  Hyrax::FlexibleSchema.order('created_at DESC').pick(:version)
+        attributes[:schema_version] ||=  Hyrax::FlexibleSchema.order('id DESC').pick(:id)
         struct = allocate
         schema_version = attributes[:schema_version]
         struct.singleton_class.attributes(Hyrax::Schema(self, schema_version:).attributes)

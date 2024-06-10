@@ -173,7 +173,6 @@ ActiveRecord::Schema.define(version: 2024_06_06_205215) do
   end
 
   create_table "hyrax_flexible_schemas", force: :cascade do |t|
-    t.string "version"
     t.text "profile"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

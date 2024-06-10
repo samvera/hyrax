@@ -1,6 +1,10 @@
 class Hyrax::FlexibleSchema < ApplicationRecord
   serialize :profile, coder: YAML
 
+  def title
+    "#{profile['profile']['responsibility_statement']} - version #{id}"
+  end
+
   def attributes_for(class_name)
     class_names[class_name]
   end
@@ -22,8 +26,8 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   end
 
   def values_map(values)
-    values['type'] = lookup_type(value['range'])
-    values['predicate'] = value['property_uri']
+    values['type'] = lookup_type(values['range'])
+    values['predicate'] = values['property_uri']
     values['index_keys'] = values['indexing']
     values['multiple'] = values['multi_value']
     values
