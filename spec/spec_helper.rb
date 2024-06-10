@@ -60,10 +60,13 @@ Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter)
 Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Postgres::MetadataAdapter.new, :postgres_adapter)
+version_path = Rails.root / 'tmp' / 'test_adapter_uploads'
 Valkyrie::StorageAdapter.register(
-  Valkyrie::Storage::VersionedDisk.new(base_path: Rails.root / 'tmp' / 'test_adapter_uploads'),
+  Valkyrie::Storage::VersionedDisk.new(base_path: version_path),
   :test_disk
 )
+FileUtils.mkdir_p(version_path)
+
 Valkyrie::StorageAdapter.register(
   Valkyrie::Storage::Disk.new(base_path: File.expand_path('../fixtures', __FILE__)),
   :fixture_disk
