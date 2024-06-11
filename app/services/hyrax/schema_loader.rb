@@ -127,6 +127,5 @@ module Hyrax
     end
 
     class UndefinedSchemaError < ArgumentError; end
-
   end
 end

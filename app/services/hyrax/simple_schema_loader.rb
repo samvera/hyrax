@@ -61,7 +61,7 @@ module Hyrax
     end
 
     def multiple_predicate_message(name, existing, incoming)
-      message =  "The attribute of #{name} has been assigned a predicate multiple times " \
+      message = "The attribute of #{name} has been assigned a predicate multiple times " \
         "within the metadata YAMLs. Please be aware that once the attribute's " \
         "predicate value is first assigned, any other value will be ignored. " \
         "The existing value is #{existing} preventing the use of #{incoming}"

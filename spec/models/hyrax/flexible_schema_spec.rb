@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe Hyrax::FlexibleSchema, type: :model do
@@ -19,7 +20,7 @@ RSpec.describe Hyrax::FlexibleSchema, type: :model do
         profile_data['classes'].keys.each do |class_name|
           attributes = subject.attributes_for(class_name)
           expect(attributes).to be_a(Hash)
-          attributes.each do |key, values|
+          attributes.each do |_key, values|
             expect(values).to include('type', 'predicate', 'index_keys', 'multiple')
           end
         end

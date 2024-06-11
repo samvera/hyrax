@@ -50,7 +50,7 @@ module Hyrax
   # @see https://wiki.duraspace.org/display/samvera/Hydra%3A%3AWorks+Shared+Modeling
   class FileSet < Hyrax::Resource
     include Hyrax::Schema(:core_metadata) unless ENV.fetch('HYRAX_FLEXIBLE', false)
-    include Hyrax::Schema(:file_set_metadata)  unless ENV.fetch('HYRAX_FLEXIBLE', false)
+    include Hyrax::Schema(:file_set_metadata) unless ENV.fetch('HYRAX_FLEXIBLE', false)
 
     def self.model_name(name_class: Hyrax::Name)
       @_model_name ||= name_class.new(self, nil, 'FileSet')
