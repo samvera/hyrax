@@ -130,6 +130,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 1
     multi_value: true
@@ -154,6 +157,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -163,12 +169,12 @@ properties:
       - 'null'
     display_label:
       default: License
-    index_documentation: searchable
+    index_documentation: displayable, searchable
     indexing:
+    - 'license_sim'
     - 'license_tesim'
     form:
-      required: false
-      primary: true
+      primary: false
     property_uri: http://purl.org/dc/terms/license
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
@@ -177,6 +183,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -186,17 +195,95 @@ properties:
       - 'null'
     display_label:
       default: Abstract
-    index_documentation: searchable
+    index_documentation: displayable, searchable
     indexing:
+    - 'abstract_sim'
     - 'abstract_tesim'
+    form:
+      primary: false
     property_uri: http://purl.org/dc/terms/abstract
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - This is an abstract.
+  access_right:
+    available_on:
+      class:
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
+    cardinality:
+      minimum: 0
+    multi_value: true
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Access Right
+    index_documentation: displayable, searchable
+    indexing:
+    - 'access_right_sim'
+    - 'access_right_tesim'
+    form:
+      primary: false
+    property_uri: http://purl.org/dc/terms/accessRights
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Open Access
+  alternative_title:
+    available_on:
+      class:
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
+    cardinality:
+      minimum: 0
+    multi_value: true
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Alternative Title
+    index_documentation: displayable, searchable
+    indexing:
+    - 'alternative_title_sim'
+    - 'alternative_title_tesim'
+    form:
+      primary: false
+    property_uri: http://purl.org/dc/terms/alternative
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Alternate Title Example
+  arkivo_checksum:
+    available_on:
+      class:
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    multi_value: false
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Arkivo Checksum
+    form:
+      primary: false
+    property_uri: http://scholarsphere.psu.edu/ns#arkivoChecksum
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - c0855931b7f1aefedb91d31af76873c0
   based_near:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -216,10 +303,38 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - San Diego, California, United States
+  bibliographic_citation:
+    available_on:
+      class:
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
+    cardinality:
+      minimum: 0
+    multi_value: true
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Bibliographic Citation
+    index_documentation: displayable, searchable
+    indexing:
+    - 'bibliographic_citation_sim'
+    - 'bibliographic_citation_tesim'
+    form:
+      primary: false
+    property_uri: http://purl.org/dc/terms/bibliographicCitation
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - "Doe, J. (2024). Example Citation. Journal of Examples, 12(3), 45-67."
   contributor:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -229,9 +344,10 @@ properties:
       - 'null'
     display_label:
       default: Contributor
-    index_documentation: searchable
+    index_documentation: displayable, searchable
     indexing:
     - 'contributor_tesim'
+    - 'contributor_sim'
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/contributor
@@ -242,6 +358,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -251,19 +370,24 @@ properties:
       - 'null'
     display_label:
       default: Date Created
-    index_documentation: searchable
+    index_documentation: displayable, searchable
     indexing:
+    - 'date_created_sim'
     - 'date_created_tesim'
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/created
     range: http://www.w3.org/2001/XMLSchema#dateTime
     sample_values:
+    sample_values:
     - "2024-06-06 21:06:51 +0000"
   description:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -273,8 +397,9 @@ properties:
       - 'null'
     display_label:
       default: Description
-    index_documentation: searchable
+    index_documentation: displayable, searchable
     indexing:
+    - 'description_sim'
     - 'description_tesim'
     form:
       primary: false
@@ -286,6 +411,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -295,8 +423,9 @@ properties:
       - 'null'
     display_label:
       default: Identifier
-    index_documentation: searchable
+    index_documentation: displayable, searchable
     indexing:
+    - 'identifier_sim'
     - 'identifier_tesim'
     form:
       primary: false
@@ -304,10 +433,33 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - abc123
+  import_url:
+    available_on:
+      class:
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    multi_value: false
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Import URL
+    property_uri: http://scholarsphere.psu.edu/ns#importUrl
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - http://example.com/resource1
   keyword:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -332,6 +484,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
       maximum: 1
@@ -342,6 +497,12 @@ properties:
       - 'null'
     display_label:
       default: Label
+    index_documentation: displayable, searchable
+    indexing:
+    - 'label_sim'
+    - 'label_tesim'
+    form:
+      primary: false
     property_uri: info:fedora/fedora-system:def/model#downloadFilename
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
@@ -350,6 +511,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -359,9 +523,10 @@ properties:
       - 'null'
     display_label:
       default: Language
+    index_documentation: displayable, searchable
     indexing:
+    - 'language_sim'
     - 'language_tesim'
-    index_documentation: searchable
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/language
@@ -373,6 +538,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -382,9 +550,10 @@ properties:
       - 'null'
     display_label:
       default: Publisher
+    index_documentation: displayable, searchable
     indexing:
+    - 'publisher_sim'
     - 'publisher_tesim'
-    index_documentation: searchable
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/publisher
@@ -395,6 +564,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -404,8 +576,9 @@ properties:
       - 'null'
     display_label:
       default: Related URL
-    index_documentation: searchable
+    index_documentation: displayable, searchable
     indexing:
+    - 'related_url_sim'
     - 'related_url_tesim'
     form:
       primary: false
@@ -417,6 +590,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
       maximum: 1
@@ -435,6 +611,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -448,6 +627,8 @@ properties:
     indexing:
     - 'resource_type_sim'
     - 'resource_type_tesim'
+    form:
+      primary: false
     property_uri: http://purl.org/dc/terms/type
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
@@ -457,6 +638,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -466,9 +650,12 @@ properties:
       - 'null'
     display_label:
       default: Rights Notes
+    index_documentation: displayable, searchable
     indexing:
+    - 'rights_notes_sim'
     - 'rights_notes_tesim'
-    index_documentation: searchable
+    form:
+      primary: false
     property_uri: http://purl.org/dc/elements/1.1/rights
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
@@ -477,6 +664,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -486,9 +676,12 @@ properties:
       - 'null'
     display_label:
       default: Rights Statement
-    index_documentation: searchable
+    index_documentation: displayable, searchable
     indexing:
+    - 'rights_statement_sim'
     - 'rights_statement_tesim'
+    form:
+      primary: true
     property_uri: http://www.europeana.eu/schemas/edm/rights
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
@@ -497,6 +690,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -506,9 +702,12 @@ properties:
       - 'null'
     display_label:
       default: Source
-    index_documentation: searchable
+    index_documentation: displayable, searchable
     indexing:
+    - 'source_sim'
     - 'source_tesim'
+    form:
+      primary: false
     property_uri: http://purl.org/dc/terms/source
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
@@ -518,6 +717,9 @@ properties:
     available_on:
       class:
       - Hyrax::FileSet
+      - CollectionResource
+      - GenericWorkResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
