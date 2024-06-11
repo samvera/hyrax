@@ -740,3 +740,65 @@ properties:
     sample_values:
     - Art
     - Science
+  target_audience:
+    available_on:
+      class:
+      - CollectionResource
+    cardinality:
+      minimum: 0
+    multi_value: true
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Target Audience
+    form:
+      primary: true
+      multiple: true
+    property_uri: http://hyrax-example.com/target_audience
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Researchers
+    - Students
+  department:
+    available_on:
+      class:
+      - CollectionResource
+    cardinality:
+      minimum: 0
+      maximum: 1
+    multi_value: false
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Department
+    form:
+      primary: true
+    property_uri: http://hyrax-example.com/department
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Mathematics
+    - History
+  course:
+    available_on:
+      class:
+      - CollectionResource
+    cardinality:
+      minimum: 0
+      maximum: 1
+    multi_value: false
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Course
+    form:
+      primary: false
+    property_uri: http://hyrax-example.com/course
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Computer Science 50
