@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Hyrax::FlexibleSchema < ApplicationRecord
   serialize :profile, coder: YAML
 
@@ -8,6 +9,8 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   def attributes_for(class_name)
     class_names[class_name]
   end
+
+  private
 
   def class_names
     return @class_names if @class_names
