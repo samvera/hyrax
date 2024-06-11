@@ -21,7 +21,7 @@ class FileDownloadStat < Hyrax::Statistic
 
     # this is called by the parent class
     def filter(file)
-      { file_id: file.id }
+      { file_id: file.id.to_s }
     end
   end
 end

@@ -55,7 +55,6 @@ module Hyrax
           # @return [Boolean] are all the required values present?
           def valid?
             return false unless @config['privkey_value'].present? || @config['privkey_path'].present?
-
             REQUIRED_KEYS.all? { |required| @config[required].present? }
           end
 
@@ -203,10 +202,25 @@ module Hyrax
           date = date_period(period, date)
           Visits.total_visits(profile, date[0], date[1])
         end
+
+        # Hyrax::Download is sent to Hyrax::Analytics.profile as #hyrax__download
+        # see Legato::ProfileMethods.method_name_from_klass
+        def page_statistics(start_date, object)
+          path = Rails.application.routes.url_helpers.polymorphic_path(object)
+          profile = Hyrax::Analytics.profile
+          unless profile
+            Hyrax.logger.error("Google Analytics profile has not been established. Unable to fetch statistics.")
+            return []
+          end
+          profile.hyrax__pageview(sort: 'date',
+                                  start_date: start_date,
+                                  end_date: Date.yesterday,
+                                  limit: 10_000)
+                 .for_path(path)
+        end
       end
       # rubocop:enable Metrics/BlockLength
     end
     # rubocop:enable Metrics/ModuleLength
   end
 end
-# rubocop:enable Metrics/ModuleLength

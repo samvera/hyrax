@@ -14,7 +14,7 @@ Hyrax.config do |config|
   # Injected via `rails g hyrax:work_resource Monograph`
   config.register_curation_concern :monograph
   # Injected via `rails g hyrax:work_resource GenericWorkResource`
-  config.register_curation_concern :generic_work_resource
+  # config.register_curation_concern :generic_work_resource
 
   config.iiif_image_server = true
   config.work_requires_files = false
@@ -68,9 +68,16 @@ Hyrax.config do |config|
 
   # dassie needs legacy AF models
   # If using Frayja/Frigg then use the resource they provide
-  config.collection_model = 'CollectionResource'
-  config.admin_set_model = 'AdminSetResource'
-  config.file_set_model = 'Hyrax::FileSet'
+  if ENV.fetch('VALKYRIE_TRANSITION', false)
+    config.collection_model = 'CollectionResource'
+    config.admin_set_model = 'AdminSetResource'
+    config.file_set_model = 'Hyrax::FileSet'
+  else
+    # dassie needs legacy AF models
+    config.collection_model = '::Collection'
+    config.admin_set_model = 'AdminSet'
+    config.file_set_model = '::FileSet'
+  end
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"

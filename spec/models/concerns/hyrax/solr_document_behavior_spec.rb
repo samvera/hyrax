@@ -54,7 +54,7 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       let(:solr_hash) { { 'has_model_ssim' => 'GenericWork' } }
 
       it 'resolves the correct model name' do
-        expect(solr_document.hydra_model).to eq GenericWork
+        expect(solr_document.hydra_model).to eq GenericWorkResource
       end
     end
 
@@ -138,11 +138,11 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       expect(solr_document.to_model.model_name.to_s).to eq 'ActiveFedora::Base'
     end
 
-    context 'with an ActiveFedora model name' do
+    context 'with an ActiveFedora model name that converts to a resource' do
       let(:solr_hash) { { 'has_model_ssim' => 'GenericWork' } }
 
       it 'wraps the specified model' do
-        expect(solr_document.to_model.model_name.to_s).to eq 'GenericWork'
+        expect(solr_document.to_model.model_name.to_s).to eq 'GenericWorkResource'
       end
     end
 

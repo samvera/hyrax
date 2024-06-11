@@ -33,5 +33,5 @@ class CollectionResource < Hyrax::PcdmCollection
   include Hyrax::Schema(:basic_metadata) unless ENV.fetch('HYRAX_FLEXIBLE', false)
   include Hyrax::Schema(:collection_resource) unless ENV.fetch('HYRAX_FLEXIBLE', false)
 
-  Hyrax::ValkyrieLazyMigration.migrating(self, from: ::Collection)
+  Hyrax::ValkyrieLazyMigration.migrating(self, from: ::Collection) if ENV.fetch('VALKYRIE_TRANSITION', false)
 end

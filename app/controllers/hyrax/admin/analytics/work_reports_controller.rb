@@ -6,7 +6,7 @@ module Hyrax
         include Hyrax::BreadcrumbsForWorksAnalytics
 
         def index
-          return unless Hyrax.config.analytics?
+          return unless Hyrax.config.analytics_reporting?
 
           @accessible_works ||= accessible_works
           @accessible_file_sets ||= accessible_file_sets
@@ -54,7 +54,7 @@ module Hyrax
         end
 
         def accessible_file_sets
-          file_set_model_clause = "has_model_ssim:\"#{Hyrax::ModelRegistry.rdf_representations_from.join('" OR "')}\""
+          file_set_model_clause = "has_model_ssim:\"#{Hyrax::ModelRegistry.file_set_rdf_representations.join('" OR "')}\""
           if current_user.ability.admin?
             Hyrax::SolrService.query(
               file_set_model_clause,

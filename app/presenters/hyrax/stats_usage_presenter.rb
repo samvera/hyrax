@@ -36,6 +36,7 @@ module Hyrax
     end
 
     def string_to_date(date_str)
+      return date_str if date_str.is_a?(Date)
       Time.zone.parse(date_str)
     rescue ArgumentError, TypeError
       nil
