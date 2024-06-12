@@ -65,17 +65,4 @@
 
 
 <!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('hyrax.dashboard.heading_actions.close') %>"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title"><%= t(:'helpers.action.hyrax_metadata_profile.import') %></h4>
-      </div>
-      <div class="modal-body">
-        <%= render 'import_modal' %>
-    </div>
-  </div>
-</div>
+<%= render 'import_modal' %>

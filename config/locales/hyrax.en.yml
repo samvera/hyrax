@@ -53,8 +53,10 @@ en:
       delete: Delete
       edit: Edit
       less: Less
-      hyrax_metadata_profiles:
-        import_profile: Import Profile
+      hyrax_metadata_profile:
+        import: Import Metadata Profile
+        import_metadata_profile: Import Profile
+        submit: Import
       more: More
       refresh: Refresh
       remove: Remove
@@ -1006,6 +1008,7 @@ en:
       managed:
         collections: Managed Collections
         works: Managed Works
+      metadata_profiles: Metadata Profiles
       my:
         action:
           add_to_collection: Add to collection

@@ -1,7 +1,17 @@
-<%= form_tag(hyrax.import_metadata_profiles_path, :multipart => true, :class => "form-inline") do %>
-  <%= file_field_tag :file %>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('hyrax.dashboard.heading_actions.close') %></button>
-    <%= submit_tag "Import Metadata Schema Profile", name: nil, class: "btn btn-primary" %>
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog" role="document">
+    <%= form_tag(hyrax.import_metadata_profiles_path, :multipart => true, :class => "modal-content") do %>
+      <div class="modal-header">
+        <h2 class="modal-title"><%= t(:'helpers.action.hyrax_metadata_profile.import') %></h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('hyrax.dashboard.heading_actions.close') %>"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <%= file_field_tag :file, class: 'form-control-file' %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('hyrax.dashboard.heading_actions.close') %></button>
+        <%= submit_tag t(:'helpers.action.hyrax_metadata_profile.submit'), name: nil, class: "btn btn-primary" %>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>

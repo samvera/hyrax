@@ -273,10 +273,12 @@ Hyrax::Engine.routes.draw do
     get action, controller: 'static', action: action, as: action
   end
 
-  # Metadata profiles routes
-  resources :metadata_profiles, except: :update do
-    collection { post :import }
-    member { post :unlock }
-    get 'export'
+  if ENV['HYRAX_FLEXIBLE']
+    # Metadata profiles routes
+    resources :metadata_profiles, except: :update do
+      collection { post :import }
+      member { post :unlock }
+      get 'export'
+    end
   end
 end
