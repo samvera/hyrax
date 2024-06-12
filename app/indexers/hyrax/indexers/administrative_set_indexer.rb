@@ -7,7 +7,7 @@ module Hyrax
     class AdministrativeSetIndexer < Hyrax::Indexers::ResourceIndexer
       include Hyrax::PermissionIndexer
       include Hyrax::VisibilityIndexer
-      include Hyrax::Indexer(:core_metadata)
+      include Hyrax::Indexer(:core_metadata) unless ENV.fetch('HYRAX_FLEXIBLE', false)
 
       def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
         super.tap do |solr_doc|

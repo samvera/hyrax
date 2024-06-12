@@ -49,8 +49,8 @@ module Hyrax
   # @see Hyrax::CustomQueries::Navigators::ParentWorkNavigator#find_parent_work
   # @see https://wiki.duraspace.org/display/samvera/Hydra%3A%3AWorks+Shared+Modeling
   class FileSet < Hyrax::Resource
-    include Hyrax::Schema(:core_metadata)
-    include Hyrax::Schema(:file_set_metadata)
+    include Hyrax::Schema(:core_metadata) unless ENV.fetch('HYRAX_FLEXIBLE', false)
+    include Hyrax::Schema(:file_set_metadata) unless ENV.fetch('HYRAX_FLEXIBLE', false)
 
     def self.model_name(name_class: Hyrax::Name)
       @_model_name ||= name_class.new(self, nil, 'FileSet')
@@ -114,7 +114,7 @@ module Hyrax
     # rubocop:disable Metrics/MethodLength
     def extensions_and_mime_types
       return [] if file_ids.empty?
-      Hyrax.query_service.find_many_by_ids(ids: file_ids).each_with_object([]) do |fm, arr|
+      Hyrax.custom_queries.find_files(file_set: self).each_with_object([]) do |fm, arr|
         next unless fm.original_filename
         extension = File.extname(fm.original_filename)
         next if extension.empty?

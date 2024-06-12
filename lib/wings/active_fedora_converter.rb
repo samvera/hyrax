@@ -145,7 +145,8 @@ module Wings
 
     def parse_attributes(af_object)
       converted_attrs = normal_attributes
-      af_object.attributes = converted_attrs.except(:members, :files)
+      af_object.attributes = converted_attrs.except(:members, :files, :file_name)
+      af_object.original_filename = converted_attrs[:file_name] if converted_attrs[:file_name]
       af_object.extracted_text = create_extrated_text(af_object) if resource.attributes[:extracted_text_id].present?
       perform_lease_conversion(af_object: af_object, resource: resource)
       perform_embargo_conversion(af_object: af_object, resource: resource)

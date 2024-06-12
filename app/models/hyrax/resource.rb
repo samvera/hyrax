@@ -31,6 +31,7 @@ module Hyrax
   #   implementations).
   #
   class Resource < Valkyrie::Resource
+    include Hyrax::Flexibility if ENV.fetch('HYRAX_FLEXIBLE', false)
     include Hyrax::Naming
     include Hyrax::WithEvents
 
