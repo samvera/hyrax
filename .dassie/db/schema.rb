@@ -176,6 +176,8 @@ ActiveRecord::Schema.define(version: 2024_06_06_205215) do
     t.text "profile"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "locked_at"
+    t.integer "locked_by_id"
   end
 
   create_table "job_io_wrappers", force: :cascade do |t|

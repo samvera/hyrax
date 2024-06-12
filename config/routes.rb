@@ -275,9 +275,8 @@ Hyrax::Engine.routes.draw do
 
   if ENV['HYRAX_FLEXIBLE']
     # Metadata profiles routes
-    resources :metadata_profiles, except: :update do
+    resources :metadata_profiles, except: [:update, :show, :destroy] do
       collection { post :import }
-      member { post :unlock }
       get 'export'
     end
   end

@@ -21,6 +21,7 @@
               <th scope="col">Profile Version</th>
               <th scope="col">Profile Type</th>
               <th scope="col">Created At</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -29,25 +30,10 @@
 
                 <!-- TODO: fix show pgs -->
                 <td><%= hyrax_metadata_profile.schema_version %></td>
-                <td><%= link_to hyrax_metadata_profile.metadata_profile_version.to_f, hyrax.metadata_profile_path(hyrax_metadata_profile) %></td>
+                <td><%= hyrax_metadata_profile.id.to_f %></td>
                 <td><%= hyrax_metadata_profile.metadata_profile_type %></td>
                 <td><%= hyrax_metadata_profile.created_at.strftime("%b %d, %Y") %></td>
-                <% if hyrax_metadata_profile == AllinsonFlex::Profile.current_version %>
-                  <% if hyrax_metadata_profile.locked_at && hyrax_metadata_profile.locked_at < Time.now %>
-                    <th colspan=3 ><%= link_to raw("<span title='click to force unlock' class='glyphicon glyphicon-lock'></span>"), hyrax.unlock_metadata_profile_path(hyrax_metadata_profile), method: :post, data: { confirm: 'Are you sure that no other user is editing the metadata_profile right now?' } %>
-                      <%= hyrax_metadata_profile.lock_statement %>
-                    </th>
-
-                  <% else %>
-                    <th><%= link_to raw('<span class="glyphicon glyphicon-pencil"></span>'), hyrax.edit_metadata_profile_path(hyrax_metadata_profile), data: { turbolinks: false } %></th>
-                    <th><%= link_to raw('<span class="glyphicon glyphicon-download-alt"></span>'), hyrax.metadata_profile_export_path(hyrax_metadata_profile), tagert: "_blank" %></th>
-                    <th><%= link_to raw('<span class="glyphicon glyphicon-remove"></span>'), hyrax.metadata_profile_path(hyrax_metadata_profile), method: :delete, data: { confirm: 'Are you sure?' } %></th>
-                  <% end %>
-                <% else %>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                <% end %>
+                <th><%= link_to raw('<span class="fa fa-download"></span>'), hyrax.metadata_profile_export_path(hyrax_metadata_profile), target: "_blank" %></th>
               </tr>
             <% end %>
           </tbody>
