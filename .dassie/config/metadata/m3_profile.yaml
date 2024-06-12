@@ -802,3 +802,165 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Computer Science 50
+  monograph_title:
+    available_on:
+      class:
+      - Monograph
+    cardinality:
+      minimum: 1
+      maximum: 1
+    multi_value: false
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Monograph Title
+    property_uri: http://hyrax-example.com/monograph_title
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Example Monograph Title
+  record_info:
+    available_on:
+      class:
+      - Monograph
+    cardinality:
+      minimum: 1
+      maximum: 1
+    multi_value: false
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Record Info
+    index_documentation: searchable
+    indexing:
+    - 'record_info_tesim'
+    form:
+      required: true
+      primary: true
+    property_uri: http://hyrax-example.com/record_info
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Example Record Info
+  place_of_publication:
+    available_on:
+      class:
+      - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    multi_value: false
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Place of Publication
+    form:
+      required: false
+      primary: true
+    property_uri: http://hyrax-example.com/place_of_publication
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Example Place of Publication
+  genre:
+    available_on:
+      class:
+      - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    multi_value: false
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Genre
+    form:
+      primary: true
+    property_uri: http://hyrax-example.com/genre
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Fiction
+    - Non-Fiction
+  series_title:
+    available_on:
+      class:
+      - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    multi_value: false
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Series Title
+    form:
+      primary: false
+    property_uri: http://hyrax-example.com/series_title
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Example Series Title
+  target_audience:
+    available_on:
+      class:
+      - Monograph
+    cardinality:
+      minimum: 0
+    multi_value: true
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Target Audience
+    form:
+      multiple: true
+    property_uri: http://hyrax-example.com/target_audience
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Researchers
+    - Students
+  table_of_contents:
+    available_on:
+      class:
+      - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    multi_value: false
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Table of Contents
+    form:
+      multiple: false
+    property_uri: http://hyrax-example.com/table_of_contents
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Example Table of Contents
+  date_of_issuance:
+    available_on:
+      class:
+      - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    multi_value: false
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Date of Issuance
+    property_uri: http://hyrax-example.com/date_of_issuance
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - 2024-06-07
