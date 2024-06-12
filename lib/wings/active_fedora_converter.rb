@@ -143,6 +143,7 @@ module Wings
     end
     # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
+    # rubocop:disable Metrics/AbcSize
     def parse_attributes(af_object)
       converted_attrs = normal_attributes
       af_object.attributes = converted_attrs.except(:members, :files, :file_name)
@@ -161,6 +162,7 @@ module Wings
       files = converted_attrs.delete(:files)
       af_object.files.build_or_set(files) if files
     end
+    # rubocop:enable Metrics/AbcSize
 
     def create_extrated_text(af_object)
       pcdm_et_file = af_object.extracted_text.presence || af_object.create_extracted_text
