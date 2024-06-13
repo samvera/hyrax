@@ -17,7 +17,7 @@ module Hyrax
           logger.info("Adding required collections...")
 
           flexible_schema = Hyrax::FlexibleSchema.first_or_create do |f|
-            f.profile = YAML.safe_load_file(Rails.root.join('config', 'metadata', 'm3_profile.yaml'))
+            f.profile = YAML.safe_load_file(Rails.root.join('config', 'metadata_profiles', 'm3_profile.yaml'))
           end
 
           logger.info "   #{flexible_schema.title} -- FOUND OR CREATED"
