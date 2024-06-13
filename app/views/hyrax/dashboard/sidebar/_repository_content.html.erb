@@ -14,7 +14,7 @@
     <span class="fa fa-file" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.works') %></span>
   <% end %>
 
-  <% if ENV['HYRAX_FLEXIBLE'] %>
+  <% if ENV.fetch('HYRAX_FLEXIBLE', false) %>
     <% if current_ability.admin? %>
       <%= menu.nav_link(hyrax.metadata_profiles_path,
                         class: "nav-link",

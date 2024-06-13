@@ -10,7 +10,7 @@ RSpec.describe Hyrax::Resource do
   it_behaves_like 'a Hyrax::Resource'
 
   before do
-    @hyrax_flexible_env_var = ENV['HYRAX_FLEXIBLE']
+    @hyrax_flexible_env_var = ENV.fetch('HYRAX_FLEXIBLE', false)
   end
 
   after do
