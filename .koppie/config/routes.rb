@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     concerns :searchable
   end
   devise_for :users
-  mount Sidekiq::Web => '/sidekiq'
+  mount Sidekiq::Web => '/sidekiq' # for sidekik monitoring; completely public
   mount Qa::Engine => '/authorities'
   mount Hyrax::Engine, at: '/'
   resources :welcome, only: 'index'

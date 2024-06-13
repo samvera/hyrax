@@ -1,7 +1,6 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  mount Sidekiq::Web => '/sidekiq' # for sidekik monitoring; completely public
   mount Riiif::Engine => 'images', as: :riiif if Hyrax.config.iiif_image_server?
         mount BrowseEverything::Engine => '/browse'
 
@@ -13,6 +12,7 @@ Rails.application.routes.draw do
     concerns :searchable
   end
   devise_for :users
+  mount Sidekiq::Web => '/sidekiq' # for sidekik monitoring; completely public
   mount Qa::Engine => '/authorities'
   mount Hyrax::Engine, at: '/'
   resources :welcome, only: 'index'
