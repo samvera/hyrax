@@ -7,11 +7,13 @@ profile:
   type:
   version: 1
 classes:
-  Hyrax::Work:
-    display_label: Work
+  GenericWork:
+    display_label: Generic Work
+  Monograph:
+    display_label: Monograph
   Hyrax::AdministrativeSet:
     diplay_label: AdministrativeSet
-  Hyrax::PcdmCollection:
+  CollectionResource:
     display_label: PcdmCollection
   Hyrax::FileSet:
     display_label: FileSet
@@ -35,8 +37,8 @@ properties:
       class:
       - Hyrax::AdministrativeSet
       - Hyrax::FileSet
-      - Hyrax::PcdmCollection
-      - Hyrax::Work
+      - CollectionResource
+      - GenericWork
     cardinality:
       minimum: 1
     multi_value: true
@@ -73,8 +75,8 @@ properties:
       class:
       - Hyrax::AdministrativeSet
       - Hyrax::FileSet
-      - Hyrax::PcdmCollection
-      - Hyrax::Work
+      - CollectionResource
+      - GenericWork
     cardinality:
       minimum: 0
       maximum: 1
@@ -90,8 +92,8 @@ properties:
       class:
       - Hyrax::AdministrativeSet
       - Hyrax::FileSet
-      - Hyrax::PcdmCollection
-      - Hyrax::Work
+      - CollectionResource
+      - GenericWork
     cardinality:
       minimum: 0
       maximum: 1
@@ -107,8 +109,8 @@ properties:
       class:
       - Hyrax::AdministrativeSet
       - Hyrax::FileSet
-      - Hyrax::PcdmCollection
-      - Hyrax::Work
+      - CollectionResource
+      - GenericWork
     cardinality:
       minimum: 0
       maximum: 1
@@ -131,7 +133,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 1
@@ -158,7 +160,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -184,7 +186,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -209,7 +211,7 @@ properties:
     available_on:
       class:
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -234,7 +236,7 @@ properties:
     available_on:
       class:
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -259,7 +261,7 @@ properties:
     available_on:
       class:
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -282,7 +284,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -307,7 +309,7 @@ properties:
     available_on:
       class:
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -333,7 +335,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -359,7 +361,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -386,7 +388,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -412,7 +414,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -437,7 +439,7 @@ properties:
     available_on:
       class:
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -458,7 +460,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -485,7 +487,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -512,7 +514,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -539,7 +541,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -565,7 +567,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -591,7 +593,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -612,7 +614,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -639,7 +641,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -665,7 +667,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -691,7 +693,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -718,7 +720,7 @@ properties:
       class:
       - Hyrax::FileSet
       - CollectionResource
-      - GenericWorkResource
+      - GenericWork
       - Monograph
     cardinality:
       minimum: 0
@@ -963,4 +965,4 @@ properties:
     property_uri: http://hyrax-example.com/date_of_issuance
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
-    - 2024-06-07
+    - "2024-06-06 21:06:51 +0000"
