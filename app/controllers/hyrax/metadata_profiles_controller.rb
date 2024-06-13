@@ -21,13 +21,15 @@ module Hyrax
       end
 
       begin
-        @flexible_schema = Hyrax::FlexibleSchema.first_or_create do |f|
-          f.profile = YAML.safe_load_file(uploaded_io.path)
-        end
+        @flexible_schema = Hyrax::FlexibleSchema.create(profile: YAML.safe_load_file(uploaded_io.path))
 
-        redirect_to metadata_profiles_path, notice: 'AllinsonFlexProfile was successfully created.'
+        if @flexible_schema.persisted?
+          redirect_to metadata_profiles_path, notice: 'AllinsonFlexProfile was successfully created.'
+        else
+          redirect_to metadata_profiles_path, alert: @flexible_schema.errors.messages.to_s
+        end
       rescue => e
-        redirect_to metadata_profiles_path, alert: @flexible_schema.errors.messages.to_s
+        redirect_to metadata_profiles_path, alert: e.message
         return
       end
     end
