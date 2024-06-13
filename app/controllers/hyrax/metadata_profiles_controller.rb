@@ -33,10 +33,10 @@ module Hyrax
     end
 
     def export
-      @allinson_flex_profile = AllinsonFlex::Profile.find(params[:profile_id])
-      filename = "metadata-profile-v.#{@allinson_flex_profile.profile_version}.yml"
-      File.open(filename, "w") { |file| file.write(@allinson_flex_profile.profile.to_hash.to_yaml(indentation: 8)) }
-      send_file filename, type: "application/yaml", x_sendfile: true
+      @schema = Hyrax::FlexibleSchema.find(params[:metadata_profile_id])
+      filename = "metadata-profile-v.#{@schema.version}.yml"
+      yaml_data = @schema.profile.to_hash.to_yaml(indentation: 2)
+      send_data yaml_data, filename: filename, type: "application/yaml"
     end
 
     private
