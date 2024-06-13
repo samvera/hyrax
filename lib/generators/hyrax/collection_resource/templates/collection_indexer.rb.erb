@@ -3,5 +3,5 @@
 # Generated via
 #  `rails generate hyrax:collection_resource <%= class_name %>`
 class <%= class_name %>Indexer < Hyrax::Indexers::PcdmCollectionIndexer
-  include Hyrax::Indexer(:<%= file_name %>)
+  include Hyrax::Indexer(:<%= file_name %>) unless ENV.fetch('HYRAX_FLEXIBLE', false)
 end
