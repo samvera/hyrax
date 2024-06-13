@@ -6,7 +6,7 @@ module Hyrax
   #
   # Read m3 profiles from the database
   #
-  # @see config/metadata/m3_profile.yaml for an example configuration
+  # @see config/metadata_profiles/m3_profile.yaml for an example configuration
   class M3SchemaLoader < Hyrax::SchemaLoader
     private
 

@@ -84,7 +84,7 @@ class Hyrax::CollectionResourceGenerator < Rails::Generators::NamedBase # ruboco
     template('collection_indexer.rb.erb', filepath)
     return unless include_basic_metadata?
     inject_into_file filepath, before: /include Hyrax::Indexer/ do
-      "include Hyrax::Indexer(:basic_metadata)\n  "
+      "include Hyrax::Indexer(:basic_metadata) unless ENV.fetch('HYRAX_FLEXIBLE', false)\n  "
     end
   end
 
