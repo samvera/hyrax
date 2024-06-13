@@ -1,4 +1,4 @@
-<div id="myModal" class="modal fade" role="dialog">
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <%= form_tag(hyrax.import_metadata_profiles_path, :multipart => true, :class => "modal-content") do %>
       <div class="modal-header">
@@ -6,6 +6,9 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('hyrax.dashboard.heading_actions.close') %>"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
+        <% unless @metadata_profiles.empty? %>
+          <p><%= t(:'helpers.action.hyrax_metadata_profile.hint') %></p>
+        <% end %>
         <%= file_field_tag :file, class: 'form-control-file' %>
       </div>
       <div class="modal-footer">

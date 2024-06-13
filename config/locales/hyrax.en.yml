@@ -54,6 +54,7 @@ en:
       edit: Edit
       less: Less
       hyrax_metadata_profile:
+        hint: Importing a new profile will overwrite the existing profile
         import: Import Metadata Profile
         import_metadata_profile: Import Profile
         submit: Import
