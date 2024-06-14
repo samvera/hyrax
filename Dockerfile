@@ -21,6 +21,7 @@ RUN apk --no-cache upgrade && \
   imagemagick-tiff \
   imagemagick-webp \
   jemalloc \
+  ruby-grpc \
   tzdata \
   nodejs \
   yarn \
