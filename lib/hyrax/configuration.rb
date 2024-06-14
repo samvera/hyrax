@@ -313,6 +313,14 @@ module Hyrax
         ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_FLEXIBLE', false))
     end
 
+    # This value determines whether to use load the Freyja adapter in dassie
+    attr_writer :valkyrie_transition
+    attr_reader :valkyrie_transition
+    def valkyrie_transition?
+      @valkyrie_transition ||=
+        ActiveModel::Type::Boolean.new.cast(ENV.fetch('VALKYRIE_TRANSITION', false))
+    end
+
     attr_writer :max_days_between_fixity_checks
     def max_days_between_fixity_checks
       @max_days_between_fixity_checks ||= 7
