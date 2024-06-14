@@ -6,7 +6,7 @@ module Hyrax
     # Adds Hyrax behaviors to the controller.
     include Hyrax::WorksControllerBehavior
     include Hyrax::BreadcrumbsForWorks
-    if ENV.fetch('VALKYRIE_TRANSITION', false)
+    if Hyrax.config.valkyrie_transition?
       self.curation_concern_type = ::GenericWorkResource
 
       self.work_form_service = Hyrax::FormFactory.new
