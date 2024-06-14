@@ -9,7 +9,7 @@ module Hyrax
       include Hyrax::VisibilityIndexer
       include Hyrax::LocationIndexer
       include Hyrax::ThumbnailIndexer
-      include Hyrax::Indexer(:core_metadata) unless ENV.fetch('HYRAX_FLEXIBLE', false)
+      include Hyrax::Indexer(:core_metadata) unless Hyrax.config.flexible?
 
       self.thumbnail_path_service = CollectionThumbnailPathService
 

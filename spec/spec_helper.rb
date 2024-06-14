@@ -5,6 +5,7 @@ ENV['DATABASE_URL'] = ENV['DATABASE_TEST_URL'] if ENV['DATABASE_TEST_URL']
 
 # Analytics is turned off by default
 ENV['HYRAX_ANALYTICS'] = 'false'
+ENV['HYRAX_FLEXIBLE'] = 'false'
 
 require "bundler/setup"
 
