@@ -11,6 +11,8 @@ classes:
     display_label: Generic Work
   GenericWorkResource:
     display_label: Generic Work
+  Wings(Hyrax::Resource):
+    display_label: Wings Resource
   Monograph:
     display_label: Monograph
   AdminSet:
@@ -46,6 +48,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
     cardinality:
       minimum: 1
@@ -86,6 +89,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
     cardinality:
       minimum: 0
@@ -105,6 +109,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
     cardinality:
       minimum: 0
@@ -124,6 +129,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
     cardinality:
       minimum: 0
@@ -148,6 +154,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -176,6 +183,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -203,6 +211,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -229,6 +238,7 @@ properties:
       class:
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -255,6 +265,7 @@ properties:
       class:
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -281,6 +292,7 @@ properties:
       class:
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -305,6 +317,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -331,6 +344,7 @@ properties:
       class:
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -358,6 +372,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -385,6 +400,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -413,6 +429,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -440,6 +457,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -466,6 +484,7 @@ properties:
       class:
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -488,6 +507,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -516,6 +536,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -544,6 +565,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -572,6 +594,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -599,6 +622,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -626,6 +650,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -648,6 +673,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -676,6 +702,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -703,6 +730,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -730,6 +758,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
@@ -758,6 +787,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWorkResource
+      - Wings(Hyrax::Resource)
       - GenericWork
       - Monograph
     cardinality:
