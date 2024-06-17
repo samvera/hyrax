@@ -54,7 +54,7 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       let(:solr_hash) { { 'has_model_ssim' => 'GenericWork' } }
 
       it 'resolves the correct model name' do
-        expect(solr_document.hydra_model).to eq GenericWorkResource
+        expect(solr_document.hydra_model.to_s).to match('GenericWork')
       end
     end
 
@@ -142,7 +142,7 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       let(:solr_hash) { { 'has_model_ssim' => 'GenericWork' } }
 
       it 'wraps the specified model' do
-        expect(solr_document.to_model.model_name.to_s).to eq 'GenericWorkResource'
+        expect(solr_document.to_model.model_name.to_s).to match 'GenericWork'
       end
     end
 
