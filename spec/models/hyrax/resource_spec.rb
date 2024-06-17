@@ -9,37 +9,28 @@ RSpec.describe Hyrax::Resource do
 
   it_behaves_like 'a Hyrax::Resource'
 
-  before do
-    @hyrax_flexible_env_var = ENV['HYRAX_FLEXIBLE']
-  end
-
-  after do
-    ENV.delete('HYRAX_FLEXIBLE')
-  end
-
+  # Hyrax::Resource was loading earlier than the `allow(Hyrax.config).to receive(:flexible?)` line,
+  # so we remove it and load it again in order for the allow to take effect
   def load_resource_model
     Hyrax.send(:remove_const, :Resource) if defined?(Hyrax::Resource)
-    load File.join('/app/samvera/hyrax-engine/app/models/hyrax/resource.rb')
+    load Hyrax::Engine.root.join('app', 'models', 'hyrax', 'resource.rb')
   end
 
-  context 'when HYRAX_FLEXIBLE environment variable is set' do
-    before do
-      ENV['HYRAX_FLEXIBLE'] = 'true'
-      load_resource_model
-    end
+  before { load_resource_model }
 
+  context 'when using flexible metadata' do
     it 'includes the Hyrax::Flexibility module' do
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
+      load_resource_model
+
       expect(Hyrax::Resource.included_modules).to include(Hyrax::Flexibility)
     end
   end
 
-  context 'when HYRAX_FLEXIBLE environment variable is not set' do
-    before do
-      ENV.delete('HYRAX_FLEXIBLE')
-      load_resource_model
-    end
-
+  context 'when not using flexible metadata' do
     it 'does not include the Hyrax::Flexibility module' do
+      allow(Hyrax.config).to receive(:flexible?).and_return(false)
+
       expect(Hyrax::Resource.included_modules).not_to include(Hyrax::Flexibility)
     end
   end
@@ -55,6 +46,7 @@ RSpec.describe Hyrax::Resource do
     let(:embargo)      { FactoryBot.create(:hyrax_embargo) }
 
     it 'saves the embargo id' do
+      # load_resource_model
       resource.embargo = Hyrax.persister.save(resource: embargo)
 
       expect(Hyrax.persister.save(resource: resource).embargo)
@@ -67,6 +59,7 @@ RSpec.describe Hyrax::Resource do
     let(:lease)        { FactoryBot.build(:hyrax_lease) }
 
     it 'saves the lease id' do
+      # load_resource_model
       resource.lease = Hyrax.persister.save(resource: lease)
 
       expect(Hyrax.persister.save(resource: resource).lease)

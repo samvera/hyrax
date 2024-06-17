@@ -1,0 +1,19 @@
+properties:
+  sample_attribute:
+    available_on:
+      class:
+      - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    multi_value: false
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Sample Attribute
+    property_uri: http://hyrax-example.com/sample_attribute
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Example Sample Attribute

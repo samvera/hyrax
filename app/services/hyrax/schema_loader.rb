@@ -121,11 +121,21 @@ module Hyrax
         when 'date_time'
           Valkyrie::Types::DateTime
         else
-          "Valkyrie::Types::#{type.capitalize}".constantize
+          begin
+            "Valkyrie::Types::#{type.capitalize}".constantize
+          rescue NameError
+            raise ArgumentError, "Unrecognized type: #{type}"
+          end
         end
       end
     end
 
     class UndefinedSchemaError < ArgumentError; end
+
+    private
+
+    def definitions(_schema_name, _version)
+      raise NotImplementedError, 'Implement #definitions in a child class'
+    end
   end
 end
