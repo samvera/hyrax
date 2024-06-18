@@ -33,7 +33,7 @@ RSpec.describe Hyrax::M3SchemaLoader do
     end
 
     context 'with generated resource' do
-      let(:sample_attribute) { YAML.safe_load_file(Rails.root.join('config', 'metadata_profiles', 'sample_attribute.yaml')) }
+      let(:sample_attribute) { YAML.safe_load_file(Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'sample_attribute.yaml')) }
       let(:schema) do
         Hyrax::FlexibleSchema.create(
           profile: profile.deep_merge(sample_attribute)
