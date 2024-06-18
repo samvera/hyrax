@@ -70,8 +70,17 @@ module Hyrax
             REQUIRED_KEYS.all? { |required| @config[required].present? }
           end
 
+          def base64?(value)
+            value.is_a?(String) && Base64.strict_encode64(Base64.decode64(value)) == value
+          end
+
           def account_json_string
-            @account_json ||= @config['account_json'] || File.read(@config['account_json_path'])
+            return @account_json_string if @account_json_string
+            @account_json_string = if @config['account_json']
+              base64?(@config['account_json']) ? Base64.decode64(@config['account_json']) : @config['account_json']
+            else
+              File.read(@config['account_json_path'])
+            end
           end
 
           def account_info
