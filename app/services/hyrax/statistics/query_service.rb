@@ -45,7 +45,7 @@ module Hyrax
       delegate :count, to: :relation
 
       def relation
-        Hyrax::WorkRelation.new
+        Hyrax::ValkyrieWorkRelation.new
       end
 
       private

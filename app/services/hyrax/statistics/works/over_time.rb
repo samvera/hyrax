@@ -16,7 +16,7 @@ module Hyrax
         private
 
         def relation
-          Hyrax::WorkRelation.new
+          Hyrax::ValkyrieWorkRelation.new
         end
       end
     end
