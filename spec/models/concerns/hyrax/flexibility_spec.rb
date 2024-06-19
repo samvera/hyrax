@@ -8,14 +8,14 @@ RSpec.describe 'Hyrax::Flexibility' do
   let(:profile) { YAML.safe_load_file(Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'm3_profile.yaml')) }
   let(:test_work_profile) do
     YAML.safe_load(<<-YAML)
-    classes:
-      Hyrax::Test::Flexibility::TestWork:
-        display_label: Test Work
-    properties:
-      title:
-        available_on:
-          class:
-          - Hyrax::Test::Flexibility::TestWork
+      classes:
+        Hyrax::Test::Flexibility::TestWork:
+          display_label: Test Work
+      properties:
+        title:
+          available_on:
+            class:
+            - Hyrax::Test::Flexibility::TestWork
     YAML
   end
 

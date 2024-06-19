@@ -33,7 +33,29 @@ RSpec.describe Hyrax::M3SchemaLoader do
     end
 
     context 'with generated resource' do
-      let(:sample_attribute) { YAML.safe_load_file(Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'sample_attribute.yaml')) }
+      let(:sample_attribute) do
+        YAML.safe_load(<<-YAML)
+          properties:
+            sample_attribute:
+              available_on:
+                class:
+                - Monograph
+              cardinality:
+                minimum: 0
+                maximum: 1
+              multi_value: false
+              controlled_values:
+                format: http://www.w3.org/2001/XMLSchema#string
+                sources:
+                - 'null'
+              display_label:
+                default: Sample Attribute
+              property_uri: http://hyrax-example.com/sample_attribute
+              range: http://www.w3.org/2001/XMLSchema#string
+              sample_values:
+              - Example Sample Attribute
+        YAML
+      end
       let(:schema) do
         Hyrax::FlexibleSchema.create(
           profile: profile.deep_merge(sample_attribute)
