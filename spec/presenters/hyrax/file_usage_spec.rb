@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 # NOTE: This presenter is currently utilizing multiple classes that are solely focused on ActiveFedora objects and classes.
 #   This class, as well as others involving Statistics and Analytics should be Valkyrized in the future.
-RSpec.describe Hyrax::FileUsage, :active_fedora, type: :model do
-  let(:user) { build(:user) }
+RSpec.describe Hyrax::FileUsage, type: :model do
+  let(:user) { create(:user) }
   let(:file) do
-    create(:file_set, user: user)
+    valkyrie_create(:hyrax_file_set, date_uploaded: date_uploaded, edit_users: [user])
   end
+  let(:date_uploaded) { (Time.zone.today - 4.days).to_s }
 
   let(:dates) do
     ldates = []
@@ -53,10 +54,11 @@ RSpec.describe Hyrax::FileUsage, :active_fedora, type: :model do
   end
 
   let(:usage) do
-    allow_any_instance_of(FileSet).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
-    allow(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
-    allow(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-    described_class.new(file.id)
+    described_class.new(file.id).tap { |obj| obj.to_flot }
+  end
+
+  before do
+    allow(Hyrax::Analytics).to receive(:page_statistics).and_return(sample_pageview_statistics, sample_download_statistics)
   end
 
   describe "#initialize" do
@@ -88,7 +90,7 @@ RSpec.describe Hyrax::FileUsage, :active_fedora, type: :model do
     end
 
     it "sets the created date" do
-      expect(usage.created).to eq(file.create_date)
+      expect(usage.created).to eq(file.date_uploaded)
     end
 
     it "counts the total numver of downloads" do
@@ -101,17 +103,13 @@ RSpec.describe Hyrax::FileUsage, :active_fedora, type: :model do
 
     context "when the analytics start date is set" do
       let(:earliest) { DateTime.new(2014, 1, 2).iso8601 }
-      let(:create_date) { DateTime.new(2014, 1, 1).iso8601 }
 
       before do
         Hyrax.config.analytic_start_date = earliest
       end
 
       describe "create date before earliest date set" do
-        let(:usage) do
-          allow_any_instance_of(FileSet).to receive(:create_date).and_return(create_date.to_s)
-          described_class.new(file.id)
-        end
+        let(:date_uploaded) { DateTime.new(2014, 1, 1).iso8601 }
 
         it "sets the created date to the earliest date not the created date" do
           expect(usage.created).to eq(earliest)
@@ -119,14 +117,10 @@ RSpec.describe Hyrax::FileUsage, :active_fedora, type: :model do
       end
 
       describe "create date after earliest" do
-        let(:usage) do
-          allow_any_instance_of(FileSet).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
-          Hyrax.config.analytic_start_date = earliest
-          described_class.new(file.id)
-        end
+        let(:date_uploaded) { DateTime.new(2014, 1, 3).iso8601 }
 
         it "sets the created date to the earliest date not the created date" do
-          expect(usage.created).to eq(file.create_date)
+          expect(usage.created).to eq(file.date_uploaded)
         end
       end
     end
@@ -135,28 +129,16 @@ RSpec.describe Hyrax::FileUsage, :active_fedora, type: :model do
       before do
         Hyrax.config.analytic_start_date = nil
       end
-      let(:create_date) { DateTime.new(2014, 1, 1).iso8601 }
-
-      let(:usage) do
-        allow_any_instance_of(FileSet).to receive(:create_date).and_return(create_date.to_s)
-        described_class.new(file.id)
-      end
+      let(:date_uploaded) { DateTime.new(2014, 1, 1).iso8601 }
 
       it "sets the created date to the earliest date not the created date" do
-        expect(usage.created).to eq(create_date)
+        expect(usage.created).to eq(date_uploaded)
       end
     end
   end
 
   describe "on a migrated file" do
     let(:date_uploaded) { "2014-12-31" }
-    let(:file_migrated) do
-      create(:file_set, date_uploaded: date_uploaded, user: user)
-    end
-
-    let(:usage) do
-      described_class.new(file_migrated.id)
-    end
 
     it "uses the date_uploaded for analytics" do
       expect(usage.created).to eq(date_uploaded)
