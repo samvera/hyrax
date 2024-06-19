@@ -9,41 +9,6 @@ RSpec.describe Hyrax::Resource do
 
   it_behaves_like 'a Hyrax::Resource'
 
-  before do
-    @hyrax_flexible_env_var = ENV.fetch('HYRAX_FLEXIBLE', false)
-  end
-
-  after do
-    ENV.delete('HYRAX_FLEXIBLE')
-  end
-
-  def load_resource_model
-    Hyrax.send(:remove_const, :Resource) if defined?(Hyrax::Resource)
-    load File.join('/app/samvera/hyrax-engine/app/models/hyrax/resource.rb')
-  end
-
-  context 'when HYRAX_FLEXIBLE environment variable is set' do
-    before do
-      ENV['HYRAX_FLEXIBLE'] = 'true'
-      load_resource_model
-    end
-
-    it 'includes the Hyrax::Flexibility module' do
-      expect(Hyrax::Resource.included_modules).to include(Hyrax::Flexibility)
-    end
-  end
-
-  context 'when HYRAX_FLEXIBLE environment variable is not set' do
-    before do
-      ENV.delete('HYRAX_FLEXIBLE')
-      load_resource_model
-    end
-
-    it 'does not include the Hyrax::Flexibility module' do
-      expect(Hyrax::Resource.included_modules).not_to include(Hyrax::Flexibility)
-    end
-  end
-
   describe '#events' do
     it 'includes Hyrax::WithEvents' do
       expect(resource).to respond_to(:events)

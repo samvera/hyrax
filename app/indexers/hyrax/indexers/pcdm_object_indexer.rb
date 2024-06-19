@@ -9,7 +9,7 @@ module Hyrax
       include Hyrax::VisibilityIndexer
       include Hyrax::LocationIndexer
       include Hyrax::ThumbnailIndexer
-      include Hyrax::Indexer(:core_metadata) unless ENV.fetch('HYRAX_FLEXIBLE', false)
+      include Hyrax::Indexer(:core_metadata) unless Hyrax.config.flexible?
 
       def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
         super.tap do |solr_doc|

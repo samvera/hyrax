@@ -2,7 +2,7 @@
 # rubocop:disable Metrics/BlockLength
 
 # Freyja setup adapted from hyku
-if ENV.fetch('VALKYRIE_TRANSITION', false)
+if Hyrax.config.valkyrie_transition?
   Rails.application.config.after_initialize do
     [ # List AF work models
       GenericWork

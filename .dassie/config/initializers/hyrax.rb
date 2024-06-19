@@ -68,7 +68,7 @@ Hyrax.config do |config|
 
   # dassie needs legacy AF models
   # If using Frayja/Frigg then use the resource they provide
-  if ENV.fetch('VALKYRIE_TRANSITION', false)
+  if Hyrax.config.valkyrie_transition?
     config.collection_model = 'CollectionResource'
     config.admin_set_model = 'AdminSetResource'
     config.file_set_model = 'Hyrax::FileSet'

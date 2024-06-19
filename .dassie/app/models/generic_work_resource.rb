@@ -3,8 +3,8 @@
 # Generated via
 #  `rails generate hyrax:work_resource GenericWorkResource`
 class GenericWorkResource < Hyrax::Work
-  include Hyrax::Schema(:basic_metadata) unless ENV.fetch('HYRAX_FLEXIBLE', false)
-  include Hyrax::Schema(:generic_work_resource) unless ENV.fetch('HYRAX_FLEXIBLE', false)
+  include Hyrax::Schema(:basic_metadata) unless Hyrax.config.flexible?
+  include Hyrax::Schema(:generic_work_resource) unless Hyrax.config.flexible?
 
   Hyrax::ValkyrieLazyMigration.migrating(self, from: GenericWork)
 end

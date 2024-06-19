@@ -61,7 +61,7 @@ module Hyrax
     ##
     # Pick the default schema loader based on whether flex is on or not
     def self.default_schema_loader
-      ENV.fetch('HYRAX_FLEXIBLE', false) ? M3SchemaLoader.new : SimpleSchemaLoader.new
+      Hyrax.config.flexible? ? M3SchemaLoader.new : SimpleSchemaLoader.new
     end
     ##
     # @param [Symbol] schema_name

@@ -50,6 +50,7 @@ class Hyrax::FlexibleSchema < ApplicationRecord
 
   def values_map(values)
     values['type'] = lookup_type(values['range'])
+    values['form']&.transform_keys!('multi_value' => 'multiple')
     values['predicate'] = values['property_uri']
     values['index_keys'] = values['indexing']
     values['multiple'] = values['multi_value']
