@@ -24,7 +24,7 @@ module Hyrax
         add_breadcrumb t(:'hyrax.admin.sidebar.works'), hyrax.my_works_path
         managed_works_count
         @create_work_presenter = create_work_presenter_class.new(current_user)
-        @available_admin_sets = available_admin_sets
+        @admin_sets_for_select = admin_sets_for_select
         super
       end
 
@@ -49,7 +49,7 @@ module Hyrax
         @managed_works_count = Hyrax::Works::ManagedWorksService.managed_works_count(scope: self)
       end
 
-      def available_admin_sets
+      def admin_sets_for_select
         source_ids = Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability: current_ability, source_type: 'admin_set')
         source_ids.map { |admin_set_id| [Hyrax.query_service.find_by(id: admin_set_id).title.first, admin_set_id] }
       end
