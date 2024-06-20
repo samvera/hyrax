@@ -130,7 +130,7 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
   end
 
   describe "on a migrated work" do
-    let(:date_uploaded) { Time.parse "2014-12-31" }
+    let(:date_uploaded) { Time.zone.parse "2014-12-31" }
     let(:work_migrated) { valkyrie_create(:monograph, date_uploaded: date_uploaded) }
 
     let(:usage) do
