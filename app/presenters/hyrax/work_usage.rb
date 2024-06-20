@@ -12,7 +12,10 @@ module Hyrax
     end
 
     alias work model
-    delegate :to_s, to: :model
+
+    def to_s
+      model.title.first
+    end
 
     def total_pageviews
       pageviews.reduce(0) { |total, result| total + result[1].to_i }

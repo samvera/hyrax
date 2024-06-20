@@ -1,6 +1,7 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::WorkUsage, :active_fedora, type: :model do
-  let!(:work) { create(:work, id: 'abc12345xy') }
+RSpec.describe Hyrax::WorkUsage, type: :model do
+  let!(:work) { valkyrie_create(:monograph, date_uploaded: date_uploaded) }
+  let(:date_uploaded) { Time.zone.today - 4.days }
 
   let(:dates) do
     ldates = []
@@ -34,8 +35,7 @@ RSpec.describe Hyrax::WorkUsage, :active_fedora, type: :model do
   end
 
   let(:usage) do
-    allow_any_instance_of(GenericWork).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
-    allow(WorkViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
+    allow(Hyrax::Analytics).to receive(:page_statistics).and_return(sample_pageview_statistics)
     described_class.new(work.id)
   end
 
@@ -45,12 +45,12 @@ RSpec.describe Hyrax::WorkUsage, :active_fedora, type: :model do
     end
 
     it "sets the created date" do
-      expect(usage.created).to eq(work.create_date)
+      expect(usage.created).to eq(work.date_uploaded)
     end
   end
 
   describe "#to_s" do
-    let(:work) { create(:work, title: ['Butter sculpture']) }
+    let(:work) { valkyrie_create(:monograph, title: ['Butter sculpture']) }
 
     subject { usage.to_s }
 
@@ -75,6 +75,7 @@ RSpec.describe Hyrax::WorkUsage, :active_fedora, type: :model do
   describe "#created" do
     let!(:system_timezone) { ENV['TZ'] }
     let(:create_date) { Time.zone.parse('2014-01-02 12:00:00').iso8601 }
+    let(:date_uploaded) { create_date }
 
     before do
       ENV['TZ'] = 'UTC'
@@ -93,7 +94,6 @@ RSpec.describe Hyrax::WorkUsage, :active_fedora, type: :model do
 
       describe "create date before earliest date set" do
         let(:usage) do
-          allow_any_instance_of(GenericWork).to receive(:create_date).and_return(create_date.to_s)
           described_class.new(work.id)
         end
 
@@ -104,13 +104,13 @@ RSpec.describe Hyrax::WorkUsage, :active_fedora, type: :model do
 
       describe "create date after earliest" do
         let(:usage) do
-          allow_any_instance_of(GenericWork).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
           Hyrax.config.analytic_start_date = earliest
           described_class.new(work.id)
         end
+        let(:date_uploaded) { Time.zone.today - 4.days }
 
         it "sets the created date to the earliest date not the created date" do
-          expect(usage.created).to eq(work.create_date)
+          expect(usage.created).to eq(work.date_uploaded)
         end
       end
     end
@@ -120,7 +120,6 @@ RSpec.describe Hyrax::WorkUsage, :active_fedora, type: :model do
       end
 
       let(:usage) do
-        allow_any_instance_of(GenericWork).to receive(:create_date).and_return(create_date.to_s)
         described_class.new(work.id)
       end
 
@@ -131,8 +130,8 @@ RSpec.describe Hyrax::WorkUsage, :active_fedora, type: :model do
   end
 
   describe "on a migrated work" do
-    let(:date_uploaded) { "2014-12-31" }
-    let(:work_migrated) { create(:work, id: '678901234', date_uploaded: date_uploaded) }
+    let(:date_uploaded) { Time.parse "2014-12-31" }
+    let(:work_migrated) { valkyrie_create(:monograph, date_uploaded: date_uploaded) }
 
     let(:usage) do
       described_class.new(work_migrated.id)
