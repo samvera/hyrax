@@ -8,12 +8,11 @@
       </div>
       <div class="modal-body">
         <% if Flipflop.assign_admin_set? %>
-        <% available_admin_sets =  Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability: current_ability, source_type: 'admin_set').map { |admin_set_id| [Hyrax.query_service.find_by(id: admin_set_id).title.first, admin_set_id] } %>
           <div class="select-work-admin-set">
             <div class="admin-set-title">
               <%= t('hyrax.dashboard.heading_actions.select_admin_set') %>
             </div>
-             <%= select_tag :admin_set_id, options_for_select(available_admin_sets), class: 'form-control' %>
+            <%= select_tag :admin_set_id, options_for_select(@available_admin_sets), class: 'form-control' %>
           </div>
         <% end %>
         <% create_work_presenter.each do |row_presenter| %>
