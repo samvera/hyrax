@@ -118,8 +118,7 @@ module Hyrax
         next unless fm.original_filename
         extension = File.extname(fm.original_filename)
         next if extension.empty?
-
-        use = fm.pcdm_use.first.to_s.split("#").last
+        use = fm.filtered_pcdm_use.first.to_s.split("#").last
         name = use == 'OriginalFile' ? nil : File.basename(fm.original_filename, extension).split('-').last
         arr << {
           id: fm.id.to_s,
