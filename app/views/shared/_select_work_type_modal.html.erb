@@ -12,7 +12,7 @@
             <div class="admin-set-title">
               <%= t('hyrax.dashboard.heading_actions.select_admin_set') %>
             </div>
-            <%= select_tag :admin_set_id, options_for_select(@admin_sets_for_select), class: 'form-control' %>
+            <%= select_tag(:admin_set_id, options_for_select(@admin_sets_for_select), class: 'form-control') if @admin_sets_for_select %>
           </div>
         <% end %>
         <% create_work_presenter.each do |row_presenter| %>

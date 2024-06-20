@@ -41,6 +41,6 @@ export default class SelectWorkType {
   destination() {
       let admin_set_id = this.form.find('select').val()
       let url = this.form.find('input[type="radio"]:checked').data(this.type)
-      return url + "&admin_set_id=" + admin_set_id 
+      return url + "&admin_set_id=" + admin_set_id
   }
 }
