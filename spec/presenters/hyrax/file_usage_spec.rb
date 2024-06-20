@@ -54,7 +54,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
   end
 
   let(:usage) do
-    described_class.new(file.id).tap { |obj| obj.to_flot }
+    described_class.new(file.id).tap(&:to_flot) # tap to preload the page_statistics mock data
   end
 
   before do
