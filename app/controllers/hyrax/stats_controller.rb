@@ -27,7 +27,7 @@ module Hyrax
       when 'file'
         add_breadcrumb I18n.t("hyrax.file_set.browse_view"), main_app.hyrax_file_set_path(params["id"])
       when 'work'
-        add_breadcrumb @work.to_s, main_app.polymorphic_path(@work)
+        add_breadcrumb @work.title.first, main_app.polymorphic_path(@work)
       end
     end
   end
