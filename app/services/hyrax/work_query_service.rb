@@ -20,7 +20,7 @@ module Hyrax
     private
 
     def default_work_relation
-      Hyrax::ValkyrieWorkRelation.new
+      Hyrax.config.disable_wings ? Hyrax::ValkyrieWorkRelation.new : Hyrax::WorkRelation.new
     end
 
     public
