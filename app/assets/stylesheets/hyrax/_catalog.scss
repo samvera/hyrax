@@ -91,3 +91,9 @@
     display: inline-block;
   }
 }
+
+@media (max-width: 1199px) {
+  .sort-pagination {
+    display: block !important;
+  }
+}
