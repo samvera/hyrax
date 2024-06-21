@@ -16,7 +16,7 @@ module Hyrax
         private
 
         def relation
-          Hyrax::ValkyrieWorkRelation.new
+          Hyrax.config.disable_wings ? Hyrax::ValkyrieWorkRelation.new : Hyrax::WorkRelation.new
         end
       end
     end
