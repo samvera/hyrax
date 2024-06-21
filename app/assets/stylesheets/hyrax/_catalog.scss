@@ -97,3 +97,8 @@
     display: block !important;
   }
 }
+
+#search-results .search-result-wrapper .metadata a,
+#documents .document-metadata a {
+  word-break: break-all;
+}
