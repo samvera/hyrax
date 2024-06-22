@@ -61,7 +61,7 @@ module Hyrax
 
     def process_works(stats, user, start_date)
       work_ids_for_user(user).each do |work_id|
-        work = Hyrax::WorkRelation.new.find(work_id)
+        work = Hyrax.query_service.find_by(id: work_id)
         work_stats = extract_stats_for(object: work, from: WorkViewStat, start_date: start_date, user: user)
         stats = tally_results(work_stats, :work_views, stats) if work_stats.present?
         delay
@@ -94,7 +94,7 @@ module Hyrax
       if last_cached_stat
         last_cached_stat.date + 1.day
       else
-        Hyrax.config.analytic_start_date
+        Hyrax.config.analytic_start_date || 1.week.ago
       end
     end
 
@@ -108,8 +108,8 @@ module Hyrax
 
     def work_ids_for_user(user)
       ids = []
-      Hyrax::WorkRelation.new.search_in_batches("#{depositor_field}:\"#{user.user_key}\"", fl: "id") do |group|
-        ids.concat group.map { |doc| doc["id"] }
+      Hyrax::SolrService.query_in_batches("#{depositor_field}:\"#{user.user_key}\"", fl: "id") do |hit|
+        ids << hit.id
       end
       ids
     end

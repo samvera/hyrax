@@ -8,11 +8,14 @@ module Hyrax
   # and prepares it for visualization in /app/views/stats/work.html.erb
   class WorkUsage < StatsUsagePresenter
     def initialize(id)
-      self.model = Hyrax::WorkRelation.new.find(id)
+      self.model = Hyrax.query_service.find_by(id: id)
     end
 
     alias work model
-    delegate :to_s, to: :model
+
+    def to_s
+      model.title.first
+    end
 
     def total_pageviews
       pageviews.reduce(0) { |total, result| total + result[1].to_i }

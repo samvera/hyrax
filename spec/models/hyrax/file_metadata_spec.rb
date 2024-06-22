@@ -138,6 +138,22 @@ RSpec.describe Hyrax::FileMetadata do
     end
   end
 
+  describe '#filtered_pcdm_use' do
+    context 'when use contains extraneous entries' do
+      before do
+        file_metadata.pcdm_use = [RDF::Vocab::Fcrepo4.Binary,
+                                  described_class::Use::ORIGINAL_FILE,
+                                  described_class::Use::EXTRACTED_TEXT,
+                                  pcdm_file_uri]
+      end
+
+      it 'returns only recognized uses' do
+        expect(file_metadata.filtered_pcdm_use).to eq [described_class::Use::ORIGINAL_FILE,
+                                                       described_class::Use::EXTRACTED_TEXT]
+      end
+    end
+  end
+
   describe '#title' do
     it 'uses the label' do
       expect(subject.title).to contain_exactly('world.png')

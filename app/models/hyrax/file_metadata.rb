@@ -42,6 +42,18 @@ module Hyrax
 
       THUMBNAIL = ::Valkyrie::Vocab::PCDMUse.ThumbnailImage # for compatibility with earlier versions of Hyrax; prefer +THUMBNAIL_IMAGE+
 
+      # @return [Array<RDF::URI>] list of all uses
+      def use_list
+        [ORIGINAL_FILE,
+         THUMBNAIL_IMAGE,
+         EXTRACTED_TEXT,
+         INTERMEDIATE_FILE,
+         PRESERVATION_FILE,
+         SERVICE_FILE,
+         TRANSCRIPT]
+      end
+      module_function :use_list
+
       ##
       # @param use [RDF::URI, Symbol]
       #
@@ -164,6 +176,13 @@ module Hyrax
     # @return [Boolean]
     def extracted_file?
       pcdm_use.include?(Use::EXTRACTED_TEXT)
+    end
+
+    ##
+    # Filters out uses not recognized by Hyrax (e.g. http://fedora.info/definitions/v4/repository#Binary)
+    # @return [Array]
+    def filtered_pcdm_use
+      pcdm_use.select { |use| Use.use_list.include?(use) }
     end
 
     ##
