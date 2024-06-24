@@ -1004,6 +1004,7 @@ en:
       heading_actions:
         close: Close
         create_work: Create work
+        select_admin_set: Deposit into admin set
         select_type_of_work: Select type of work
       manage_proxies: Manage Proxies
       managed:
