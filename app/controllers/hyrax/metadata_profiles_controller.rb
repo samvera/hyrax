@@ -13,6 +13,7 @@ module Hyrax
       @metadata_profiles = Hyrax::FlexibleSchema.page(params[:profile_entries_page])
     end
 
+    # rubocop:disable Metrics/MethodLength
     def import
       uploaded_io = params[:file]
       if uploaded_io.blank?
@@ -30,9 +31,10 @@ module Hyrax
         end
       rescue => e
         redirect_to metadata_profiles_path, alert: e.message
-        return
+        nil
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     def export
       @schema = Hyrax::FlexibleSchema.find(params[:metadata_profile_id])
@@ -43,10 +45,10 @@ module Hyrax
 
     private
 
-      def add_breadcrumbs
-        add_breadcrumb t(:'hyrax.controls.home'), main_app.root_path
-        add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-        add_breadcrumb t(:'hyrax.dashboard.metadata_profiles'), hyrax.metadata_profiles_path
-      end
+    def add_breadcrumbs
+      add_breadcrumb t(:'hyrax.controls.home'), main_app.root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.dashboard.metadata_profiles'), hyrax.metadata_profiles_path
+    end
   end
 end
