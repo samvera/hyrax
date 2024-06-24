@@ -3,7 +3,7 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   serialize :profile, coder: YAML
 
   def self.current_version
-    self.order("created_at asc").last.profile
+    order("created_at asc").last.profile
   end
 
   def title
