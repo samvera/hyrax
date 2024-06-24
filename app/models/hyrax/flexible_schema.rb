@@ -2,12 +2,32 @@
 class Hyrax::FlexibleSchema < ApplicationRecord
   serialize :profile, coder: YAML
 
+  def self.current_version
+    self.order("created_at asc").last.profile
+  end
+
   def title
     "#{profile['profile']['responsibility_statement']} - version #{id}"
   end
 
   def attributes_for(class_name)
     class_names[class_name]
+  end
+
+  def schema_version
+    profile['m3_version']
+  end
+
+  def metadata_profile_type
+    profile['profile']['type']
+  end
+
+  def version
+    id
+  end
+
+  def profile_created_at
+    created_at.strftime("%b %d, %Y")
   end
 
   private
