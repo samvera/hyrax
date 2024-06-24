@@ -19,7 +19,7 @@ module Hyrax
   #   end
   #
   # @since 3.0.0
-  def self.Indexer(schema_name, index_loader: SimpleSchemaLoader.new)
+  def self.Indexer(schema_name, index_loader: Hyrax::Schema.default_schema_loader)
     Indexer.new(index_loader.index_rules_for(schema: schema_name))
   end
 

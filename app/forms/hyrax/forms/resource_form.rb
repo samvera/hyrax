@@ -7,6 +7,11 @@ module Hyrax
     #
     # This form wraps +Hyrax::ChangeSet+ in the +HydraEditor::Form+ interface.
     class ResourceForm < Hyrax::ChangeSet # rubocop:disable Metrics/ClassLength
+      # These do not get auto loaded when using a flexible schema and should instead
+      # be added to the individual Form classes for a work type or smart enough
+      # to be selective as to when they trigger
+      include BasedNearFieldBehavior if Hyrax.config.flexible?
+
       ##
       # @api private
       #
@@ -48,6 +53,15 @@ module Hyrax
       # Forms should be initialized with an explicit +resource:+ parameter to
       # match indexers.
       def initialize(deprecated_resource = nil, resource: nil)
+        if Hyrax.config.flexible?
+          self.singleton_class.instance_variable_set("@definitions", self.class.definitions)
+          r = resource || deprecated_resource
+          Hyrax::Schema.default_schema_loader.form_definitions_for(schema: r.class.to_s, version: r.schema_version).map do |field_name, options|
+         self.singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
+            self.singleton_class.validates field_name.to_sym, presence: true if options.fetch(:required, false)
+          end
+        end
+
         if resource.nil?
           if !deprecated_resource.nil?
             Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. Pass the resource with `resource:` instead."
@@ -146,10 +160,21 @@ module Hyrax
         secondary_terms.any?
       end
 
+
+      # OVERRIDE disposable 0.6.3 to make schema dynamic
+      def schema
+        Definition::Each.new(self.singleton_class.definitions)
+      end
+
       private
 
+      # OVERRIDE valkyrie 3.0.1 to make schema dynamic
+      def field(field_name)
+        self.singleton_class.definitions.fetch(field_name.to_s)
+      end
+
       def _form_field_definitions
-        self.class.definitions
+        self.singleton_class.definitions
       end
     end
   end

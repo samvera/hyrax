@@ -79,8 +79,8 @@ module Hyrax
         # @return [Array<Valkyrie::ID>]
         def changed_collection_membership(change_set)
           return [] unless change_set.changed?(:member_of_collection_ids)
-
-          change_set.member_of_collection_ids - change_set.model.member_of_collection_ids
+debugger
+          change_set.member_of_collection_ids - change_set.model.member_of_collection_ids.to_a
         end
 
         def publish_changes(resource:, user:, new: false, new_collections: [])

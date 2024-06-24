@@ -82,7 +82,7 @@ module Hyrax
 
     # Method to return the model
     def hydra_model(classifier: nil)
-      ((first('has_model_ssim')&.+ 'Resource')&.safe_constantize && Hyrax.config.valkyrie_transition) ||
+      (Hyrax.config.valkyrie_transition && (first('has_model_ssim')&.+ 'Resource')&.safe_constantize) ||
         first('has_model_ssim')&.safe_constantize ||
         model_classifier(classifier).classifier(self).best_model
     end

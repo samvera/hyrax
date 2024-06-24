@@ -6,7 +6,7 @@ module Hyrax
     # @api public
     # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
     class PcdmCollectionForm < Hyrax::Forms::ResourceForm # rubocop:disable Metrics/ClassLength
-      include Hyrax::FormFields(:core_metadata)
+      include Hyrax::FormFields(:core_metadata) unless Hyrax.config.flexible?
 
       BannerInfoPrepopulator = lambda do |**_options|
         self.banner_info ||= begin
