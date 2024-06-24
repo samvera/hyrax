@@ -9,7 +9,7 @@ module Hyrax
       include Hyrax::VisibilityIndexer
       include Hyrax::LocationIndexer
       include Hyrax::ThumbnailIndexer
-      include Hyrax::Indexer(:core_metadata)
+      include Hyrax::Indexer(:core_metadata) unless Hyrax.config.flexible?
 
       def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
         super.tap do |solr_doc|
@@ -20,13 +20,13 @@ module Hyrax
           solr_doc['admin_set_sim']   = admin_set_label
           solr_doc['admin_set_tesim'] = admin_set_label
           solr_doc["#{Hyrax.config.admin_set_predicate.qname.last}_ssim"] = [resource.admin_set_id.to_s]
-          solr_doc['member_of_collection_ids_ssim'] = resource.member_of_collection_ids.map(&:to_s)
-          solr_doc['member_ids_ssim'] = resource.member_ids.map(&:to_s)
+          solr_doc['member_of_collection_ids_ssim'] = resource.member_of_collection_ids&.map(&:to_s)
+          solr_doc['member_ids_ssim'] = resource.member_ids&.map(&:to_s)
           solr_doc['depositor_ssim'] = [resource.depositor]
           solr_doc['depositor_tesim'] = [resource.depositor]
           solr_doc['hasRelatedMediaFragment_ssim'] = [resource.representative_id.to_s]
           solr_doc['hasRelatedImage_ssim'] = [resource.thumbnail_id.to_s]
-          solr_doc['hasFormat_ssim'] = resource.rendering_ids.map(&:to_s) if resource.rendering_ids.present?
+          solr_doc['hasFormat_ssim'] = resource.rendering_ids&.map(&:to_s) if resource.rendering_ids.present?
           index_embargo(solr_doc)
           index_lease(solr_doc)
         end

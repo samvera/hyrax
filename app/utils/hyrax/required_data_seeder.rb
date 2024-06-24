@@ -14,6 +14,7 @@ module Hyrax
     end
 
     def generate_seed_data
+      Hyrax::RequiredDataSeeders::FlexibleProfileSeeder.generate_seeds(logger: logger) if Hyrax.config.flexible?
       Hyrax::RequiredDataSeeders::CollectionTypeSeeder.generate_seeds(logger: logger)
       Hyrax::RequiredDataSeeders::CollectionSeeder.generate_seeds(logger: logger)
     end
