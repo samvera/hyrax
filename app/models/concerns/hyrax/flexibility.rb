@@ -11,7 +11,8 @@ module Hyrax
       ## Override dry-struct 1.6.0 to enable redefining schemas on the fly
       def attributes(new_schema)
         keys = new_schema.keys.map { |k| k.to_s.chomp("?").to_sym }
-        schema self.schema.schema(new_schema)
+        schema_location = singleton_class? ? self.superclass : self
+        schema schema_location.schema.schema(new_schema)
 
         define_accessors(keys)
 
