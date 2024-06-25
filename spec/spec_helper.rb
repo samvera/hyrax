@@ -282,14 +282,6 @@ RSpec.configure do |config|
   #   skip("Don't test Wings") if Hyrax.config.disable_wings
   # end
 
-  config.before(:example, :clean_repo) do
-    clean_active_fedora_repository unless Hyrax.config.disable_wings
-    Hyrax::RedisEventStore.instance.then(&:flushdb)
-    # Not needed to clean the Solr core used by ActiveFedora since
-    # clean_active_fedora_repository will wipe that core
-    Hyrax::SolrService.wipe! if Hyrax.config.query_index_from_valkyrie
-  end
-
   # Use this example metadata when you want to perform jobs inline during testing.
   #
   #   describe '#my_method`, :perform_enqueued do
@@ -329,6 +321,14 @@ RSpec.configure do |config|
     allow(Hyrax)
       .to receive(:index_adapter)
       .and_return(Valkyrie::IndexingAdapter.find(adapter_name))
+  end
+
+  config.before(:example, :clean_repo) do
+    clean_active_fedora_repository unless Hyrax.config.disable_wings
+    Hyrax::RedisEventStore.instance.then(&:flushdb)
+    # Not needed to clean the Solr core used by ActiveFedora since
+    # clean_active_fedora_repository will wipe that core
+    Hyrax::SolrService.wipe! if Hyrax.config.query_index_from_valkyrie
   end
 
   config.after(:example, :index_adapter) do |example|
