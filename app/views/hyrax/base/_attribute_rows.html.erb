@@ -1,3 +1,3 @@
 <% view_options_for(presenter).each do |field, options| %>
-  <%= presenter.attribute_to_html(field.to_sym, options['view'].transform_keys(&:to_sym)) %>
+  <%= presenter.attribute_to_html(field.to_sym, conform_options(options)) %>
 <% end %>
