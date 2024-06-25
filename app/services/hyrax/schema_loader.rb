@@ -45,6 +45,14 @@ module Hyrax
       end
     end
 
+    def view_definitions_for(schema:, version: 1)
+      definitions(schema, version).each_with_object({}) do |definition, hash|
+        next if definition.view_options.empty?
+
+        hash[definition.name] = definition.view_options
+      end
+    end
+
     ##
     # @api private
     class AttributeDefinition
@@ -73,6 +81,12 @@ module Hyrax
       # @return [Enumerable<Symbol>]
       def index_keys
         config.fetch('index_keys', [])&.map(&:to_sym) || []
+      end
+
+      ##
+      # @return [Hash{Symbol => Object}]
+      def view_options
+        config.fetch('view', {})&.symbolize_keys || {}
       end
 
       ##
