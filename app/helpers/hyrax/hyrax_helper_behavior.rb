@@ -16,10 +16,10 @@ module Hyrax
     include Hyrax::IiifHelper
     include Hyrax::MembershipHelper
     include Hyrax::PermissionLevelsHelper
-    include Hyrax::PresenterHelper
     include Hyrax::WorkFormHelper
     include Hyrax::WorkflowsHelper
     include Hyrax::FacetsHelper
+    include Hyrax::AttributesHelper
 
     ##
     # @return [Array<String>] the list of all user groups
