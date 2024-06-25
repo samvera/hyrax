@@ -28,6 +28,7 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     @class_names
   end
 
+  private
   def values_map(values)
     values['type'] = lookup_type(values['range'])
     values['form']&.transform_keys!('multi_value' => 'multiple')
