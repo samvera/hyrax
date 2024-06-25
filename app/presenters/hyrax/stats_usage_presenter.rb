@@ -30,7 +30,7 @@ module Hyrax
     def date_for_analytics
       earliest = Hyrax.config.analytic_start_date
       date_uploaded = string_to_date(model.date_uploaded)
-      date_analytics = date_uploaded ? date_uploaded : model.create_date
+      date_analytics = date_uploaded ? date_uploaded : (model.create_date || model.created_at)
       return date_analytics if earliest.blank?
       earliest > date_analytics ? earliest : date_analytics
     end

@@ -29,11 +29,11 @@ module Hyrax
     private
 
     def downloads
-      to_flots(FileDownloadStat.statistics(model, created, user_id))
+      @downloads ||= to_flots(FileDownloadStat.statistics(model, created, user_id))
     end
 
     def pageviews
-      to_flots(FileViewStat.statistics(model, created, user_id))
+      @pageviews ||= to_flots(FileViewStat.statistics(model, created, user_id))
     end
   end
 end

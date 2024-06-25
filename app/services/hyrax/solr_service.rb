@@ -54,7 +54,7 @@ module Hyrax
       end
 
       delegate :add, :commit, :count, :delete, :get, :instance, :ping, :post,
-               :query, :query_result, :delete_by_query, :search_by_id, :wipe!, to: :new
+               :query, :query_result, :query_in_batches, :delete_by_query, :search_by_id, :wipe!, to: :new
     end
 
     # Wraps rsolr get
@@ -108,6 +108,20 @@ module Hyrax
     def query(query, **args)
       query_result(query, **args)['response']['docs'].map do |doc|
         ::SolrHit.new(doc)
+      end
+    end
+
+    def query_in_batches(query, **args)
+      args[:rows] ||= 500
+      args[:start] ||= 0
+      loop do
+        result = query_result(query, **args)
+        break if result['response']['docs'].blank? || result['response']['numFound'] <= args[:start]
+        result['response']['docs'].select do |doc|
+          yield ::SolrHit.new(doc)
+          nil
+        end
+        args[:start] += args[:rows]
       end
     end
 
