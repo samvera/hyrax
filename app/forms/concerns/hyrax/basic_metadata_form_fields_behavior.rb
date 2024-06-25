@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 module Hyrax
   module BasicMetadataFormFieldsBehavior
-  extend ActiveSupport::Concern
+    extend ActiveSupport::Concern
 
-  included do
-    include Hyrax::BasedNearFieldBehavior
+    included do
+      include Hyrax::BasedNearFieldBehavior
+    end
   end
- end
 end

@@ -52,13 +52,13 @@ module Hyrax
       #
       # Forms should be initialized with an explicit +resource:+ parameter to
       # match indexers.
-      def initialize(deprecated_resource = nil, resource: nil)
+      def initialize(deprecated_resource = nil, resource: nil) # rubocop:disable Metrics/MethodLength
         if Hyrax.config.flexible?
-          self.singleton_class.instance_variable_set("@definitions", self.class.definitions)
+          singleton_class.instance_variable_set("@definitions", self.class.definitions)
           r = resource || deprecated_resource
           Hyrax::Schema.default_schema_loader.form_definitions_for(schema: r.class.to_s, version: r.schema_version).map do |field_name, options|
-         self.singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
-            self.singleton_class.validates field_name.to_sym, presence: true if options.fetch(:required, false)
+            singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
+            singleton_class.validates field_name.to_sym, presence: true if options.fetch(:required, false)
           end
         end
 
@@ -72,7 +72,7 @@ module Hyrax
         else
           super(resource)
         end
-      end
+      end # rubocop:enable Metrics/MethodLength
 
       class << self
         ##
@@ -160,21 +160,20 @@ module Hyrax
         secondary_terms.any?
       end
 
-
       # OVERRIDE disposable 0.6.3 to make schema dynamic
       def schema
-        Definition::Each.new(self.singleton_class.definitions)
+        Definition::Each.new(singleton_class.definitions)
       end
 
       private
 
       # OVERRIDE valkyrie 3.0.1 to make schema dynamic
       def field(field_name)
-        self.singleton_class.definitions.fetch(field_name.to_s)
+        singleton_class.definitions.fetch(field_name.to_s)
       end
 
       def _form_field_definitions
-        self.singleton_class.definitions
+        singleton_class.definitions
       end
     end
   end
