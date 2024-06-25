@@ -9,11 +9,9 @@ module Hyrax
       super
     end
 
-    class << self
-      def for(*args, **kwargs)
-        Deprecation.warn "`Hyrax::ValkyrieIndexer.for` is deprecated. Use `Hyrax::Indexers::ResourceIndexer.for` instead."
-        Hyrax::Indexers::ResourceIndexer.for(*args, **kwargs)
-      end
+    def self.for(*args, **kwargs)
+      Deprecation.warn "`Hyrax::ValkyrieIndexer.for` is deprecated. Use `Hyrax::Indexers::ResourceIndexer.for` instead."
+      Hyrax::Indexers::ResourceIndexer.for(*args, **kwargs)
     end
   end
 end

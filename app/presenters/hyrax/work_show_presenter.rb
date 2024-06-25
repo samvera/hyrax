@@ -16,13 +16,6 @@ module Hyrax
     self.collection_presenter_class = CollectionPresenter
     self.presenter_factory_class = MemberPresenterFactory
 
-    # Methods used by blacklight helpers
-    delegate :has?, :first, :fetch, :export_formats, :export_as, to: :solr_document
-
-    # delegate fields from Hyrax::Works::Metadata to solr_document
-    delegate :based_near_label, :related_url, :depositor, :identifier, :resource_type,
-             :keyword, :itemtype, :admin_set, :rights_notes, :access_right, :abstract, to: :solr_document
-
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
     # @param [ActionDispatch::Request] request the http request context. Used so
@@ -33,19 +26,13 @@ module Hyrax
       @request = request
     end
 
+    # We cannot rely on the method missing to catch this delegation.  Because
+    # most all objects implicitly implicitly implement #to_s
+    delegate :to_s, to: :solr_document
+
     def page_title
       "#{human_readable_type} | #{title.first} | ID: #{id} | #{I18n.t('hyrax.product_name')}"
     end
-
-    # CurationConcern methods
-    delegate :stringify_keys, :human_readable_type, :collection?, :to_s, :suppressed?,
-             to: :solr_document
-
-    # Metadata Methods
-    delegate :title, :date_created, :description,
-             :creator, :contributor, :subject, :publisher, :language, :embargo_release_date,
-             :lease_expiration_date, :license, :source, :rights_statement, :thumbnail_id, :representative_id,
-             :rendering_ids, :member_of_collection_ids, :alternative_title, :bibliographic_citation, to: :solr_document
 
     def workflow
       @workflow ||= WorkflowPresenter.new(solr_document, current_ability)
@@ -258,6 +245,15 @@ module Hyrax
     end
 
     private
+
+    def method_missing(method_name, *args, &block)
+      return solr_document.public_send(method_name, *args, &block) if solr_document.respond_to?(method_name)
+      super
+    end
+
+    def respond_to_missing?(method_name, include_private = false)
+      solr_document.respond_to?(method_name, include_private) || super
+    end
 
     # list of item ids to display is based on ordered_ids
     def authorized_item_ids(filter_unreadable: Flipflop.hide_private_items?)

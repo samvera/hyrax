@@ -34,6 +34,7 @@ module Hyrax
     require 'hyrax/transactions'
     require 'hyrax/errors'
     require 'hyrax/valkyrie_simple_path_generator'
+    require 'hyrax/rubocop/custom_cops'
 
     # Force these models to be added to Legato's registry in development mode
     config.eager_load_paths += %W[
@@ -89,6 +90,8 @@ module Hyrax
 
     initializer 'requires' do
       require 'wings' unless Hyrax.config.disable_wings
+      require 'freyja' unless Hyrax.config.disable_freyja
+      require 'frigg' unless Hyrax.config.disable_frigg
     end
 
     initializer 'routing' do

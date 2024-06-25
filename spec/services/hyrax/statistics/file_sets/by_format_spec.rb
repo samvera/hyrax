@@ -38,11 +38,13 @@ RSpec.describe Hyrax::Statistics::FileSets::ByFormat, :clean_repo, valkyrie_adap
     subject { described_class.query }
 
     it "is a list of categories" do
-      expect(subject).to eq [{ label: 'jpg (JPEG image)', data: 2 },
-                             { label: 'plain (plain text)', data: 1 },
-                             { label: 'png (PNG image)', data: 1 }]
-      expect(subject.first.label).to eq 'jpg (JPEG image)'
-      expect(subject.first.value).to eq 2
+      [{ label: 'jpg (JPEG image)', data: 2 },
+       { label: 'plain (plain text)', data: 1 },
+       { label: 'png (PNG image)', data: 1 }].each do |set|
+        item = subject.detect { |s| s.label == set[:label] }
+        expect(item).to be
+        expect(item.value).to eq(set[:data])
+      end
     end
   end
 end

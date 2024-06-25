@@ -385,7 +385,12 @@ module Hyrax
 
     def format_error_messages(errors)
       # the error may already be a string
-      errors.respond_to?(:messages) ? errors.messages.values.flatten.join("\n") : errors
+      return errors unless errors.respond_to?(:messages)
+
+      errors.messages.map do |field, messages|
+        field_name = field.to_s.humanize
+        messages.map { |message| "#{field_name} #{message.sub(/^./, &:downcase)}" }
+      end.flatten.join("\n")
     end
 
     def after_create_error(errors, original_input_params_for_form = nil)

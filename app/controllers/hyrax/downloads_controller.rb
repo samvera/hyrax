@@ -11,15 +11,38 @@ module Hyrax
       :original_file
     end
 
+    # We want to alias the show method for a later use with #show_active_fedora;
+    # because we're adding quite a bit of logic and need a good alias.  Why the
+    # alias?  Because we were using `super' for the show method and that just
+    # doesn't quite work with all of the antics we're performing.
+    alias hydra_show_active_fedora_file show
+
     # Render the 404 page if the file doesn't exist.
     # Otherwise renders the file.
     def show
+      # We will use the thumbnail from our file system first, if one exists
+      # Otherwise we will fallback to Valkyrie, then the default implementations
+      use = params.fetch(:file, :original_file).to_sym
+      if use == :thumbnail
+        thumbnail = Hyrax::DerivativePath.derivative_path_for_reference(params[:id], 'thumbnail')
+        if thumbnail.present? && File.exist?(thumbnail)
+          @file = thumbnail
+          return send_local_content
+        end
+      end
+
       return show_valkyrie if Hyrax.config.use_valkyrie?
 
+      show_active_fedora
+    end
+
+    private
+
+    def show_active_fedora
       case file
       when ActiveFedora::File
         # For original files that are stored in fedora
-        super
+        hydra_show_active_fedora_file
       when String
         # For derivatives stored on the local file system
         send_local_content
@@ -27,8 +50,6 @@ module Hyrax
         raise Hyrax::ObjectNotFoundError
       end
     end
-
-    private
 
     # Override the Hydra::Controller::DownloadBehavior#content_options so that
     # we have an attachement rather than 'inline'

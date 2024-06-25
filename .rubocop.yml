@@ -1,3 +1,5 @@
+require: ./lib/hyrax/rubocop/custom_cops.rb
+
 inherit_from:
   - .rubocop_fixme.yml
 
@@ -125,3 +127,6 @@ RSpec/NestedGroups:
 
 RSpec/LeadingSubject:
   Enabled: false
+
+Hyrax/ArResource:
+  Enabled: true
