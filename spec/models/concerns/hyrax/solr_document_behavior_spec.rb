@@ -54,7 +54,7 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       let(:solr_hash) { { 'has_model_ssim' => 'GenericWork' } }
 
       it 'resolves the correct model name' do
-        expect(solr_document.hydra_model).to eq GenericWork
+        expect(solr_document.hydra_model.to_s).to match('GenericWork')
       end
     end
 
@@ -138,11 +138,11 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       expect(solr_document.to_model.model_name.to_s).to eq 'ActiveFedora::Base'
     end
 
-    context 'with an ActiveFedora model name' do
+    context 'with an ActiveFedora model name that converts to a resource' do
       let(:solr_hash) { { 'has_model_ssim' => 'GenericWork' } }
 
       it 'wraps the specified model' do
-        expect(solr_document.to_model.model_name.to_s).to eq 'GenericWork'
+        expect(solr_document.to_model.model_name.to_s).to match 'GenericWork'
       end
     end
 
@@ -252,6 +252,25 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       it 'is "lease"' do
         expect(solr_document.visibility).to eq "lease"
       end
+    end
+  end
+
+  describe '#valkyrie?' do
+    subject { solr_document.valkyrie? }
+
+    context 'when valkyrie_bsi is present in the document and false' do
+      let(:solr_hash) { { "valkyrie_bsi" => false } }
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when valkyrie_bsi is present in the document and true' do
+      let(:solr_hash) { { "valkyrie_bsi" => true } }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when valkyrie_bsi is not present in the document' do
+      let(:solr_hash) { {} }
+      it { is_expected.to be_falsey }
     end
   end
 end

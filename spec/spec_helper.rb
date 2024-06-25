@@ -50,6 +50,9 @@ require 'hyrax/specs/capybara'
 require 'hyrax/specs/clamav'
 require 'hyrax/specs/engine_routes'
 
+require 'rubocop'
+require 'rubocop/rspec/support'
+
 # ensure Hyrax::Schema gets loaded is resolvable for `support/` models
 Hyrax::Schema # rubocop:disable Lint/Void
 
@@ -57,10 +60,13 @@ Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter)
 Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Postgres::MetadataAdapter.new, :postgres_adapter)
+version_path = Rails.root / 'tmp' / 'test_adapter_uploads'
 Valkyrie::StorageAdapter.register(
-  Valkyrie::Storage::VersionedDisk.new(base_path: Rails.root / 'tmp' / 'test_adapter_uploads'),
+  Valkyrie::Storage::VersionedDisk.new(base_path: version_path),
   :test_disk
 )
+FileUtils.mkdir_p(version_path)
+
 Valkyrie::StorageAdapter.register(
   Valkyrie::Storage::Disk.new(base_path: File.expand_path('../fixtures', __FILE__)),
   :fixture_disk
@@ -364,4 +370,6 @@ RSpec.configure do |config|
       .to receive(:storage_adapter)
       .and_return(Valkyrie::StorageAdapter.find(adapter_name))
   end
+
+  config.include RuboCop::RSpec::ExpectOffense
 end

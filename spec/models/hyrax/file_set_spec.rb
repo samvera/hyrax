@@ -35,6 +35,7 @@ RSpec.describe Hyrax::FileSet do
     end
 
     it 'builds an array of extensions_and_mime_types' do
+      expect(Hyrax.custom_queries).to receive(:find_files).and_return(files)
       expect(file_set.extensions_and_mime_types).to match_array results_array
     end
   end

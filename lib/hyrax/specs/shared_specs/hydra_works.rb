@@ -374,7 +374,7 @@ RSpec.shared_examples 'a Hyrax::FileSet', valkyrie_adapter: :test_adapter do
       end
 
       context 'with simulated original file' do
-        let(:file_metadata_double) { double("Fake Hyrax::FileMetadata", id: SecureRandom.uuid, file_identifier: SecureRandom.uuid, versions: [file_double]) }
+        let(:file_metadata_double) { double("Fake Hyrax::FileMetadata", id: SecureRandom.uuid, file_identifier: "versiondisk://#{Rails.root.join / 'tmp' / 'test_adapter_uploads'}/#{SecureRandom.uuid}", versions: [file_double]) }
         let(:file_double) { double("Fake Valkyrie::StorageAdapter::File", id: SecureRandom.uuid, version_id: SecureRandom.uuid)}
 
         before do
