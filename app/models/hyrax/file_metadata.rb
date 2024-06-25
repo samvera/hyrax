@@ -179,6 +179,13 @@ module Hyrax
     end
 
     ##
+    # Filters out uses not recognized by Hyrax (e.g. http://fedora.info/definitions/v4/repository#Binary)
+    # @return [Array]
+    def filtered_pcdm_use
+      pcdm_use.select { |use| Use.use_list.include?(use) }
+    end
+
+    ##
     # @return [String]
     def to_rdf_representation
       self.class.to_rdf_representation

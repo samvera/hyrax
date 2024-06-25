@@ -10,6 +10,8 @@ module Hyrax
       self.curation_concern_type = ::GenericWorkResource
 
       self.work_form_service = Hyrax::FormFactory.new
+    else
+      self.curation_concern_type = ::GenericWork
     end
 
     # Use this line if you want to use a custom presenter

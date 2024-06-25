@@ -42,9 +42,9 @@ RSpec.describe "work show view" do
       end
 
       around do |example|
-        Hyrax.config.analytics = true
+        Hyrax.config.analytics_reporting = true
         example.run
-        Hyrax.config.analytics = false
+        Hyrax.config.analytics_reporting = false
       end
 
       it "shows work content and all editor buttons and links" do
@@ -109,9 +109,9 @@ RSpec.describe "work show view" do
       let!(:collection) { FactoryBot.create(:collection_lw, user: viewer, collection_type: multi_membership_type_1) }
 
       around do |example|
-        Hyrax.config.analytics = true
+        Hyrax.config.analytics_reporting = true
         example.run
-        Hyrax.config.analytics = false
+        Hyrax.config.analytics_reporting = false
       end
 
       before do
