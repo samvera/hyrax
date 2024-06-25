@@ -103,7 +103,14 @@ attributes:
     type: date_time
     predicate: http://purl.org/dc/terms/modified
     view:
-      label: 'hyrax.base.show.last_modified'
+      label:
+        de: 'Zuletzt geändert'
+        en: 'Last modified'
+        es: 'Última modificación'
+        fr: 'Dernière modification'
+        it: 'Ultima modifica'
+        pt-BR: 'Última modificação'
+        zh: '最新修改'
       html_dl: true
   description:
     type: string
