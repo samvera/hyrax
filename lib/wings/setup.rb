@@ -127,9 +127,9 @@ custom_queries.each do |query_handler|
   Valkyrie.config.metadata_adapter.query_service.custom_queries.register_query_handler(query_handler)
 end
 
-Wings::ModelRegistry.register(Hyrax::AccessControl,     Hydra::AccessControl)
-Wings::ModelRegistry.register(Hyrax::AdministrativeSet, AdminSet)
-Wings::ModelRegistry.register(Hyrax::PcdmCollection,    ::Collection)
+Wings::ModelRegistry.register(Hyrax::AccessControl, Hydra::AccessControl)
+Wings::ModelRegistry.register(Hyrax.config.admin_set_class_for_wings, AdminSet)
+Wings::ModelRegistry.register(Hyrax.config.collection_class_for_wings, ::Collection)
 Wings::ModelRegistry.register(Hyrax::FileSet,           FileSet)
 Wings::ModelRegistry.register(Hyrax::Embargo,           Hydra::AccessControls::Embargo)
 Wings::ModelRegistry.register(Hyrax::Lease,             Hydra::AccessControls::Lease)

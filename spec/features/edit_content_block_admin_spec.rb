@@ -6,6 +6,7 @@ RSpec.describe 'Editing content blocks as admin', :js do
     let!(:confirm_modal_text) { 'Are you sure you want to leave this tab? Any unsaved data will be lost.' }
 
     before do
+      allow(Hyrax::Statistic).to receive(:work_types).and_return([])
       sign_in user
       visit '/dashboard'
       click_link 'Settings'
