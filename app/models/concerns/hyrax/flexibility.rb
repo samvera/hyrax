@@ -5,7 +5,6 @@ module Hyrax
     extend ActiveSupport::Concern
     included do
       attribute :schema_version,       Valkyrie::Types::String
-      attr_accessor :form_definitions
     end
 
     class_methods do
@@ -66,7 +65,6 @@ module Hyrax
         struct.singleton_class.attributes(Hyrax::Schema(self, schema_version:).attributes)
         clean_attributes = safe ? struct.singleton_class.schema.call_safe(attributes) { |output = attributes| return yield output } : struct.singleton_class.schema.call_unsafe(attributes)
         struct.__send__(:initialize, clean_attributes)
-        struct.form_definitions =
         struct
       end
     end
