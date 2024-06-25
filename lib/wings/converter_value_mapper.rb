@@ -246,6 +246,7 @@ module Wings
     attr_reader :attributes
 
     def initialize(attributes)
+      attributes = attributes.merge(file_name: attributes[:original_filename]) if attributes[:original_filename]
       @attributes = attributes
     end
 

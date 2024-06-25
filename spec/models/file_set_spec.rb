@@ -36,6 +36,7 @@ RSpec.describe FileSet, :active_fedora do
     it "does not be changed when it's new" do
       expect(subject).not_to be_visibility_changed
     end
+
     it 'is changed when it has been changed' do
       subject.visibility = 'open'
       expect(subject).to be_visibility_changed

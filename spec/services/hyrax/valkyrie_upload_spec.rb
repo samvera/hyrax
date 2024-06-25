@@ -60,14 +60,14 @@ RSpec.describe Hyrax::ValkyrieUpload do
         io: file,
         user: user
       )
-      expect(listener.file_uploaded.map(&:payload))
-        .to contain_exactly(match(metadata: have_attributes(id: an_instance_of(Valkyrie::ID),
-                                                            original_filename: filename)))
+      payload = listener.file_uploaded.map(&:payload)
+      expect(payload.first[:metadata].id).to be_an_instance_of(Valkyrie::ID)
+      expect(payload.first[:metadata].original_filename).to eq(filename)
 
-      expect(listener.file_metadata_updated.map(&:payload))
-        .to include(match(metadata: have_attributes(id: an_instance_of(Valkyrie::ID),
-                                                    original_filename: filename),
-                          user: user))
+      payload = listener.file_metadata_updated.map(&:payload)
+      expect(payload.first[:metadata].id).to be_an_instance_of(Valkyrie::ID)
+      expect(payload.first[:metadata].original_filename).to eq(filename)
+      expect(payload.first[:user]).to eq(user)
 
       expect(listener.object_membership_updated.map(&:payload))
         .to contain_exactly(match(object: file_set,

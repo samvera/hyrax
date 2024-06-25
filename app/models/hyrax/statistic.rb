@@ -26,13 +26,13 @@ module Hyrax
       end
 
       def query_works(query)
-        models = Hyrax.config.curation_concerns.map { |m| "\"#{m}\"" }
+        models = Hyrax::ModelRegistry.work_rdf_representations.map { |m| "\"#{m}\"" }
         Hyrax::SolrService.query("has_model_ssim:(#{models.join(' OR ')})", fl: query, rows: 100_000)
       end
 
       def work_types
         results = query_works("human_readable_type_tesim")
-        results.group_by { |result| result['human_readable_type_tesim'].join('') }.transform_values(&:count)
+        results.group_by { |result| result['human_readable_type_tesim']&.join('') || "Unknown" }.transform_values(&:count)
       end
 
       def resource_types

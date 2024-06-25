@@ -17,5 +17,10 @@ module Hyrax
       @singular_route_key = ActiveSupport::Inflector.singularize(@route_key)
       @route_key += "_index" if @plural == @singular
     end
+
+    ##
+    # Expose the underlying klass which can be helpful when consider that we have the
+    # Hyrax::ValkyrieLazyMigration
+    attr_reader :klass
   end
 end

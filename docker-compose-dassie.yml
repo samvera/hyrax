@@ -20,6 +20,7 @@ services:
       - chrome
       - db_migrate
       - fcrepo
+      - fits
       - memcached
       - postgres
       - redis
@@ -49,6 +50,7 @@ services:
     depends_on:
       - db_migrate
       - fcrepo
+      - fits
       - memcached
       - postgres
       - redis
