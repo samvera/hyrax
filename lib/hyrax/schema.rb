@@ -63,6 +63,22 @@ module Hyrax
     def self.default_schema_loader
       Hyrax.config.flexible? ? M3SchemaLoader.new : SimpleSchemaLoader.new
     end
+
+    ##
+    # @param [Hyrax::Resource] work_type
+    #
+    # @example Hyrax::Schema.schema_to_hash(Monograph)
+    #
+    # @return [Hash{String => Hash}]
+    def self.schema_to_hash_for(work_type)
+      return unless work_type.respond_to?(:schema)
+
+      schema = work_type.schema
+      schema.each_with_object({}) do |property, metadata|
+        metadata[property.name.to_s] = property.meta
+      end
+    end
+
     ##
     # @param [Symbol] schema_name
     #

@@ -1,21 +1,3 @@
-<%= presenter.attribute_to_html(:alternative_title, html_dl: true) %>
-<%= presenter.attribute_to_html(:abstract, html_dl: true) %>
-<%= presenter.attribute_to_html(:date_modified, label: t('hyrax.base.show.last_modified'), html_dl: true) %>
-<%= presenter.attribute_to_html(:creator, render_as: :faceted, html_dl: true) %>
-<%= presenter.attribute_to_html(:contributor, render_as: :faceted, html_dl: true) %>
-<%= presenter.attribute_to_html(:subject, render_as: :faceted, html_dl: true) %>
-<%= presenter.attribute_to_html(:publisher, render_as: :faceted, html_dl: true) %>
-<%= presenter.attribute_to_html(:bibliographic_citation, html_dl: true) %>
-<%= presenter.attribute_to_html(:language, render_as: :faceted, html_dl: true) %>
-<%= presenter.attribute_to_html(:identifier, render_as: :linked, search_field: 'identifier_tesim', html_dl: true) %>
-<%= presenter.attribute_to_html(:keyword, render_as: :faceted, html_dl: true) %>
-<%= presenter.attribute_to_html(:date_created, render_as: :linked, search_field: 'date_created_tesim', html_dl: true) %>
-<%= presenter.attribute_to_html(:based_near_label, html_dl: true) %>
-<%= presenter.attribute_to_html(:related_url, render_as: :external_link, html_dl: true) %>
-<%= presenter.attribute_to_html(:resource_type, render_as: :faceted, html_dl: true) %>
-<%= presenter.attribute_to_html(:source, html_dl: true) %>
-<%= presenter.attribute_to_html(:extent, html_dl: true) %>
-<%= presenter.attribute_to_html(:rights_statement, render_as: :rights_statement, html_dl: true) %>
-<%= presenter.attribute_to_html(:rights_notes, html_dl: true) %>
-<%= presenter.attribute_to_html(:access_right, html_dl: true) %>
-<%= presenter.attribute_to_html(:license, render_as: :license, html_dl: true) %>
+<% view_options_for(presenter).each do |field, options| %>
+  <%= presenter.attribute_to_html(field.to_sym, conform_options(options)) %>
+<% end %>
