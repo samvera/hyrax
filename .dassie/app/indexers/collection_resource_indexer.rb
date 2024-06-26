@@ -3,6 +3,6 @@
 # Generated via
 #  `rails generate hyrax:collection_resource CollectionResource`
 class CollectionResourceIndexer < Hyrax::PcdmCollectionIndexer
-  include Hyrax::Indexer(:basic_metadata)
-  include Hyrax::Indexer(:collection_resource)
+  include Hyrax::Indexer(:basic_metadata) unless Hyrax.config.flexible?
+  include Hyrax::Indexer(:collection_resource) unless Hyrax.config.flexible?
 end

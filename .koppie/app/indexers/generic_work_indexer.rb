@@ -3,8 +3,8 @@
 # Generated via
 #  `rails generate hyrax:work_resource GenericWork`
 class GenericWorkIndexer < Hyrax::ValkyrieWorkIndexer
-  include Hyrax::Indexer(:basic_metadata)
-  include Hyrax::Indexer(:generic_work)
+  include Hyrax::Indexer(:basic_metadata) unless Hyrax.config.flexible?
+  include Hyrax::Indexer(:generic_work) unless Hyrax.config.flexible?
 
   # Uncomment this block if you want to add custom indexing behavior:
   #  def to_solr
