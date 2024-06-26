@@ -71,7 +71,7 @@ attributes:
       - "contributor_sim"
     predicate: http://purl.org/dc/elements/1.1/contributor
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
   creator:
     type: string
@@ -84,7 +84,7 @@ attributes:
       - "creator_tesim"
     predicate: http://purl.org/dc/elements/1.1/creator
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
   date_created:
     type: date_time
@@ -96,8 +96,8 @@ attributes:
       - "date_created_tesim"
     predicate: http://purl.org/dc/terms/created
     view:
-      render_as: "linked"
-      search_field: 'date_created_tesim'
+      render_as: linked
+      search_field: date_created_tesim
       html_dl: true
   date_modified:
     type: date_time
@@ -131,8 +131,8 @@ attributes:
       - "identifier_tesim"
     predicate: http://purl.org/dc/terms/identifier
     view:
-      render_as: "linked"
-      search_field: 'identifier_tesim'
+      render_as: linked
+      search_field: identifier_tesim
       html_dl: true
   import_url:
     type: string
@@ -147,7 +147,7 @@ attributes:
       primary: false
     predicate: http://schema.org/keywords
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
   publisher:
     type: string
@@ -159,7 +159,7 @@ attributes:
       - "publisher_tesim"
     predicate: http://purl.org/dc/elements/1.1/publisher
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
   label:
     type: string
@@ -179,7 +179,7 @@ attributes:
       - "language_tesim"
     predicate: http://purl.org/dc/elements/1.1/language
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
   license:
     type: string
@@ -191,7 +191,7 @@ attributes:
       - "license_tesim"
     predicate: http://purl.org/dc/terms/license
     view:
-      render_as: "license"
+      render_as: license
       html_dl: true
   relative_path:
     type: string
@@ -206,7 +206,7 @@ attributes:
       - "related_url_tesim"
     predicate: http://www.w3.org/2000/01/rdf-schema#seeAlso
     view:
-      render_as: "external_link"
+      render_as: external_link
       html_dl: true
   resource_type:
     type: string
@@ -218,7 +218,7 @@ attributes:
       - "resource_type_tesim"
     predicate: http://purl.org/dc/terms/type
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
   rights_notes:
     type: string
@@ -241,7 +241,7 @@ attributes:
       - "rights_statement_tesim"
     view:
       html_dl: true
-      render_as: "rights_statement"
+      render_as: rights_statement
     predicate: http://www.europeana.eu/schemas/edm/rights
   source:
     type: string
@@ -264,5 +264,5 @@ attributes:
       primary: false
     predicate: http://purl.org/dc/elements/1.1/subject
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
