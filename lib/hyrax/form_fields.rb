@@ -45,7 +45,8 @@ module Hyrax
     private
 
     def included(descendant)
-      return super unless Hyrax.config.flexible?
+      super
+      return if Hyrax.config.flexible?
 
       form_field_definitions.each do |field_name, options|
         descendant.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
