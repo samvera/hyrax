@@ -69,7 +69,7 @@ class Hyrax::CollectionResourceGenerator < Rails::Generators::NamedBase # ruboco
     template('collection_form.rb.erb', filepath)
     return unless include_basic_metadata?
     inject_into_file filepath, before: /include Hyrax::FormFields/ do
-      "include Hyrax::FormFields(:basic_metadata)\n  "
+      "include Hyrax::FormFields(:basic_metadata) unless Hyrax.config.flexible?\n  "
     end
   end
 
