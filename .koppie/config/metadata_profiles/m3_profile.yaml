@@ -39,6 +39,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWork
+      - Monograph
     cardinality:
       minimum: 1
     multi_value: true
@@ -77,6 +78,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWork
+      - Monograph
     cardinality:
       minimum: 0
       maximum: 1
@@ -94,6 +96,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWork
+      - Monograph
     cardinality:
       minimum: 0
       maximum: 1
@@ -111,6 +114,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWork
+      - Monograph
     cardinality:
       minimum: 0
       maximum: 1

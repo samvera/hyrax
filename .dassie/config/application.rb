@@ -17,7 +17,9 @@ module Dassie
     # the framework and any gems in your application.
 
     # use SideKiq by default
-    config.active_job.queue_adapter = :inline # :sidekiq
+    config.active_job.queue_adapter = :sidekiq
+    # inline can be useful when debugging
+    # config.active_job.queue_adapter = :inline
 
     ##
     # When using the Goddess adapter of Hyrax 5.x, we want to have a
