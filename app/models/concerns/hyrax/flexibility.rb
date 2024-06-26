@@ -5,14 +5,14 @@ module Hyrax
     extend ActiveSupport::Concern
     included do
       attribute :schema_version,       Valkyrie::Types::String
-      attr_accessor :form_definitions
     end
 
     class_methods do
       ## Override dry-struct 1.6.0 to enable redefining schemas on the fly
       def attributes(new_schema)
         keys = new_schema.keys.map { |k| k.to_s.chomp("?").to_sym }
-        schema Hyrax::Resource.schema.schema(new_schema)
+        schema_location = singleton_class? ? self.superclass : self
+        schema schema_location.schema.schema(new_schema)
 
         define_accessors(keys)
 
@@ -66,7 +66,6 @@ module Hyrax
         struct.singleton_class.attributes(Hyrax::Schema(self, schema_version:).attributes)
         clean_attributes = safe ? struct.singleton_class.schema.call_safe(attributes) { |output = attributes| return yield output } : struct.singleton_class.schema.call_unsafe(attributes)
         struct.__send__(:initialize, clean_attributes)
-        struct.form_definitions =
         struct
       end
     end
