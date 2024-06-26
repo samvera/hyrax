@@ -141,9 +141,12 @@ module Hyrax
       # @return [Array<Symbol>] terms for display 'above-the-fold', or in the most
       #   prominent form real estate
       def primary_terms
-        _form_field_definitions
+        terms = _form_field_definitions
           .select { |_, definition| definition[:primary] }
           .keys.map(&:to_sym)
+
+        terms = [:schema_version] + terms if Hyrax.config.flexible?
+        terms
       end
 
       ##
@@ -163,6 +166,10 @@ module Hyrax
       # OVERRIDE disposable 0.6.3 to make schema dynamic
       def schema
         Definition::Each.new(singleton_class.definitions)
+      end
+
+      def schema_version
+        resource.schema_version
       end
 
       private

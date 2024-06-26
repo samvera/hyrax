@@ -39,7 +39,7 @@ module Hyrax
       # @api public
       # @return [HashWithIndifferentAccess<Symbol, Object>]
       def to_solr
-        {
+        solr_hash = {
           "id": resource.id.to_s,
           "date_uploaded_dtsi": resource.created_at,
           "date_modified_dtsi": resource.updated_at,
@@ -49,6 +49,10 @@ module Hyrax
           "human_readable_type_tesim": resource.human_readable_type,
           "alternate_ids_sim": resource.alternate_ids.map(&:to_s)
         }.with_indifferent_access
+
+        solr_hash.merge!({ "schema_version_ssi": resource.schema_version }) if Hyrax.config.flexible?
+
+        solr_hash
       end
 
       ##
