@@ -146,10 +146,6 @@ module Hyrax
       JSON.parse(self['extensions_and_mime_types_ssm'].first).map(&:with_indifferent_access) if self['extensions_and_mime_types_ssm']
     end
 
-    def schema_version
-      self['schema_version_ssi']
-    end
-
     private
 
     def model_classifier(classifier)
