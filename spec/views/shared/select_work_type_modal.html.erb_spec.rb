@@ -1,5 +1,9 @@
 # frozen_string_literal: true
+require 'rails_helper'
+include Warden::Test::Helpers
+
 RSpec.describe 'shared/_select_work_type_modal.html.erb', type: :view do
+  include(Devise::Test::ControllerHelpers)
   let(:presenter) { instance_double Hyrax::SelectTypeListPresenter }
   let(:row1) { Hyrax::SelectTypePresenter.new(GenericWork) }
   let(:row2) { Hyrax::SelectTypePresenter.new(Hyrax.config.disable_wings ? Monograph : NamespacedWorks::NestedWork) }
