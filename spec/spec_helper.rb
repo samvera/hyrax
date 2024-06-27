@@ -50,6 +50,9 @@ require 'hyrax/specs/capybara'
 require 'hyrax/specs/clamav'
 require 'hyrax/specs/engine_routes'
 
+require 'rubocop'
+require 'rubocop/rspec/support'
+
 # ensure Hyrax::Schema gets loaded is resolvable for `support/` models
 Hyrax::Schema # rubocop:disable Lint/Void
 
@@ -57,10 +60,13 @@ Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter)
 Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Postgres::MetadataAdapter.new, :postgres_adapter)
+version_path = Rails.root / 'tmp' / 'test_adapter_uploads'
 Valkyrie::StorageAdapter.register(
-  Valkyrie::Storage::VersionedDisk.new(base_path: Rails.root / 'tmp' / 'test_adapter_uploads'),
+  Valkyrie::Storage::VersionedDisk.new(base_path: version_path),
   :test_disk
 )
+FileUtils.mkdir_p(version_path)
+
 Valkyrie::StorageAdapter.register(
   Valkyrie::Storage::Disk.new(base_path: File.expand_path('../fixtures', __FILE__)),
   :fixture_disk
@@ -276,14 +282,6 @@ RSpec.configure do |config|
   #   skip("Don't test Wings") if Hyrax.config.disable_wings
   # end
 
-  config.before(:example, :clean_repo) do
-    clean_active_fedora_repository unless Hyrax.config.disable_wings
-    Hyrax::RedisEventStore.instance.then(&:flushdb)
-    # Not needed to clean the Solr core used by ActiveFedora since
-    # clean_active_fedora_repository will wipe that core
-    Hyrax::SolrService.wipe! if Hyrax.config.query_index_from_valkyrie
-  end
-
   # Use this example metadata when you want to perform jobs inline during testing.
   #
   #   describe '#my_method`, :perform_enqueued do
@@ -325,6 +323,14 @@ RSpec.configure do |config|
       .and_return(Valkyrie::IndexingAdapter.find(adapter_name))
   end
 
+  config.before(:example, :clean_repo) do
+    clean_active_fedora_repository unless Hyrax.config.disable_wings
+    Hyrax::RedisEventStore.instance.then(&:flushdb)
+    # Not needed to clean the Solr core used by ActiveFedora since
+    # clean_active_fedora_repository will wipe that core
+    Hyrax::SolrService.wipe! if Hyrax.config.query_index_from_valkyrie
+  end
+
   config.after(:example, :index_adapter) do |example|
     adapter_name = example.metadata[:index_adapter]
     Valkyrie::IndexingAdapter.find(adapter_name).wipe!
@@ -364,4 +370,6 @@ RSpec.configure do |config|
       .to receive(:storage_adapter)
       .and_return(Valkyrie::StorageAdapter.find(adapter_name))
   end
+
+  config.include RuboCop::RSpec::ExpectOffense
 end

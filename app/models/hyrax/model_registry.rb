@@ -85,7 +85,8 @@ module Hyrax
     #
     # @todo Consider the Wings::ModelRegistry and how we perform mappings.
     def self.work_class_names
-      Hyrax.config.registered_curation_concern_types
+      @work_class_names ||= (Hyrax.config.registered_curation_concern_types +
+        Array(Rails.application.class.try(:work_types))).map(&:to_s).uniq
     end
 
     def self.work_classes
@@ -101,11 +102,9 @@ module Hyrax
     def self.classes_from(strings)
       strings.map(&:safe_constantize).compact.uniq
     end
-    private_class_method :classes_from
 
     def self.rdf_representations_from(klasses)
       klasses.map { |klass| klass.respond_to?(:to_rdf_representation) ? klass.to_rdf_representation : klass.name }.uniq
     end
-    private_class_method :rdf_representations_from
   end
 end

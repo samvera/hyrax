@@ -90,5 +90,8 @@ end
 RSpec.configure do |config|
   config.after(:each, :js) do |example|
     save_timestamped_page_and_screenshot(Capybara.page, example.metadata) if example.exception
+    # Quitting forces the browser session to be reinitialized during the next :js spec.
+    # This is slower but more resilient to timeouts (in theory).
+    Capybara.page.driver.quit
   end
 end

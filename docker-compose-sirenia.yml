@@ -24,6 +24,7 @@ services:
     depends_on:
       - chrome
       - db_migrate
+      - fits
       - memcached
       - postgres
       - redis
@@ -58,6 +59,7 @@ services:
       - VALKYRIE_STORAGE_ADAPTER=fedora_storage
     depends_on:
       - db_migrate
+      - fits
       - memcached
       - postgres
       - redis

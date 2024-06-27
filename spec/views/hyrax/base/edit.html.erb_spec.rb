@@ -28,7 +28,7 @@ RSpec.describe 'hyrax/base/edit.html.erb', type: :view do
     let(:controller_class) { Hyrax::MonographsController }
 
     it "sets a header and draws the form" do
-      expect(view).to receive(:provide).with(:page_title, "comet in moominland // Simple Work [#{work.id}] // #{I18n.t('hyrax.product_name')}")
+      expect(view).to receive(:provide).with(:page_title, "comet in moominland // #{work.human_readable_type} [#{work.id}] // #{I18n.t('hyrax.product_name')}")
       expect(view).to receive(:provide).with(:page_header).and_yield
       render
       expect(rendered).to eq "  <h1><span class=\"fa fa-edit\" aria-hidden=\"true\"></span>Edit Work</h1>\n\na form\n"

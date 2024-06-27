@@ -54,3 +54,15 @@
     }
   }
 }
+
+.select-work-admin-set {
+  margin: 20px;
+  select {
+    width: 100%;
+  }
+
+  .admin-set-title {
+    font-size: $h4-font-size;
+    margin-top: 0;
+  }
+}
