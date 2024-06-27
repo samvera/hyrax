@@ -49,10 +49,6 @@ module Hyrax
           "human_readable_type_tesim": resource.human_readable_type,
           "alternate_ids_sim": resource.alternate_ids.map(&:to_s)
         }.with_indifferent_access
-
-        solr_hash.merge!({ "schema_version_ssi": resource.schema_version }) if Hyrax.config.flexible?
-
-        solr_hash
       end
 
       ##
