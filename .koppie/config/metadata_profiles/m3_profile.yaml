@@ -4,7 +4,7 @@ profile:
   date_modified: '2024-06-01'
   responsibility: https://samvera.org
   responsibility_statement: Hyrax Initial Profile
-  type:
+  type: Flexible with Views
   version: 1
 classes:
   GenericWork:
@@ -39,7 +39,6 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWork
-      - Monograph
     cardinality:
       minimum: 1
     multi_value: true
@@ -48,15 +47,14 @@ properties:
       sources:
       - 'null'
     definition:
-      default: Enter a standardized title for display. If only one
-        title is needed, transcribe the title from the source
-        itself.
+      default: Enter a standardized title for display. If only one title is needed,
+        transcribe the title from the source itself.
     display_label:
       default: Title
     index_documentation: displayable, searchable
     indexing:
-    - 'title_sim'
-    - 'title_tesim'
+    - title_sim
+    - title_tesim
     form:
       required: true
       primary: true
@@ -71,6 +69,11 @@ properties:
     requirement: required
     sample_values:
     - Pencil drawn portrait study of woman
+    view:
+      label:
+        en: 'Title'
+        es: 'Título'
+      html_dl: true
   date_modified:
     available_on:
       class:
@@ -78,7 +81,6 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWork
-      - Monograph
     cardinality:
       minimum: 0
       maximum: 1
@@ -88,7 +90,10 @@ properties:
     property_uri: http://purl.org/dc/terms/modified
     range: http://www.w3.org/2001/XMLSchema#dateTime
     sample_values:
-    - "2024-06-06 21:06:51 +0000"
+    - '2024-06-06 21:06:51 +0000'
+    view:
+      label: Date Modified
+      html_dl: true
   date_uploaded:
     available_on:
       class:
@@ -96,7 +101,6 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWork
-      - Monograph
     cardinality:
       minimum: 0
       maximum: 1
@@ -106,7 +110,9 @@ properties:
     property_uri: http://purl.org/dc/terms/dateSubmitted
     range: http://www.w3.org/2001/XMLSchema#dateTime
     sample_values:
-    - "2024-06-06 21:06:51 +0000"
+    - '2024-06-06 21:06:51 +0000'
+    view:
+      html_dl: true
   depositor:
     available_on:
       class:
@@ -114,7 +120,6 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWork
-      - Monograph
     cardinality:
       minimum: 0
       maximum: 1
@@ -127,11 +132,13 @@ properties:
       default: Depositor
     index_documentation: searchable
     indexing:
-    - 'depositor_tesim'
+    - depositor_tesim
     property_uri: http://id.loc.gov/vocabulary/relators/dpt
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Julie Allinson
+    view:
+      html_dl: true
   creator:
     available_on:
       class:
@@ -150,8 +157,8 @@ properties:
       default: Creator
     index_documentation: displayable, searchable
     indexing:
-    - 'creator_sim'
-    - 'creator_tesim'
+    - creator_sim
+    - creator_tesim
     form:
       required: true
       primary: true
@@ -159,6 +166,8 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Julie Allinson
+    view:
+      html_dl: true
   license:
     available_on:
       class:
@@ -177,14 +186,16 @@ properties:
       default: License
     index_documentation: displayable, searchable
     indexing:
-    - 'license_sim'
-    - 'license_tesim'
+    - license_sim
+    - license_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/license
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - http://creativecommons.org/licenses/by/3.0/us/
+    view:
+      html_dl: true
   abstract:
     available_on:
       class:
@@ -203,14 +214,16 @@ properties:
       default: Abstract
     index_documentation: displayable, searchable
     indexing:
-    - 'abstract_sim'
-    - 'abstract_tesim'
+    - abstract_sim
+    - abstract_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/abstract
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - This is an abstract.
+    view:
+      html_dl: true
   access_right:
     available_on:
       class:
@@ -228,14 +241,16 @@ properties:
       default: Access Right
     index_documentation: displayable, searchable
     indexing:
-    - 'access_right_sim'
-    - 'access_right_tesim'
+    - access_right_sim
+    - access_right_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/accessRights
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Open Access
+    view:
+      html_dl: true
   alternative_title:
     available_on:
       class:
@@ -253,14 +268,16 @@ properties:
       default: Alternative Title
     index_documentation: displayable, searchable
     indexing:
-    - 'alternative_title_sim'
-    - 'alternative_title_tesim'
+    - alternative_title_sim
+    - alternative_title_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/alternative
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Alternate Title Example
+    view:
+      html_dl: true
   arkivo_checksum:
     available_on:
       class:
@@ -283,6 +300,8 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - c0855931b7f1aefedb91d31af76873c0
+    view:
+      html_dl: true
   based_near:
     available_on:
       class:
@@ -301,14 +320,16 @@ properties:
       default: Location
     index_documentation: displayable, searchable
     indexing:
-    - 'based_near_sim'
-    - 'based_near_tesim'
+    - based_near_sim
+    - based_near_tesim
     form:
       primary: false
     property_uri: http://xmlns.com/foaf/0.1/based_near
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - San Diego, California, United States
+    view:
+      html_dl: true
   bibliographic_citation:
     available_on:
       class:
@@ -326,14 +347,16 @@ properties:
       default: Bibliographic Citation
     index_documentation: displayable, searchable
     indexing:
-    - 'bibliographic_citation_sim'
-    - 'bibliographic_citation_tesim'
+    - bibliographic_citation_sim
+    - bibliographic_citation_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/bibliographicCitation
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
-    - "Doe, J. (2024). Example Citation. Journal of Examples, 12(3), 45-67."
+    - Doe, J. (2024). Example Citation. Journal of Examples, 12(3), 45-67.
+    view:
+      html_dl: true
   contributor:
     available_on:
       class:
@@ -352,14 +375,16 @@ properties:
       default: Contributor
     index_documentation: displayable, searchable
     indexing:
-    - 'contributor_tesim'
-    - 'contributor_sim'
+    - contributor_tesim
+    - contributor_sim
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/contributor
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Julie Allinson
+    view:
+      html_dl: true
   date_created:
     available_on:
       class:
@@ -378,15 +403,16 @@ properties:
       default: Date Created
     index_documentation: displayable, searchable
     indexing:
-    - 'date_created_sim'
-    - 'date_created_tesim'
+    - date_created_sim
+    - date_created_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/created
     range: http://www.w3.org/2001/XMLSchema#dateTime
     sample_values:
-    sample_values:
-    - "2024-06-06 21:06:51 +0000"
+    - '2024-06-06 21:06:51 +0000'
+    view:
+      html_dl: true
   description:
     available_on:
       class:
@@ -405,14 +431,16 @@ properties:
       default: Description
     index_documentation: displayable, searchable
     indexing:
-    - 'description_sim'
-    - 'description_tesim'
+    - description_sim
+    - description_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/description
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - This is a description.
+    view:
+      html_dl: true
   identifier:
     available_on:
       class:
@@ -431,14 +459,16 @@ properties:
       default: Identifier
     index_documentation: displayable, searchable
     indexing:
-    - 'identifier_sim'
-    - 'identifier_tesim'
+    - identifier_sim
+    - identifier_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/identifier
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - abc123
+    view:
+      html_dl: true
   import_url:
     available_on:
       class:
@@ -459,6 +489,8 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - http://example.com/resource1
+    view:
+      html_dl: true
   keyword:
     available_on:
       class:
@@ -477,8 +509,8 @@ properties:
       default: Keyword
     index_documentation: displayable, searchable
     indexing:
-    - 'keyword_sim'
-    - 'keyword_tesim'
+    - keyword_sim
+    - keyword_tesim
     form:
       primary: false
     property_uri: http://schema.org/keywords
@@ -486,6 +518,8 @@ properties:
     sample_values:
     - Metadata
     - Repository
+    view:
+      html_dl: true
   label:
     available_on:
       class:
@@ -505,14 +539,16 @@ properties:
       default: Label
     index_documentation: displayable, searchable
     indexing:
-    - 'label_sim'
-    - 'label_tesim'
+    - label_sim
+    - label_tesim
     form:
       primary: false
     property_uri: info:fedora/fedora-system:def/model#downloadFilename
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - file_label.txt
+    view:
+      html_dl: true
   language:
     available_on:
       class:
@@ -531,8 +567,8 @@ properties:
       default: Language
     index_documentation: displayable, searchable
     indexing:
-    - 'language_sim'
-    - 'language_tesim'
+    - language_sim
+    - language_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/language
@@ -540,6 +576,8 @@ properties:
     sample_values:
     - English
     - Spanish
+    view:
+      html_dl: true
   publisher:
     available_on:
       class:
@@ -558,14 +596,16 @@ properties:
       default: Publisher
     index_documentation: displayable, searchable
     indexing:
-    - 'publisher_sim'
-    - 'publisher_tesim'
+    - publisher_sim
+    - publisher_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/publisher
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Scholastic
+    view:
+      html_dl: true
   related_url:
     available_on:
       class:
@@ -584,14 +624,16 @@ properties:
       default: Related URL
     index_documentation: displayable, searchable
     indexing:
-    - 'related_url_sim'
-    - 'related_url_tesim'
+    - related_url_sim
+    - related_url_tesim
     form:
       primary: false
     property_uri: http://www.w3.org/2000/01/rdf-schema#seeAlso
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - http://example.com/resource1
+    view:
+      html_dl: true
   relative_path:
     available_on:
       class:
@@ -612,7 +654,9 @@ properties:
     property_uri: http://scholarsphere.psu.edu/ns#relativePath
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
-    - /path/to/resource
+    - "/path/to/resource"
+    view:
+      html_dl: true
   resource_type:
     available_on:
       class:
@@ -631,8 +675,8 @@ properties:
       default: Resource Type
     index_documentation: displayable, searchable
     indexing:
-    - 'resource_type_sim'
-    - 'resource_type_tesim'
+    - resource_type_sim
+    - resource_type_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/type
@@ -640,6 +684,8 @@ properties:
     sample_values:
     - Article
     - Conference Proceeding
+    view:
+      html_dl: true
   rights_notes:
     available_on:
       class:
@@ -658,14 +704,16 @@ properties:
       default: Rights Notes
     index_documentation: displayable, searchable
     indexing:
-    - 'rights_notes_sim'
-    - 'rights_notes_tesim'
+    - rights_notes_sim
+    - rights_notes_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/rights
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Creative Commons license.
+    view:
+      html_dl: true
   rights_statement:
     available_on:
       class:
@@ -684,14 +732,16 @@ properties:
       default: Rights Statement
     index_documentation: displayable, searchable
     indexing:
-    - 'rights_statement_sim'
-    - 'rights_statement_tesim'
+    - rights_statement_sim
+    - rights_statement_tesim
     form:
       primary: true
     property_uri: http://www.europeana.eu/schemas/edm/rights
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - http://rightsstatements.org/vocab/InC/1.0/
+    view:
+      html_dl: true
   source:
     available_on:
       class:
@@ -710,8 +760,8 @@ properties:
       default: Source
     index_documentation: displayable, searchable
     indexing:
-    - 'source_sim'
-    - 'source_tesim'
+    - source_sim
+    - source_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/source
@@ -719,6 +769,8 @@ properties:
     sample_values:
     - Original Manuscript
     - Digital Archive
+    view:
+      html_dl: true
   subject:
     available_on:
       class:
@@ -737,8 +789,8 @@ properties:
       default: Subject
     index_documentation: displayable, searchable
     indexing:
-    - 'subject_sim'
-    - 'subject_tesim'
+    - subject_sim
+    - subject_tesim
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/subject
@@ -746,10 +798,12 @@ properties:
     sample_values:
     - Art
     - Science
+    view:
+      html_dl: true
   target_audience:
     available_on:
       class:
-      - CollectionResource
+      - Monograph
     cardinality:
       minimum: 0
     multi_value: true
@@ -760,13 +814,14 @@ properties:
     display_label:
       default: Target Audience
     form:
-      primary: true
       multiple: true
     property_uri: http://hyrax-example.com/target_audience
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Researchers
     - Students
+    view:
+      html_dl: true
   department:
     available_on:
       class:
@@ -788,6 +843,8 @@ properties:
     sample_values:
     - Mathematics
     - History
+    view:
+      html_dl: true
   course:
     available_on:
       class:
@@ -808,6 +865,8 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Computer Science 50
+    view:
+      html_dl: true
   monograph_title:
     available_on:
       class:
@@ -826,6 +885,8 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Example Monograph Title
+    view:
+      html_dl: true
   record_info:
     available_on:
       class:
@@ -842,7 +903,7 @@ properties:
       default: Record Info
     index_documentation: searchable
     indexing:
-    - 'record_info_tesim'
+    - record_info_tesim
     form:
       required: true
       primary: true
@@ -850,6 +911,8 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Example Record Info
+    view:
+      html_dl: true
   place_of_publication:
     available_on:
       class:
@@ -871,6 +934,8 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Example Place of Publication
+    view:
+      html_dl: true
   genre:
     available_on:
       class:
@@ -892,6 +957,8 @@ properties:
     sample_values:
     - Fiction
     - Non-Fiction
+    view:
+      html_dl: true
   series_title:
     available_on:
       class:
@@ -912,26 +979,8 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Example Series Title
-  target_audience:
-    available_on:
-      class:
-      - Monograph
-    cardinality:
-      minimum: 0
-    multi_value: true
-    controlled_values:
-      format: http://www.w3.org/2001/XMLSchema#string
-      sources:
-      - 'null'
-    display_label:
-      default: Target Audience
-    form:
-      multiple: true
-    property_uri: http://hyrax-example.com/target_audience
-    range: http://www.w3.org/2001/XMLSchema#string
-    sample_values:
-    - Researchers
-    - Students
+    view:
+      html_dl: true
   table_of_contents:
     available_on:
       class:
@@ -952,6 +1001,8 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Example Table of Contents
+    view:
+      html_dl: true
   date_of_issuance:
     available_on:
       class:
@@ -969,4 +1020,6 @@ properties:
     property_uri: http://hyrax-example.com/date_of_issuance
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
-    - "2024-06-06 21:06:51 +0000"
+    - '2024-06-06 21:06:51 +0000'
+    view:
+      html_dl: true

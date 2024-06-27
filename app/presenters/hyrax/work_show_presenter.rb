@@ -30,6 +30,10 @@ module Hyrax
     # most all objects implicitly implicitly implement #to_s
     delegate :to_s, to: :solr_document
 
+    def schema_version
+      solr_document[:schema_version_ssi]
+    end
+
     def page_title
       "#{human_readable_type} | #{title.first} | ID: #{id} | #{I18n.t('hyrax.product_name')}"
     end

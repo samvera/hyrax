@@ -3,31 +3,54 @@
 module Hyrax
   module AttributesHelper
     def view_options_for(presenter)
-      model_name = presenter.model.model_name.name.constantize
-      hash = Hyrax::Schema.schema_to_hash_for(model_name) ||
-               Hyrax::Schema.schema_to_hash_for((model_name.to_s + 'Resource').safe_constantize)
+      model_name = presenter.model.model_name.name
 
-      hash.select { |_, val| val['view'].present? }
+      # @todo: decide if views should be based on current_version or the work's version (presenter.schema_version)
+      if Hyrax.config.flexible?
+        Hyrax::Schema.default_schema_loader.view_definitions_for(schema: model_name, version: Hyrax::FlexibleSchema.order("created_at asc").last.id)
+      else
+        schema = model_name.constantize.schema || (model_name + 'Resource').safe_constantize.schema
+        Hyrax::Schema.default_schema_loader.view_definitions_for(schema:)
+      end
     end
 
-    def conform_options(options)
-      hash_of_locales = options['view']['label'] || {}
+    # @param [String] field name
+    # @param [Hash<Hash] {:label=>{"en"=>"Title", "es"=>"Título"}, :html_dl=>true}
+    def conform_options(field_name, options_hash)
+      options = HashWithIndifferentAccess.new(options_hash)
+      hash_of_locales = HashWithIndifferentAccess.new(options)['label'] || {}
       current_locale = params['locale'] || I18n.locale.to_s
-      updated_options = options.deep_dup
-      return updated_options['view'].transform_keys(&:to_sym) if hash_of_locales.is_a?(String)
+
+      unless hash_of_locales.present?
+        options[:label] = field_to_label(field_name.to_s)
+        return options
+      end     
+
+      return options_hash if hash_of_locales.is_a?(String)
 
       # If the params locale is found in the hash of locales, use that value
       if hash_of_locales[current_locale].present?
-        updated_options['view']['label'] = hash_of_locales[current_locale]
+        options[:label] = hash_of_locales[current_locale]
       # If the params locale is not found, fall back to english
       elsif hash_of_locales['en']
-        updated_options['view']['label'] = hash_of_locales['en']
+        options[:label] = hash_of_locales['en']
       # If the params locale is not found and english is not found, use the first value in the hash as a fallback
-      elsif hash_of_locales.present? && hash_of_locales['en'].nil? && hash_of_locales[current_locale].nil?
-        updated_options['view']['label'] = hash_of_locales.values.first
+      elsif hash_of_locales['en'].nil? && hash_of_locales[current_locale].nil?
+        options[:label] = hash_of_locales.values.first
       end
 
-      updated_options['view'].transform_keys(&:to_sym)
+      options
+    end
+
+    def field_to_label(input_string)
+      # Split the input string by underscores
+      words = input_string.downcase.split('_')
+      # Capitalize the first word
+      if words.any?
+        words[0] = words[0].capitalize
+      end
+      # Join the words into a single string
+      words.join(' ')
     end
   end
 end
