@@ -5,6 +5,7 @@
 class MonographIndexer < Hyrax::ValkyrieWorkIndexer
   include Hyrax::Indexer(:basic_metadata) unless Hyrax.config.flexible?
   include Hyrax::Indexer(:monograph) unless Hyrax.config.flexible?
+  include Hyrax::Indexer('Monograph') if Hyrax.config.flexible?
 
   # Uncomment this block if you want to add custom indexing behavior:
   #  def to_solr
