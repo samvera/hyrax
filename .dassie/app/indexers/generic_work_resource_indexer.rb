@@ -5,6 +5,7 @@
 class GenericWorkResourceIndexer < Hyrax::ValkyrieWorkIndexer
   include Hyrax::Indexer(:basic_metadata) unless Hyrax.config.flexible?
   include Hyrax::Indexer(:generic_work_resource) unless Hyrax.config.flexible?
+  include Hyrax::Indexer('GenericWorkResource') if Hyrax.config.flexible?
 
   # Uncomment this block if you want to add custom indexing behavior:
   #  def to_solr
