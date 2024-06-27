@@ -5,6 +5,7 @@
 class <%= class_name %>Indexer < Hyrax::Indexers::PcdmObjectIndexer(<%= class_name %>)
   include Hyrax::Indexer(:basic_metadata) unless Hyrax.config.flexible?
   include Hyrax::Indexer(:<%= file_name %>) unless Hyrax.config.flexible?
+  include Hyrax::Indexer('<%= class_name %>') unless Hyrax.config.flexible?
 
   # Uncomment this block if you want to add custom indexing behavior:
   #  def to_solr
