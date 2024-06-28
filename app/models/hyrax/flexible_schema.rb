@@ -6,6 +6,10 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     order("created_at asc").last.profile
   end
 
+  def self.current_schema_id
+    order("created_at asc").last.id
+  end
+
   def title
     "#{profile['profile']['responsibility_statement']} - version #{id}"
   end

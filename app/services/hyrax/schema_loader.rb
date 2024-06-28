@@ -45,14 +45,6 @@ module Hyrax
       end
     end
 
-    def view_definitions_for(schema:, version: 1)
-      definitions(schema, version).each_with_object({}) do |definition, hash|
-        next if definition.view_options.empty?
-
-        hash[definition.name] = definition.view_options
-      end
-    end
-
     ##
     # @api private
     class AttributeDefinition
