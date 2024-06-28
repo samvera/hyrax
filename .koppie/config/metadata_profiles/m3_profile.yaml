@@ -112,6 +112,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWork
+      - Monograph
     cardinality:
       minimum: 0
       maximum: 1
