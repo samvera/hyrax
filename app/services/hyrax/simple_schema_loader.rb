@@ -8,6 +8,13 @@ module Hyrax
   #
   # @see config/metadata/basic_metadata.yaml for an example configuration
   class SimpleSchemaLoader < Hyrax::SchemaLoader
+    def view_definitions_for(schema:, _version: 1)
+      schema.each_with_object({}) do |property, metadata|
+        view_options = property.meta['view']
+        metadata[property.name.to_s] = view_options unless view_options.nil?
+      end
+    end
+
     def permissive_schema_for_valkrie_adapter
       metadata_files.each_with_object({}) do |schema_name, ret_hsh|
         predicate_pairs(ret_hsh, schema_name)
