@@ -4,7 +4,7 @@ profile:
   date_modified: '2024-06-01'
   responsibility: https://samvera.org
   responsibility_statement: Hyrax Initial Profile
-  type: Flexible with Views
+  type: Initial Profile
   version: 1
 classes:
   GenericWork:
@@ -17,6 +17,8 @@ classes:
     display_label: PcdmCollection
   Hyrax::FileSet:
     display_label: FileSet
+  Hyrax::PcdmCollection:
+    display_label: PcdmCollection
 contexts:
   flexible_context:
     display_label: Flexible Metadata Example
@@ -39,6 +41,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWork
+      - Monograph
     cardinality:
       minimum: 1
     multi_value: true
@@ -81,6 +84,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWork
+      - Monograph
     cardinality:
       minimum: 0
       maximum: 1
@@ -92,7 +96,14 @@ properties:
     sample_values:
     - '2024-06-06 21:06:51 +0000'
     view:
-      label: Date Modified
+      label:
+        de: 'Zuletzt geändert'
+        en: 'Last modified'
+        es: 'Última modificación'
+        fr: 'Dernière modification'
+        it: 'Ultima modifica'
+        pt-BR: 'Última modificação'
+        zh: '最新修改'
       html_dl: true
   date_uploaded:
     available_on:
@@ -111,8 +122,6 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#dateTime
     sample_values:
     - '2024-06-06 21:06:51 +0000'
-    view:
-      html_dl: true
   depositor:
     available_on:
       class:
@@ -120,6 +129,7 @@ properties:
       - Hyrax::FileSet
       - CollectionResource
       - GenericWork
+      - Monograph
     cardinality:
       minimum: 0
       maximum: 1
@@ -137,11 +147,10 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - Julie Allinson
-    view:
-      html_dl: true
   creator:
     available_on:
       class:
+      - Hyrax::AdministrativeSet
       - Hyrax::FileSet
       - CollectionResource
       - GenericWork
@@ -167,6 +176,7 @@ properties:
     sample_values:
     - Julie Allinson
     view:
+      render_as: "faceted"
       html_dl: true
   license:
     available_on:
@@ -195,6 +205,7 @@ properties:
     sample_values:
     - http://creativecommons.org/licenses/by/3.0/us/
     view:
+      render_as: "external_link"
       html_dl: true
   abstract:
     available_on:
@@ -254,6 +265,7 @@ properties:
   alternative_title:
     available_on:
       class:
+      - Hyrax::AdministrativeSet
       - CollectionResource
       - GenericWork
       - Monograph
@@ -277,6 +289,9 @@ properties:
     sample_values:
     - Alternate Title Example
     view:
+      label:
+        en: 'Alternative Title'
+        es: 'Título Alternativo'
       html_dl: true
   arkivo_checksum:
     available_on:
@@ -300,8 +315,6 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - c0855931b7f1aefedb91d31af76873c0
-    view:
-      html_dl: true
   based_near:
     available_on:
       class:
@@ -329,6 +342,7 @@ properties:
     sample_values:
     - San Diego, California, United States
     view:
+      label: Based Near
       html_dl: true
   bibliographic_citation:
     available_on:
@@ -384,6 +398,7 @@ properties:
     sample_values:
     - Julie Allinson
     view:
+      render_as: "faceted"
       html_dl: true
   date_created:
     available_on:
@@ -412,6 +427,8 @@ properties:
     sample_values:
     - '2024-06-06 21:06:51 +0000'
     view:
+      render_as: "linked"
+      search_field: 'date_created_tesim'
       html_dl: true
   description:
     available_on:
@@ -439,8 +456,6 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - This is a description.
-    view:
-      html_dl: true
   identifier:
     available_on:
       class:
@@ -468,6 +483,8 @@ properties:
     sample_values:
     - abc123
     view:
+      render_as: "linked"
+      search_field: 'identifier_tesim'
       html_dl: true
   import_url:
     available_on:
@@ -489,8 +506,6 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - http://example.com/resource1
-    view:
-      html_dl: true
   keyword:
     available_on:
       class:
@@ -519,6 +534,7 @@ properties:
     - Metadata
     - Repository
     view:
+      render_as: "faceted"
       html_dl: true
   label:
     available_on:
@@ -547,8 +563,6 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - file_label.txt
-    view:
-      html_dl: true
   language:
     available_on:
       class:
@@ -577,6 +591,7 @@ properties:
     - English
     - Spanish
     view:
+      render_as: "faceted"
       html_dl: true
   publisher:
     available_on:
@@ -605,6 +620,7 @@ properties:
     sample_values:
     - Scholastic
     view:
+      render_as: "faceted"
       html_dl: true
   related_url:
     available_on:
@@ -633,6 +649,7 @@ properties:
     sample_values:
     - http://example.com/resource1
     view:
+      render_as: "external_link"
       html_dl: true
   relative_path:
     available_on:
@@ -655,8 +672,6 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
     - "/path/to/resource"
-    view:
-      html_dl: true
   resource_type:
     available_on:
       class:
@@ -685,6 +700,7 @@ properties:
     - Article
     - Conference Proceeding
     view:
+      render_as: "faceted"
       html_dl: true
   rights_notes:
     available_on:
@@ -742,6 +758,7 @@ properties:
     - http://rightsstatements.org/vocab/InC/1.0/
     view:
       html_dl: true
+      render_as: "rights_statement"
   source:
     available_on:
       class:
@@ -799,6 +816,7 @@ properties:
     - Art
     - Science
     view:
+      render_as: "faceted"
       html_dl: true
   target_audience:
     available_on:
