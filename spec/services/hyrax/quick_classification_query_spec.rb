@@ -14,13 +14,11 @@ RSpec.describe Hyrax::QuickClassificationQuery do
     describe '#each' do
       let(:thing) { double }
 
-      before do
-        # Ensure that no other test has altered the configuration:
-        allow(Hyrax.config).to receive(:registered_curation_concern_types).and_return(['GenericWork'])
-      end
-
       it "calls the block once for every model" do
-        expect(thing).to receive(:test).with(GenericWork)
+        expect(Hyrax.config.curation_concerns.size).to be > 0
+        Hyrax.config.curation_concerns.each do |cc|
+          expect(thing).to receive(:test).with(cc)
+        end
 
         query.each { |f| thing.test(f) }
       end
