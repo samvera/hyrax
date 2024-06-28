@@ -92,7 +92,7 @@ module Hyrax
     # rubocop:enable Metrics/AbcSize
 
     def edit
-      @latest_schema_version ||= Hyrax::FlexibleSchema.last.id.to_f if Hyrax.config.flexible?
+      @latest_schema_version ||= Hyrax::FlexibleSchema.current_schema_id.to_f if Hyrax.config.flexible?
       @admin_set_options = available_admin_sets
       build_form
     end
