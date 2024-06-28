@@ -168,8 +168,6 @@ module Hyrax
         Definition::Each.new(singleton_class.definitions)
       end
 
-      delegate :schema_version, to: :resource
-
       private
 
       # OVERRIDE valkyrie 3.0.1 to make schema dynamic

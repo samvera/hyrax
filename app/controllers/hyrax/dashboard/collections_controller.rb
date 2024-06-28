@@ -76,6 +76,7 @@ module Hyrax
       end
 
       def edit
+        @latest_schema_version ||= Hyrax::FlexibleSchema.last.id.to_f if Hyrax.config.flexible?
         form
       end
 

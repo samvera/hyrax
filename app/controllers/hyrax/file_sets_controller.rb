@@ -43,6 +43,7 @@ module Hyrax
 
     # GET /concern/file_sets/:id
     def edit
+      @latest_schema_version ||= Hyrax::FlexibleSchema.last.id.to_f if Hyrax.config.flexible?
       initialize_edit_form
     end
 
