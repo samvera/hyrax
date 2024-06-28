@@ -17,6 +17,7 @@ RSpec.describe 'Creating a new Work' do
 
   after do
     Rails::Generators.invoke('hyrax:work', ['Catapult', '--quiet'], behavior: :revoke, destination_root: Rails.root)
+    Hyrax::ModelRegistry.instance_variable_set(:@work_class_names, nil) # Catapult gets memoized here
   end
 
   it 'catapults should behave like generic works' do
