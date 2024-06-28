@@ -5,9 +5,11 @@ module Hyrax
     def view_options_for(presenter)
       model_name = presenter.model.model_name.name
 
-      # @todo: decide if views should be based on current_version or the work's version (presenter.schema_version)
+      # @todo: decide if views should instead be based on the work's stored version (presenter.schema_version)
+      # => using current means dropped terms from schema could be missing even if they exist on the work (but they'd already be missing on the edit view anyway)
+      # => using saved means that any view changes can't take effect unless the work(s) needing them are edited & saved
       if Hyrax.config.flexible?
-        Hyrax::Schema.default_schema_loader.view_definitions_for(schema: model_name, version: Hyrax::FlexibleSchema.order("created_at asc").last.id)
+        Hyrax::Schema.default_schema_loader.view_definitions_for(schema: model_name, version: Hyrax::FlexibleSchema.current_schema_id)
       else
         schema = model_name.constantize.schema || (model_name + 'Resource').safe_constantize.schema
         Hyrax::Schema.default_schema_loader.view_definitions_for(schema:)
@@ -15,7 +17,7 @@ module Hyrax
     end
 
     # @param [String] field name
-    # @param [Hash<Hash] {:label=>{"en"=>"Title", "es"=>"Título"}, :html_dl=>true}
+    # @param [Hash<Hash>] a nested hash of view options... {:label=>{"en"=>"Title", "es"=>"Título"}, :html_dl=>true}
     def conform_options(field_name, options_hash)
       options = HashWithIndifferentAccess.new(options_hash)
       hash_of_locales = HashWithIndifferentAccess.new(options)['label'] || {}
@@ -24,9 +26,9 @@ module Hyrax
       unless hash_of_locales.present?
         options[:label] = field_to_label(field_name.to_s)
         return options
-      end     
+      end    
 
-      return options_hash if hash_of_locales.is_a?(String)
+      return options_hash if hash_of_locales.is_a?(String) || hash_of_locales.empty?
 
       # If the params locale is found in the hash of locales, use that value
       if hash_of_locales[current_locale].present?
@@ -41,6 +43,8 @@ module Hyrax
 
       options
     end
+
+    private
 
     def field_to_label(input_string)
       # Split the input string by underscores

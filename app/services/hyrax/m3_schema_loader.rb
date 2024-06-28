@@ -8,6 +8,14 @@ module Hyrax
   #
   # @see config/metadata_profiles/m3_profile.yaml for an example configuration
   class M3SchemaLoader < Hyrax::SchemaLoader
+    def view_definitions_for(schema:, version: 1)
+      definitions(schema, version).each_with_object({}) do |definition, hash|
+        next if definition.view_options.empty?
+
+        hash[definition.name] = definition.view_options
+      end
+    end
+
     private
 
     ##
