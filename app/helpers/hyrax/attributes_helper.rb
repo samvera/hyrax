@@ -5,11 +5,12 @@ module Hyrax
     def view_options_for(presenter)
       model_name = presenter.model.model_name.name.constantize
       hash = Hyrax::Schema.schema_to_hash_for(model_name) ||
-               Hyrax::Schema.schema_to_hash_for((model_name.to_s + 'Resource').safe_constantize)
+             Hyrax::Schema.schema_to_hash_for((model_name.to_s + 'Resource').safe_constantize)
 
       hash.select { |_, val| val['view'].present? }
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def conform_options(options)
       hash_of_locales = options['view']['label'] || {}
       current_locale = params['locale'] || I18n.locale.to_s
@@ -29,5 +30,6 @@ module Hyrax
 
       updated_options['view'].transform_keys(&:to_sym)
     end
+    # rubocop:endable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   end
 end

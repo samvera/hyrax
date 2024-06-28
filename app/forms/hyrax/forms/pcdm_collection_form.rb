@@ -63,8 +63,8 @@ module Hyrax
       #   prominent form real estate
       def primary_terms
         terms = _form_field_definitions
-          .select { |_, definition| definition[:primary] }
-          .keys.map(&:to_sym)
+                .select { |_, definition| definition[:primary] }
+                .keys.map(&:to_sym)
 
         terms = [:schema_version] + terms if Hyrax.config.flexible?
         terms

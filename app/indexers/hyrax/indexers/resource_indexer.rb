@@ -39,7 +39,7 @@ module Hyrax
       # @api public
       # @return [HashWithIndifferentAccess<Symbol, Object>]
       def to_solr
-        solr_hash = {
+        {
           "id": resource.id.to_s,
           "date_uploaded_dtsi": resource.created_at,
           "date_modified_dtsi": resource.updated_at,
