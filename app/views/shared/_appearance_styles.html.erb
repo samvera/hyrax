@@ -14,9 +14,13 @@ a { color: <%= appearance.link_color %>; }
 .navbar-dark.bg-dark .navbar-text,
 .navbar-dark.bg-dark .navbar-brand { color: <%= appearance.header_text_color %>; }
 
-.btn-primary {
+.btn-primary, .page-item.active .page-link {
   background-color: <%= appearance.primary_button_background_color %>;
   border-color: <%= appearance.primary_button_border_color %>;
+}
+
+.page-link {
+  color: <%= appearance.primary_button_background_color %>;
 }
 
 .btn-primary:focus,
