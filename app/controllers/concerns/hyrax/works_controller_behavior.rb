@@ -6,6 +6,7 @@ module Hyrax
     extend ActiveSupport::Concern
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
+    include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
 
     included do
       with_themed_layout :decide_layout
@@ -92,7 +93,6 @@ module Hyrax
     # rubocop:enable Metrics/AbcSize
 
     def edit
-      @latest_schema_version ||= Hyrax::FlexibleSchema.current_schema_id.to_f if Hyrax.config.flexible?
       @admin_set_options = available_admin_sets
       build_form
     end

@@ -6,6 +6,7 @@ module Hyrax
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
     include Hyrax::Breadcrumbs
+    include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
 
     before_action :authenticate_user!, except: [:show, :citation, :stats]
     load_and_authorize_resource class: Hyrax.config.file_set_class
@@ -43,7 +44,6 @@ module Hyrax
 
     # GET /concern/file_sets/:id
     def edit
-      @latest_schema_version ||= Hyrax::FlexibleSchema.current_schema_id.to_f if Hyrax.config.flexible?
       initialize_edit_form
     end
 
