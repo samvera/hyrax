@@ -375,6 +375,7 @@ properties:
     - San Diego, California, United States
     view:
       label: Based Near
+      render_term: 'based_near_label_tesim'
       html_dl: true
   bibliographic_citation:
     available_on:

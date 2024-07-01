@@ -49,6 +49,7 @@ attributes:
       - "based_near_tesim"
     predicate: http://xmlns.com/foaf/0.1/based_near
     view:
+      render_term: 'based_near_label'
       html_dl: true
   bibliographic_citation:
     type: string

@@ -16,6 +16,11 @@ module Hyrax
       end
     end
 
+    def conform_field(field_name, options_hash)
+      options = HashWithIndifferentAccess.new(options_hash)
+      HashWithIndifferentAccess.new(options)['render_term'] || field_name
+    end
+
     # @param [String] field name
     # @param [Hash<Hash>] a nested hash of view options... {:label=>{"en"=>"Title", "es"=>"Título"}, :html_dl=>true}
     def conform_options(field_name, options_hash)
@@ -24,7 +29,7 @@ module Hyrax
       current_locale = params['locale'] || I18n.locale.to_s
 
       unless hash_of_locales.present?
-        options[:label] = field_to_label(field_name.to_s)
+        options[:label] = field_name.to_s.humanize
         return options
       end    
 
@@ -42,19 +47,6 @@ module Hyrax
       end
 
       options
-    end
-
-    private
-
-    def field_to_label(input_string)
-      # Split the input string by underscores
-      words = input_string.downcase.split('_')
-      # Capitalize the first word
-      if words.any?
-        words[0] = words[0].capitalize
-      end
-      # Join the words into a single string
-      words.join(' ')
     end
   end
 end
