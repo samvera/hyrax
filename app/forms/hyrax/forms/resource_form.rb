@@ -166,7 +166,7 @@ module Hyrax
       # OVERRIDE disposable 0.6.3 to make schema dynamic
       def schema
         if Hyrax.config.flexible?
-          Definition::Each.new(self.singleton_class.definitions)
+          Definition::Each.new(singleton_class.definitions)
         else
           super
         end
@@ -177,7 +177,7 @@ module Hyrax
       # OVERRIDE valkyrie 3.0.1 to make schema dynamic
       def field(field_name)
         if Hyrax.config.flexible?
-          self.singleton_class.definitions.fetch(field_name.to_s)
+          singleton_class.definitions.fetch(field_name.to_s)
         else
           super
         end
@@ -185,7 +185,7 @@ module Hyrax
 
       def _form_field_definitions
         if Hyrax.config.flexible?
-          self.singleton_class.definitions
+          singleton_class.definitions
         else
           self.class.definitions
         end
