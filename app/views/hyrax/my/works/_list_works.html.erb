@@ -10,7 +10,7 @@
       <%= link_to [main_app, document], class: 'mr-2' do %>
         <%= document_presenter(document)&.thumbnail&.thumbnail_tag(
           { class: 'd-none d-md-block file_listing_thumbnail', alt: "#{document.title_or_label} #{t('hyrax.homepage.admin_sets.thumbnail')}" },
-          { suppress_link: true } 
+          { suppress_link: true }
         ) %>
       <% end %>
 
@@ -27,6 +27,9 @@
       </div>
     </div>
   </td>
+  <% if Hyrax.config.flexible? %>
+    <td class='text-center'><%= document.schema_version.to_f if document.schema_version %></td>
+  <% end %>
   <td class="date text-center"><%= document.date_modified %></td>
   <td class='text-center'>
     <span class="fa <%= current_user.trophies.where(work_id: document.id).exists? ? 'fa-star highlighted-work' : 'fa-star-o trophy-off' %>" aria-hidden="true"></span></td>

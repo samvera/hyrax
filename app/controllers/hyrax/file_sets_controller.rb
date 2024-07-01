@@ -6,6 +6,7 @@ module Hyrax
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
     include Hyrax::Breadcrumbs
+    include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
 
     before_action :authenticate_user!, except: [:show, :citation, :stats]
     load_and_authorize_resource class: Hyrax.config.file_set_class
