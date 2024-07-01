@@ -305,6 +305,14 @@ module Hyrax
       @fixity_service ||= Hyrax::Fixity::ActiveFedoraFixityService
     end
 
+    # This value determines whether to use m3 flexible metadata schema or not
+    attr_writer :flexible
+    attr_reader :flexible
+    def flexible?
+      @flexible ||=
+        ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_FLEXIBLE', false))
+    end
+
     # This value determines whether to use load the Freyja adapter in dassie
     attr_writer :valkyrie_transition
     attr_reader :valkyrie_transition

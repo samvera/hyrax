@@ -82,7 +82,7 @@ module Hyrax
 
     # Method to return the model
     def hydra_model(classifier: nil)
-      ((first('has_model_ssim')&.+ 'Resource')&.safe_constantize && Hyrax.config.valkyrie_transition) ||
+      (Hyrax.config.valkyrie_transition && (first('has_model_ssim')&.+ 'Resource')&.safe_constantize) ||
         first('has_model_ssim')&.safe_constantize ||
         model_classifier(classifier).classifier(self).best_model
     end
@@ -144,6 +144,10 @@ module Hyrax
 
     def extensions_and_mime_types
       JSON.parse(self['extensions_and_mime_types_ssm'].first).map(&:with_indifferent_access) if self['extensions_and_mime_types_ssm']
+    end
+
+    def schema_version
+      self['schema_version_ssi']
     end
 
     private

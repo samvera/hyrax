@@ -14,4 +14,15 @@
     <span class="fa fa-file" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.works') %></span>
   <% end %>
 
+  <% if ENV.fetch('HYRAX_FLEXIBLE', false) %>
+    <% if current_ability.admin? %>
+      <%= menu.nav_link(hyrax.metadata_profiles_path,
+                        class: "nav-link",
+                        onclick: "dontChangeAccordion(event);",
+                        title: t('hyrax.admin.sidebar.metadata_profiles')) do %>
+        <span class="fa fa-table" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.metadata_profiles') %></span>
+      <% end %>
+    <% end %>
+  <% end %>
+
   <%= render 'hyrax/dashboard/sidebar/menu_partials', menu: menu, section: :repository_content %>
