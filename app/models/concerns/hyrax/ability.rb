@@ -55,6 +55,7 @@ module Hyrax
       include Hyrax::Ability::PermissionTemplateAbility
       include Hyrax::Ability::ResourceAbility
       include Hyrax::Ability::SolrDocumentAbility
+      include Hyrax::Ability::FlexibleMetadataAbility
 
       class_attribute :admin_group_name, :registered_group_name, :public_group_name
       self.admin_group_name = Hyrax.config.admin_user_group_name
@@ -79,7 +80,9 @@ module Hyrax
                              :permission_template_abilities,
                              :resource_abilities,
                              :solr_document_abilities,
-                             :trophy_abilities]
+                             :trophy_abilities,
+                             :flexible_metadata_abilities
+                            ]
     end
 
     # Samvera doesn't use download user/groups, so make it an alias to read

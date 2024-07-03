@@ -15,7 +15,7 @@ module Hyrax
     # @example Add a custom partial to the tasks sidebar block
     #   Hyrax::DashboardController.sidebar_partials[:tasks] << "hyrax/dashboard/sidebar/custom_task"
     class_attribute :sidebar_partials
-    self.sidebar_partials = { activity: [], configuration: [], repository_content: [], tasks: [] }
+    self.sidebar_partials = { activity: [], configuration: ["hyrax/dashboard/sidebar/metadata"], repository_content: [], tasks: [] }
 
     def show
       if can? :read, :admin_dashboard
