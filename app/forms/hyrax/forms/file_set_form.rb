@@ -11,6 +11,7 @@ module Hyrax
       # previous version of Hyrax, but ideally in the future this metadata will
       # be configurable.
       include Hyrax::FormFields(:file_set_metadata) unless Hyrax.config.flexible?
+      include Hyrax::FormFields('Hyrax::FileSet') if Hyrax.config.flexible?
 
       include Hyrax::DepositAgreementBehavior
       include Hyrax::ContainedInWorksBehavior
