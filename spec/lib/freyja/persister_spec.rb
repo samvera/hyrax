@@ -7,7 +7,7 @@ require 'valkyrie/specs/shared_specs'
 require 'wings'
 require 'freyja/metadata_adapter'
 
-RSpec.describe Freyja::Persister, :active_fedora do
+RSpec.describe Freyja::Persister, :active_fedora, :clean_repo do
   subject(:persister) { described_class.new(adapter: adapter) }
   let(:adapter) { Freyja::MetadataAdapter.new }
   let(:query_service) { adapter.query_service }
@@ -268,7 +268,7 @@ RSpec.describe Freyja::Persister, :active_fedora do
         .to raise_error Valkyrie::Persistence::ObjectNotFoundError
     end
 
-    it "can delete all objects but only from postgers" do
+    it "can delete all objects but only from postgres" do
       resource2 = resource_class.new
 
       persister.save_all(resources: [resource, resource2])
