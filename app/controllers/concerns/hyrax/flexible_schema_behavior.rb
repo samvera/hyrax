@@ -5,7 +5,7 @@ module Hyrax
     extend ActiveSupport::Concern
 
     included do
-      before_action :set_latest_schema_version, only: [:edit]
+      before_action :set_latest_schema_version, only: [:new, :edit]
     end
 
     private
