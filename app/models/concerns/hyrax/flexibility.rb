@@ -8,6 +8,13 @@ module Hyrax
     end
 
     class_methods do
+      def try(term)
+        # This logic is necessary to handle method :try on a class
+        # otherwise load(attributes) tries to use the term as a schema to load and errors
+        return nil unless self.respond_to?(term)
+        self.send(term)
+      end
+
       ## Override dry-struct 1.6.0 to enable redefining schemas on the fly
       def attributes(new_schema)
         keys = new_schema.keys.map { |k| k.to_s.chomp("?").to_sym }
