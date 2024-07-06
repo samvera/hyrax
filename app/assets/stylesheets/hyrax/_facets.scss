@@ -3,6 +3,18 @@
     width: 100%;
 }
 
+.facet-field-heading button.collapsed::after {
+    transition: transform 0.25s ease;
+}
+
+.facet-field-heading button::after {
+    transition: transform 0.25s ease;
+}
+
+.collapsing {
+    transition: height 0.25s ease;
+}
+
 .facets-header > .navbar-toggler {
     display: none;
 }
