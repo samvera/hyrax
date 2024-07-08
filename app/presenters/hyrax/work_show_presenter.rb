@@ -33,12 +33,12 @@ module Hyrax
         method_name = prop.to_s
         property_details = Hyrax::FlexibleSchema.current_version["properties"][method_name]
         next unless property_details
-    
+
         index_keys = property_details["indexing"]
         next unless index_keys
-    
+
         multi_value = property_details.dig("multi_value")
-    
+
         unless self.class.method_defined?(method_name) || solr_document.respond_to?(method_name)
           self.class.send(:define_method, method_name) do
             index_keys.each do |index_key|
@@ -51,9 +51,7 @@ module Hyrax
       end
     end
 
-    if Hyrax.config.flexible?
-      delegate(*delegated_properties, to: :solr_document)
-    end
+    self.class.delegate(*self.delegated_properties, to: :solr_document) if Hyrax.config.flexible?
 
     # We cannot rely on the method missing to catch this delegation.  Because
     # most all objects implicitly implicitly implement #to_s

@@ -15,14 +15,8 @@ module Hyrax
 
       def reload_dynamic_methods
         if Hyrax.config.flexible?
-          reload_classes
           Hyrax::WorkShowPresenter.new(nil, nil).define_dynamic_methods
         end
-      end
-
-      def reload_classes
-        ActiveSupport::Dependencies.clear
-        Rails.application.eager_load!
       end
     end
   end
