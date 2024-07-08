@@ -28,12 +28,6 @@ module Hyrax
       define_dynamic_methods if Hyrax.config.flexible?
     end
 
-    def self.reload_dynamic_methods
-      if Hyrax.config.flexible?
-        self.new(nil, nil).define_dynamic_methods
-      end
-    end
-
     def define_dynamic_methods
       Hyrax::FlexibleSchema.default_properties.each do |prop|
         method_name = prop.to_s
@@ -57,8 +51,9 @@ module Hyrax
       end
     end
 
-    # Ensure self.class.delegate(*self.delegated_properties, to: :solr_document) is executed if Hyrax.config.flexible?
-    self.class.delegate(*self.delegated_properties, to: :solr_document) if Hyrax.config.flexible?
+    if Hyrax.config.flexible?
+      delegate(*delegated_properties, to: :solr_document)
+    end
 
     # We cannot rely on the method missing to catch this delegation.  Because
     # most all objects implicitly implicitly implement #to_s
