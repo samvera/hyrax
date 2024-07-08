@@ -10,6 +10,19 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     order("created_at asc").last.id
   end
 
+  # Retrieve the properties for the model / work type
+  # This is a class method called by the model at class load
+  #   meaning AdminSet is not available and we cannot get the
+  #   contextual dynamic_schema
+  # Instead we use the default (contextless) dynamic_schema
+  #   which will add all properties available for that class
+  # @return [Array] property#to_sym
+  def self.default_properties
+    self.current_version['properties'].symbolize_keys!.keys
+  rescue StandardError => e
+    []
+  end
+  
   def title
     "#{profile['profile']['responsibility_statement']} - version #{id}"
   end

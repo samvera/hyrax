@@ -25,6 +25,8 @@ module Hyrax
         @flexible_schema = Hyrax::FlexibleSchema.create(profile: YAML.safe_load_file(uploaded_io.path))
 
         if @flexible_schema.persisted?
+          # After importing the profile, reload dynamic methods
+          Hyrax::WorkShowPresenter.reload_dynamic_methods
           redirect_to metadata_profiles_path, notice: 'AllinsonFlexProfile was successfully created.'
         else
           redirect_to metadata_profiles_path, alert: @flexible_schema.errors.messages.to_s

@@ -3,6 +3,7 @@ module Hyrax
   class WorkShowPresenter
     include ModelProxy
     include PresentsAttributes
+    include Hyrax::FlexibleSchemaPresenterBehavior if Hyrax.config.flexible?
 
     ##
     # @!attribute [w] member_presenter_factory
@@ -24,11 +25,44 @@ module Hyrax
       @solr_document = Hyrax::SolrDocument::OrderedMembers.decorate(solr_document)
       @current_ability = current_ability
       @request = request
+      define_dynamic_methods if Hyrax.config.flexible?
     end
+
+    def self.reload_dynamic_methods
+      if Hyrax.config.flexible?
+        self.new(nil, nil).define_dynamic_methods
+      end
+    end
+
+    def define_dynamic_methods
+      Hyrax::FlexibleSchema.default_properties.each do |prop|
+        method_name = prop.to_s
+        property_details = Hyrax::FlexibleSchema.current_version["properties"][method_name]
+        next unless property_details
+    
+        index_keys = property_details["indexing"]
+        next unless index_keys
+    
+        multi_value = property_details.dig("multi_value")
+    
+        unless self.class.method_defined?(method_name) || solr_document.respond_to?(method_name)
+          self.class.send(:define_method, method_name) do
+            index_keys.each do |index_key|
+              value = solr_document[index_key]
+              return value unless value.blank?
+            end
+            multi_value ? [] : ""
+          end
+        end
+      end
+    end
+
+    # Ensure self.class.delegate(*self.delegated_properties, to: :solr_document) is executed if Hyrax.config.flexible?
+    self.class.delegate(*self.delegated_properties, to: :solr_document) if Hyrax.config.flexible?
 
     # We cannot rely on the method missing to catch this delegation.  Because
     # most all objects implicitly implicitly implement #to_s
-    delegate :to_s, to: :solr_document
+    delegate :to_s, to: :solr_document unless Hyrax.config.flexible?
 
     def schema_version
       solr_document[:schema_version_ssi]
