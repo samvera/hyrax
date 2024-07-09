@@ -22,7 +22,8 @@ module Hyrax
     # @param [#to_s] schema_name
     # @return [Enumerable<AttributeDefinition]
     def definitions(schema_name, version)
-      Hyrax::FlexibleSchema.find(version).attributes_for(schema_name).map do |name, config|
+      schema = Hyrax::FlexibleSchema.find_by(id: version) || Hyrax::FlexibleSchema.default_schema
+      schema.attributes_for(schema_name).map do |name, config|
         AttributeDefinition.new(name, config)
       end
     rescue NoMethodError

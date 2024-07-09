@@ -10,6 +10,12 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     order("created_at asc").last.id
   end
 
+  def self.default_schema
+    Hyrax::FlexibleSchema.first_or_create do |f|
+      f.profile = YAML.safe_load_file(Rails.root.join('config', 'metadata_profiles', 'm3_profile.yaml'))
+    end
+  end
+
   # Retrieve the properties for the model / work type
   # This is a class method called by the model at class load
   #   meaning AdminSet is not available and we cannot get the
