@@ -51,7 +51,7 @@ module Hyrax
       end
     end
 
-    self.class.delegate(*self.delegated_properties, to: :solr_document) if Hyrax.config.flexible?
+    delegate(*self.delegated_properties, to: :solr_document) if Hyrax.config.flexible?
 
     # We cannot rely on the method missing to catch this delegation.  Because
     # most all objects implicitly implicitly implement #to_s
