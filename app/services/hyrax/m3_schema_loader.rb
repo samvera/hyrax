@@ -22,7 +22,7 @@ module Hyrax
     # @param [#to_s] schema_name
     # @return [Enumerable<AttributeDefinition]
     def definitions(schema_name, version)
-      schema = Hyrax::FlexibleSchema.find_by(id: version) || Hyrax::FlexibleSchema.default_schema
+      schema = Hyrax::FlexibleSchema.find_by(id: version) || Hyrax::FlexibleSchema.create_default_schema
       schema.attributes_for(schema_name).map do |name, config|
         AttributeDefinition.new(name, config)
       end
