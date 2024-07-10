@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'hyrax/rubocop/custom_cops'
 
 RSpec.describe Hyrax::RuboCop::CustomCops::ArResource do
   subject(:cop) { described_class.new }
