@@ -12,11 +12,11 @@ module Hyrax
       def delegated_properties
         Hyrax::FlexibleSchema.default_properties
       end
+    end
 
-      def reload_dynamic_methods
-        if Hyrax.config.flexible?
-          Hyrax::WorkShowPresenter.new(nil, nil).define_dynamic_methods
-        end
+    def reload_dynamic_methods
+      if Hyrax.config.flexible?
+        self.class.delegate(*self.class.delegated_properties, to: :solr_document)
       end
     end
   end

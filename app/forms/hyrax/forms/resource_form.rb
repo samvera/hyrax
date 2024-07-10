@@ -55,7 +55,7 @@ module Hyrax
       def initialize(deprecated_resource = nil, resource: nil) # rubocop:disable Metrics/MethodLength
         if Hyrax.config.flexible?
           # reload dynamic methods
-          Hyrax::WorkShowPresenter.reload_dynamic_methods
+          Hyrax::WorkShowPresenter.new(nil, nil).reload_dynamic_methods
           singleton_class.instance_variable_set("@definitions", self.class.definitions)
           r = resource || deprecated_resource
           
