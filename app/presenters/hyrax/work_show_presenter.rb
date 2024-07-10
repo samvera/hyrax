@@ -39,7 +39,7 @@ module Hyrax
 
         multi_value = property_details.dig("multi_value")
 
-        unless self.class.method_defined?(method_name) || solr_document.respond_to?(method_name)
+        unless self.class.method_defined?(method_name) && solr_document.respond_to?(method_name)
           self.class.send(:define_method, method_name) do
             index_keys.each do |index_key|
               value = solr_document[index_key]
