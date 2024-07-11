@@ -40,12 +40,18 @@ module Hyrax
         multi_value = property_details.dig("multi_value")
 
         unless self.class.method_defined?(method_name) && solr_document.respond_to?(method_name)
-          self.class.send(:define_method, method_name) do
+          # Define the method on the SolrDocument class
+          Hyrax::SolrDocument::OrderedMembers.send(:define_method, method_name) do
             index_keys.each do |index_key|
-              value = solr_document[index_key]
+              value = self[index_key]
               return value unless value.blank?
             end
             multi_value ? [] : ""
+          end
+
+          # Define the method on the Presenter class
+          self.class.send(:define_method, method_name) do
+            @solr_document.send(method_name)
           end
         end
       end
