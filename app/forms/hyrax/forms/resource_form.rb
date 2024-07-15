@@ -54,7 +54,7 @@ module Hyrax
       # match indexers.
       def initialize(deprecated_resource = nil, resource: nil) # rubocop:disable Metrics/MethodLength
         if Hyrax.config.flexible?
-          singleton_class.instance_variable_set("@definitions", self.class.definitions)
+          singleton_class.schema_definitions = self.class.definitions
           r = resource || deprecated_resource
           
           Hyrax::Schema.default_schema_loader.form_definitions_for(schema: r.class.to_s, version: Hyrax::FlexibleSchema.current_schema_id).map do |field_name, options|
@@ -126,8 +126,19 @@ module Hyrax
 
           required_fields
         end
-      end
 
+        def schema_definitions
+          @definitions
+        end
+
+        def schema_definitions=(values)
+          @definitions = values
+        end
+
+        def expose_class
+          @expose_class = Class.new(Disposable::Expose).from(definitions.values)
+        end
+      end
       ##
       # @param [#to_s] attr
       # @param [Object] value
@@ -174,7 +185,7 @@ module Hyrax
       # OVERRIDE disposable 0.6.3 to make schema dynamic
       def schema
         if Hyrax.config.flexible?
-          Definition::Each.new(singleton_class.definitions)
+          Definition::Each.new(singleton_class.schema_definitions)
         else
           super
         end
@@ -185,7 +196,7 @@ module Hyrax
       # OVERRIDE valkyrie 3.0.1 to make schema dynamic
       def field(field_name)
         if Hyrax.config.flexible?
-          singleton_class.definitions.fetch(field_name.to_s)
+          singleton_class.schema_definitions.fetch(field_name.to_s)
         else
           super
         end
@@ -193,7 +204,7 @@ module Hyrax
 
       def _form_field_definitions
         if Hyrax.config.flexible?
-          singleton_class.definitions
+          singleton_class.schema_definitions
         else
           self.class.definitions
         end
