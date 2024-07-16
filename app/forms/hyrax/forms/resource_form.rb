@@ -109,7 +109,7 @@ module Hyrax
         ##
         # @return [Array<Symbol>] list of required field names as symbols
         def required_fields
-          definitions
+          schema_definitions
             .select { |_, definition| definition[:required] }
             .keys.map(&:to_sym)
         end
@@ -120,9 +120,9 @@ module Hyrax
         # @return [Array<Symbol>] list of required field names as symbols
         def required_fields=(fields)
           fields = fields.map(&:to_s)
-          raise(KeyError) unless fields.all? { |f| definitions.key?(f) }
+          raise(KeyError) unless fields.all? { |f| schema_definitions.key?(f) }
 
-          fields.each { |field| definitions[field].merge!(required: true) }
+          fields.each { |field| schema_definitions[field].merge!(required: true) }
 
           required_fields
         end
@@ -136,7 +136,7 @@ module Hyrax
         end
 
         def expose_class
-          @expose_class = Class.new(Disposable::Expose).from(definitions.values)
+          @expose_class = Class.new(Disposable::Expose).from(schema_definitions.values)
         end
       end
       ##
