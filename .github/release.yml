@@ -24,6 +24,9 @@ changelog:
     - title: Tests and CI Process
       labels:
         - notes-tests
+    - title: Accessibility Standards
+      labels:
+        - notes-accessibility
     - title: Other
       labels:
         - "*"
