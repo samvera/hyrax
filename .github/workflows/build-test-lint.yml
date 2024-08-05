@@ -116,30 +116,19 @@ jobs:
           CI_NODE_INDEX: ${{ matrix.ci_node_index }}
         run: >-
           mv rspec.xml rspec-${CI_TEST_APP}-${CI_NODE_INDEX}.xml
-      - name: Archive spec reports
+      - name: Archive spec reports (${{ matrix.ci_node_index}})
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: spec-reports-${{ matrix.ci_test_app }}-${{ matrix.ci_node_index }}
           path: '**/rspec*.xml'
 
-  report:
-    needs: test
+  event_file:
+    name: "Event File"
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
-      # only needed unless run with comment_mode: off
-      pull-requests: write
-    if: always()
     steps:
-      - name: Download all workflow run artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-          pattern: "*report*"
-      - name: Publish Test Report
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        with:
-          files: "artifacts/**/*.xml"
-          action_fail_on_inconclusive: true
-          fail_on: "test failures"
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: Event File
+        path: ${{ github.event_path }}
