@@ -165,9 +165,9 @@ module Hyrax
             if result[1].empty?
               results.push([result[0].to_date, 0])
             elsif result[1].is_a?(Array)
-              results.push([result[0].to_date, result[1].first[metric]])
+              results.push([result[0].to_date, result[1].first[metric].to_i])
             else
-              results.push([result[0].to_date, result[1][metric].presence || 0])
+              results.push([result[0].to_date, result[1][metric].presence.to_i])
             end
           end
           Hyrax::Analytics::Results.new(results)

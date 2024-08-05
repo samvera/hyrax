@@ -31,7 +31,7 @@ module Hyrax
         result = query_service.find_by(id: id)
         unless result.is_a? Hyrax::FileMetadata
           raise ::Valkyrie::Persistence::ObjectNotFoundError,
-                "Result type #{result.internal_resource} for id #{id} is not a `Hyrax::FileMetadata`"
+                "Result type #{result&.internal_resource} for id #{id} is not a `Hyrax::FileMetadata`"
         end
         result
       end
@@ -44,7 +44,7 @@ module Hyrax
         result = query_service.find_by_alternate_identifier(alternate_identifier: alternate_identifier)
         unless result.is_a? Hyrax::FileMetadata
           raise ::Valkyrie::Persistence::ObjectNotFoundError,
-                "Result type #{result.internal_resource} for alternate_identifier #{alternate_identifier} is not a `Hyrax::FileMetadata`"
+                "Result type #{result&.internal_resource} for alternate_identifier #{alternate_identifier} is not a `Hyrax::FileMetadata`"
         end
         result
       end
