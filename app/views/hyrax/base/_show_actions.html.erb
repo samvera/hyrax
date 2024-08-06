@@ -34,13 +34,12 @@
         <div class="btn-group">
           <button type="button" class="btn btn-secondary dropdown-toggle" type="button" id="dropdown-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <%= t('.attach_child') %>
-            <ul class="dropdown-menu">
-              <% presenter.valid_child_concerns.each do |concern| %>
-                <li class="dropdown-item">
-                  <%= link_to "Attach #{concern.human_readable_type}", polymorphic_path([main_app, :new, :hyrax, :parent, concern.model_name.singular.to_sym], parent_id: presenter.id) %>
-                </li>
-              <% end %>
-            </ul>
+          </button>
+          <div class="dropdown-menu">
+            <% presenter.valid_child_concerns.each do |concern| %>
+              <%= link_to "Attach #{concern.human_readable_type}", polymorphic_path([main_app, :new, :hyrax, :parent, concern.model_name.singular.to_sym], parent_id: presenter.id), class: "dropdown-item" %>
+            <% end %>
+          </div>
         </div>
       <% end %>
       <%= link_to t('.delete'), [main_app, presenter], class: 'btn btn-danger', data: { confirm: t('.confirm_delete', work_type: presenter.human_readable_type) }, method: :delete %>

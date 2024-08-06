@@ -4,6 +4,7 @@ module Hyrax
     module Analytics
       class WorkReportsController < AnalyticsController
         include Hyrax::BreadcrumbsForWorksAnalytics
+        before_action :authenticate_user!
 
         def index
           return unless Hyrax.config.analytics_reporting?
@@ -14,10 +15,7 @@ module Hyrax
           @top_works = paginate(top_works_list, rows: 10)
           @top_file_set_downloads = paginate(top_files_list, rows: 10)
 
-          if current_user.ability.admin?
-            @pageviews = Hyrax::Analytics.daily_events('work-view')
-            @downloads = Hyrax::Analytics.daily_events('file-set-download')
-          end
+          @pageviews = Hyrax::Analytics.daily_events('work-view'), @downloads = Hyrax::Analytics.daily_events('file-set-download') if current_user.ability.admin?
 
           respond_to do |format|
             format.html

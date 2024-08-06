@@ -24,6 +24,7 @@ services:
     depends_on:
       - chrome
       - db_migrate
+      - fits
       - memcached
       - postgres
       - redis
@@ -58,6 +59,7 @@ services:
       - VALKYRIE_STORAGE_ADAPTER=fedora_storage
     depends_on:
       - db_migrate
+      - fits
       - memcached
       - postgres
       - redis
@@ -132,7 +134,8 @@ services:
         CATALINA_OPTS=-Dfcrepo.home=/fcrepo-home -Djava.awt.headless=true -Dfile.encoding=UTF-8
         -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m
         -XX:MaxPermSize=256m -XX:+DisableExplicitGC -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true
-      - JAVA_OPTS=-Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true
+        -Dfcrepo.pid.minter.length=2 -Dfcrepo.pid.minter.count=4
+      - JAVA_OPTS=-Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true -Dfcrepo.pid.minter.length=2 -Dfcrepo.pid.minter.count=4
     volumes:
       - fcrepo:/fcrepo-home
     ports:

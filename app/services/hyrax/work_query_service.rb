@@ -3,7 +3,7 @@ module Hyrax
   # Responsible for retrieving information based on the given work.
   #
   # @see ProxyDepositRequest
-  # @see Hyrax::WorkRelation
+  # @see Hyrax::VaklyrieWorkRelation
   # @see SolrDocument
   # @see Hyrax::SolrService
   # @see ActiveFedora::SolrQueryBuilder
@@ -20,7 +20,7 @@ module Hyrax
     private
 
     def default_work_relation
-      Hyrax::WorkRelation.new
+      Hyrax.config.disable_wings ? Hyrax::ValkyrieWorkRelation.new : Hyrax::WorkRelation.new
     end
 
     public

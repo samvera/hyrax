@@ -19,8 +19,13 @@ module Hyrax
       Hyrax.query_service.custom_queries.find_count_by(models: allowable_types)
     end
 
-    def where(hash)
-      Hyrax.query_service.find_references_by(resource: hash.values.first, property: hash.keys.first)
+    def where(hash_or_string)
+      case hash_or_string
+      when String
+        Hyrax::SolrService.query(hash_or_string)
+      else
+        Hyrax.query_service.find_references_by(resource: hash_or_string.values.first, property: hash_or_string.keys.first)
+      end
     end
 
     def ==(other)
