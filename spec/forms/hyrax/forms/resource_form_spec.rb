@@ -94,7 +94,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
     let(:form_class) do
       Class.new(Hyrax::Forms::ResourceForm(work.class)) do
-        include Hyrax::FormFields(:basic_metadata)
+        include Hyrax::FormFields(:basic_metadata) unless Hyrax.config.flexible?
       end
     end
 
@@ -373,7 +373,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
       let(:form_class) do
         Class.new(Hyrax::Forms::ResourceForm(work.class)) do
-          include Hyrax::FormFields(:basic_metadata)
+          include Hyrax::FormFields(:basic_metadata) unless Hyrax.config.flexible?
         end
       end
 
@@ -440,7 +440,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
       let(:form_class) do
         Class.new(Hyrax::Forms::ResourceForm(work.class)) do
-          include Hyrax::FormFields(:basic_metadata)
+          include Hyrax::FormFields(:basic_metadata) unless Hyrax.config.flexible?
         end
       end
 
