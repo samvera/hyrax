@@ -1154,6 +1154,24 @@ module Hyrax
       @visibility_map ||= Hyrax::VisibilityMap.instance
     end
 
+    attr_writer :simple_schema_loader_config_search_paths
+    # A configuration for modifying the SimpleSchemaLoader#config_search_paths
+    # which will allow gems to add their own metadata yaml files and easily keep
+    # them within the gem.
+    #
+    # @return [Array<Pathname>]
+    # @see Hyrax::SimpleSchemaLoader#config_search_paths
+    # @example
+    #   Hyrax.config do |config|
+    #     config.simple_schema_loader_config_search_paths.unshift(HykuKnapsack::Engine.root)
+    #   end
+    #
+    #   Hyrax.config.simple_schema_loader_config_search_paths
+    #   => [#<Pathname:/app/samvera>, #<Pathname:/app/samvera/hyrax-webapp>, #<Pathname:/app/samvera/hyrax-webapp/gems/hyrax>]
+    def simple_schema_loader_config_search_paths
+      @simple_schema_loader_config_search_paths ||= [Rails.root, Hyrax::Engine.root]
+    end
+
     private
 
     # @param [Symbol, #to_s] model_name - symbol representing the model
