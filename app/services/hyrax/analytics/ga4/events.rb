@@ -7,7 +7,6 @@ module Hyrax
                        end_date:,
                        dimensions: [{ name: 'eventName' }, { name: 'contentType' }, { name: 'contentId' }],
                        metrics: [{ name: 'eventCount' }])
-          super
           @start_date = start_date.to_date
           @end_date = end_date.to_date
           @dimensions = dimensions
