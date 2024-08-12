@@ -7,10 +7,7 @@ module Hyrax
                        end_date:,
                        dimensions: [{ name: 'date' }, { name: 'eventName' }, { name: 'contentType' }, { name: 'contentId' }],
                        metrics: [{ name: 'eventCount' }])
-          @start_date = start_date.to_date
-          @end_date = end_date.to_date
-          @dimensions = dimensions
-          @metrics = metrics
+          super
         end
 
         # returns a daily number of events for a specific action

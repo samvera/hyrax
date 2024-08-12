@@ -5,6 +5,16 @@ module Hyrax
       class Base
         attr_reader :start_date, :end_date, :dimensions, :metrics
 
+        def initialize(start_date:,
+          end_date:,
+          dimensions: [],
+          metrics: [])
+          @start_date = start_date.to_date
+          @end_date = end_date.to_date
+          @dimensions = dimensions
+          @metrics = metrics
+        end
+
         def filters
           @filters ||= {}
         end
