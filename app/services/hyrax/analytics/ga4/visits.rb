@@ -5,10 +5,6 @@ module Hyrax
       class Visits < Hyrax::Analytics::Ga4::Base
         def initialize(start_date:, end_date:, dimensions: [{ name: 'newVsReturning' }], metrics: [{ name: 'sessions' }])
           super
-          @start_date = start_date.to_date
-          @end_date = end_date.to_date
-          @dimensions = dimensions
-          @metrics = metrics
         end
 
         def new_visits
