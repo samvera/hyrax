@@ -26,30 +26,21 @@ module Hyrax
       end
 
       def query_works(query)
-        models = Hyrax.config.curation_concerns.map { |m| "\"#{m}\"" }
-        Hyrax::SolrService.query("has_model_ssim:(#{models.join(' OR ')})", fl: query, rows: 100_000)
+        models = Hyrax::ModelRegistry.work_rdf_representations.map { |m| "\"#{m}\"" }
+        response = Hyrax::SolrService.get(fq: "has_model_ssim:(#{models.join(' OR ')})", 'facet.field': query, 'facet.missing': true, rows: 0)
+        Hash[*response['facet_counts']['facet_fields'][query]]
       end
 
       def work_types
-        results = query_works("human_readable_type_tesim")
-        results.group_by { |result| result['human_readable_type_tesim'].join('') }.transform_values(&:count)
+        types = query_works("human_readable_type_sim")
+        types['Unknown'] = types.delete(nil)
+        types
       end
 
       def resource_types
-        results = query_works("resource_type_tesim")
-        resource_types = []
-        results.each do |y|
-          if y["resource_type_tesim"].nil? || (y["resource_type_tesim"] == [""])
-            resource_types.push("Unknown")
-          elsif y["resource_type_tesim"].count > 1
-            y["resource_type_tesim"].each do |t|
-              resource_types.push(t)
-            end
-          else
-            resource_types.push(y["resource_type_tesim"].join(""))
-          end
-        end
-        resource_types.group_by { |rt| rt }.transform_values(&:count)
+        types = query_works("resource_type_sim")
+        types['Unknown'] = types.delete(nil)
+        types
       end
 
       private

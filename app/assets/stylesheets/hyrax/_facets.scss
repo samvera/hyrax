@@ -1,9 +1,21 @@
 #facet-panel-collapse {
-    display: inline-block !important; 
+    display: inline-block !important;
     width: 100%;
 }
 
-.navbar-toggler-icon {
+.facet-field-heading button.collapsed::after {
+    transition: transform 0.25s ease;
+}
+
+.facet-field-heading button::after {
+    transition: transform 0.25s ease;
+}
+
+.collapsing {
+    transition: height 0.25s ease;
+}
+
+.facets-header > .navbar-toggler {
     display: none;
 }
 

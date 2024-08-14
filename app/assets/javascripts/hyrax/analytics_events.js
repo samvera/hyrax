@@ -49,7 +49,7 @@ function trackAnalyticsEvents(provider) {
     if(provider !== 'ga4') {
       window.trackingTags.analytics().push([window.trackingTags.trackEvent(), eventSpan.data('category'), eventSpan.data('action'), eventSpan.data('name')]);
     } else {
-      gtag('event', eventspan.data('action'), { 'content_type': eventspan.data('category'), 'content_id': eventspan.data('name')})
+      gtag('event', eventSpan.data('action'), { 'content_type': eventSpan.data('category'), 'content_id': eventSpan.data('name')})
     }
   })
 }
@@ -69,7 +69,7 @@ if (typeof Turbolinks !== 'undefined') {
     setupTracking()
   })
 } else {
-  $(document).on('ready', function() {
+  $(document).ready(function() {
     setupTracking()
   })
 }

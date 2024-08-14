@@ -58,7 +58,7 @@ module Hyrax
       @admin_set_options = available_admin_sets
       # TODO: move these lines to the work form builder in Hyrax
       curation_concern.depositor = current_user.user_key
-      curation_concern.admin_set_id = admin_set_id_for_new
+      curation_concern.admin_set_id = params[:admin_set_id] || admin_set_id_for_new
       build_form
     end
 
@@ -385,7 +385,12 @@ module Hyrax
 
     def format_error_messages(errors)
       # the error may already be a string
-      errors.respond_to?(:messages) ? errors.messages.values.flatten.join("\n") : errors
+      return errors unless errors.respond_to?(:messages)
+
+      errors.messages.map do |field, messages|
+        field_name = field.to_s.humanize
+        messages.map { |message| "#{field_name} #{message.sub(/^./, &:downcase)}" }
+      end.flatten.join("\n")
     end
 
     def after_create_error(errors, original_input_params_for_form = nil)

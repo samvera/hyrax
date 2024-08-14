@@ -140,8 +140,9 @@ module Hyrax
       # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def create_or_update_embargo_on_members(members, work)
         # TODO: account for all members and levels, not just file sets. ref: #6131
-
         members.each do |member|
+          # reload member to make sure nothing in the transaction has changed it already
+          member = Hyrax.query_service.find_by(id: member.id)
           member_embargo_needs_updating = work.embargo.updated_at > member.embargo&.updated_at if member.embargo
 
           if member.embargo && member_embargo_needs_updating

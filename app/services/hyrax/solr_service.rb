@@ -54,7 +54,7 @@ module Hyrax
       end
 
       delegate :add, :commit, :count, :delete, :get, :instance, :ping, :post,
-               :query, :query_result, :delete_by_query, :search_by_id, :wipe!, to: :new
+               :query, :query_result, :query_in_batches, :delete_by_query, :search_by_id, :wipe!, to: :new
     end
 
     # Wraps rsolr get
@@ -111,6 +111,20 @@ module Hyrax
       end
     end
 
+    def query_in_batches(query, **args)
+      args[:rows] ||= 500
+      args[:start] ||= 0
+      loop do
+        result = query_result(query, **args)
+        break if result['response']['docs'].blank? || result['response']['numFound'] <= args[:start]
+        result['response']['docs'].select do |doc|
+          yield ::SolrHit.new(doc)
+          nil
+        end
+        args[:start] += args[:rows]
+      end
+    end
+
     # Wraps rsolr :delete_by_query
     def delete_by_query(query, **args)
       connection.delete_by_query(query, params: args)
@@ -149,6 +163,13 @@ module Hyrax
       result.first
     end
 
+    ##
+    # @api private
+    def connection
+      return self.class.instance.conn unless use_valkyrie
+      valkyrie_index.connection
+    end
+
     private
 
     ##
@@ -161,13 +182,6 @@ module Hyrax
     # functioning `rsolr` connection.
     def valkyrie_index
       Hyrax.index_adapter
-    end
-
-    ##
-    # @api private
-    def connection
-      return self.class.instance.conn unless use_valkyrie
-      valkyrie_index.connection
     end
 
     def rows_warning

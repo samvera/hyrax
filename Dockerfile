@@ -1,5 +1,5 @@
 ARG ALPINE_VERSION=3.19
-ARG RUBY_VERSION=3.2.3
+ARG RUBY_VERSION=3.2.4
 
 FROM ruby:$RUBY_VERSION-alpine$ALPINE_VERSION as hyrax-base
 
@@ -21,6 +21,7 @@ RUN apk --no-cache upgrade && \
   imagemagick-tiff \
   imagemagick-webp \
   jemalloc \
+  ruby-grpc \
   tzdata \
   nodejs \
   yarn \

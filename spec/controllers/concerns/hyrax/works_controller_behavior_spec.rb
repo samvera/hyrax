@@ -28,6 +28,9 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     allow(Hyrax.config)
       .to receive(:registered_curation_concern_types)
       .and_return([work.model_name.name])
+    allow(Hyrax::ModelRegistry)
+      .to receive(:work_classes)
+      .and_return([Hyrax::Test::SimpleWork])
 
     # NOTE: we can't run jobs that rely on routes (i.e. those that send notifications)
     # from here because of this stubbing. it's proabably best just to not do that

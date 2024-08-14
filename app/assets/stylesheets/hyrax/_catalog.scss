@@ -23,6 +23,16 @@
     }
   }
 
+  .search-results-title-row {
+    .badge {
+      margin-bottom: 6px;
+    }
+
+    .search-result-title {
+      margin-right: 16px;
+    }
+  }
+
   .collection-icon-search {
     padding-bottom: 20px;
   }
@@ -90,4 +100,15 @@
   .view-type {
     display: inline-block;
   }
+}
+
+@media (max-width: 1199px) {
+  .sort-pagination {
+    display: block !important;
+  }
+}
+
+#search-results .search-result-wrapper .metadata a,
+#documents .document-metadata a {
+  word-break: break-all;
 }

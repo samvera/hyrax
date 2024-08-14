@@ -158,7 +158,7 @@ module Hyrax
     end
 
     def config_search_paths
-      [Rails.root, Hyrax::Engine.root]
+      Hyrax.config.simple_schema_loader_config_search_paths
     end
 
     def metadata_files
