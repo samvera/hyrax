@@ -3,7 +3,7 @@
 RSpec.describe Hyrax::FileSetsController do
   routes      { Rails.application.routes }
   let(:user)  { FactoryBot.create(:user) }
-  let(:admin_set) { create(:admin_set, id: 'admin_set_1', with_permission_template: { with_active_workflow: true }) }
+  let(:admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set, user: user, with_permission_template: true) }
   let(:work_user) { user }
   before do
     allow(Hyrax.config.characterization_service).to receive(:run).and_return(true)
