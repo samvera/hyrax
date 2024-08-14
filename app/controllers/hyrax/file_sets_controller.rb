@@ -255,6 +255,7 @@ module Hyrax
       end
       @version_list = Hyrax::VersionListPresenter.for(file_set: file_set)
       @groups = current_user.groups
+      @is_admin = current_ability.admin?
     end
 
     include WorkflowsHelper # Provides #workflow_restriction?, and yes I mean include not helper; helper exposes the module methods

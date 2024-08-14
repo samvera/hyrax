@@ -5,11 +5,14 @@
                                 data: { param_key: file_set.model_name.param_key },
                                 class: 'nav-safety'
                               } do |f| %>
-      <div class="tab-content">
-        <div role="tabpanel" class="tab-pane show active" id="admin_sets">
-          <%= render 'admin_set_options' %>
+      <!-- Only apply admin set restrictions for non admins -->
+      <% if !@is_admin %>
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane show active" id="admin_sets">
+            <%= render 'admin_set_options' %>
+          </div>
         </div>
-      </div>
+      <% end %>
       <%= hidden_field_tag('redirect_tab', 'permissions') %>
       <%= render "permission_form", f: f %>
       <div id="permissions_submit">
