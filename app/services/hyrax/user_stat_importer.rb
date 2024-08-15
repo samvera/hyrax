@@ -124,7 +124,7 @@ module Hyrax
 
         date_key = stats.date.to_s
         old_count = total_stats[date_key] ? total_stats[date_key].fetch(stat_name) { 0 } : 0
-        new_count = old_count + stats.method(stat_name).call
+        new_count = old_count + stats.method(stat_name).call.to_i
 
         old_values = total_stats[date_key] || {}
         total_stats.store(date_key, old_values)
