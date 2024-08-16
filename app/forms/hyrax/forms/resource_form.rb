@@ -56,7 +56,7 @@ module Hyrax
         if Hyrax.config.flexible?
           singleton_class.schema_definitions = self.class.definitions
           r = resource || deprecated_resource
-          
+
           Hyrax::Schema.default_schema_loader.form_definitions_for(schema: r.class.to_s, version: Hyrax::FlexibleSchema.current_schema_id).map do |field_name, options|
             singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
             singleton_class.validates field_name.to_sym, presence: true if options.fetch(:required, false)
@@ -72,10 +72,15 @@ module Hyrax
           end
         else
           # make a new resource with all of the existing attributes
-          resource = if Hyrax.config.flexible?
+          if Hyrax.config.flexible?
             hash = resource.attributes.dup
             hash[:schema_version] = Hyrax::FlexibleSchema.current_schema_id
-            resource.class.new(hash)
+            resource = resource.class.new(hash)
+            # find any fields removed by the new schema
+            to_remove = self.singleton_class.definitions.select {|k, v| !resource.respond_to?(k) && v.instance_variable_get("@options")[:display]}
+            to_remove.keys.each do |removed_field|
+              self.singleton_class.definitions.delete(removed_field)
+            end
           end
 
           super(resource)
