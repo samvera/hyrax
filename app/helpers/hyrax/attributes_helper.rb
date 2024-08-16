@@ -5,11 +5,8 @@ module Hyrax
     def view_options_for(presenter)
       model_name = presenter.model.model_name.name
 
-      # @todo: decide if views should instead be based on the work's stored version (presenter.schema_version)
-      # => using current means dropped terms from schema could be missing even if they exist on the work (but they'd already be missing on the edit view anyway)
-      # => using saved means that any view changes can't take effect unless the work(s) needing them are edited & saved
       if Hyrax.config.flexible?
-        Hyrax::Schema.default_schema_loader.view_definitions_for(schema: model_name, version: Hyrax::FlexibleSchema.current_schema_id)
+        Hyrax::Schema.default_schema_loader.view_definitions_for(schema: model_name, version: presenter.solr_document.schema_version)
       else
         schema = model_name.constantize.schema || (model_name + 'Resource').safe_constantize.schema
         Hyrax::Schema.default_schema_loader.view_definitions_for(schema:)
@@ -31,7 +28,7 @@ module Hyrax
       unless hash_of_locales.present?
         options[:label] = field_name.to_s.humanize
         return options
-      end    
+      end
 
       return options_hash if hash_of_locales.is_a?(String) || hash_of_locales.empty?
 
