@@ -26,6 +26,9 @@ module Hyrax
       schema.attributes_for(schema_name).map do |name, config|
         AttributeDefinition.new(name, config)
       end
+    rescue ActiveRecord::StatementInvalid
+      Rails.logger.error "Skipping definition load for migrations to run"
+      []
     rescue NoMethodError
       raise UndefinedSchemaError, "Flexible schema not found in version #{version} for #{schema_name}"
     end
