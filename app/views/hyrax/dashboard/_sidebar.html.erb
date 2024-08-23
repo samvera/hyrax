@@ -12,7 +12,7 @@
         </div>
       </div>
     </li>
-    <li class="nav-item">
+    <li class="nav-item <%= 'active' if current_page?(hyrax.dashboard_path) %>">
       <%= link_to hyrax.dashboard_path, class: "nav-link", title: t('hyrax.admin.sidebar.dashboard') do %>
         <span class="fa fa-home" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.dashboard') %></span>
       <% end %>

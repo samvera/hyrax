@@ -1148,8 +1148,9 @@ en:
         graph_reports: Customized Graph Reports
       stats:
         collections: Collections created
-        file_downloads: Download
-        file_views: View
+        work_views: Metadata View
+        file_downloads: File Download
+        file_views: File View
         files: Files deposited
         heading: Your Statistics
         joined_on: Joined on

@@ -14,7 +14,7 @@ attributes:
   compression:
     predicate: http://vocabulary.samvera.org/ns#compressionScheme
   created_at:
-    predicate: http://purl.org/dc/terms/created
+    predicate: http://vocabulary.samvera.org/ns#created_at
   file_identifier:
     predicate: http://vocabulary.samvera.org/ns#fileIdentifier
   file_ids:

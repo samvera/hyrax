@@ -8,10 +8,6 @@ module Hyrax
                        dimensions: [{ name: 'eventName' }, { name: 'contentType' }, { name: 'contentId' }],
                        metrics: [{ name: 'eventCount' }])
           super
-          @start_date = start_date.to_date
-          @end_date = end_date.to_date
-          @dimensions = dimensions
-          @metrics = metrics
         end
 
         def self.list(start_date, end_date, action)

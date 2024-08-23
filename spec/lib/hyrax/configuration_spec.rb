@@ -115,6 +115,7 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:range_for_number_of_results_to_display_per_page) }
   it { is_expected.to respond_to(:range_for_number_of_results_to_display_per_page=) }
   it { is_expected.to respond_to(:work_requires_files?) }
+  it { is_expected.to respond_to(:simple_schema_loader_config_search_paths) }
 
   describe "#registered_ingest_dirs" do
     it "provides the Rails tmp directory for temporary downloads for cloud files" do

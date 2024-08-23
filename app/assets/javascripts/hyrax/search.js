@@ -4,6 +4,7 @@
 
     this.init = function() {
       this.$label = this.$element.find('[data-search-element="label"]');
+      this.$visibleLabel = this.$element.find('.dropdown-toggle').find('span[aria-hidden="true"]');
       this.$items = this.$element.find('[data-search-option]');
       this.setDefault();
     }
@@ -11,7 +12,6 @@
     this.init();
     this.attachEvents();
   }
-
 
   Hyrax.Search.prototype = {
     attachEvents: function() {
@@ -43,6 +43,7 @@
 
     setLabel: function(label) {
       this.$label.html(label);
+      this.$visibleLabel.html(label);
     }
 
   }
@@ -58,8 +59,6 @@
 
 })(jQuery);
 
-
 Blacklight.onLoad(function() {
   $('#search-form-header').search();
 });
-

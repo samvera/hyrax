@@ -15,14 +15,6 @@ module Hyrax
       extend ActiveSupport::Concern
       # rubocop:disable Metrics/BlockLength
       class_methods do
-        def client
-          @client
-        end
-
-        def client=(value)
-          @client = value
-        end
-
         # Loads configuration options from config/analytics.yml. You only need PRIVATE_KEY_PATH or
         # PRIVATE_KEY_VALUE. VALUE takes precedence.
         # Expected structure:
@@ -70,8 +62,17 @@ module Hyrax
             REQUIRED_KEYS.all? { |required| @config[required].present? }
           end
 
+          def base64?(value)
+            value.is_a?(String) && Base64.strict_encode64(Base64.decode64(value)) == value
+          end
+
           def account_json_string
-            @account_json ||= @config['account_json'] || File.read(@config['account_json_path'])
+            return @account_json_string if @account_json_string
+            @account_json_string = if @config['account_json']
+                                     base64?(@config['account_json']) ? Base64.decode64(@config['account_json']) : @config['account_json']
+                                   else
+                                     File.read(@config['account_json_path'])
+                                   end
           end
 
           def account_info
@@ -87,7 +88,7 @@ module Hyrax
         end
 
         def client
-          self.class.client ||= ::Google::Analytics::Data::V1beta::AnalyticsData::Client.new do |conf|
+          @client ||= ::Google::Analytics::Data::V1beta::AnalyticsData::Client.new do |conf|
             conf.credentials = config.account_info
           end
         end

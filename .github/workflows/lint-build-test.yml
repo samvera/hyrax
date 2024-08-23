@@ -1,5 +1,5 @@
-name: 'Build Test Lint'
-run-name: Build Test Lint of ${{ github.ref_name }} by @${{ github.actor }}
+name: 'Lint Build Test'
+run-name: Link Build Test of ${{ github.ref_name }} by @${{ github.actor }}
 on:
   push:
     branches:
@@ -123,23 +123,12 @@ jobs:
           name: spec-reports-${{ matrix.ci_test_app }}-${{ matrix.ci_node_index }}
           path: '**/rspec*.xml'
 
-  report:
-    needs: test
+  event_file:
+    name: "Event File"
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
-      # only needed unless run with comment_mode: off
-      pull-requests: write
-    if: always()
     steps:
-      - name: Download all workflow run artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-          pattern: "*report*"
-      - name: Publish Test Report
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        with:
-          files: "artifacts/**/*.xml"
-          action_fail_on_inconclusive: true
-          fail_on: "test failures"
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: Event File
+        path: ${{ github.event_path }}
