@@ -89,11 +89,11 @@ $(document).on('click', '#file_download', function(e) {
       window.trackingTags.analytics().push([trackingTags.trackEvent(), 'work-in-collection', 'work-in-collection-download', collection]);
     });
   } else {
-    gtag('event', 'file-set-download', { 'content-type': 'file-set', 'content-id': $(this).data('label')})
-    gtag('event', 'file-set-in-work-download', { 'content-type': 'file-set-in-work', 'content-id': $(this).data('work-id')})
+    gtag('event', 'file-set-download', { 'content-type': 'file-set', 'content_id': $(this).data('label')})
+    gtag('event', 'file-set-in-work-download', { 'content-type': 'file-set-in-work', 'content_id': $(this).data('work-id')})
     $(this).data('collection-ids').forEach(function (collection) {
-      gtag('event', 'file-set-in-collection-download', { 'content-type': 'file-set-in-collection', 'content-id': collection })
-      gtag('event', 'work-in-collection-download', { 'content-type': 'work-in-collection', 'content-id': collection })
+      gtag('event', 'file-set-in-collection-download', { 'content-type': 'file-set-in-collection', 'content_id': collection })
+      gtag('event', 'work-in-collection-download', { 'content-type': 'work-in-collection', 'content_id': collection })
     });
   }
 });
