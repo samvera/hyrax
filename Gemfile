@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 source 'https://rubygems.org'
 
+gem 'active-fedora', git: 'https://github.com/samvera/active_fedora.git', branch: 'rewording'
+
 # Please see hyrax.gemspec for dependency information.
 # Install gems from test app
 if ENV['RAILS_ROOT']
