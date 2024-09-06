@@ -26,6 +26,7 @@ if RUBY_PLATFORM =~ /musl/
 end
 
 gemspec name: 'hyrax', path: ENV.fetch('HYRAX_ENGINE_PATH', '..')
+gem 'valkyrie', git: 'https://github.com/samvera/valkyrie.git', branch: 'main'
 gem 'jbuilder', '~> 2.5'
 gem 'jquery-rails'
 gem 'pg', '~> 1.3'
