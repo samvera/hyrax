@@ -231,7 +231,9 @@ module Hyrax
                                                                             banner_unchanged_indicator: params["banner_unchanged"] },
                           'collection_resource.save_collection_logo' => { update_logo_file_ids: params["logo_files"],
                                                                           alttext_values: params["alttext"],
-                                                                          linkurl_values: params["linkurl"] }
+                                                                          linkurl_values: params["linkurl"],
+                                                                          logo_unchanged_indicator: false
+                                                                        }
                         )
                  .call(form)
         @collection = result.value_or { return after_update_errors(result.failure.first) }
