@@ -19,7 +19,8 @@ module Hyrax
         #
         # @return [Dry::Monads::Result] `Failure` if the work fails to save;
         #   `Success(input)`, otherwise.
-        def call(collection_resource, update_logo_file_ids: nil, alttext_values: nil, linkurl_values: nil)
+        def call(collection_resource, update_logo_file_ids: nil, alttext_values: nil, linkurl_values: nil, logo_unchanged_indicator: true)
+          return Success(collection_resource) if ActiveModel::Type::Boolean.new.cast(logo_unchanged_indicator)
           collection_id = collection_resource.id.to_s
           process_logo_input(collection_id: collection_id, update_logo_file_ids: update_logo_file_ids, alttext_values: alttext_values, linkurl_values: linkurl_values)
           Success(collection_resource)
