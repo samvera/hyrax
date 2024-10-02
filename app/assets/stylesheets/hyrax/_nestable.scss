@@ -32,9 +32,9 @@ tr.dd-item {
 
 .dd-handle { display: block; height: 100%; margin: 5px 0; padding: 5px 10px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
     background: #fafafa;
-    background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
-    background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
-    background:         linear-gradient(top, #fafafa 0%, #eee 100%);
+    background: -webkit-linear-gradient(to bottom, #fafafa 0%, #eee 100%);
+    background:    -moz-linear-gradient(to bottom, #fafafa 0%, #eee 100%);
+    background:         linear-gradient(to bottom, #fafafa 0%, #eee 100%);
     -webkit-border-radius: 3px;
             border-radius: 3px;
     box-sizing: border-box; -moz-box-sizing: border-box;
@@ -80,8 +80,8 @@ tr.dd-item {
 
 .dd3-content { display: block; margin: 5px 0; padding: 0 0 0 30px;
     background: #fafafa;
-    background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
-    background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background: -webkit-linear-gradient(to bottom, #fafafa 0%, #eee 100%);
+    background:    -moz-linear-gradient(to bottom, #fafafa 0%, #eee 100%);
     background:         linear-gradient(to bottom, #fafafa 0%, #eee 100%);
     -webkit-border-radius: 3px;
             border-radius: 3px;
@@ -101,8 +101,8 @@ tr.dd-item {
     white-space: nowrap; overflow: hidden;
     border: 1px solid #aaa;
     background: #ddd;
-    background: -webkit-linear-gradient(top, #ddd 0%, #bbb 100%);
-    background: -moz-linear-gradient(top, #ddd 0%, #bbb 100%);
+    background: -webkit-linear-gradient(to bottom, #ddd 0%, #bbb 100%);
+    background: -moz-linear-gradient(to bottom, #ddd 0%, #bbb 100%);
     background: -o-linear-gradient(to bottom, #ddd 0%, #bbb 100%);
     background: linear-gradient(to bottom, #ddd 0%, #bbb 100%);
     border-top-right-radius: 0;

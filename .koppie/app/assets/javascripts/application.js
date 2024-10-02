@@ -21,7 +21,8 @@
 //= require twitter/typeahead
 //= require bootstrap
 //= require jquery.dataTables
-//= require dataTables.bootstrap4
+//= require dataTables
+//= require dataTables.bootstrap5
 //= require blacklight/blacklight
 //= require blacklight_gallery
 
