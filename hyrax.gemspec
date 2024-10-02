@@ -32,9 +32,9 @@ SUMMARY
   # NOTE: rails does not follow sem-ver conventions, it's
   # minor version releases can include breaking changes; see
   # http://guides.rubyonrails.org/maintenance_policy.html
-  spec.add_dependency 'rails', '~> 6.1'
+  spec.add_dependency 'rails', '~> 7.2', '< 8.0'
 
-  spec.add_dependency 'active-fedora', '~> 14.0'
+  spec.add_dependency 'active-fedora', '~> 15.0'
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'blacklight', '~> 7.29'
@@ -56,10 +56,10 @@ SUMMARY
   spec.add_dependency 'flot-rails', '~> 0.0.6'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'google-analytics-data', '~> 0.6'
-  spec.add_dependency 'hydra-derivatives', '~> 3.3'
+  spec.add_dependency 'hydra-derivatives', '~> 4.0'
   spec.add_dependency 'hydra-editor', '~> 6.0'
   spec.add_dependency 'hydra-file_characterization', '~> 1.1'
-  spec.add_dependency 'hydra-head', '~> 12.0'
+  spec.add_dependency 'hydra-head', '~> 13.0'
   spec.add_dependency 'hydra-works', '>= 0.16'
   spec.add_dependency 'iiif_manifest', '>= 0.3', '< 2.0'
   spec.add_dependency 'json-schema' # for Arkivo
