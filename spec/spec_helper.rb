@@ -60,6 +60,8 @@ Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter)
 Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Postgres::MetadataAdapter.new, :postgres_adapter)
+Valkyrie::MetadataAdapter
+  .register(Freyja::MetadataAdapter.new, :freyja_adapter)
 version_path = Rails.root / 'tmp' / 'test_adapter_uploads'
 Valkyrie::StorageAdapter.register(
   Valkyrie::Storage::VersionedDisk.new(base_path: version_path),
