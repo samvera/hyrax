@@ -84,7 +84,7 @@ module Hyrax
     def hydra_model(classifier: nil)
       model_name = first('has_model_ssim')
       valkyrie_model = "#{model_name}Resource".safe_constantize if Hyrax.config.valkyrie_transition
-    
+
       valkyrie_model ||
         model_name&.safe_constantize ||
         model_classifier(classifier).classifier(self).best_model
@@ -151,6 +151,10 @@ module Hyrax
 
     def schema_version
       self['schema_version_ssi']
+    end
+
+    def contexts
+      self['contexts_ssim']
     end
 
     private

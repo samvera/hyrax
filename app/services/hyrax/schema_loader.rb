@@ -15,8 +15,8 @@ module Hyrax
     #
     # @return [Hash<Symbol, Dry::Types::Type>] a map from attribute names to
     #   types
-    def attributes_for(schema:, version: 1)
-      definitions(schema, version).each_with_object({}) do |definition, hash|
+    def attributes_for(schema:, version: 1, contexts: nil)
+      definitions(schema, version, contexts).each_with_object({}) do |definition, hash|
         hash[definition.name] = definition.type.meta(definition.config)
       end
     end
@@ -25,8 +25,8 @@ module Hyrax
     # @param [Symbol] schema
     #
     # @return [Hash{Symbol => Hash{Symbol => Object}}]
-    def form_definitions_for(schema:, version: 1)
-      definitions(schema, version).each_with_object({}) do |definition, hash|
+    def form_definitions_for(schema:, version: 1, contexts: nil)
+      definitions(schema, version, contexts).each_with_object({}) do |definition, hash|
         next if definition.form_options.empty?
 
         hash[definition.name] = definition.form_options
@@ -37,8 +37,8 @@ module Hyrax
     # @param [Symbol] schema
     #
     # @return [{Symbol => Symbol}] a map from index keys to attribute names
-    def index_rules_for(schema:, version: 1)
-      definitions(schema, version).each_with_object({}) do |definition, hash|
+    def index_rules_for(schema:, version: 1, contexts: nil)
+      definitions(schema, version, contexts).each_with_object({}) do |definition, hash|
         definition.index_keys.each do |key|
           hash[key] = definition.name
         end
@@ -140,7 +140,7 @@ module Hyrax
 
     private
 
-    def definitions(_schema_name, _version)
+    def definitions(_schema_name, _version, _contexts)
       raise NotImplementedError, 'Implement #definitions in a child class'
     end
   end

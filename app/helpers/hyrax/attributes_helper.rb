@@ -6,7 +6,7 @@ module Hyrax
       model_name = presenter.model.model_name.name
 
       if Hyrax.config.flexible?
-        Hyrax::Schema.default_schema_loader.view_definitions_for(schema: model_name, version: presenter.solr_document.schema_version)
+        Hyrax::Schema.default_schema_loader.view_definitions_for(schema: model_name, version: presenter.solr_document.schema_version, contexts: presenter.solr_document.contexts)
       else
         schema = model_name.constantize.schema || (model_name + 'Resource').safe_constantize.schema
         Hyrax::Schema.default_schema_loader.view_definitions_for(schema:)
