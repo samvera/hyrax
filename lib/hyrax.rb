@@ -46,6 +46,10 @@ module Hyrax
     autoload :ResourceSync
     autoload :Zotero
     autoload :Listeners
+    autoload :Workflow
+    autoload :SimpleSchemaLoader
+    autoload :VirusScanner
+    autoload :DerivativeBucketedStorage
   end
 
   ##
