@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 class Hyrax::FlexibleSchema < ApplicationRecord
   serialize :profile, coder: YAML
-  
+  serialize :contexts, coder: YAML
+
   validate :validate_profile_classes
+
+  before_save :update_contexts
 
   def self.current_version
     order("created_at asc").last.profile
@@ -30,7 +33,11 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   rescue StandardError => e
     []
   end
-  
+
+  def update_contexts
+    self.contexts = profile['contexts']
+  end
+
   def title
     "#{profile['profile']['responsibility_statement']} - version #{id}"
   end
@@ -41,6 +48,10 @@ class Hyrax::FlexibleSchema < ApplicationRecord
 
   def schema_version
     profile['m3_version']
+  end
+
+  def context_select
+    contexts.map { |k, v| [v&.[]('display_label'), k] }
   end
 
   def metadata_profile_type
@@ -61,7 +72,7 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     required_classes = [
       Hyrax.config.collection_model,
       Hyrax.config.file_set_model,
-      Hyrax.config.admin_set_model 
+      Hyrax.config.admin_set_model
     ]
 
     if profile['classes'].blank?
@@ -97,6 +108,7 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     values['predicate'] = values['property_uri']
     values['index_keys'] = values['indexing']
     values['multiple'] = values['multi_value']
+    values['context'] = values['available_on']['context']
     values
   end
 

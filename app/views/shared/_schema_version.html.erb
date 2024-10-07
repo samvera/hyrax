@@ -1,6 +1,6 @@
 <% schema_version = SolrDocument.find(f.object.id).schema_version if action_name == 'edit' %>
 <% schema_version = Hyrax::FlexibleSchema.current_schema_id if action_name == 'new' %>
-<% updating = (schema_version.to_f < @latest_schema_version) ? 'updating' : '' %>
+<% updating = (schema_version.to_f < @latest_schema_version.to_f) ? 'updating' : '' %>
 
 <div class='pull-right'>
   <% if schema_version.present? %>
