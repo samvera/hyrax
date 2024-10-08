@@ -42,6 +42,7 @@ module Hyrax
       require 'hyrax/transactions/steps/delete_access_control'
       require 'hyrax/transactions/steps/delete_all_file_metadata'
       require 'hyrax/transactions/steps/delete_all_file_sets'
+      require 'hyrax/transactions/steps/delete_permission_template'
       require 'hyrax/transactions/steps/delete_resource'
       require 'hyrax/transactions/steps/ensure_admin_set'
       require 'hyrax/transactions/steps/file_metadata_delete'
@@ -202,6 +203,10 @@ module Hyrax
         ops.register 'save_acl' do
           Steps::SaveAccessControl.new
         end
+
+        ops.register 'delete_permission_template' do
+          Steps::DeletePermissionTemplate.new
+        end
       end
 
       namespace 'collection_resource' do |ops| # Hyrax::PcdmCollection resource
@@ -227,6 +232,10 @@ module Hyrax
 
         ops.register 'save_acl' do
           Steps::SaveAccessControl.new
+        end
+
+        ops.register 'delete_permission_template' do
+          Steps::DeletePermissionTemplate.new
         end
 
         ops.register 'save_collection_banner' do
