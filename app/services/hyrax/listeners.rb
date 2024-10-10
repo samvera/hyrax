@@ -20,6 +20,7 @@ module Hyrax
     autoload :ACLIndexListener
     autoload :ActiveFedoraACLIndexListener
     autoload :BatchNotificationListener
+    autoload :FileListener
     autoload :FileMetadataListener
     autoload :FileSetLifecycleListener
     autoload :FileSetLifecycleNotificationListener
