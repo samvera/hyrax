@@ -244,7 +244,7 @@ RSpec.configure do |config|
       # trust that clean_repo performed the clean if present
       example.metadata[:clean_repo] ||
       # don't run for adapters other than wings
-      (example.metadata[:valkyrie_adapter].present? && example.metadata[:valkyrie_adapter] != :wings_adapter)
+      (example.metadata[:valkyrie_adapter].present? && ![:wings_adapter, :freyja_adapter, :frigg_adapter].include?(adapter_name))
   end
 
   config.append_after(:each, type: :feature) do
@@ -352,7 +352,7 @@ RSpec.configure do |config|
   config.prepend_before(:example, :valkyrie_adapter) do |example|
     adapter_name = example.metadata[:valkyrie_adapter]
 
-    if adapter_name == :wings_adapter
+    if [:wings_adapter, :freyja_adapter, :frigg_adapter].include?(adapter_name)
       skip("Don't test Wings when it is dasabled") if Hyrax.config.disable_wings
     else
       allow(Hyrax.config).to receive(:disable_wings).and_return(true)
