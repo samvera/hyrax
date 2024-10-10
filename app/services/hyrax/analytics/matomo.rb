@@ -173,10 +173,18 @@ module Hyrax
           Hyrax::Analytics::Results.new(results)
         end
 
+        # If Matomo detects an error it will return a reponse with the key {"result":"error"}
+        # instead of returning an error status code. This method checks for that key.
+        def contains_matomo_error?(response)
+          response.is_a?(Hash) && response["result"] == "error"
+        end
+
         def get(params)
           response = Faraday.get(config.base_url, params)
           return [] if response.status != 200
-          JSON.parse(response.body)
+          api_response = JSON.parse(response.body)
+          return [] if contains_matomo_error?(api_response)
+          api_response
         end
 
         def api_params(method, period, date, additional_params = {})
