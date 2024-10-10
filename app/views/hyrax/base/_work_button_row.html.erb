@@ -7,7 +7,7 @@
       <% end %>
       <% if presenter.valid_child_concerns.length > 0 %>
         <div class="btn-group">
-          <button type="button" class="btn btn-secondary dropdown-toggle" type="button" id="dropdown-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button type="button" class="btn btn-secondary dropdown-toggle" type="button" id="dropdown-menu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <%= t('.attach_child') %>
           </button>
           <ul class="dropdown-menu">
@@ -19,7 +19,7 @@
           </ul>
         </div>
       <% end %>
-      <%= link_to t(".delete"), [main_app, presenter], class: 'btn btn-danger', data: { confirm: t(".delete_type", type: {presenter.human_readable_type}) }, method: :delete %>
+      <%= link_to t(".delete"), [main_app, presenter], class: 'btn btn-danger', data: { 'bs-confirm': t(".delete_type", type: {presenter.human_readable_type}) }, method: :delete %>
     <% end %>
   </div>
   <div class="col-sm-6 text-right">
@@ -27,7 +27,7 @@
       <input type="checkbox"  style="display:none" name="batch_document_ids[]" id="batch_document_<%= presenter.id %>" value="<%= presenter.id %>" class="batch_document_selector" checked="checked" />
       <%= button_tag t('hyrax.dashboard.my.action.add_to_collection'),
                     class: 'btn btn-secondary submits-batches submits-batches-add',
-                    data: { toggle: "modal", target: "#collection-list-container" } %>
+                    data: { 'bs-toggle': "modal", 'bs-target': "#collection-list-container" } %>
     <% end %>
     <% if presenter.work_featurable? %>
       <%= link_to t(".feature"), hyrax.featured_work_path(presenter, format: :json),

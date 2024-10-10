@@ -1,7 +1,7 @@
 <% { notice: 'alert-success', error: 'alert-danger', alert: 'alert-warning' }.each do |type, flash_dom_class| %>
   <% if flash[type].present? %>
     <div class="alert <%= flash_dom_class %> alert-dismissable" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       <%= sanitize Array.wrap(flash[type]).join(tag(:br)) %>
     </div>
     <% flash.delete(type) %>
