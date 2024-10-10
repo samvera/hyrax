@@ -324,7 +324,7 @@ RSpec.configure do |config|
   end
 
   config.before(:example, :clean_repo) do
-    clean_active_fedora_repository unless Hyrax.config.disable_wings
+    Hyrax.config.disable_wings ? Hyrax.persister.wipe! : clean_active_fedora_repository
     Hyrax::RedisEventStore.instance.then(&:flushdb)
     # Not needed to clean the Solr core used by ActiveFedora since
     # clean_active_fedora_repository will wipe that core
