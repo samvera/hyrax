@@ -1,7 +1,7 @@
 .badge-enabled {
-  @extend .badge-success;
+  @extend .bg-success;
 }
 
 .badge-disabled {
-  @extend .badge-secondary;
+  @extend .bg-secondary;
 }

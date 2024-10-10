@@ -64,12 +64,12 @@ body.dashboard {
 
     h1 {
       font-size: $h2-font-size;
-      margin-left: $table-cell-padding-sm;
+      margin-left: $table-cell-padding-x-sm;
       margin-top: $input-btn-padding-y;
 
       .fa {
         color: $gray;
-        margin-right: $table-cell-padding-sm;
+        margin-right: $table-cell-padding-x-sm;
       }
     }
 

@@ -13,8 +13,8 @@ td.status {
 
   span {
     @extend .badge;
-    &.on { @extend .badge-success; }
-    &.off { @extend .badge-secondary; }
+    &.on { @extend .bg-success; }
+    &.off { @extend .bg-secondary; }
   }
 }
 

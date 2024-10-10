@@ -168,11 +168,12 @@ module Hyrax
       javascript_manifest = 'app/assets/javascripts/application.js'
       insert_into_file javascript_manifest, after: /jquery.?\n/ do
         "//= require jquery.dataTables\n" \
-        "//= require dataTables.bootstrap4\n"
+        "//= require dataTables\n" \
+        "//= require dataTables.bootstrap5\n"
       end
 
       insert_into_file 'app/assets/stylesheets/application.css', before: ' *= require_self' do
-        " *= require dataTables.bootstrap4\n"
+        " *= require dataTables.bootstrap5\n"
       end
     end
 
