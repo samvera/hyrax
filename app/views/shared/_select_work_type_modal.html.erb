@@ -4,7 +4,7 @@
     <form class="modal-content new-work-select">
       <div class="modal-header">
         <h2 class="modal-title" id="select-worktype-label"><%= t('hyrax.dashboard.heading_actions.select_type_of_work') %></h2>
-        <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('hyrax.dashboard.heading_actions.close') %>"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= t('hyrax.dashboard.heading_actions.close') %>"></button>
       </div>
       <div class="modal-body">
         <% if Flipflop.assign_admin_set? %>
@@ -34,7 +34,7 @@
         <% end %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('hyrax.dashboard.heading_actions.close') %></button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= t('hyrax.dashboard.heading_actions.close') %></button>
         <input type="submit" class="btn btn-primary" value="<%= t('hyrax.dashboard.heading_actions.create_work') %>" />
       </div>
     </form>
