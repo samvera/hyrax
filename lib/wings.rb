@@ -115,7 +115,9 @@ end
 
 Valkyrie.config.resource_class_resolver = lambda do |resource_klass_name|
   klass_name = resource_klass_name.gsub(/Resource$/, '')
-  klass = klass_name.constantize
+  # Second one should throw a name error because we do not know what you want if
+  # it isn't one of these two options
+  klass = klass_name.safe_constantize || resource_klass_name.constantize
   Wings::ModelRegistry.reverse_lookup(klass) || klass
 end
 
