@@ -357,10 +357,10 @@ RSpec.configure do |config|
       unless adapter_name == :wings_adapter
         Valkyrie::StorageAdapter.register(
           Valkyrie::Storage::Disk.new(base_path: Rails.root.join("tmp", "storage", "files"),
-            file_mover: FileUtils.method(:cp)),
+                                      file_mover: FileUtils.method(:cp)),
           :disk
         )
-        Valkyrie.config.storage_adapter  = :disk
+        Valkyrie.config.storage_adapter = :disk
       end
     else
       allow(Hyrax.config).to receive(:disable_wings).and_return(true)

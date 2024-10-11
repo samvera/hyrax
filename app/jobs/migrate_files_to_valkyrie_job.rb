@@ -12,6 +12,7 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
     migrate_files!(resource: resource)
   end
 
+  # rubocop:disable Metrics/MethodLength
   def attribute_mapping
     return @attribute_mapping if @attribute_mapping
     @attribute_mapping = %w[
@@ -64,6 +65,7 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
     @attribute_mapping['checksum'] = 'original_checksum'
     @attribute_mapping
   end
+  # rubocop:enable Metrics/MethodLength
 
   private
 
