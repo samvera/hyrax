@@ -51,7 +51,7 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   end
 
   def context_select
-    contexts.map { |k, v| [v&.[]('display_label'), k] }
+    contexts&.map { |k, v| [v&.[]('display_label'), k] }
   end
 
   def metadata_profile_type

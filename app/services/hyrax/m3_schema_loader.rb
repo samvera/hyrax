@@ -24,7 +24,7 @@ module Hyrax
     def definitions(schema_name, version, contexts = nil)
       schema = Hyrax::FlexibleSchema.find_by(id: version) || Hyrax::FlexibleSchema.create_default_schema
       schema.attributes_for(schema_name).map do |name, config|
-        # We might be able to consolidate these conditions, but they have been kept seperate to make it easier to reason about
+        # We might be able to consolidate these conditions, but they have been kept separate to make it easier to reason about
         # If there is a context filter on the metadata field and no context is set, skip it
         next if contexts.blank? && config['context'].present?
 
