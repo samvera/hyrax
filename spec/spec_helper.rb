@@ -362,7 +362,9 @@ RSpec.configure do |config|
                                       file_mover: FileUtils.method(:cp)),
           :disk
         )
-        Valkyrie.config.storage_adapter = :disk
+        allow(Valkyrie.config)
+          .to receive(:storage_adapter)
+          .and_return(Valkyrie::StorageAdapter.find(:disk))
       end
     else
       allow(Hyrax.config).to receive(:disable_wings).and_return(true)

@@ -7,7 +7,7 @@ require 'valkyrie/specs/shared_specs'
 require 'wings'
 require 'freyja/metadata_adapter'
 
-RSpec.describe Freyja::Persister, :active_fedora, :clean_repo do
+RSpec.describe Freyja::Persister, :active_fedora, :clean_repo, valkyrie_adapter: :freyja_adapter do
   subject(:persister) { described_class.new(adapter: adapter) }
   let(:adapter) { Freyja::MetadataAdapter.new }
   let(:query_service) { adapter.query_service }
@@ -36,6 +36,8 @@ RSpec.describe Freyja::Persister, :active_fedora, :clean_repo do
         accepts_nested_attributes_for :nested_resource
         include Hydra::Works::WorkBehavior
       end
+
+      Wings::ModelRegistry.register(CustomResource, Custom)
     end
     after do
       Object.send(:remove_const, :CustomResource)
