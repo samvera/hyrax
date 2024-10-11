@@ -146,6 +146,29 @@ module Goddess
     # @param [QueryService] query_service
     def initialize(*services)
       @services = services
+      setup_custom_queries
+    end
+
+    def setup_custom_queries
+      # load all the sql based custom queries
+      [
+        Hyrax::CustomQueries::Navigators::CollectionMembers,
+        Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator,
+        Hyrax::CustomQueries::Navigators::ParentCollectionsNavigator,
+        Hyrax::CustomQueries::Navigators::ChildFileSetsNavigator,
+        Hyrax::CustomQueries::Navigators::ChildWorksNavigator,
+        Hyrax::CustomQueries::Navigators::FindFiles,
+        Hyrax::CustomQueries::FindAccessControl,
+        Hyrax::CustomQueries::FindCollectionsByType,
+        Hyrax::CustomQueries::FindFileMetadata,
+        Hyrax::CustomQueries::FindIdsByModel,
+        Hyrax::CustomQueries::FindManyByAlternateIds,
+        Hyrax::CustomQueries::FindModelsByAccess,
+        Hyrax::CustomQueries::FindCountBy,
+        Hyrax::CustomQueries::FindByDateRange
+      ].each do |handler|
+        services[0].custom_queries.register_query_handler(handler)
+      end
     end
   end
 end
