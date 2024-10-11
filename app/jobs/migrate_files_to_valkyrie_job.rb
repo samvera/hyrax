@@ -12,6 +12,59 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
     migrate_files!(resource: resource)
   end
 
+  def attribute_mapping
+    return @attribute_mapping if @attribute_mapping
+    @attribute_mapping = %w[
+      aspect_ratio
+      bit_depth
+      bit_rate
+      byte_order
+      capture_device
+      channels
+      character_count
+      character_set
+      checksum
+      color_map
+      color_space
+      compression
+      creator
+      data_format
+      duration
+      exif_version
+      file_title
+      fits_version
+      format_label
+      frame_rate
+      gps_timestamp
+      graphics_count
+      height
+      image_producer
+      language
+      latitude
+      line_count
+      longitude
+      markup_basis
+      markup_language
+      offset
+      orientation
+      page_count
+      paragraph_count
+      profile_name
+      profile_version
+      recorded_size
+      sample_rate
+      scanning_software
+      table_count
+      well_formed
+      width
+      word_count
+    ].inject({}) { |j, i| j[i] = i; j}
+    @attribute_mapping['recorded_size'] = 'file_size'
+    @attribute_mapping['channels'] = 'alpha_channels'
+    @attribute_mapping['checksum'] = 'original_checksum'
+    @attribute_mapping
+  end
+
   private
 
   def migrate_derivatives!(resource:)
@@ -61,11 +114,11 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
   end
 
   def copy_attributes(valkyrie_file:, original_file:)
-    TRANSFERABLE_ATTRIBUTES.each do |attr|
-      valkyrie_file.set_value(attr, original_file[attr])
+    attribute_mapping.each do |k, v|
+      valkyrie_file.set_value(k, original_file.send(v))
     end
-    valkyrie_file.set_value(:channels, original_file.alpha_channels) if valkyrie_file.channels.blank?
-    valkyrie_file.set_value(:checksum, original_file.original_checksum)
+    # Special case as this property isn't in the characterization proxy
+    valkyrie_file.set_value('alternate_ids', original_file.alternate_ids)
     valkyrie_file
   end
 
@@ -89,51 +142,4 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
       'service_file'
     end
   end
-
-  TRANSFERABLE_ATTRIBUTES = %w[
-    alternate_ids
-    aspect_ratio
-    bit_depth
-    bit_rate
-    byte_order
-    capture_device
-    channels
-    character_count
-    character_set
-    checksum
-    color_map
-    color_space
-    compression
-    creator
-    data_format
-    duration
-    exif_version
-    file_title
-    fits_version
-    format_label
-    frame_rate
-    gps_timestamp
-    graphics_count
-    height
-    image_producer
-    language
-    latitude
-    line_count
-    longitude
-    markup_basis
-    markup_language
-    offset
-    orientation
-    page_count
-    paragraph_count
-    profile_name
-    profile_version
-    recorded_size
-    sample_rate
-    scanning_software
-    table_count
-    well_formed
-    width
-    word_count
-  ]
 end
