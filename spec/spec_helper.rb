@@ -240,11 +240,13 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers, type: :feature
 
   config.before(:each, type: :feature) do |example|
+    adapter_name = example.metadata[:valkyrie_adapter]
+
     clean_active_fedora_repository unless
       # trust that clean_repo performed the clean if present
       example.metadata[:clean_repo] ||
       # don't run for adapters other than wings
-      (example.metadata[:valkyrie_adapter].present? && ![:wings_adapter, :freyja_adapter, :frigg_adapter].include?(adapter_name))
+      (adapter_name.present? && ![:wings_adapter, :freyja_adapter, :frigg_adapter].include?(adapter_name))
   end
 
   config.append_after(:each, type: :feature) do
