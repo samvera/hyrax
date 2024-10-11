@@ -5,7 +5,7 @@ return if Hyrax.config.disable_wings
 require 'wings/attribute_transformer'
 
 RSpec.describe Wings::AttributeTransformer, :active_fedora do
-  let(:id)   { 'moomin123' }
+  let(:id) { 'moomin123' }
   let(:based_near) { Hyrax::ControlledVocabularies::Location.new("https://sws.geonames.org/4920808/") }
   let(:work) { GenericWork.new(id: id, **attributes) }
 
@@ -14,7 +14,7 @@ RSpec.describe Wings::AttributeTransformer, :active_fedora do
       title: ['fake title', 'fake title 2'],
       contributor: ['user1'],
       description: ['a description'],
-      based_near:[based_near]
+      based_near: [based_near]
     }
   end
 

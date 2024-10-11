@@ -143,7 +143,7 @@ module Wings
     end
     # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def parse_attributes(af_object)
       converted_attrs = normal_attributes
       af_object.attributes = converted_attrs.except(:members, :files, :file_name)
@@ -163,14 +163,10 @@ module Wings
       files = converted_attrs.delete(:files)
       af_object.files.build_or_set(files) if files
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def convert_based_near(based_near_string)
-      converted_based_near = []
-      based_near_string.each do |bn|
-        converted_based_near << Hyrax::ControlledVocabularies::Location.new(bn)
-      end
-      converted_based_near
+      based_near_string.map { |bn| Hyrax::ControlledVocabularies::Location.new(bn) }
     end
 
     def create_extrated_text(af_object)

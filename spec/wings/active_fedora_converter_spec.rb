@@ -125,9 +125,11 @@ RSpec.describe Wings::ActiveFedoraConverter, :active_fedora, :clean_repo do
 
     context 'when given a valkyrie native model' do
       let(:based_near) { "https://sws.geonames.org/4920808/" }
-      let(:resource) { klass.new(title: ['comet in moominland'],
-                                 distant_relation: ['Snufkin'],
-                                 based_near: [based_near]) }
+      let(:resource) do
+        klass.new(title: ['comet in moominland'],
+                  distant_relation: ['Snufkin'],
+                  based_near: [based_near])
+      end
       let(:klass) { Hyrax::Test::Converter::Resource }
 
       before do
