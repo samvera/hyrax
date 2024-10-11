@@ -354,6 +354,14 @@ RSpec.configure do |config|
 
     if [:wings_adapter, :freyja_adapter, :frigg_adapter].include?(adapter_name)
       skip("Don't test Wings when it is dasabled") if Hyrax.config.disable_wings
+      unless adapter_name == :wings_adapter
+        Valkyrie::StorageAdapter.register(
+          Valkyrie::Storage::Disk.new(base_path: Rails.root.join("tmp", "storage", "files"),
+            file_mover: FileUtils.method(:cp)),
+          :disk
+        )
+        Valkyrie.config.storage_adapter  = :disk
+      end
     else
       allow(Hyrax.config).to receive(:disable_wings).and_return(true)
       hide_const("Wings") # disable_wings=true removes the Wings constant
