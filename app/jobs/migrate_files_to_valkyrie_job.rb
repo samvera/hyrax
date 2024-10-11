@@ -12,60 +12,20 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
     migrate_files!(resource: resource)
   end
 
-  # rubocop:disable Metrics/MethodLength
   def attribute_mapping
     return @attribute_mapping if @attribute_mapping
     @attribute_mapping = %w[
-      aspect_ratio
-      bit_depth
-      bit_rate
-      byte_order
-      capture_device
-      channels
-      character_count
-      character_set
-      checksum
-      color_map
-      color_space
-      compression
-      creator
-      data_format
-      duration
-      exif_version
-      file_title
-      fits_version
-      format_label
-      frame_rate
-      gps_timestamp
-      graphics_count
-      height
-      image_producer
-      language
-      latitude
-      line_count
-      longitude
-      markup_basis
-      markup_language
-      offset
-      orientation
-      page_count
-      paragraph_count
-      profile_name
-      profile_version
-      recorded_size
-      sample_rate
-      scanning_software
-      table_count
-      well_formed
-      width
-      word_count
-    ].inject({}) { |j, i| j[i] = i; j}
+      aspect_ratio bit_depth bit_rate byte_order capture_device channels character_count character_set
+      checksum color_map color_space compression creator data_format duration exif_version file_title
+      fits_version format_label frame_rate gps_timestamp graphics_count height image_producer language
+      latitude line_count longitude markup_basis markup_language offset orientation page_count
+      paragraph_count profile_name profile_version recorded_size sample_rate scanning_software
+      table_count well_formed width word_count ].inject({}) { |j, i| j[i] = i; j}
     @attribute_mapping['recorded_size'] = 'file_size'
     @attribute_mapping['channels'] = 'alpha_channels'
     @attribute_mapping['checksum'] = 'original_checksum'
     @attribute_mapping
   end
-  # rubocop:enable Metrics/MethodLength
 
   private
 

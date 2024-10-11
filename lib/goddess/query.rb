@@ -149,6 +149,7 @@ module Goddess
       setup_custom_queries
     end
 
+    # rubocop:disable Metrics/MethodLength
     def setup_custom_queries
       # load all the sql based custom queries
       [
@@ -170,5 +171,6 @@ module Goddess
         services[0].custom_queries.register_query_handler(handler)
       end
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end
