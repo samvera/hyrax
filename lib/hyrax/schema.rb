@@ -56,7 +56,7 @@ module Hyrax
     ##
     # @!attribute [r] name
     #   @return [Symbol]
-    attr_reader :name, :version
+    attr_reader :name, :version, :contexts
 
     ##
     # Pick the default schema loader based on whether flex is on or not
@@ -70,16 +70,17 @@ module Hyrax
     # @note use Hyrax::Schema(:my_schema) instead
     #
     # @api private
-    def initialize(schema_name, schema_loader: Hyrax::Schema.default_schema_loader, schema_version: '1')
+    def initialize(schema_name, schema_loader: Hyrax::Schema.default_schema_loader, schema_version: '1', contexts: [])
       @name = schema_name.to_s
       @version = schema_version
       @schema_loader = schema_loader
+      @contexts = contexts
     end
 
     ##
     # @return [Hash{Symbol => Dry::Types::Type}]
     def attributes
-      @schema_loader.attributes_for(schema: name, version:)
+      @schema_loader.attributes_for(schema: name, version:, contexts:)
     end
 
     ##

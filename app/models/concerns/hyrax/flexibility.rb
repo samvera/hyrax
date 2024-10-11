@@ -5,6 +5,7 @@ module Hyrax
     extend ActiveSupport::Concern
     included do
       attribute :schema_version,       Valkyrie::Types::String
+      attribute :contexts,          Valkyrie::Types::Set.of(Valkyrie::Types::String)
     end
 
     class_methods do
@@ -70,11 +71,17 @@ module Hyrax
         attributes[:schema_version] ||=  Hyrax::FlexibleSchema.order('id DESC').pick(:id)
         struct = allocate
         schema_version = attributes[:schema_version]
-        struct.singleton_class.attributes(Hyrax::Schema(self, schema_version:).attributes)
+        contexts = attributes[:contexts] || []
+        struct.singleton_class.attributes(Hyrax::Schema(self, schema_version:, contexts:).attributes)
         clean_attributes = safe ? struct.singleton_class.schema.call_safe(attributes) { |output = attributes| return yield output } : struct.singleton_class.schema.call_unsafe(attributes)
         struct.__send__(:initialize, clean_attributes)
         struct
       end
+    end
+
+    def contexts=(value)
+      val = Array.wrap(value).map { |v| v.split }.flatten
+      @attributes[:contexts] = val
     end
 
     # Override set_value from valkyrie 3.1.1 to enable dynamic schema loading
