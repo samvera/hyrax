@@ -149,6 +149,7 @@ module Wings
       af_object.attributes = converted_attrs.except(:members, :files, :file_name)
       af_object.original_filename = converted_attrs[:file_name] if converted_attrs[:file_name]
       af_object.extracted_text = create_extrated_text(af_object) if resource.attributes[:extracted_text_id].present?
+      af_object.based_near = convert_based_near(converted_attrs[:based_near]) if converted_attrs[:based_near]
       perform_lease_conversion(af_object: af_object, resource: resource)
       perform_embargo_conversion(af_object: af_object, resource: resource)
 
@@ -163,6 +164,14 @@ module Wings
       af_object.files.build_or_set(files) if files
     end
     # rubocop:enable Metrics/AbcSize
+
+    def convert_based_near(based_near_string)
+      converted_based_near = []
+      based_near_string.each do |bn|
+        converted_based_near << Hyrax::ControlledVocabularies::Location.new(bn)
+      end
+      converted_based_near
+    end
 
     def create_extrated_text(af_object)
       pcdm_et_file = af_object.extracted_text.presence || af_object.create_extracted_text
