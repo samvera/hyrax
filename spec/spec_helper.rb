@@ -60,6 +60,8 @@ Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter)
 Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Postgres::MetadataAdapter.new, :postgres_adapter)
+Valkyrie::MetadataAdapter
+  .register(Freyja::MetadataAdapter.new, :freyja_adapter)
 version_path = Rails.root / 'tmp' / 'test_adapter_uploads'
 Valkyrie::StorageAdapter.register(
   Valkyrie::Storage::VersionedDisk.new(base_path: version_path),
@@ -238,11 +240,13 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers, type: :feature
 
   config.before(:each, type: :feature) do |example|
+    adapter_name = example.metadata[:valkyrie_adapter]
+
     clean_active_fedora_repository unless
       # trust that clean_repo performed the clean if present
       example.metadata[:clean_repo] ||
       # don't run for adapters other than wings
-      (example.metadata[:valkyrie_adapter].present? && example.metadata[:valkyrie_adapter] != :wings_adapter)
+      (adapter_name.present? && ![:wings_adapter, :freyja_adapter, :frigg_adapter].include?(adapter_name))
   end
 
   config.append_after(:each, type: :feature) do
@@ -350,8 +354,18 @@ RSpec.configure do |config|
   config.prepend_before(:example, :valkyrie_adapter) do |example|
     adapter_name = example.metadata[:valkyrie_adapter]
 
-    if adapter_name == :wings_adapter
+    if [:wings_adapter, :freyja_adapter, :frigg_adapter].include?(adapter_name)
       skip("Don't test Wings when it is dasabled") if Hyrax.config.disable_wings
+      unless adapter_name == :wings_adapter
+        Valkyrie::StorageAdapter.register(
+          Valkyrie::Storage::Disk.new(base_path: Rails.root.join("tmp", "storage", "files"),
+                                      file_mover: FileUtils.method(:cp)),
+          :disk
+        )
+        allow(Valkyrie.config)
+          .to receive(:storage_adapter)
+          .and_return(Valkyrie::StorageAdapter.find(:disk))
+      end
     else
       allow(Hyrax.config).to receive(:disable_wings).and_return(true)
       hide_const("Wings") # disable_wings=true removes the Wings constant
