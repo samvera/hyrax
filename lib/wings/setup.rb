@@ -127,6 +127,15 @@ custom_queries.each do |query_handler|
   Valkyrie.config.metadata_adapter.query_service.custom_queries.register_query_handler(query_handler)
 end
 
+Valkyrie.config.resource_class_resolver = lambda do |resource_klass_name|
+  return resource_klass_name.constantize unless defined?(Wings)
+  klass_name = resource_klass_name.gsub(/Resource$/, '')
+  # Second one should throw a name error because we do not know what you want if
+  # it isn't one of these two options
+  klass = klass_name.safe_constantize || resource_klass_name.constantize
+  Wings::ModelRegistry.reverse_lookup(klass) || klass
+end
+
 Wings::ModelRegistry.register(Hyrax::AccessControl, Hydra::AccessControl)
 Wings::ModelRegistry.register(Hyrax.config.admin_set_class_for_wings, AdminSet)
 Wings::ModelRegistry.register(Hyrax.config.collection_class_for_wings, ::Collection)
