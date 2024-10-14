@@ -39,7 +39,10 @@ RSpec.describe Freyja::Persister, :active_fedora, :clean_repo, valkyrie_adapter:
 
       Wings::ModelRegistry.register(CustomResource, Custom)
     end
+
     after do
+      Wings::ModelRegistry.unregister(CustomResource)
+
       Object.send(:remove_const, :CustomResource)
       Object.send(:remove_const, :Custom)
     end
