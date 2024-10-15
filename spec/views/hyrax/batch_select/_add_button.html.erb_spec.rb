@@ -3,7 +3,7 @@
 RSpec.describe 'hyrax/batch_select/_add_button.html.erb', type: :view do
   let(:document) { double(id: 123) }
   before do
-    render 'hyrax/batch_select/add_button.html.erb', document: document
+    render 'hyrax/batch_select/add_button', document: document
   end
 
   it 'renders a checkbox named "batch_document_ids[]"' do
