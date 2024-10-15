@@ -3,7 +3,7 @@ RSpec.describe 'hyrax/dashboard/collections/_subcollection_list.html.erb', type:
   let(:user) { create :user }
   let(:ability) { instance_double("Ability") }
   let(:collection) { stub_model(Collection, id: '123') }
-  let(:subject) { render('subcollection_list.html.erb', id: collection.id, collection: subcollection) }
+  let(:subject) { render('subcollection_list', id: collection.id, collection: subcollection) }
 
   before do
     allow(view).to receive(:id).and_return(collection.id)
@@ -19,7 +19,7 @@ RSpec.describe 'hyrax/dashboard/collections/_subcollection_list.html.erb', type:
     end
 
     it "posts a warning message" do
-      render('subcollection_list.html.erb', collection: subcollection)
+      render('subcollection_list', collection: subcollection)
       expect(rendered).to have_text("There are no visible subcollections.")
     end
   end
