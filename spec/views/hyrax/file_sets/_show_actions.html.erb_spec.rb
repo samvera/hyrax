@@ -31,7 +31,7 @@ RSpec.describe 'hyrax/file_sets/_show_actions.html.erb', type: :view do
       Hyrax.config.citations = citations
       allow(ability).to receive(:can?).with(:edit, anything).and_return(false)
       assign(:presenter, presenter)
-      view.lookup_context.view_paths.push 'app/views/hyrax/base'
+      stub_template '_social_media.html.erb' => 'social_media'
       render
     end
 
@@ -57,7 +57,7 @@ RSpec.describe 'hyrax/file_sets/_show_actions.html.erb', type: :view do
       allow(ability).to receive(:can?).with(:edit, anything).and_return(true)
       allow(presenter).to receive(:editor?).and_return(true)
       assign(:presenter, presenter)
-      view.lookup_context.view_paths.push 'app/views/hyrax/base'
+      stub_template '_social_media.html.erb' => 'social_media'
       render
     end
 
