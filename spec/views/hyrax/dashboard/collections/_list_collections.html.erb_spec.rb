@@ -33,7 +33,7 @@ RSpec.describe 'hyrax/dashboard/collections/_list_collections.html.erb', type: :
     before do
       allow(ability).to receive(:admin?).and_return(false)
       allow(presenter).to receive(:managed_access).and_return('Manage Access')
-      render('list_collections.html.erb', collection_presenter: presenter)
+      render('list_collections', collection_presenter: presenter)
     end
 
     # NOTE: Real labels are Manage, Deposit, or View, but UI shows whatever label gets returned,
@@ -47,7 +47,7 @@ RSpec.describe 'hyrax/dashboard/collections/_list_collections.html.erb', type: :
     before do
       allow(ability).to receive(:admin?).and_return(true)
       allow(presenter).to receive(:managed_access).and_return('Manage')
-      render('list_collections.html.erb', collection_presenter: presenter)
+      render('list_collections', collection_presenter: presenter)
     end
 
     it "doesn't show access" do
