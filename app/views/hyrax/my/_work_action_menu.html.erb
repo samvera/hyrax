@@ -2,7 +2,7 @@
 
 <div class="btn-group">
 
-  <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= document.id %>" aria-haspopup="true" aria-expanded="false" aria-controls="<%= ul_id %>">
+  <button class="btn btn-default btn-sm dropdown-toggle" data-bs-toggle="dropdown" type="button" id="dropdownMenu_<%= document.id %>" aria-haspopup="true" aria-expanded="false" aria-controls="<%= ul_id %>">
     <span class="sr-only"><%= t("hyrax.dashboard.my.sr.press_to") %> </span>
     <%= t("hyrax.dashboard.my.action.select") %>
   </button>
@@ -22,7 +22,7 @@
                     method: :delete,
                     id: 'action-delete-work',
                     data: {
-                      confirm: t("hyrax.dashboard.my.action.work_confirmation", application_name: application_name) } do %>
+                      'bs-confirm': t("hyrax.dashboard.my.action.work_confirmation", application_name: application_name) } do %>
           <%= t("hyrax.dashboard.my.action.delete_work") %>
         <% end %>
       </li>

@@ -9,7 +9,8 @@ end
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'bootsnap', '>= 1.1.0', require: false
-gem 'bootstrap', '~> 4.0'
+gem 'bootstrap', '~> 5.3'
+gem 'browse-everything', github: 'samvera/browse-everything', branch: '2.x-stable-dlp'
 gem 'coffee-rails', '~> 4.2'
 gem 'dalli'
 gem 'devise'
@@ -39,6 +40,7 @@ gem 'turbolinks', '~> 5'
 gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'uglifier', '>= 1.3.0'
+gem 'valkyrie', github: 'samvera/valkyrie', branch: 'main'
 
 group :development do
   gem 'better_errors' # add command line in browser when errors
