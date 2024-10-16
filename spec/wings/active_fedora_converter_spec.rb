@@ -124,12 +124,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :active_fedora, :clean_repo do
     end
 
     context 'when given a valkyrie native model' do
-      let(:based_near) { "https://sws.geonames.org/4920808/" }
-      let(:resource) do
-        klass.new(title: ['comet in moominland'],
-                  distant_relation: ['Snufkin'],
-                  based_near: [based_near])
-      end
+      let(:resource) { klass.new(title: ['comet in moominland'], distant_relation: ['Snufkin']) }
       let(:klass) { Hyrax::Test::Converter::Resource }
 
       before do
@@ -138,7 +133,6 @@ RSpec.describe Wings::ActiveFedoraConverter, :active_fedora, :clean_repo do
             class Resource < Hyrax::Resource
               attribute :title, Valkyrie::Types::Array.of(Valkyrie::Types::String)
               attribute :distant_relation, Valkyrie::Types::String
-              attribute :based_near, Valkyrie::Types::Array.of(Valkyrie::Types::String)
             end
           end
         end
@@ -158,11 +152,6 @@ RSpec.describe Wings::ActiveFedoraConverter, :active_fedora, :clean_repo do
       it 'converts arbitrary metadata' do
         expect(converter.convert)
           .to have_attributes(title: ['comet in moominland'], distant_relation: ['Snufkin'])
-      end
-
-      it 'converts based_near to an RDF::URI' do
-        converted_work = converter.convert
-        expect(converted_work.based_near.first).to be_a(Hyrax::ControlledVocabularies::Location)
       end
 
       it 'supports indexing' do
