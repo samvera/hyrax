@@ -19,10 +19,17 @@ module Hyrax
     #
     # @raise Hyrax::ObjectNotFoundError
     def self.find(_model_class, id)
-      return Hyrax.query_service.find_by(id: id) unless Hyrax.config.enable_noids?
+      self.find_by(id:) ||
       Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: id)
     rescue Valkyrie::Persistence::ObjectNotFoundError => err
       raise Hyrax::ObjectNotFoundError, err.message
+    end
+
+    private
+
+    def self.find_by(id:)
+      Hyrax.query_service.find_by(id:)
+    rescue Valkyrie::Persistence::ObjectNotFoundError
     end
   end
 end
