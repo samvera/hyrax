@@ -49,8 +49,12 @@ module Wings
     end
 
     ##
-    # @return [RDF::Term]
+    # Valkyrie objects contain a URI string for location objects so we need
+    # to return just the string for mapping from Fedora
+    #
+    # @return [RDF::Term || String]
     def result
+      return value.id if value.is_a?(Hyrax::ControlledVocabularies::Location)
       value.to_term
     end
   end
