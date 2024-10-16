@@ -33,8 +33,15 @@ module Hyrax
     def initialize(rules)
       define_method :to_solr do |*args|
         super(*args).tap do |document|
-          rules.each do |index_key, method|
-            document[index_key] = resource.try(method)
+          if Hyrax.config.flexible?
+            Hyrax::Schema.default_schema_loader.index_rules_for(schema: resource.class.to_s, version: resource.schema_version).each do |index_key, method|
+              document[index_key] = resource.try(method)
+            end
+            document['schema_version_ssi'] = resource.schema_version
+          else
+            rules.each do |index_key, method|
+              document[index_key] = resource.try(method)
+            end
           end
         end
       end
