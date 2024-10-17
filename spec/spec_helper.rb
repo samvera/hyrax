@@ -26,7 +26,8 @@ end
 require 'factory_bot'
 
 require File.expand_path("config/environment", '../hyrax-webapp')
-db_config = ActiveRecord::Base.configurations[ENV['RAILS_ENV']]
+# db_config = ActiveRecord::Base.configurations[ENV['RAILS_ENV']]
+db_config = ActiveRecord::Base.configurations.configs_for(env_name: ENV['RAILS_ENV'])[0]
 ActiveRecord::Tasks::DatabaseTasks.create(db_config)
 ActiveRecord::Migrator.migrations_paths = [Pathname.new(ENV['RAILS_ROOT']).join('db', 'migrate').to_s]
 ActiveRecord::Tasks::DatabaseTasks.migrate
@@ -161,7 +162,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.fixture_path = File.expand_path("../fixtures", __FILE__)
+  config.fixture_paths = [File.expand_path("../fixtures", __FILE__)]
   config.file_fixture_path = File.expand_path("../fixtures", __FILE__)
   config.use_transactional_fixtures = false
 
