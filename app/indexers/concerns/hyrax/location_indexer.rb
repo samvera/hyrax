@@ -6,7 +6,7 @@ module Hyrax
   module LocationIndexer
     def to_solr
       super.tap do |index_document|
-        index_document[:based_near_label_tesim] = index_document[:based_near_label_tesim] = based_near_label_lookup(resource.based_near) if resource.respond_to? :based_near
+        index_document[:based_near_label_tesim] = index_document[:based_near_label_sim] = based_near_label_lookup(resource.based_near) if resource.respond_to? :based_near
       end
     end
 
