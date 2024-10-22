@@ -168,14 +168,17 @@ RSpec.configure do |config|
   config.before :suite do
     FactoryBot::SyntaxRunner.include ActiveJob::TestHelper
     FactoryBot::SyntaxRunner.include RSpec::Mocks::ExampleMethods
+    # Workarounds for perform_enqueued_jobs
     FactoryBot::SyntaxRunner.include ActiveSupport::Testing::TaggedLogging
-    # HACK: Workaround for issue with TaggedLogging
     # See https://github.com/rspec/rspec-rails/issues/2545
     FactoryBot::SyntaxRunner.class_eval do
       def name
         'FactoryBot::SyntaxRunner'
       end
     end
+    require 'rspec/core/minitest_assertions_adapter'
+    FactoryBot::SyntaxRunner.include RSpec::Core::MinitestAssertionsAdapter
+    # End of workarounds
     Hyrax::RedisEventStore.instance.then(&:flushdb)
     DatabaseCleaner.clean_with(:truncation)
     # Noid minting causes extra LDP requests which slow the test suite.
