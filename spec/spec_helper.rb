@@ -169,6 +169,7 @@ RSpec.configure do |config|
   config.before :suite do
     FactoryBot::SyntaxRunner.include ActiveJob::TestHelper
     FactoryBot::SyntaxRunner.include RSpec::Mocks::ExampleMethods
+    FactoryBot::SyntaxRunner.include ActiveSupport::Testing::TaggedLogging
     Hyrax::RedisEventStore.instance.then(&:flushdb)
     DatabaseCleaner.clean_with(:truncation)
     # Noid minting causes extra LDP requests which slow the test suite.
