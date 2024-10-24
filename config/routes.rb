@@ -25,7 +25,6 @@ Hyrax::Engine.routes.draw do
   # Eventually it would be good to update the javascript so that it doesn't
   # submit the form, just the file and always uses POST.
   patch '/uploads', to: 'uploads#create'
-  
 
   match 'batch_edits/clear' => 'batch_edits#clear', as: :batch_edits_clear, via: [:get, :post]
   resources :batch_edits, only: [:index] do
