@@ -18,7 +18,6 @@ Hyrax::Engine.routes.draw do
   get '/resourcelist' => 'resource_sync#resource_list', as: :resource_list
   get '/changelist' => 'resource_sync#change_list', as: :change_list
 
-  delete '/uploads/delete_incomplete', to: 'uploads#delete_incomplete'
   delete '/uploads/:id', to: 'uploads#destroy', as: :uploaded_file
   post '/uploads', to: 'uploads#create'
   # This is a hack that is required because the rails form the uploader is on
@@ -26,7 +25,6 @@ Hyrax::Engine.routes.draw do
   # Eventually it would be good to update the javascript so that it doesn't
   # submit the form, just the file and always uses POST.
   patch '/uploads', to: 'uploads#create'
-  get '/uploads/resume_upload', to: 'uploads#resume_upload'
   
 
   match 'batch_edits/clear' => 'batch_edits#clear', as: :batch_edits_clear, via: [:get, :post]

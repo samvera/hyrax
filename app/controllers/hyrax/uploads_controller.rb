@@ -4,37 +4,32 @@ module Hyrax
     load_and_authorize_resource class: Hyrax::UploadedFile, except: [:resume_upload, :delete_incomplete]
 
     def create
-      @upload.attributes = { file: params[:files].first,
-                             user: current_user }
+      
+      if params[:id].blank?
+        @upload.attributes = { file: params[:files].first,
+                              user: current_user }
+      else
+        @upload = Hyrax::UploadedFile.find(params[:id])
+        unpersisted_upload = Hyrax::UploadedFile.new(file: params[:files].first, user: current_user) 
+
+        # deal with chunks
+        current_size = @upload.file.size
+        content_range = request.headers['CONTENT-RANGE']
+        begin_of_chunk = content_range[/\ (.*?)-/,1].to_i # "bytes 100-999999/1973660678" will return '100'
+  
+        # Add the following chunk to the incomplete upload
+        if @upload.file.present? && begin_of_chunk == current_size
+          File.open(@upload.file.path, "ab") { |f| f.write(params[:files].first.read) } 
+        else
+          @upload.file = unpersisted_upload.file
+        end
+      end
       @upload.save!
     end
 
     def destroy
       @upload.destroy
       head :no_content
-    end
-
-    def resume_upload
-      file_name = params[:file]
-      uploaded_file = Hyrax::UploadedFile.find_by(file: file_name)
-      
-      if uploaded_file
-        render json: { file: { name: uploaded_file.file_set_uri, size: uploaded_file.file.size } }
-      else
-        render json: { file: nil }
-      end
-    end
-
-    def delete_incomplete
-      file_name = params[:file_name]
-      uploaded_file = Hyrax::UploadedFile.find_by(file: file_name)
-
-      if uploaded_file
-        uploaded_file.destroy
-        render json: { success: true, message: "Incomplete upload deleted." }, status: :ok
-      else
-        render json: { success: false, message: "File not found." }, status: :not_found
-      end
     end
   end
 end
