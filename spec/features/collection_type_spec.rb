@@ -78,7 +78,7 @@ RSpec.describe 'collection_type', type: :feature do
   end
 
   describe 'edit collection type' do
-    context 'when there are no collections of this type' do
+    context 'when there are no collections of this type', :clean_repo do
       before do
         exhibit_collection_type
         sign_in admin_user
@@ -270,7 +270,7 @@ RSpec.describe 'collection_type', type: :feature do
   end
 
   describe 'delete collection type' do
-    context 'when there are no collections of this type' do
+    context 'when there are no collections of this type', :clean_repo do
       let!(:empty_collection_type) { create(:collection_type, title: 'Empty Type', creator_user: admin_user) }
       let!(:delete_modal_text) { 'Deleting this collection type will permanently remove the type and its settings from the repository. Are you sure you want to delete this collection type?' }
       let!(:deleted_flash_text) { "The collection type #{empty_collection_type.title} has been deleted." }
