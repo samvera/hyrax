@@ -23,14 +23,18 @@
     hyraxUploader: function( options ) {
       // Initialize our jQuery File Upload widget.
       this.fileupload($.extend({
-        // xhrFields: {withCredentials: true},              // to send cross-domain cookies
-        // acceptFileTypes: /(\.|\/)(png|mov|jpe?g|pdf)$/i, // not a strong check, just a regex on the filename
-        // limitMultiFileUploadSize: 500000000, // bytes
+        maxChunkSize: 500, // 10 MB
         autoUpload: true,
         url: '/uploads/',
         type: 'POST',
         dropZone: $(this).find('.dropzone')
       }, Hyrax.config.uploader, options))
+      .on('fileuploadsend', function(e, data) {
+        if (data.files[0].size > data.maxChunkSize) {
+          console.log('Chunking in progress...');
+        }
+        console.log('Sending chunk or full file: ', data);
+      })
       .on('fileuploadadded', function (e, data) {
         $(e.currentTarget).find('button.cancel').removeAttr("hidden");
       });
