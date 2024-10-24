@@ -6,6 +6,7 @@ module Hyrax
     extend ActiveSupport::Concern
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
+    include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
 
     included do
       with_themed_layout :decide_layout

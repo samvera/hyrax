@@ -7,6 +7,11 @@ module Hyrax
     #
     # This form wraps +Hyrax::ChangeSet+ in the +HydraEditor::Form+ interface.
     class ResourceForm < Hyrax::ChangeSet # rubocop:disable Metrics/ClassLength
+      # These do not get auto loaded when using a flexible schema and should instead
+      # be added to the individual Form classes for a work type or smart enough
+      # to be selective as to when they trigger
+      include BasedNearFieldBehavior if Hyrax.config.flexible?
+
       ##
       # @api private
       #
@@ -47,7 +52,17 @@ module Hyrax
       #
       # Forms should be initialized with an explicit +resource:+ parameter to
       # match indexers.
-      def initialize(deprecated_resource = nil, resource: nil)
+      def initialize(deprecated_resource = nil, resource: nil) # rubocop:disable Metrics/MethodLength
+        if Hyrax.config.flexible?
+          singleton_class.schema_definitions = self.class.definitions
+          r = resource || deprecated_resource
+
+          Hyrax::Schema.default_schema_loader.form_definitions_for(schema: r.class.to_s, version: Hyrax::FlexibleSchema.current_schema_id).map do |field_name, options|
+            singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
+            singleton_class.validates field_name.to_sym, presence: true if options.fetch(:required, false)
+          end
+        end
+
         if resource.nil?
           if !deprecated_resource.nil?
             Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. Pass the resource with `resource:` instead."
@@ -56,9 +71,21 @@ module Hyrax
             super()
           end
         else
+          # make a new resource with all of the existing attributes
+          if Hyrax.config.flexible?
+            hash = resource.attributes.dup
+            hash[:schema_version] = Hyrax::FlexibleSchema.current_schema_id
+            resource = resource.class.new(hash)
+            # find any fields removed by the new schema
+            to_remove = self.singleton_class.definitions.select {|k, v| !resource.respond_to?(k) && v.instance_variable_get("@options")[:display]}
+            to_remove.keys.each do |removed_field|
+              self.singleton_class.definitions.delete(removed_field)
+            end
+          end
+
           super(resource)
         end
-      end
+      end # rubocop:enable Metrics/MethodLength
 
       class << self
         ##
@@ -87,7 +114,7 @@ module Hyrax
         ##
         # @return [Array<Symbol>] list of required field names as symbols
         def required_fields
-          definitions
+          schema_definitions
             .select { |_, definition| definition[:required] }
             .keys.map(&:to_sym)
         end
@@ -98,14 +125,25 @@ module Hyrax
         # @return [Array<Symbol>] list of required field names as symbols
         def required_fields=(fields)
           fields = fields.map(&:to_s)
-          raise(KeyError) unless fields.all? { |f| definitions.key?(f) }
+          raise(KeyError) unless fields.all? { |f| schema_definitions.key?(f) }
 
-          fields.each { |field| definitions[field].merge!(required: true) }
+          fields.each { |field| schema_definitions[field].merge!(required: true) }
 
           required_fields
         end
-      end
 
+        def schema_definitions
+          @definitions
+        end
+
+        def schema_definitions=(values)
+          @definitions = values
+        end
+
+        def expose_class
+          @expose_class = Class.new(Disposable::Expose).from(schema_definitions.values)
+        end
+      end
       ##
       # @param [#to_s] attr
       # @param [Object] value
@@ -127,9 +165,12 @@ module Hyrax
       # @return [Array<Symbol>] terms for display 'above-the-fold', or in the most
       #   prominent form real estate
       def primary_terms
-        _form_field_definitions
-          .select { |_, definition| definition[:primary] }
-          .keys.map(&:to_sym)
+        terms = _form_field_definitions
+                .select { |_, definition| definition[:primary] }
+                .keys.map(&:to_sym)
+
+        terms = [:schema_version] + terms if Hyrax.config.flexible?
+        terms
       end
 
       ##
@@ -146,10 +187,32 @@ module Hyrax
         secondary_terms.any?
       end
 
+      # OVERRIDE disposable 0.6.3 to make schema dynamic
+      def schema
+        if Hyrax.config.flexible?
+          Definition::Each.new(singleton_class.schema_definitions)
+        else
+          super
+        end
+      end
+
       private
 
+      # OVERRIDE valkyrie 3.0.1 to make schema dynamic
+      def field(field_name)
+        if Hyrax.config.flexible?
+          singleton_class.schema_definitions.fetch(field_name.to_s)
+        else
+          super
+        end
+      end
+
       def _form_field_definitions
-        self.class.definitions
+        if Hyrax.config.flexible?
+          singleton_class.schema_definitions
+        else
+          self.class.definitions
+        end
       end
     end
   end
