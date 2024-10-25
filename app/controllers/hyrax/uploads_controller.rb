@@ -37,6 +37,9 @@ module Hyrax
     def chunk_valid?(upload)
       current_size = upload.file.size
       content_range = request.headers['CONTENT-RANGE']
+
+      return false unless content_range
+
       begin_of_chunk = content_range[/\ (.*?)-/, 1].to_i
       upload.file.present? && begin_of_chunk == current_size
     end
