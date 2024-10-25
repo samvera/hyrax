@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::CustomQueries::FindAccessControl do
   subject(:query_handler) { described_class.new(query_service: query_service) }
-  let(:adapter)           { Valkyrie::MetadataAdapter.find(:test_adapter) }
+  let(:adapter)           { Hyrax.metadata_adapter }
   let(:persister)         { adapter.persister }
   let(:query_service)     { adapter.query_service }
 
