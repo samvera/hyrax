@@ -26,6 +26,17 @@ RSpec.describe Hyrax::CustomQueries::FindAccessControl, skip: !Hyrax.config.disa
       end
     end
 
+    context 'for deleted object' do
+      let(:resource) { persister.save(resource: Hyrax::Resource.new) }
+
+      before { persister.delete(resource: resource) }
+
+      it 'raises ObjectNotFoundError' do
+        expect { query_handler.find_access_control_for(resource: resource) }
+          .to raise_error Valkyrie::Persistence::ObjectNotFoundError
+      end
+    end
+
     context 'when an acl exists' do
       let(:acl)      { persister.save(resource: Hyrax::AccessControl.new(access_to: resource.id)) }
       let(:resource) { persister.save(resource: Hyrax::Resource.new) }
