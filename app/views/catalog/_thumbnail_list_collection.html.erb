@@ -1,4 +1,4 @@
 <div class="col-md-3">
-  <%= document_presenter(document)&.thumbnail&.thumbnail_tag({}, { suppress_link: true }) %>
+  <%= document_presenter(document)&.thumbnail&.thumbnail_tag({ alt: document.title_or_label }, { suppress_link: true }) %>
 </div> 
 
