@@ -100,18 +100,11 @@ export class FieldManager {
         let $listing = $(event.target).closest(this.inputTypeClass).find(this.listClass)
         let $activeField = $listing.children('li').last()
 
-        // ID from first input + how many other inputs
-        let labelID = $listing.children('li').first().find('input').attr('id') + '_' + 'label';
-
         if (this.inputIsEmpty($activeField)) {
             this.displayEmptyWarning();
         } else {
             this.clearEmptyWarning();
-            // Create new field
-            let $new = this._newField($activeField);
-            // Make new field labelled by field label
-            $new.find('input').attr('aria-labelledby',labelID);
-            $listing.append($new);
+            $listing.append(this._newField($activeField));
         }
 
         this._manageFocus()
@@ -168,10 +161,9 @@ export class FieldManager {
 
         return label;
     }
-    // adds aria-label
+
     createAddHtml(options) {
         var $addHtml  = $(options.addHtml);
-        $addHtml.attr('aria-label', options.addText + options.label);
         $addHtml.find('.controls-add-text').html(options.addText + options.label);
         return $addHtml;
     }
