@@ -39,7 +39,7 @@ export class FieldManager {
 
     // ensure ID is assigned
     _addInitialID() {
-      let id = this.element.find('input').attr('id') + '_' + 'label';
+      let id = this.element.find('.multi_value.form-control').attr('id') + '_' + 'label';
       this.element.find('label').attr('id', id);
     }
 
