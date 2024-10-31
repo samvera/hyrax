@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Hyrax
   class UploadsController < ApplicationController
     load_and_authorize_resource class: Hyrax::UploadedFile
@@ -9,6 +10,7 @@ module Hyrax
       else
         handle_chunked_upload
       end
+
       @upload.save!
     end
 
@@ -23,6 +25,16 @@ module Hyrax
       @upload.attributes = { file: params[:files].first, user: current_user }
     end
 
+    def chunk_valid?(upload)
+      content_range = request.headers['CONTENT-RANGE']
+      return false unless content_range
+
+      begin_of_chunk = content_range[/\ (.*?)-/, 1].to_i
+      current_size = upload.file.size
+
+      upload.file.present? && begin_of_chunk == current_size
+    end
+
     def handle_chunked_upload
       @upload = Hyrax::UploadedFile.find(params[:id])
       unpersisted_upload = Hyrax::UploadedFile.new(file: params[:files].first, user: current_user)
@@ -34,18 +46,12 @@ module Hyrax
       end
     end
 
-    def chunk_valid?(upload)
-      current_size = upload.file.size
-      content_range = request.headers['CONTENT-RANGE']
-
-      return false unless content_range
-
-      begin_of_chunk = content_range[/\ (.*?)-/, 1].to_i
-      upload.file.present? && begin_of_chunk == current_size
-    end
-
     def append_chunk(upload)
-      File.open(upload.file.path, "ab") { |f| f.write(params[:files].first.read) }
+      File.open(upload.file.path, "ab") do |f|
+        f.write(params[:files].first.read)
+      end
+
+      upload.reload
     end
 
     def replace_file(upload, unpersisted_upload)
