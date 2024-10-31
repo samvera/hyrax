@@ -40,7 +40,9 @@ export class FieldManager {
     // ensure ID is assigned
     _addInitialID() {
       let id = this.element.find('.multi_value.form-control').attr('id') + '_' + 'label';
-      this.element.find('label').attr('id', id);
+      if (id != "undefined_label"){
+        this.element.find('label').attr('id', id);
+      }
     }
 
     _addAriaLiveRegions() {
