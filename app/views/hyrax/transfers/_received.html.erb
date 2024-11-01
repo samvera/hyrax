@@ -23,7 +23,7 @@
         <% if req.pending? %>
             <div class="btn-group">
               <button class="btn btn-sm btn-primary" href="#"><%= t(".accept") %></button>
-              <button class="btn btn-sm dropdown-toggle accept" data-toggle="dropdown" href="#"></button>
+              <button class="btn btn-sm dropdown-toggle accept" data-toggle="dropdown" href="#"><span class="sr-only">accept options</span></button>
               <ul class="dropdown-menu">
                 <li class="dropdown-item">
                   <%= link_to t(".allow_depositor_to_retain_edit_access"), hyrax.accept_transfer_path(req), method: :put, class: 'accept-retain', title: t(".accept_the_file_and_allow_the_original_depositor_to_retain_access_to_edit_the_file_and_metadata") %>
