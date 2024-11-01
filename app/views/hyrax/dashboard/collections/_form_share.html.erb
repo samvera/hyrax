@@ -25,10 +25,11 @@
                                         class: 'form-control search-input' %>
               </div>
               <div class="form-group">
-                <label class="mr-2">as</label>
+                <label id="add_group_as" class="mr-2">as</label>
                 <%= builder.select :access,
                                       access_options,
                                       { prompt: t('.select_a_role') },
+                                     'aria-labelledby': "add_group_as",
                                       class: 'form-control' %>
               </div>
             <% end %>
@@ -56,10 +57,11 @@
                                         placeholder: t('.search_for_a_user') %>
               </div>
               <div class="form-group">
-                <label class="mx-2">as</label>
+                <label id="add_user_as" class="mx-2">as</label>
                 <%= builder.select :access,
                                     access_options,
                                     { prompt: t('.select_a_role') },
+                                    'aria-labelledby': "add_user_as",
                                     class: 'form-control' %>
               </div>
             <% end %>
@@ -75,8 +77,8 @@
 
     <h2 class="h3"><%= t(".current_shared") %></h2>
     <section class="section-collection-sharing">
-     
-      
+
+
       <%= render 'form_share_table', access: 'managers', filter: :manage? %>
       <%= render 'form_share_table', access: 'depositors', filter: :deposit? %>
       <%= render 'form_share_table', access: 'viewers', filter: :view? %>

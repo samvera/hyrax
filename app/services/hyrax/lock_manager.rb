@@ -16,11 +16,11 @@ module Hyrax
 
     ##
     # Blocks until lock is acquired or timeout.
-    def lock(key)
+    def lock(key, ttl: @ttl, retry_count: @retry_count, retry_delay: @retry_delay)
       returned_from_block = nil
 
       pool.then do |conn|
-        client(conn).lock(key, @ttl) do |locked|
+        client(conn, retry_count: retry_count, retry_delay: retry_delay).lock(key, ttl) do |locked|
           raise UnableToAcquireLockError unless locked
           returned_from_block = yield
         end
@@ -31,16 +31,16 @@ module Hyrax
       Hyrax.logger.error(err.message)
       raise(ConnectionPool::TimeoutError,
             "Failed to acquire a lock from Redlock due to a Redis connection " \
-            "timeout: #{err}. If you are using Redis via `ConnectionPool` " \
-            "you may wish to increase the pool size.")
+              "timeout: #{err}. If you are using Redis via `ConnectionPool` " \
+              "you may wish to increase the pool size.")
     end
 
     private
 
     ##
     # @api_private
-    def client(conn)
-      Redlock::Client.new([conn], retry_count: @retry_count, retry_delay: @retry_delay)
+    def client(conn, retry_count:, retry_delay:)
+      Redlock::Client.new([conn], retry_count: retry_count, retry_delay: retry_delay)
     end
 
     ##
