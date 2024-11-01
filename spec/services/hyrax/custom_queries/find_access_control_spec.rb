@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::CustomQueries::FindAccessControl do
+RSpec.describe Hyrax::CustomQueries::FindAccessControl, skip: !Hyrax.config.disable_wings do
   subject(:query_handler) { described_class.new(query_service: query_service) }
   let(:adapter)           { Hyrax.metadata_adapter }
   let(:persister)         { adapter.persister }
