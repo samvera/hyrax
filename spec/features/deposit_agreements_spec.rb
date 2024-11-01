@@ -36,6 +36,7 @@ RSpec.describe 'Deposit Agreement options', :js, :workflow, :clean_repo do
       within('div#add-files') do
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
       end
+      expect(page).to have_content('image.jp2') # Ensures async upload finishes
 
       expect(page).not_to have_selector('#agreement')
       expect(page).to have_selector('input[name="save_with_files"]:not([disabled])')
