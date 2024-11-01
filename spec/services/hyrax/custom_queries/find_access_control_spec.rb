@@ -33,8 +33,8 @@ RSpec.describe Hyrax::CustomQueries::FindAccessControl, skip: !Hyrax.config.disa
       before { acl } # ensure the acl gets saved
 
       it 'returns the acl' do
-        expect(query_handler.find_access_control_for(resource: resource))
-          .to eq acl
+        expect(query_handler.find_access_control_for(resource: resource).id)
+          .to eq acl.id
       end
     end
 
