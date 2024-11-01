@@ -5,7 +5,7 @@ require 'hyrax/specs/spy_listener'
 
 RSpec.describe Hyrax::Transactions::Steps::Save do
   subject(:step)      { described_class.new(persister: persister) }
-  let(:adapter)       { Valkyrie::MetadataAdapter.find(:test_adapter) }
+  let(:adapter)       { Hyrax.metadata_adapter }
   let(:change_set)    { change_set_class.new(resource) }
   let(:persister)     { adapter.persister }
   let(:resource)      { build(:hyrax_work) }
