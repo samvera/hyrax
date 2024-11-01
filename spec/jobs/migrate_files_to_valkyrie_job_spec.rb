@@ -35,5 +35,6 @@ RSpec.describe MigrateFilesToValkyrieJob, valkyrie_adapter: :freyja_adapter, per
     described_class.new.attribute_mapping.each do |k, v|
       expect(valkyrized_file_set.original_file.send(k)).to match_array(pcdm_file.send(v))
     end
+    expect(SolrDocument.find(valkyrized_file_set.id.to_s).width).to eq(222)
   end
 end
