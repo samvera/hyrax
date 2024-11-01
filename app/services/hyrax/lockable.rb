@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+require 'forwardable'
+
 module Hyrax
   module Lockable
+    extend Forwardable
     extend ActiveSupport::Concern
 
-    def acquire_lock_for(lock_key, &block)
-      lock_manager.lock(lock_key, &block)
-    end
+    def_delegator :lock_manager, :lock, :acquire_lock_for
 
     def lock_manager
       @lock_manager ||= LockManager.new(
