@@ -22,9 +22,11 @@ export class FieldManager {
         this.init();
     }
 
+    // call _addInitialID
     init() {
         this._addInitialClasses();
-        this._addAriaLiveRegions()
+        this._addInitialID();
+        this._addAriaLiveRegions();
         this._appendControls();
         this._attachEvents();
         this._addCallbacks();
@@ -33,6 +35,14 @@ export class FieldManager {
     _addInitialClasses() {
         this.element.addClass("managed");
         $(this.fieldWrapperClass, this.element).addClass("input-group input-append");
+    }
+
+    // ensure ID is assigned
+    _addInitialID() {
+      let id = this.element.find('.multi_value.form-control').attr('id') + '_' + 'label';
+      if (id != "undefined_label"){
+        this.element.find('label').attr('id', id);
+      }
     }
 
     _addAriaLiveRegions() {
