@@ -73,6 +73,8 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
         Hyrax.persister.save(resource: valkyrie_file)
       end
     end
+    # reindex the file set after migrating files to include characterization info
+    Hyrax.index_adapter.save(resource: resource)
   end
 
   def copy_attributes(valkyrie_file:, original_file:)
