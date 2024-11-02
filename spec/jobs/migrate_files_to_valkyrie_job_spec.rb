@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'wings'
 
-RSpec.describe MigrateFilesToValkyrieJob, valkyrie_adapter: :freyja_adapter, perform_enqueued: [MigrateFilesToValkyrieJob] do
+RSpec.describe MigrateFilesToValkyrieJob, index_adapter: :solr_index, valkyrie_adapter: :freyja_adapter, perform_enqueued: [MigrateFilesToValkyrieJob] do
   let(:user)      { create(:user) }
   let(:content) { File.open(fixture_path + '/' + label) }
   let(:uploaded_file1) { build(:uploaded_file, file:) }
@@ -23,9 +23,6 @@ RSpec.describe MigrateFilesToValkyrieJob, valkyrie_adapter: :freyja_adapter, per
 
   before do
     allow(Hyrax.config).to receive(:valkyrie_transition?).and_return(true)
-    # allow(ActiveFedora::Base).to receive(:find).and_call_original
-    # allow(ActiveFedora::Base).to receive(:find).with(migrated_file_set.original_file.file_identifier.to_s).and_return(file_with_characterization)
-    # allow(File_Set).to receive(:find).with(fedora_file_set.id).and_return(fedora_file_set)
   end
 
   it "it migrates all derivatives along with a file" do
@@ -35,5 +32,7 @@ RSpec.describe MigrateFilesToValkyrieJob, valkyrie_adapter: :freyja_adapter, per
     described_class.new.attribute_mapping.each do |k, v|
       expect(valkyrized_file_set.original_file.send(k)).to match_array(pcdm_file.send(v))
     end
+    solr_doc = Hyrax.index_adapter.connection.get("select", params: { q: "id:#{valkyrized_file_set.id.to_s}" })["response"]["docs"].first
+    expect(solr_doc['width_is']).to eq(222)
   end
 end
