@@ -30,7 +30,7 @@ RSpec.describe Qa::Authorities::FindWorks, :clean_repo do
 
     context "when work has child works" do
       before do
-        work4.member_ids << work1.id
+        work4.member_ids += [work1.id]
         Hyrax.persister.save(resource: work4)
         Hyrax.index_adapter.save(resource: work4)
       end
@@ -42,7 +42,7 @@ RSpec.describe Qa::Authorities::FindWorks, :clean_repo do
 
     context "when work has parent works" do
       before do
-        work1.member_ids << work4.id
+        work1.member_ids += [work4.id]
         Hyrax.persister.save(resource: work1)
         Hyrax.index_adapter.save(resource: work1)
       end

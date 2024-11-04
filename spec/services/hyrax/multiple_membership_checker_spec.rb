@@ -176,7 +176,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
           context 'and the member is already in the other single membership collection' do
             before do
               [item, item_2].each do |work|
-                work.member_of_collection_ids << collection2.id
+                work.member_of_collection_ids += [collection2.id]
                 Hyrax.persister.save(resource: work)
                 Hyrax.publisher.publish('object.metadata.updated', object: work, user: user)
               end
@@ -192,7 +192,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
           context 'and the member is not already in the other single membership collection' do
             before do
-              item_2.member_of_collection_ids << collection2.id
+              item_2.member_of_collection_ids += [collection2.id]
               Hyrax.persister.save(resource: item_2)
               Hyrax.publisher.publish('object.metadata.updated', object: item_2, user: user)
 
