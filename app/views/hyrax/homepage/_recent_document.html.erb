@@ -11,10 +11,10 @@
           <% end %>
         </h3>
         <p class="recent-field">
-          <span class="recent-label"><%= t('hyrax.homepage.recently_uploaded.document.depositor_label') %>:</span> <%= link_to_profile recent_document.depositor(t('hyrax.homepage.recently_uploaded.document.depositor_missing')) %>
+          <span class="recent-label text-dark"><%= t('hyrax.homepage.recently_uploaded.document.depositor_label') %>:</span> <%= link_to_profile recent_document.depositor(t('hyrax.homepage.recently_uploaded.document.depositor_missing')) %>
         </p>
         <p class="recent-field">
-          <span class="recent-label"><%= t('hyrax.homepage.recently_uploaded.document.keyword_label') %>:</span> <%= link_to_facet_list(recent_document.keyword, 'keyword', t('hyrax.homepage.recently_uploaded.document.keyword_missing')).html_safe %>
+          <span class="recent-label text-dark"><%= t('hyrax.homepage.recently_uploaded.document.keyword_label') %>:</span> <%= link_to_facet_list(recent_document.keyword, 'keyword', t('hyrax.homepage.recently_uploaded.document.keyword_missing')).html_safe %>
         </p>
       </div>
     </div>
