@@ -5,9 +5,10 @@ module Hyrax
 
     def create
       if params[:id].blank?
-        handle_new_upload
+        @upload.attributes = { file: params[:files].first,
+                               user: current_user }
       else
-        handle_chunked_upload
+        upload_with_chunking
       end
       @upload.save!
     end
@@ -19,39 +20,24 @@ module Hyrax
 
     private
 
-    def handle_new_upload
-      @upload.attributes = { file: params[:files].first, user: current_user }
-    end
-
-    def handle_chunked_upload
+    def upload_with_chunking
       @upload = Hyrax::UploadedFile.find(params[:id])
       unpersisted_upload = Hyrax::UploadedFile.new(file: params[:files].first, user: current_user)
 
-      if chunk_valid?(@upload)
-        append_chunk(@upload)
-      else
-        replace_file(@upload, unpersisted_upload)
-      end
-    end
-
-    def chunk_valid?(upload)
-      current_size = upload.file.size
+      # Check if CONTENT-RANGE header is present
       content_range = request.headers['CONTENT-RANGE']
+      return @upload.file = unpersisted_upload.file if content_range.nil?
 
-      return false unless content_range
+      # deal with chunks
+      current_size = @upload.file.size
+      begin_of_chunk = content_range[/\ (.*?)-/, 1].to_i # "bytes 100-999999/1973660678" will return '100'
 
-      begin_of_chunk = content_range[/\ (.*?)-/, 1].to_i
-      upload.file.present? && begin_of_chunk == current_size
-    end
-
-    def append_chunk(upload)
-      File.open(upload.file.path, "ab") { |f| f.write(params[:files].first.read) }
-    end
-
-    def replace_file(upload, unpersisted_upload)
-      upload.file = unpersisted_upload.file
-      upload.save!
-      upload.reload
+      # Add the following chunk to the incomplete upload
+      if @upload.file.present? && begin_of_chunk == current_size
+        File.open(@upload.file.path, "ab") { |f| f.write(params[:files].first.read) }
+      else
+        @upload.file = unpersisted_upload.file
+      end
     end
   end
 end

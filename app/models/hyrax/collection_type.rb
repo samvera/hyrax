@@ -111,7 +111,7 @@ module Hyrax
     # @return [Boolean] True if there are any collections of this collection type in the repository
     def collections?
       return false unless id
-      Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: { Hyrax.config.collection_type_index_field.to_sym => to_global_id.to_s }).with_model(model: Hyrax.config.collection_class).count > 0
+      Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: { Hyrax.config.collection_type_index_field.to_sym => to_global_id.to_s }).with_model(model: Hyrax.config.collection_class.to_rdf_representation).count > 0
     end
 
     # @return [Boolean] True if this is the Admin Set type
