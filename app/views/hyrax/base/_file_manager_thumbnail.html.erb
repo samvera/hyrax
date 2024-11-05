@@ -1,1 +1,1 @@
-<%= document_presenter(node)&.thumbnail&.thumbnail_tag({ class: 'thumbnail-inner mw-100' }, {}) %>
+<%= document_presenter(node)&.thumbnail&.thumbnail_tag({ class: 'thumbnail-inner mw-100', 'alt': "Thumbnail image for #{node.title[0]}" }, {}) %>
