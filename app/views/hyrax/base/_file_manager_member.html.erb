@@ -3,7 +3,8 @@
       <%= simple_form_for [main_app, node], remote: true, html: {'data-type': 'json'} do |f| %>
         <div class="card-header">
           <div class="order-title">
-            <%= f.input :title, as: :string, input_html: { name: "#{f.object.model_name.singular}[title][]", class: "title" }, value: node.to_s, label: false, hint: false %>
+            <label class="sr-only" id='<%= "edit_#{f.object.model_name.singular}_title" %>'>Edit title</label>
+            <%= f.input :title, as: :string, input_html: { name: "#{f.object.model_name.singular}[title][]", class: "title", 'aria-labelledby': "edit_#{f.object.model_name.singular}_title" }, value: node.to_s, label: false, hint: false %>
           </div>
           <div class="file-set-link float-right">
             <%= link_to contextual_path(node, @presenter), title: "Edit file" do %>
@@ -11,9 +12,11 @@
             <% end %>
           </div>
           <% if node.respond_to?(:label) %>
-            <div class="order-filename">
-              <em title="<%= node.page_title %>">(<%= truncate(node.label, length: 29) %>)</em>
-            </div>
+            <% unless node.label.nil? %>
+              <div class="order-filename" >
+                <em title="<%= node.page_title %>">(<%= truncate(node.label, length: 29) %>)</em>
+              </div>
+            <% end %>
           <% end %>
         </div>
         <div class="card-body">
