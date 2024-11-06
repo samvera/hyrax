@@ -26,8 +26,10 @@ export default class SaveManager {
   check_button() {
     if (this.is_changed) {
       this.save_button.removeClass("disabled")
+      this.save_button.attr("aria-disabled", "false")
     } else {
       this.save_button.addClass("disabled")
+      this.save_button.attr("aria-disabled", "true")
     }
   }
 
