@@ -90,6 +90,7 @@ SUMMARY
   spec.add_dependency 'sprockets', '3.7.2' # 3.7.3 fails feature specs
   spec.add_dependency 'sass-rails', '~> 6.0'
   spec.add_dependency 'select2-rails', '~> 3.5'
+  spec.add_dependency 'uri', '~> 0.13'
 
   spec.add_development_dependency "capybara", '~> 3.29'
   spec.add_development_dependency 'capybara-screenshot', '~> 1.0'
