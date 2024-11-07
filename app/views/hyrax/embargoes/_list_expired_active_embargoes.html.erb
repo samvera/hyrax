@@ -22,7 +22,7 @@
     <table class="embargoes table">
       <thead>
         <tr>
-          <th><label><input type="checkbox" id="checkAllBox" class="batch_document_selector" aria-labelledby="checkAllBox"/></label> <label for="checkAllBox"><%= t('.select_all') %></label></th>
+          <th><input type="checkbox" id="checkAllBox" class="batch_document_selector" aria-labelledby="checkAllBox"/> <label for="checkAllBox"><%= t('.select_all') %></label></th>
           <%= render partial: 'table_headers' %>
         </tr>
       </thead>
@@ -40,7 +40,7 @@
         <tr data-behavior="extra" data-id="<%= curation_concern.id %>" class="extra-embargo-info">
           <td></td>
           <td colspan=5>
-            <label><%= check_box_tag "embargoes[#{i}][copy_visibility]", curation_concern.id, true, 'aria-labelledby': "embargoes_#{i}_copy_visibility" %></label>
+            <%= check_box_tag "embargoes[#{i}][copy_visibility]", curation_concern.id, true, 'aria-labelledby': "embargoes_#{i}_copy_visibility" %>
             <label for="embargoes_<%= i %>_copy_visibility"><%= t('.change_all', cc: curation_concern) %>
             <%= visibility_badge(curation_concern.visibility_after_embargo) %>?</label>
           </td>
