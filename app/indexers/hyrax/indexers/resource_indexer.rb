@@ -47,6 +47,7 @@ module Hyrax
           "system_modified_dtsi": resource.updated_at,
           "has_model_ssim": resource.to_rdf_representation,
           "human_readable_type_tesim": resource.human_readable_type,
+          "human_readable_type_sim": resource.human_readable_type,
           "alternate_ids_sim": resource.alternate_ids.map(&:to_s)
         }.with_indifferent_access
       end
