@@ -31,6 +31,12 @@ module Hyrax
       def model_name
         model.to_model.model_name
       end
+
+      ##
+      # @return [String]
+      def to_s
+        [*model.title].join(' ')
+      end
     end
   end
 end
