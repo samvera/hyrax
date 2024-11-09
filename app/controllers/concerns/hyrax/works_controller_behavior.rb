@@ -263,6 +263,8 @@ module Hyrax
 
     def contextual_path(presenter, parent_presenter)
       ::Hyrax::ContextualPath.new(presenter, parent_presenter).show
+    rescue NoMethodError
+      ''
     end
 
     ##
