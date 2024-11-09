@@ -15,7 +15,7 @@ class MigrateResourcesJob < ApplicationJob
     else
       ids.each do |id|
         migrate(id)
-     end
+      end
     end
     raise errors.inspect if errors.present?
   end
