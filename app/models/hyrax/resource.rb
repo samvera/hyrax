@@ -151,7 +151,7 @@ module Hyrax
 
     # Its nice to know if a record is still in AF or not
     def wings?
-      self.respond_to?(:head) && self.respond_to?(:tail)
+      respond_to?(:head) && respond_to?(:tail)
     end
 
     def ==(other)

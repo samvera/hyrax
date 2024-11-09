@@ -11,8 +11,8 @@ RSpec.describe MigrateResourcesJob, clean: true do
     clear_enqueued_jobs
   end
 
-  let(:account)        { create(:account_with_public_schema) }
-  let(:af_file_set)       { create(:file_set, title: ['TestFS']) }
+  let(:account) { create(:account_with_public_schema) }
+  let(:af_file_set) { create(:file_set, title: ['TestFS']) }
 
   let!(:af_admin_set) do
     as = AdminSet.new(title: ['AF Admin Set'])
