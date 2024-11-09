@@ -32,8 +32,9 @@ module Freyja
 
     def convert_and_migrate_resource(orm_object)
       new_resource = resource_factory.to_resource(object: orm_object)
-      if Hyrax.config.valkyrie_transition? && new_resource.is_a?(Hyrax::FileSet) && new_resource.file_ids.size == 1 && new_resource.file_ids.first.id.to_s.match('/files/')
-        MigrateFilesToValkyrieJob.perform_later(new_resource)
+      if Hyrax.config.valkyrie_transition?
+        MigrateFilesToValkyrieJob.perform_later(new_resource) if new_resource.is_a?(Hyrax::FileSet) && new_resource.file_ids.size == 1 && new_resource.file_ids.first.id.to_s.match('/files/')
+        MigrateResourcesJob.perform_later(ids: new_resource.member_ids) if new_resource.is_a?(Hyrax::Work)
       end
       new_resource
     end
