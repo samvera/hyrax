@@ -1,17 +1,28 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::CustomQueries::FindAccessControl do
+RSpec.describe Hyrax::CustomQueries::FindAccessControl, skip: !Hyrax.config.disable_wings do
   subject(:query_handler) { described_class.new(query_service: query_service) }
-  let(:adapter)           { Valkyrie::MetadataAdapter.find(:test_adapter) }
+  let(:adapter)           { Hyrax.metadata_adapter }
   let(:persister)         { adapter.persister }
   let(:query_service)     { adapter.query_service }
 
   describe '#find_access_control' do
     context 'for missing object' do
-      let(:resource) { Valkyrie::Resource.new }
+      let(:resource) { Hyrax::Resource.new }
 
       it 'raises ObjectNotFoundError' do
         expect { query_handler.find_access_control_for(resource: resource) }
-          .to raise_error { Valkyrie::Persistence::ObjectNotFoundError }
+          .to raise_error Valkyrie::Persistence::ObjectNotFoundError
+      end
+    end
+
+    context 'for deleted object' do
+      let(:resource) { persister.save(resource: Hyrax::Resource.new) }
+
+      before { persister.delete(resource: resource) }
+
+      it 'raises ObjectNotFoundError' do
+        expect { query_handler.find_access_control_for(resource: resource) }
+          .to raise_error Valkyrie::Persistence::ObjectNotFoundError
       end
     end
 
@@ -22,8 +33,8 @@ RSpec.describe Hyrax::CustomQueries::FindAccessControl do
       before { acl } # ensure the acl gets saved
 
       it 'returns the acl' do
-        expect(query_handler.find_access_control_for(resource: resource))
-          .to eq acl
+        expect(query_handler.find_access_control_for(resource: resource).id)
+          .to eq acl.id
       end
     end
 
@@ -39,7 +50,7 @@ RSpec.describe Hyrax::CustomQueries::FindAccessControl do
 
       it 'raises ObjectNotFoundError' do
         expect { query_handler.find_access_control_for(resource: resource) }
-          .to raise_error { Valkyrie::Persistence::ObjectNotFoundError }
+          .to raise_error Valkyrie::Persistence::ObjectNotFoundError
       end
     end
   end

@@ -6,7 +6,13 @@ module Hyrax
 
     def only_expired_leases(solr_params)
       solr_params[:fq] ||= []
-      solr_params[:fq] = 'lease_expiration_date_dtsi:[* TO NOW]'
+      solr_params[:fq] = "lease_expiration_date_dtsi:[* TO #{now}]"
+    end
+
+    private
+
+    def now
+      Hyrax::TimeService.time_in_utc.utc.xmlschema
     end
   end
 end
