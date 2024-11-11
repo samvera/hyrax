@@ -2,7 +2,6 @@
 
 require 'freyja/persister'
 RSpec.describe MigrateResourcesJob, clean: true, index_adapter: :solr_index, valkyrie_adapter: :freyja_adapter do
-  let(:account) { create(:account_with_public_schema) }
   let(:af_file_set) { create(:file_set, title: ['TestFS']) }
 
   let!(:af_admin_set) do
@@ -16,9 +15,7 @@ RSpec.describe MigrateResourcesJob, clean: true, index_adapter: :solr_index, val
       expect(Valkyrie::Persistence::Postgres::ORM::Resource.find_by(id: af_admin_set.id.to_s)).to be_nil
 
       ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
-      switch!(account)
       MigrateResourcesJob.perform_now
-
       expect(Valkyrie::Persistence::Postgres::ORM::Resource.find_by(id: af_admin_set.id.to_s)).to be_present
     end
 
@@ -26,7 +23,6 @@ RSpec.describe MigrateResourcesJob, clean: true, index_adapter: :solr_index, val
       expect(Valkyrie::Persistence::Postgres::ORM::Resource.find_by(id: af_file_set.id.to_s)).to be_nil
 
       ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
-      switch!(account)
       MigrateResourcesJob.perform_now(ids: [af_file_set.id])
 
       expect(Valkyrie::Persistence::Postgres::ORM::Resource.find_by(id: af_file_set.id.to_s)).to be_present
