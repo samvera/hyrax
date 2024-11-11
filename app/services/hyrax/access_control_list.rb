@@ -136,7 +136,7 @@ module Hyrax
     #
     # @return [Boolean]
     def pending_changes?
-      change_set.changed?
+      !change_set.resource.persisted? || change_set.changed?
     end
 
     ##

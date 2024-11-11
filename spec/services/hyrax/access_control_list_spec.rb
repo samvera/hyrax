@@ -119,10 +119,21 @@ RSpec.describe Hyrax::AccessControlList do
         .from be_empty
     end
 
-    it 'does not publish when permissions are unchanged' do
-      expect { acl.save }
-        .not_to change { listener.object_acl_updated }
-        .from nil
+    context 'when not persisted' do
+      it 'publishes when permissions are unchanged' do
+        expect { acl.save }
+          .to change { listener.object_acl_updated }
+          .from nil
+      end
+    end
+
+    context 'when persisted' do
+      before { acl.save }
+
+      it 'does not publish when permissions are unchanged' do
+        expect { acl.save }
+          .not_to change { listener.object_acl_updated }
+      end
     end
 
     context 'with additions' do
