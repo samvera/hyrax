@@ -20,8 +20,8 @@ RSpec.describe Hyrax::Listeners::FileMetadataListener, valkyrie_adapter: :test_a
     it 'indexes the file_set' do
       expect { listener.on_file_metadata_updated(event) }
         .to change { fake_adapter.saved_resources }
-        .from(be_empty)
-        .to contain_exactly(file_set)
+        .from(contain_exactly(file_set)) # Saving the ACL triggers an index
+        .to(contain_exactly(file_set, file_set))
     end
 
     context 'when the file is not in a file set' do
@@ -53,7 +53,7 @@ RSpec.describe Hyrax::Listeners::FileMetadataListener, valkyrie_adapter: :test_a
       it 'does not index the file_set' do
         expect { listener.on_file_metadata_updated(event) }
           .not_to change { fake_adapter.saved_resources }
-          .from(be_empty)
+          .from(contain_exactly(file_set)) # Saving the ACL triggers an index
       end
     end
   end
