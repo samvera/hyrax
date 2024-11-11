@@ -1,16 +1,7 @@
 # frozen_string_literal: true
 
 require 'freyja/persister'
-RSpec.describe MigrateResourcesJob, clean: true do
-  before do
-    ActiveJob::Base.queue_adapter = :test
-    FactoryBot.create(:group, name: "public")
-  end
-
-  after do
-    clear_enqueued_jobs
-  end
-
+RSpec.describe MigrateResourcesJob, clean: true, index_adapter: :solr_index, valkyrie_adapter: :freyja_adapter do
   let(:account) { create(:account_with_public_schema) }
   let(:af_file_set) { create(:file_set, title: ['TestFS']) }
 
