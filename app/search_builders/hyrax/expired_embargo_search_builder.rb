@@ -12,7 +12,7 @@ module Hyrax
     private
 
     def now
-      Hyrax::TimeService.time_in_utc.xmlschema
+      Hyrax::TimeService.time_in_utc.utc.xmlschema
     end
   end
 end
