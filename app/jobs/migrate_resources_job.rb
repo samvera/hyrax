@@ -26,7 +26,7 @@ class MigrateResourcesJob < ApplicationJob
 
   def migrate(id)
     resource = Hyrax.query_service.find_by(id: id)
-    next unless resource.wings? # this resource has already been converted
+    return unless resource.wings? # this resource has already been converted
     result = MigrateResourceService.new(resource: resource).call
     errors << result unless result.success?
     result
