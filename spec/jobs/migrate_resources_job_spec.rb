@@ -15,7 +15,7 @@ RSpec.describe MigrateResourcesJob, clean: true, index_adapter: :solr_index, val
       expect(Valkyrie::Persistence::Postgres::ORM::Resource.find_by(id: af_admin_set.id.to_s)).to be_nil
 
       ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
-      MigrateResourcesJob.perform_now
+      MigrateResourcesJob.perform_now(ids: [af_admin_set.id])
       expect(Valkyrie::Persistence::Postgres::ORM::Resource.find_by(id: af_admin_set.id.to_s)).to be_present
     end
 

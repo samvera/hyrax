@@ -5,7 +5,7 @@ class MigrateResourcesJob < ApplicationJob
   attr_writer :errors
   # input [Array>>String] Array of ActiveFedora model names to migrate to valkyrie objects
   # defaults to AdminSet & Collection models if empty
-  def perform(models: ['AdminSet', 'Collection'], ids: [])
+  def perform(ids: [], models: ['AdminSet', 'Collection'])
     if ids.blank?
       models.each do |model|
         model.constantize.find_each do |item|
