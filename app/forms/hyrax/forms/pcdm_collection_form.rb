@@ -81,6 +81,15 @@ module Hyrax
         secondary_terms.any?
       end
 
+      ##
+      # This feature is not supported in Valkyrie collections and should be removed as part of #5764
+      # However, the depreciated method is still needed for some specs
+      # @return [] always empty.
+      def select_files
+        Deprecation.warn "`Hyrax::PcdmCollection` does not currently support thumbnail_id. Collection thumbnails need to be redesigned as part of issue #5764"
+        []
+      end
+
       private
 
       def _form_field_definitions

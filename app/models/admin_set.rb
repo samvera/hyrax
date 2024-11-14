@@ -17,6 +17,7 @@
 # @see Hyrax::DefaultAdminSetActor
 # @see Hyrax::ApplyPermissionTemplateActor
 class AdminSet < ActiveFedora::Base
+  include Hydra::PCDM::CollectionBehavior
   include Hydra::AccessControls::Permissions
   include Hyrax::Noid
   include Hyrax::HumanReadableType

@@ -149,6 +149,11 @@ module Hyrax
       self.class.work?
     end
 
+    # Its nice to know if a record is still in AF or not
+    def wings?
+      respond_to?(:head) && respond_to?(:tail)
+    end
+
     def ==(other)
       attributes.except(:created_at, :updated_at) == other.attributes.except(:created_at, :updated_at) if other.respond_to?(:attributes)
     end
