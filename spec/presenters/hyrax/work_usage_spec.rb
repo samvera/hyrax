@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::WorkUsage, type: :model do
   let!(:work) { valkyrie_create(:monograph, date_uploaded: date_uploaded) }
-  let(:date_uploaded) { Time.zone.today - 4.days }
+  let(:date_uploaded) { Hyrax::TimeService.time_in_utc - 4.days }
 
   let(:dates) do
     ldates = []
@@ -107,7 +107,7 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
           Hyrax.config.analytic_start_date = earliest
           described_class.new(work.id)
         end
-        let(:date_uploaded) { Time.zone.today - 4.days }
+        let(:date_uploaded) { Hyrax::TimeService.time_in_utc - 4.days }
 
         it "sets the created date to the earliest date not the created date" do
           expect(usage.created).to eq(work.date_uploaded)
