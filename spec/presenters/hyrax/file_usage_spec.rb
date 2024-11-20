@@ -6,7 +6,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
   let(:file) do
     valkyrie_create(:hyrax_file_set, date_uploaded: date_uploaded, edit_users: [user])
   end
-  let(:date_uploaded) { (Time.zone.today - 4.days).to_s }
+  let(:date_uploaded) { Hyrax::TimeService.time_in_utc - 4.days }
 
   let(:dates) do
     ldates = []
@@ -102,14 +102,14 @@ RSpec.describe Hyrax::FileUsage, type: :model do
     end
 
     context "when the analytics start date is set" do
-      let(:earliest) { DateTime.new(2014, 1, 2).iso8601 }
+      let(:earliest) { DateTime.new(2014, 1, 2) }
 
       before do
         Hyrax.config.analytic_start_date = earliest
       end
 
       describe "create date before earliest date set" do
-        let(:date_uploaded) { DateTime.new(2014, 1, 1).iso8601 }
+        let(:date_uploaded) { DateTime.new(2014, 1, 1) }
 
         it "sets the created date to the earliest date not the created date" do
           expect(usage.created).to eq(earliest)
@@ -117,7 +117,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
       end
 
       describe "create date after earliest" do
-        let(:date_uploaded) { DateTime.new(2014, 1, 3).iso8601 }
+        let(:date_uploaded) { DateTime.new(2014, 1, 3) }
 
         it "sets the created date to the earliest date not the created date" do
           expect(usage.created).to eq(file.date_uploaded)
@@ -129,7 +129,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
       before do
         Hyrax.config.analytic_start_date = nil
       end
-      let(:date_uploaded) { DateTime.new(2014, 1, 1).iso8601 }
+      let(:date_uploaded) { DateTime.new(2014, 1, 1) }
 
       it "sets the created date to the earliest date not the created date" do
         expect(usage.created).to eq(date_uploaded)
@@ -138,7 +138,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
   end
 
   describe "on a migrated file" do
-    let(:date_uploaded) { "2014-12-31" }
+    let(:date_uploaded) { DateTime.new(2014, 12, 31) }
 
     it "uses the date_uploaded for analytics" do
       expect(usage.created).to eq(date_uploaded)
