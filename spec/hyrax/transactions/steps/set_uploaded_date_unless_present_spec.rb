@@ -5,7 +5,7 @@ require 'hyrax/transactions'
 RSpec.describe Hyrax::Transactions::Steps::SetUploadedDateUnlessPresent do
   subject(:step) { described_class.new }
   let(:work)     { build(:hyrax_work) }
-  let(:xmas)     { DateTime.parse('2018-12-25 11:30').iso8601 }
+  let(:xmas)     { DateTime.parse('2018-12-25 11:30') }
 
   before { allow(Hyrax::TimeService).to receive(:time_in_utc).and_return(xmas) }
 
@@ -21,7 +21,7 @@ RSpec.describe Hyrax::Transactions::Steps::SetUploadedDateUnlessPresent do
 
       context 'when a modified date exists' do
         let(:work)      { build(:hyrax_work, date_modified: xmas_past) }
-        let(:xmas_past) { DateTime.parse('2009-12-25 11:30').iso8601 }
+        let(:xmas_past) { DateTime.parse('2009-12-25 11:30') }
 
         it 'sets the uploaded date to the modified date' do
           expect { step.call(work) }
@@ -51,7 +51,7 @@ RSpec.describe Hyrax::Transactions::Steps::SetUploadedDateUnlessPresent do
       end
 
       context 'when an uploaded date exists' do
-        let(:xmas_past) { DateTime.parse('2009-12-25 11:30').iso8601 }
+        let(:xmas_past) { DateTime.parse('2009-12-25 11:30') }
 
         before { change_set.date_uploaded = xmas_past }
 
@@ -63,7 +63,7 @@ RSpec.describe Hyrax::Transactions::Steps::SetUploadedDateUnlessPresent do
       end
 
       context 'when a modified date exists' do
-        let(:xmas_past) { DateTime.parse('2009-12-25 11:30').iso8601 }
+        let(:xmas_past) { DateTime.parse('2009-12-25 11:30') }
 
         before { change_set.date_modified = xmas_past }
 

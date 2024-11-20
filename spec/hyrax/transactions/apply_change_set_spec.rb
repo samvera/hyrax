@@ -9,7 +9,7 @@ RSpec.describe Hyrax::Transactions::ApplyChangeSet do
   let(:change_set) { Hyrax::ChangeSet.for(resource) }
   let(:resource)   { build(:hyrax_work) }
   let(:user)       { create(:user) }
-  let(:xmas)       { DateTime.parse('2018-12-25 11:30').iso8601 }
+  let(:xmas)       { DateTime.parse('2018-12-25 11:30') }
 
   before { allow(Hyrax::TimeService).to receive(:time_in_utc).and_return(xmas) }
 
@@ -25,11 +25,10 @@ RSpec.describe Hyrax::Transactions::ApplyChangeSet do
     end
 
     it 'sets modified and uploaded date' do
-      expected_time = Hyrax.config.disable_wings ? DateTime.parse(xmas) : xmas
 
       expect(tx.call(change_set).value!)
-        .to have_attributes(date_modified: expected_time,
-                            date_uploaded: expected_time)
+        .to have_attributes(date_modified: xmas,
+                            date_uploaded: xmas)
     end
 
     describe 'events' do

@@ -6,10 +6,10 @@ require 'dry/container/stub'
 RSpec.describe Hyrax::Transactions::WorkUpdate, valkyrie_adapter: :test_adapter do
   subject(:tx)     { described_class.new }
   let(:change_set) { Hyrax::ChangeSet.for(resource) }
-  let(:xmas)       { DateTime.parse('2018-12-25 11:30').iso8601 }
+  let(:xmas)       { DateTime.parse('2018-12-25 11:30') }
 
   let(:resource) do
-    FactoryBot.valkyrie_create(:hyrax_work, date_uploaded: DateTime.parse('2018-12-01T11:30').iso8601)
+    FactoryBot.valkyrie_create(:hyrax_work, date_uploaded: DateTime.parse('2018-12-01T11:30'))
   end
 
   describe '#call' do
