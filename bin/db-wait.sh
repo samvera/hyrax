@@ -5,9 +5,9 @@ port=$(printf "%s\n" "$1"| cut -d : -f 2)
 
 shift 1
 
+echo "silently waiting for $host:$port"
 while ! nc -z "$host" "$port"
 do
-  echo "waiting for $host:$port"
   sleep 1
 done
 
