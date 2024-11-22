@@ -25,7 +25,6 @@ RSpec.describe Hyrax::Transactions::ApplyChangeSet do
     end
 
     it 'sets modified and uploaded date' do
-
       expect(tx.call(change_set).value!)
         .to have_attributes(date_modified: xmas,
                             date_uploaded: xmas)
