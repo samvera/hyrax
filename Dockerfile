@@ -1,5 +1,5 @@
 ARG ALPINE_VERSION=3.19
-ARG RUBY_VERSION=3.2.4
+ARG RUBY_VERSION=3.2.6
 
 FROM ruby:$RUBY_VERSION-alpine$ALPINE_VERSION as hyrax-base
 
@@ -91,40 +91,22 @@ ONBUILD RUN bundle install --jobs "$(nproc)"
 ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
 
-FROM hyrax-base as hyrax-engine-dev
+FROM hyrax-worker-base as hyrax-engine-dev
 
-USER root
-RUN apk --no-cache add bash \
-  ffmpeg \
-  mediainfo \
-  perl
 USER app
-
-ARG APP_PATH=.dassie
 ARG BUNDLE_WITHOUT=
-
 ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
 
-COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
+COPY --chown=1001:101 .dassie /app/samvera/hyrax-webapp
+COPY --chown=1001:101 .koppie /app/samvera/hyrax-koppie
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
 
 RUN bundle -v && \
-  bundle install --jobs "$(nproc)" && \
-  cd $HYRAX_ENGINE_PATH && \
-  bundle install --jobs "$(nproc)" && \
-  yarn && yarn cache clean
+  BUNDLE_GEMFILE=Gemfile.dassie bundle install --jobs "$(nproc)" && yarn && \
+  cd ../hyrax-koppie && BUNDLE_GEMFILE=Gemfile.koppie bundle install --jobs "$(nproc)" && yarn && \
+  cd $HYRAX_ENGINE_PATH && bundle install --jobs "$(nproc)" && yarn && \
+  yarn cache clean
 
-RUN RAILS_ENV=production SECRET_KEY_BASE='fakesecret1234' DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
-
-
-FROM hyrax-worker-base as hyrax-engine-dev-worker
-
-ARG APP_PATH=.dassie
-ARG BUNDLE_WITHOUT=
-
-ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
-
-COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
-COPY --chown=1001:101 . /app/samvera/hyrax-engine
-
-RUN bundle install --jobs "$(nproc)"
+# RUN RAILS_ENV=production SECRET_KEY_BASE='fakesecret1234' DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
+ENTRYPOINT ["dev-entrypoint.sh"]
+CMD ["bundle", "exec", "puma", "-v", "-b", "tcp://0.0.0.0:3000"]

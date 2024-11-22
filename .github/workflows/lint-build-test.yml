@@ -1,5 +1,5 @@
 name: 'Lint Build Test'
-run-name: Link Build Test of ${{ github.ref_name }} by @${{ github.actor }}
+run-name: Lint Build Test of ${{ github.ref_name }} by @${{ github.actor }}
 on:
   push:
     branches:
@@ -44,29 +44,25 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        ci_test_app: [dassie,koppie]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build and export
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
-          build-args: |
-            APP_PATH=.${{ matrix.ci_test_app }}
           cache-from: type=gha
           cache-to: type=gha, mode=max
           context: .
           target: hyrax-engine-dev
-          tags: samvera/${{ matrix.ci_test_app }}:latest,samvera/${{ matrix.ci_test_app }}:${{ github.sha }}
-          outputs: type=docker,dest=/tmp/${{ matrix.ci_test_app }}-${{ github.sha }}.tar
+          tags: samvera/hyrax-dev:latest,samvera/hyrax-dev:${{ github.sha }}
+          outputs: type=docker,dest=/tmp/hyrax-dev-${{ github.sha }}.tar
       - name: Upload built image artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.ci_test_app }}-image
-          path: /tmp/${{ matrix.ci_test_app }}-${{ github.sha }}.tar
+          name: hyrax-dev
+          path: /tmp/hyrax-dev-${{ github.sha }}.tar
 
   test:
     needs: build
@@ -74,9 +70,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ci_test_app: [dassie,koppie]
-        ci_node_total: [8]
-        ci_node_index: [0,1,2,3,4,5,6,7]
+        ci_test_app: [dassie,koppie,sirenia]
+        ci_node_total: [4]
+        ci_node_index: [0,1,2,3]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -89,11 +85,11 @@ jobs:
       - name: Download built image artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ matrix.ci_test_app }}-image
+          name: hyrax-dev
           path: /tmp
       - name: Start containers
         run: |
-          docker load --input /tmp/${{ matrix.ci_test_app }}-${{ github.sha }}.tar
+          docker load --input /tmp/hyrax-dev-${{ github.sha }}.tar
           docker image ls -a
           docker compose -f docker-compose-${{ matrix.ci_test_app }}.yml up -d --quiet-pull --pull missing --no-build
       - name: RSpec
@@ -107,7 +103,7 @@ jobs:
         if: always()
         uses: jwalton/gh-docker-logs@v2
         with:
-          images: 'seleniarm/standalone-chromium'
+          images: 'selenium/standalone-chromium,postgres,fcrepo/fcrepo,solr,redis,samvera/fitsservlet,samvera/fcrepo4'
       - name: Move Test Files
         if: always()
         env:
