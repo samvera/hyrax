@@ -1,7 +1,7 @@
 ARG ALPINE_VERSION=3.19
 ARG RUBY_VERSION=3.2.6
 
-FROM ruby:$RUBY_VERSION-alpine$ALPINE_VERSION as hyrax-base
+FROM ruby:$RUBY_VERSION-alpine$ALPINE_VERSION AS hyrax-base
 
 ARG DATABASE_APK_PACKAGE="postgresql-dev"
 ARG EXTRA_APK_PACKAGES="git"
@@ -49,7 +49,7 @@ ENTRYPOINT ["hyrax-entrypoint.sh"]
 CMD ["bundle", "exec", "puma", "-v", "-b", "tcp://0.0.0.0:3000"]
 
 
-FROM hyrax-base as hyrax
+FROM hyrax-base AS hyrax
 
 ARG APP_PATH=.
 ARG BUNDLE_WITHOUT="development test"
@@ -59,7 +59,7 @@ ONBUILD RUN bundle install --jobs "$(nproc)"
 ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
 
-FROM hyrax-base as hyrax-worker-base
+FROM hyrax-base AS hyrax-worker-base
 
 USER root
 RUN apk --no-cache add bash \
@@ -78,10 +78,10 @@ RUN mkdir -p /app/fits && \
     sed -i 's/\(<tool.*TikaTool.*>\)/<!--\1-->/' /app/fits/xml/fits.xml
 ENV PATH="${PATH}:/app/fits"
 
-CMD bundle exec sidekiq
+CMD ["bundle", "exec", "sidekiq"]
 
 
-FROM hyrax-worker-base as hyrax-worker
+FROM hyrax-worker-base AS hyrax-worker
 
 ARG APP_PATH=.
 ARG BUNDLE_WITHOUT="development test"
@@ -91,11 +91,11 @@ ONBUILD RUN bundle install --jobs "$(nproc)"
 ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
 
-FROM hyrax-worker-base as hyrax-engine-dev
+FROM hyrax-worker-base AS hyrax-engine-dev
 
 USER app
 ARG BUNDLE_WITHOUT=
-ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
+ENV HYRAX_ENGINE_PATH=/app/samvera/hyrax-engine
 
 COPY --chown=1001:101 .dassie /app/samvera/hyrax-webapp
 COPY --chown=1001:101 .koppie /app/samvera/hyrax-koppie

@@ -22,6 +22,7 @@ services:
       - VALKYRIE_METADATA_ADAPTER=fedora_metadata
       - VALKYRIE_STORAGE_ADAPTER=fedora_storage
     depends_on:
+      - worker
       - chrome
       - fits
       - memcached
@@ -110,7 +111,7 @@ services:
       - sirenia
 
   fcrepo:
-    image: fcrepo/fcrepo:6.5.1-RC
+    image: fcrepo/fcrepo:6.5.1-RC3-tomcat9
     environment:
       - >-
         CATALINA_OPTS=-Dfcrepo.home=/fcrepo-home -Djava.awt.headless=true -Dfile.encoding=UTF-8
