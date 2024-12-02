@@ -103,7 +103,7 @@ jobs:
         if: always()
         uses: jwalton/gh-docker-logs@v2
         with:
-          images: 'selenium/standalone-chromium,postgres,fcrepo/fcrepo,solr,redis,samvera/fitsservlet,samvera/fcrepo4'
+          images: 'selenium/standalone-chromium,postgres,fcrepo/fcrepo,solr,bitnami/redis,ghcr.io/samvera/fitsservlet,ghcr.io/samvera/fcrepo4'
       - name: Move Test Files
         if: always()
         env:

@@ -19,6 +19,7 @@ services:
     environment:
       - RAILS_ROOT=/app/samvera/hyrax-koppie
     depends_on:
+      - worker
       - chrome
       - fits
       - memcached
