@@ -8,6 +8,12 @@ module Hyrax
       def initialize(curation_concern, current_ability, attributes)
         @curation_concern = curation_concern
         @current_ability = current_ability
+
+        # TODO: how to safely permit a variable list of attributes if we don't know them in advance?
+        # This is no longer allowed because keys in attributes haven't been permitted yet
+        # @attributes = attributes.to_h.with_indifferent_access
+        #
+        attributes.permit! if attributes.class == ActionController::Parameters
         @attributes = attributes.to_h.with_indifferent_access
       end
 
