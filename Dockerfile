@@ -107,6 +107,5 @@ RUN bundle -v && \
   cd $HYRAX_ENGINE_PATH && bundle install --jobs "$(nproc)" && yarn && \
   yarn cache clean
 
-# RUN RAILS_ENV=production SECRET_KEY_BASE='fakesecret1234' DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 ENTRYPOINT ["dev-entrypoint.sh"]
 CMD ["bundle", "exec", "puma", "-v", "-b", "tcp://0.0.0.0:3000"]
