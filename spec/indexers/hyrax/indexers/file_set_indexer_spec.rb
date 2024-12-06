@@ -38,7 +38,7 @@ RSpec.describe Hyrax::Indexers::FileSetIndexer, if: Hyrax.config.use_valkyrie? d
   let(:metadata_attrs) do
     {
       id: SecureRandom.uuid,
-      file_identifier: "versiondisk://#{Rails.root}/tmp/test_adapter_uploads/VALFILEID1",
+      file_identifier: "versiondisk://#{Rails.root.join('tmp', 'test_adapter_uploads', 'VALFILEID1')}",
       alternate_ids: ['AFFILEID1'],
       file_set_id: fileset_id,
 
