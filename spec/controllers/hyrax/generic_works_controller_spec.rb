@@ -380,6 +380,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
             expect(actor).to receive(:create).with(Hyrax::Actors::Environment) do |env|
               expect(env.attributes['uploaded_files']).to eq []
               expect(env.attributes['remote_files']).to eq browse_everything_params.values
+              # expect(env.attributes['remote_files'].map! { |v| v.permit!.to_h }).to eq browse_everything_params.values
             end
 
             post :create, params: {
