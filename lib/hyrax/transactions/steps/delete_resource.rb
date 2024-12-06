@@ -27,8 +27,8 @@ module Hyrax
         def call(resource, user: nil)
           return Failure(:resource_not_persisted) unless resource.persisted?
 
-          @persister.delete(resource: resource)
           publish_changes(resource: resource, user: user)
+          @persister.delete(resource: resource)
 
           Success(resource)
         end

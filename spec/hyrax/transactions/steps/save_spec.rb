@@ -5,7 +5,7 @@ require 'hyrax/specs/spy_listener'
 
 RSpec.describe Hyrax::Transactions::Steps::Save do
   subject(:step)      { described_class.new(persister: persister) }
-  let(:adapter)       { Valkyrie::MetadataAdapter.find(:test_adapter) }
+  let(:adapter)       { Hyrax.metadata_adapter }
   let(:change_set)    { change_set_class.new(resource) }
   let(:persister)     { adapter.persister }
   let(:resource)      { build(:hyrax_work) }
@@ -68,13 +68,13 @@ RSpec.describe Hyrax::Transactions::Steps::Save do
         it 'publishes object.metadata.updated with a user' do
           expect { step.call(change_set, user: user) }
             .to change { listener.object_metadata_updated&.payload }
-            .to match object: an_instance_of(resource.class), user: user
+            .to match object: a_kind_of(resource.class), user: user
         end
 
         it 'publishes object.deposited with a user' do
           expect { step.call(change_set, user: user) }
             .to change { listener.object_deposited&.payload }
-            .to match object: an_instance_of(resource.class), user: user
+            .to match object: a_kind_of(resource.class), user: user
         end
       end
 
@@ -83,7 +83,7 @@ RSpec.describe Hyrax::Transactions::Steps::Save do
         it 'publishes collection.metadata.updated with a user' do
           expect { step.call(change_set, user: user) }
             .to change { listener.collection_metadata_updated&.payload }
-            .to match collection: an_instance_of(resource.class), user: user
+            .to match collection: a_kind_of(resource.class), user: user
         end
       end
     end
