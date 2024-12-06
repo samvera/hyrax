@@ -51,7 +51,10 @@ module Hyrax
 
       def admin_sets_for_select
         source_ids = Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability: current_ability, source_type: 'admin_set')
-        source_ids.map { |admin_set_id| [Hyrax.query_service.find_by(id: admin_set_id).title.first, admin_set_id] }
+
+        Hyrax.query_service.find_many_by_ids(ids: source_ids).map do |source|
+          [source.title.first, source.id]
+        end
       end
     end
   end
