@@ -28,7 +28,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor, :active_fedora do
 
   describe '#create' do
     let(:curation_concern) { create(:generic_work, user: user) }
-    let(:xmas) { DateTime.parse('2014-12-25 11:30').iso8601 }
+    let(:xmas) { DateTime.parse('2014-12-25 11:30') }
     let(:attributes) { {} }
     let(:file) { fixture_file_upload('/world.png', 'image/png') }
     let(:uploaded_file) { Hyrax::UploadedFile.create(file: file, user: user) }
