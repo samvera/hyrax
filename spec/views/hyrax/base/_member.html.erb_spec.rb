@@ -31,7 +31,7 @@ RSpec.describe 'hyrax/base/_member.html.erb' do
     allow(view).to receive(:contextual_path).with(anything, anything) do |x, y|
       Hyrax::ContextualPath.new(x, y).show
     end
-    render 'hyrax/base/member.html.erb', member: presenter
+    render 'hyrax/base/member', member: presenter
   end
 
   it 'checks the :download ability' do

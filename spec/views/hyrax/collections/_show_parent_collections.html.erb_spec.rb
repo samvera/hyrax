@@ -8,7 +8,7 @@ RSpec.describe 'hyrax/collections/_show_parent_collections.html.erb', type: :vie
       'date_created_tesim' => '2000-01-01'
     }
   end
-  let(:subject) { render('show_parent_collections.html.erb', presenter: presenter) }
+  let(:subject) { render('show_parent_collections', presenter: presenter) }
   let(:ability) { double }
   let(:solr_document) { SolrDocument.new(collection_doc) }
   let(:presenter) { Hyrax::CollectionPresenter.new(solr_document, ability) }

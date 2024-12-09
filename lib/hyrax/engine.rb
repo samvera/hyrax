@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
-  class Engine < ::Rails::Engine
+  class Engine < ::Rails::Engine # rubocop:disable Metrics/ClassLength
     isolate_namespace Hyrax
 
     require 'almond-rails'
@@ -88,9 +88,11 @@ module Hyrax
     end
 
     initializer 'requires' do
-      require 'wings' unless Hyrax.config.disable_wings
-      require 'freyja' unless Hyrax.config.disable_freyja
-      require 'frigg' unless Hyrax.config.disable_frigg
+      ActiveSupport::Reloader.to_prepare do
+        require 'wings' unless Hyrax.config.disable_wings
+        require 'freyja' unless Hyrax.config.disable_freyja
+        require 'frigg' unless Hyrax.config.disable_frigg
+      end
     end
 
     initializer 'routing' do

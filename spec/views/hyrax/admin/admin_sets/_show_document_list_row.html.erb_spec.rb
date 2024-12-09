@@ -22,7 +22,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_show_document_list_row.html.erb', type: 
   end
 
   it "renders works" do
-    render 'hyrax/admin/admin_sets/show_document_list_row.html.erb', show_document_list_row: work
+    render 'hyrax/admin/admin_sets/show_document_list_row', show_document_list_row: work
     expect(rendered).to have_content 'One Hundred Years of Solitude'
     expect(rendered).to have_content 'deposited'
   end
