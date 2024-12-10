@@ -8,7 +8,7 @@ RSpec.describe 'The default Hyrax workflow', type: :feature, valkyrie_adapter: :
                                state: Hyrax::ResourceStatus::INACTIVE)
   end
 
-  describe 'initializing the workflow' do
+  describe 'initializing the workflow', :clean_repo do
     let(:attributes) { :LEGACY_UNUSED_ARGUMENT_WITH_NO_KNOWN_USE_CASE_SHOULD_NEVER_BE_REQUIRED }
     let(:workflow_factory) { Hyrax::Workflow::WorkflowFactory }
 

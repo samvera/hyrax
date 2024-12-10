@@ -14,9 +14,11 @@ artifacts/*
 coverage/*
 chart/*
 
-Gemfile.lock
-.dassie/Gemfile.lock
-.koppie/Gemfile.lock
+Gemfile*lock
+*/Gemfile*lock
 
-node_modules/*
+
+node_modules
+*/node_modules
 yarn.lock
+*/yarn.lock

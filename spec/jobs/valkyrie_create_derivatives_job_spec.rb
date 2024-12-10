@@ -7,8 +7,8 @@ RSpec.describe ValkyrieCreateDerivativesJob, perform_enqueued: true do
   let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :with_member_file_sets, :with_thumbnail) }
   let(:upload_0) { FactoryBot.create(:uploaded_file, file_set_uri: file_sets[0].id, file: File.open('spec/fixtures/image.png')) }
   let(:upload_1) { FactoryBot.create(:uploaded_file, file_set_uri: file_sets[1].id, file: File.open('spec/fixtures/world.png')) }
-  let(:file_id_0) { file_sets[0].file_ids.first }
-  let(:file_id_1) { file_sets[1].file_ids.first }
+  let(:file_id_0) { file_sets[0].original_file_id }
+  let(:file_id_1) { file_sets[1].original_file_id }
 
   let(:characterizer) { double(characterize: fits_response) }
   let(:fits_response) { IO.read('spec/fixtures/png_fits.xml') }

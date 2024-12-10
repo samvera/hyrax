@@ -8,7 +8,7 @@ RSpec.describe Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator, :cle
 
   before do
     resources = [collection2, collection3]
-    resources.each { |res| res.member_of_collection_ids << collection1.id }
+    resources.each { |res| res.member_of_collection_ids += [collection1.id] }
     resources.each { |res| Hyrax.persister.save(resource: res) }
   end
 
