@@ -55,6 +55,11 @@ de:
         new: Neue Sammlung Hinzufügen
       delete: Löschen
       edit: Bearbeiten
+      hyrax_metadata_profile:
+        hint: Durch das Importieren eines neuen Profils wird das vorhandene Profil überschrieben
+        import: Metadatenprofil importieren
+        import_metadata_profile: Importprofil
+        submit: Importieren
       less: Weniger
       more: Mehr
       refresh: Aktualisierung
@@ -94,6 +99,7 @@ de:
           note: Benutzern, denen eine neue Rolle zugewiesen wurde, können die damit verbundenen Rollenrechte nur auf jene Arbeiten übertragen, die nach der Gewährung dieser Rolle deponiert wurden.
           permission_destroy_errors:
             admin_group: Die Gruppe der Administratoren des Repositoriums kann nicht entfernt werden
+            participants: Das Löschen der Teilnehmerrechte des Verwaltungssets ist fehlgeschlagen.
           permission_update_errors:
             error: Ungültige Update-Option für Admin-Set-Vorlage.
             no_date: Für die gewählte Release-Option ist ein Datum erforderlich.
@@ -410,6 +416,7 @@ de:
         content_blocks: Inhaltsblöcke
         dashboard: Dashboard
         delete_all: Alles löschen
+        metadata_profiles: Metadatenprofile
         notifications: Benachrichtigungen
         pages: Seiten
         profile: Profil
@@ -473,9 +480,17 @@ de:
       workflows:
         index:
           header: Rückmeldung
+          heading:
+            depositor: Einzahler
+            status: Status
+            submission_date: Abgabetermin
+            work: Arbeiten
           tabs:
             published: Veröffentlicht
             under_review: Unter Begutachtung
+          works_listing: Werkverzeichnis
+          works_published: "<strong>%{total_count} Werke</strong> veröffentlicht"
+          works_under_review: "<strong>%{total_count} Werke</strong> werden überprüft"
     api:
       accepted:
         default: Ihre Anfrage wurde zur Bearbeitung angenommen, aber die Verarbeitung ist nicht abgeschlossen. Siehe Job für mehr Info.
@@ -542,13 +557,7 @@ de:
         add_folder: Ordner hinzufügen
         cancel_upload: Upload abbrechen
         dropzone: Dateien hier hinziehen.
-        local_upload_browse_everything_html: |
-          <p>Sie können eine oder mehre Dateien von Ihrem lokalen System oder einem Cloudanbieter hinzufügen, welche mit
-          dieser Arbeit verknüpft werden sollen.</p>
-          <p>Bitte beachten Sie, dass der Cloud-Anbieter möglicherweise nicht in der Lage ist Ihrer Anfrage 
-          nachzukommen, wenn Sie eine große Anzahl von Dateien innerhalb einer kurzen Zeitspanne hochladen. 
-          Wenn Sie irgendwelche Fehler beim Hochladen aus der Cloud erhalten, teilen Sie uns dies bitte über %{contact_href} mit.</p>
-          <p>Das Hochladen ist auf %{upload_file_limit} Dateien mit jeweils %{upload_size_limit} MB begrenzt.</p>
+        local_upload_browse_everything_html: "<p>Sie können eine oder mehre Dateien von Ihrem lokalen System oder einem Cloudanbieter hinzufügen, welche mit\ndieser Arbeit verknüpft werden sollen.</p>\n<p>Bitte beachten Sie, dass der Cloud-Anbieter möglicherweise nicht in der Lage ist Ihrer Anfrage \nnachzukommen, wenn Sie eine große Anzahl von Dateien innerhalb einer kurzen Zeitspanne hochladen. \nWenn Sie irgendwelche Fehler beim Hochladen aus der Cloud erhalten, teilen Sie uns dies bitte über %{contact_href} mit.</p>\n<p>Das Hochladen ist auf %{upload_file_limit} Dateien mit jeweils %{upload_size_limit} MB begrenzt.</p>\n"
         local_upload_html: |
           <p>Sie können eine oder mehrere Dateien hinzufügen, die dieser Arbeit zugeordnet werden sollen.</p>
           <p>Das Hochladen ist auf %{upload_file_limit} Dateien mit jeweils %{upload_size_limit} MB begrenzt.</p>
@@ -589,6 +598,11 @@ de:
         help_html: Wählen Sie die Datei mit den Medien aus, die diese Arbeit darstellen.
         legend_html: Repräsentative Medien
       form_share:
+        access_options:
+          creator: Schöpfer
+          depositor: Einzahler
+          manager: Manager
+          viewer: Zuschauer
         access_type_to_grant: Zu gewährende Zugriffsart
         account_label_without_suffix: "%{account_label} (ohne den Teil %{suffix})"
         add_sharing: Hinzufügen von individuellen Freigaben
@@ -603,8 +617,8 @@ de:
         help_html: Wählen Sie die Datei aus, die als Miniaturansicht für diese Arbeit verwendet werden soll.
         legend_html: Miniaturansicht
       form_visibility_component:
+        subtitle_html: "<small>Wer sollte diesen Inhalt anzeigen oder herunterladen können?</small>"
         visibility: Sichtbarkeit
-        subtitle_html: <small>Wer sollte diesen Inhalt anzeigen oder herunterladen können?</small>
       inspect_work:
         back_to: Zurück zu
         entity_id: Mandanten-ID
@@ -857,6 +871,7 @@ de:
         form:
           permission_update_errors:
             error: Ungültige Update-Option für die Berechtigungsvorlage
+            sharing: Die Freigabeoptionen der Sammlung konnten nicht aktualisiert werden.
           permission_update_notices:
             participants: Die Freigabeoptionen der Sammlung wurden aktualisiert.
             sharing: Die Freigabeoptionen der Sammlung wurden aktualisiert.
@@ -1002,6 +1017,7 @@ de:
       managed:
         collections: Verwaltete Sammlungen
         works: Verwaltete Arbeiten
+      metadata_profiles: Metadatenprofile
       my:
         action:
           add_to_collection: Zur Sammlung hinzufügen
@@ -1495,6 +1511,7 @@ de:
       owner:
         edit: Zugriff bearbeiten
       read: Lesen/Download
+    read_only: Das Repository befindet sich zur Wartung im Nur-Lese-Modus. Derzeit können keine Einsendungen oder Änderungen vorgenommen werden.
     search:
       button:
         html: <span class="fa fa-search"></span> Suchen
@@ -1712,6 +1729,8 @@ de:
         note_html: Nur Benutzer und / oder Gruppen, denen im Abschnitt „Freigeben“ einen bestimmten Zugriff gewährt wurde.
         text: Privat
       restricted_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
+      unknown:
+        text: Unbekannt
     work_button_row:
       attach_child: Unterarbeit anhängen
     workflow:
