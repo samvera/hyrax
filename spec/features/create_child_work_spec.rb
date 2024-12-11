@@ -45,7 +45,7 @@ RSpec.describe 'Creating a new child Work', :workflow do
     let!(:new_sipity_entity) { create(:sipity_entity, proxy_for: new_parent) }
 
     before do
-      parent.member_ids << curation_concern.id
+      parent.member_ids += [curation_concern.id]
       persister.save(resource: parent)
     end
 
@@ -57,7 +57,7 @@ RSpec.describe 'Creating a new child Work', :workflow do
     end
 
     it "doesn't lose other memberships" do
-      new_parent.member_ids << curation_concern.id
+      new_parent.member_ids += [curation_concern.id]
       persister.save(resource: new_parent)
 
       visit "/concern/parent/#{parent.id}/monographs/#{curation_concern.id}/edit"

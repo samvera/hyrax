@@ -53,14 +53,14 @@ RSpec.describe 'building a IIIF Manifest', :clean_repo do
                                  title: ['supplemental object'],
                                  creator: ['Author, Samantha'],
                                  description: ['supplemental materials'])
-    work.member_ids << child_work.id
+    work.member_ids += [child_work.id]
   end
 
   def build_a_file_set_with_an_image
     file_set = valkyrie_create(:hyrax_file_set, title: ['page n'], creator: ['Jansson, Tove'], description: ['the nth page'])
     valkyrie_create(:hyrax_file_metadata, :original_file, :image, :with_file, original_filename: 'world.png', file_set: file_set, file: uploaded_file)
     persister.save(resource: file_set)
-    work.member_ids << file_set.id
+    work.member_ids += [file_set.id]
   end
 
   def load_manifest_check_standards
