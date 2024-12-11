@@ -84,7 +84,7 @@ SUMMARY
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 5.10'
-  spec.add_dependency 'valkyrie', '~> 3.4'
+  spec.add_dependency 'valkyrie', '~> 3.5'
   spec.add_dependency 'view_component', '~> 2.74.1' # Pin until blacklight is updated with workaround for https://github.com/ViewComponent/view_component/issues/1565
   spec.add_dependency 'sprockets', '3.7.2' # 3.7.3 fails feature specs
   spec.add_dependency 'sass-rails', '~> 6.0'
