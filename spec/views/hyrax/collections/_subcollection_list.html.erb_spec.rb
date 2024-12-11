@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/collections/_subcollection_list.html.erb', type: :view do
-  let(:subject) { render('subcollection_list.html.erb', collection: subcollection) }
+  let(:subject) { render('subcollection_list', collection: subcollection) }
   let(:collection) { stub_model(Collection, id: '123') }
 
   context 'when subcollection list is empty' do
@@ -11,7 +11,7 @@ RSpec.describe 'hyrax/collections/_subcollection_list.html.erb', type: :view do
     end
 
     it "posts a warning message" do
-      render('subcollection_list.html.erb', collection: subcollection)
+      render('subcollection_list', collection: subcollection)
       expect(rendered).to have_text("There are no visible subcollections.")
     end
   end
