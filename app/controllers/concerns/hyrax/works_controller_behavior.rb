@@ -360,6 +360,7 @@ module Hyrax
       # that they have not removed from the upload widget.
       uploaded_files = params.fetch(:uploaded_files, [])
       selected_files = params.fetch(:selected_files, {}).values
+                             .map { |f| f.permit(:expires, :file_name, :url, {}) }
       browse_everything_urls = uploaded_files &
                                selected_files.map { |f| f[:url] }
 
