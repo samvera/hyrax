@@ -18,6 +18,8 @@ classes:
 contexts:
   flexible_context:
     display_label: Flexible Metadata Example
+  special_context:
+    display_label: Special Case Context
 mappings:
   blacklight:
     name: Additional Blacklight Solr Mappings
@@ -803,4 +805,32 @@ properties:
     view:
       render_as: "faceted"
       html_dl: true
- 
+  dimensions:
+    available_on:
+      class:
+      - Hyrax::Work
+      context:
+      - special_context
+    cardinality:
+      minimum: 0
+    multi_value: true
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+      - 'null'
+    display_label:
+      default: Dimensions
+    index_documentation: displayable, searchable
+    indexing:
+    - dimensions_sim
+    - dimensions_tesim
+    form:
+      primary: false
+    property_uri: http://purl.org/dc/terms/format
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - 50" x 20"
+    - 5 m x 10 m x 8 m
+    view:
+      render_as: "faceted"
+      html_dl: true

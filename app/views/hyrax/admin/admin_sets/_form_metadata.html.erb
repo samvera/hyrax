@@ -1,2 +1,5 @@
 <%= f.input :title %>
 <%= f.input :description, as: :text %>
+<% if Hyrax.config.flexible? && Hyrax.config.admin_set_class.new.respond_to?(:contexts) %>
+  <%= f.input :contexts, collection: Hyrax::FlexibleSchema.last.context_select, input_html: { multiple: true } %>
+<% end %>

@@ -16,7 +16,7 @@ module Hyrax
   #
   # @see .FormFields
   class FormFields < Module
-    attr_reader :name
+    attr_reader :name, :version, :contexts
 
     ##
     # @api private
@@ -25,15 +25,17 @@ module Hyrax
     # @param [#form_definitions_for] definition_loader
     #
     # @note use Hyrax::FormFields(:my_schema) instead
-    def initialize(schema_name, definition_loader: Hyrax::Schema.default_schema_loader)
+    def initialize(schema_name, definition_loader: Hyrax::Schema.default_schema_loader, version: 1, contexts:)
       @name = schema_name
+      @contexts = contexts
+      @version = version
       @definition_loader = definition_loader
     end
 
     ##
     # @return [Hash{Symbol => Hash{Symbol => Object}}]
     def form_field_definitions
-      @definition_loader.form_definitions_for(schema: name)
+      @definition_loader.form_definitions_for(schema: name, version:, contexts:)
     end
 
     ##

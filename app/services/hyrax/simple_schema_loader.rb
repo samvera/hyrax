@@ -8,7 +8,7 @@ module Hyrax
   #
   # @see config/metadata/basic_metadata.yaml for an example configuration
   class SimpleSchemaLoader < Hyrax::SchemaLoader
-    def view_definitions_for(schema:, _version: 1)
+    def view_definitions_for(schema:, version: 1, contexts: nil)
       schema.each_with_object({}) do |property, metadata|
         view_options = property.meta['view']
         metadata[property.name.to_s] = view_options unless view_options.nil?
@@ -26,7 +26,7 @@ module Hyrax
     ##
     # @param [#to_s] schema_name
     # @return [Enumerable<AttributeDefinition]
-    def definitions(schema_name, _version)
+    def definitions(schema_name, _version, _contexts = nil)
       schema_config(schema_name)['attributes'].map do |name, config|
         AttributeDefinition.new(name, config)
       end
