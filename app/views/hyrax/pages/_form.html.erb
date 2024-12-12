@@ -2,22 +2,22 @@
 <div class="card tabs">
 
   <ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item">
+    <li class="nav-item" role="presentation">
       <a href="#about" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm">
         <%= t(:'hyrax.pages.tabs.about_page') %>
       </a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" role="presentation">
       <a href="#help" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
         <%= t(:'hyrax.pages.tabs.help_page') %>
       </a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" role="presentation">
       <a href="#agreement" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
         <%= t(:'hyrax.pages.tabs.agreement_page') %>
       </a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" role="presentation">
       <a href="#terms" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
         <%= t(:'hyrax.pages.tabs.terms_page') %>
       </a>
@@ -36,7 +36,7 @@
           </div>
           <div class="card-footer d-flex justify-content-end">
             <%= f.button :submit, class: 'btn btn-primary text-white mr-2' %>
-            <%= link_to t(:'hyrax.pages.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-light' %>
+            <%= link_to t(:'hyrax.pages.cancel'), hyrax.edit_pages_path, class: 'btn btn-light' %>
           </div>
         <% end %>
       </div>
@@ -52,7 +52,7 @@
           </div>
           <div class="card-footer d-flex justify-content-end">
             <%= f.button :submit, class: 'btn btn-primary text-white mr-2' %>
-            <%= link_to t(:'hyrax.pages.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-light' %>
+            <%= link_to t(:'hyrax.pages.cancel'), hyrax.edit_pages_path, class: 'btn btn-light' %>
           </div>
         <% end %>
       </div>
@@ -68,7 +68,7 @@
           </div>
           <div class="card-footer d-flex justify-content-end">
             <%= f.button :submit, class: 'btn btn-primary text-white mr-2' %>
-            <%= link_to t(:'hyrax.pages.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-light' %>
+            <%= link_to t(:'hyrax.pages.cancel'), hyrax.edit_pages_path, class: 'btn btn-light' %>
           </div>
         <% end %>
       </div>
@@ -84,7 +84,7 @@
           </div>
           <div class="card-footer d-flex justify-content-end">
             <%= f.button :submit, class: 'btn btn-primary text-white mr-2' %>
-            <%= link_to t(:'hyrax.pages.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-light' %>
+            <%= link_to t(:'hyrax.pages.cancel'), hyrax.edit_pages_path, class: 'btn btn-light' %>
           </div>
         <% end %>
       </div>

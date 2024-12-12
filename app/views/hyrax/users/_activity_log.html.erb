@@ -7,17 +7,23 @@
       </tr>
     </thead>
     <tbody>
-    <% events.each do |event| %>
-      <% next if event[:action].blank? or event[:timestamp].blank? %>
+    <% valid_events = events.reject { |event| event[:action].blank? || event[:timestamp].blank? } %>
+    <% if valid_events.empty? %>
       <tr>
-        <td class="ensure-wrapped"><%= sanitize event[:action] %></td>
-        <% time = Time.zone.at(event[:timestamp].to_i) %>
-        <td data-sort="<%= time.getutc.iso8601(5) %>">
-          <relative-time datetime="<%= time.getutc.iso8601 %>" title="<%= time.to_formatted_s(:standard) %>">
-            <%= time.to_formatted_s(:long_ordinal) %>
-          </relative-time>
-        </td>
+        <td colspan="2">No user activity</td>
       </tr>
+    <% else %>
+      <% valid_events.each do |event| %>
+        <tr>
+          <td class="ensure-wrapped"><%= sanitize event[:action] %></td>
+          <% time = Time.zone.at(event[:timestamp].to_i) %>
+          <td data-sort="<%= time.getutc.iso8601(5) %>">
+            <relative-time datetime="<%= time.getutc.iso8601 %>" title="<%= time.to_formatted_s(:standard) %>">
+              <%= time.to_formatted_s(:long_ordinal) %>
+            </relative-time>
+          </td>
+        </tr>
+      <% end %>
     <% end %>
     </tbody>
   </table>

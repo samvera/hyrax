@@ -18,6 +18,10 @@ $warning: #565653 !default;
 // * Darkens the text for disabled pagination buttons on every page.
 $breadcrumb-active-color: #4c4c4c;
 $pagination-disabled-color: #4c4c4c;
+$blue: #0056B3 !default;
+// Adjusts link text to show as underlined and then not underlined on hover
+$link-decoration: underline !default;
+$link-hover-decoration: none !default;
 
 // Date picker on safari placeholder text was misaligned
 @media screen {

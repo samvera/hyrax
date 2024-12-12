@@ -12,7 +12,7 @@
     <input type="checkbox" name="batch_document_ids[]" id="batch_document_<%= id %>" value="<%= id %>" class="batch_document_selector"
       data-hasaccess="<%= (can?(:edit, collection_presenter.solr_document)) %>" />
     <% else %>
-    <input type="checkbox" class="disabled batch_document_selector" disabled=true />
+    <input type="checkbox" id="batch_document_<%= id %>" class="disabled batch_document_selector" disabled=true />
     <% end %>
   </td>
   <td>

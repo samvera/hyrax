@@ -22,7 +22,7 @@
     <table class="embargoes table">
       <thead>
         <tr>
-          <th><input type="checkbox" id="checkAllBox" class="batch_document_selector"/> <%= t('.select_all') %></th>
+          <th><input type="checkbox" id="checkAllBox" class="batch_document_selector" aria-labelledby="checkAllBox"/> <label for="checkAllBox"><%= t('.select_all') %></label></th>
           <%= render partial: 'table_headers' %>
         </tr>
       </thead>
@@ -31,19 +31,19 @@
         <tr>
           <td><%= render 'hyrax/batch_select/add_button', document: curation_concern %></td>
           <td class="human-readable-type"><%= curation_concern.human_readable_type %></td>
-          <td class="title"><%= link_to curation_concern, edit_embargo_path(curation_concern) %></td>
+          <td class="title"><label for="batch_document_<%= curation_concern.id %>"><%= link_to curation_concern, edit_embargo_path(curation_concern) %></label></td>
           <td class="current-visibility"><%= visibility_badge(curation_concern.visibility) %></td>
           <td class="embargo-release-date"><%= curation_concern.embargo_release_date %></td>
           <td class="visibility-after-embargo"><%= visibility_badge(curation_concern.visibility_after_embargo) %></td>
-          <td class="actions"><%= link_to t('.deactivate'), embargo_path(curation_concern), method: :delete, class: 'btn btn-primary' %></td>
         </tr>
         <tr data-behavior="extra" data-id="<%= curation_concern.id %>" class="extra-embargo-info">
           <td></td>
-          <td colspan=5>
-            <%= check_box_tag "embargoes[#{i}][copy_visibility]", curation_concern.id, true %>
-            <%= t('.change_all', cc: curation_concern) %>
-            <%= visibility_badge(curation_concern.visibility_after_embargo) %>?
+          <td colspan=4>
+            <%= check_box_tag "embargoes[#{i}][copy_visibility]", curation_concern.id, true, 'aria-labelledby': "embargoes_#{i}_copy_visibility" %>
+            <label for="embargoes_<%= i %>_copy_visibility"><%= t('.change_all', cc: curation_concern) %>
+            <%= visibility_badge(curation_concern.visibility_after_embargo) %>?</label>
           </td>
+          <td class="actions"><%= link_to t('.deactivate'), embargo_path(curation_concern), method: :delete, class: 'btn btn-primary' %></td>
         </tr>
       <% end %>
       </tbody>

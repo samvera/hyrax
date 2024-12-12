@@ -107,7 +107,14 @@ FactoryBot.define do
       Hyrax::EmbargoManager.new(resource: work).apply
       Hyrax::LeaseManager.new(resource: work).apply
 
-      work.permission_manager.acl.save
+      if evaluator.with_index
+        work.permission_manager.acl.save
+      else
+        # manually save acl change_set so it does not automatically index the work
+        change_set = work.permission_manager.acl.send(:change_set)
+        change_set.sync
+        Hyrax.persister.save(resource: change_set.resource)
+      end
 
       # This has to happen after permissions for permissions to propagate.
       if evaluator.uploaded_files.present?

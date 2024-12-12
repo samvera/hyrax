@@ -106,6 +106,14 @@ module Hyrax
       ActiveFedora::Base.where(Hyrax.config.collection_type_index_field.to_sym => to_global_id.to_s)
     end
 
+    # Query solr to see if any collections of this type exist
+    # This should be much more performant for certain adapters than calling collections.any?
+    # @return [Boolean] True if there are any collections of this collection type in the repository
+    def collections?
+      return false unless id
+      Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: { Hyrax.config.collection_type_index_field.to_sym => to_global_id.to_s }).with_model(model: Hyrax.config.collection_class.to_rdf_representation).count > 0
+    end
+
     # @return [Boolean] True if this is the Admin Set type
     def admin_set?
       machine_id == ADMIN_SET_MACHINE_ID
@@ -154,7 +162,7 @@ module Hyrax
     end
 
     def ensure_no_collections
-      return true unless collections.any?
+      return true unless collections?
       errors[:base] << I18n.t('hyrax.admin.collection_types.errors.not_empty')
       throw :abort
     end
@@ -172,7 +180,7 @@ module Hyrax
     end
 
     def ensure_no_settings_changes_if_collections_exist
-      return true unless collections.any?
+      return true unless collections?
       return true unless collection_type_settings_changed?
       errors[:base] << I18n.t('hyrax.admin.collection_types.errors.no_settings_change_if_not_empty')
       throw :abort

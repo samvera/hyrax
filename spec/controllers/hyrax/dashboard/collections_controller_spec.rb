@@ -805,9 +805,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         before { sign_in user }
 
         it 'shows a list of member files' do
-          pending "update implementation to work with CollectionResource" if
-            model.safe_constantize == CollectionResource
-
           get :files, params: { id: collection }, format: :json
 
           expect(response).to be_successful

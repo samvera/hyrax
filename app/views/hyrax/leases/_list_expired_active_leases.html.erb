@@ -32,19 +32,19 @@
         <tr>
           <td><%= render 'hyrax/batch_select/add_button', document: curation_concern %></td>
           <td class="human-readable-type"><%= curation_concern.human_readable_type %></td>
-          <td class="title"><%= link_to curation_concern, edit_lease_path(curation_concern) %></td>
+          <td class="title"><label for="batch_document_<%= curation_concern.id %>"><%= link_to curation_concern, edit_lease_path(curation_concern) %></label></td>
           <td class="current-visibility"><%= visibility_badge(curation_concern.visibility) %></td>
           <td class="lease-release-date"><%= curation_concern.lease_expiration_date %></td>
           <td class="visibility-after-lease"><%= visibility_badge(curation_concern.visibility_after_lease) %></td>
-          <td class="actions"><%= link_to t('.deactivate'), lease_path(curation_concern), method: :delete, class: 'btn btn-primary' %></td>
         </tr>
         <tr data-behavior="extra" data-id="<%= curation_concern.id %>" class="extra-lease-info">
           <td></td>
-          <td colspan=5>
-            <%= check_box_tag "leases[#{i}][copy_visibility]", curation_concern.id, true %>
-            <%= t('.change_all', cc: curation_concern) %>
-            <%= visibility_badge(curation_concern.visibility_after_lease) %>?
+          <td colspan=4>
+            <%= check_box_tag "leases[#{i}][copy_visibility]", curation_concern.id, true, 'aria-labelledby': "leases_#{i}_copy_visibility" %>
+            <label for="leases_<%= i %>_copy_visibility"><%= t('.change_all', cc: curation_concern) %>
+            <%= visibility_badge(curation_concern.visibility_after_lease) %>?</label>
           </td>
+          <td class="actions"><%= link_to t('.deactivate'), lease_path(curation_concern), method: :delete, class: 'btn btn-primary' %></td>
         </tr>
       <% end %>
       </tbody>
