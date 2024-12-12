@@ -6,8 +6,8 @@
 # @see https://github.com/samvera/hyrax/wiki/Hyrax-Valkyrie-Usage-Guide#forms
 # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
 class GenericWorkResourceForm < Hyrax::Forms::ResourceForm(GenericWorkResource)
-  include Hyrax::FormFields(:basic_metadata)
-  include Hyrax::FormFields(:generic_work_resource)
+  include Hyrax::FormFields(:basic_metadata) unless Hyrax.config.flexible?
+  include Hyrax::FormFields(:generic_work_resource) unless Hyrax.config.flexible?
 
   # Define custom form fields using the Valkyrie::ChangeSet interface
   #
