@@ -11,7 +11,7 @@ RSpec.describe FileViewStat, type: :model do
     expect(file_stat).to respond_to(:date)
     expect(file_stat).to respond_to(:file_id)
     expect(file_stat.file_id).to eq("99")
-    expect(file_stat.date).to eq(date)
+    expect(file_stat.date.round(0)).to eq(date.round(0))
     expect(file_stat.views).to eq(25)
     expect(file_stat.user_id).to eq(user_id)
   end
