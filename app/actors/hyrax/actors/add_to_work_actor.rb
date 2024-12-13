@@ -69,7 +69,7 @@ module Hyrax
       end
 
       def add_permissions_error(work)
-        work.errors[:in_works_ids] << "Works can only be related to each other if user has ability to edit both."
+        work.errors.add(:in_works_ids, "Works can only be related to each other if user has ability to edit both.")
       end
     end
   end
