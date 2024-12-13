@@ -31,7 +31,7 @@ class SingleUseLink < ActiveRecord::Base
   end
 
   def cannot_be_destroyed
-    errors[:base] << "Single Use Link has already been used" if destroyed?
+    errors.add(:base, "Single Use Link has already been used") if destroyed?
   end
 
   def set_defaults
