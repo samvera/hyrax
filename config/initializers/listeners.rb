@@ -2,8 +2,10 @@
 
 Hyrax.publisher.subscribe(Hyrax::Listeners::ActiveFedoraACLIndexListener.new) unless Hyrax.config.disable_wings
 
-Hyrax.publisher.default_listeners.each do |listener|
-  Hyrax.publisher.subscribe(listener)
+Rails.application.reloader.to_prepare do
+  Hyrax.publisher.default_listeners.each do |listener|
+    Hyrax.publisher.subscribe(listener)
+  end
 end
 
 # Publish events from old style Hyrax::Callbacks to trigger the listeners

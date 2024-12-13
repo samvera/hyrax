@@ -514,7 +514,7 @@ RSpec.describe Wings::Valkyrie::Persister, :active_fedora do
       end
 
       after do
-        ActiveSupport::Dependencies.remove_constant("MyLockingResource")
+        Object.send(:remove_const, "MyLockingResource")
       end
 
       describe "#save" do

@@ -41,7 +41,7 @@ module Hyrax
             env.curation_concern.ordered_members << work
             env.curation_concern.save!
           else
-            env.curation_concern.errors[:ordered_member_ids] << "Works can only be related to each other if user has ability to edit both."
+            env.curation_concern.errors.add(:ordered_member_ids, "Works can only be related to each other if user has ability to edit both.")
           end
         end
       end

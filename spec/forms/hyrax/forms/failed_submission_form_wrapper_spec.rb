@@ -34,8 +34,13 @@ RSpec.describe Hyrax::Forms::FailedSubmissionFormWrapper do
       expect(wrapper.title).to eq(input_params.fetch(:title))
       expect(wrapper[:title]).to eq(input_params.fetch(:title))
 
-      expect(wrapper.member_of_collections_attributes).to eq(input_params.fetch(:member_of_collections_attributes))
-      expect(wrapper[:member_of_collections_attributes]).to eq(input_params.fetch(:member_of_collections_attributes))
+      # Params come back from wrapper as ActionController::Parameters in a regular hash, so we have to do the same to input_params
+      params_hash = {}
+      input_params.fetch("member_of_collections_attributes").each_pair do |nested_key, nested_value|
+        params_hash[nested_key] = nested_value
+      end
+      expect(wrapper.member_of_collections_attributes).to eq(params_hash)
+      expect(wrapper[:member_of_collections_attributes]).to eq(params_hash)
 
       expect { wrapper.obviously_missing_attribute }.to raise_error(NoMethodError)
     end

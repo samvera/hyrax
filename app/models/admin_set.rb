@@ -105,13 +105,13 @@ class AdminSet < ActiveFedora::Base
 
   def check_if_empty
     return true if members.empty?
-    errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_not_empty')
+    errors.add(:base, I18n.t('hyrax.admin.admin_sets.delete.error_not_empty'))
     throw :abort
   end
 
   def check_if_not_default_set
     return true unless Hyrax::AdminSetCreateService.default_admin_set?(id: id)
-    errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_default_set')
+    errors.add(:base, I18n.t('hyrax.admin.admin_sets.delete.error_default_set'))
     throw :abort
   end
 end

@@ -27,7 +27,7 @@ RSpec.describe Hyrax::Admin::StatsController, type: :controller do
         expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of Hyrax::AdminStatsPresenter
         expect(assigns[:presenter])
-          .to have_attributes(limit: 5, stats_filters: {})
+          .to have_attributes(limit: 5, stats_filters: ActionController::Parameters.new({}))
       end
 
       context 'with a custom presenter' do
@@ -40,7 +40,7 @@ RSpec.describe Hyrax::Admin::StatsController, type: :controller do
 
           expect(assigns[:presenter]).to be_kind_of presenter_class
           expect(assigns[:presenter])
-            .to have_attributes(limit: 5, stats_filters: {})
+            .to have_attributes(limit: 5, stats_filters: ActionController::Parameters.new({}))
         end
       end
 

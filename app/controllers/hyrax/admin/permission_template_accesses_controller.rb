@@ -21,14 +21,14 @@ module Hyrax
 
       def after_destroy_error
         if source.admin_set?
-          @permission_template_access.errors[:base] <<
-            t('hyrax.admin.admin_sets.form.permission_destroy_errors.participants')
+          @permission_template_access.errors.add(:base,
+            t('hyrax.admin.admin_sets.form.permission_destroy_errors.participants'))
           redirect_to hyrax.edit_admin_admin_set_path(source_id,
                                                       anchor: 'participants'),
                       alert: @permission_template_access.errors.full_messages.to_sentence
         else
-          @permission_template_access.errors[:base] <<
-            t('hyrax.dashboard.collections.form.permission_update_errors.sharing')
+          @permission_template_access.errors.add(:base,
+            t('hyrax.dashboard.collections.form.permission_update_errors.sharing'))
           redirect_to hyrax.edit_dashboard_collection_path(source_id,
                                                            anchor: 'sharing'),
                       alert: @permission_template_access.errors.full_messages.to_sentence

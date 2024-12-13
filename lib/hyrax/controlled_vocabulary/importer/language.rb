@@ -13,7 +13,7 @@ module Hyrax
           stdout_logger.formatter = proc do |_severity, _datetime, _progname, msg|
             "#{msg}\n"
           end
-          Hyrax.logger.extend(ActiveSupport::Logger.broadcast(stdout_logger))
+          ActiveSupport::BroadcastLogger.new(Hyrax.logger, stdout_logger)
         end
 
         def import
