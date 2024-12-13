@@ -293,7 +293,7 @@ RSpec.describe Freyja::Persister, :active_fedora, :clean_repo, valkyrie_adapter:
       end
 
       after do
-        ActiveSupport::Dependencies.remove_constant("MyLockingResource")
+        Object.send(:remove_const, "MyLockingResource")
       end
 
       describe "#save" do
