@@ -25,11 +25,13 @@ module Hyrax
       # @param models [Array]
       # @param start_datetime [DateTime]
       # @param end_datetime [DateTime]
+      # @return [Array<Hyrax::Resource>]
       def find_by_date_range(start_datetime:, end_datetime: nil, models: nil)
         end_range = end_datetime.blank? ? '*' : end_datetime.utc.xmlschema
-        args = "system_create_dtsi:[#{start_datetime.utc.xmlschema} TO #{end_range}]"
-        args += " AND has_model_ssim: (#{models.map { |m| "\"#{m}\"" }.join(' OR ')})" unless models.empty?
-        Hyrax::SolrService.query(args)
+        query = "system_create_dtsi:[#{start_datetime.utc.xmlschema} TO #{end_range}]"
+        query += " AND has_model_ssim: (#{models.map { |m| "\"#{m}\"" }.join(' OR ')})" unless models.empty?
+        ids = Hyrax::SolrService.query_result(query, fl: 'id')['response']['docs'].map { |doc| doc['id'] }
+        Hyrax.query_service.find_many_by_ids(ids: ids)
       end
     end
   end

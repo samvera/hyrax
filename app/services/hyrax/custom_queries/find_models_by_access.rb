@@ -24,11 +24,13 @@ module Hyrax
       #
       # @param model [Class]
       # @param ids [Enumerable<#to_s>, Symbol]
+      # @return [Array<Hyrax::Resource>]
       #
       def find_models_by_access(mode:, models: nil, agent:, group: nil)
-        args = "#{Hydra.config.permissions[mode.to_sym][(group ? 'group' : 'individual').to_sym]}:#{agent}"
-        args += " AND has_model_ssim: (#{models.map { |m| "\"#{m}\"" }.join(' OR ')})" unless models.empty?
-        Hyrax::SolrService.query(args)
+        query = "#{Hydra.config.permissions[mode.to_sym][(group ? 'group' : 'individual').to_sym]}:#{agent}"
+        query += " AND has_model_ssim: (#{models.map { |m| "\"#{m}\"" }.join(' OR ')})" unless models.empty?
+        ids = Hyrax::SolrService.query_result(query, fl: 'id')['response']['docs'].map { |doc| doc['id'] }
+        Hyrax.query_service.find_many_by_ids(ids: ids)
       end
     end
   end
