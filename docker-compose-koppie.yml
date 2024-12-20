@@ -9,7 +9,6 @@ services:
         - EXTRA_APK_PACKAGES=git less
         - BUNDLE_GEMFILE=Gemfile.koppie
     image: samvera/hyrax-dev
-    working_dir: /app/samvera/hyrax-koppie
     command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
     stdin_open: true
     tty: true
@@ -17,7 +16,7 @@ services:
     env_file:
       - .koppie/.env
     environment:
-      - RAILS_ROOT=/app/samvera/hyrax-koppie
+      - RAILS_ROOT=/app/samvera/hyrax-webapp
     depends_on:
       - worker
       - chrome
@@ -32,20 +31,19 @@ services:
       - 1049:1048
     volumes:
       - ./bin:/app/samvera
-      - .koppie:/app/samvera/hyrax-koppie
+      - .koppie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
       - bundle:/app/bundle
-      - hyrax-storage:/app/samvera/hyrax-koppie/storage
-      - hyrax-derivatives:/app/samvera/hyrax-koppie/derivatives
-      - hyrax-uploads:/app/samvera/hyrax-koppie/uploads
-      - rails-public:/app/samvera/hyrax-koppie/public
-      - rails-tmp:/app/samvera/hyrax-koppie/tmp
+      - hyrax-storage:/app/samvera/hyrax-webapp/storage
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
       - koppie
 
   worker:
     image: samvera/hyrax-dev
-    working_dir: /app/samvera/hyrax-koppie
     entrypoint: worker-entrypoint.sh
     command: sh -c 'bundle exec sidekiq'
     user: root
@@ -59,14 +57,14 @@ services:
       - solr
     volumes:
       - ./bin:/app/samvera
-      - .koppie:/app/samvera/hyrax-koppie
+      - .koppie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
       - bundle:/app/bundle
-      - hyrax-storage:/app/samvera/hyrax-koppie/storage
-      - hyrax-derivatives:/app/samvera/hyrax-koppie/derivatives
-      - hyrax-uploads:/app/samvera/hyrax-koppie/uploads
-      - rails-public:/app/samvera/hyrax-koppie/public
-      - rails-tmp:/app/samvera/hyrax-koppie/tmp
+      - hyrax-storage:/app/samvera/hyrax-webapp/storage
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
       - koppie
 

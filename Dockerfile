@@ -98,12 +98,10 @@ ARG BUNDLE_WITHOUT=
 ENV HYRAX_ENGINE_PATH=/app/samvera/hyrax-engine
 
 COPY --chown=1001:101 .dassie /app/samvera/hyrax-webapp
-COPY --chown=1001:101 .koppie /app/samvera/hyrax-koppie
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
 
 RUN bundle -v && \
   BUNDLE_GEMFILE=Gemfile.dassie bundle install --jobs "$(nproc)" && yarn && \
-  cd ../hyrax-koppie && BUNDLE_GEMFILE=Gemfile.koppie bundle install --jobs "$(nproc)" && yarn && \
   cd $HYRAX_ENGINE_PATH && bundle install --jobs "$(nproc)" && yarn && \
   yarn cache clean
 
