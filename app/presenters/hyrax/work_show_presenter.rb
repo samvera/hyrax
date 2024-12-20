@@ -57,11 +57,11 @@ module Hyrax
       end
     end
 
-  
+
 
     # We cannot rely on the method missing to catch this delegation.  Because
     # most all objects implicitly implicitly implement #to_s
-    delegate :to_s, to: :solr_document unless Hyrax.config.flexible?
+    delegate :to_s, to: :solr_document
 
     def schema_version
       solr_document[:schema_version_ssi]
