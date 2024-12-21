@@ -25,7 +25,7 @@ module Hyrax
     # @param [#form_definitions_for] definition_loader
     #
     # @note use Hyrax::FormFields(:my_schema) instead
-    def initialize(schema_name, definition_loader: Hyrax::Schema.default_schema_loader, version: 1, contexts:)
+    def initialize(schema_name, definition_loader: Hyrax::Schema.default_schema_loader, version: 1, contexts: nil)
       @name = schema_name
       @contexts = contexts
       @version = version
