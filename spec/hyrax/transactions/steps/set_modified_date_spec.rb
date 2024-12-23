@@ -5,7 +5,7 @@ require 'hyrax/transactions'
 RSpec.describe Hyrax::Transactions::Steps::SetModifiedDate do
   subject(:step) { described_class.new }
   let(:work)     { build(:hyrax_work) }
-  let(:xmas)     { DateTime.parse('2018-12-25 11:30').iso8601 }
+  let(:xmas)     { DateTime.parse('2018-12-25 11:30') }
 
   before { allow(Hyrax::TimeService).to receive(:time_in_utc).and_return(xmas) }
 

@@ -7,10 +7,8 @@ services:
       target: hyrax-engine-dev
       args:
         - EXTRA_APK_PACKAGES=git less
-        - APP_PATH=.koppie
         - BUNDLE_GEMFILE=Gemfile.koppie
-    image: samvera/koppie
-    entrypoint: dev-entrypoint.sh
+    image: samvera/hyrax-dev
     command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
     stdin_open: true
     tty: true
@@ -20,8 +18,8 @@ services:
     environment:
       - RAILS_ROOT=/app/samvera/hyrax-webapp
     depends_on:
+      - worker
       - chrome
-      - db_migrate
       - fits
       - memcached
       - postgres
@@ -45,14 +43,13 @@ services:
       - koppie
 
   worker:
-    image: samvera/koppie
-    entrypoint: dev-entrypoint.sh
+    image: samvera/hyrax-dev
+    entrypoint: worker-entrypoint.sh
     command: sh -c 'bundle exec sidekiq'
     user: root
     env_file:
       - .koppie/.env
     depends_on:
-      - db_migrate
       - fits
       - memcached
       - postgres
@@ -71,44 +68,29 @@ services:
     networks:
       - koppie
 
-  db_migrate:
-    image: samvera/koppie
-    user: root
-    env_file:
-      - .koppie/.env
-    entrypoint: dev-entrypoint.sh
-    command: db-migrate-seed.sh
-    depends_on:
-      - postgres
-      - solr
-    volumes:
-      - ./bin:/app/samvera
-      - .koppie:/app/samvera/hyrax-webapp
-      - .:/app/samvera/hyrax-engine
-      - bundle:/app/bundle
-      - rails-public:/app/samvera/hyrax-webapp/public
-      - rails-tmp:/app/samvera/hyrax-webapp/tmp
-    networks:
-      - koppie
-
   chrome:
-    image: seleniarm/standalone-chromium:4
+    image: selenium/standalone-chromium:4
     environment:
-      - START_XVFB=false
+#      - START_XVFB=false
       - SE_NODE_SESSION_TIMEOUT=800
+      - SE_ENABLE_TRACING=false
+      - SE_ENABLE_BROWSER_LEFTOVERS_CLEANUP=true
+      - SE_BROWSER_ARGS_DISABLE_DSHM=--disable-dev-shm-usage
+      - SE_BROWSER_ARGS_HEADLESS=--headless=new
 #    logging:
 #      driver: none
     volumes:
       - /dev/shm:/dev/shm
-    shm_size: 2G
+    shm_size: 2g
     ports:
       - "4446:4444"
       - "5961:5900"
+      - "7961:7900"
     networks:
       - koppie
 
   postgres:
-    image: postgres:15
+    image: postgres:15-alpine
     env_file:
       - .koppie/.env
     ports:
