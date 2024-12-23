@@ -16,7 +16,7 @@ module Hyrax
   #
   # @see .FormFields
   class FormFields < Module
-    attr_reader :name
+    attr_reader :name, :version, :contexts
 
     ##
     # @api private
@@ -25,15 +25,17 @@ module Hyrax
     # @param [#form_definitions_for] definition_loader
     #
     # @note use Hyrax::FormFields(:my_schema) instead
-    def initialize(schema_name, definition_loader: SimpleSchemaLoader.new)
+    def initialize(schema_name, definition_loader: Hyrax::Schema.default_schema_loader, version: 1, contexts: nil)
       @name = schema_name
+      @contexts = contexts
+      @version = version
       @definition_loader = definition_loader
     end
 
     ##
     # @return [Hash{Symbol => Hash{Symbol => Object}}]
     def form_field_definitions
-      @definition_loader.form_definitions_for(schema: name)
+      @definition_loader.form_definitions_for(schema: name, version:, contexts:)
     end
 
     ##
@@ -46,10 +48,13 @@ module Hyrax
 
     def included(descendant)
       super
+      return if Hyrax.config.flexible?
+
       form_field_definitions.each do |field_name, options|
         descendant.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
         descendant.validates field_name.to_sym, presence: true if options.fetch(:required, false)
       end
+
       # Auto include any matching FormFieldBehaviors
       schema_name = name.to_s.camelcase
       behavior = "#{schema_name}FormFieldsBehavior".safe_constantize ||
