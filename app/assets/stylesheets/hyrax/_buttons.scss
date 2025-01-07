@@ -65,7 +65,7 @@ td.toggle input[type="submit"]:not(.active) {
   @extend .btn-default;
 }
 
-.btn-link {
+.btn-link.add {
   font-weight: 400;
   color: #0056b3;
   text-decoration: none;
