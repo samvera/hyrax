@@ -20,7 +20,7 @@ spec:
         {{- include "hyrax.workerSelectorLabels" . | nindent 8 }}
     spec:
       initContainers:
-        - name: db-wait
+        - name: service-wait
           image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
           envFrom:
@@ -35,7 +35,7 @@ spec:
           command:
             - sh
             - -c
-            - db-wait.sh "$REDIS_HOST:6379"
+            - service-wait.sh "$REDIS_HOST:6379"
         {{- if .Values.worker.extraInitContainers }}
         {{- toYaml .Values.worker.extraInitContainers | nindent 8 }}
         {{- end }}

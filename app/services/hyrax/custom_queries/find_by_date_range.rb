@@ -25,30 +25,13 @@ module Hyrax
       # @param models [Array]
       # @param start_datetime [DateTime]
       # @param end_datetime [DateTime]
+      # @return [Array<Hyrax::Resource>]
       def find_by_date_range(start_datetime:, end_datetime: nil, models: nil)
-        end_datetime = 1.second.since(Time.zone.now) if end_datetime.blank?
-        if models.present?
-          query_service.run_query(find_models_by_date_range_query, start_datetime.to_s, end_datetime.to_s, models)
-        else
-          query_service.run_query(find_by_date_range_query, start_datetime.to_s, end_datetime.to_s)
-        end
-      end
-
-      def find_models_by_date_range_query
-        <<-SQL
-          SELECT * FROM orm_resources
-          WHERE created_at >= ?
-          AND created_at <= ?
-          AND internal_resource IN (?);
-        SQL
-      end
-
-      def find_by_date_range_query
-        <<-SQL
-          SELECT * FROM orm_resources
-          WHERE created_at >= ?
-          AND created_at <= ?;
-        SQL
+        end_range = end_datetime.blank? ? '*' : end_datetime.utc.xmlschema
+        query = "system_create_dtsi:[#{start_datetime.utc.xmlschema} TO #{end_range}]"
+        query += " AND has_model_ssim: (#{models.map { |m| "\"#{m}\"" }.join(' OR ')})" unless models.empty?
+        ids = Hyrax::SolrService.query_result(query, fl: 'id')['response']['docs'].map { |doc| doc['id'] }
+        Hyrax.query_service.find_many_by_ids(ids: ids)
       end
     end
   end

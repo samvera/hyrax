@@ -5,6 +5,10 @@ FactoryBot.define do
     visibility_after_lease  { 'authenticated' }
     visibility_during_lease { 'open' }
 
+    after(:build) do |lease, evaluator|
+      lease.lease_expiration_date = evaluator.lease_expiration_date.to_datetime
+    end
+
     to_create do |instance|
       saved_instance = Valkyrie.config.metadata_adapter.persister.save(resource: instance)
       instance.id = saved_instance.id

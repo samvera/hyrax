@@ -19,7 +19,7 @@ RSpec.describe Hyrax::Listeners::MemberCleanupListener do
     let(:parent_work)  { FactoryBot.valkyrie_create(:hyrax_work) }
 
     before do
-      parent_work.member_ids << child_work.id
+      parent_work.member_ids += [child_work.id]
       Hyrax.persister.save(resource: parent_work)
     end
 
