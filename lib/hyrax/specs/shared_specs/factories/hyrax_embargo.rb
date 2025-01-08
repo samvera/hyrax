@@ -5,6 +5,10 @@ FactoryBot.define do
     visibility_after_embargo  { 'open' }
     visibility_during_embargo { 'authenticated' }
 
+    after(:build) do |embargo, evaluator|
+      embargo.embargo_release_date = evaluator.embargo_release_date.to_datetime
+    end
+
     to_create do |instance|
       saved_instance = Valkyrie.config.metadata_adapter.persister.save(resource: instance)
       instance.id = saved_instance.id

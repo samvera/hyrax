@@ -46,7 +46,7 @@ RSpec.describe Hyrax::Ability do
     end
   end
 
-  describe "can?(:review, :submissions)" do
+  describe "can?(:review, :submissions)", :clean_repo do
     subject { ability.can?(:review, :submissions) }
 
     let(:role) { Sipity::Role.create(name: role_name) }

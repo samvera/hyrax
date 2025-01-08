@@ -51,7 +51,6 @@ SUMMARY
   spec.add_dependency 'dry-events', '~> 1.0', '>= 1.0.1'
   spec.add_dependency 'dry-monads', '~> 1.6'
   spec.add_dependency 'dry-validation', '~> 1.10'
-  spec.add_dependency 'faraday', '2.9.1' # Pinned to avoid errors from calling start_with? on RDF::Value
   spec.add_dependency 'flipflop', '~> 2.3'
   # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'flot-rails', '~> 0.0.6'
@@ -71,7 +70,7 @@ SUMMARY
   spec.add_dependency 'noid-rails', '~> 3.0'
   spec.add_dependency 'oauth'
   spec.add_dependency 'oauth2', '~> 1.2'
-  spec.add_dependency 'openseadragon'
+  spec.add_dependency 'openseadragon', '~> 0.9'
   spec.add_dependency 'posix-spawn'
   spec.add_dependency 'qa', '~> 5.5', '>= 5.5.1' # questioning_authority
   spec.add_dependency 'rails_autolink', '~> 1.1'
@@ -85,7 +84,7 @@ SUMMARY
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 5.10'
-  spec.add_dependency 'valkyrie', '~> 3.3'
+  spec.add_dependency 'valkyrie', '~> 3.5'
   spec.add_dependency 'view_component', '~> 2.74.1' # Pin until blacklight is updated with workaround for https://github.com/ViewComponent/view_component/issues/1565
   spec.add_dependency 'sprockets', '3.7.2' # 3.7.3 fails feature specs
   spec.add_dependency 'sass-rails', '~> 6.0'
