@@ -18,6 +18,9 @@
       </div>
     </div>
   </td>
+  <% if Hyrax.config.flexible? %>
+    <td class='text-center'><%= collection_presenter.schema_version.to_f if collection_presenter.schema_version %></td>
+  <% end %>
   <td class="collection_type">
     <%= collection_presenter.collection_type_badge %>
   </td>
