@@ -1,4 +1,4 @@
-ARG ALPINE_VERSION=3.19
+ARG ALPINE_VERSION=3.21
 ARG RUBY_VERSION=3.3.6
 
 FROM ruby:$RUBY_VERSION-alpine$ALPINE_VERSION AS hyrax-base
@@ -6,6 +6,9 @@ FROM ruby:$RUBY_VERSION-alpine$ALPINE_VERSION AS hyrax-base
 ARG DATABASE_APK_PACKAGE="postgresql-dev"
 ARG EXTRA_APK_PACKAGES="git"
 ARG RUBYGEMS_VERSION=""
+
+RUN addgroup -S --gid 101 app && \
+  adduser -S -G app -u 1001 -s /bin/sh -h /app app
 
 RUN apk --no-cache upgrade && \
   apk --no-cache add acl \
@@ -32,8 +35,6 @@ RUN apk --no-cache upgrade && \
 RUN setfacl -d -m o::rwx /usr/local/bundle && \
   gem update --silent --system $RUBYGEMS_VERSION
 
-RUN addgroup -S --gid 101 app && \
-  adduser -S -G app -u 1001 -s /bin/sh -h /app app
 USER app
 
 RUN mkdir -p /app/samvera/hyrax-webapp

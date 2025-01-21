@@ -71,7 +71,6 @@ SUMMARY
   spec.add_dependency 'oauth'
   spec.add_dependency 'oauth2', '~> 1.2'
   spec.add_dependency 'openseadragon', '~> 0.9'
-  spec.add_dependency 'posix-spawn'
   spec.add_dependency 'qa', '~> 5.5', '>= 5.5.1' # questioning_authority
   spec.add_dependency 'rails_autolink', '~> 1.1'
   spec.add_dependency 'rdf-rdfxml' # controlled vocabulary importer

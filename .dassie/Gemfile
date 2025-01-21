@@ -18,12 +18,14 @@ gem 'devise-guests', '~> 0.8'
 # Required because grpc and google-protobuf gem's binaries are not compatible with Alpine Linux.
 # To install the package in Alpine: `apk add ruby-grpc`
 # The pinned versions should match the version provided by the Alpine packages.
-if RUBY_PLATFORM =~ /musl/
-  path '/usr/lib/ruby/gems/3.2.0' do
-    gem 'google-protobuf', '~> 3.24.4', force_ruby_platform: true
-    gem 'grpc', '~> 1.59.3', force_ruby_platform: true
-  end
-end
+
+# Disabled due to dependency mismatches in Alpine packages (grpc 1.62.1 needs protobuf ~> 3.25)
+# if RUBY_PLATFORM =~ /musl/
+#   path '/usr/lib/ruby/gems/3.3.0' do
+#     gem 'google-protobuf', '~> 3.24.4', force_ruby_platform: true
+#     gem 'grpc', '~> 1.62.1', force_ruby_platform: true
+#   end
+# end
 
 gemspec name: 'hyrax', path: ENV.fetch('HYRAX_ENGINE_PATH', '..')
 gem 'jbuilder', '~> 2.5'
