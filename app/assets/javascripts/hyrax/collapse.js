@@ -40,10 +40,10 @@ function getStatusActivity(){
     }
     else if(isCollapsed){
         resultDiv.classList.remove("in");
-        resultDiv.setAttribute("aria-expanded", "false");
+        // resultDiv.setAttribute("aria-expanded", "false");
     }else{
         resultDiv.classList.add("in");
-        resultDiv.setAttribute("aria-expanded", "true");
+        // resultDiv.setAttribute("aria-expanded", "true");
     }
 }
 
@@ -55,10 +55,10 @@ function getStatusSettings(){
     }
     else if(isCollapsed){
         resultDiv.classList.remove("in");
-        resultDiv.setAttribute("aria-expanded", "false");
+        // resultDiv.setAttribute("aria-expanded", "false");
     }else{
         resultDiv.classList.add("in");
-        resultDiv.setAttribute("aria-expanded", "true");
+        // resultDiv.setAttribute("aria-expanded", "true");
     }
 }
 

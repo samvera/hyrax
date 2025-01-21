@@ -51,7 +51,21 @@ module Hyrax
 
       def admin_sets_for_select
         source_ids = Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability: current_ability, source_type: 'admin_set')
-        source_ids.map { |admin_set_id| [Hyrax.query_service.find_by(id: admin_set_id).title.first, admin_set_id] }
+
+        admin_sets_list = Hyrax.query_service.find_many_by_ids(ids: source_ids).map do |source|
+          [source.title.first, source.id]
+        end
+
+        # Sorts the default admin set to be first, then the rest by title.
+        admin_sets_list.sort do |a, b|
+          if Hyrax::AdminSetCreateService.default_admin_set?(id: a[1])
+            -1
+          elsif Hyrax::AdminSetCreateService.default_admin_set?(id: b[1])
+            1
+          else
+            a[0] <=> b[0]
+          end
+        end
       end
     end
   end

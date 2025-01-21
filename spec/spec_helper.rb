@@ -25,9 +25,8 @@ end
 
 require 'factory_bot'
 
-require File.expand_path("config/environment", '../hyrax-webapp')
-# db_config = ActiveRecord::Base.configurations[ENV['RAILS_ENV']]
-db_config = ActiveRecord::Base.configurations.configs_for(env_name: ENV['RAILS_ENV'])[0]
+require File.expand_path("config/environment", ENV['RAILS_ROOT'])
+db_config = ActiveRecord::Base.configurations[ENV['RAILS_ENV']][0]
 ActiveRecord::Tasks::DatabaseTasks.create(db_config)
 ActiveRecord::Migrator.migrations_paths = [Pathname.new(ENV['RAILS_ROOT']).join('db', 'migrate').to_s]
 ActiveRecord::Tasks::DatabaseTasks.migrate
