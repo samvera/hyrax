@@ -38,7 +38,7 @@ SUMMARY
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'blacklight', '~> 7.29'
-  spec.add_dependency 'blacklight-gallery', '~> 4.0'
+  spec.add_dependency 'blacklight-gallery', '~> 4.7.0'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
   spec.add_dependency 'browse-everything', '>= 0.16', '< 2.0'
   spec.add_dependency 'carrierwave', '~> 1.0'
