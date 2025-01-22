@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/collections/_subcollection_list.html.erb', type: :view do
   let(:subject) { render('subcollection_list', collection: subcollection) }
-  let(:collection) { stub_model(Collection, id: '123') }
+  let(:collection) { stub_model(Collection, id: '123', title: ['col1']) }
 
   context 'when subcollection list is empty' do
     let(:subcollection) { nil }

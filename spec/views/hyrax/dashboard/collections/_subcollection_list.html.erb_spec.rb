@@ -2,7 +2,7 @@
 RSpec.describe 'hyrax/dashboard/collections/_subcollection_list.html.erb', type: :view do
   let(:user) { create :user }
   let(:ability) { instance_double("Ability") }
-  let(:collection) { stub_model(Collection, id: '123') }
+  let(:collection) { stub_model(Collection, id: '123', title: ['col1']) }
   let(:subject) { render('subcollection_list', id: collection.id, collection: subcollection) }
 
   before do
