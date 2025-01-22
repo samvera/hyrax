@@ -12,3 +12,6 @@
 .home_marketing_text #content_block_external_key {
   color: black;
 }
+
+// Prevents text from being clipped in Tiny MCE bottom status bar (Issue #6789)
+.tox .tox-statusbar { overflow: visible !important; }
