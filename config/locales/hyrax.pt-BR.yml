@@ -55,6 +55,11 @@ pt-BR:
         new: Nova coleção
       delete: Excluir
       edit: Editar
+      hyrax_metadata_profile:
+        hint: A importação de um novo perfil substituirá o perfil existente
+        import: Importar perfil de metadados
+        import_metadata_profile: Perfil de importação
+        submit: Importar
       less: Menos
       more: Mais
       refresh: Atualizar
@@ -94,6 +99,7 @@ pt-BR:
           note: Os usuários que receberam uma nova função só terão a função nas obras que são depositadas depois da concessão da função.
           permission_destroy_errors:
             admin_group: O grupo de administradores do repositório não pode ser removido
+            participants: Os direitos de participante do conjunto administrativo não foram excluídos.
           permission_update_errors:
             error: Opção de atualização inválida para o modelo de permissão.
             no_date: É necessária uma data para a opção de divulgação selecionada.
@@ -410,6 +416,7 @@ pt-BR:
         content_blocks: Blocos de Conteúdo
         dashboard: Painel
         delete_all: Excluir tudo
+        metadata_profiles: Perfis de metadados
         notifications: Notificações
         pages: Páginas
         profile: Perfil
@@ -473,9 +480,17 @@ pt-BR:
       workflows:
         index:
           header: Rever Submissões
+          heading:
+            depositor: Depositante
+            status: status
+            submission_date: Data de submissão
+            work: Trabalhar
           tabs:
             published: Publicados
             under_review: Sob revisão
+          works_listing: Listagem de obras
+          works_published: "<strong>%{total_count} trabalhos</strong> publicados"
+          works_under_review: "<strong>%{total_count} funciona</strong> em revisão"
     api:
       accepted:
         default: Seu pedido foi aceito para processamento, mas o processamento ainda não acabou. Veja o processo para mais informações.
@@ -542,12 +557,7 @@ pt-BR:
         add_folder: Adicionar pasta
         cancel_upload: Cancelar upload
         dropzone: Largue os arquivos aqui.
-        local_upload_browse_everything_html: |
-          <p>Você pode associar um ou mais arquivos a esta obra. Associe arquivos de seu sistema local ou um provedor de nuvem.</p>
-          <p>Note que se você carregar uma grande quantidade de arquivos dentro de um curto período de tempo, 
-          o fornecedor de nuvem pode não ser capaz de acomodar a sua solicitação. Se você tiver algum erro ao carregar 
-          da nuvem, avise-nos através do %{contact_href}.<p>
-          <p>Os uploads são limitados a %{upload_file_limit} arquivos, %{upload_size_limit} MB cada.</p>
+        local_upload_browse_everything_html: "<p>Você pode associar um ou mais arquivos a esta obra. Associe arquivos de seu sistema local ou um provedor de nuvem.</p>\n<p>Note que se você carregar uma grande quantidade de arquivos dentro de um curto período de tempo, \no fornecedor de nuvem pode não ser capaz de acomodar a sua solicitação. Se você tiver algum erro ao carregar \nda nuvem, avise-nos através do %{contact_href}.<p>\n<p>Os uploads são limitados a %{upload_file_limit} arquivos, %{upload_size_limit} MB cada.</p>\n"
         local_upload_html: |
           <p>Você pode acrescentar um ou mais arquivos para associar a esta obra.</p>
           <p>Os uploads são limitados a %{upload_file_limit} arquivos, %{upload_size_limit} MB cada.</p>
@@ -588,6 +598,11 @@ pt-BR:
         help_html: Selecione o arquivo com a mídia que representa esta obra.
         legend_html: Mídia representativa
       form_share:
+        access_options:
+          creator: O Criador
+          depositor: Depositante
+          manager: Gerente
+          viewer: Visualizador
         access_type_to_grant: Tipo de acesso a conceder
         account_label_without_suffix: "%{account_label} (sem a parte %{suffix})"
         add_sharing: Acrescentar compartilhamento
@@ -602,8 +617,8 @@ pt-BR:
         help_html: Selecione o arquivo a ser usado como miniatura para esta obra.
         legend_html: Miniatura
       form_visibility_component:
+        subtitle_html: "<small>Quem deve conseguir visualizar ou baixar este conteúdo?</small>"
         visibility: Visibilidade
-        subtitle_html: <small>Quem deve conseguir visualizar ou baixar este conteúdo?</small>
       inspect_work:
         back_to: De volta a
         entity_id: ID da entidade
@@ -856,6 +871,7 @@ pt-BR:
         form:
           permission_update_errors:
             error: Opção de atualização inválida para o modelo de permissão.
+            sharing: As opções de compartilhamento da coleção não foram atualizadas.
           permission_update_notices:
             participants: As opções de compartilhamento da coleção foram atualizadas.
             sharing: As opções de compartilhamento da coleção foram atualizadas.
@@ -908,7 +924,7 @@ pt-BR:
             creator: O Criador
             depositor: Depositante
             manager: Gerente
-            viewer: Visualizador        
+            viewer: Visualizador
           add_group: Acrescentar Grupo
           add_sharing: Acrescentar Compartilhamento
           add_user: Acrescentar Usuário
@@ -1001,6 +1017,7 @@ pt-BR:
       managed:
         collections: Coleções Curateladas
         works: Obras Curateladas
+      metadata_profiles: Perfis de metadados
       my:
         action:
           add_to_collection: Acrescentar à coleção
@@ -1494,6 +1511,7 @@ pt-BR:
       owner:
         edit: Editar acesso
       read: Visualizar download
+    read_only: O repositório está em modo somente leitura para manutenção. Nenhum envio ou edição pode ser feito neste momento.
     search:
       button:
         html: <span class="fa fa-search"></span> Ir
@@ -1711,6 +1729,8 @@ pt-BR:
         note_html: Manter privado com a opção de compartilhar.
         text: Privado
       restricted_title_attr: Altere a permissão de acesso deste recurso
+      unknown:
+        text: Desconhecido
     work_button_row:
       attach_child: Anexar criança
     workflow:

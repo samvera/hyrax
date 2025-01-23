@@ -2,7 +2,7 @@
 module Hyrax
   module Forms
     class ResourceBatchEditForm < Hyrax::Forms::ResourceForm
-      include Hyrax::FormFields(:basic_metadata)
+      include Hyrax::FormFields(:basic_metadata) unless Hyrax.config.flexible?
 
       include Hyrax::ContainedInWorksBehavior
       include Hyrax::DepositAgreementBehavior
