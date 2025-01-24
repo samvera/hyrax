@@ -12,7 +12,7 @@ RSpec.describe Hyrax::Schema do
     Hyrax::Test::Schema::Resource
   end
 
-  after { Hyrax::Test.send(:remove_const, :Schema) }
+  after { Hyrax::Test.send(:remove_const, :Schema) if defined?(Hyrax::Test::Schema) }
 
   describe 'including' do
     it 'applies the specified schema' do
@@ -94,6 +94,24 @@ RSpec.describe Hyrax::Schema do
 
       expect(saved).to have_attributes(**matchers)
       expect(saved[:date_created].map { |t| DateTime.parse(t.to_s).strftime("%FT%R") }).to match_array(times_parsed)
+    end
+  end
+
+  describe '.default_schema_loader' do
+    context 'when using flexible metadata' do
+      it 'returns an M3SchemaLoader' do
+        allow(Hyrax.config).to receive(:flexible?).and_return(true)
+
+        expect(described_class.default_schema_loader).to be_a(Hyrax::M3SchemaLoader)
+      end
+    end
+
+    context 'when not using flexible metadata' do
+      it 'returns a SimpleSchemaLoader' do
+        allow(Hyrax.config).to receive(:flexible?).and_return(false)
+
+        expect(described_class.default_schema_loader).to be_a(Hyrax::SimpleSchemaLoader)
+      end
     end
   end
 end
