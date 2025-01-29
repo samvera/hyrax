@@ -59,11 +59,6 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
     copy_file 'config/initializers/hyrax.rb'
   end
 
-  # Add mini-magick configuration
-  def minimagick_config
-    copy_file 'config/initializers/mini_magick.rb'
-  end
-
   def tinymce_config
     copy_file 'config/tinymce.yml'
   end

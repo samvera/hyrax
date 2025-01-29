@@ -8,7 +8,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_show_document_list.html.erb', type: :vie
   end
 
   it "renders rows of works" do
-    render('hyrax/admin/admin_sets/show_document_list.html.erb', documents: documents)
+    render('hyrax/admin/admin_sets/show_document_list', documents: documents)
     expect(rendered).to have_css('tbody', text: documents.join)
   end
 end

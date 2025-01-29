@@ -13,5 +13,8 @@
   color: black;
 }
 
-// Prevents text from being clipped in Tiny MCE bottom status bar (Issue #6789)
+// Prevents text from being clipped in Tiny MCE bottom status bar and drop-down style menu (Issue #6789)
 .tox .tox-statusbar { overflow: visible !important; }
+.tox .tox-tbtn--bespoke .tox-tbtn__select-label { overflow: visible !important; }
+.tox .tox-tbtn { overflow: visible !important; }
+.tox-tinymce { overflow: visible !important; }

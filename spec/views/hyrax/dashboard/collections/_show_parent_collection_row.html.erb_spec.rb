@@ -8,7 +8,7 @@ RSpec.describe 'hyrax/dashboard/collections/_show_parent_collection_row.html.erb
       'date_created_tesim' => '2000-01-01' }
   end
   let(:document) { SolrDocument.new(parent_collection_doc) }
-  let(:subject) { render('show_parent_collection_row.html.erb', id: child_collection.id, document: document) }
+  let(:subject) { render('show_parent_collection_row', id: child_collection.id, document: document) }
 
   context 'when user cannot edit the child collection' do
     before do
