@@ -8,7 +8,7 @@ RSpec.describe 'hyrax/single_use_links_viewer/show.html.erb' do
   before do
     assign :download_link, Hyrax::Engine.routes.url_helpers.download_single_use_link_path(hash)
     assign :presenter, Hyrax::FileSetPresenter.new(solr_document, ability)
-    view.lookup_context.view_paths.push "#{Hyrax::Engine.root}/app/views/hyrax/base"
+    view.lookup_context.append_view_paths(["#{Hyrax::Engine.root}/app/views/hyrax/base"])
     render
   end
 

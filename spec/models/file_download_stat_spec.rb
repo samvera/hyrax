@@ -10,7 +10,7 @@ RSpec.describe FileDownloadStat, type: :model do
     expect(file_stat).to respond_to(:date)
     expect(file_stat).to respond_to(:file_id)
     expect(file_stat.file_id).to eq("99")
-    expect(file_stat.date).to eq(date)
+    expect(file_stat.date.round(0)).to eq(date.round(0))
     expect(file_stat.downloads).to eq(2)
   end
 

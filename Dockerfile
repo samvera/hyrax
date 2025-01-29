@@ -1,11 +1,14 @@
-ARG ALPINE_VERSION=3.19
-ARG RUBY_VERSION=3.2.6
+ARG ALPINE_VERSION=3.21
+ARG RUBY_VERSION=3.3.6
 
 FROM ruby:$RUBY_VERSION-alpine$ALPINE_VERSION AS hyrax-base
 
 ARG DATABASE_APK_PACKAGE="postgresql-dev"
 ARG EXTRA_APK_PACKAGES="git"
 ARG RUBYGEMS_VERSION=""
+
+RUN addgroup -S --gid 101 app && \
+  adduser -S -G app -u 1001 -s /bin/sh -h /app app
 
 RUN apk --no-cache upgrade && \
   apk --no-cache add acl \
@@ -32,8 +35,6 @@ RUN apk --no-cache upgrade && \
 RUN setfacl -d -m o::rwx /usr/local/bundle && \
   gem update --silent --system $RUBYGEMS_VERSION
 
-RUN addgroup -S --gid 101 app && \
-  adduser -S -G app -u 1001 -s /bin/sh -h /app app
 USER app
 
 RUN mkdir -p /app/samvera/hyrax-webapp
@@ -56,7 +57,7 @@ ARG BUNDLE_WITHOUT="development test"
 
 ONBUILD COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 ONBUILD RUN bundle install --jobs "$(nproc)"
-ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
+ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DATABASE_URL='nulldb://nulldb' bundle exec rake assets:precompile
 
 
 FROM hyrax-base AS hyrax-worker-base
@@ -88,7 +89,7 @@ ARG BUNDLE_WITHOUT="development test"
 
 ONBUILD COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 ONBUILD RUN bundle install --jobs "$(nproc)"
-ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
+ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DATABASE_URL='nulldb://nulldb' bundle exec rake assets:precompile
 
 
 FROM hyrax-worker-base AS hyrax-engine-dev
