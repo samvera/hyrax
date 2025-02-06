@@ -9,7 +9,8 @@
 # application's `Gemfile`.
 #
 # @see https://github.com/sportngin/okcomputer/
-begin
+
+Rails.application.reloader.to_prepare do
   OkComputer.mount_at = 'healthz'
 
   require 'hyrax/health_checks'

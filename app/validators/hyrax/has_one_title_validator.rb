@@ -4,7 +4,7 @@ module Hyrax
   class HasOneTitleValidator < ActiveModel::Validator
     def validate(record)
       return unless record.title.reject(&:empty?).empty?
-      record.errors[:title] << "You must provide a title"
+      record.errors.add(:title, "You must provide a title")
     end
   end
 end

@@ -59,7 +59,7 @@ module Hyrax
         end
 
         # Allows us to create a Flot charts pie-graph
-        def as_json(opts)
+        def as_json(opts = nil)
           @data.as_json(opts)
         end
       end

@@ -26,12 +26,12 @@ RSpec.describe 'hyrax/collections/_show_document_list_row.html.erb', type: :view
     end
 
     it "renders collections links" do
-      render('hyrax/collections/show_document_list_row.html.erb', document: solr_doc)
+      render('hyrax/collections/show_document_list_row', document: solr_doc)
       expect(rendered).not_to have_content 'My awesome collection'
     end
 
     it "renders works" do
-      render('hyrax/collections/show_document_list_row.html.erb', document: solr_doc)
+      render('hyrax/collections/show_document_list_row', document: solr_doc)
       expect(rendered).to have_content 'One Hundred Years of Solitude'
       expect(rendered).not_to have_content('Edit Access:')
     end
