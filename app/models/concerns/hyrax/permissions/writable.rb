@@ -23,8 +23,7 @@ module Hyrax
         valid = true
         paranoid_edit_permissions.each do |validation|
           next unless validation[:condition].call(self)
-          errors[validation[:key]] ||= []
-          errors[validation[:key]] << validation[:message]
+          errors.add(validation[:key], validation[:message])
           valid = false
         end
         valid

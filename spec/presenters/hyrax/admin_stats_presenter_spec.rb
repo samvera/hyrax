@@ -129,7 +129,7 @@ RSpec.describe Hyrax::AdminStatsPresenter do
 
     context "with a start and no end date" do
       let(:start_date) { '2015-12-14' }
-      let(:today) { Time.zone.today.to_date.to_s(:standard) }
+      let(:today) { Time.zone.today.to_date.to_formatted_s(:standard) }
 
       it { is_expected.to eq "12/14/2015 to #{today}" }
     end

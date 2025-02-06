@@ -22,6 +22,7 @@ module Hyrax
         instance_variables.each do |ivar|
           next if ivar == :@name
           next if ivar == :@klass
+          next if ivar == :@uncountable
           instance_variable_set(ivar, legacy_model.model_name.send(ivar[1..-1]))
         end
       end

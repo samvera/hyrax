@@ -62,7 +62,7 @@ RSpec.describe Hyrax::Admin::WorkflowRolesController do
 
       it "is successful" do
         delete :destroy, params: { id: 1 }
-        expect(controller).to have_received(:authorize!).with(:destroy, Sipity::WorkflowResponsibility)
+        expect(controller).to have_received(:authorize!).with(:destroy, responsibility)
         expect(response).to redirect_to admin_workflow_roles_path
       end
     end
