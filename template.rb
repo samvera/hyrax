@@ -1,4 +1,5 @@
 # frozen_string_literal: true
-gem 'hyrax', '5.0.3'
+#gem 'hyrax', git: 'git://github.com/samvera/hyrax.git', branch: '5.1_rc1-prep'
+gem 'hyrax', git: 'https://github.com/samvera/hyrax.git', branch: 'main'
 run 'bundle install'
 generate 'hyrax:install', '-f'
