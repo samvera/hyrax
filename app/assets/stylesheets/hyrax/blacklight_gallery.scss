@@ -1,5 +1,10 @@
 /* These styles are very specific to override the thumbnails from blacklight gallery */
 
+/* wrap an overly-long title to avoid a distorted layout */
+.document-title-heading {
+  overflow-wrap: anywhere;
+}
+
 .documents-slideshow {
   .grid {
     .document {

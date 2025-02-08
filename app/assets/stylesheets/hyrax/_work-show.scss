@@ -97,7 +97,8 @@ ul.tabular {
   margin-bottom: $input-btn-padding-y * 2;
 
   .title-with-badges {
-    align-items: center;
+    align-items: baseline;
+    overflow-wrap: anywhere;
     display: flex;
 
     h1,
