@@ -15,20 +15,20 @@ module Hyrax
   #
   # @see https://dry-rb.org/gems/dry-events/0.2/#event-listeners
   module Listeners
-    extend ActiveSupport::Autoload
+#    extend ActiveSupport::Autoload
 
-    autoload :ACLIndexListener
-    autoload :ActiveFedoraACLIndexListener
-    autoload :BatchNotificationListener
-    autoload :FileListener
-    autoload :FileMetadataListener
-    autoload :FileSetLifecycleListener
-    autoload :FileSetLifecycleNotificationListener
-    autoload :MemberCleanupListener
-    autoload :MetadataIndexListener
-    autoload :ObjectLifecycleListener
-    autoload :ProxyDepositListener
-    autoload :TrophyCleanupListener
-    autoload :WorkflowListener
+#    autoload :ACLIndexListener
+#    autoload :ActiveFedoraACLIndexListener
+#    autoload :BatchNotificationListener
+#    autoload :FileListener
+#    autoload :FileMetadataListener
+#    autoload :FileSetLifecycleListener
+#    autoload :FileSetLifecycleNotificationListener
+#    autoload :MemberCleanupListener
+#    autoload :MetadataIndexListener
+#    autoload :ObjectLifecycleListener
+#    autoload :ProxyDepositListener
+#    autoload :TrophyCleanupListener
+#    autoload :WorkflowListener
   end
 end

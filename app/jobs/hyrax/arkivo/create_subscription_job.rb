@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
   module Arkivo
-    class SubscriptionError < RuntimeError
-    end
-
     class CreateSubscriptionJob < Hyrax::ApplicationJob
       attr_reader :user
 

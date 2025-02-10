@@ -1,4 +1,8 @@
 # frozen_string_literal: true
+#require "zeitwerk"
+#loader = Zeitwerk::Loader.for_gem
+#loader.setup
+
 require 'select2-rails'
 require 'nest'
 require 'redis-namespace'
@@ -17,7 +21,6 @@ require 'browse-everything'
 require 'hydra/works'
 require 'hyrax/engine'
 require 'hyrax/version'
-require 'hyrax/inflections'
 require 'hyrax/name'
 require 'hyrax/valkyrie_can_can_adapter'
 require 'retriable'
@@ -37,19 +40,15 @@ module Hyrax
 
   eager_autoload do
     autoload :Arkivo
-    autoload :Collections
     autoload :Configuration
     autoload :ControlledVocabularies
     autoload :EventStore
-    autoload :Forms
+    autoload :Publisher
     autoload :RedisEventStore
     autoload :ResourceSync
     autoload :Zotero
-    autoload :Listeners
-    autoload :Workflow
     autoload :SimpleSchemaLoader
     autoload :VirusScanner
-    autoload :DerivativeBucketedStorage
   end
 
   ##
@@ -145,4 +144,23 @@ module Hyrax
   def self.custom_queries
     query_service.custom_queries
   end
+
+  # Errors
+  require 'active_fedora/errors'
+
+  # Generic Hyrax exception class.
+  class HyraxError < StandardError; end
+
+  # Error that is raised when an active workflow can't be found
+  class MissingWorkflowError < HyraxError; end
+
+  class WorkflowAuthorizationException < HyraxError; end
+
+  class SingleUseError < HyraxError; end
+
+  class SingleMembershipError < HyraxError; end
+
+  class ObjectNotFoundError < ActiveFedora::ObjectNotFoundError; end
+
+  class ModelMismatchError < HyraxError; end
 end

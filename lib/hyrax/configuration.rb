@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'hyrax/callbacks'
 require 'hyrax/role_registry'
 
 module Hyrax
@@ -61,8 +60,6 @@ module Hyrax
   #
   # @see Hyrax.config
   class Configuration
-    include Callbacks
-
     def initialize
       @registered_concerns = []
       @role_registry = Hyrax::RoleRegistry.new
@@ -730,13 +727,6 @@ module Hyrax
           []
         end
     end
-
-    callback.enable :after_create_concern, :after_create_fileset,
-                    :after_update_content, :after_revert_content,
-                    :after_update_metadata, :after_import_local_file_success,
-                    :after_import_local_file_failure, :after_fixity_check_failure,
-                    :after_destroy, :after_import_url_success,
-                    :after_import_url_failure
 
     # Registers the given curation concern model in the configuration
     # @param [Array<Symbol>,Symbol] curation_concern_types

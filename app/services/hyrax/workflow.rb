@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   module Workflow
-    extend ActiveSupport::Autoload
+#    extend ActiveSupport::Autoload
 
-    autoload :WorkflowFactory
+#    autoload :WorkflowFactory
   end
 end

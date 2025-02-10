@@ -215,18 +215,11 @@ module Hyrax
     ##
     # @return Array[Object] the listeners Hyrax subscribes by default.
     def default_listeners
-      @default_listeners ||=
-        [Hyrax::Listeners::ACLIndexListener.new,
-         Hyrax::Listeners::BatchNotificationListener.new,
-         Hyrax::Listeners::FileListener.new,
-         Hyrax::Listeners::FileMetadataListener.new,
-         Hyrax::Listeners::FileSetLifecycleListener.new,
-         Hyrax::Listeners::FileSetLifecycleNotificationListener.new,
-         Hyrax::Listeners::MemberCleanupListener.new,
-         Hyrax::Listeners::MetadataIndexListener.new,
-         Hyrax::Listeners::ObjectLifecycleListener.new,
-         Hyrax::Listeners::TrophyCleanupListener.new,
-         Hyrax::Listeners::WorkflowListener.new].freeze
+      @default_listeners ||= []
+    end
+
+    def default_listeners= listeners
+      @default_listeners = listeners
     end
   end
 end
