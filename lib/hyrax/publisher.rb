@@ -212,14 +212,12 @@ module Hyrax
     #     `#member_ids`)
     register_event('object.metadata.updated')
 
+    attr_writer :default_listeners
+
     ##
     # @return Array[Object] the listeners Hyrax subscribes by default.
     def default_listeners
       @default_listeners ||= []
-    end
-
-    def default_listeners= listeners
-      @default_listeners = listeners
     end
   end
 end

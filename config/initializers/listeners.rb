@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 Rails.application.reloader.to_prepare do
-
   Hyrax::Configuration.include Hyrax::Callbacks
   Hyrax::Configuration.callback.enable :after_create_concern, :after_create_fileset,
                       :after_update_content, :after_revert_content,
@@ -65,3 +65,4 @@ Rails.application.reloader.to_prepare do
     Hyrax.publisher.publish('file.set.url.imported', file_set: file_set, user: user, result: :failure)
   end
 end
+# rubocop:enable Metrics/BlockLength

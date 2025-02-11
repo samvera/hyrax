@@ -1,7 +1,4 @@
 # frozen_string_literal: true
-#require "zeitwerk"
-#loader = Zeitwerk::Loader.for_gem
-#loader.setup
 
 require 'select2-rails'
 require 'nest'
