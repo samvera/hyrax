@@ -28,11 +28,9 @@ module Hyrax
     require 'hyrax/form_fields'
     require 'hyrax/indexer'
     require 'hyrax/model_decorator'
-    require 'hyrax/publisher'
     require 'hyrax/schema'
     require 'hyrax/search_state'
     require 'hyrax/transactions'
-    require 'hyrax/errors'
     require 'hyrax/valkyrie_simple_path_generator'
 
     # Force these models to be added to Legato's registry in development mode
