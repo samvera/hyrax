@@ -60,11 +60,13 @@ module Hyrax
       # raises PG::ConnectionBad. There's no good common ancestor to assume. That's why this test
       # is in its own tiny chunk of code – so we know that whatever the StandardError is, it's coming
       # from the attempt to connect.
+      #
+      # (Some time later...) Simply accessing the connection obj is not raising PG::ConnectionBad,
+      # so let's call active? too.
       can_connect = begin
-        ActiveRecord::Base.connection
-        true
-                    rescue StandardError
-                      false
+        ActiveRecord::Base.connection.active?
+      rescue StandardError
+        false
       end
 
       can_persist = can_connect && begin
