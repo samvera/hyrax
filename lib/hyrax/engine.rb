@@ -63,11 +63,12 @@ module Hyrax
       #
       # (Some time later...) Simply accessing the connection obj is not raising PG::ConnectionBad,
       # so let's call active? too.
-      can_connect = begin
-        ActiveRecord::Base.connection.active?
-      rescue StandardError
-        false
-      end
+      can_connect =
+        begin
+          ActiveRecord::Base.connection.active?
+        rescue StandardError
+          false
+        end
 
       can_persist = can_connect && begin
         Hyrax.config.persist_registered_roles!
