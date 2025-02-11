@@ -15,7 +15,7 @@ module Hyrax
           @top_works = paginate(top_works_list, rows: 10)
           @top_file_set_downloads = paginate(top_files_list, rows: 10)
 
-          @pageviews = Hyrax::Analytics.daily_events('work-view'), @downloads = Hyrax::Analytics.daily_events('file-set-download') if current_user.ability.admin?
+          @pageviews, @downloads = Hyrax::Analytics.daily_events('work-view'), Hyrax::Analytics.daily_events('file-set-download') if current_user.ability.admin?
 
           respond_to do |format|
             format.html
@@ -34,7 +34,7 @@ module Hyrax
           end
         end
 
-  private
+        private
 
         def accessible_works
           models = Hyrax::ModelRegistry.work_rdf_representations.map { |m| "\"#{m}\"" }
