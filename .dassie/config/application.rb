@@ -9,7 +9,12 @@ Bundler.require(*Rails.groups)
 module Dassie
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 7.2
+    config.add_autoload_paths_to_load_path = true
+    config.action_view.button_to_generates_button_tag = false
+    config.action_controller.raise_on_open_redirects = false
+    config.action_view.sanitizer_vendor = Rails::HTML4::Sanitizer
+
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
