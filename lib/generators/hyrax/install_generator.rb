@@ -188,9 +188,12 @@ module Hyrax
       generate 'hyrax:riiif' unless options[:'skip-riiif']
     end
 
-    def insert_env_queue_adapter
+    def insert_application_config
       insert_into_file 'config/application.rb', after: /config\.load_defaults [0-9.]+$/ do
-        "\n    config.active_job.queue_adapter = ENV.fetch('HYRAX_ACTIVE_JOB_QUEUE') { 'async' }.to_sym\n"
+        "\n    config.action_view.button_to_generates_button_tag = false" \
+        "\n    config.action_controller.raise_on_open_redirects = false" \
+        "\n    config.action_view.sanitizer_vendor = Rails::HTML4::Sanitizer" \
+        "\n    config.active_job.queue_adapter = ENV.fetch('HYRAX_ACTIVE_JOB_QUEUE') { 'async' }.to_sym"
       end
     end
 
