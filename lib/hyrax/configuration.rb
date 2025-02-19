@@ -132,8 +132,13 @@ module Hyrax
     attr_writer :analytics_reporting
     attr_reader :analytics_reporting
     def analytics_reporting?
-      @analytics_reporting ||=
-        ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS_REPORTING', false))
+      # Check for all required Google Analytics settings
+      return false if ENV.fetch('HYRAX_ANALYTICS_REPORTING', '').blank?
+      return false if ENV.fetch('GOOGLE_ANALYTICS_ID', '').blank?
+      return false if ENV.fetch('GOOGLE_ANALYTICS_PROPERTY_ID', '').blank?
+      return false if ENV.fetch('GOOGLE_ACCOUNT_JSON', '').blank? && ENV.fetch('GOOGLE_ACCOUNT_JSON_PATH', '').blank?
+      
+      @analytics_reporting ||= ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS_REPORTING', false))
     end
 
     # Currently supports 'google' or 'matomo'
@@ -141,7 +146,7 @@ module Hyrax
     attr_writer :analytics_provider
     def analytics_provider
       @analytics_provider ||=
-        ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'google')
+        ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'ga4')
     end
 
     ##
