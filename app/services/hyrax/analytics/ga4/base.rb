@@ -31,17 +31,7 @@ module Hyrax
         end
 
         def results
-          return [] if Hyrax::Analytics.property.blank?
-          
-          @results ||= begin
-            Hyrax::Analytics.client.run_report(report).rows
-          rescue ::Google::Cloud::Error => e
-            Rails.logger.error "Google Analytics error: #{e.message}"
-            []
-          rescue ::GRPC::BadStatus => e
-            Rails.logger.error "GRPC error: #{e.message}"
-            []
-          end
+          @results ||= Hyrax::Analytics.client.run_report(report).rows
         end
 
         def report
