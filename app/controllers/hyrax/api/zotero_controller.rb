@@ -14,7 +14,7 @@ module Hyrax
         session[:request_token] = request_token
         current_user.zotero_token = request_token
         current_user.save
-        redirect_to request_token.authorize_url(identity: '1', oauth_callback: callback_url)
+        redirect_to request_token.authorize_url(identity: '1', oauth_callback: callback_url), allow_other_host: true
       rescue OAuth::Unauthorized
         redirect_to root_url, alert: 'Invalid Zotero client key pair'
       end

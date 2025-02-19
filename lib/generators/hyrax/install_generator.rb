@@ -188,7 +188,7 @@ module Hyrax
       generate 'hyrax:riiif' unless options[:'skip-riiif']
     end
 
-    def insert_env_queue_adapter
+    def insert_application_config
       insert_into_file 'config/application.rb', after: /config\.load_defaults [0-9.]+$/ do
         "\n    config.active_job.queue_adapter = ENV.fetch('HYRAX_ACTIVE_JOB_QUEUE') { 'async' }.to_sym\n"
       end
