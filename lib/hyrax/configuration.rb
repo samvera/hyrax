@@ -138,12 +138,12 @@ module Hyrax
           GOOGLE_ANALYTICS_ID
           GOOGLE_ANALYTICS_PROPERTY_ID
         ]
-        
+
         required_env_vars << if ENV['GOOGLE_ACCOUNT_JSON'].blank?
-                              'GOOGLE_ACCOUNT_JSON_PATH'
-                            else
-                              'GOOGLE_ACCOUNT_JSON'
-                            end
+                               'GOOGLE_ACCOUNT_JSON_PATH'
+                             else
+                               'GOOGLE_ACCOUNT_JSON'
+                             end
 
         return false if required_env_vars.any? { |var| ENV.fetch(var, '').blank? }
         

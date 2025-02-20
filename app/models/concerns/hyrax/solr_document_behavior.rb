@@ -152,7 +152,6 @@ module Hyrax
     private
 
     def model_classifier(classifier)
-debugger
       classifier || ActiveFedora.model_mapper
     end
   end
