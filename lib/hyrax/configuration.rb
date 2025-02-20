@@ -146,7 +146,7 @@ module Hyrax
                              end
 
         return false if required_env_vars.any? { |var| ENV.fetch(var, '').blank? }
- 
+
         ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS_REPORTING', false))
       end
     end
