@@ -82,9 +82,12 @@ module Hyrax
 
     # Method to return the model
     def hydra_model(classifier: nil)
+      # finds the model from the solr document
       model = first('has_model_ssim')&.safe_constantize
-      model = (first('has_model_ssim')&.+ 'Resource')&.safe_constantize if Hyrax.config.valkyrie_transition?
-      model || model_classifier(classifier).classifier(self).best_model
+      # this returns nil if it isn't a valid model
+      resource_model = (first('has_model_ssim')&.+ 'Resource')&.safe_constantize if Hyrax.config.valkyrie_transition?
+      # if valkyrie_transition is enabled, we generally want to use the resource model if it exists
+      resource_model || model || model_classifier(classifier).classifier(self).best_model
     end
 
     def depositor(default = '')
@@ -149,6 +152,7 @@ module Hyrax
     private
 
     def model_classifier(classifier)
+debugger
       classifier || ActiveFedora.model_mapper
     end
   end
