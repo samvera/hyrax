@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require 'valkyrie/specs/shared_specs'
 RSpec.describe Hyrax::Forms::PcdmCollectionForm do
-  let(:collection) { Hyrax::PcdmCollection.new(id: "123") }
-  subject(:form)   { described_class.new(collection) }
+  subject(:change_set) { described_class.new(resource: resource) }
+  let(:resource) { Hyrax::PcdmCollection.new(id: "123") }
+
+  it_behaves_like 'a Valkyrie::ChangeSet'
 
   describe '.required_fields' do
     it 'lists required fields' do
