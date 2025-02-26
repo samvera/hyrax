@@ -1,5 +1,5 @@
 ---
-title: About (for Managers)
+title: Getting Started
 layout: default
 ---
 
@@ -13,29 +13,12 @@ layout: default
                     <section>
                         <h3>Questions</h3>
                         <ul>
-                            <li><strong><a href="#q1">How does Hyrax relate to Samvera?</a></strong></li>
-                            <li><strong><a href="#q2">How does Hyrax relate to Fedora?</a></strong></li>
-                            <li><strong><a href="#q3">How does Hyrax relate to ...?</a></strong></li>
-                            <li><strong><a href="#q3a">Should I use Hyrax or Hyku?</a></strong></li>
-                            <li><strong><a href="#q4">Does Hyrax use PCDM?</a></strong></li>
-                            <li><strong><a href="#q5">How do I customize Hyrax?</a></strong></li>
-                            <li><strong><a href="#q6">How can I contribute?</a></strong></li>
-                            <li><strong><a href="#q7">Who provides technical support?</a></strong></li>
-                            <li><strong><a href="#q8">What kinds of metadata are supported?</a></strong></li>
-                            <li><strong><a href="#q9">How often are there new releases?</a></strong></li>
-                            <li><strong><a href="#q10">How can I keep my application updated?</a></strong></li>
-                            <li><strong><a href="#q11">What components are there in the stack?</a></strong></li>
-                            <li><strong><a href="#q12">How do I stay updated on Hyrax news?</a></strong></li>
-                            <li><strong><a href="#q13">How does Hyrax support preservation?</a></strong></li>
-                            <li><strong><a href="#q14">Does Hyrax provide use and user stats?</a></strong></li>
-                            <li><strong><a href="#q15">Who is developing Hyrax?</a></strong></li>
-                            <li><strong><a href="#q16">What user roles are provided?</a></strong></li>
-                            <li><strong><a href="#q17">When can I expect X to be done?</a></strong></li>
-                            <li><strong><a href="#q18">What does Hyrax integrate with?</a></strong></li>
-                            <li><strong><a href="#q19">Does it integrate with ...?</a></strong></li>
-                            <li><strong><a href="#q20">How do we get started?</a></strong></li>
-                            <li><strong><a href="#q21">How does Hyrax handle many/large files?</a></strong></li>
-                            <li><strong><a href="#q22">How is the Hyrax roadmap planned?</a></strong></li>
+                            <li><strong><a href="#q1">Should I use Hyrax or Hyku for my application?</a></strong></li>
+                            <li><strong><a href="#q2">Who provides technical support for Hyrax?</a></strong></li>
+                            <li><strong><a href="#q3">We're ready to test/move forward - what do we need to do to get started?</a></strong></li>
+                            <li><strong><a href="#q3a">Does Hyrax use the Portland Common Data Model (PCDM)?</a></strong></li>
+                            <li><strong><a href="#q4">What do I do when I want to customize (or extend) Hyrax?</a></strong></li>
+                            
                         </ul>
                         <footer>
                             <a href="https://github.com/samvera-labs/hyrax" class="button"><span class="icon fa-github">&nbsp;</span>Take me to the code</a>
@@ -48,108 +31,42 @@ layout: default
                     <!-- Content -->
                     <article>
                         <header>
-                            <h2>About Hyrax (for Managers)</h2>
+                            <h2>Getting Started</h2>
                             <p>Questions and answers</p>
                         </header>
                         <dl>
-                            <dt style="margin-top: 25px"><strong><a name="q1">How does Hyrax relate to Samvera?</a></strong></dt>
-                            <dd style="margin-top: 5px">Samvera provides a framework for building web applications on top of a repository back-end and a search index. Hyrax uses the full power of Samvera and extends it to provide common repository features such as file and folder upload, metadata assignment, flexible user and group access controls, derivative generation, faceted and full-text search, delivery/download, and a host of social experience-related features. It offers self-deposit, proxy deposit, and configurable mediated deposit workflows. Hyrax delivers its rich and growing set of features via a modern, responsive user interface, which its users have come to expect from web applications.</dd>
+                            <dt style="margin-top: 25px"><strong><a name="q1">Should I use Hyrax or Hyku for my application?</a></strong></dt>
+                            <dd style="margin-top: 5px"><p>
+Hyrax is a<a href="http://guides.rubyonrails.org/engines.html"> Rails Engine</a> that you can use to generate an application that you will deploy locally. This application is the place for you to customize layouts, styles and behaviors so that it suits your purposes. You will have to make some implementation decisions on your own (e.g. database, authentication, workers). It should be easy to upgrade your application from one Hyrax version to the next.
+</p>
+<p>
+<a href="https://hyku.samvera.org/">Hyku</a> is a pre-generated application built using Hyrax. It comes with some choices already made for you (database, authentication, workers) and we recommend you stick with these defaults. Hyku offers some basic customization in the UI (text blocks, banner, colors) and we are working to expand the scope of these customizations. If you fork Hyku and start customizing, you should expect a painful upgrade process; however, active development is happening now to improve upgrading Hyku via the<a href="https://github.com/samvera-labs/hyku_knapsack"> HykuKnapsack</a> project. Hyku comes with scripts for deploying using<a href="https://www.docker.com/"> Docker</a> and the<a href="https://aws.amazon.com/"> Amazon cloud services</a>. It should also be possible to deploy this locally, although you must set up all the<a href="https://samvera.github.io/service-stack.html"> services</a> yourself.
+</p>
+<p>
+There are service providers in the community who can help by hosting Hyku for you or helping you to set it up locally.<a href="https://samvera.org/the-community/service-providers"> See the full service provider list on the Samvera.org website.</a>
+</p></dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q2">How does Hyrax relate to Fedora?</a></strong></dt>
-                            <dd style="margin-top: 5px">Hyrax 1 and 2 require the Fedora repository software. These versions require at least Fedora 4.0. Hyrax provides a user-friendly web application for depositing and retrieving items from a Fedora repository. Hyrax is built on Samvera which is a multi-tenant architecture, therefore more than one Hyrax-based or other Samvera-based application can use the same Fedora instance. Hyrax 3 will be built atop Valkyrie, which will allow Hyrax installations to use a variety of back-ends, including but not limited to Fedora. Using Valkyrie will provide Hyrax users more flexibility to meet their needs.</dd>
+                            <dt style="margin-top: 25px"><strong><a name="q2">Who provides technical support for Hyrax?</a></strong></dt>
+                            <dd style="margin-top: 5px">Because Hyrax is open and community supported, there is no centralized or official technical support entity. One of the best ways to get technical support for Hyrax is to visit the <a href="https://samvera.atlassian.net/wiki/spaces/samvera/pages/405211682/Getting+Started+in+the+Samvera+Community">Getting Started page</a> on the Samvera wiki, where you can join the Samvera Slack workspace and sign up for the Samvera-Tech list. The Samvera community also holds a <a href="https://samvera.atlassian.net/wiki/spaces/samvera/pages/405211059/Notes+from+Tech+Meetings+and+Calls">weekly technical call</a> where all are free to pose questions. </dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q3">How does Hyrax relate to Avalon Media System / Sufia / CurationConcerns / Hyku?</a></strong></dt>
+                            <dt style="margin-top: 25px"><strong><a name="q3">We're ready to test/move forward - what do we need to do to get started?</a></strong></dt>
                             <dd style="margin-top: 5px">
-                                <ul class="default">
-                                    <li>Avalon: Avalon Media System version 7 will be built atop Hyrax. Prior versions of Avalon related to Hyrax only in that they both build atop Samvera and are the most widely used solution bundles.</li>
-                                    <li>Sufia: The Sufia gem is one of Hyrax's two progenitors, and much of Hyrax's user interface comes straight out of Sufia..</li>
-                                    <li>CurationConcerns: The CurationConcerns gem is one of Hyrax's two progenitors, bringing configurable workflows and the ability to create, read, update, and delete flexible PCDM-based repository object types which can be created on demand.</li>
-                                    <li>Hyku: Hyku is a multi-tenant application built atop Hyrax.</li>
-                                </ul>
+                                Great to hear it! There are numerous ways to connect to the community, including our email lists and Slack workspace. You can find information about these and other ways to connect on the <a href="https://samvera.atlassian.net/wiki/spaces/samvera/pages/405211682/Getting+Started+in+the+Samvera+Community">Getting Started</a> page on the Samvera Community Wiki. You'll also want to check out the <a href="https://samvera.atlassian.net/wiki/spaces/samvera/pages/496632287/Hyrax+Interest+Group">Hyrax Interest Group</a> to connect with other implementers and the Hyrax community leadership team.
                             </dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q3a">Should I use Hyrax or Hyku for my application?</a></strong></dt>
+                            <dt style="margin-top: 25px"><strong><a name="q3a">Does Hyrax use the Portland Common Data Model (PCDM)?</a></strong></dt>
                             <dd style="margin-top: 5px">
-                                Whether you choose to use Hyku or your own application based on Hyrax depends on a number of factors including your requirements and availability of resources to develop and maintain the application over time. The Hydra-in-a-Box team has written up <a href="https://wiki.duraspace.org/pages/viewpage.action?pageId=85530575">a guide to help explain the relationship and differences between Hyku and Hyrax</a> on the Hyku documentation site. This guide should help inform your decision. If you still have questions, you should <a href="https://wiki.duraspace.org/pages/viewpage.action?pageId=43910187">engage the Samvera community</a>.
+                                All repository objects created in Hyrax are modeled using the Portland Common Data Model.
                             </dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q4">Does Hyrax use the Portland Common Data Model (PCDM)?</a></strong></dt>
-                            <dd style="margin-top: 5px">All repository objects created in Hyrax are modeled using the Portland Common Data Model.</dd>
+                            <dt style="margin-top: 25px"><strong><a name="q4">What do I do when I want to customize (or extend) Hyrax?</a></strong></dt>
+                            <dd style="margin-top: 5px"><p>
+First, check the Hyrax GitHub page to see if the aspect of the system you would like to customize has documentation, such as this <a href="https://github.com/samvera-labs/hyrax/wiki/Customizing-Metadata">section on customizing metadata</a> (which is perhaps the most common customization). 
+</p>
+<p>
+You can also connect with other Hyrax implementers and the current technology team on the <a href="https://samvera.atlassian.net/wiki/spaces/samvera/pages/405211682/Getting+Started+in+the+Samvera+Community">Samvera Slack workspace</a>, on our <a href="https://samvera.atlassian.net/wiki/spaces/samvera/pages/405211059/Notes+from+Tech+Meetings+and+Calls">weekly Tech Calls</a>, and at calls for the <a href="https://samvera.atlassian.net/wiki/spaces/samvera/pages/496632287/Hyrax+Interest+Group">Hyrax Interest Group</a>.
+</p></dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q5">What do I do when I want to customize (or extend) Hyrax?</a></strong></dt>
-                            <dd style="margin-top: 5px">First, check the Hyrax GitHub page to see if the aspect of the system you would like to customize has documentation, such as this <a href="https://github.com/samvera-labs/hyrax/wiki/Customizing-Metadata">section on customizing metadata</a> (which is perhaps the most common customization). A good place to go next is the archives is <a href="https://groups.google.com/forum/#!topic/samvera-tech/">the Samvera-Tech community discussion list</a>. This will give you a sense of whether anyone else has already done work customizing the same thing, which could suggest one or more persons to consult with or existing documentation. Please do feel free to get in touch with the Samvera-Tech list, or Hyrax's product owner (<a href="mailto:vantuyls@oregonstate.edu">Steve Van Tuyl</a>), about your customization and how that might fit into the Hyrax development roadmap as collaborative work.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q6">I don't have developers, but are there other ways I can contribute to Hyrax development?</a></strong></dt>
-                            <dd style="margin-top: 5px">Absolutely. One way is by <a href="https://github.com/samvera-labs/hyrax/issues/new">contributing use cases and user stories</a> to inform future Hyrax development. If you're likely to be managing a Hyrax-based repository at some point, then there are <a href="https://wiki.duraspace.org/display/samvera/">working groups and interest groups in the Samvera community</a> that you may wish to join, in order to get a sense of the activities taking place in the community; to see what fellow Samvera institutions are involved and what they're focusing on; and to learn who your service manager peers are as well.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q7">Who provides technical support for Hyrax?</a></strong></dt>
-                            <dd style="margin-top: 5px">Because Hyrax and Samvera are open and community supported, there is no centralized or official technical support entity. One of the best ways to get technical support for Hyrax is to join the Samvera-Tech list and post questions to the forum. The Samvera community also holds a weekly technical call where all are free to pose questions. Last, there are currently a handful of independent consultancies that specialize in assisting users of Samvera products. At this time, the best way to find these consultancies is to contact members of the Samvera community through one of the Samvera message forums.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q8">What kinds of metadata are supported?</a></strong></dt>
-                            <dd style="margin-top: 5px">By default, Hyrax provides relatively simple, Dublin Core Terms-based RDF metadata. The Hyrax GitHub wiki provides some <a href="https://github.com/samvera-labs/hyrax/wiki/Customizing-Metadata">technical documentation for customization per individual needs</a>. Please note that customization of metadata, while common, will require in-house maintenance over time as new versions of Hyrax are released.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q9">How often are there new releases?</a></strong></dt>
-                            <dd style="margin-top: 5px">Hyrax is a relatively new product, but based on what we learned from our experience with Sufia and CurationConcerns, we anticipate new Hyrax releases every 6-8 weeks, with no more than one major version per year.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q10">How can I keep my Hyrax application updated? How often should I plan to upgrade it?</a></strong></dt>
-                            <dd style="margin-top: 5px">We have found that devoting one day per month (again, on average) to updating Hyrax and other components, and then testing that work, to be an effective and sustainable way to stay up to date.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q11">What components/gems are there in a complete "stack?"</a></strong></dt>
-                            <dd style="margin-top: 5px">Prior to Valkyrie, Samvera software required a few pieces of software: Apache Solr, Blacklight, the Fedora repository, and a relational database (most often MySQL or PostgreSQL). Samvera software that leverages Valkyrie (including the forthcoming Hyrax 3.0) no longer explicitly requires Fedora. In addition, Hyrax requires the Redis datastore, ImageMagick, and FITS software. In terms of Ruby gems that are dependencies of Hyrax, there are many, including hydra-head, active-fedora, hydra-derivatives, hydra-editor, google-api-client, and browse-everything.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q12">How do I stay updated on the latest Hyrax developments?</a></strong></dt>
-                            <dd style="margin-top: 5px">There are many ways to track Hyrax development depending on what you're interested in. To track development in-depth, you can follow along on <a href="https://github.com/samvera-labs/hyrax">GitHub</a>. All Hyrax development, technical documentation, and issue tracking is done on GitHub. To track it at a higher level (new releases, opportunities for collaboration, usage surveys), subscribe to the samvera-tech and samvera-community lists and keep an eye out for updates specifically about Hyrax. Occasionally Hyrax-related development, as one of the most active and widely contributed-to Samvera projects, is discussed on the weekly Samvera Tech call.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q13">What preservation activities does Hyrax do automatically?</a></strong></dt>
-                            <dd style="margin-top: 5px">Every file that is uploaded via Hyrax is "characterized" by the File Information Tool Set (FITS) tool. FITS extracts salient technical characteristics of each file, and that information is stored in Fedora as technical metadata and is searchable. Gathering this metadata can help drive future digital preservation strategies such as emulation, normalization, and format migration. Hyrax uses Fedora's fixity service to record and periodically evaluate file integrity for every file uploaded via Hyrax. Hyrax works with Fedora to create and maintain a log of significant fixity events over time, which can aid in auditing changes to an object.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q14">Does Hyrax provide use and user stats?</a></strong></dt>
-                            <dd style="margin-top: 5px">Yes, in the administrative dashboard. For now it provides some high-level stats around use and users, such as the following: Number of objects deposited; Number of users; Number of downloads for individual files; Number of pageviews for individual files; Visualizations for downloads and page views for each file - these visualizations are viewable (via "Analytics" link) on open access files to anyone. Hyrax also makes certain use/user stats available only to admin users: Determining various statistics (number of users, number of files) within date ranges (i.e., number of new users between September 2014 and September 2015); Number of total works, collections, and files in system (with breakdown by access controls); Number of total users, who they are, number of files they've deposited; Top five users (users with most files deposited); and top file formats.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q15">How many people are developing Hyrax? And is the Hyrax development community "right" for my developers?</a></strong></dt>
-                            <dd style="margin-top: 5px">There are a few dozen institutions who have contributed to the development of Hyrax. On top of these, the larger Samvera development community contributes functionality to the core Samvera framework which Hyrax extends. Hyrax has so far had code contributions from over 110 different developers (as of April 2018). As to whether the community is "right" from a skill-set perspective, it will be helpful for your developers/administrators to have (or be willing to gain) experience with Ruby on Rails, Solr, Blacklight, and Fedora. The developer community for Samvera welcomes and works together to support new users and there are active communication channels for developers seeking assistance and conversation around Samvera and Hyrax issues. The Samvera community is committed to providing a welcoming and inclusive experience for all community members.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q16">What user roles (depositor, curator, administrator) exist off the shelf?</a></strong></dt>
-                            <dd style="margin-top: 5px">
-                                <ul class="default">
-                                    <li>Unauthenticated user (public)</li>
-                                    <li>Authenticated user/Depositor</li>
-                                    <li>Reviewer</li>
-                                    <li>Collection manager</li>
-                                    <li>Collection depositor</li>
-                                    <li>Collection viewer</li>
-                                    <li>Administrator (for access to certain use/user stats and for editor access to certain pages where content is dynamic)</li>
-                                    <li>A number of Hyrax adopters have used gems such as <a href="https://github.com/samvera/hydra-role-management">the hydra-role-management gem</a> or <a href="https://github.com/RolifyCommunity/rolify">rolify</a> for adding extra roles to Hyrax-based applications</li>
-                                </ul>
-                            </dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q17">When can I expect X to be implemented?</a></strong></dt>
-                            <dd style="margin-top: 5px">That depends on a number of factors, including what is already on the Hyrax roadmap, what functionality you are interested in, who may already be working on it (or have done related work in codebases other than Hyrax), and who is interested in doing this work when. The Samvera community works together to advance collective interests, and this collaborative model has been leveraged considerably in Hyrax. The open community model speaks to the need for folks desiring new functionality to communicate their needs with the Samvera community, to align timelines and user stories, and, where possible, to allot time and resources to collaborate. Get in touch early and often, either with the samvera-tech or samvera-community lists or with Hyrax's product owner (<a href="mailto:vantuyls@oregonstate.edu">Steve Van Tuyl</a>), who manages the Hyrax roadmap with guidance from the <a href="https://wiki.duraspace.org/pages/viewpage.action?pageId=90976017">Samvera Interest Group for Advising the Hyrax Roadmap</a> (SIGAHR).</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q18">What other products/services does Hyrax integrate with out-of-the-box?</a></strong></dt>
-                            <dd style="margin-top: 5px">
-                                <ul class="default">
-                                    <li>Uses the browse_everything gem to allow users to upload files via cloud providers such as Dropbox, Box, Google Drive, and SkyDrive</li>
-                                    <li>Exports metadata to Zotero, Mendeley, and EndNote</li>
-                                    <li>Integrates with Zotero's new "My Publications" feature for automated upload and management of Zotero-managed content into Hyrax</li>
-                                    <li>Leverages Google Analytics for usage statistics</li>
-                                    <li>Hyrax does not yet provide ORCID integration, but there is an orcid gem that is intended to be implemented atop Hyrax in your application and there are Hyrax installations that have already done this and may be consulted.</li>
-                                    <li>Hyrax does not yet provide DOI integration, but there is a hydra-remote-identifier gem that is intended to be implemented atop Hyrax in your application and there are Hyrax installations that have already done this and may be consulted.</li>
-                                    <li>Hyrax does not provide institutional Single Sign-On integration since there are many possible SSO products in use. There are a number of Hyrax installations which do integrate with SSO and it's often possible to adopt other institutions' recipes to do this customization.</li>
-                                </ul>
-                            </dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q19">Does it work with DPN / APTrust / DuraCloud / DPLA / MetaArchive, etc.?</a></strong></dt>
-                            <dd style="margin-top: 5px">There are many such services in this space, and Hyrax does not provide integration with any out of the box. There are some Hyrax installations which do integrate with some of the above services, which you may consult for hints and tips. That said, some of these services require hand-off of BagIt bags, and Fedora provides the ability to export bags for each object. Hyrax also supports the ResourceSync specification, providing resource lists and change lists, which DPLA has expressed interest in supporting as a mechanism for harvesting.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q20">We're ready to test/move forward - what do we need to do to get started?</a></strong></dt>
-                            <dd style="margin-top: 5px">Great to hear it! There are numerous ways to connect to the community, including our email lists and Slack workspace. You can find information about these and other ways to connect on the (<a href="https://samvera.atlassian.net/wiki/spaces/samvera/pages/405211682/Getting+Started+in+the+Samvera+Community">Getting Started</a>) page on the Samvera Community Wiki. You'll also want to check out the (<a href="https://samvera.atlassian.net/wiki/spaces/samvera/pages/496632287/Hyrax+Interest+Group">Hyrax Interest Group</a>) to connect with other implementers and the Hyrax community leadership team.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q21">How does Hyrax handle many/large files?</a></strong></dt>
-                            <dd style="margin-top: 5px">Hyrax comes preconfigured to limit the number of files that can be uploaded at one time to 100, and each file is allowed to be up to 500MB. There is <a href="https://github.com/samvera-labs/hyrax/issues/119">an open issue to revisit these numbers and allow them to be more easily configurable</a> &mdash; if this is a need of yours, we encourage you to get in touch especially if you have development cycles to work on this. Beyond these limits, we suggest using Hyrax's integration with the browse-everything gem to upload large files asynchronously via a third-party storage provider such as Dropbox or Google Drive. Another option that browse-everything provides, though this requires some small amount of work to set up, is to allow server-based uploads, where you open up space on your server for users to drop files into, and configure Hyrax to point at your server space.</dd>
-
-                            <dt style="margin-top: 25px"><strong><a name="q22">How is it decided what makes it into a Hyrax release? How is the roadmap planned?</a></strong></dt>
-                            <dd style="margin-top: 5px">The Hyrax product owner (Steve Van Tuyl) and Hyrax tech lead (Tom Johnson) decide what makes it into a release, and what makes it onto a roadmap. These decisions are highly coordinated with the Samvera community, and communicated in advance via community lists and channels. The Samvera Interest Group for Advising the Hyrax Roadmap (SIGAHR) is an open group that helps to guide the Hyrax roadmap.</dd>
                         </dl>
                     </article>
                 </div>
