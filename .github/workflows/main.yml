@@ -1,15 +1,15 @@
 name: Trigger Nurax build
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - 'main'
+#  push:
+#    branches:
+#      - 'main'
 
 jobs:
   trigger:
     runs-on: ubuntu-latest
     steps:
-    - uses: peter-evans/repository-dispatch@v2.1.1
+    - uses: peter-evans/repository-dispatch@v3
       with:
          token: ${{ secrets.NURAX_ACCESS_TOKEN }}
          event-type: push
