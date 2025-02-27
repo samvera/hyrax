@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
-  class Engine < ::Rails::Engine
+  class Engine < ::Rails::Engine # rubocop:disable Metrics/ClassLength
     isolate_namespace Hyrax
 
     require 'almond-rails'
@@ -60,12 +60,15 @@ module Hyrax
       # raises PG::ConnectionBad. There's no good common ancestor to assume. That's why this test
       # is in its own tiny chunk of code – so we know that whatever the StandardError is, it's coming
       # from the attempt to connect.
-      can_connect = begin
-        ActiveRecord::Base.connection
-        true
-                    rescue StandardError
-                      false
-      end
+      #
+      # (Some time later...) Simply accessing the connection obj is not raising PG::ConnectionBad,
+      # so let's call active? too.
+      can_connect =
+        begin
+          ActiveRecord::Base.connection.active?
+        rescue StandardError
+          false
+        end
 
       can_persist = can_connect && begin
         Hyrax.config.persist_registered_roles!
@@ -88,9 +91,11 @@ module Hyrax
     end
 
     initializer 'requires' do
-      require 'wings' unless Hyrax.config.disable_wings
-      require 'freyja' unless Hyrax.config.disable_freyja
-      require 'frigg' unless Hyrax.config.disable_frigg
+      ActiveSupport::Reloader.to_prepare do
+        require 'wings' unless Hyrax.config.disable_wings
+        require 'freyja' unless Hyrax.config.disable_freyja
+        require 'frigg' unless Hyrax.config.disable_frigg
+      end
     end
 
     initializer 'routing' do

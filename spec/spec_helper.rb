@@ -26,7 +26,7 @@ end
 require 'factory_bot'
 
 require File.expand_path("config/environment", ENV['RAILS_ROOT'])
-db_config = ActiveRecord::Base.configurations[ENV['RAILS_ENV']]
+db_config = ActiveRecord::Base.configurations.configs_for(env_name: ENV['RAILS_ENV'])[0]
 ActiveRecord::Tasks::DatabaseTasks.create(db_config)
 ActiveRecord::Migrator.migrations_paths = [Pathname.new(ENV['RAILS_ROOT']).join('db', 'migrate').to_s]
 ActiveRecord::Tasks::DatabaseTasks.migrate
@@ -161,13 +161,24 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.fixture_path = File.expand_path("../fixtures", __FILE__)
+  config.fixture_paths = [File.expand_path("../fixtures", __FILE__)]
   config.file_fixture_path = File.expand_path("../fixtures", __FILE__)
   config.use_transactional_fixtures = false
 
   config.before :suite do
     FactoryBot::SyntaxRunner.include ActiveJob::TestHelper
     FactoryBot::SyntaxRunner.include RSpec::Mocks::ExampleMethods
+    # Workarounds for perform_enqueued_jobs
+    FactoryBot::SyntaxRunner.include ActiveSupport::Testing::TaggedLogging
+    # See https://github.com/rspec/rspec-rails/issues/2545
+    FactoryBot::SyntaxRunner.class_eval do
+      def name
+        'FactoryBot::SyntaxRunner'
+      end
+    end
+    require 'rspec/core/minitest_assertions_adapter'
+    FactoryBot::SyntaxRunner.include RSpec::Core::MinitestAssertionsAdapter
+    # End of workarounds
     Hyrax::RedisEventStore.instance.then(&:flushdb)
     DatabaseCleaner.clean_with(:truncation)
     # Noid minting causes extra LDP requests which slow the test suite.
