@@ -27,6 +27,7 @@ if RUBY_PLATFORM =~ /musl/
 #   end
 end
 
+gem 'hydra-role-management'
 gemspec name: 'hyrax', path: ENV.fetch('HYRAX_ENGINE_PATH', '..')
 gem 'jbuilder', '~> 2.5'
 gem 'jquery-rails'
