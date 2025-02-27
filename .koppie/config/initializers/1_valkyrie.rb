@@ -31,8 +31,8 @@ Valkyrie::MetadataAdapter.register(
 Valkyrie::MetadataAdapter.register(
   Valkyrie::Persistence::Fedora::MetadataAdapter.new(
     connection: ::Ldp::Client.new(Hyrax.config.fedora_connection_builder.call(
-      ENV.fetch('FCREPO_URL') { "http://localhost:8080/fcrepo/rest" })),
-    base_path: Rails.env,
+      ENV.fetch('FEDORA6_URL') { ENV.fetch('FEDORA_URL') { "http://localhost:8080/fcrepo/rest" } })),
+    base_path: ENV.fetch('FEDORA_BASE_PATH') { Rails.env },
     schema: Valkyrie::Persistence::Fedora::PermissiveSchema.new(Hyrax::SimpleSchemaLoader.new.permissive_schema_for_valkrie_adapter),
     fedora_version: 6.5,
     fedora_pairtree_count: 4,
@@ -64,8 +64,8 @@ Valkyrie.config.metadata_adapter = ENV.fetch('VALKYRIE_METADATA_ADAPTER') { :pg_
 Valkyrie::StorageAdapter.register(
   Valkyrie::Storage::Fedora.new(
     connection: ::Ldp::Client.new(Hyrax.config.fedora_connection_builder.call(
-      ENV.fetch('FCREPO_URL') { "http://localhost:8080/fcrepo/rest" })),
-    base_path: Rails.env,
+      ENV.fetch('FEDORA6_URL') { ENV.fetch('FEDORA_URL') { "http://localhost:8080/fcrepo/rest" } })),
+    base_path: ENV.fetch('FEDORA_BASE_PATH') { Rails.env },
     fedora_version: 6.5,
     fedora_pairtree_count: 4,
     fedora_pairtree_length: 2
