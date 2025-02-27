@@ -73,7 +73,7 @@ Valkyrie::StorageAdapter.register(
 )
 
 Valkyrie::StorageAdapter.register(
-  Valkyrie::Storage::VersionedDisk.new(base_path: Rails.root.join("storage", "files"),
+  Valkyrie::Storage::VersionedDisk.new(base_path: ENV.fetch('HYRAX_STORAGE_PATH') { Rails.root.join("storage", "files") },
                                        file_mover: FileUtils.method(:cp)),
   :versioned_disk_storage
 )
