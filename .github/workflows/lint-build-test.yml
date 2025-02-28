@@ -63,7 +63,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
-            type=ref,event=branch
+            type=ref,event=pr
             type=sha
       - name: Build and export
         uses: docker/build-push-action@v6
