@@ -39,11 +39,12 @@ class CreateWorkJob < Hyrax::ApplicationJob
   end
 
   def batch_create_valkyrie_work(work, attributes, user)
-    uploaded_file_ids = attributes.delete(:uploaded_files)
+    form_attributes = attributes
+    uploaded_file_ids = form_attributes.delete(:uploaded_files)
     files = Hyrax::UploadedFile.find(uploaded_file_ids)
-    permissions_params = attributes.delete(:permissions_attributes)
+    permissions_params = form_attributes.delete(:permissions_attributes)
     form = Hyrax::FormFactory.new.build(work, nil, nil)
-    form.validate(attributes)
+    form.validate(form_attributes)
 
     transactions['change_set.create_work']
       .with_step_args(
