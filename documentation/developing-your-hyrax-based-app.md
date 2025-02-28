@@ -32,7 +32,7 @@ You can also try [Running Hyrax-based application in local VM](https://github.co
 During development, running only the dependent services in a container environment may be beneficial. This avoids potential headaches concerning file permissions and eases the use of debugging tools. The application generation instructions below use [Lando](https://lando.dev) to achieve this setup.
 
 This document contains instructions specific to setting up an app with __Hyrax
-v5.0.4__. If you are looking for instructions on installing a different
+v5.1.0-beta1__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -46,7 +46,7 @@ Prerequisites are required for both creating a Hyrax\-based app and contributing
 Hyrax requires the following software to work:
 
 1. [Solr](http://lucene.apache.org/solr/) version >= 5.x (tested up to 8.11.1, which includes the log4j library update)
-1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.7.6 (if not using the Valkyrie Postgres adapter)
+1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.7.6 && < 5 (if using legacy ActiveFedora) or >= 6.5.1 (if using the Valkyrie Fedora adapter)
 1. A SQL RDBMS ([PostgreSQL](https://www.postgresql.org) recommended)
 1. [Redis](http://redis.io/), a key-value store
 1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
@@ -102,7 +102,7 @@ Once ffmpeg has been installed, enable transcoding by setting `config.enable_ffm
 
 First, you'll need a working Ruby installation. You can install this via your operating system's package manager -- you are likely to get farther with OSX, Linux, or UNIX than Windows but your mileage may vary -- but we recommend using a Ruby version manager such as [RVM](https://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv).
 
-Hyrax supports Ruby 3.2. When starting a new project, we recommend using the latest Ruby 3.2 version.
+Hyrax supports Ruby 3.3. When starting a new project, we recommend using the latest Ruby 3.3 version.
 
 ## Redis
 
@@ -112,11 +112,11 @@ Starting up Redis will depend on your operating system, and may in fact already 
 
 ## Rails
 
-Hyrax requires Rails 6. We recommend the latest Rails 6.1 release.
+Hyrax requires Rails 7. We recommend the latest Rails 7.2 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 6.1.7.7
+gem install rails -v 7.2.2.1
 ```
 
 ### JavaScript runtime
@@ -148,7 +148,7 @@ Generate a new Rails application using the template.
 **NOTE:** `HYRAX_SKIP_WINGS` is needed here to avoid loading the Wings compatibility layer during the application generation process.
 
 ```shell
-HYRAX_SKIP_WINGS=true rails _6.1.7.7_ new my_app --database=postgresql -m https://raw.githubusercontent.com/samvera/hyrax/hyrax-v5.0.4/template.rb
+HYRAX_SKIP_WINGS=true rails _7.2.2.1_ new my_app --database=postgresql -m https://raw.githubusercontent.com/samvera/hyrax/hyrax-v5.1.0-beta1/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
