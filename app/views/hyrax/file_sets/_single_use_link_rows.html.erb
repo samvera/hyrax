@@ -13,7 +13,10 @@
       </button>
       <%= link_to t('hyrax.single_use_links.delete'),
                   hyrax.delete_single_use_link_path(params[:id], presenter),
-                  class: 'btn btn-sm btn-danger delete-single-use-link' %>
+                  class: 'btn btn-sm btn-danger delete-single-use-link',
+                  method: :delete,
+                  remote: true,
+                  onclick: 'alert("delete request sent!")' %>
     </td>
   </tr>
 <% end %>
