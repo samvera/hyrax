@@ -15,10 +15,9 @@ layout: default
                         <ul>
                             <li><strong><a href="#q1">What is Samvera?</a></strong></li>
                             <li><strong><a href="#q2">What is Hyrax?</a></strong></li>
-                            <li><strong><a href="#q3">What does Hyrax do?</a></strong></li>
-                            <li><strong><a href="#q4">Who's using Hyrax, and for what purposes?</a></strong></li>
-                            <li><strong><a href="#q5">How is Hyrax different from ...?</a></strong></li>
-                            <li><strong><a href="#q6">What will it cost?</a></strong></li>
+                            <li><strong><a href="#q3">Who's using Hyrax, and for what purposes?</a></strong></li>
+                            <li><strong><a href="#q4">How is Hyrax different from ...?</a></strong></li>
+                            <li><strong><a href="#q5">What will it cost?</a></strong></li>
                         </ul>
                         <footer>
                             <a href="{{ site.baseurl}}/about/managers" class="button">More detail, please!</a>
@@ -36,57 +35,80 @@ layout: default
                         </header>
                         <dl>
                             <dt style="margin-top: 25px"><strong><a name="q1">What is Samvera?</a></strong></dt>
-                            <dd style="margin-top: 5px">Samvera is an open-source repository solution built collaboratively to address a broad range of repository needs. Rather than being one-size-fits-all, Samvera leverages an ecosystem of components that lets institutions assemble and deploy robust and durable repository applications that are tailored to their users' needs and workflows. Samvera's platform is built atop the <a href="http://fedorarepository.org/">Fedora repository</a> for digital asset management and utilizes Apache Solr for searching &amp; indexing.  The Samvera community has worked together to develop and sustain a number of “solution bundles” &mdash; applications designed to solve a common need in a generalized yet customizable way with minimal development effort required &mdash; including the Avalon Media System, for managing and providing access to large collections of digital audio and video, and Hyrax, a front-end enabling common digital collections management and institutional repository features including creation of repository object types on demand, deposit of content via multiple configurable workflows, and description of content with flexible metadata.</dd>
+                            <dd style="margin-top: 5px"><p>
+The <a href="https://samvera.org/">Samvera Community</a> is a global community of technologists who create and maintain repository software; you can’t install Samvera, but you can install the repository solutions we develop together including Avalon Media System, Hyrax, and Hyku. Institutions around the world rely on Samvera Community supported software to provide access to their digital content.
+</p>
+<p>
+Samvera is also a community of practice where software developers and library technologists can support and learn from one another. We have active participation from metadata specialists, repository managers, user experience professionals, and others who contribute their expertise to ensure the software stays relevant and responsive to changing needs.
+</p>
+<p>
+Samvera software is free and open source, available under an Apache 2 license.  It offers flexible and rich user interfaces tailored to distinct content types on top of a robust back end – giving adopters the best of both worlds.
+</p></dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q2">What is Hyrax, and what's the relationship between Hyrax and Samvera?</a></strong></dt>
-                            <dd style="margin-top: 5px">Samvera provides a framework for building web applications on top of a repository back-end and a search index. Hyrax uses the full power of Samvera and extends it to provide a user interface around common repository features and social features (see <a href="#q3">the answer to question 3</a> for more). Hyrax offers self-deposit, proxy deposit, and mediated deposit workflows. Hyrax delivers its rich and growing set of features via a modern, responsive user interface.
-                                <br/><br/>
-                                Hyrax was created through the consolidation of the Sufia and CurationConcerns gems. (Sufia was originally developed at <a href="http://psu.edu/">Penn State University</a> as a shareable generalization of their Samvera-based research repository application, <a href="https://scholarsphere.psu.edu/">ScholarSphere</a>.) Hyrax, and Sufia and CurationConcerns before it, has been maintained by a growing number of Samvera community developers (with over 110 contributors as of April of 2018. Hyrax is exemplary of Samvera development that has had wide implementation and code contributions to become a truly community-driven, -supported, and -maintained solution bundle.
+                            <dt style="margin-top: 25px"><strong><a name="q2">What is Hyrax?</a></strong></dt>
+                            <dd style="margin-top: 5px"><p>
+Hyrax is a repository engine that provides a rich set of features, including:
+</p>
+<ul>
+
+<li>Multiple file, or folder, upload</li>
+
+<li>Flexible user- and group-based access controls, including sharing with groups and individuals:</li> 
+<ol>
+ 
+<li>Example: A file can be shared with a User Managed Group for viewing and downloading, or access can be at the editing level (i.e., anyone in the group would have editing rights to the metadata).</li>
+ 
+<li>Example: Permissions for visibility are, by default, open access. They can be changed to "Private," or to the institution level (i.e., Penn State only)</li> 
+</ol>
+
+<li>Admin user privileges:</li> 
+<ol>
+ 
+<li>Editing rights to pages where content can be dynamic</li>
+ 
+<li>Ability to configure featured works and featured researcher on home page</li>
+ 
+<li>Access to range of use and usage statistics</li> 
+</ol>
+
+<li>User profiles, where users can also select files to feature in the profile</li>
+
+<li>User dashboard for managing files, including creation of collections</li>
+
+<li>Proxy deposit and transfer of file ownership</li>
+
+<li>Configurable, flexible workflows</li>
+
+<li>Forms for batch-editing metadata</li>
+
+<li>Google Analytics for usage statistics</li>
+
+<li>Full-text indexing and searching</li>
+
+<li>Faceted search and browse</li>
+
+<li>Digital preservation functionalities:</li> 
+<ol>
+ 
+<li>Fixity checking</li>
+ 
+<li>Version control</li>
+ 
+<li>Characterization of uploaded files
+<p>
                             </dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q3">What does Hyrax do?</a></strong></dt>
-                            <dd style="margin-top: 5px">Hyrax provides a rich set of features, including:
-                                <ul class="default">
-                                    <li>Multiple file, or folder, upload</li>
-                                    <li>Flexible user- and group-based access controls, including sharing with groups and individuals:
-                                        <ol class="default">
-                                            <li>Example: A file can be shared with a User Managed Group for viewing and downloading, or access can be at the editing level (i.e., anyone in the group would have editing rights to the metadata).</li>
-                                            <li>Example: Permissions for visibility are, by default, open access. They can be changed to "Private," or to the institution level (i.e., Penn State only)</li>
-                                        </ol>
-                                    </li>
-                                    <li>Admin user privileges:
-                                        <ol class="default">
-                                            <li>Editing rights to pages where content can be dynamic</li>
-                                            <li>Ability to configure featured works and featured researcher on home page</li>
-                                            <li>Access to range of use and usage statistics</li>
-                                        </ol>
-                                    </li>
-                                    <li>User profiles, where users can also select files to feature in the profile</li>
-                                    <li>User dashboard for managing files, including creation of collections</li>
-                                    <li>Proxy deposit and transfer of file ownership</li>
-                                    <li>Configurable, flexible workflows</li>
-                                    <li>Forms for batch-editing metadata</li>
-                                    <li>Google Analytics for usage statistics</li>
-                                    <li>Full-text indexing and searching</li>
-                                    <li>Faceted search and browse</li>
-                                    <li>Digital preservation functionalities:
-                                        <ol class="default">
-                                            <li>Fixity checking</li>
-                                            <li>Version control</li>
-                                            <li>Characterization of uploaded files</li>
-                                        </ol>
-                                    </li>
-                                </ul>
+                            <dt style="margin-top: 25px"><strong><a name="q3">Who's using Hyrax, and for what purposes?</a></strong></dt>
+                            <dd style="margin-top: 5px">Hyrax is used for a range of purposes including institutional repositories, data repositories, digital collections management, and digital archives. As Hyrax is open-source software that anyone can use freely, there's no way to tell exactly how many Hyrax users there are. We've seen Hyrax used by a diverse group of organizations including research libraries & archives, public media, art museums, and academic consortia. The Samvera Wiki maintains a list of example implementations of Hyrax as well as Hyku and Avalon Media System.
                             </dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q4">Who's using Hyrax, and for what purposes?</a></strong></dt>
-                            <dd style="margin-top: 5px">There are approximately 45 organizations (as of March of 2017) that we know are running instances of Hyrax (and its progenitors, Sufia and CurationConcerns) for a range of purposes including institutional repositories, data repositories, digital collections management, and digital archives. As Hyrax is open-source software that anyone can use freely, there's no way to tell exactly how many Hyrax users there are. We've seen Hyrax used by a diverse group of organizations including research libraries & archives, public media, art museums, academic consortia, scientific foundations, and a repertory theater.</dd>
+                            <dt style="margin-top: 25px"><strong><a name="q4">How is Hyrax different from DSpace, Bepress, CONTENTdm, etc.?</a></strong></dt>
+                            <dd style="margin-top: 5px">Hyrax is a repository solution that allows deposit of content via configurable workflows; description with customizable metadata; and user-level control over that content (upload, modify, delete content). Hyrax supports many of the same features provided by each of these systems.</dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q5">How is Hyrax different from DSpace, Bepress, CONTENTdm, etc.?</a></strong></dt>
-                            <dd style="margin-top: 5px">Hyrax is a repository solution that allows deposit of content via configurable workflows; description with customizable metadata; and user-level control over that content (upload, modify, delete content). Hyrax supports many of the same features provided by each of these systems (see <a href="https://github.com/samvera/sufia/wiki/Feature-matrix">the feature matrix</a>).</dd>
+                            <dt style="margin-top: 25px"><strong><a name="q5">What does Hyrax cost?</a></strong></dt>
+                            <dd style="margin-top: 5px">While it is difficult to put a dollar amount on a particular implementation of Hyrax, we know from the experiences of our community members that Hyrax repository solutions generally work well with at least a part-time developer and part-time sysadmin. As Hyrax is an open-source product, it would be useful for potential users to <a href="https://samvera.atlassian.net/wiki/spaces/samvera/pages/405211682/Getting+Started+in+the+Samvera+Community">connect with the community</a> about resourcing concerns for a particular implementation scenario.</dd>
 
-                            <dt style="margin-top: 25px"><strong><a name="q6">What does Hyrax cost?</a></strong></dt>
-                            <dd style="margin-top: 5px">While it is difficult to put a dollar amount on a particular implementation of Hyrax, we know from the experiences of our community members that Hyrax repository solutions have been implemented with resources ranging from one part-time developer through much larger development shops. As Hyrax and Samvera are open-source products, it would be useful for potential users to connect with the community (<a href="https://groups.google.com/forum/#!forum/samvera-tech">Samvera-Tech</a> or <a href="https://groups.google.com/forum/#!forum/samvera-community">Samvera-Community</a> groups) about resourcing concerns for a particular implementation scenario.</dd>
+                        
                         </dl>
                     </article>
                 </div>
