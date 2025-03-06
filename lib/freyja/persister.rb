@@ -38,7 +38,7 @@ module Freyja
         if new_resource.is_a?(Hyrax::Work)
           member_ids = new_resource.member_ids.map(&:to_s)
           MigrateResourcesJob.perform_later(ids: member_ids) unless member_ids.empty?
-          MigrateSipityEntityJob.perform_later(id: new_resource.id)
+          MigrateSipityEntityJob.perform_later(id: new_resource.id.to_s)
         end
       end
       new_resource
