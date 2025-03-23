@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Hyrax
   # Given the id of a work, find the collections it is a member of
-  class ParentCollectionSearchBuilder < Hyrax::CollectionSearchBuilder
+  class ParentCollectionSearchBuilder < ::Hyrax::CollectionSearchBuilder
     delegate :item, to: :scope
 
     # include filters into the query to only include the collections containing this item
