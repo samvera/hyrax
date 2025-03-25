@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Transactions::FileSetUpdate do
   let(:file_set)   { FactoryBot.valkyrie_create(:hyrax_file_set, title: 'image.jpg') }
   let(:change_set) { Hyrax::Forms::AdministrativeSetForm.new(file_set) }
   let(:user)       { FactoryBot.create(:user) }
-  let(:xmas)       { DateTime.parse('2022-12-25 11:30').iso8601 }
+  let(:xmas)       { DateTime.parse('2022-12-25 11:30') }
 
   before { allow(Hyrax::TimeService).to receive(:time_in_utc).and_return(xmas) }
 
