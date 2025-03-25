@@ -51,7 +51,7 @@ module Hyrax
   class FileSet < Hyrax::Resource
     include Hyrax::Schema(:core_metadata) unless Hyrax.config.flexible?
     include Hyrax::Schema(:file_set_metadata) unless Hyrax.config.flexible?
-    # TODO why isn't this automatic?
+    # TODO: why isn't this automatic?
     include Hyrax::Schema('Hyrax::FileSet') if Hyrax.config.flexible?
 
     def self.model_name(name_class: Hyrax::Name)

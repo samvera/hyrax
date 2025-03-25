@@ -28,7 +28,7 @@ module Hyrax
       define_dynamic_methods if Hyrax.config.flexible?
     end
 
-    def define_dynamic_methods
+    def define_dynamic_methods # rubocop:disable Metrics/MethodLength
       Hyrax::FlexibleSchema.default_properties.each do |prop|
         method_name = prop.to_s
         property_details = Hyrax::FlexibleSchema.current_version["properties"][method_name]
@@ -39,25 +39,22 @@ module Hyrax
 
         multi_value = property_details.dig("multi_value")
 
-        unless self.class.method_defined?(method_name) && solr_document.respond_to?(method_name)
-          # Define the method on the SolrDocument class
-          Hyrax::SolrDocument::OrderedMembers.send(:define_method, method_name) do
-            index_keys.each do |index_key|
-              value = self[index_key]
-              return value unless value.blank?
-            end
-            multi_value ? [] : ""
+        next unless self.class.method_defined?(method_name) && solr_document.respond_to?(method_name)
+        # Define the method on the SolrDocument class
+        Hyrax::SolrDocument::OrderedMembers.send(:define_method, method_name) do
+          index_keys.each do |index_key|
+            value = self[index_key]
+            return value if value.present?
           end
+          multi_value ? [] : ""
+        end
 
-          # Define the method on the Presenter class
-          self.class.send(:define_method, method_name) do
-            @solr_document.send(method_name)
-          end
+        # Define the method on the Presenter class
+        self.class.send(:define_method, method_name) do
+          @solr_document.send(method_name)
         end
       end
-    end
-
-
+    end # rubocop:enable Metrics/MethodLength
 
     # We cannot rely on the method missing to catch this delegation.  Because
     # most all objects implicitly implicitly implement #to_s

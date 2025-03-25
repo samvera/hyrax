@@ -30,7 +30,7 @@ module Hyrax
   class Indexer < Module
     ##
     # @param [Hash{Symbol => Symbol}] rules
-    def initialize(rules)
+    def initialize(rules) # rubocop:disable Metrics/MethodLength
       define_method :to_solr do |*args|
         super(*args).tap do |document|
           if Hyrax.config.flexible?
@@ -46,6 +46,6 @@ module Hyrax
           end
         end
       end
-    end
+    end  # rubocop:enable Metrics/MethodLength
   end
 end

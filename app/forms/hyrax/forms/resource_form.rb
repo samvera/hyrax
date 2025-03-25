@@ -52,7 +52,8 @@ module Hyrax
       #
       # Forms should be initialized with an explicit +resource:+ parameter to
       # match indexers.
-      def initialize(deprecated_resource = nil, resource: nil) # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      def initialize(deprecated_resource = nil, resource: nil)
         if Hyrax.config.flexible?
           singleton_class.schema_definitions = self.class.definitions
           r = resource || deprecated_resource
@@ -76,15 +77,15 @@ module Hyrax
             hash[:schema_version] = Hyrax::FlexibleSchema.current_schema_id
             resource = resource.class.new(hash)
             # find any fields removed by the new schema
-            to_remove = self.singleton_class.definitions.select {|k, v| !resource.respond_to?(k) && v.instance_variable_get("@options")[:display]}
+            to_remove = singleton_class.definitions.select { |k, v| !resource.respond_to?(k) && v.instance_variable_get("@options")[:display] }
             to_remove.keys.each do |removed_field|
-              self.singleton_class.definitions.delete(removed_field)
+              singleton_class.definitions.delete(removed_field)
             end
           end
 
           super(resource)
         end
-      end # rubocop:enable Metrics/MethodLength
+      end # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
       class << self
         ##

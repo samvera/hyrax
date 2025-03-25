@@ -30,7 +30,7 @@ module Hyrax
   #   `Hyrax::VisibilityWriter` (which provide their underlying
   #   implementations).
   #
-  class Resource < Valkyrie::Resource
+  class Resource < Valkyrie::Resource # rubocop:disable Metrics/ClassLength
     include Hyrax::Flexibility if Hyrax.config.flexible?
     include Hyrax::Naming
     include Hyrax::WithEvents
@@ -205,4 +205,4 @@ module Hyrax
       Hyrax::VisibilityReader.new(resource: self)
     end
   end
-end
+end # rubocop:enable Metrics/ClassLength

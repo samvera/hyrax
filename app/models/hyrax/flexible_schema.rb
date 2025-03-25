@@ -29,8 +29,8 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   #   which will add all properties available for that class
   # @return [Array] property#to_sym
   def self.default_properties
-    self.current_version['properties'].symbolize_keys!.keys
-  rescue StandardError => e
+    current_version['properties'].symbolize_keys!.keys
+  rescue StandardError
     []
   end
 

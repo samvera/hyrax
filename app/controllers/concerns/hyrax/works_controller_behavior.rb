@@ -180,7 +180,7 @@ module Hyrax
     end
 
     def build_form(contexts: [])
-      curation_concern.contexts = contexts unless contexts.blank?
+      curation_concern.contexts = contexts if contexts.present?
       @form = work_form_service.build(curation_concern, current_ability, self)
     end
 
