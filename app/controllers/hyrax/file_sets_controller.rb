@@ -9,6 +9,10 @@ module Hyrax
 
     before_action :authenticate_user!, except: [:show, :citation, :stats]
     load_and_authorize_resource class: Hyrax.config.file_set_class
+    # If Hyrax.config.file_set_class is set to ::FileSet, the load above will force-cast
+    # the instance as a ::FileSet, even if it is a Hyrax::FileSet. Re-cast it back to
+    # prevent method errors and nil objects later
+    before_action :cast_file_set
     before_action :build_breadcrumbs, only: [:show, :edit, :stats]
     before_action do
       blacklight_config.track_search_session = false
@@ -157,6 +161,13 @@ module Hyrax
         attrs["#{name}_attributes"] = new_perm_attrs
       end
       attrs
+    end
+
+    def cast_file_set
+      return unless @file_set.class == ::FileSet
+      # We can tell if a Hyrax::FileSet was improperly cast because this AF method will
+      # return nil since its parent is not a ActiveFedora work.
+      @file_set = @file_set.valkyrie_resource if @file_set.parent&.id.nil?
     end
 
     def parent(file_set: curation_concern)
