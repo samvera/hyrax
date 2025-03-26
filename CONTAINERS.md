@@ -181,7 +181,7 @@ It was also seen on a Windows 10 host and was resolved by using the git `--core.
 We also provide a base image which can be reused for your Hyrax applications: `hyrax`.
 
 ```sh
-echo "FROM samveralabs/hyrax" > Dockerfile
+echo "FROM ghcr.io/samvera/hyrax/hyrax-base" > Dockerfile
 ```
 
 _This is for applications that mount Hyrax and is separate from the docker containers for Hyrax engine development._
