@@ -186,6 +186,12 @@ module Hyrax
       def display_additional_fields?
         secondary_terms.any?
       end
+
+      private
+
+      def _form_field_definitions
+        self.class.definitions
+      end
     end
   end
 end

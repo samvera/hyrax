@@ -60,7 +60,7 @@ module Hyrax
       # TODO: move these lines to the work form builder in Hyrax
       curation_concern.depositor = current_user.user_key
       curation_concern.admin_set_id = params[:admin_set_id] || admin_set_id_for_new
-      curation_concern.contexts = Hyrax.query_service.find_by(id: curation_concern.admin_set_id)&.contexts
+      curation_concern.contexts = Hyrax.query_service.find_by(id: curation_concern.admin_set_id)&.contexts if Hyrax.config.flexible?
       build_form
     end
 
