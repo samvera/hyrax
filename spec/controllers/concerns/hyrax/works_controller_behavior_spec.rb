@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'hyrax/specs/spy_listener'
+require 'hyrax/specs/shared_specs/simple_work'
 
 RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
   let(:paths) { controller.main_app }
