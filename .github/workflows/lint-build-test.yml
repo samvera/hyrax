@@ -64,7 +64,7 @@ jobs:
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=ref,event=pr
-            type=sha
+            type=sha,format=long,prefix=
       - name: Build and export
         uses: docker/build-push-action@v6
         with:
