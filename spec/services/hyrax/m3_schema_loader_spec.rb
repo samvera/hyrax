@@ -13,7 +13,7 @@ RSpec.describe Hyrax::M3SchemaLoader do
 
   before do
     allow(Hyrax.config).to receive(:flexible?).and_return(true)
-    allow(Hyrax::FlexibleSchema).to receive(:find).and_return(schema)
+    allow(Hyrax::FlexibleSchema).to receive(:find_by).and_return(schema)
   end
 
   describe '#attributes_for' do

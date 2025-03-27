@@ -24,7 +24,8 @@ module Hyrax
     # @param [Hash<Hash>] a nested hash of view options... {:label=>{"en"=>"Title", "es"=>"Título"}, :html_dl=>true}
     def conform_options(field_name, options_hash)
       options = HashWithIndifferentAccess.new(options_hash)
-      hash_of_locales = HashWithIndifferentAccess.new(options)['label'] || {}
+      options_hash = HashWithIndifferentAccess.new(options)
+      hash_of_locales = options_hash['render_term'] || options_hash['label'] || {}
       current_locale = params['locale'] || I18n.locale.to_s
 
       unless hash_of_locales.present?
