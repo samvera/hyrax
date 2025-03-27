@@ -8,7 +8,9 @@ module Hyrax
       if Hyrax.config.flexible?
         Hyrax::Schema.default_schema_loader.view_definitions_for(schema: model_name, version: presenter.solr_document.schema_version, contexts: presenter.solr_document.contexts)
       else
-        schema = model_name.constantize.schema || (model_name + 'Resource').safe_constantize.schema
+        # using respond_to? check because try? does not succeed with Dry::Types object that is returned by schema method
+        schema = model_name.constantize.respond_to?(:schema) ? model_name.constantize.schema : (model_name + 'Resource').safe_constantize.schema
+
         Hyrax::Schema.default_schema_loader.view_definitions_for(schema:)
       end
     end
