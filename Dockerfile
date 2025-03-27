@@ -1,50 +1,95 @@
-ARG ALPINE_VERSION=3.21
-ARG RUBY_VERSION=3.3.6
+ARG DEBIAN_VERSION=bookworm
+ARG RUBY_VERSION=3.3
 
-FROM ruby:$RUBY_VERSION-alpine$ALPINE_VERSION AS hyrax-base
+FROM ruby:$RUBY_VERSION-$DEBIAN_VERSION AS hyrax-base
 
-ARG DATABASE_APK_PACKAGE="postgresql-dev"
-ARG EXTRA_APK_PACKAGES="git"
-ARG RUBYGEMS_VERSION=""
+RUN apt update && \
+    curl -sL "https://deb.nodesource.com/setup_20.x" | bash - && \
+    apt install -y --no-install-recommends \
+    acl \
+    build-essential \
+    curl \
+    exiftool \
+    ffmpeg \
+    git \
+    imagemagick \
+    less \
+    libgsf-1-dev \
+    libimagequant-dev \
+    libjemalloc2 \
+    libjpeg62-turbo-dev \
+    libopenjp2-7-dev \
+    libopenjp2-tools \
+    libpng-dev \
+    libpoppler-cpp-dev \
+    libpoppler-dev \
+    libpoppler-glib-dev \
+    libpoppler-private-dev \
+    libpoppler-qt5-dev \
+    libreoffice \
+    libreoffice-l10n-uk \
+    librsvg2-dev \
+    libtiff-dev \
+    libvips-dev \
+    libvips-tools \
+    libwebp-dev \
+    libxml2-dev \
+    mediainfo \
+    netcat-openbsd \
+    nodejs \
+    perl \
+    poppler-utils \
+    postgresql-client \
+    rsync \
+    ruby-grpc \
+    screen \
+    tesseract-ocr \
+    tzdata \
+    vim \
+    zip \
+    && \
+    npm install --global yarn && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    ln -s /usr/lib/*-linux-gnu/libjemalloc.so.2 /usr/lib/libjemalloc.so.2 && \
+    echo "******** Packages Installed *********"
 
-RUN addgroup -S --gid 101 app && \
-  adduser -S -G app -u 1001 -s /bin/sh -h /app app
+#RUN wget https://github.com/ImageMagick/ImageMagick/archive/refs/tags/7.1.0-57.tar.gz \
+#    && tar xf 7.1.0-57.tar.gz \
+#    && cd ImageMagick* \
+#    && ./configure \
+#    && make install \
+#    && ldconfig /usr/local/lib \
+#    && cd $OLDPWD \
+#    && rm -rf ImageMagick*
 
-RUN apk --no-cache upgrade && \
-  apk --no-cache add acl \
-  build-base \
-  curl \
-  gcompat \
-  imagemagick \
-  imagemagick-heic \
-  imagemagick-jpeg \
-  imagemagick-jxl \
-  imagemagick-pdf \
-  imagemagick-svg \
-  imagemagick-tiff \
-  imagemagick-webp \
-  jemalloc \
-  ruby-grpc \
-  tzdata \
-  nodejs \
-  yarn \
-  zip \
-  $DATABASE_APK_PACKAGE \
-  $EXTRA_APK_PACKAGES
+RUN wget https://imagemagick.org/archive/binaries/magick && \
+    mv magick /usr/local/bin && \
+    cd /usr/local/bin && \
+    for name in animate compare composite conjure convert display identify import magick-script mogrify montage stream ; do \
+      ln -s magick $name ; \
+    done
+
+# TODO Add tesseract data?
 
 RUN setfacl -d -m o::rwx /usr/local/bundle && \
-  gem update --silent --system $RUBYGEMS_VERSION
+    gem update --silent --system
+
+
+RUN useradd -m -u 1001 -U -s /bin/bash --home-dir /app app && \
+    mkdir -p /app/samvera/hyrax-webapp && \
+    chown -R app:app /app && \
+    echo "export PATH=/app/samvera/hyrax-webapp/bin:${PATH}" >> /etc/bash.bashrc
 
 USER app
-
-RUN mkdir -p /app/samvera/hyrax-webapp
 WORKDIR /app/samvera/hyrax-webapp
 
-COPY --chown=1001:101 ./bin/*.sh /app/samvera/
+COPY --chown=1001 ./bin/*.sh /app/samvera/
 ENV PATH="/app/samvera:$PATH" \
     RAILS_ROOT="/app/samvera/hyrax-webapp" \
     RAILS_SERVE_STATIC_FILES="1" \
-    LD_PRELOAD="/usr/local/lib/libjemalloc.so.2"
+    LD_PRELOAD="/usr/lib/libjemalloc.so.2" \
+    MALLOC_CONF="dirty_decay_ms:1000,narenas:2,background_thread:true"
 
 ENTRYPOINT ["hyrax-entrypoint.sh"]
 CMD ["bundle", "exec", "puma", "-v", "-b", "tcp://0.0.0.0:3000"]
@@ -55,19 +100,12 @@ FROM hyrax-base AS hyrax
 ARG APP_PATH=.
 ARG BUNDLE_WITHOUT="development test"
 
-ONBUILD COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
+ONBUILD COPY --chown=1001 $APP_PATH /app/samvera/hyrax-webapp
 ONBUILD RUN bundle install --jobs "$(nproc)"
 ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DATABASE_URL='nulldb://nulldb' bundle exec rake assets:precompile
 
 
 FROM hyrax-base AS hyrax-worker-base
-
-USER root
-RUN apk --no-cache add bash \
-  ffmpeg \
-  mediainfo \
-  openjdk17-jre \
-  perl
 USER app
 
 RUN mkdir -p /app/fits && \
@@ -98,8 +136,8 @@ USER app
 ARG BUNDLE_WITHOUT=
 ENV HYRAX_ENGINE_PATH=/app/samvera/hyrax-engine
 
-COPY --chown=1001:101 .dassie /app/samvera/hyrax-webapp
-COPY --chown=1001:101 . /app/samvera/hyrax-engine
+COPY --chown=1001 .dassie /app/samvera/hyrax-webapp
+COPY --chown=1001 . /app/samvera/hyrax-engine
 
 RUN bundle -v && \
   BUNDLE_GEMFILE=Gemfile.dassie bundle install --jobs "$(nproc)" && yarn && \
