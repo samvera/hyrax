@@ -86,21 +86,23 @@ Valkyrie.config.storage_adapter  = ENV.fetch('VALKYRIE_STORAGE_ADAPTER') { :vers
 
 Valkyrie.config.indexing_adapter = :solr_index
 
-custom_queries = [Hyrax::CustomQueries::Navigators::CollectionMembers,
-                  Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator,
-                  Hyrax::CustomQueries::Navigators::ParentCollectionsNavigator,
-                  Hyrax::CustomQueries::Navigators::ChildFileSetsNavigator,
-                  Hyrax::CustomQueries::Navigators::ChildWorksNavigator,
-                  Hyrax::CustomQueries::Navigators::ParentWorkNavigator,
-                  Hyrax::CustomQueries::Navigators::FindFiles,
-                  Hyrax::CustomQueries::FindAccessControl,
-                  Hyrax::CustomQueries::FindCollectionsByType,
-                  Hyrax::CustomQueries::FindFileMetadata,
-                  Hyrax::CustomQueries::FindIdsByModel,
-                  Hyrax::CustomQueries::FindManyByAlternateIds,
-                  Hyrax::CustomQueries::FindModelsByAccess,
-                  Hyrax::CustomQueries::FindCountBy,
-                  Hyrax::CustomQueries::FindByDateRange]
-custom_queries.each do |handler|
-  Hyrax.query_service.custom_queries.register_query_handler(handler)
+Rails.application.reloader.to_prepare do
+  custom_queries = [Hyrax::CustomQueries::Navigators::CollectionMembers,
+                    Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator,
+                    Hyrax::CustomQueries::Navigators::ParentCollectionsNavigator,
+                    Hyrax::CustomQueries::Navigators::ChildFileSetsNavigator,
+                    Hyrax::CustomQueries::Navigators::ChildWorksNavigator,
+                    Hyrax::CustomQueries::Navigators::ParentWorkNavigator,
+                    Hyrax::CustomQueries::Navigators::FindFiles,
+                    Hyrax::CustomQueries::FindAccessControl,
+                    Hyrax::CustomQueries::FindCollectionsByType,
+                    Hyrax::CustomQueries::FindFileMetadata,
+                    Hyrax::CustomQueries::FindIdsByModel,
+                    Hyrax::CustomQueries::FindManyByAlternateIds,
+                    Hyrax::CustomQueries::FindModelsByAccess,
+                    Hyrax::CustomQueries::FindCountBy,
+                    Hyrax::CustomQueries::FindByDateRange]
+  custom_queries.each do |handler|
+    Hyrax.query_service.custom_queries.register_query_handler(handler)
+  end
 end
