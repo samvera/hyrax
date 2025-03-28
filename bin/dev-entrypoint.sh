@@ -13,7 +13,7 @@ bundle install
 yarn install
 
 # Precompile assets if running in production (Nurax)
-[ "$RAILS_ENV" = "production" ] && bundle exec assets:precompile
+[ "$RAILS_ENV" = "production" ] && bundle exec rake assets:precompile
 
 db-migrate-seed.sh
 
