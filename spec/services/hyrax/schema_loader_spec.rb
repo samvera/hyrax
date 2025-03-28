@@ -7,7 +7,7 @@ RSpec.describe Hyrax::SchemaLoader do
 
   describe '#definitions' do
     it 'raises NotImplementedError' do
-      expect { schema_loader.send(:definitions, :some_schema, 1) }
+      expect { schema_loader.send(:definitions, :some_schema, 1, nil) }
         .to raise_error(NotImplementedError, 'Implement #definitions in a child class')
     end
   end

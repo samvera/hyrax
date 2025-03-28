@@ -4,6 +4,7 @@ RSpec.describe 'leases' do
 
   before do
     sign_in user
+    Wings::ModelRegistry.register(GenericWorkResource, GenericWork)
   end
   describe 'create a new leased object' do
     let(:future_date) { Time.zone.today + 5 }

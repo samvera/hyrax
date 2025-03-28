@@ -691,6 +691,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         sign_in user
         # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
         allow(CharacterizeJob).to receive(:perform_later)
+        Wings::ModelRegistry.register(GenericWorkResource, GenericWork)
       end
 
       it "preselects the collection we are adding works to and adds the new work" do

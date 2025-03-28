@@ -2,7 +2,10 @@
 RSpec.describe 'embargo' do
   let(:user) { create(:user) }
 
-  before { sign_in user }
+  before do
+    sign_in user
+    Wings::ModelRegistry.register(GenericWorkResource, GenericWork)
+  end
 
   def go_to_embargo_mgmt_valkyrie
     click_link 'Edit'

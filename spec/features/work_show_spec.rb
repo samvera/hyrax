@@ -14,6 +14,7 @@ RSpec.describe "work show view" do
     before do
       allow(Hyrax::Analytics.config).to receive(:analytics_id).and_return('UA-XXXXXXXX')
       FactoryBot.create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+      Wings::ModelRegistry.register(GenericWorkResource, GenericWork)
     end
 
     context "as the work owner" do
