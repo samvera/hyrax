@@ -106,9 +106,13 @@ ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DATABASE_URL=
 
 
 FROM hyrax-base AS hyrax-worker-base
-USER app
+USER root
 
-RUN mkdir -p /app/fits && \
+RUN apt update && \
+    apt install -y --no-install-recommends default-jre-headless && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /app/fits && \
     cd /app/fits && \
     wget https://github.com/harvard-lts/fits/releases/download/1.6.0/fits-1.6.0.zip -O fits.zip && \
     unzip fits.zip && \
