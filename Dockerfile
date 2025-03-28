@@ -137,6 +137,7 @@ ARG BUNDLE_WITHOUT=
 ENV HYRAX_ENGINE_PATH=/app/samvera/hyrax-engine
 
 COPY --chown=1001 .dassie /app/samvera/hyrax-webapp
+COPY --chown=1001 .koppie /app/samvera/hyrax-koppie
 COPY --chown=1001 . /app/samvera/hyrax-engine
 
 RUN bundle -v && \
