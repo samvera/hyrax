@@ -8,9 +8,12 @@ module Hyrax
       if Hyrax.config.flexible?
         Hyrax::Schema.default_schema_loader.view_definitions_for(schema: model_name, version: presenter.solr_document.schema_version, contexts: presenter.solr_document.contexts)
       else
-        # using respond_to? check because try? does not succeed with Dry::Types object that is returned by schema method
         model = model_name.safe_constantize
-        schema = model.respond_to?(:schema) ? model.schema : Wings::ModelRegistry.reverse_lookup(model).schema
+        # using respond_to? check because try? does not succeed with Dry::Types object that is returned by schema method
+        schema = model.schema if model.respond_to?(:schema)
+        if schema.nil? && !Hyrax.config.disable_wings
+          schema = Wings::ModelRegistry.reverse_lookup(model).schema
+        end
 
         Hyrax::Schema.default_schema_loader.view_definitions_for(schema:)
       end
