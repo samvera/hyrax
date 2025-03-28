@@ -7,7 +7,64 @@ class ControlledVocabularyInput < MultiValueInput
   #   'multi_value'.freeze
   # end
 
+  def input(wrapper_options = nil)
+    # For Valkyrie forms, use a special approach
+    if valkyrie_form?
+      # For Valkyrie, generate HTML that works with the JS
+      template = <<-HTML
+        <div class="multi_value controlled_vocabulary" data-autocomplete-url="#{input_html_options[:data].try(:[], :'autocomplete-url')}" data-field-name="#{attribute_name}">
+          <ul class="listing">
+            <li class="field-wrapper input-group input-append">
+              #{build_valkyrie_field}
+              <span class="input-group-btn field-controls">
+                <button type="button" class="btn btn-link add">
+                  <span class="fa fa-plus"></span>
+                  <span class="controls-add-text">Add another</span>
+                </button>
+              </span>
+            </li>
+          </ul>
+        </div>
+      HTML
+      
+      template.html_safe
+    else
+      # For ActiveFedora, use the original MultiValueInput behavior
+      super
+    end
+  end
+
   private
+
+  def build_valkyrie_field
+    # Build input field with all required attributes for the JavaScript
+    options = input_html_options.dup
+    options[:class] ||= []
+    options[:class] += ["controlled_vocabulary", "form-control", "multi-text-field"]
+    
+    # Essential: these data attributes are required for the JavaScript
+    options[:data] ||= {}
+    options[:data][:autocomplete] = attribute_name
+    options[:data][:attribute] = attribute_name
+    options[:placeholder] ||= "Search for a #{attribute_name.to_s.humanize.downcase}..."
+    
+    # Generate the text field and hidden fields
+    @builder.text_field(attribute_name, options) +
+    @builder.hidden_field(attribute_name, name: "#{@builder.object_name}[#{attribute_name}_attributes][0][id]", id: "#{@builder.object_name}_#{attribute_name}_attributes_0_id", value: "", data: { id: "remote" }) +
+    @builder.hidden_field(attribute_name, name: "#{@builder.object_name}[#{attribute_name}_attributes][0][_destroy]", id: "#{@builder.object_name}_#{attribute_name}_attributes_0__destroy", value: "", data: { destroy: true })
+  end
+  
+  def valkyrie_form?
+    return false unless defined?(Valkyrie)
+    
+    # Check various ways a form might be Valkyrie-related
+    object.class.to_s.include?('ResourceForm') || 
+    object.is_a?(Valkyrie::ChangeSet) || 
+    (object.respond_to?(:model) && 
+      object.model.respond_to?(:class) && 
+      (object.model.is_a?(Valkyrie::Resource) || 
+        object.model.class.to_s.include?('Resource')))
+  end
 
   def build_field(value, index)
     options = input_html_options.dup
@@ -18,6 +75,11 @@ class ControlledVocabularyInput < MultiValueInput
     options[:class] ||= []
     options[:class] += ["#{input_dom_id} form-control multi-text-field"]
     options[:'aria-labelledby'] = label_id
+    
+    # Add data-autocomplete attribute to make the test pass
+    options[:data] ||= {}
+    options[:data][:autocomplete] = attribute_name
+    
     @rendered_first_element = true
     text_field(options) + hidden_id_field(value, index) + destroy_widget(attribute_name, index)
   end
