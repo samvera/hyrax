@@ -25,7 +25,7 @@ RSpec.describe 'hyrax/base/_attributes.html.erb' do
   before do
     allow(presenter).to receive(:member_of_collection_presenters).and_return([])
     allow(view).to receive(:dom_class) { '' }
-    Wings::ModelRegistry.register(GenericWorkResource, GenericWork)
+    Wings::ModelRegistry.register(GenericWorkResource, GenericWork) if defined?(Wings::ModelRegistry)
 
     render 'hyrax/base/attributes', presenter: presenter
   end

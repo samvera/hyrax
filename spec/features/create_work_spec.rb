@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
   let(:user) { create(:user) }
   let!(:ability) { ::Ability.new(user) }
@@ -13,7 +14,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
     create(:permission_template_access, :deposit, permission_template: permission_template, agent_type: 'user', agent_id: user.user_key)
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
     allow(CharacterizeJob).to receive(:perform_later)
-    Wings::ModelRegistry.register(GenericWorkResource, GenericWork)
+    Wings::ModelRegistry.register(GenericWorkResource, GenericWork) if defined?(Wings::ModelRegistry)
   end
 
   context "when the user is not a proxy" do

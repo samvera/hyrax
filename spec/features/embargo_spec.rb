@@ -4,7 +4,7 @@ RSpec.describe 'embargo' do
 
   before do
     sign_in user
-    Wings::ModelRegistry.register(GenericWorkResource, GenericWork)
+    Wings::ModelRegistry.register(GenericWorkResource, GenericWork) if defined?(Wings::ModelRegistry)
   end
 
   def go_to_embargo_mgmt_valkyrie
