@@ -3,6 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe 'Hyrax::Flexibility' do
+  before(:all) do
+    module Hyrax::Test::Flexibility
+      class TestWork < Hyrax::Resource
+      end
+    end
+  end
+
+  after(:all) do
+    Hyrax::Test::Flexibility.send(:remove_const, :TestWork)
+  end
+
   subject(:flexibility_class) { Hyrax::Test::Flexibility::TestWork }
   let(:schema) { Hyrax::FlexibleSchema.create(profile: profile.deep_merge(test_work_profile)) }
   let(:profile) { YAML.safe_load_file(Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'm3_profile.yaml')) }
@@ -21,17 +32,12 @@ RSpec.describe 'Hyrax::Flexibility' do
 
   before do
     allow(Hyrax.config).to receive(:flexible?).and_return(true)
-    allow(Hyrax::FlexibleSchema).to receive(:find).and_return(schema)
+    allow(Hyrax::FlexibleSchema).to receive(:find_by).and_return(schema)
 
-    module Hyrax::Test::Flexibility
-      class TestWork < Hyrax::Resource
-        include Hyrax::Flexibility if Hyrax.config.flexible?
-      end
-    end
+    Hyrax::Test::Flexibility::TestWork.include(Hyrax::Flexibility)
   end
 
   after do
-    Hyrax::Test::Flexibility.send(:remove_const, :TestWork)
     allow(Hyrax.config).to receive(:flexible?).and_return(false)
   end
 
