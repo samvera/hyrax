@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+require 'hyrax/specs/shared_specs/simple_work'
+
 RSpec.describe 'collection', type: :feature, clean_repo: true do
   include Selectors::Dashboard
 

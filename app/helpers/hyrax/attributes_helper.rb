@@ -9,7 +9,8 @@ module Hyrax
         Hyrax::Schema.default_schema_loader.view_definitions_for(schema: model_name, version: presenter.solr_document.schema_version, contexts: presenter.solr_document.contexts)
       else
         # using respond_to? check because try? does not succeed with Dry::Types object that is returned by schema method
-        schema = model_name.constantize.respond_to?(:schema) ? model_name.constantize.schema : (model_name + 'Resource').safe_constantize.schema
+        model = model_name.safe_constantize
+        schema = model.respond_to?(:schema) ? model.constantize.schema : Wings::ModelRegistry.reverse_lookup(model).schema
 
         Hyrax::Schema.default_schema_loader.view_definitions_for(schema:)
       end
