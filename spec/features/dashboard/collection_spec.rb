@@ -310,6 +310,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         fill_in('Creator', with: 'Doe, Jane')
         fill_in('Related URL', with: 'http://example.com/')
 
+        find('button.btn.btn-link.add', text: /Add another Location/i).click
         click_link('Search for a location')
         expect(page).to have_content 'Please enter 2 or more characters'
         find('#s2id_autogen1_search').send_keys("minneapolis")
