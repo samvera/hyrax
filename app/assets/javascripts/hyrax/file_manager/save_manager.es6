@@ -6,7 +6,7 @@ export default class SaveManager {
 
   override_save_button() {
     Blacklight.onLoad(() => {
-      this.save_button.click(this.clicked_save)
+      this.save_button.on('click', this.clicked_save)
     })
   }
 
@@ -24,10 +24,12 @@ export default class SaveManager {
   }
 
   check_button() {
-    if(this.is_changed && this.save_button.selector.valueOf("data-action") === "*[data-action='save-actions']") {
+    if (this.is_changed) {
       this.save_button.removeClass("disabled")
+      this.save_button.attr("aria-disabled", "false")
     } else {
       this.save_button.addClass("disabled")
+      this.save_button.attr("aria-disabled", "true")
     }
   }
 
