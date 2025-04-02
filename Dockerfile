@@ -103,6 +103,10 @@ ARG BUNDLE_WITHOUT="development test"
 ONBUILD COPY --chown=1001 $APP_PATH /app/samvera/hyrax-webapp
 ONBUILD RUN bundle install --jobs "$(nproc)"
 ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DATABASE_URL='nulldb://nulldb' bundle exec rake assets:precompile
+ARG BUILD_GITSHA
+ARG BUILD_TIMESTAMP
+ENV BUILD_GITSHA=$BUILD_GITSHA \
+    BUILD_TIMESTAMP=$BUILD_TIMESTAMP
 
 
 FROM hyrax-base AS hyrax-worker-base
@@ -132,6 +136,10 @@ ARG BUNDLE_WITHOUT="development test"
 ONBUILD COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 ONBUILD RUN bundle install --jobs "$(nproc)"
 ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DATABASE_URL='nulldb://nulldb' bundle exec rake assets:precompile
+ARG BUILD_GITSHA
+ARG BUILD_TIMESTAMP
+ENV BUILD_GITSHA=$BUILD_GITSHA \
+    BUILD_TIMESTAMP=$BUILD_TIMESTAMP
 
 
 FROM hyrax-worker-base AS hyrax-engine-dev
@@ -151,3 +159,7 @@ RUN bundle -v && \
 
 ENTRYPOINT ["dev-entrypoint.sh"]
 CMD ["bundle", "exec", "puma", "-v", "-b", "tcp://0.0.0.0:3000"]
+ARG BUILD_GITSHA
+ARG BUILD_TIMESTAMP
+ENV BUILD_GITSHA=$BUILD_GITSHA \
+    BUILD_TIMESTAMP=$BUILD_TIMESTAMP

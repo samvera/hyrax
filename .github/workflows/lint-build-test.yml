@@ -68,6 +68,9 @@ jobs:
       - name: Build and export
         uses: docker/build-push-action@v6
         with:
+          build-args: |
+            BUILD_TIMESTAMP=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+            BUILD_GITSHA=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha, mode=max
           context: .
