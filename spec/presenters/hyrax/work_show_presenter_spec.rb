@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'hyrax/specs/shared_specs/simple_work'
+
 RSpec.describe Hyrax::WorkShowPresenter do
   subject(:presenter) { described_class.new(solr_document, ability, request) }
   let(:ability) { double Ability }

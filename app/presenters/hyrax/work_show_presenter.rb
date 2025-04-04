@@ -39,7 +39,7 @@ module Hyrax
 
         multi_value = property_details.dig("multi_value")
 
-        next unless self.class.method_defined?(method_name) && solr_document.respond_to?(method_name)
+        next if self.class.method_defined?(method_name) && solr_document.respond_to?(method_name)
         # Define the method on the SolrDocument class
         Hyrax::SolrDocument::OrderedMembers.send(:define_method, method_name) do
           index_keys.each do |index_key|
