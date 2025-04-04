@@ -29,7 +29,7 @@ module Hyrax
         next if contexts.blank? && config['context'].present?
 
         # If there is a context filter on the metadata field and we have set a context, but the context does not match, skip it
-        next if contexts.present? && config['context'].present? && !contexts.intersect?(config['context'])
+        next if contexts.present? && config['context'].present? && !(Array(contexts) & Array(config['context'])).any?
 
         # Wew, we are in the clear to use this field
         AttributeDefinition.new(name, config)
