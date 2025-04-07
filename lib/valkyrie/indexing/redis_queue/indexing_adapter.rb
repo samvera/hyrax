@@ -46,12 +46,12 @@ module Valkyrie
           resources = Hyrax.query_service.find_many_by_ids(ids: set)
           Valkyrie::IndexingAdapter.find(:solr_index).save_all(resources: resources)
         rescue
-          persist(set) # if anything goes wrong, try to requeue the items
+          connection.sadd(index_queue_name, set) # if anything goes wrong, try to requeue the items
         end
 
         # We reach in to solr directly here to prevent needing to load the objects unnecessarily
         def delete_queue(size: 200)
-          set = connection.spop(index_queue_name, size)
+          set = connection.spop(delete_queue_name, size)
           return [] if set.blank?
           indexer = Valkyrie::IndexingAdapter.find(:solr_index)
           set.each do |id|
@@ -59,7 +59,7 @@ module Valkyrie
           end
           indexer.connection.commit
         rescue
-          persist(set) # if anything goes wrong, try to requeue the items
+          connection.sadd(delete_queue_name, set)
         end
 
         private
