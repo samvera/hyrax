@@ -65,7 +65,7 @@ module Valkyrie
         private
 
         def persist(resources)
-          connection.sadd(index_queue_name, resources.map {|r| r.id.to_s})
+          connection.sadd(index_queue_name, resources.map { |r| r.id.to_s })
         end
 
         def default_connection
