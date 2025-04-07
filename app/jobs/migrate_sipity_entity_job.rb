@@ -10,6 +10,7 @@ class MigrateSipityEntityJob < ApplicationJob
     original_gid = Hyrax::GlobalID(work).to_s
     return if new_gid == original_gid
     original_entity = Sipity::Entity.find_by(proxy_for_global_id: original_gid)
+    return if original_entity.nil?
     original_entity.update(proxy_for_global_id: new_gid)
   rescue ActiveFedora::ObjectNotFoundError
     # this happens when the resource was never in Fedora so there is nothing to migrate.
