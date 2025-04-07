@@ -2,6 +2,10 @@
 # Responsible for conditionally enqueuing the file and thumbnail migration
 # logic of an ActiveFedora object.
 class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
+  # Define a logger for this job
+  def logger
+    @logger ||= Logger.new(Rails.root.join('log', 'migrate_files_to_valkyrie_job.log'))
+  end
   ##
   #
   # @param resource [Hyrax::FileSet]
@@ -50,27 +54,33 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
 
     files = Hyrax.custom_queries.find_many_file_metadata_by_ids(ids: resource.file_ids)
     files.each do |file|
-      # If it doesn't start with fedora, we've likely already migrated it.
-      next unless /^fedora:/.match?(file.file_identifier.to_s)
-      resource.file_ids.delete(file.id)
+      begin
+        # If it doesn't start with fedora, we've likely already migrated it.
+        next unless /^fedora:/.match?(file.file_identifier.to_s)
+        resource.file_ids.delete(file.id)
 
-      Tempfile.create do |tempfile|
-        tempfile.binmode
-        tempfile.write(URI.open(file.file_identifier.to_s.gsub("fedora:", "http:")).read)
-        tempfile.rewind
+        Tempfile.create do |tempfile|
+          tempfile.binmode
+          tempfile.write(URI.open(file.file_identifier.to_s.gsub("fedora:", "http:")).read)
+          tempfile.rewind
 
-        # valkyrie_file = Hyrax.storage_adapter.upload(resource: resource, file: tempfile, original_filename: file.original_filename)
-        valkyrie_file = Hyrax::ValkyrieUpload.file(
-          filename: resource.label,
-          file_set: resource,
-          io: tempfile,
-          use: file.pcdm_use.select {|use| Hyrax::FileMetadata::Use.use_list.include?(use)},
-          user: User.find_or_initialize_by(User.user_key_field => resource.depositor),
-          mime_type: file.mime_type,
-          skip_derivatives: true
-        )
-        valkyrie_file = copy_attributes(valkyrie_file:, original_file: file)
-        Hyrax.persister.save(resource: valkyrie_file)
+          # valkyrie_file = Hyrax.storage_adapter.upload(resource: resource, file: tempfile, original_filename: file.original_filename)
+          valkyrie_file = Hyrax::ValkyrieUpload.file(
+            filename: resource.label,
+            file_set: resource,
+            io: tempfile,
+            use: file.pcdm_use.select {|use| Hyrax::FileMetadata::Use.use_list.include?(use)},
+            user: User.find_or_initialize_by(User.user_key_field => resource.depositor),
+            mime_type: file.mime_type,
+            skip_derivatives: true
+          )
+          valkyrie_file = copy_attributes(valkyrie_file:, original_file: file)
+          Hyrax.persister.save(resource: valkyrie_file)
+        end
+      rescue StandardError => e
+        # Log errors specific to file migration
+        logger.error("Error migrating file #{file.id} for resource #{resource.id}: #{e.message}")
+        logger.error(e.backtrace.join("\n"))
       end
     end
     # reindex the file set after migrating files to include characterization info
