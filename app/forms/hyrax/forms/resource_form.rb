@@ -187,11 +187,8 @@ module Hyrax
         secondary_terms.any?
       end
 
-
       def validate(params)
-        if Hyrax.config.flexible? && params.key?(:based_near_attributes)
-          process_based_near_params(params)
-        end
+        process_based_near_params(params) if Hyrax.config.flexible? && params.key?(:based_near_attributes)
 
         super(params)
       end
@@ -209,7 +206,7 @@ module Hyrax
           begin
             uris_from_form << RDF::URI.parse(h["id"]).to_s
           rescue ArgumentError, TypeError, RDF::ReaderError
-             Rails.logger.warn("Invalid URI ignored during form processing: #{h['id']}")
+            Rails.logger.warn("Invalid URI ignored during form processing: #{h['id']}")
           end
         end
         params[:based_near] = uris_from_form.uniq
