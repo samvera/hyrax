@@ -6,6 +6,7 @@ module Hyrax
 
     included do
       queue_as Hyrax.config.ingest_queue_name
+      cattr_accessor :requeue_frequency
     end
 
     private
@@ -15,7 +16,7 @@ module Hyrax
     end
 
     def requeue(*args)
-      self.class.set(wait_until: 5.minutes.from_now).perform_later(*args)
+      self.class.set(wait_until: (self.class.requeue_frequency || 5.minutes).from_now).perform_later(*args)
     end
   end
 end
