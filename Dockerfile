@@ -64,11 +64,13 @@ RUN apt update && \
 #    && rm -rf ImageMagick*
 
 RUN wget https://imagemagick.org/archive/binaries/magick && \
-    mv magick /usr/local/bin && \
-    cd /usr/local/bin && \
-    for name in animate compare composite conjure convert display identify import magick-script mogrify montage stream ; do \
-      ln -s magick $name ; \
-    done
+    chmod a+x magick && \
+    ./magick --appimage-extract && \
+    mv squashfs-root/usr/etc/ImageMagick*  /etc && \
+    rm -rf squashfs-root/usr/share/doc && \
+    cp -rv squashfs-root/usr/*  /usr/local && \
+    rm -rf magick squashfs-root && \
+    magick -version
 
 # TODO Add tesseract data?
 
