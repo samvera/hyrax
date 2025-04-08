@@ -22,4 +22,11 @@ class User < ApplicationRecord
   def to_s
     email
   end
+
+  # Groups include roles and those set by #groups= (especially in specs)
+  def groups
+    g = roles.map(&:name)
+    g += group_service.fetch_groups(user: self)
+    g
+  end
 end
