@@ -7,9 +7,7 @@ services:
         - EXTRA_APK_PACKAGES=git less
         - BUNDLE_GEMFILE=Gemfile.dassie
     image: samvera/hyrax-dev
-    # command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
-    command: sleep infinity
-    entrypoint: ["hyrax-entrypoint.sh"]
+    command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
     stdin_open: true
     tty: true
     user: root
