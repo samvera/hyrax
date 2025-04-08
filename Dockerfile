@@ -3,14 +3,15 @@ ARG RUBY_VERSION=3.3
 
 FROM ruby:$RUBY_VERSION-$DEBIAN_VERSION AS hyrax-base
 
-RUN apt update && \
+RUN apt-get update && \
     curl -sL "https://deb.nodesource.com/setup_20.x" | bash - && \
-    apt install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends \
     acl \
     build-essential \
     curl \
     exiftool \
     ffmpeg \
+    ghostscript \
     git \
     imagemagick \
     less \
