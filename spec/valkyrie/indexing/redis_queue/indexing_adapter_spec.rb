@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'rails_helper'
+require 'valkyrie/indexing/redis_queue/indexing_adapter'
 
 RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
   let(:connection) { instance_double(Redis) }
@@ -8,6 +9,14 @@ RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
   let(:adapter) { described_class.new(connection: connection, index_queue_name: index_queue_name, delete_queue_name: delete_queue_name) }
   let(:resource) { FactoryBot.valkyrie_create(:hyrax_resource) }
   let(:resources) { [resource] }
+
+  before do
+    Timecop.freeze(Time.current)
+  end
+
+  after do
+    Timecop.return
+  end
 
   describe '#initialize' do
     it 'sets the connection, index_queue_name, and delete_queue_name' do
@@ -19,21 +28,23 @@ RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
 
   describe '#save' do
     it 'persists the resource to the index queue' do
-      expect(connection).to receive(:sadd).with(index_queue_name, [resource.id.to_s])
+      expect(connection).to receive(:zadd).with(index_queue_name, Time.current.to_i, resource.id.to_s)
       adapter.save(resource: resource)
     end
   end
 
   describe '#save_all' do
     it 'persists multiple resources to the index queue' do
-      expect(connection).to receive(:sadd).with(index_queue_name, resources.map { |r| r.id.to_s })
+      resources.map do |r|
+        expect(connection).to receive(:zadd).with(index_queue_name, Time.current.to_i, r.id.to_s)
+      end
       adapter.save_all(resources: resources)
     end
   end
 
   describe '#delete' do
     it 'adds the resource ID to the delete queue' do
-      expect(connection).to receive(:sadd).with(delete_queue_name, resource.id.to_s)
+      expect(connection).to receive(:zadd).with(delete_queue_name, Time.current.to_i, resource.id.to_s)
       adapter.delete(resource: resource)
     end
   end
@@ -60,7 +71,7 @@ RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
     let(:solr_indexing_adapter) { instance_double(Valkyrie::Indexing::Solr::IndexingAdapter) }
 
     before do
-      allow(connection).to receive(:spop).with(index_queue_name, 200).and_return(set)
+      allow(connection).to receive(:zpopmin).with(index_queue_name, 200).and_return(set.map { |id| [id, Time.current.to_i] })
       allow(Hyrax.query_service).to receive(:find_many_by_ids).with(ids: set).and_return(resources)
       allow(Valkyrie::IndexingAdapter).to receive(:find).with(:solr_index).and_return(solr_indexing_adapter)
       allow(solr_indexing_adapter).to receive(:save_all)
@@ -77,7 +88,9 @@ RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
       end
 
       it 'requeues the items' do
-        expect(connection).to receive(:sadd).with(index_queue_name, set)
+        set.each do |r|
+          expect(connection).to receive(:zadd).with(index_queue_name, Time.current.to_i, r)
+        end
         adapter.index_queue
       end
     end
@@ -89,7 +102,7 @@ RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
     let(:solr_connection) { instance_double(RSolr::Client) }
 
     before do
-      allow(connection).to receive(:spop).with(delete_queue_name, 200).and_return(set)
+      allow(connection).to receive(:zpopmin).with(delete_queue_name, 200).and_return(set.map { |id| [id, Time.current.to_i] })
       allow(Valkyrie::IndexingAdapter).to receive(:find).with(:solr_index).and_return(solr_indexing_adapter)
       allow(solr_indexing_adapter).to receive(:connection).and_return(solr_connection)
       allow(solr_connection).to receive(:delete_by_id)
@@ -110,7 +123,9 @@ RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
       end
 
       it 'requeues the items' do
-        expect(connection).to receive(:sadd).with(delete_queue_name, set)
+        set.each do |r|
+          expect(connection).to receive(:zadd).with(delete_queue_name, Time.current.to_i, r)
+        end
         adapter.delete_queue
       end
     end

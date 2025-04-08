@@ -7,7 +7,9 @@ services:
         - EXTRA_APK_PACKAGES=git less
         - BUNDLE_GEMFILE=Gemfile.dassie
     image: samvera/hyrax-dev
-    command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
+    # command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
+    command: sleep infinity
+    entrypoint: ["hyrax-entrypoint.sh"]
     stdin_open: true
     tty: true
     user: root
@@ -68,14 +70,14 @@ services:
   chrome:
     image: selenium/standalone-chromium:4
     environment:
-#      - START_XVFB=false
+      #      - START_XVFB=false
       - SE_NODE_SESSION_TIMEOUT=800
       - SE_ENABLE_TRACING=false
       - SE_ENABLE_BROWSER_LEFTOVERS_CLEANUP=true
       - SE_BROWSER_ARGS_DISABLE_DSHM=--disable-dev-shm-usage
       - SE_BROWSER_ARGS_HEADLESS=--headless=new
-#    logging:
-#      driver: none
+    #    logging:
+    #      driver: none
     volumes:
       - /dev/shm:/dev/shm
     shm_size: 2g
@@ -118,7 +120,7 @@ services:
   memcached:
     image: bitnami/memcached
     ports:
-      - '11211:11211'
+      - "11211:11211"
     networks:
       - hyrax
 

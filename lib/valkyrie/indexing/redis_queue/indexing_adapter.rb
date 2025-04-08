@@ -27,7 +27,7 @@ module Valkyrie
         # Deletes a Solr Document using the ID
         # @return [Array<Valkyrie::Resource>] resources which have been deleted from Solr
         def delete(resource:)
-          connection.sadd(delete_queue_name, resource.id.to_s)
+          connection.zadd(delete_queue_name, Time.current.to_i, resource.id.to_s)
         end
 
         # Delete the Solr index of all Documents
@@ -41,31 +41,35 @@ module Valkyrie
         end
 
         def index_queue(size: 200)
-          set = connection.spop(index_queue_name, size)
+          set = connection.zpopmin(index_queue_name, size)
           return [] if set.blank?
-          resources = Hyrax.query_service.find_many_by_ids(ids: set)
+          resources = Hyrax.query_service.find_many_by_ids(ids: set.map(&:first))
           Valkyrie::IndexingAdapter.find(:solr_index).save_all(resources: resources)
         rescue
-          connection.sadd(index_queue_name, set) # if anything goes wrong, try to requeue the items
+          # if anything goes wrong, try to requeue the items
+          set.each { |pair| connection.zadd(index_queue_name, pair[1], pair[0]) }
         end
 
         # We reach in to solr directly here to prevent needing to load the objects unnecessarily
         def delete_queue(size: 200)
-          set = connection.spop(delete_queue_name, size)
+          set = connection.zpopmin(delete_queue_name, size)
           return [] if set.blank?
           indexer = Valkyrie::IndexingAdapter.find(:solr_index)
           set.each do |id|
-            indexer.connection.delete_by_id id.to_s, { softCommit: true }
+            indexer.connection.delete_by_id id[0].to_s, { softCommit: true }
           end
           indexer.connection.commit
         rescue
-          connection.sadd(delete_queue_name, set)
+          # if anything goes wrong, try to requeue the items
+          set.each { |pair| connection.zadd(delete_queue_name, pair[1], pair[0]) }
         end
 
         private
 
         def persist(resources)
-          connection.sadd(index_queue_name, resources.map { |r| r.id.to_s })
+          resources.map do |r|
+            connection.zadd(index_queue_name, Time.current.to_i, r.id.to_s)
+          end
         end
 
         def default_connection
