@@ -187,7 +187,30 @@ module Hyrax
         secondary_terms.any?
       end
 
+      def validate(params)
+        process_based_near_params(params) if Hyrax.config.flexible? && params.key?(:based_near_attributes)
+
+        super(params)
+      end
+
       private
+
+      def process_based_near_params(params)
+        based_near_attributes = params.delete(:based_near_attributes)
+        return unless based_near_attributes.respond_to?(:each_pair)
+
+        uris_from_form = []
+        based_near_attributes.each do |_, h|
+          next unless h.respond_to?(:[])
+          next if h["_destroy"] == "true" || h["id"].blank?
+          begin
+            uris_from_form << RDF::URI.parse(h["id"]).to_s
+          rescue ArgumentError, TypeError, RDF::ReaderError
+            Rails.logger.warn("Invalid URI ignored during form processing: #{h['id']}")
+          end
+        end
+        params[:based_near] = uris_from_form.uniq
+      end
 
       def _form_field_definitions
         self.class.definitions

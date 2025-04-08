@@ -60,7 +60,8 @@ module Hyrax
 
     # @param [String] field name
     # @param [Hash<Hash>] a nested hash of view options...
-    #        {:render_term=>:based_near_label, :label=>{"en"=>"Title", "es"=>"Título"}, :html_dl=>true}
+    #        {:label=>{"en"=>"Title", "es"=>"Título"}, :html_dl=>true}
+    # @return [Hash] the transformed options for the field
     def conform_options(field_name, options_hash)
       options = HashWithIndifferentAccess.new(options_hash)
       options_hash = HashWithIndifferentAccess.new(options)
