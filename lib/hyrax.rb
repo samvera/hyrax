@@ -23,6 +23,7 @@ require 'hyrax/valkyrie_can_can_adapter'
 require 'retriable'
 require 'valkyrie/indexing_adapter'
 require 'valkyrie/indexing/solr/indexing_adapter'
+require 'valkyrie/indexing/redis_queue/indexing_adapter'
 require 'valkyrie/indexing/null_indexing_adapter'
 
 ##
