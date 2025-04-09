@@ -39,6 +39,16 @@ RSpec.describe Wings::OrmConverter, :active_fedora do
       end
 
       context 'for a custom class' do
+        before do
+          stub_const("Hyrax::Test::Book", Class.new(ActiveFedora::Base))
+          stub_const("Hyrax::Test::BookResource", Class.new(Hyrax::Resource))
+          Wings::ModelRegistry.register(Hyrax::Test::BookResource, Hyrax::Test::Book)
+        end
+
+        after do
+          Wings::ModelRegistry.unregister(Hyrax::Test::BookResource)
+        end
+
         subject(:klass) { described_class.to_valkyrie_resource_class(klass: Hyrax::Test::Book) }
 
         it 'will be the registered resource class' do
