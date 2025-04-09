@@ -5,14 +5,16 @@ RSpec.describe Hyrax::Schema do
   let(:resource)   { resource_class.new(attributes) }
 
   let(:resource_class) do
-    module Hyrax::Test::Schema
-      class Resource < Hyrax::Resource; end
+    module HyraxSchemaSpecTest
+      module Schema
+        class Resource < Hyrax::Resource; end
+      end
     end
 
-    Hyrax::Test::Schema::Resource
+    HyraxSchemaSpecTest::Schema::Resource
   end
 
-  after { Hyrax::Test.send(:remove_const, :Schema) if defined?(Hyrax::Test::Schema) }
+  after { Object.send(:remove_const, :HyraxSchemaSpecTest) if defined?(HyraxSchemaSpecTest) }
 
   describe 'including' do
     it 'applies the specified schema' do
