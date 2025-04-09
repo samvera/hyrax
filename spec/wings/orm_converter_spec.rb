@@ -8,6 +8,14 @@ require 'wings/orm_converter'
 RSpec.describe Wings::OrmConverter, :active_fedora do
   describe '.to_valkyrie_resource_class' do
     context 'when given a ActiveFedora class (eg. a constant that responds to #properties)' do
+      before do
+        Wings::ModelRegistry.unregister(GenericWorkResource) if defined?(GenericWorkResource)
+      end
+
+      after do
+        Wings::ModelRegistry.register(GenericWorkResource, GenericWork) if defined?(GenericWorkResource) && defined?(GenericWork)
+      end
+
       context 'for the returned object (e.g. a class)' do
         subject(:klass) { described_class.to_valkyrie_resource_class(klass: GenericWork) }
 
