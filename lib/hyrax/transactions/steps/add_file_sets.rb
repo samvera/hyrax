@@ -24,6 +24,7 @@ module Hyrax
         #
         # @return [Dry::Monads::Result]
         def call(obj, uploaded_files: [], file_set_params: [])
+          return Success(obj) if uploaded_files.empty? && file_set_params.empty? # Skip if no files to attach
           if @handler.new(work: obj).add(files: uploaded_files, file_set_params: file_set_params).attach
             file_sets = obj.member_ids.map do |member|
               Hyrax.query_service.find_by(id: member) if Hyrax.query_service.find_by(id: member).is_a? Hyrax::FileSet
