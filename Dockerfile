@@ -35,6 +35,7 @@ RUN apt-get update && \
     libvips-tools \
     libwebp-dev \
     libxml2-dev \
+    lsof \
     mediainfo \
     netcat-openbsd \
     nodejs \
@@ -55,15 +56,6 @@ RUN apt-get update && \
     ln -s /usr/lib/*-linux-gnu/libjemalloc.so.2 /usr/lib/libjemalloc.so.2 && \
     echo "******** Packages Installed *********"
 
-#RUN wget https://github.com/ImageMagick/ImageMagick/archive/refs/tags/7.1.0-57.tar.gz \
-#    && tar xf 7.1.0-57.tar.gz \
-#    && cd ImageMagick* \
-#    && ./configure \
-#    && make install \
-#    && ldconfig /usr/local/lib \
-#    && cd $OLDPWD \
-#    && rm -rf ImageMagick*
-
 RUN wget https://imagemagick.org/archive/binaries/magick && \
     chmod a+x magick && \
     ./magick --appimage-extract && \
@@ -73,11 +65,8 @@ RUN wget https://imagemagick.org/archive/binaries/magick && \
     rm -rf magick squashfs-root && \
     magick -version
 
-# TODO Add tesseract data?
-
 RUN setfacl -d -m o::rwx /usr/local/bundle && \
     gem update --silent --system
-
 
 RUN useradd -m -u 1001 -U -s /bin/bash --home-dir /app app && \
     mkdir -p /app/samvera/hyrax-webapp && \
