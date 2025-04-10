@@ -478,31 +478,31 @@ module Hyrax
     # Path on the local file system where derivatives will be stored
     attr_writer :derivatives_path
     def derivatives_path
-      @derivatives_path ||= ENV.fetch('HYRAX_DERIVATIVES_PATH', Rails.root.join('tmp', 'derivatives'))
+      @derivatives_path ||= Pathname.new(ENV.fetch('HYRAX_DERIVATIVES_PATH', Rails.root.join('tmp', 'derivatives')))
     end
 
     # Path on the local file system where originals will be staged before being ingested into Fedora.
     attr_writer :working_path
     def working_path
-      @working_path ||= ENV.fetch('HYRAX_UPLOAD_PATH', Rails.root.join('tmp', 'uploads'))
+      @working_path ||= Pathname.new(ENV.fetch('HYRAX_UPLOAD_PATH', Rails.root.join('tmp', 'uploads')))
     end
 
     # @todo do we use both upload_path and working path?
     # Path on the local file system where originals will be staged before being ingested into Fedora.
     attr_writer :upload_path
     def upload_path
-      @upload_path ||= ->() { ENV.fetch('HYRAX_UPLOAD_PATH') { Rails.root.join('tmp', 'uploads') } }
+      @upload_path ||= ->() { Pathname.new(ENV.fetch('HYRAX_UPLOAD_PATH') { Rails.root.join('tmp', 'uploads') }) }
     end
 
     attr_writer :cache_path
     def cache_path
-      @cache_path ||= ->() { ENV.fetch('HYRAX_CACHE_PATH') { Rails.root.join('tmp', 'cache') } }
+      @cache_path ||= ->() { Pathname.new(ENV.fetch('HYRAX_CACHE_PATH') { Rails.root.join('tmp', 'cache') }) }
     end
 
     # Path on the local file system where where log and banners will be stored.
     attr_writer :branding_path
     def branding_path
-      @branding_path ||= ENV.fetch('HYRAX_BRANDING_PATH', Rails.root.join('public', 'branding'))
+      @branding_path ||= Pathname.new(ENV.fetch('HYRAX_BRANDING_PATH', Rails.root.join('public', 'branding')))
     end
 
     # @!endgroup
