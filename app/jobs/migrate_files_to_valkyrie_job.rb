@@ -4,7 +4,8 @@
 class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
   # Define a logger for this job
   def logger
-    @logger ||= Logger.new(Rails.root.join('tmp', 'imports', 'migrate_files_to_valkyrie_job.log'))
+    FileUtils.mkdir_p(Hyrax.config.working_path)
+    @logger ||= Logger.new(Hyrax.config.working_path.join('migrate_files_to_valkyrie_job.log'))
   end
   ##
   #
