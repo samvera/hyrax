@@ -68,9 +68,9 @@ RSpec.describe Hyrax::M3SchemaLoader do
       end
     end
 
-    it 'raises an error for an undefined schema' do
-      expect { schema_loader.attributes_for(schema: :NOT_A_SCHEMA) }
-        .to raise_error described_class::UndefinedSchemaError
+    it 'provides a default schema for an undefined schema' do
+      expect(schema_loader.attributes_for(schema: :NOT_A_SCHEMA))
+        .to include(title: Valkyrie::Types::Array.of(Valkyrie::Types::String))
     end
   end
 
