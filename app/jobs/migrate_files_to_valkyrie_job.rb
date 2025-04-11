@@ -38,11 +38,17 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
     # @todo should we trigger a job if the member is a child work?
     paths = Hyrax::DerivativePath.derivatives_for_reference(resource)
     paths.each do |path|
-      container = container_for(path)
-      mime_type = Marcel::MimeType.for(extension: File.extname(path))
-      directives = { url: path, container: container, mime_type: mime_type }
-      File.open(path, 'rb') do |content|
-        Hyrax::ValkyriePersistDerivatives.call(content, directives)
+      begin
+        container = container_for(path)
+        mime_type = Marcel::MimeType.for(extension: File.extname(path))
+        directives = { url: path, container: container, mime_type: mime_type }
+        File.open(path, 'rb') do |content|
+          Hyrax::ValkyriePersistDerivatives.call(content, directives)
+        end
+      rescue StandardError => e
+        # Log errors specific to file migration
+        logger.error("Error migrating derivative type #{mime_type} at path: #{path} for resource #{resource.id}: #{e.message}")
+        logger.error(e.backtrace.join("\n"))
       end
     end
   end
