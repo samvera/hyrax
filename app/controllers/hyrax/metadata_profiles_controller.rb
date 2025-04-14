@@ -25,7 +25,7 @@ module Hyrax
         @flexible_schema = Hyrax::FlexibleSchema.create(profile: YAML.safe_load_file(uploaded_io.path))
 
         if @flexible_schema.persisted?
-          redirect_to metadata_profiles_path, notice: 'AllinsonFlexProfile was successfully created.'
+          redirect_to metadata_profiles_path, notice: 'Flexible Metadata Profile was successfully created.'
         else
           redirect_to metadata_profiles_path, alert: @flexible_schema.errors.messages.to_s
         end
