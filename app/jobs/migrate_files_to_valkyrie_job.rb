@@ -38,6 +38,7 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
     # @todo should we trigger a job if the member is a child work?
     paths = Hyrax::DerivativePath.derivatives_for_reference(resource)
     paths.each do |path|
+      next unless File.size?(path) # skip blank files
       container = container_for(path)
       mime_type = Marcel::MimeType.for(extension: File.extname(path))
       directives = { url: path, container: container, mime_type: mime_type }
@@ -104,9 +105,9 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
   #
   # @param filename [String] the name of the derivative file: i.e. 'x-thumbnail.jpg'
   # @return [String]
-  def container_for(filename)
+  def container_for(path)
     # we want the portion between the '-' and the '.'
-    file_blob = File.basename(filename, '.*').split('-').last
+    file_blob = File.basename(path, '.*').split('-').last
 
     case file_blob
     when 'thumbnail'
