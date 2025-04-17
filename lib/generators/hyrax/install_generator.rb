@@ -209,10 +209,5 @@ module Hyrax
         gem 'dotenv-rails', '~> 2.8'
       end
     end
-
-    def support_analytics
-      gem 'google-protobuf', force_ruby_platform: true # required because google-protobuf is not compatible with Alpine linux
-      gem 'grpc', force_ruby_platform: true # required because grpc is not compatible with Alpine linux
-    end
   end
 end
