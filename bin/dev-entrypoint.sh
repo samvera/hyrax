@@ -12,6 +12,9 @@ cp -Rn /usr/local/bundle/* /app/bundle/ruby/$RUBY_MAJOR.0
 bundle install
 yarn install
 
+# Precompile assets if running in production (Nurax)
+[ "$RAILS_ENV" = "production" ] && bundle exec rake assets:precompile
+
 db-migrate-seed.sh
 
 # Run the command

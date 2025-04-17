@@ -2,7 +2,7 @@
 RSpec.describe Hyrax::LeaseService, :clean_repo do
   subject { described_class }
 
-  if I18n.t('hyrax.product_name') != 'Koppie'
+  context 'wings enabled', :active_fedora do
     let(:future_date) { 2.days.from_now }
     let(:past_date) { 2.days.ago }
 
@@ -43,9 +43,10 @@ RSpec.describe Hyrax::LeaseService, :clean_repo do
                                         [work_with_expired_lease1.id, work_with_lease_in_effect.id])
       end
     end
+  end
 
   # NOTE: The below Rspec steup only pases in Koppie. See comment below.
-  else
+  context 'wings disabled', skip: !Hyrax.config.disable_wings do
     let(:expired_lease) { valkyrie_create(:hyrax_lease, :expired) }
     let(:another_expired_lease) { valkyrie_create(:hyrax_lease, :expired) }
     let(:current_lease) { valkyrie_create(:hyrax_lease) }

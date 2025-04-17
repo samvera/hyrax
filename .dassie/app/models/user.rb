@@ -1,6 +1,10 @@
 class User < ApplicationRecord
   # Connects this user object to Hydra behaviors.
   include Hydra::User
+
+  # Connects this user object to Role-management behaviors.
+  include Hydra::RoleManagement::UserRoles
+
   # Connects this user object to Hyrax behaviors.
   include Hyrax::User
   include Hyrax::UserUsageStats
@@ -17,5 +21,12 @@ class User < ApplicationRecord
   # the account.
   def to_s
     email
+  end
+
+  # Groups include roles and those set by #groups= (especially in specs)
+  def groups
+    g = roles.map(&:name)
+    g += group_service.fetch_groups(user: self)
+    g
   end
 end

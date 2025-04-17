@@ -2,7 +2,7 @@
 set -e
 
 service-wait.sh "$DB_HOST:$DB_PORT"
-bundle exec rails db:create
+bundle exec rails db:prepare
 bundle exec rails db:migrate
 
 if [ "$FCREPO_HOST" ]; then

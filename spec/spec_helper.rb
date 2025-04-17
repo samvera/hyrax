@@ -2,6 +2,7 @@
 $VERBOSE = nil unless ENV['RUBY_LOUD'] # silence loud Ruby 2.7 deprecations
 ENV['RAILS_ENV'] = 'test'
 ENV['DATABASE_URL'] = ENV['DATABASE_TEST_URL'] if ENV['DATABASE_TEST_URL']
+ENV.delete('APP_NAME') # Prevent custom test app names in specs
 
 # Analytics is turned off by default
 ENV['HYRAX_ANALYTICS'] = 'false'
