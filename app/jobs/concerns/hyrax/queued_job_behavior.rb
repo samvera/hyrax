@@ -15,8 +15,8 @@ module Hyrax
       Valkyrie::IndexingAdapter.find(:redis_queue)
     end
 
-    def requeue(*args)
-      self.class.set(wait_until: (self.class.requeue_frequency || 5.minutes).from_now).perform_later(*args)
+    def requeue(**args)
+      self.class.set(wait_until: (self.class.requeue_frequency || 5.minutes).from_now).perform_later(**args)
     end
   end
 end
