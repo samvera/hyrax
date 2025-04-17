@@ -6,14 +6,19 @@ module Valkyrie
         ##
         # @!attribute [r] connection
         #   @return [RSolr::Client]
-        attr_accessor :connection, :index_queue_name, :delete_queue_name
+        attr_writer :connection
+        attr_accessor :index_queue_name, :delete_queue_name
 
         ##
         # @param connection [RSolr::Client] The RSolr connection to index to.
-        def initialize(connection: default_connection, index_queue_name: 'toindex', delete_queue_name: 'todelete')
+        def initialize(connection: nil, index_queue_name: 'toindex', delete_queue_name: 'todelete')
           @connection = connection
           @index_queue_name = index_queue_name
           @delete_queue_name = delete_queue_name
+        end
+
+        def connection
+          @connection ||= default_connection
         end
 
         def save(resource:)
@@ -43,25 +48,38 @@ module Valkyrie
         def index_queue(size: 200)
           set = connection.zpopmin(index_queue_name, size)
           return [] if set.blank?
-          resources = Hyrax.query_service.find_many_by_ids(ids: set.map(&:first))
-          Valkyrie::IndexingAdapter.find(:solr_index).save_all(resources: resources)
+          # we have to load these one at a time because find_all_by_id gets duplicates during wings transition
+          resources = set.map { |id, _time| Hyrax.query_service.find_by(id: id) }
+          solr_indexer = Valkyrie::IndexingAdapter.find(:solr_index)
+          solr_indexer.save_all(resources: resources)
+          solr_indexer.connection.commit
         rescue
           # if anything goes wrong, try to requeue the items
-          set.each { |pair| connection.zadd(index_queue_name, pair[1], pair[0]) }
+          set.each { |id, time| connection.zadd(index_queue_name, time, id) }
+          raise
         end
 
         # We reach in to solr directly here to prevent needing to load the objects unnecessarily
         def delete_queue(size: 200)
           set = connection.zpopmin(delete_queue_name, size)
           return [] if set.blank?
-          indexer = Valkyrie::IndexingAdapter.find(:solr_index)
-          set.each do |id|
-            indexer.connection.delete_by_id id[0].to_s, { softCommit: true }
+          solr_indexer = Valkyrie::IndexingAdapter.find(:solr_index)
+          set.each do |id, _time|
+            solr_indexer.connection.delete_by_id id.to_s, { softCommit: true }
           end
-          indexer.connection.commit
+          solr_indexer.connection.commit
         rescue
           # if anything goes wrong, try to requeue the items
-          set.each { |pair| connection.zadd(delete_queue_name, pair[1], pair[0]) }
+          set.each { |id, time| connection.zadd(delete_queue_name, time, id) }
+          raise
+        end
+
+        def list_index
+          connection.zrange(index_queue_name, 0, -1, with_scores: true)
+        end
+
+        def list_delete
+          connection.zrange(delete_queue_name, 0, -1, with_scores: true)
         end
 
         private
