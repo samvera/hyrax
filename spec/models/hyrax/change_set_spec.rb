@@ -5,7 +5,7 @@ require 'hyrax/specs/shared_specs/change_set'
 
 RSpec.describe Hyrax::ChangeSet do
   subject(:change_set) { described_class.for(resource) }
-  let(:resource)       { build(:hyrax_work) }
+  let(:resource)       { build(:hyrax_work, :with_default_admin_set) }
   let(:titles)         { ['comet in moominland', 'finn family moomintroll'] }
 
   it_behaves_like 'a Hyrax::ChangeSet'
@@ -31,6 +31,21 @@ RSpec.describe Hyrax::ChangeSet do
     it 'does not list reserved attributes as fields' do
       expect(change_set.class.fields)
         .not_to include(*resource.class.reserved_attributes)
+    end
+  end
+
+  describe '#clean_id_fields_before_sync' do
+    # NOTE: A pair-tree'ed Fedora storage scheme requires the elimiation of any
+    #   empty string values within a multivalued id attribute. If it passes along
+    #   to a parser that takes any value present in an array and converts it into
+    #   a Valkyrie::ID instance, Valkyrie's persister will attempt to pairtree that value.
+    it 'will eliminate empty string values from a change set' do
+      change_set.member_of_collection_ids = [""]
+
+      expect { change_set.clean_id_fields_before_sync }
+        .to change { change_set.member_of_collection_ids }
+        .from([""])
+        .to([])
     end
   end
 
