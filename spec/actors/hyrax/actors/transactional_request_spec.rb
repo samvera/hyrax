@@ -19,7 +19,7 @@ RSpec.describe Hyrax::Actors::TransactionalRequest, :active_fedora do
   let(:ability) { ::Ability.new(depositor) }
   let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
-  let(:depositor) { instance_double(User, new_record?: true, guest?: true, id: nil, user_key: nil) }
+  let(:depositor) { instance_double(User, new_record?: true, guest?: true, admin?: false, id: nil, user_key: nil) }
   let(:work) { double(:work) }
 
   subject(:middleware) do

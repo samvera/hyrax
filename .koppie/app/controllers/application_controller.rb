@@ -10,4 +10,8 @@ class ApplicationController < ActionController::Base
   with_themed_layout '1_column'
 
   protect_from_forgery with: :exception
+
+  before_action do
+    Rack::MiniProfiler.authorize_request if current_user&.admin?
+  end
 end
