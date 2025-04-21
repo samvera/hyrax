@@ -55,7 +55,7 @@ module Valkyrie
           solr_indexer.connection.commit
         rescue
           # if anything goes wrong, try to requeue the items
-          set.each { |id, time| connection.zadd(index_queue_name, time, id) }
+          set.each { |id, time| connection.zadd(index_queue_name + "-error", time, id) }
           raise
         end
 
@@ -70,7 +70,7 @@ module Valkyrie
           solr_indexer.connection.commit
         rescue
           # if anything goes wrong, try to requeue the items
-          set.each { |id, time| connection.zadd(delete_queue_name, time, id) }
+          set.each { |id, time| connection.zadd(delete_queue_name + "-error", time, id) }
           raise
         end
 
@@ -82,6 +82,13 @@ module Valkyrie
           connection.zrange(delete_queue_name, 0, -1, with_scores: true)
         end
 
+        def list_index_errors
+          connection.zrange(index_queue_name + "-error", 0, -1, with_scores: true)
+        end
+
+        def list_delete_errors
+          connection.zrange(delete_queue_name + "-error", 0, -1, with_scores: true)
+        end
         private
 
         def persist(resources)
