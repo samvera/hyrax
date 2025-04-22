@@ -187,6 +187,14 @@ module Hyrax
           api_response
         end
 
+        def post(params)
+          response = Faraday.post(config.base_url, params)
+          return [] if response.status != 200
+          api_response = JSON.parse(response.body)
+          return [] if contains_matomo_error?(api_response)
+          api_response
+        end
+
         def api_params(method, period, date, additional_params = {})
           params = {
             module: "API",
@@ -198,7 +206,7 @@ module Hyrax
             token_auth: config.auth_token
           }
           params.merge!(additional_params)
-          get(params)
+          post(params)
         end
       end
     end
