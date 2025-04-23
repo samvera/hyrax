@@ -13,7 +13,6 @@ RUN apt-get update && \
     ffmpeg \
     ghostscript \
     git \
-    imagemagick \
     less \
     libgsf-1-dev \
     libimagequant-dev \
@@ -56,14 +55,26 @@ RUN apt-get update && \
     ln -s /usr/lib/*-linux-gnu/libjemalloc.so.2 /usr/lib/libjemalloc.so.2 && \
     echo "******** Packages Installed *********"
 
-RUN wget https://imagemagick.org/archive/binaries/magick && \
-    chmod a+x magick && \
-    ./magick --appimage-extract && \
-    mv squashfs-root/usr/etc/ImageMagick*  /etc && \
-    rm -rf squashfs-root/usr/share/doc && \
-    cp -rv squashfs-root/usr/*  /usr/local && \
-    rm -rf magick squashfs-root && \
-    magick -version
+RUN bash -x -c "\
+    if [ $(dpkg --print-architecture) = 'amd64' ]; then \
+      wget https://github.com/ImageMagick/ImageMagick/releases/download/7.1.1-47/ImageMagick-82572af-gcc-x86_64.AppImage -O magick \
+        && chmod a+x magick \
+        && ./magick --appimage-extract \
+        && mv squashfs-root/usr/etc/ImageMagick*  /etc \
+        && rm -rf squashfs-root/usr/share/doc \
+        && cp -rv squashfs-root/usr/*  /usr/local \
+        && rm -rf magick squashfs-root ; \
+    else \
+      wget https://github.com/ImageMagick/ImageMagick/archive/refs/tags/7.1.1-47.tar.gz \
+        && tar xf 7.1.1-47.tar.gz \
+        && cd ImageMagick* \
+        && ./configure \
+        && make install \
+        && ldconfig /usr/local/lib \
+        && cd $OLDPWD \
+        && rm -rf 7.1.1-47.tar.gz ImageMagick* ; \
+    fi \
+    && identify -version"
 
 RUN setfacl -d -m o::rwx /usr/local/bundle && \
     gem update --silent --system
