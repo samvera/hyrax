@@ -32,7 +32,7 @@ You can also try [Running Hyrax-based application in local VM](https://github.co
 During development, running only the dependent services in a container environment may be beneficial. This avoids potential headaches concerning file permissions and eases the use of debugging tools. The application generation instructions below use [Lando](https://lando.dev) to achieve this setup.
 
 This document contains instructions specific to setting up an app with __Hyrax
-v5.1.0-beta1__. If you are looking for instructions on installing a different
+v5.1.0__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
