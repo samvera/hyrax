@@ -213,7 +213,11 @@ module Hyrax
       end
 
       def _form_field_definitions
-        self.class.definitions
+        if Hyrax.config.flexible?
+          singleton_class.schema_definitions
+        else
+          self.class.definitions
+        end
       end
     end
   end
