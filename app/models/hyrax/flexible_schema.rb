@@ -34,6 +34,37 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     []
   end
 
+  # Retrieve the latest schema definitions for a specific class name.
+  def self.definitions_for(class_name:)
+    profile = current_version
+    definitions = {}
+    return definitions unless profile && profile['properties']
+
+    profile['properties'].each do |key, values|
+      next unless values['available_on']&.[]('class')&.include?(class_name)
+
+      processed_values = values.deep_dup
+      range = processed_values['range']
+      processed_values['type'] = case range
+                                 when "http://www.w3.org/2001/XMLSchema#dateTime"
+                                   'date_time'
+                                 else
+                                   range&.split('#')&.last&.underscore || 'string'
+                                 end
+      processed_values['form']&.transform_keys!('multi_value' => 'multiple')
+      processed_values['predicate'] = processed_values['property_uri']
+      processed_values['index_keys'] = processed_values['indexing']
+      processed_values['multiple'] = processed_values['multi_value']
+      processed_values['context'] = processed_values['available_on']&.[]('context')
+
+      definitions[key] = processed_values
+    end
+    definitions
+  rescue StandardError => e
+    Rails.logger.error("Error fetching definitions for #{class_name}: #{e.message}")
+    {}
+  end
+
   def update_contexts
     self.contexts = profile['contexts']
   end
