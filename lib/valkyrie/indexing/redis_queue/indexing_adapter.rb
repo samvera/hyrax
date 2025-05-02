@@ -38,7 +38,9 @@ module Valkyrie
         # Delete the Solr index of all Documents
         def wipe!
           connection.del(index_queue_name)
+          connection.del(index_queue_name + "-error")
           connection.del(delete_queue_name)
+          connection.del(delete_queue_name + "-error")
         end
 
         def reset!
@@ -59,6 +61,23 @@ module Valkyrie
           raise
         end
 
+       # If a batch fails, try running them one at a time to get down to just records that really fail
+        def index_error_queue(size: 200)
+          size.times do
+            set = connection.zpopmin(index_queue_name + "-error", 1)
+            return [] if set.blank?
+            # we have to load these one at a time because find_all_by_id gets duplicates during wings transition
+            resources = set.map { |id, _time| Hyrax.query_service.find_by(id: id) }
+            solr_indexer = Valkyrie::IndexingAdapter.find(:solr_index)
+            solr_indexer.save_all(resources: resources)
+            solr_indexer.connection.commit
+          end
+        rescue
+          # if anything goes wrong, try to requeue the items
+          set.each { |id, _time| connection.zadd(index_queue_name + "-error", Time.now.to_i, id) }
+          raise
+        end
+
         # We reach in to solr directly here to prevent needing to load the objects unnecessarily
         def delete_queue(size: 200)
           set = connection.zpopmin(delete_queue_name, size)
@@ -71,6 +90,23 @@ module Valkyrie
         rescue
           # if anything goes wrong, try to requeue the items
           set.each { |id, time| connection.zadd(delete_queue_name + "-error", time, id) }
+          raise
+        end
+
+        # If a batch fails, try running them one at a time to get down to just records that really fail
+        def delete_error_queue(size: 200)
+          size.times do
+            set = connection.zpopmin(delete_queue_name + "-error", 1)
+            return [] if set.blank?
+            solr_indexer = Valkyrie::IndexingAdapter.find(:solr_index)
+            set.each do |id, _time|
+              solr_indexer.connection.delete_by_id id.to_s, { softCommit: true }
+            end
+            solr_indexer.connection.commit
+          end
+        rescue
+          # if anything goes wrong, try to requeue the items
+          set.each { |id, _time| connection.zadd(delete_queue_name + "-error", Time.now.to_i, id) }
           raise
         end
 
