@@ -63,11 +63,10 @@ module Wings
       #
       # @param model [Class]
       # @return [Array<Valkyrie::Resource>]
-      #
-      # @note Due to implementation details, .find_all_of_model and .count_all_of_model may not
-      #       return the same number of results.  Is that a bug?  Probably.
       def find_all_of_model(model:)
-        model_class_for(model).all.map do |obj|
+        ActiveFedora::Base
+          .where(has_model_ssim: [model_class_for(model).to_rdf_representation,
+                                  model.to_rdf_representation]).map do |obj|
           resource_factory.to_resource(object: obj)
         end
       end

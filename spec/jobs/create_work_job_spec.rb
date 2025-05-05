@@ -72,7 +72,7 @@ RSpec.describe CreateWorkJob do
         end
       end
 
-      it "it creates a work and a file_set" do
+      it "it creates a work and a file_set", :clean_repo do
         described_class.perform_later(user, 'GenericWork', metadata, log)
         work_id = Hyrax.custom_queries.find_ids_by_model(model: GenericWork).first
         work = Hyrax.query_service.find_by(id: work_id)
