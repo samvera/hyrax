@@ -133,8 +133,23 @@ module Hyrax
     attr_writer :analytics_reporting
     attr_reader :analytics_reporting
     def analytics_reporting?
-      @analytics_reporting ||=
+      @analytics_reporting ||= begin
+        required_env_vars = %w[
+          HYRAX_ANALYTICS_REPORTING
+          GOOGLE_ANALYTICS_ID
+          GOOGLE_ANALYTICS_PROPERTY_ID
+        ]
+
+        required_env_vars << if ENV['GOOGLE_ACCOUNT_JSON'].blank?
+                               'GOOGLE_ACCOUNT_JSON_PATH'
+                             else
+                               'GOOGLE_ACCOUNT_JSON'
+                             end
+
+        return false if required_env_vars.any? { |var| ENV.fetch(var, '').blank? }
+
         ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS_REPORTING', false))
+      end
     end
 
     # Currently supports 'google' or 'matomo'
@@ -142,7 +157,7 @@ module Hyrax
     attr_writer :analytics_provider
     def analytics_provider
       @analytics_provider ||=
-        ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'google')
+        ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'ga4')
     end
 
     ##

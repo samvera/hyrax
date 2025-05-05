@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Analytics do
+
+RSpec.describe Hyrax::Analytics, skip: 'deprecated analytics provider: google, use ga4 instead' do
   before do
     ENV['GOOGLE_ANALYTICS_ID'] = 'UA-XXXXXXXX'
     ENV['GOOGLE_OAUTH_APP_NAME'] = 'My App Name'

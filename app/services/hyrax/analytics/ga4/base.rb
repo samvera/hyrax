@@ -88,7 +88,7 @@ module Hyrax
         end
 
         def unwrap_metric(metric)
-          metric.metric_values.first.value.to_i
+          metric&.metric_values&.first&.value.to_i
         end
       end
     end

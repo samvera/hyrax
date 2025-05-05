@@ -14,8 +14,8 @@
       <tbody>
           <% @top_file_set_downloads.each do |download| %>
             <tr>
-              <td><%= download[1] %></td> 
-              <td><%= download[0] %></td>  
+              <td><%= download[1] %></td>
+              <td><%= download[0] %></td>
               <td><%= download[2] %></td>
             </tr>
           <% end %>
@@ -24,10 +24,7 @@
   </div>
   <div class="card-footer">
     <div class="float-right">
-     <%= paginate @top_file_set_downloads %> 
+      <%= paginate @top_file_set_downloads, outer_window: 2, theme: 'blacklight' %>
     </div>
   </div>
 </div>
- 
-
-
