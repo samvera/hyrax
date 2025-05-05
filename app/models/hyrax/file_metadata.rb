@@ -44,15 +44,30 @@ module Hyrax
 
       # @return [Array<RDF::URI>] list of all uses
       def use_list
-        [ORIGINAL_FILE,
-         THUMBNAIL_IMAGE,
-         EXTRACTED_TEXT,
-         INTERMEDIATE_FILE,
-         PRESERVATION_FILE,
-         SERVICE_FILE,
-         TRANSCRIPT]
+        [
+          EXTRACTED_TEXT,
+          INTERMEDIATE_FILE,
+          ORIGINAL_FILE,
+          PRESERVATION_FILE,
+          SERVICE_FILE,
+          THUMBNAIL_IMAGE,
+          TRANSCRIPT
+        ]
       end
       module_function :use_list
+
+      def keys
+        [
+          :extracted_file,
+          :intermediate_file,
+          :original_file,
+          :preservation_file,
+          :service_file,
+          :thumbnail_file,
+          :transcript_file
+        ]
+      end
+      module_function :keys
 
       ##
       # @param use [RDF::URI, Symbol]
