@@ -20,10 +20,11 @@ module Hyrax
         ##
         # @param [Hyrax::Work] obj
         # @param [Enumerable<UploadedFile>] uploaded_files
-        # @param [Enumerable<Hash>] file_set_params
+        # @param [Enumerable<Hash>] file_set_params or nil
         #
         # @return [Dry::Monads::Result]
         def call(obj, uploaded_files: [], file_set_params: [])
+          return Success(obj) if uploaded_files.empty? && file_set_params.blank? # Skip if no files to attach
           if @handler.new(work: obj).add(files: uploaded_files, file_set_params: file_set_params).attach
             file_sets = obj.member_ids.map do |member|
               Hyrax.query_service.find_by(id: member) if Hyrax.query_service.find_by(id: member).is_a? Hyrax::FileSet
