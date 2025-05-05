@@ -18,9 +18,6 @@ module Hyrax
     # OVERRIDE valkyrie 3.0.1 to make schema dynamic
     def field(field_name)
       _form_field_definitions.fetch(field_name.to_s)
-    rescue KeyError
-      Rails.logger.warn("Field '#{field_name}' not found in dynamic schema for #{model.class.name}")
-      nil
     end
 
     def _form_field_definitions
