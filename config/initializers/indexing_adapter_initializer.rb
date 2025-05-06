@@ -7,3 +7,7 @@ Valkyrie::IndexingAdapter.register(
 Valkyrie::IndexingAdapter.register(
   Valkyrie::Indexing::NullIndexingAdapter.new, :null_index
 )
+Valkyrie::IndexingAdapter.register(
+  Valkyrie::Indexing::RedisQueue::IndexingAdapter.new,
+  :redis_queue
+)
