@@ -55,6 +55,7 @@ module Hyrax
       # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       def initialize(deprecated_resource = nil, resource: nil)
         if Hyrax.config.flexible?
+          self.class.deserializer_class = nil # need to reload this on first use after schema is loaded
           singleton_class.schema_definitions = self.class.definitions
           r = resource || deprecated_resource
           Hyrax::Schema.default_schema_loader.form_definitions_for(schema: r.class.to_s, version: Hyrax::FlexibleSchema.current_schema_id, contexts: r.contexts).map do |field_name, options|
