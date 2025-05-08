@@ -14,9 +14,11 @@
                 <p><%= t("hyrax.collection.select_form.select_heading") %></p>
               
                 <% if @add_works_to_collection.present? %>
+                  <label for="member_of_collection_label"><%= t("hyrax.collection.select_form.select_label") %></label>
                   <%= text_field_tag 'member_of_collection_label', @add_works_to_collection_label, disabled: true %>
                   <%= hidden_field_tag 'member_of_collection_ids', @add_works_to_collection %>
                 <% else %>
+                  <label for="member_of_collection_ids"><%= t("hyrax.collection.select_form.select_label") %></label>
                   <%= text_field_tag 'member_of_collection_ids', nil,
                               prompt: :translate,
                               data: {
