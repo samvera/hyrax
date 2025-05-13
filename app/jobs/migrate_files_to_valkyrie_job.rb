@@ -2,6 +2,11 @@
 # Responsible for conditionally enqueuing the file and thumbnail migration
 # logic of an ActiveFedora object.
 class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
+  # Define a logger for this job
+  def logger
+    FileUtils.mkdir_p(Hyrax.config.working_path)
+    @logger ||= Logger.new(Hyrax.config.working_path.join('migrate_files_to_valkyrie_job.log'))
+  end
   ##
   #
   # @param resource [Hyrax::FileSet]
@@ -33,6 +38,7 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
     # @todo should we trigger a job if the member is a child work?
     paths = Hyrax::DerivativePath.derivatives_for_reference(resource)
     paths.each do |path|
+      next unless File.size?(path) # skip blank files
       container = container_for(path)
       mime_type = Marcel::MimeType.for(extension: File.extname(path))
       directives = { url: path, container: container, mime_type: mime_type }
@@ -50,27 +56,33 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
 
     files = Hyrax.custom_queries.find_many_file_metadata_by_ids(ids: resource.file_ids)
     files.each do |file|
-      # If it doesn't start with fedora, we've likely already migrated it.
-      next unless /^fedora:/.match?(file.file_identifier.to_s)
-      resource.file_ids.delete(file.id)
+      begin
+        # If it doesn't start with fedora, we've likely already migrated it.
+        next unless /^fedora:/.match?(file.file_identifier.to_s)
+        resource.file_ids.delete(file.id)
 
-      Tempfile.create do |tempfile|
-        tempfile.binmode
-        tempfile.write(URI.open(file.file_identifier.to_s.gsub("fedora:", "http:")).read)
-        tempfile.rewind
+        Tempfile.create do |tempfile|
+          tempfile.binmode
+          tempfile.write(URI.open(file.file_identifier.to_s.gsub("fedora:", "http:")).read)
+          tempfile.rewind
 
-        # valkyrie_file = Hyrax.storage_adapter.upload(resource: resource, file: tempfile, original_filename: file.original_filename)
-        valkyrie_file = Hyrax::ValkyrieUpload.file(
-          filename: resource.label,
-          file_set: resource,
-          io: tempfile,
-          use: file.pcdm_use.select {|use| Hyrax::FileMetadata::Use.use_list.include?(use)},
-          user: User.find_or_initialize_by(User.user_key_field => resource.depositor),
-          mime_type: file.mime_type,
-          skip_derivatives: true
-        )
-        valkyrie_file = copy_attributes(valkyrie_file:, original_file: file)
-        Hyrax.persister.save(resource: valkyrie_file)
+          # valkyrie_file = Hyrax.storage_adapter.upload(resource: resource, file: tempfile, original_filename: file.original_filename)
+          valkyrie_file = Hyrax::ValkyrieUpload.file(
+            filename: resource.label,
+            file_set: resource,
+            io: tempfile,
+            use: file.pcdm_use.select {|use| Hyrax::FileMetadata::Use.use_list.include?(use)},
+            user: User.find_or_initialize_by(User.user_key_field => resource.depositor),
+            mime_type: file.mime_type,
+            skip_derivatives: true
+          )
+          valkyrie_file = copy_attributes(valkyrie_file:, original_file: file)
+          Hyrax.persister.save(resource: valkyrie_file)
+        end
+      rescue StandardError => e
+        # Log errors specific to file migration
+        logger.error("Error migrating file #{file.id} for resource #{resource.id}: #{e.message}")
+        logger.error(e.backtrace.join("\n"))
       end
     end
     # reindex the file set after migrating files to include characterization info
@@ -93,9 +105,9 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
   #
   # @param filename [String] the name of the derivative file: i.e. 'x-thumbnail.jpg'
   # @return [String]
-  def container_for(filename)
+  def container_for(path)
     # we want the portion between the '-' and the '.'
-    file_blob = File.basename(filename, '.*').split('-').last
+    file_blob = File.basename(path, '.*').split('-').last
 
     case file_blob
     when 'thumbnail'

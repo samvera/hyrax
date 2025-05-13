@@ -102,6 +102,7 @@ module Hyrax
     def find_file_metadata(file_set:, use: :original_file, mime_type: nil)
       if mime_type.nil?
         use = :thumbnail_file if use == :thumbnail
+        use = :original_file unless Hyrax::FileMetadata::Use.keys.include?(use)
         use = Hyrax::FileMetadata::Use.uri_for(use: use)
         results = Hyrax.custom_queries.find_many_file_metadata_by_use(resource: file_set, use: use)
       else
