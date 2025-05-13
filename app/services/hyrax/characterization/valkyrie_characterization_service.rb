@@ -109,11 +109,20 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
   # Assign values of the instance properties from the metadata mapping :prop => val
   # @return [Hash]
   def apply_metadata(terms)
-    terms.each_pair do |term, value|
-      property = property_for(term)
-      next if property.nil?
+    terms.each do |term, value|
+      next unless (property = property_for(term))
 
-      Array(value).each { |v| append_property_value(property, v) }
+      # could also extract this into a `filter_value` method
+      # and put it where `append_property_value` is now
+      if property == :mime_type
+        # keep only the last mime type
+        value = Array(value).last
+      elsif [:height, :width].include?(property)
+        # keep only the max height or width
+        value = Array(value).map(&:to_i).max.to_s
+      end
+
+      metadata.public_send("#{property}=", value)
     end
   end
 
