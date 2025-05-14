@@ -1,9 +1,9 @@
-name: Trigger Nurax build
+name: Deploy main to Nurax
 on:
   workflow_dispatch:
-#  push:
-#    branches:
-#      - 'main'
+  push:
+    branches:
+      - 'main'
 
 jobs:
   trigger:
@@ -12,6 +12,6 @@ jobs:
     - uses: peter-evans/repository-dispatch@v3
       with:
          token: ${{ secrets.NURAX_ACCESS_TOKEN }}
-         event-type: push
-         repository: samvera-labs/nurax
+         event-type: deploy
+         repository: samvera-labs/nurax-terraform
          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
