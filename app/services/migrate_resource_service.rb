@@ -8,7 +8,7 @@ class MigrateResourceService
   end
 
   def model
-    @model || Wings::ModelRegistry.lookup(resource.class).to_s
+    @model ||= Wings::ModelRegistry.lookup(resource.class).to_s
   end
 
   def call
