@@ -85,7 +85,7 @@ jobs:
         with:
           token: ${{ secrets.NURAX_ACCESS_TOKEN }}
           event-type: deploy
-          repository: samvera-labs/nurax
+          repository: samvera-labs/nurax-terraform
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
       - name: Upload built image artifact
         uses: actions/upload-artifact@v4
