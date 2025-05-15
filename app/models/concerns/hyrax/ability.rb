@@ -404,11 +404,9 @@ module Hyrax
                                     .select(:source_id)
                                     .distinct
                                     .pluck(:source_id)
-
-      Hyrax.query_service.find_many_by_ids(ids: ids).any? do |resource|
-        Hyrax::ModelRegistry.admin_set_classes.any? do |c|
-          resource.is_a? c
-        end
+      return false if ids.empty?
+      Hyrax::SolrQueryService.new.with_ids(ids: ids).query_result(rows: 1000)['response']['docs'].any? do |doc|
+        (Hyrax::ModelRegistry.admin_set_rdf_representations & doc['has_model_ssim']).present?
       end
     end
 

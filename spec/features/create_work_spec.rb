@@ -138,7 +138,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
     end
   end
 
-  context "with valkyrie resources", valkyrie_adapter: :postgres_adapter do
+  context "with valkyrie resources", index_adapter: :solr_index, valkyrie_adapter: :postgres_adapter do
     before do
       sign_in user
       click_link 'Works'
