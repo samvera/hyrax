@@ -7,39 +7,43 @@
     <%= t("hyrax.dashboard.my.action.select") %>
   </button>
   <ul role="menu" id="<%= ul_id %>" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu_<%= id %>">
-    <li class="dropdown-item" role="menuitem" tabindex="-1">
-      <%= link_to hyrax.admin_admin_set_path(id),
-                  class: 'itemicon itemedit',
-                  title: t("hyrax.dashboard.my.action.view_admin_set") do %>
+    <%= link_to hyrax.admin_admin_set_path(id),
+                class: 'itemicon itemedit',
+                role: 'menuitem',
+                title: t("hyrax.dashboard.my.action.view_admin_set") do %>
+      <li class="dropdown-item" tabindex="-1">
         <%= t("hyrax.dashboard.my.action.view_admin_set") %>
-      <% end %>
-    </li>
-    <% if can? :edit, admin_set_presenter.solr_document %>
-      <li class="dropdown-item" role="menuitem" tabindex="-1">
-        <%= link_to hyrax.edit_admin_admin_set_path(id),
-                    class: 'itemicon itemedit',
-                    title: t("hyrax.dashboard.my.action.edit_admin_set") do %>
-          <%= t("hyrax.dashboard.my.action.edit_admin_set") %>
-        <% end %>
-      </li>
-    <% else %>
-      <li class="dropdown-item" role="menuitem" tabindex="-1">
-        <%= link_to "#",
-                    class: 'itemicon itemedit edit-collection-deny-button',
-                    title: t("hyrax.dashboard.my.action.edit_collection") do %>
-          <%= t("hyrax.dashboard.my.action.edit_collection") %>
-        <% end %>
       </li>
     <% end %>
-    <li class="dropdown-item" role="menuitem" tabindex="-1">
-      <%= link_to "#",
-                     class: 'itemicon itemtrash delete-collection-button',
-                     title: t("hyrax.dashboard.my.action.delete_admin_set"),
-                     data: { totalitems: admin_set_presenter.total_items ,
-                             membership: admin_set_presenter.collection_type_is_require_membership? ,
-                             hasaccess: (can?(:edit, admin_set_presenter.solr_document)) } do %>
-        <%= t("hyrax.dashboard.my.action.delete_admin_set") %>
+    <% if can? :edit, admin_set_presenter.solr_document %>
+      <%= link_to hyrax.edit_admin_admin_set_path(id),
+                  class: 'itemicon itemedit',
+                  role: 'menuitem',
+                  title: t("hyrax.dashboard.my.action.edit_admin_set") do %>
+        <li class="dropdown-item" tabindex="-1">
+          <%= t("hyrax.dashboard.my.action.edit_admin_set") %>
+        </li>
       <% end %>
-    </li>
+    <% else %>
+      <%= link_to "#",
+                  class: 'itemicon itemedit edit-collection-deny-button',
+                  role: 'menuitem',
+                  title: t("hyrax.dashboard.my.action.edit_collection") do %>
+        <li class="dropdown-item" tabindex="-1">
+          <%= t("hyrax.dashboard.my.action.edit_collection") %>
+        </li>
+      <% end %>
+    <% end %>
+    <%= link_to "#",
+                class: 'itemicon itemtrash delete-collection-button',
+                role: 'menuitem',
+                title: t("hyrax.dashboard.my.action.delete_admin_set"),
+                data: { totalitems: admin_set_presenter.total_items,
+                        membership: admin_set_presenter.collection_type_is_require_membership?,
+                        hasaccess: (can?(:edit, admin_set_presenter.solr_document)) } do %>
+      <li class="dropdown-item" tabindex="-1">
+        <%= t("hyrax.dashboard.my.action.delete_admin_set") %>
+      </li>
+    <% end %>
   </ul>
 </div>
