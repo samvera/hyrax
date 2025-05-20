@@ -56,3 +56,9 @@ en:
     institution_name_full: The Institution Name
     product_name: Hyrax
     product_twitter_handle: "@SamveraRepo"
+  layouts:
+    application:
+      dev_env: "Dassie"
+  shared:
+    footer:
+      built_at: "Built at "

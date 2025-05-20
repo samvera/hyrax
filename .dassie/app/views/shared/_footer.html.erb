@@ -4,7 +4,7 @@
       <p><%= t('hyrax.footer.service_html') %> <%= t('hyrax.product_name') %> v<%= Hyrax::VERSION %></p>
       <p>Commit <%= link_to ENV.fetch('BUILD_GITSHA', "Unknown")[0..6],
                             "https://github.com/samvera/hyrax/commit/#{ENV.fetch('BUILD_GITSHA', 'main')}" %>
-        Built at <%= ENV.fetch('BUILD_TIMESTAMP', 'Unknown') %>
+        <%= I18n.t("shared.footer.built_at", :default => "Built at ") %><%= ENV.fetch('BUILD_TIMESTAMP', 'Unknown') %>
       </p>
     </div>
     <div class="navbar-right">
