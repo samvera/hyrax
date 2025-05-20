@@ -1903,3 +1903,7 @@ en:
   total_view:
     one: This work has 1 total view
     other: This work has %{count} total views
+  catalog:
+    edit_partials:
+      default_details:
+        title: "Title:"
