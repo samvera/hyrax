@@ -15,6 +15,10 @@ Flipflop.configure do
             default: false,
             description: "Do not show the private items."
 
+    feature :hide_social_buttons,
+            default: false,
+            description: "Do not show social media share buttons."
+
     feature :hide_users_list,
             default: true,
             description: "Do not show users list unless user has authenticated."

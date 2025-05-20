@@ -1,3 +1,5 @@
+<% return '' if Flipflop.hide_social_buttons? %>
+
 <% page_title ||= content_for?(:page_title) ? content_for(:page_title) : default_page_title %>
 <% share_url ||= request.original_url %>
 <div class="social-media">
