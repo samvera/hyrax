@@ -6,7 +6,7 @@ RSpec.describe Hyrax::TrophyHelper, type: :helper do
 
     let(:text_attributes) { '[data-add-text="Highlight work on profile"][data-remove-text="Unhighlight work"]' }
     let(:url_attribute) { "[data-url=\"/works/#{id}/trophy\"]" }
-    let(:args) { { :role => 'menuitem' } }
+    let(:args) { { role: 'menuitem' } }
 
     context "when there is no trophy" do
       it "has a link for highlighting" do
