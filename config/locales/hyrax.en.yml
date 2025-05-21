@@ -1657,6 +1657,10 @@ en:
         no_links: No links have been generated
       title: Single-Use Links
     single_use_links_viewer:
+      show:
+        actions: Actions
+        descriptions: " Descriptions:"
+        download: Download (can only be used once)
       single_use_error:
         help: '%{application_name} could not locate the single use link. This link either expired or had been used previously.  We apologize for the inconvenience. You might be interested in using <a href="/help/">the help page</a> for looking up solutions.'
         link_expired_not_found: Single Use Link Expired or Not Found
