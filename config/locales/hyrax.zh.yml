@@ -149,6 +149,7 @@ zh:
           add_participants: 添加参与者
           add_user: '添加用户:'
           current_participants: 目前参与者
+          as: as
         form_visibility:
           cancel: 取消
           page_description: 当作品加入收藏集，发布和公开度设置可以控制谁和何时可以观看和下载这些作品。
@@ -187,6 +188,25 @@ zh:
           item_list_header: 集内作品
         show_actions:
           confirm_delete: 您确定要删除此管理集？此操作无法撤消。
+        index:
+          creator: Creator
+          date_created: Date created
+          no_administrative_sets_have_been_created: No administrative sets have been created.
+          title: Title
+          works: Works
+        show_document_list:
+          actions: Actions
+          date_uploaded: Date Uploaded
+          list_of_items_in_this_administrative_set: List of items in this administrative set
+          status: Status
+          title: Title
+          visibility: Visibility
+        show_document_list_row:
+          creator: 'Creator:'
+          depositor: 'Depositor:'
+          edit_access: 'Edit Access:'
+          groups: 'Groups: '
+          users: 'Users: '
       analytics:
         collection_reports:
           custom_range:
@@ -357,6 +377,7 @@ zh:
             top_works: 热门作品
             work_title: 作品名称
             work_views: 工作页面浏览量
+            id: ID
           work_counts:
             child_works: 儿童作品
             files: 档案
@@ -414,9 +435,11 @@ zh:
           remove_success: 参与者已移除
           submit: 加
           update_notice: 参与者已更新
+          as: as
         form_settings:
           instructions: 这些设置决定了如何管理和发现此类型的集合。
           warning: 警告：创建此类型的集合后，这些设置无法更改。
+          apply_to_new_works: APPLY TO NEW WORKS
         index:
           breadcrumb: 集合类型
           create_new_button: 创建新的集合类型
@@ -447,6 +470,7 @@ zh:
           description: 描述
           feature: 特征
           header: 特征
+          status: Status
       sidebar:
         activity: 活动
         analytics: 分析
@@ -498,6 +522,27 @@ zh:
             main: 工作统计
             total: 总作品：
             visibility: 总计公开度
+        date_form:
+          load_stats: Load Stats
+        deposits:
+          deposited: 'deposited '
+          deposits_by_users: 'Deposits By Users '
+        new_users:
+          newest_users: Newest Users %{users}
+          of: 'of '
+          registered: registered
+          total: 'Total: '
+        stats_by_date:
+          explanation: Statistics in this section are filtered by the dates entered in the form below. The data is unfiltered unless the date form has been filled in. Start date is required and the default end is now.
+          statistics_by_date: Statistics By Date
+        top_data:
+          explanation_with_limit: Statistics in this section shows the top %{limit} items for each category
+          most_actie_users: Most Active Users (top %{count})
+          top_file_format: Top File Formats (top %{count})
+          top_file_formats_and_users: Top File Formats and Users
+          view_top: View top %{number}
+        workflows:
+          show_number_per_page: Show %{number}) per page
       users:
         index:
           access_label: 上次访问
@@ -619,6 +664,7 @@ zh:
         header:
           actions: 行动
           title: 集合标题
+        display_data_info: This table will only display data if works are assigned to collections
       form_permission:
         visibility: 可见性<small>谁应该能够查看或下载此内容？</ small>
       form_permission_under_embargo:
@@ -680,6 +726,7 @@ zh:
         users: 用户
         workflow: 工作流程
         workflow_comments: 工作流程评论
+        solr: Solr
       items:
         actions: 行动
         date_uploaded: 上传日期
@@ -737,6 +784,8 @@ zh:
         previous_comments: 以前的评论
         review_comment: 评论评论
         title: 审核和批准
+      member_of_collections:
+        member_of_collections: Member of Collections
     base/unauthorized:
       is_private: 您尝试访问的%{type}是私有的
       unauthorized: 擅自
@@ -763,6 +812,7 @@ zh:
         permissions: 权限
         sharing: 分享
         visibility: 能见度
+        save_changes: Save changes
     batch_uploads:
       disabled: 功能被管理员禁用
       files:
@@ -782,6 +832,9 @@ zh:
     citations:
       work:
         citation_formats: 引文格式
+        apa: APA
+        chicago: Chicago
+        mla: MLA
     collection:
       actions:
         add_existing_works:
@@ -884,6 +937,10 @@ zh:
         featured_researcher: 特色研究员
         marketing_text: 营销文字
       updated: 内容块已更新。
+      form:
+        announcement: announcement
+        marketing: marketing
+        researcher: researcher
     controls:
       about: 关于
       contact: 联系
@@ -1039,6 +1096,8 @@ zh:
           creator: 创建者：
           depositor: 储户：
           edit_access: 编辑权限：
+          groups: 'Groups: '
+          users: 'Users: '
         sort_and_per_page:
           show_par_page_html: 显示%{select}每页
           sort_by: 排序：
@@ -1381,6 +1440,8 @@ zh:
         save: 保存修订
         save_your_note: 您必须点击“保存修订版”还原此文件的先前版本
         upload: 上传新版本
+      asset_permissions_denial_flash:
+        message: The file(s) %{files} could not be updated.  You do not have sufficient privileges to edit it."
     help:
       header: 用户支持
       override_text: 用 app/views/static/help.html.erb 取代此文件。
@@ -1542,6 +1603,13 @@ zh:
         status: 状态
         title: 操作
         updated: 更新
+      show:
+        message_header: Message
+        message_label: 'Message:'
+        operation_type_header: Operation Type
+        status: status
+        status_header: Status
+        status_label: 'Status:'
     pages:
       cancel: 取消
       tabs:
@@ -1550,6 +1618,11 @@ zh:
         help_page: 帮助页面
         terms_page: 使用条款
       updated: 页面更新。
+      form:
+        about: about
+        agreement: agreement
+        help: help
+        terms: terms
     passive_consent_to_agreement: 保存这件作品表明我同意
     permission_levels:
       edit: 编辑权限
@@ -1612,6 +1685,10 @@ zh:
         help: '%{application_name}无法找到单次使用链接。此链接已过期或之前已使用过。我们对不便表示抱歉。您可能有兴趣使用<a href="/help/">帮助页面</a>查找解决方案。'
         link_expired_not_found: 单次使用链接已过期或未找到
         link_not_found: 单用链接未找到
+      show:
+        actions: Actions
+        descriptions: " Descriptions:"
+        download: Download (can only be used once)
     sort_label: 对清单中单件排序
     static:
       mendeley:
@@ -1745,6 +1822,7 @@ zh:
       activity_log:
         date: 日期
         user_activity: 用户活动
+        no_user_activity: No user activity
       index:
         avatar: 阿凡达
         department: 部门
@@ -1759,6 +1837,19 @@ zh:
       search_form:
         go: 走
         search_users: 搜索用户
+      user_info:
+        administrative_area: Administrative Area
+        affiliation: Affiliation
+        chat_id: Chat ID
+        department: Department
+        email: Email
+        facebook_handle: Facebook Handle
+        linkedin: LinkedIn
+        office: Office
+        telephone: Telephone
+        title: Title
+        twitter_handle: Twitter Handle
+        website: Website(s)
     virus_scanner:
       virus_detected: 在 %{filename} 中检测到病毒。该文件尚未保存。
     visibility:
@@ -1816,6 +1907,10 @@ zh:
         no_preview: 不可预览
       update:
         header: 编辑作品
+    permissions:
+      confirm:
+        confirm: Yes please.
+        deny: No. I'll update it manually.
   simple_form:
     hints:
       admin_set:
@@ -1917,3 +2012,17 @@ zh:
   total_view:
     one: 该作品共有 1 次浏览
     other: 此作品总浏览量为 %{count}
+  catalog:
+    edit_partials:
+      default_details:
+        title: 'Title:'
+  layouts:
+    error:
+      system_error: System Error
+  shared:
+    nav_safety_modal:
+      cancel: Cancel
+      ok: OK
+    schema_version:
+      created_on_version: Created On Version
+      version_after_save: Version After Save
