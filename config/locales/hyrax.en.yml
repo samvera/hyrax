@@ -498,15 +498,27 @@ en:
         works_listing: Works listing
         works_report: Works Report
       stats:
+        date_form:
+          load_stats: Load Stats
         deposited_form:
           end_label: end [defaults to now]
           heading: 'Display Files Deposited:'
           start_label: Start
+        deposits:
+          deposited: 'deposited '
+          deposits_by_users: 'Deposits By Users '
+        new_users:
+          of: 'of '
+          registered: registered
+          total: 'Total: '
         repository_objects:
           series:
             published: Published
             unknown: Unknown
             unpublished: Unpublished
+        stats_by_date:
+          explanation: Statistics in this section are filtered by the dates entered in the form below. The data is unfiltered unless the date form has been filled in. Start date is required and the default end is now.
+          statistics_by_date: Statistics By Date
         user_deposits:
           end_label: Ending [defaults to now]
           heading: Display files deposited by users

@@ -1,7 +1,7 @@
-<h3>Newest Users (<%= @presenter.date_filter_string %>)</h3>
+<h3>I18n.t("hyrax.admin.stats.new_users.newest_users_<%=_@presenterdate_filter_string_%>", :default => "Newest Users (<%= @presenter.date_filter_string %>)")</h3>
 <h4>
 <%- if !@presenter.start_date.blank? %>
-  Total: <%= @presenter.recent_users.count %>
+  <%= I18n.t("hyrax.admin.stats.new_users.total", :default => "Total: ") %><%= @presenter.recent_users.count %>
 <%- else %>
     <%= @presenter.recent_users.count %> most recent users:
 <%- end %>
@@ -11,9 +11,9 @@
     <li>
       <%= link_to usr.name, hyrax.user_path(usr), title: "View user's profile" %>
       <%- if usr.department %>
-        of <%= usr.department %>
+        <%= I18n.t("hyrax.admin.stats.new_users.of", :default => "of ") %><%= usr.department %>
       <%- end %>
-      registered
+      <%= I18n.t("hyrax.admin.stats.new_users.registered", :default => "registered") %>
       <span class="date">
         <%= usr.created_at.to_time.strftime("%m/%d/%Y") %>
       </span>
