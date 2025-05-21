@@ -359,8 +359,9 @@ module Hyrax
       # intersection, we get the files they added via BrowseEverything
       # that they have not removed from the upload widget.
       uploaded_files = params.fetch(:uploaded_files, [])
+      params.permit(selected_files: [:expires, :file_name, :url])
       selected_files = params.fetch(:selected_files, {}).values
-                             .map { |f| f.permit(:expires, :file_name, :url, {}) }
+
       browse_everything_urls = uploaded_files &
                                selected_files.map { |f| f[:url] }
 
