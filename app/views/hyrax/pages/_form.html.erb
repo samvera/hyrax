@@ -30,7 +30,7 @@
         <%= simple_form_for ContentBlock.for(:about), url: hyrax.page_path(ContentBlock.for(:about)), html: { class: 'nav-safety' } do |f| %>
           <div class="card-body">
             <div class="field form-group">
-                <%= f.label :about %><br />
+                <%= f.label I18n.t("hyrax.pages.form.about", :default => "about") %><br />
                 <%= f.text_area :about, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
             </div>
           </div>
@@ -46,7 +46,7 @@
         <%= simple_form_for ContentBlock.for(:help), url: hyrax.page_path(ContentBlock.for(:help)), html: { class: 'nav-safety' } do |f| %>
           <div class="card-body">
             <div class="field form-group">
-                <%= f.label :help %><br />
+                <%= f.label I18n.t("hyrax.pages.form.help", :default => "help") %><br />
                 <%= f.text_area :help, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
             </div>
           </div>
@@ -62,7 +62,7 @@
         <%= simple_form_for ContentBlock.for(:agreement), url: hyrax.page_path(ContentBlock.for(:agreement)), html: { class: 'nav-safety' } do |f| %>
           <div class="card-body">
             <div class="field form-group">
-                <%= f.label :agreement %><br />
+                <%= f.label I18n.t("hyrax.pages.form.agreement", :default => "agreement") %><br />
                 <%= f.text_area :agreement, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
             </div>
           </div>
@@ -78,7 +78,7 @@
         <%= simple_form_for ContentBlock.for(:terms), url: hyrax.page_path(ContentBlock.for(:terms)), html: { class: 'nav-safety' } do |f| %>
           <div class="card-body">
             <div class="field form-group">
-                <%= f.label :terms %><br />
+                <%= f.label I18n.t("hyrax.pages.form.terms", :default => "terms") %><br />
                 <%= f.text_area :terms, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
             </div>
           </div>

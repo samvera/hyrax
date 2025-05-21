@@ -1589,6 +1589,11 @@ en:
         updated: Updated
     pages:
       cancel: Cancel
+      form:
+        about: about
+        agreement: agreement
+        help: help
+        terms: terms
       tabs:
         about_page: About Page
         agreement_page: Deposit Agreement
