@@ -468,6 +468,7 @@ en:
           description: Description
           feature: Feature
           header: Features
+          status: Status
       sidebar:
         activity: Activity
         analytics: Analytics
