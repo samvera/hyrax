@@ -1796,6 +1796,7 @@ en:
     users:
       activity_log:
         date: Date
+        no_user_activity: No user activity
         user_activity: User Activity
       index:
         avatar: Avatar
@@ -1811,6 +1812,20 @@ en:
       search_form:
         go: Go
         search_users: Search Users
+      user_info:
+        administrative_area: Administrative Area
+        affiliation: Affiliation
+        chat_id: Chat ID
+        department: Department
+        email: Email
+        facebook_handle: Facebook Handle
+        googleplus_handle: Google+ Handle
+        linkedin: LinkedIn
+        office: Office
+        telephone: Telephone
+        title: Title
+        twitter_handle: Twitter Handle
+        website: Website(s)
     virus_scanner:
       virus_detected: Virus detected in %{filename}. The file has not been saved.
     visibility:
