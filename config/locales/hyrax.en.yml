@@ -808,6 +808,7 @@ en:
         permissions: Permissions
         sharing: Sharing
         visibility: Visibility
+        save_changes: Save changes
     batch_uploads:
       disabled: Feature disabled by administrator
       files:
