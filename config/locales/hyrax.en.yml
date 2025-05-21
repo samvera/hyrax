@@ -1605,6 +1605,10 @@ en:
       owner:
         edit: Edit access
       read: View/Download
+    permissions:
+      confirm:
+        confirm: Yes please.
+        deny: No. I'll update it manually.
     read_only: The repository is in read-only mode for maintenance. No submissions or edits can be made at this time.
     search:
       button:
