@@ -26,7 +26,7 @@
           <label id="sharable-applies-to-new-works-setting-label"
                  class="form-check-label boolean optional <%= 'disabled' if f.object.share_options_disabled? %>"
                  for="collection_type_share_applies_to_new_works">
-            APPLY TO NEW WORKS
+            <%= I18n.t("hyrax.admin.collection_types.form_settings.apply_to_new_works", :default => "APPLY TO NEW WORKS") %>
           </label>
         </div>
       </div>

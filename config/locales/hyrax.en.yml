@@ -423,9 +423,11 @@ en:
             title: Managers
             type: Type
         form_participants:
+          access_options: access_options,
           add_group: Add group
           add_participants: Add Participants
           add_user: Add user
+          as: as
           current_participants: Current Participants
           header: Collection Participants
           instructions: You can designate both groups and users as creators and managers of collections of this type
@@ -433,6 +435,7 @@ en:
           submit: Add
           update_notice: Participants Updated
         form_settings:
+          apply_to_new_works: APPLY TO NEW WORKS
           instructions: These settings determine how collections of this type can be managed and discovered.
           warning: 'Warning: These settings cannot be changed after a collection of this type has been created.'
         index:
