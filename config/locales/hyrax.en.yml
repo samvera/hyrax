@@ -371,6 +371,7 @@ en:
           top_works:
             export: Export
             file_downloads: File Downloads
+            id: ID
             top_works: Top Works
             work_title: Work Title
             work_views: Work Page Views
