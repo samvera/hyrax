@@ -31,6 +31,10 @@ en:
       filters:
         title: 'Filtering by:'
       start_over: Start Over
+  catalog:
+    edit_partials:
+      default_details:
+        title: 'Title:'
   download:
     one: and 1 download
     other: and %{count} downloads
@@ -145,12 +149,12 @@ en:
             title: Viewers
             type: Type
         form_participants:
+          access_options: access_options,
           add_group: 'Add group:'
           add_participants: Add Participants
           add_user: 'Add user:'
+          as: as
           current_participants: Current Participants
-          as: 'as'
-          access_options: 'access_options,'
         form_visibility:
           cancel: Cancel
           page_description: Release and visibility settings determine the options available to depositors when submitting a work to this administrative set. Changes to these settings do not affect previously deposited works.
@@ -181,6 +185,12 @@ en:
           cancel: Cancel
           no_workflows: There are no workflows to select.
           page_description: Each administrative set has a workflow associated with it. This workflow is applied to all works added to the administrative set. Select the workflow to be used for this administrative set below.
+        index:
+          creator: Creator
+          date_created: Date created
+          no_administrative_sets_have_been_created: No administrative sets have been created.
+          title: Title
+          works: Works
         new:
           header: Create New Administrative Set
         show:
@@ -190,24 +200,18 @@ en:
         show_actions:
           confirm_delete: Are you sure you wish to delete this Administrative Set? This action cannot be undone.
         show_document_list:
-          list_of_items_in_this_administrative_set: 'List of items in this administrative set'
-          title: 'Title'
-          date_uploaded: 'Date Uploaded'
-          visibility: 'Visibility'
-          status: 'Status'
-          actions: 'Actions'
+          actions: Actions
+          date_uploaded: Date Uploaded
+          list_of_items_in_this_administrative_set: List of items in this administrative set
+          status: Status
+          title: Title
+          visibility: Visibility
         show_document_list_row:
           creator: 'Creator:'
           depositor: 'Depositor:'
           edit_access: 'Edit Access:'
           groups: 'Groups: '
           users: 'Users: '
-        index:
-          title: 'Title'
-          date_created: 'Date created'
-          creator: 'Creator'
-          works: 'Works'
-          no_administrative_sets_have_been_created: 'No administrative sets have been created.'
       analytics:
         collection_reports:
           custom_range:
@@ -1924,7 +1928,3 @@ en:
   total_view:
     one: This work has 1 total view
     other: This work has %{count} total views
-  catalog:
-    edit_partials:
-      default_details:
-        title: "Title:"
