@@ -529,6 +529,8 @@ en:
           end_label: Ending [defaults to now]
           heading: Display files deposited by users
           start_label: Starting
+        workflows:
+          show_number_per_page: "Show %{number}) per page"
         works:
           headers:
             main: Work Statistics
