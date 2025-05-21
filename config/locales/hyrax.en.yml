@@ -519,6 +519,12 @@ en:
         stats_by_date:
           explanation: Statistics in this section are filtered by the dates entered in the form below. The data is unfiltered unless the date form has been filled in. Start date is required and the default end is now.
           statistics_by_date: Statistics By Date
+        top_data:
+          explanation_with_limit: Statistics in this section shows the top %{limit} items for each category
+          most_actie_users: Most Active Users (top %{count})
+          top_file_format: Top File Formats (top %{count})
+          top_file_formats_and_users: Top File Formats and Users
+          view_top: View top %{number}
         user_deposits:
           end_label: Ending [defaults to now]
           heading: Display files deposited by users
