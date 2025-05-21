@@ -1,13 +1,13 @@
 <h4><%= t('.citation_formats') %></h4>
 
-<h4>MLA</h4>
-<span class="mla-citation"><%= export_as_mla_citation(@presenter) %></span>
+<h4><%= I18n.t("hyrax.citations.work.mla", :default => "MLA") %></h4>
+<span class="mla-citation">I18n.t("hyrax.citations.work.<%=_export_as_mla_citation@presenter_%>", :default => "<%= export_as_mla_citation(@presenter) %>")</span>
 <br /><br />
 
-<h4>APA</h4>
-<span class="apa-citation"><%= export_as_apa_citation(@presenter) %></span>
+<h4><%= I18n.t("hyrax.citations.work.apa", :default => "APA") %></h4>
+<span class="apa-citation">I18n.t("hyrax.citations.work.<%=_export_as_apa_citation@presenter_%>", :default => "<%= export_as_apa_citation(@presenter) %>")</span>
 <br /><br />
 
-<h4>Chicago</h4>
-<span class="chicago-citation"><%= export_as_chicago_citation(@presenter) %></span>
+<h4><%= I18n.t("hyrax.citations.work.chicago", :default => "Chicago") %></h4>
+<span class="chicago-citation">I18n.t("hyrax.citations.work.<%=_export_as_chicago_citation@presenter_%>", :default => "<%= export_as_chicago_citation(@presenter) %>")</span>
 <br /><br />

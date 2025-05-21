@@ -806,9 +806,9 @@ en:
         descriptions: Descriptions
         descriptions_title: 'Descriptions:'
         permissions: Permissions
+        save_changes: Save changes
         sharing: Sharing
         visibility: Visibility
-        save_changes: Save changes
     batch_uploads:
       disabled: Feature disabled by administrator
       files:
@@ -827,7 +827,10 @@ en:
       search_results: Back to search results
     citations:
       work:
+        apa: APA
+        chicago: Chicago
         citation_formats: Citation Formats
+        mla: MLA
     collection:
       actions:
         add_existing_works:
