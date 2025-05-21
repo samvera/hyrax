@@ -530,7 +530,7 @@ en:
           heading: Display files deposited by users
           start_label: Starting
         workflows:
-          show_number_per_page: "Show %{number}) per page"
+          show_number_per_page: Show %{number}) per page
         works:
           headers:
             main: Work Statistics
@@ -657,6 +657,7 @@ en:
           cancel: Cancel
           remove: Remove
           text: Removing this work will not remove it from the repository, only from this collection. Are you sure you want to remove this work from the collection?
+        display_data_info: This table will only display data if works are assigned to collections
         header:
           actions: Action
           title: Collection title
@@ -716,6 +717,7 @@ en:
         processing_entity_id: Processing Entity ID
         proxy_for: Proxy for
         roles: Roles
+        solr: Solr
         state: State
         state_name: State Name
         users: Users
@@ -730,6 +732,8 @@ en:
         title: Title
         unauthorized: There are no publicly available items in this %{type}.
         visibility: Visibility
+      member_of_collections:
+        member_of_collections: Member of Collections
       relationships:
         empty: This %{type} is not currently in any collections.
         header: Relationships
