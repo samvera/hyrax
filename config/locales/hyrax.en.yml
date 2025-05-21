@@ -149,6 +149,8 @@ en:
           add_participants: Add Participants
           add_user: 'Add user:'
           current_participants: Current Participants
+          as: 'as'
+          access_options: 'access_options,'
         form_visibility:
           cancel: Cancel
           page_description: Release and visibility settings determine the options available to depositors when submitting a work to this administrative set. Changes to these settings do not affect previously deposited works.
@@ -187,6 +189,25 @@ en:
           item_list_header: Works in This Set
         show_actions:
           confirm_delete: Are you sure you wish to delete this Administrative Set? This action cannot be undone.
+        show_document_list:
+          list_of_items_in_this_administrative_set: 'List of items in this administrative set'
+          title: 'Title'
+          date_uploaded: 'Date Uploaded'
+          visibility: 'Visibility'
+          status: 'Status'
+          actions: 'Actions'
+        show_document_list_row:
+          creator: 'Creator:'
+          depositor: 'Depositor:'
+          edit_access: 'Edit Access:'
+          groups: 'Groups: '
+          users: 'Users: '
+        index:
+          title: 'Title'
+          date_created: 'Date created'
+          creator: 'Creator'
+          works: 'Works'
+          no_administrative_sets_have_been_created: 'No administrative sets have been created.'
       analytics:
         collection_reports:
           custom_range:

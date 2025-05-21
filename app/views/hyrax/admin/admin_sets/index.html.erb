@@ -15,11 +15,12 @@
       <div class="table-responsive">
         <table class="table table-striped datatable">
           <thead>
+          <thead>
             <tr>
-              <th>Title</th>
-              <th>Date created</th>
-              <th>Creator</th>
-              <th>Works</th>
+              <th><%= I18n.t("hyrax.admin.admin_sets.index.title", :default => "Title") %></th>
+              <th><%= I18n.t("hyrax.admin.admin_sets.index.date_created", :default => "Date created") %></th>
+              <th><%= I18n.t("hyrax.admin.admin_sets.index.creator", :default => "Creator") %></th>
+              <th><%= I18n.t("hyrax.admin.admin_sets.index.works", :default => "Works") %></th>
             </tr>
           </thead>
           <tbody>
@@ -35,7 +36,7 @@
         </table>
       </div>
       <% else %>
-        <p>No administrative sets have been created.</p>
+        <p><%= I18n.t("hyrax.admin.admin_sets.index.no_administrative_sets_have_been_created", :default => "No administrative sets have been created.") %></p>
       <% end %>
   </div>
 </div>
