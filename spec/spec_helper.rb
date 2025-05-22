@@ -162,7 +162,12 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.fixture_paths = [File.expand_path("../fixtures", __FILE__)]
+  if config.respond_to?(:fixture_paths=)
+    config.fixture_paths = [File.expand_path("../fixtures", __FILE__)]
+  else
+    config.fixture_path = File.expand_path("../fixtures", __FILE__)
+  end
+
   config.file_fixture_path = File.expand_path("../fixtures", __FILE__)
   config.use_transactional_fixtures = false
 
