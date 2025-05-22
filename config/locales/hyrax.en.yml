@@ -1353,6 +1353,8 @@ en:
         versions_title: Display previous versions
       asset_deleted_flash:
         message: The file has been deleted.
+      asset_permissions_denial_flash:
+        message: The file(s) %{files} could not be updated.  You do not have sufficient privileges to edit it."
       asset_saved_flash:
         message:
           one: The file %{saved_files} has been saved.
