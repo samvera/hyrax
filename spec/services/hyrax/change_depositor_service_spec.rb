@@ -60,6 +60,8 @@ RSpec.describe Hyrax::ChangeDepositorService do
         expect(work.proxy_depositor).to eq depositor.user_key
         expect(work.edit_users.to_a).to include(receiver.user_key, depositor.user_key)
         expect(ChangeDepositorEventJob).to have_been_enqueued
+        solr = Hyrax::SolrQueryService.new.with_ids(ids: [work.id]).solr_documents.first
+        expect(solr.edit_people).to contain_exactly(receiver.user_key, depositor.user_key)
       end
     end
 
@@ -71,6 +73,8 @@ RSpec.describe Hyrax::ChangeDepositorService do
         expect(work.proxy_depositor).to eq depositor.user_key
         expect(work.edit_users.to_a).to contain_exactly(receiver.user_key)
         expect(ChangeDepositorEventJob).to have_been_enqueued
+        solr = Hyrax::SolrQueryService.new.with_ids(ids: [work.id]).solr_documents.first
+        expect(solr.edit_people).to contain_exactly(receiver.user_key)
       end
     end
 
