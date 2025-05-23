@@ -34,17 +34,17 @@
 <tr id="detail_<%= id %>"> <!--  document detail"> -->
   <td colspan="6">
     <dl class="expanded-details row">
-      <dt class="col-3 col-lg-2">Creator:</dt>
+      <dt class="col-3 col-lg-2"><%= I18n.t("hyrax.admin.admin_sets.show_document_list_row.creator", :default => "Creator:") %></dt>
       <dd class="col-9 col-lg-4"><%= document.creator.to_a.to_sentence %></dd>
-      <dt class="col-3 col-lg-2">Depositor:</dt>
+      <dt class="col-3 col-lg-2"><%= I18n.t("hyrax.admin.admin_sets.show_document_list_row.depositor", :default => "Depositor:") %></dt>
       <dd class="col-9 col-lg-4"><%= link_to_profile document.depositor %></dd>
-      <dt class="col-3 col-lg-2">Edit Access:</dt>
+      <dt class="col-3 col-lg-2"><%= I18n.t("hyrax.admin.admin_sets.show_document_list_row.edit_access", :default => "Edit Access:") %></dt>
       <dd class="col-9 col-lg-10">
         <% if document.edit_groups.present? %>
-          Groups: <%= document.edit_groups.join(', ') %>
+          <%= I18n.t("hyrax.admin.admin_sets.show_document_list_row.groups", :default => "Groups: ") %><%= document.edit_groups.join(', ') %>
           <br />
         <% end %>
-        Users: <%= document.edit_people.join(', ') %>
+        <%= I18n.t("hyrax.admin.admin_sets.show_document_list_row.users", :default => "Users: ") %><%= document.edit_people.join(', ') %>
       </dd>
     </dl>
   </td>
