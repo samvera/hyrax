@@ -21,8 +21,7 @@
               </div>
               <div class="form-group">
                 <label><%= I18n.t("hyrax.admin.admin_sets.form_participants.as", :default => "as") %></label>
-                <%= builder.select :access,
-                    <%= I18n.t("hyrax.admin.admin_sets.form_participants.access_options", :default => "access_options,") %>
+                <%= builder.select :access, "access_options,"
                     { prompt: "Select a role..." },
                  class: 'form-control' %>
               </div>
@@ -48,8 +47,7 @@
               </div>
               <div class="form-group">
                 <label><%= I18n.t("hyrax.admin.admin_sets.form_participants.as", :default => "as") %></label>
-                <%= builder.select :access,
-                    <%= I18n.t("hyrax.admin.admin_sets.form_participants.access_options", :default => "access_options,") %>
+                <%= builder.select :access, "access_options,"
                     { prompt: "Select a role..." },
                  class: 'form-control' %>
               </div>

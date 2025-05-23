@@ -1,5 +1,4 @@
 <h3><%= I18n.t("hyrax.admin.stats.deposits.deposits_by_users", :default => "Deposits By Users ") %>(<%= @presenter.date_filter_string %>)</h3>
-<h3>Deposits By Users (<%= @presenter.date_filter_string %>)</h3>
 <ul>
   <% @presenter.depositors.each do |usr| %>
     <li>

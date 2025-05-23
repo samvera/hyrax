@@ -9,7 +9,7 @@
         visibility_badge: visibility_badge(curation_concern.visibility)).html_safe %>
   </div>
   <div class="form-actions card-footer">
-    <%= button_to 18n.t("hyrax.permissions.confirm.confirm", :default => "Yes please.", main_app.copy_hyrax_permission_path(curation_concern), class: 'btn btn-primary' %>
+    <%= button_to I18n.t("hyrax.permissions.confirm.confirm", :default => "Yes please.", main_app.copy_hyrax_permission_path(curation_concern), class: 'btn btn-primary' %>
     <%= link_to I18n.t("hyrax.permissions.confirm.deny", :default => "No. I'll update it manually.", [main_app, curation_concern], class: 'btn' %>
   </div>
 </div>

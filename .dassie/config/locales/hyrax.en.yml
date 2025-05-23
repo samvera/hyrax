@@ -61,4 +61,4 @@ en:
       dev_env: "Dassie"
   shared:
     footer:
-      built_at: "Built at "
+      built_at: "Built at %{time}"
