@@ -49,6 +49,8 @@ RSpec.describe Hyrax::PropagateChangeDepositorJob do
       file_sets.each do |file_set|
         expect(file_set.depositor).to eq receiver.user_key
         expect(file_set.edit_users.to_a).to include(receiver.user_key, depositor.user_key)
+        solr = Hyrax::SolrQueryService.new.with_ids(ids: [file_set.id]).solr_documents.first
+        expect(solr.edit_people).to contain_exactly(receiver.user_key, depositor.user_key)
       end
     end
 
@@ -61,6 +63,8 @@ RSpec.describe Hyrax::PropagateChangeDepositorJob do
         file_sets.each do |file_set|
           expect(file_set.depositor).to eq receiver.user_key
           expect(file_set.edit_users.to_a).to contain_exactly(receiver.user_key)
+          solr = Hyrax::SolrQueryService.new.with_ids(ids: [file_set.id]).solr_documents.first
+          expect(solr.edit_people).to contain_exactly(receiver.user_key)
         end
       end
     end
