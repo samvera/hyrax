@@ -32,7 +32,7 @@ module Hyrax
     #    * form_object.object.model = FileSet
     #    * use work the file_set is in
     #    No other object types are supported by this view.
-    def self.build_service_object_from(form:, ability:)
+    def self.build_service_object_from(form:, ability:) # rubocop:disable Metrics/AbcSize
       if form.object.respond_to?(:model) && form.object.model.work?
         # The provided form object is a work form.
         new(object: form.object, ability: ability)
@@ -41,7 +41,7 @@ module Hyrax
         # (+Hyrax::Forms::FileSetForm+), +:in_works_ids+ is prepopulated onto
         # the form object itself. For +Hyrax::Forms::FileSetEditForm+, the
         # +:in_works+ method is present on the wrapped +:model+.
-        if form.object.is_a?(Hyrax::Forms::FileSetForm)
+        if form.object.is_a?(Hyrax.config.file_set_form)
           object_id = form.object.in_works_ids.first
           new(object: Hyrax.query_service.find_by(id: object_id), ability: ability)
         else
@@ -51,7 +51,7 @@ module Hyrax
         # The provided form object is a FileSet.
         new(object: form.object.in_works.first, ability: ability)
       end
-    end
+    end # rubocop:enable Metrics/AbcSize
 
     attr_reader :depositor, :unauthorized_collection_managers
 
