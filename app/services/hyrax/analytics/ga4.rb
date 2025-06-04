@@ -76,7 +76,11 @@ module Hyrax
           end
 
           def account_info
-            @account_info ||= JSON.parse(account_json_string)
+            @account_info ||= if account_json_string.is_a? Hash
+                                account_json_string
+                              else
+                                JSON.parse(account_json_string)
+                              end
           end
 
           KEYS.each do |key|

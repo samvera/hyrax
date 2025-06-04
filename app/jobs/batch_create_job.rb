@@ -32,8 +32,8 @@ class BatchCreateJob < Hyrax::ApplicationJob
       title = [titles[upload_id]] if titles[upload_id]
       resource_type = Array.wrap(resource_types[upload_id]) if resource_types[upload_id]
       job_attributes = job_attributes.merge(uploaded_files: [upload_id],
-                                    title: title,
-                                    resource_type: resource_type)
+                                            title: title,
+                                            resource_type: resource_type)
       child_operation = Hyrax::Operation.create!(user: user,
                                                  operation_type: "Create Work",
                                                  parent: operation)
