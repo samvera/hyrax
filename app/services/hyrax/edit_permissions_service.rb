@@ -41,7 +41,7 @@ module Hyrax
         # (+Hyrax::Forms::FileSetForm+), +:in_works_ids+ is prepopulated onto
         # the form object itself. For +Hyrax::Forms::FileSetEditForm+, the
         # +:in_works+ method is present on the wrapped +:model+.
-        if form.object.is_a?(Hyrax::Forms::FileSetForm)
+        if form.object.is_a?(Hyrax.config.file_set_form)
           object_id = form.object.in_works_ids.first
           new(object: Hyrax.query_service.find_by(id: object_id), ability: ability)
         else
