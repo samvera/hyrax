@@ -124,7 +124,9 @@ services:
       - koppie
 
   solr:
-    image: solr:8.11
+    image: solr:9.8
+    env_file:
+      - .koppie/.env
     ports:
       - 8984:8983
     command:
@@ -132,7 +134,7 @@ services:
       - "-c"
       - "precreate-core koppie-test /opt/solr/server/configsets/hyraxconf; solr-precreate koppie /opt/solr/server/configsets/hyraxconf"
     volumes:
-      - solr_home:/var/solr/data:cached
+      - solr_home:/var/solr:cached
       - .koppie/solr/conf:/opt/solr/server/configsets/hyraxconf
     ulimits:
       nofile:
