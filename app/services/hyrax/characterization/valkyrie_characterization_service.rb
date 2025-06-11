@@ -107,13 +107,19 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
   end
 
   # Assign values of the instance properties from the metadata mapping :prop => val
+  # @todo push exceptional per-property behavior into the mapping somehow?
   # @return [Hash]
   def apply_metadata(terms)
-    terms.each_pair do |term, value|
-      property = property_for(term)
-      next if property.nil?
-
-      Array(value).each { |v| append_property_value(property, v) }
+    values_by_property(terms).each do |property, values|
+      value = if property == :mime_type
+                values.last
+              elsif [:height, :width].include?(property)
+                # keep only the max height or width
+                values.map(&:to_i).max.to_s
+              else
+                values
+              end
+      metadata.public_send("#{property}=", value)
     end
   end
 
@@ -127,13 +133,15 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
     end
   end
 
-  ##
-  # @todo push exceptional per-property behavior into the mapping somehow?
-  def append_property_value(property, value)
-    # We don't want multiple mime_types; this overwrites each time to accept last value
-    value = Array(metadata.public_send(property)) + [value] unless property == :mime_type
-    # We don't want multiple heights / widths, pick the max
-    value = value.map(&:to_i).max.to_s if property == :height || property == :width
-    metadata.public_send("#{property}=", value)
+  # Map each term to the corresponding property
+  # (multiple terms can map to the same property),
+  # and gather all values for each property
+  # @return [Hash]
+  def values_by_property(terms)
+    terms.each_with_object({}) do |(term, value), property_values|
+      next unless (property = property_for(term))
+
+      (property_values[property] ||= []).concat(Array(value))
+    end
   end
 end
