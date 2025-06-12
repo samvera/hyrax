@@ -6,7 +6,7 @@ module Hyrax
     # @api public
     # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
     class PcdmCollectionForm < Hyrax::Forms::ResourceForm # rubocop:disable Metrics/ClassLength
-      include Hyrax::FormFields(:core_metadata)
+      include Hyrax::FormFields(:core_metadata) if Hyrax.config.collection_include_metadata?
 
       BannerInfoPrepopulator = lambda do |**_options|
         self.banner_info ||= begin
@@ -62,9 +62,12 @@ module Hyrax
       # @return [Array<Symbol>] terms for display 'above-the-fold', or in the most
       #   prominent form real estate
       def primary_terms
-        _form_field_definitions
-          .select { |_, definition| definition[:primary] }
-          .keys.map(&:to_sym)
+        terms = _form_field_definitions
+                .select { |_, definition| definition[:primary] }
+                .keys.map(&:to_sym)
+
+        terms = [:schema_version] + terms if Hyrax.config.flexible?
+        terms
       end
 
       ##

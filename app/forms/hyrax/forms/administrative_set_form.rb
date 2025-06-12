@@ -22,6 +22,7 @@ module Hyrax
 
       property :title, required: true, primary: true
       property :description, primary: true
+      property :contexts, primary: true if Hyrax.config.flexible?
 
       property :creator
 
