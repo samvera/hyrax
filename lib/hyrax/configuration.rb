@@ -309,6 +309,15 @@ module Hyrax
     end
 
     ##
+    # @!attribute [rw] file_set_include_metadata
+    #   @return [Boolean] whether to include static metadata for file_sets
+    attr_accessor :file_set_include_metadata
+    def file_set_include_metadata
+      @file_set_include_metadata ||= flexible? ? false : true
+    end
+    alias file_set_include_metadata? file_set_include_metadata
+
+    ##
     # @!attribute [rw] file_set_file_service
     #   @return [Class] implementer of {Hyrax::FileSetFileService}
     attr_writer :file_set_file_service
@@ -319,6 +328,14 @@ module Hyrax
     attr_writer :fixity_service
     def fixity_service
       @fixity_service ||= Hyrax::Fixity::ActiveFedoraFixityService
+    end
+
+    # This value determines whether to use m3 flexible metadata schema or not
+    attr_writer :flexible
+    attr_reader :flexible
+    def flexible?
+      @flexible ||=
+        ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_FLEXIBLE', false))
     end
 
     # This value determines whether to use load the Freyja adapter in dassie
@@ -872,6 +889,26 @@ module Hyrax
       @admin_set_predicate ||= ::RDF::Vocab::DC.isPartOf
     end
 
+    ##
+    # @!attribute [rw] work_include_metadata
+    #   this is deprecated and will be removed in a future release
+    #   @return [Boolean] whether to include static metadata for works
+    attr_accessor :work_include_metadata
+    def work_include_metadata
+      return @work_include_metadata if @work_include_metadata
+      @work_include_metadata ||= flexible? ? false : true
+      if @work_include_metadata
+        warning = <<-WARN
+          globally including `Hyrax::Schema(:core_metadata)` at the work level is deprecated.
+          Add `include Hyrax::Schema(:core_metadata)` to your individual work classes or set
+          up flexible metadata, then set `work_include_metadata = false` in config/hyrax.rb to remove this warning.
+        WARN
+        Deprecation.warn warning
+      end
+      @work_include_metadata
+    end
+    alias work_include_metadata? work_include_metadata
+
     attr_writer :work_requires_files
     def work_requires_files?
       return true if @work_requires_files.nil?
@@ -921,6 +958,15 @@ module Hyrax
     end
 
     ##
+    # @!attribute [rw] collection_include_metadata
+    #   @return [Boolean] whether to include static metadata for collections
+    attr_accessor :collection_include_metadata
+    def collection_include_metadata
+      @collection_include_metadata ||= flexible? ? false : true
+    end
+    alias collection_include_metadata? collection_include_metadata
+
+    ##
     # @api private
     #
     # There are assumptions baked into {Wings} and tests regarding what the
@@ -963,6 +1009,15 @@ module Hyrax
 
       Hyrax::AdministrativeSet
     end
+
+    ##
+    # @!attribute [rw] admin_set_include_metadata
+    #   @return [Boolean] whether to include static metadata for admin_sets
+    attr_accessor :admin_set_include_metadata
+    def admin_set_include_metadata
+      @admin_set_include_metadata ||= flexible? ? false : true
+    end
+    alias admin_set_include_metadata? admin_set_include_metadata
 
     ##
     # @return [String] the default admin set id
