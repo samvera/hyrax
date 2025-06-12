@@ -94,7 +94,7 @@ module Hyrax
   # @see https://wiki.lyrasis.org/display/samvera/Hydra::Works+Shared+Modeling
   #   for a historical perspective.
   class Work < Hyrax::Resource
-    include Hyrax::Schema(:core_metadata)
+    include Hyrax::Schema(:core_metadata) if Hyrax.config.work_default_metadata
 
     attribute :admin_set_id,             Valkyrie::Types::ID
     attribute :member_ids,               Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
