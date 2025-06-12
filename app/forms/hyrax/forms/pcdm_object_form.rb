@@ -9,8 +9,6 @@ module Hyrax
     # Although File Sets are technically also PCDM objects, they use a separate
     # form class: +Hyrax::Forms::FileSetForm+.
     class PcdmObjectForm < Hyrax::Forms::ResourceForm
-      include Hyrax::FormFields(:core_metadata)
-
       include Hyrax::ContainedInWorksBehavior
       include Hyrax::DepositAgreementBehavior
       include Hyrax::LeaseabilityBehavior

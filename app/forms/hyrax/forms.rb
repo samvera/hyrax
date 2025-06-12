@@ -13,6 +13,7 @@ module Hyrax
     def self.PcdmObjectForm(work_class) # rubocop:disable Naming/MethodName
       Class.new(Hyrax::Forms::PcdmObjectForm) do
         self.model_class = work_class
+        include Hyrax::FormFields(:core_metadata) if work_class.ancestors.detect { |k| k.inspect == "Hyrax::Schema(core_metadata)" }
 
         ##
         # @return [String]
