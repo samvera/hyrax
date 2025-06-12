@@ -891,23 +891,32 @@ module Hyrax
 
     ##
     # @!attribute [rw] work_include_metadata
-    #   this is deprecated and will be removed in a future release
     #   @return [Boolean] whether to include static metadata for works
     attr_accessor :work_include_metadata
     def work_include_metadata
-      return @work_include_metadata if @work_include_metadata
       @work_include_metadata ||= flexible? ? false : true
-      if @work_include_metadata
+    end
+    alias work_include_metadata? work_include_metadata
+
+    ##
+    # @!attribute [rw] work_default_metadata
+    #   this is deprecated and will be removed in a future release
+    #   @return [Boolean] whether to include static metadata for works
+    attr_accessor :work_default_metadata
+    def work_default_metadata
+      return @work_default_metadata if @work_default_metadata
+      @work_default_metadata ||= flexible? ? false : true
+      if @work_default_metadata
         warning = <<-WARN
           globally including `Hyrax::Schema(:core_metadata)` at the work level is deprecated.
           Add `include Hyrax::Schema(:core_metadata)` to your individual work classes or set
-          up flexible metadata, then set `work_include_metadata = false` in config/hyrax.rb to remove this warning.
+          up flexible metadata, then set `work_default_metadata = false` in config/hyrax.rb to remove this warning.
         WARN
         Deprecation.warn warning
       end
-      @work_include_metadata
+      @work_default_metadata
     end
-    alias work_include_metadata? work_include_metadata
+    alias work_default_metadata? work_default_metadata
 
     attr_writer :work_requires_files
     def work_requires_files?
