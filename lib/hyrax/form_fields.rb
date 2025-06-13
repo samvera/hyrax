@@ -54,7 +54,15 @@ module Hyrax
       schema_name = name.to_s.camelcase
       behavior = "#{schema_name}FormFieldsBehavior".safe_constantize ||
                  "Hyrax::#{schema_name}FormFieldsBehavior".safe_constantize
-      descendant.include(behavior) if behavior
+      if behavior
+        warning = <<-WARN
+          Auto including a FormFieldsBehavior class based on name of the schema is depreciated.
+          We are removing it from Hyrax as it has proven hard to debug or trace.
+          Please include form field behaviors in your form classes directly.
+        WARN
+        Deprecation.warn warning
+        descendant.include(behavior)
+      end
     end
   end
 end
