@@ -236,14 +236,6 @@ RSpec.configure do |config|
     visit "/assets/application.js"
   end
 
-  config.after do
-    DatabaseCleaner.clean
-    # Ensuring we have a clear queue between each spec.
-    ActiveJob::Base.queue_adapter.enqueued_jobs  = []
-    ActiveJob::Base.queue_adapter.performed_jobs = []
-    User.group_service.clear
-  end
-
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.
@@ -270,6 +262,14 @@ RSpec.configure do |config|
     Warden.test_reset!
     Capybara.reset_sessions!
     page.driver.reset!
+  end
+
+  config.append_after do
+    DatabaseCleaner.clean
+    # Ensuring we have a clear queue between each spec.
+    ActiveJob::Base.queue_adapter.enqueued_jobs  = []
+    ActiveJob::Base.queue_adapter.performed_jobs = []
+    User.group_service.clear
   end
 
   config.include Capybara::RSpecMatchers, type: :input
