@@ -53,7 +53,7 @@ With `docker compose up` running, any changes you make to your cloned Hyrax code
 Any changes you make to Hyrax should be tested. You can run the full test suite using the following command:
 
 ```sh
-docker compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec"
+docker compose exec -w /app/samvera/hyrax-engine web sh -c "bundle exec rspec"
 ```
 
 Let's break down the above command:
@@ -63,8 +63,8 @@ Let's break down the above command:
 <dd>Tell docker to run the following:</dd>
 <dt><code>-w /app/samvera/hyrax-engine</code></dt>
 <dd>In the working directory "/app/samvera/hyrax-engine" (e.g. your cloned Hyrax repository)</dd>
-<dt><code>app</code></dt>
-<dd>of the container named "app"</dd>
+<dt><code>web</code></dt>
+<dd>of the container named "web"</dd>
 <dt><code>sh -c</code>
 <dd>run the following shell script</dd>
 <dt><code>"bundle exec rspec"</code></dt>
@@ -73,26 +73,26 @@ Let's break down the above command:
 
 _**Note:**_ The `bundle exec rspec` portion of the command runs the whole test suite. See the [rspec command documentation](https://github.com/rspec/rspec-core#the-rspec-command) for how to refine your test runs.
 
-#### The Docker Container Named "app"
+#### The Docker Container Named "web"
 
 As a developer, you may need to run commands against the Hyrax-based application and/or the Hyrax engine.  Examples
 of those commands are `rails db:migrate` and `rspec`.  You would run `rails db:migrate` on the Hyrax-based
 application, and `rspec` on the Hyrax engine.
 
-In the engine development `app` container, the `.dassie` test Hyrax-based application is setup as a docker
+In the engine development `web` container, the `.dassie` test Hyrax-based application is setup as a docker
 bind mount to `/app/samvera/hyrax-webapp`, and your local development copy of Hyrax (eg. the clone [samvera/hyrax](https://github.com/samvera/hyrax)) is bound to
 `/app/samvera/hyrax-engine`.  Those directories are defined as part of the [Dockerfile](Dockerfile) configuration.
                                                                                                                                  .
 What does this structure mean? Let's look at an example. The following command will list the rake tasks for the Hyrax-based application running in Docker:
 
 ```sh
-docker compose exec -w /app/samvera/hyrax-webapp app sh -c "bundle exec rake -T"
+docker compose exec -w /app/samvera/hyrax-webapp web sh -c "bundle exec rake -T"
 ```
 
 And this command lists the rake tasks for the Hyrax engine that is in Docker:
 
 ```sh
-docker compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rake -T"
+docker compose exec -w /app/samvera/hyrax-engine web sh -c "bundle exec rake -T"
 ```
 
 In the two examples, note the difference in the `-w` switch. In the first case, it's referencing the Hyrax-based application. In the latter case, it's referencing the Hyrax engine.
@@ -165,13 +165,13 @@ Currently Koppie should not be used for running specs. See [Code Changes and Tes
 
 ```sh
 docker compose -f docker-compose-koppie.yml up
-docker compose -f docker-compose-koppie.yml exec app bundle exec rails c
+docker compose -f docker-compose-koppie.yml exec web bundle exec rails c
 ```
 #### Troubleshooting Koppie
 
 If the postgres service logs show permissions errors, there may be old data from alternate versions of the postgres image. The old data volumes can deleted by using `docker compose -f docker-compose-koppie.yml down -v`
 
-Errors such as `exec /app/samvera/hyrax-entrypoint.sh: no such file or directory` in the app, sidekiq and db_migrate services may indicate an outdated cached hyrax-base image layer was used to build the koppie image. Try `docker compose -f docker-compose-koppie.yml build --no-cache`  to rebuild all the image layers.
+Errors such as `exec /app/samvera/hyrax-entrypoint.sh: no such file or directory` in the web, sidekiq and db_migrate services may indicate an outdated cached hyrax-base image layer was used to build the koppie image. Try `docker compose -f docker-compose-koppie.yml build --no-cache`  to rebuild all the image layers.
 
 It was also seen on a Windows 10 host and was resolved by using the git `--core.autocrlf` option when cloning the repo.
 
@@ -217,7 +217,7 @@ Currently Sirenia should not be used for running specs. See [Code Changes and Te
 
 ```sh
 docker compose -f docker-compose-sirenia.yml up
-docker compose -f docker-compose-sirenia.yml exec app bundle exec rails c
+docker compose -f docker-compose-sirenia.yml exec web bundle exec rails c
 ```
 
 ### Maintaining
