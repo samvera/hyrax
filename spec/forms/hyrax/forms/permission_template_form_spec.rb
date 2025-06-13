@@ -162,7 +162,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
       end
 
       before do
-        role = Sipity::Role.create(name: 'approving')
+        role = Sipity::Role.find_or_create_by(name: 'approving')
         workflow.workflow_roles.create(role: role)
         # We are testing that this workflow role is removed
         Hyrax::Workflow::PermissionGenerator.call(roles: role,
