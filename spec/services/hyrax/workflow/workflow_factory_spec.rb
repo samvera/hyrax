@@ -24,6 +24,11 @@ RSpec.describe Hyrax::Workflow::WorkflowFactory do
         .by(1)
       expect(Sipity::WorkflowResponsibility.count).to eq initial_workflow_responsibility_count
     end
+    it 'is idempotent if called more than once' do
+      deposit_action
+      factory.create(work, attributes, user)
+      expect { factory.create(work, attributes, user) }.to_not raise_error ActiveRecord::RecordNotUnique
+    end
   end
 
   describe '.create' do
