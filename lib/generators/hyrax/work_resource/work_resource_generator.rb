@@ -37,6 +37,7 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
   end
 
   def create_metadata_config
+    return unless if Hyrax.config.work_include_metadata
     template('metadata.yaml', File.join('config/metadata/', "#{file_name}.yaml"))
     return if attributes.blank?
     gsub_file File.join('config/metadata/', "#{file_name}.yaml"),
