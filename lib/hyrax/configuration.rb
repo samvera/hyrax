@@ -311,7 +311,7 @@ module Hyrax
     ##
     # @!attribute [rw] file_set_include_metadata
     #   @return [Boolean] whether to include static metadata for file_sets
-    attr_accessor :file_set_include_metadata
+    attr_writer :file_set_include_metadata
     def file_set_include_metadata
       @file_set_include_metadata ||= flexible? ? false : true
     end
@@ -332,11 +332,11 @@ module Hyrax
 
     # This value determines whether to use m3 flexible metadata schema or not
     attr_writer :flexible
-    attr_reader :flexible
-    def flexible?
+    def flexible
       @flexible ||=
         ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_FLEXIBLE', false))
     end
+    alias flexible? flexible
 
     # This value determines whether to use load the Freyja adapter in dassie
     attr_writer :valkyrie_transition
@@ -892,7 +892,7 @@ module Hyrax
     ##
     # @!attribute [rw] work_include_metadata
     #   @return [Boolean] whether to include static metadata for works
-    attr_accessor :work_include_metadata
+    attr_writer :work_include_metadata
     def work_include_metadata
       @work_include_metadata ||= flexible? ? false : true
     end
@@ -902,7 +902,7 @@ module Hyrax
     # @!attribute [rw] work_default_metadata
     #   this is deprecated and will be removed in a future release
     #   @return [Boolean] whether to include static metadata for works
-    attr_accessor :work_default_metadata
+    attr_writer :work_default_metadata
     def work_default_metadata
       return @work_default_metadata if @work_default_metadata
       @work_default_metadata ||= flexible? ? false : true
@@ -969,7 +969,7 @@ module Hyrax
     ##
     # @!attribute [rw] collection_include_metadata
     #   @return [Boolean] whether to include static metadata for collections
-    attr_accessor :collection_include_metadata
+    attr_writer :collection_include_metadata
     def collection_include_metadata
       @collection_include_metadata ||= flexible? ? false : true
     end
@@ -1022,7 +1022,7 @@ module Hyrax
     ##
     # @!attribute [rw] admin_set_include_metadata
     #   @return [Boolean] whether to include static metadata for admin_sets
-    attr_accessor :admin_set_include_metadata
+    attr_writer :admin_set_include_metadata
     def admin_set_include_metadata
       @admin_set_include_metadata ||= flexible? ? false : true
     end

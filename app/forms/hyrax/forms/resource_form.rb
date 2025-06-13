@@ -26,6 +26,7 @@ module Hyrax
         end
       end
 
+      include BasedNearFieldBehavior # this is a noop if based near is not defined on a given model
       class_attribute :model_class
 
       property :human_readable_type, writable: false
