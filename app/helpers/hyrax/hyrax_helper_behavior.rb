@@ -68,10 +68,10 @@ module Hyrax
       mailbox = UserMailbox.new(user)
       unread_notifications = mailbox.unread_count
       link_to(hyrax.notifications_path,
-              'aria-label' => mailbox.label(params[:locale]),
+              'aria-description' => mailbox.label(params[:locale]),
               class: 'notify-number nav-link') do
         capture do
-          concat tag.span('', class: 'fa fa-bell')
+          concat tag.span('', class: 'fa fa-bell', 'aria-label': t('hyrax.admin.sidebar.notifications'))
           concat "\n"
           concat tag.span(unread_notifications,
                              class: count_classes_for(unread_notifications))
