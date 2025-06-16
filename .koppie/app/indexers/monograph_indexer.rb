@@ -3,6 +3,7 @@
 # Generated via
 #  `rails generate hyrax:work_resource Monograph`
 class MonographIndexer < Hyrax::ValkyrieWorkIndexer
+  include Hyrax::Indexer(:core_metadata)
   include Hyrax::Indexer(:basic_metadata)
   include Hyrax::Indexer(:monograph)
 
