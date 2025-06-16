@@ -4,6 +4,7 @@
 #  `rails generate hyrax:work_resource <%= class_name %>`
 class <%= class_name %>Indexer < Hyrax::Indexers::PcdmObjectIndexer(<%= class_name %>)
   if Hyrax.config.work_include_metadata?
+    include Hyrax::Indexer(:core_metadata)
     include Hyrax::Indexer(:basic_metadata)
     include Hyrax::Indexer(:<%= file_name %>)
   end
