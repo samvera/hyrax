@@ -33,23 +33,24 @@ module Hyrax
     #    * use work the file_set is in
     #    No other object types are supported by this view.
     def self.build_service_object_from(form:, ability:)
-      if form.object.respond_to?(:model) && form.object.model.work?
+      obj = form.object
+      if obj.respond_to?(:model) && obj.model.work?
         # The provided form object is a work form.
-        new(object: form.object, ability: ability)
-      elsif form.object.respond_to?(:model) && form.object.model.file_set?
+        new(object: obj, ability: ability)
+      elsif obj.respond_to?(:model) && obj.model.file_set?
         # The provided form object is a FileSet form. For Valkyrie forms
         # (+Hyrax::Forms::FileSetForm+), +:in_works_ids+ is prepopulated onto
         # the form object itself. For +Hyrax::Forms::FileSetEditForm+, the
         # +:in_works+ method is present on the wrapped +:model+.
-        if form.object.is_a?(Hyrax.config.file_set_form)
-          object_id = form.object.in_works_ids.first
+        if obj.is_a?(Hyrax.config.file_set_form)
+          object_id = obj.in_works_ids.first
           new(object: Hyrax.query_service.find_by(id: object_id), ability: ability)
         else
-          new(object: form.object.model.in_works.first, ability: ability)
+          new(object: obj.model.in_works.first, ability: ability)
         end
-      elsif form.object.file_set?
+      elsif obj.file_set?
         # The provided form object is a FileSet.
-        new(object: form.object.in_works.first, ability: ability)
+        new(object: obj.in_works.first, ability: ability)
       end
     end
 
