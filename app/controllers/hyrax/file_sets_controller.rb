@@ -167,7 +167,7 @@ module Hyrax
       return unless @file_set.class == ::FileSet
       # We can tell if a Hyrax::FileSet was improperly cast because this AF method will
       # return nil since its parent is not a ActiveFedora work.
-      @file_set = @file_set.valkyrie_resource if @file_set.parent&.id.nil?
+      @file_set = @file_set.valkyrie_resource if @file_set.respond_to?(:parent) && @file_set.parent&.id.nil?
     end
 
     def parent(file_set: curation_concern)
