@@ -49,7 +49,7 @@ RSpec.describe Hyrax::Ability do
   describe "can?(:review, :submissions)", :clean_repo do
     subject { ability.can?(:review, :submissions) }
 
-    let(:role) { Sipity::Role.create(name: role_name) }
+    let(:role) { Sipity::Role.find_or_create_by(name: role_name) } # Using only create has flaky uniqueness in CI
     let(:user) { create(:user) }
     let(:permission_template) { create(:permission_template, with_active_workflow: true) }
     let(:workflow) { permission_template.active_workflow }
