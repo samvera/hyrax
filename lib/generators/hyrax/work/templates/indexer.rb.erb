@@ -7,7 +7,7 @@ class <%= class_name %>Indexer < Hyrax::WorkIndexer
 
   # Fetch remote labels for based_near. You can remove this if you don't want
   # this behavior
-  include Hyrax::IndexesLinkedMetadata
+  include Hyrax::IndexesLinkedMetadata if Hyrax.config.work_include_metadata
 
   # Uncomment this block if you want to add custom indexing behavior:
   # def generate_solr_document

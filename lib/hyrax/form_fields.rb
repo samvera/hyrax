@@ -44,6 +44,7 @@ module Hyrax
 
     private
 
+    # rubocop:disable Metrics/MethodLength
     def included(descendant)
       super
       form_field_definitions.each do |field_name, options|
@@ -54,7 +55,15 @@ module Hyrax
       schema_name = name.to_s.camelcase
       behavior = "#{schema_name}FormFieldsBehavior".safe_constantize ||
                  "Hyrax::#{schema_name}FormFieldsBehavior".safe_constantize
-      descendant.include(behavior) if behavior
+      return unless behavior
+      warning = <<-WARN
+        Auto including a FormFieldsBehavior class based on name of the schema is depreciated.
+        We are removing it from Hyrax as it has proven hard to debug or trace.
+        Please include form field behaviors in your form classes directly.
+      WARN
+      Deprecation.warn warning
+      descendant.include(behavior)
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end

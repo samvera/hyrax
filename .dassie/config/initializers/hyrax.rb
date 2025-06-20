@@ -23,7 +23,7 @@ Hyrax.config do |config|
   config.characterization_options = { ch12n_tool: ENV.fetch('CH12N_TOOL', 'fits').to_sym }
 
   # Returns a URL that resolves to an image provided by a IIIF image server
-  config.iiif_image_url_builder = lambda do |file_id, base_url, size, format|
+  config.iiif_image_url_builder = lambda do |file_id, base_url, size, _format|
     Riiif::Engine.routes.url_helpers.image_url(file_id, host: base_url, size: size)
   end
 
@@ -66,6 +66,7 @@ Hyrax.config do |config|
   # config.collection_model = 'CollectionResource'    # collection with basic metadata
   # config.admin_set_model = 'Hyrax::AdministrativeSet'
 
+  config.work_default_metadata = false
   # dassie needs legacy AF models
   # If using Frayja/Frigg then use the resource they provide
   if Hyrax.config.valkyrie_transition?
