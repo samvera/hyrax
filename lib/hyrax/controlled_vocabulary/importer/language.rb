@@ -13,7 +13,11 @@ module Hyrax
           stdout_logger.formatter = proc do |_severity, _datetime, _progname, msg|
             "#{msg}\n"
           end
-          ActiveSupport::BroadcastLogger.new(Hyrax.logger, stdout_logger)
+          if Rails.version >= '7.1'
+            ActiveSupport::BroadcastLogger.new(Hyrax.logger, stdout_logger)
+          else
+            Hyrax.logger.extend(ActiveSupport::Logger.broadcast(stdout_logger))
+          end
         end
 
         def import

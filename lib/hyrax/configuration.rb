@@ -133,8 +133,23 @@ module Hyrax
     attr_writer :analytics_reporting
     attr_reader :analytics_reporting
     def analytics_reporting?
-      @analytics_reporting ||=
+      @analytics_reporting ||= begin
+        required_env_vars = %w[
+          HYRAX_ANALYTICS_REPORTING
+          GOOGLE_ANALYTICS_ID
+          GOOGLE_ANALYTICS_PROPERTY_ID
+        ]
+
+        required_env_vars << if ENV['GOOGLE_ACCOUNT_JSON'].blank?
+                               'GOOGLE_ACCOUNT_JSON_PATH'
+                             else
+                               'GOOGLE_ACCOUNT_JSON'
+                             end
+
+        return false if required_env_vars.any? { |var| ENV.fetch(var, '').blank? }
+
         ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS_REPORTING', false))
+      end
     end
 
     # Currently supports 'google' or 'matomo'
@@ -142,7 +157,7 @@ module Hyrax
     attr_writer :analytics_provider
     def analytics_provider
       @analytics_provider ||=
-        ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'google')
+        ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'ga4')
     end
 
     ##
@@ -478,31 +493,31 @@ module Hyrax
     # Path on the local file system where derivatives will be stored
     attr_writer :derivatives_path
     def derivatives_path
-      @derivatives_path ||= ENV.fetch('HYRAX_DERIVATIVES_PATH', Rails.root.join('tmp', 'derivatives'))
+      @derivatives_path ||= Pathname.new(ENV.fetch('HYRAX_DERIVATIVES_PATH', Rails.root.join('tmp', 'derivatives')))
     end
 
     # Path on the local file system where originals will be staged before being ingested into Fedora.
     attr_writer :working_path
     def working_path
-      @working_path ||= ENV.fetch('HYRAX_UPLOAD_PATH', Rails.root.join('tmp', 'uploads'))
+      @working_path ||= Pathname.new(ENV.fetch('HYRAX_UPLOAD_PATH', Rails.root.join('tmp', 'uploads')))
     end
 
     # @todo do we use both upload_path and working path?
     # Path on the local file system where originals will be staged before being ingested into Fedora.
     attr_writer :upload_path
     def upload_path
-      @upload_path ||= ->() { ENV.fetch('HYRAX_UPLOAD_PATH') { Rails.root.join('tmp', 'uploads') } }
+      @upload_path ||= ->() { Pathname.new(ENV.fetch('HYRAX_UPLOAD_PATH') { Rails.root.join('tmp', 'uploads') }) }
     end
 
     attr_writer :cache_path
     def cache_path
-      @cache_path ||= ->() { ENV.fetch('HYRAX_CACHE_PATH') { Rails.root.join('tmp', 'cache') } }
+      @cache_path ||= ->() { Pathname.new(ENV.fetch('HYRAX_CACHE_PATH') { Rails.root.join('tmp', 'cache') }) }
     end
 
     # Path on the local file system where where log and banners will be stored.
     attr_writer :branding_path
     def branding_path
-      @branding_path ||= ENV.fetch('HYRAX_BRANDING_PATH', Rails.root.join('public', 'branding'))
+      @branding_path ||= Pathname.new(ENV.fetch('HYRAX_BRANDING_PATH', Rails.root.join('public', 'branding')))
     end
 
     # @!endgroup

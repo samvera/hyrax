@@ -9,7 +9,7 @@ Bundler.require(*Rails.groups)
 module Dassie
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
+    config.load_defaults 6.1
     config.add_autoload_paths_to_load_path = true
 
     # Settings in config/environments/* take precedence over those specified here.
