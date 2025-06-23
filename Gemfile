@@ -18,7 +18,6 @@ group :development, :test do
   gem 'pry' unless ENV['CI']
   gem 'pry-byebug' unless ENV['CI']
   gem 'rspec'
-  gem 'rspec-mocks', '< 3.13.3' # remove after https://github.com/rspec/rspec/pull/214 is released
   gem 'ruby-prof', require: false
   gem 'semaphore_test_boosters'
   gem 'simplecov', require: false
