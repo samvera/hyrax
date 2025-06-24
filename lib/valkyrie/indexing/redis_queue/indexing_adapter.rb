@@ -69,16 +69,14 @@ module Valkyrie
           solr_indexer = Valkyrie::IndexingAdapter.find(:solr_index)
 
           size.times do
-            begin
-              @set = queue.connection.zpopmin(index_error_name, 1)
-              return [] if @set.blank?
-              # we have to load these one at a time because find_all_by_id gets duplicates during wings transition
-              resource = Hyrax.query_service.find_by(id: @set[0])
-              solr_indexer.save(resource: resource)
-            rescue
-              # if anything goes wrong, try to requeue the items
-              @set.each { |id, _time| queue.connection.zadd(index_error_name + "-twice", Time.now.to_i, id) }
-            end
+            @set = queue.connection.zpopmin(index_error_name, 1)
+            return [] if @set.blank?
+            # we have to load these one at a time because find_all_by_id gets duplicates during wings transition
+            resource = Hyrax.query_service.find_by(id: @set[0])
+            solr_indexer.save(resource: resource)
+          rescue
+            # if anything goes wrong, try to requeue the items
+            @set.each { |id, _time| queue.connection.zadd(index_error_name + "-twice", Time.now.to_i, id) }
           end
           solr_indexer.connection.commit
         end
@@ -102,16 +100,14 @@ module Valkyrie
         def delete_error_queue(size: 200)
           @set = []
           size.times do
-            begin
-              @set = connection.zpopmin(delete_error_name, 1)
-              return [] if @set.blank?
-              solr_indexer = Valkyrie::IndexingAdapter.find(:solr_index)
-              solr_indexer.connection.delete_by_id @set[0].to_s, { softCommit: true }
-              solr_indexer.connection.commit
-            rescue
-              # if anything goes wrong, try to requeue the items
-              @set.each { |id, _time| connection.zadd(delete_error_name, Time.now.to_i, id) }
-            end
+            @set = connection.zpopmin(delete_error_name, 1)
+            return [] if @set.blank?
+            solr_indexer = Valkyrie::IndexingAdapter.find(:solr_index)
+            solr_indexer.connection.delete_by_id @set[0].to_s, { softCommit: true }
+            solr_indexer.connection.commit
+          rescue
+            # if anything goes wrong, try to requeue the items
+            @set.each { |id, _time| connection.zadd(delete_error_name, Time.now.to_i, id) }
           end
         end
 
