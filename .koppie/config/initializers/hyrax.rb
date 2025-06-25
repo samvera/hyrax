@@ -139,7 +139,7 @@ Hyrax.config do |config|
   config.iiif_image_server = true
 
   # Returns a URL that resolves to an image provided by a IIIF image server
-  config.iiif_image_url_builder = lambda do |file_id, base_url, size, format|
+  config.iiif_image_url_builder = lambda do |file_id, base_url, size, _format|
     Riiif::Engine.routes.url_helpers.image_url(file_id, host: base_url, size: size)
   end
   # config.iiif_image_url_builder = lambda do |file_id, base_url, size, format|
@@ -258,6 +258,7 @@ Hyrax.config do |config|
   # config.admin_set_model = 'AdminSet'
   config.admin_set_model = 'Hyrax::AdministrativeSet'
 
+  config.work_default_metadata = false
   # When your application is ready to use the valkyrie index instead of the one
   # maintained by active fedora, you will need to set this to true. You will
   # also need to update your Blacklight configuration.
@@ -337,6 +338,5 @@ Rails.application.reloader.to_prepare do
     Hyrax.query_service.custom_queries.register_query_handler(handler)
   end
 end
-
 
 ActiveFedora.init(solr_config_path: Rails.root.join('config', 'solr.yml'))

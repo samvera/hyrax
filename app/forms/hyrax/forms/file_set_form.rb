@@ -5,12 +5,10 @@ module Hyrax
     ##
     # A form for +Hyrax::FileSet+s.
     class FileSetForm < Hyrax::Forms::ResourceForm
-      include Hyrax::FormFields(:core_metadata)
-
-      # The fields in +:file_set_metadata+ were hardcoded into this form in a
-      # previous version of Hyrax, but ideally in the future this metadata will
-      # be configurable.
-      include Hyrax::FormFields(:file_set_metadata)
+      if Hyrax.config.file_set_include_metadata?
+        include Hyrax::FormFields(:core_metadata)
+        include Hyrax::FormFields(:file_set_metadata)
+      end
 
       include Hyrax::DepositAgreementBehavior
       include Hyrax::ContainedInWorksBehavior

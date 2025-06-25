@@ -3,6 +3,9 @@
 # Generated via
 #  `rails generate hyrax:work_resource <%= class_name %>`
 class <%= class_name %> < Hyrax::Work
-  include Hyrax::Schema(:basic_metadata)
-  include Hyrax::Schema(:<%= file_name %>)
+  if Hyrax.config.work_include_metadata?
+    include Hyrax::Schema(:core_metadata) unless Hyrax.config.work_default_metadata?
+    include Hyrax::Schema(:basic_metadata)
+    include Hyrax::Schema(:<%= file_name %>)
+  end
 end
