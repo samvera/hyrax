@@ -12,5 +12,6 @@
  *
  *= require_tree .
  *= require dataTables.bootstrap4
+ *= require 'bulkrax/application'
  *= require_self
  */
