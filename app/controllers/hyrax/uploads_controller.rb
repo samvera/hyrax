@@ -23,22 +23,25 @@ module Hyrax
     def upload_with_chunking
       @upload = Hyrax::UploadedFile.find(params[:id])
       unpersisted_upload = Hyrax::UploadedFile.new(file: params[:files].first, user: current_user)
-
-      # Check if CONTENT-RANGE header is present
       content_range = request.headers['CONTENT-RANGE']
-      return @upload.file = unpersisted_upload.file if content_range.nil?
 
-      # deal with chunks
-      current_size = @upload.file.size
-      begin_of_chunk = content_range[/\ (.*?)-/, 1].to_i # "bytes 100-999999/1973660678" will return '100'
-
-      # Add the following chunk to the incomplete upload
-      if @upload.file.present? && begin_of_chunk == current_size
-        `sync #{@upload.file.path}`
-        File.open(@upload.file.path, "ab") { |f| f.write(params[:files].first.read) }
-        `sync #{@upload.file.path}`
+      if content_range
+        handle_chunk(content_range, unpersisted_upload.file)
       else
         @upload.file = unpersisted_upload.file
+      end
+    end
+
+    def handle_chunk(content_range, chunk)
+      current_size = @upload.file.size
+      begin_of_chunk = content_range[/\ (.*?)-/, 1].to_i
+
+      if @upload.file.present? && begin_of_chunk == current_size
+        `sync #{@upload.file.path}`
+        File.open(@upload.file.path, "ab") { |f| f.write(chunk.read) }
+        `sync #{@upload.file.path}`
+      else
+        @upload.file = chunk
       end
     end
   end
