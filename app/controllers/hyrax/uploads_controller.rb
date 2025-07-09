@@ -34,7 +34,9 @@ module Hyrax
 
       # Add the following chunk to the incomplete upload
       if @upload.file.present? && begin_of_chunk == current_size
+        `sync #{@upload.file.path}`
         File.open(@upload.file.path, "ab") { |f| f.write(params[:files].first.read) }
+        `sync #{@upload.file.path}`
       else
         @upload.file = unpersisted_upload.file
       end
