@@ -33,13 +33,19 @@ module Hyrax
     end
 
     def handle_chunk(content_range, chunk)
-      current_size = @upload.file.size
+      file_path = @upload.file.path
+
+      current_size = 0
+      if file_path && File.exist?(file_path)
+        File.open(file_path, "r") { |f| current_size = f.size }
+      end
+
       begin_of_chunk = content_range[/\ (.*?)-/, 1].to_i
 
       if @upload.file.present? && begin_of_chunk == current_size
-        `sync #{@upload.file.path}`
-        File.open(@upload.file.path, "ab") { |f| f.write(chunk.read) }
-        `sync #{@upload.file.path}`
+        `sync #{file_path}`
+        File.open(file_path, "ab") { |f| f.write(chunk.read) }
+        `sync #{file_path}`
       else
         @upload.file = chunk
       end
