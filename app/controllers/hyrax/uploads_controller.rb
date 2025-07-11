@@ -35,17 +35,20 @@ module Hyrax
     def handle_chunk(content_range, chunk)
       file_path = @upload.file.path
 
+      # In a multi-pod environment with a shared filesystem (like NFS), attribute
+      # caching can cause `File.size` to return a stale value. Opening the file
+      # for reading forces a metadata refresh, ensuring we get the correct size
+      # without reading the entire file into memory.
       current_size = 0
-      if file_path && File.exist?(file_path)
-        File.open(file_path, "r") { |f| current_size = f.size }
-      end
+      File.open(file_path, "r") { |f| current_size = f.size } if file_path && File.exist?(file_path)
 
       begin_of_chunk = content_range[/\ (.*?)-/, 1].to_i
 
       if @upload.file.present? && begin_of_chunk == current_size
-        `sync #{file_path}`
-        File.open(file_path, "ab") { |f| f.write(chunk.read) }
-        `sync #{file_path}`
+        File.open(file_path, "ab") do |f|
+          f.write(chunk.read)
+          f.fsync
+        end
       else
         @upload.file = chunk
       end
