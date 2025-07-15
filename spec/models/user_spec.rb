@@ -88,7 +88,6 @@ RSpec.describe User, type: :model do
   it "has social attributes" do
     expect(user).to respond_to(:twitter_handle)
     expect(user).to respond_to(:facebook_handle)
-    expect(user).to respond_to(:googleplus_handle)
     expect(user).to respond_to(:linkedin_handle)
     expect(user).to respond_to(:orcid)
   end

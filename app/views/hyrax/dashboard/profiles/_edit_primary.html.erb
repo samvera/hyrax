@@ -46,13 +46,6 @@
     </div>
   </div><!-- .form-group -->
 
-  <div class="form-group row">
-    <%= f.label :googleplus_handle, t(".google_handle").html_safe, class: 'col-4 col-form-label' %>
-    <div class="col-8">
-       <%= f.text_field :googleplus_handle, class: "form-control" %>
-    </div>
-  </div><!-- .form-group -->
-
   <%= render 'trophy_edit', trophies: @trophies %>
 
   <%= f.button t(".save_profile").html_safe, type: 'submit', class: "btn btn-primary" %>
