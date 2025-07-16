@@ -14,7 +14,7 @@ module Hyrax
 
         properties_hash = current_profile['properties']
         properties_hash.each do |itemprop, prop|
-          label = prop['display_label']['default'] || itemprop.titleize
+          label = prop['display_label']&.fetch('default', nil) || itemprop.titleize
           indexing = prop['indexing']
           next if indexing.nil?
 
