@@ -27,10 +27,11 @@ module Hyrax
         if @flexible_schema.persisted?
           redirect_to metadata_profiles_path, notice: 'Flexible Metadata Profile was successfully created.'
         else
-          redirect_to metadata_profiles_path, alert: @flexible_schema.errors.messages.to_s
+          error_message = @flexible_schema.errors.messages.values.flatten.join(', ')
+          redirect_to metadata_profiles_path, flash: { error: error_message }
         end
       rescue => e
-        redirect_to metadata_profiles_path, alert: e.message
+        redirect_to metadata_profiles_path, flash: { error: e.message }
         nil
       end
     end
