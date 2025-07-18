@@ -113,7 +113,7 @@ module Hyrax
       query += "{!term f=generic_type_sim}#{generic_type}" if generic_type
 
       Hyrax::SolrService
-        .post(q: query, rows: 10_000)
+        .post(query, rows: 10_000)
         .fetch('response')
         .fetch('docs')
     end
