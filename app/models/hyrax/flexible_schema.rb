@@ -16,8 +16,9 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   end
 
   def self.create_default_schema
+    m3_profile_path = Hyrax.config.default_m3_profile_path || Rails.root.join('config', 'metadata_profiles', 'm3_profile.yaml')
     Hyrax::FlexibleSchema.first_or_create do |f|
-      f.profile = YAML.safe_load_file(Rails.root.join('config', 'metadata_profiles', 'm3_profile.yaml'))
+      f.profile = YAML.safe_load_file(m3_profile_path)
     end
   end
 

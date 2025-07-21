@@ -1195,6 +1195,9 @@ module Hyrax
       @simple_schema_loader_config_search_paths ||= [Rails.root, Hyrax::Engine.root]
     end
 
+    # Path to the m3 profile
+    attr_accessor :default_m3_profile_path
+
     private
 
     # @param [Symbol, #to_s] model_name - symbol representing the model
