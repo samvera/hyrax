@@ -24,11 +24,13 @@ module Hyrax
 
     def copy_access
       authorize! :edit, curation_concern
+
+      #CopyAccessJob.perform_later(curation_concern)
       # copy visibility
       VisibilityCopyJob.perform_later(curation_concern)
 
       # copy permissions
-      InheritPermissionsJob.perform_later(curation_concern)
+      #InheritPermissionsJob.perform_later(curation_concern)
       redirect_to [main_app, curation_concern], notice: I18n.t("hyrax.upload.change_access_flash_message")
     end
   end
