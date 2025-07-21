@@ -44,6 +44,8 @@ module Hyrax
         embargo_manager.copy_embargo_to(target: file_set)
         lease_manager.copy_lease_to(target: file_set)
 
+        Hyrax::AccessControlList
+          .copy_permissions(source: source, target: file_set)
         file_set.permission_manager.acl.save
         persister.save(resource: file_set)
       end
