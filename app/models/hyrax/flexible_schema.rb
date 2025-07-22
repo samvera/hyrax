@@ -105,11 +105,47 @@ class Hyrax::FlexibleSchema < ApplicationRecord
 
   def values_map(values)
     values['type'] = lookup_type(values['range'])
-    values['form']&.transform_keys!('multi_value' => 'multiple')
-    values['predicate'] = values['property_uri']
+
+    # Normalize form configuration keys and determine multiplicity
+    if values['form']
+      # Rename `multi_value` key to `multiple` (legacy support)
+      if values['form'].key?('multi_value')
+        values['form']['multiple'] = values['form'].delete('multi_value')
+      end
+
+      if values['form'].key?('data_type')
+        values['form']['multiple'] = values['form'].delete('data_type') == 'array'
+      end
+
+      # Set required flag from cardinality if not already provided
+      if (card = values['cardinality']) && card['minimum']
+        required_flag = card['minimum'].to_i > 0
+        if values['form']
+          values['form']['required'] = required_flag
+        else
+          values['form'] = { 'required' => required_flag }
+        end
+      end
+    end
+
+    values['predicate']  = values['property_uri']
     values['index_keys'] = values['indexing']
-    values['multiple'] = values['multi_value']
-    values['context'] = values['available_on']['context']
+
+    # Determine if the field should accept multiple values.
+    values['multiple'] =
+      if values.key?('data_type')
+        values['data_type'] == 'array'
+      elsif values.key?('multi_value')
+        values['multi_value']
+      elsif (card = values['cardinality'])
+        # When `cardinality` is present, treat maximum > 1 or undefined as multiple
+        max = card['maximum']
+        max.nil? || max.to_i > 1
+      else
+        false
+      end
+
+    values['context'] = values.dig('available_on', 'context')
     values
   end
 
