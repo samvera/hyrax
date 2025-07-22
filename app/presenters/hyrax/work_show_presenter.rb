@@ -37,7 +37,7 @@ module Hyrax
         index_keys = property_details["indexing"]
         next unless index_keys
 
-        multi_value = property_details.dig("multi_value")
+        multi_value = property_details['multiple']
 
         next if self.class.method_defined?(method_name) && solr_document.respond_to?(method_name)
         # Define the method on the SolrDocument class

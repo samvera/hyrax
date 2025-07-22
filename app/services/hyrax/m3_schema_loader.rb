@@ -45,7 +45,7 @@ module Hyrax
     def fallback_schema_for(_schema_name)
       { "title" =>
         { "cardinality" => { "minimum" => 1 },
-          "multi_value" => true,
+          "data_type" => "array",
           "controlled_values" => { "format" => "http://www.w3.org/2001/XMLSchema#string", "sources" => ["null"] },
           "definition" =>
           { "default" =>
@@ -53,7 +53,7 @@ module Hyrax
           "display_label" => { "default" => "Title" },
           "index_documentation" => "displayable, searchable",
           "indexing" => ["title_sim", "title_tesim"],
-          "form" => { "required" => true, "primary" => true, "multiple" => true },
+          "form" => { "primary" => true, "multiple" => true },
           "mappings" =>
           { "metatags" => "twitter:title, og:title",
             "mods_oai_pmh" => "mods:titleInfo/mods:title",
