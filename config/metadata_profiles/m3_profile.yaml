@@ -283,7 +283,7 @@ properties:
       class:
       - Hyrax::AdministrativeSet
       - Hyrax::PcdmCollection
-      - Hyrax::Worc
+      - Hyrax::Work
     cardinality:
       minimum: 0
       maximum: 1
