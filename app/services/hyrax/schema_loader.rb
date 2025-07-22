@@ -84,25 +84,25 @@ module Hyrax
       ##
       # @return [Dry::Types::Type]
       def type
-        # Determine whether this attribute allows multiple values.
-        multiple_flag = if config.key?('multiple')
-                          config['multiple']
-                        elsif config.key?('data_type')
-                          config['data_type'] == 'array'
-                        elsif (card = config['cardinality'])
-                          # Treat as multiple when maximum is greater than 1 or not specified
-                          max = card['maximum']
-                          max.nil? || max.to_i > 1
-                        else
-                          false
-                        end
+        collection_type = multiple? ? Valkyrie::Types::Array.of(type_for(config['type'])) : type_for(config['type'])
+        collection_type.constructor { |v| Array(v).select(&:present?) }
+      end
 
-        collection_type = if multiple_flag
-                            Valkyrie::Types::Array.constructor { |v| Array(v).select(&:present?) }
-                          else
-                            Identity
-                          end
-        collection_type.of(type_for(config['type']))
+      ##
+      # @return [Boolean]
+      def multiple?
+        # Determine whether this attribute allows multiple values.
+        if config.key?('multiple')
+          config['multiple']
+        elsif config.key?('data_type')
+          config['data_type'] == 'array'
+        elsif (card = config['cardinality'])
+          # Treat as multiple when maximum is greater than 1 or not specified
+          max = card['maximum']
+          max.nil? || max.to_i > 1
+        else
+          false
+        end
       end
 
       ##
