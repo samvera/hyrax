@@ -52,7 +52,9 @@ RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
   describe '#wipe!' do
     it 'deletes the index and delete queues' do
       expect(connection).to receive(:del).with(index_queue_name)
+      expect(connection).to receive(:del).with("#{index_queue_name}-error")
       expect(connection).to receive(:del).with(delete_queue_name)
+      expect(connection).to receive(:del).with("#{delete_queue_name}-error")
       adapter.wipe!
     end
   end
@@ -69,12 +71,15 @@ RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
   describe '#index_queue' do
     let(:set) { [resource.id.to_s] }
     let(:solr_indexing_adapter) { instance_double(Valkyrie::Indexing::Solr::IndexingAdapter) }
+    let(:solr_connection) { instance_double(RSolr::Client) }
 
     before do
       allow(connection).to receive(:zpopmin).with(index_queue_name, 200).and_return(set.map { |id| [id, Time.current.to_i] })
-      allow(Hyrax.query_service).to receive(:find_many_by_ids).with(ids: set).and_return(resources)
+      allow(Hyrax.query_service).to receive(:find_by).with(id: resource.id.to_s).and_return(resource)
       allow(Valkyrie::IndexingAdapter).to receive(:find).with(:solr_index).and_return(solr_indexing_adapter)
       allow(solr_indexing_adapter).to receive(:save_all)
+      allow(solr_indexing_adapter).to receive(:connection).and_return(solr_connection)
+      allow(solr_connection).to receive(:commit)
     end
 
     it 'indexes the resources' do
@@ -89,9 +94,9 @@ RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
 
       it 'requeues the items' do
         set.each do |r|
-          expect(connection).to receive(:zadd).with(index_queue_name, Time.current.to_i, r)
+          expect(connection).to receive(:zadd).with("#{index_queue_name}-error", Time.current.to_i, r)
         end
-        adapter.index_queue
+        expect { adapter.index_queue }.to raise_error(StandardError)
       end
     end
   end
@@ -124,9 +129,9 @@ RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
 
       it 'requeues the items' do
         set.each do |r|
-          expect(connection).to receive(:zadd).with(delete_queue_name, Time.current.to_i, r)
+          expect(connection).to receive(:zadd).with("#{delete_queue_name}-error", Time.current.to_i, r)
         end
-        adapter.delete_queue
+        expect { adapter.delete_queue }.to raise_error(StandardError)
       end
     end
   end
