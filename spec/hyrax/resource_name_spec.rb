@@ -19,6 +19,19 @@ RSpec.describe Hyrax::ResourceName do
   context 'when a legacy resource is registered with Wings', :active_fedora do
     let(:work_class) { Hyrax::Test::BookResource }
 
+    before do
+      allow(Hyrax.config).to receive(:disable_wings).and_return(false)
+
+      # Load Wings components directly since wings.rb has a guard clause
+      unless defined?(Wings)
+        require 'wings/model_registry'
+        # Define the Wings module if it doesn't exist
+        module Wings; end unless defined?(Wings)
+      end
+
+      Wings::ModelRegistry.register(Hyrax::Test::BookResource, Hyrax::Test::Book)
+    end
+
     it 'uses the legacy route key' do
       expect(name.route_key).to eq 'test_books'
     end
