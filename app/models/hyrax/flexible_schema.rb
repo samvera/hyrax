@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Metrics/ClassLength
 class Hyrax::FlexibleSchema < ApplicationRecord
   serialize :profile, coder: YAML
   serialize :contexts, coder: YAML
@@ -105,48 +106,46 @@ class Hyrax::FlexibleSchema < ApplicationRecord
 
   def values_map(values)
     values['type'] = lookup_type(values['range'])
+    values['predicate'] = values['property_uri']
+    values['index_keys'] = values['indexing']
+    values['context'] = values.dig('available_on', 'context')
+    values['multiple'] = determine_multiplicity(values)
 
-    # Normalize form configuration keys and determine multiplicity
-    if values['form']
-      # Rename `multi_value` key to `multiple` (legacy support)
-      if values['form'].key?('multi_value')
-        values['form']['multiple'] = values['form'].delete('multi_value')
-      end
+    normalize_form_attributes(values)
 
-      if values['form'].key?('data_type')
-        values['form']['multiple'] = values['form'].delete('data_type') == 'array'
-      end
+    values
+  end
 
-      # Set required flag from cardinality if not already provided
-      if (card = values['cardinality']) && card['minimum']
-        required_flag = card['minimum'].to_i > 0
-        if values['form']
-          values['form']['required'] = required_flag
-        else
-          values['form'] = { 'required' => required_flag }
-        end
-      end
+  def determine_multiplicity(values)
+    return values['data_type'] == 'array' if values.key?('data_type')
+    return values['multi_value'] if values.key?('multi_value')
+
+    if (card = values['cardinality'])
+      max = card['maximum']
+      return max.nil? || max.to_i > 1
     end
 
-    values['predicate']  = values['property_uri']
-    values['index_keys'] = values['indexing']
+    false
+  end
 
-    # Determine if the field should accept multiple values.
-    values['multiple'] =
-      if values.key?('data_type')
-        values['data_type'] == 'array'
-      elsif values.key?('multi_value')
-        values['multi_value']
-      elsif (card = values['cardinality'])
-        # When `cardinality` is present, treat maximum > 1 or undefined as multiple
-        max = card['maximum']
-        max.nil? || max.to_i > 1
-      else
-        false
-      end
+  def normalize_form_attributes(values)
+    return unless values['form']
 
-    values['context'] = values.dig('available_on', 'context')
-    values
+    # Rename `multi_value` key to `multiple` (legacy support)
+    values['form']['multiple'] = values['form'].delete('multi_value') if values['form'].key?('multi_value')
+
+    values['form']['multiple'] = values['form'].delete('data_type') == 'array' if values['form'].key?('data_type')
+
+    assign_required_flag(values)
+  end
+
+  def assign_required_flag(values)
+    return unless (card = values['cardinality']) && card['minimum']
+
+    return if values['form'].key?('required')
+
+    required_flag = card['minimum'].to_i.positive?
+    values['form']['required'] = required_flag
   end
 
   def lookup_type(range)
@@ -158,3 +157,4 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
