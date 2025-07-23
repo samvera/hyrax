@@ -40,9 +40,9 @@ RSpec.describe Hyrax::QueuedJobBehavior do
 
     it 'schedules the job to run again in 5 minutes' do
       expect(including_class).to receive(:set).with(wait_until: kind_of(ActiveSupport::TimeWithZone))
-      expect(including_class).to receive(:perform_later).with('arg1', 'arg2')
+      expect(including_class).to receive(:perform_later).with(foo: 'arg1', bar: 'arg2')
 
-      instance.send(:requeue, 'arg1', 'arg2')
+      instance.send(:requeue, foo: 'arg1', bar: 'arg2')
     end
 
     it 'uses the class requeue_frequency if set' do
