@@ -26,6 +26,7 @@ module Hyrax
         end
       end
 
+      include BasedNearFieldBehavior
       class_attribute :model_class
 
       property :human_readable_type, writable: false
