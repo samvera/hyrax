@@ -42,7 +42,7 @@ RSpec.describe 'collection_type', type: :feature do
     end
   end
 
-  describe 'create collection type' do
+  describe 'create collection type', :clean_repo do
     let(:title) { 'Test Type' }
     let(:description) { 'Description for collection type we are testing.' }
 
@@ -63,7 +63,18 @@ RSpec.describe 'collection_type', type: :feature do
       checks_for_standard_form_options
       fill_in_and_save
 
+      # Verify first collection type was created successfully
+      expect(page).to have_selector "input#collection_type_title[value='#{title}']"
+      expect(Hyrax::CollectionType.find_by(title: title)).to be_present
+
       visit '/admin/collection_types'
+      
+      # Verify we're on the correct page and user has proper permissions
+      expect(page).to have_content('Collection Types')
+      expect(page).to have_current_path('/admin/collection_types')
+      expect(page).to have_content(title) # Verify first collection type appears in list
+      expect(page).to have_link('Create new collection type', wait: 10)
+      
       click_link 'Create new collection type'
 
       expect(page).to have_content 'Create New Collection Type'
@@ -72,7 +83,7 @@ RSpec.describe 'collection_type', type: :feature do
 
       fill_in_and_save
 
-      # Confirm error message is displayed.
+      # Confirm error message is displayed and form is in error state
       expect(page).to have_content 'Save was not successful because title has already been taken, and machine_id has already been taken.'
     end
   end
