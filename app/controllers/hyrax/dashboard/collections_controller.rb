@@ -71,6 +71,7 @@ module Hyrax
       def show
         # @todo: remove this unused assignment in 4.0.0
         @banner_file = presenter.banner_file if collection_type.brandable?
+        @admin_sets_for_select = helpers.available_admin_sets_for_creating_works(ability: current_ability)
 
         presenter
         query_collection_members
