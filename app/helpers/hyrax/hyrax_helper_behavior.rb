@@ -21,6 +21,30 @@ module Hyrax
     include Hyrax::FacetsHelper
 
     ##
+    # @return [Array<String>] the list of admin sets available for creating works for this user
+    def available_admin_sets_for_creating_works(ability:)
+      return [] unless Flipflop.assign_admin_set?
+      return [] unless ability
+
+      source_ids = Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability:, source_type: 'admin_set')
+
+      admin_sets_list = Hyrax.query_service.find_many_by_ids(ids: source_ids).map do |source|
+        [source.title.first, source.id]
+      end
+
+      # Sorts the default admin set to be first, then the rest by title.
+      admin_sets_list.sort do |a, b|
+        if Hyrax::AdminSetCreateService.default_admin_set?(id: a[1])
+          -1
+        elsif Hyrax::AdminSetCreateService.default_admin_set?(id: b[1])
+          1
+        else
+          a[0] <=> b[0]
+        end
+      end
+    end
+
+    ##
     # @return [Array<String>] the list of all user groups
     def available_user_groups(ability:)
       return ::User.group_service.role_names if ability.admin?

@@ -24,7 +24,7 @@ module Hyrax
         add_breadcrumb t(:'hyrax.admin.sidebar.works'), hyrax.my_works_path
         managed_works_count
         @create_work_presenter = create_work_presenter_class.new(current_user)
-        @admin_sets_for_select = admin_sets_for_select
+        @admin_sets_for_select = helpers.available_admin_sets_for_creating_works(ability: current_ability)
         super
       end
 
@@ -47,25 +47,6 @@ module Hyrax
 
       def managed_works_count
         @managed_works_count = Hyrax::Works::ManagedWorksService.managed_works_count(scope: self)
-      end
-
-      def admin_sets_for_select
-        source_ids = Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability: current_ability, source_type: 'admin_set')
-
-        admin_sets_list = Hyrax.query_service.find_many_by_ids(ids: source_ids).map do |source|
-          [source.title.first, source.id]
-        end
-
-        # Sorts the default admin set to be first, then the rest by title.
-        admin_sets_list.sort do |a, b|
-          if Hyrax::AdminSetCreateService.default_admin_set?(id: a[1])
-            -1
-          elsif Hyrax::AdminSetCreateService.default_admin_set?(id: b[1])
-            1
-          else
-            a[0] <=> b[0]
-          end
-        end
       end
     end
   end
