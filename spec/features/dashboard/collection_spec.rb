@@ -683,6 +683,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
     context 'adding a new works to a collection', js: true do
       before do
+        Hyrax::AdminSetCreateService.find_or_create_default_admin_set
+        admin_set_b
         collection1 # create collections by referencing them
         collection2
         sign_in user
@@ -693,6 +695,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       it "preselects the collection we are adding works to and adds the new work" do
         visit "/dashboard/collections/#{collection1.id}"
         click_link 'Deposit new work through this collection'
+        expect(page).to have_select('admin_set_id', selected: 'Default Admin Set')
+        select('Set B', from: 'admin_set_id')
         choose "payload_concern", option: "GenericWork"
         click_button 'Create work'
 
@@ -720,6 +724,11 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         # verify new work was added to collection1
         visit "/dashboard/collections/#{collection1.id}"
         expect(page).to have_content("New Work for Collection")
+
+        # Verify work belongs to correct admin set
+        click_link "New Work for Collection", match: :first
+        expect(page).to have_content("New Work for Collection")
+        expect(page).to have_content("Set B")
       end
     end
   end
