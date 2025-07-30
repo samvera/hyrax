@@ -68,13 +68,13 @@ RSpec.describe 'collection_type', type: :feature do
       expect(Hyrax::CollectionType.find_by(title: title)).to be_present
 
       visit '/admin/collection_types'
-      
+
       # Verify we're on the correct page and user has proper permissions
       expect(page).to have_content('Collection Types')
       expect(page).to have_current_path('/admin/collection_types')
       expect(page).to have_content(title) # Verify first collection type appears in list
       expect(page).to have_link('Create new collection type', wait: 10)
-      
+
       click_link 'Create new collection type'
 
       expect(page).to have_content 'Create New Collection Type'
