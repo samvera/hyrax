@@ -4,13 +4,13 @@
   <meta name="twitter:creator" content="<%= @presenter.tweeter %>" />
   <meta property="og:site_name" content="<%= application_name %>" />
   <meta property="og:type" content="object" />
-  <meta property="og:title" content="<%= @presenter.title.first %>" />
-  <meta property="og:description" content="<%= @presenter.description.first.truncate(200) rescue @presenter.title.first %>" />
+  <meta property="og:title" content="<%= Array(@presenter.title).first %>" />
+  <meta property="og:description" content="<%= Array(@presenter.description).first&.truncate(200) || Array(@presenter.title).first %>" />
   <meta property="og:image" content="<%= @presenter.download_url %>" />
   <meta property="og:url" content="<%= polymorphic_url([main_app, @presenter]) %>" />
-  <meta name="twitter:data1" content="<%= @presenter.keyword.join(', ') %>" />
+  <meta name="twitter:data1" content="<%= Array(@presenter.keyword).join(', ') %>" />
   <meta name="twitter:label1" content="Keywords" />
-  <meta name="twitter:data2" content="<%= @presenter.rights_statement.first %>" />
+  <meta name="twitter:data2" content="<%= Array(@presenter.rights_statement).first %>" />
   <meta name="twitter:label2" content="Rights Statement" />
 <% end %>
 
