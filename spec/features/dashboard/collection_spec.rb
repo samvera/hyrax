@@ -10,8 +10,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   let(:solr_model_field) { 'has_model_ssim' }
 
   # Setting Title on admin sets to avoid false positive matches with collections.
-  let(:admin_set_a) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_permission_template, user: admin_user, title: ['Set A'], description: 'A') }
-  let(:admin_set_b) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_permission_template, user: user, title: ['Set B'], edit_users: [user.user_key]) }
+  let(:admin_set_a) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_active_workflow, user: admin_user, title: ['Set A'], description: 'A') }
+  let(:admin_set_b) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_active_workflow, user: user, title: ['Set B'], edit_users: [user.user_key]) }
   let(:collection1) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: user, creator: 'A User', collection_type: collection_type) }
   let(:collection2) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: user, creator: 'A User', collection_type: collection_type) }
   let(:collection3) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: admin_user, creator: 'An Admin', collection_type: collection_type) }
