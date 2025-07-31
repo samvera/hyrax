@@ -108,12 +108,10 @@ module Hyrax
 
     def query_docs(generic_type: nil, ids: object.member_ids)
       query = "{!terms f=id}#{ids.join(',')}"
-      query += "{!term f=generic_type_si}#{generic_type}" if generic_type
-      # works created via ActiveFedora use the _sim field
-      query += "{!term f=generic_type_sim}#{generic_type}" if generic_type
+      query = "(generic_type_si:#{generic_type} OR generic_type_sim:#{generic_type}) AND #{query}" if generic_type
 
       Hyrax::SolrService
-        .post(q: query, rows: 10_000)
+        .post(query, rows: 10_000)
         .fetch('response')
         .fetch('docs')
     end
