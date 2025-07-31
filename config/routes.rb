@@ -273,7 +273,7 @@ Hyrax::Engine.routes.draw do
     get action, controller: 'static', action: action, as: action
   end
 
-  if ENV.fetch('HYRAX_FLEXIBLE', false)
+  if ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_FLEXIBLE', false))
     # Metadata profiles routes
     resources :metadata_profiles, except: [:update, :show, :destroy] do
       collection { post :import }
