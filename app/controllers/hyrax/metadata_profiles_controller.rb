@@ -40,7 +40,13 @@ module Hyrax
     def export
       @schema = Hyrax::FlexibleSchema.find(params[:metadata_profile_id])
       filename = "metadata-profile-v.#{@schema.version}.yml"
-      yaml_data = @schema.profile.to_hash.to_yaml(indentation: 2)
+
+      profile_hash = @schema.profile.deep_dup
+
+      profile_hash['profile']['version'] = @schema.version
+      profile_hash['profile']['date_modified'] = Time.current.strftime('%Y-%m-%d')
+
+      yaml_data = profile_hash.to_yaml(indentation: 2)
       send_data yaml_data, filename: filename, type: "application/yaml"
     end
 
