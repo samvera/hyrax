@@ -10,8 +10,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   let(:solr_model_field) { 'has_model_ssim' }
 
   # Setting Title on admin sets to avoid false positive matches with collections.
-  let(:admin_set_a) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_permission_template, user: admin_user, title: ['Set A'], description: 'A') }
-  let(:admin_set_b) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_permission_template, user: user, title: ['Set B'], edit_users: [user.user_key]) }
+  let(:admin_set_a) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_active_workflow, user: admin_user, title: ['Set A'], description: 'A') }
+  let(:admin_set_b) { FactoryBot.valkyrie_create(:hyrax_admin_set, :with_active_workflow, user: user, title: ['Set B'], edit_users: [user.user_key]) }
   let(:collection1) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: user, creator: 'A User', collection_type: collection_type) }
   let(:collection2) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: user, creator: 'A User', collection_type: collection_type) }
   let(:collection3) { FactoryBot.valkyrie_create(:hyrax_collection, :public, user: admin_user, creator: 'An Admin', collection_type: collection_type) }
@@ -683,6 +683,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
     context 'adding a new works to a collection', js: true do
       before do
+        Hyrax::AdminSetCreateService.find_or_create_default_admin_set
+        admin_set_b
         collection1 # create collections by referencing them
         collection2
         sign_in user
@@ -693,6 +695,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       it "preselects the collection we are adding works to and adds the new work" do
         visit "/dashboard/collections/#{collection1.id}"
         click_link 'Deposit new work through this collection'
+        expect(page).to have_select('admin_set_id', selected: 'Default Admin Set')
+        select('Set B', from: 'admin_set_id')
         choose "payload_concern", option: "GenericWork"
         click_button 'Create work'
 
@@ -720,6 +724,11 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         # verify new work was added to collection1
         visit "/dashboard/collections/#{collection1.id}"
         expect(page).to have_content("New Work for Collection")
+
+        # Verify work belongs to correct admin set
+        click_link "New Work for Collection", match: :first
+        expect(page).to have_content("New Work for Collection")
+        expect(page).to have_content("Set B")
       end
     end
   end

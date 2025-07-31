@@ -15,6 +15,7 @@ FactoryBot.define do
 
     transient do
       with_permission_template { false }
+      with_active_workflow { false }
       user { FactoryBot.create(:user) }
       access_grants { [] }
       with_index { true }
@@ -34,6 +35,12 @@ FactoryBot.define do
 
       if evaluator.with_permission_template
         template = Hyrax::PermissionTemplate.find_or_create_by(source_id: admin_set.id.to_s)
+
+        if evaluator.with_active_workflow
+          workflow = create(:workflow, active: true, permission_template: template)
+          create(:workflow_action, workflow: workflow) # Need to create a single action that can be taken
+        end
+
         evaluator.access_grants.each do |grant|
           Hyrax::PermissionTemplateAccess.find_or_create_by(permission_template_id: template.id,
                                                             agent_type: grant[:agent_type],
@@ -57,6 +64,11 @@ FactoryBot.define do
          agent_id: user.user_key,
          access: Hyrax::PermissionTemplateAccess::MANAGE }]
     end
+  end
+
+  trait :with_active_workflow do
+    with_active_workflow { true }
+    with_permission_template
   end
 
   factory :invalid_hyrax_admin_set, class: 'Hyrax::AdministrativeSet' do

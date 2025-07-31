@@ -39,8 +39,13 @@ export default class SelectWorkType {
   // for a single work.  So, given the value of 'this.type', return the appropriate
   // path.
   destination() {
-      let admin_set_id = this.form.find('select').val()
       let url = this.form.find('input[type="radio"]:checked').data(this.type)
-      return url + "&admin_set_id=" + admin_set_id
+      const select = this.form.find('select')
+
+      // Only append admin_set_id if the select exists and has a value
+      if (select.length && select.val()) {
+          url = url + "&admin_set_id=" + select.val()
+      }
+      return url
   }
 }
