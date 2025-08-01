@@ -1,0 +1,12 @@
+version: 2.1
+
+# Run a no-op workflow so CircleCI reports as a green check in pull requests.
+# This file is needed until all active hyrax branches have moved off CircleCI
+# and the integration can be deactivated.
+jobs:
+  build:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run: echo "Hyrax tests have moved to Github Actions."
