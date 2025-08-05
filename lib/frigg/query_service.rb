@@ -11,5 +11,6 @@ module Frigg
     def custom_queries
       @custom_queries ||= Frigg::CustomQueryContainer.new(query_service: self)
     end
+    alias custom_query custom_queries
   end
 end
