@@ -1,3 +1,8 @@
+---
+name: Hyrax Issue
+about: Use this template for Hyrax issues
+---
+
 ### Descriptive summary
 
 Present tense short summary (30 words or less)
