@@ -40,7 +40,7 @@ module Hyrax
   # @see Hyrax::CustomQueries::Navigators::CollectionMembers#find_members_of
   #
   class PcdmCollection < Hyrax::Resource
-    include Hyrax::Schema(:core_metadata)
+    include Hyrax::Schema(:core_metadata) if Hyrax.config.collection_include_metadata?
 
     attribute :collection_type_gid, Valkyrie::Types::String
     attribute :member_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)

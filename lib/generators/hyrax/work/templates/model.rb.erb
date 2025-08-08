@@ -10,5 +10,9 @@ class <%= class_name %> < ActiveFedora::Base
 
   # This must be included at the end, because it finalizes the metadata
   # schema (by adding accepts_nested_attributes)
-  include ::Hyrax::BasicMetadata
+  if Hyrax.config.work_include_metadata?
+    include ::Hyrax::Schema(:core_metadata) unless Hyrax.config.work_default_metadata?
+    include ::Hyrax::BasicMetadata
+   end
+
 end

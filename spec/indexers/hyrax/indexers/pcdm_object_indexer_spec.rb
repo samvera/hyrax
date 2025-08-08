@@ -4,7 +4,11 @@ require 'hyrax/specs/shared_specs'
 
 RSpec.describe Hyrax::Indexers::PcdmObjectIndexer do
   let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }
-  let(:indexer_class) { described_class }
+  let(:indexer_class) do
+    Class.new(described_class) do
+      include Hyrax::Indexer(:core_metadata)
+    end
+  end
 
   it_behaves_like 'a Work indexer'
 

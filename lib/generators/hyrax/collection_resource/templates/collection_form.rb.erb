@@ -3,5 +3,5 @@
 # Generated via
 #  `rails generate hyrax:collection_resource <%= class_name %>`
 class <%= class_name %>Form < Hyrax::Forms::PcdmCollectionForm
-  include Hyrax::FormFields(:<%= file_name %>)
+  include Hyrax::FormFields(:<%= file_name %>) if Hyrax.config.collection_include_metadata?
 end
