@@ -64,7 +64,7 @@ module Freyja
       fedora_record = Hyrax.query_service.find_by(id: resource.id)
       wings_service.delete(resource: fedora_record) if fedora_record
       resource
-    rescue Valkyrie::Persistence::ObjectNotFoundError
+    rescue
       # If the resource is not found, we return the original resource
       resource
     end
