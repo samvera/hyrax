@@ -71,7 +71,7 @@ module Hyrax
     #
     # @api private
     def initialize(schema_name, schema_loader: Hyrax::Schema.default_schema_loader, schema_version: '1', contexts: [])
-      @name = schema_name.to_s
+      @name = schema_name.respond_to?(:name) ? schema_name.name : schema_name.to_s
       @version = schema_version
       @schema_loader = schema_loader
       @contexts = contexts
