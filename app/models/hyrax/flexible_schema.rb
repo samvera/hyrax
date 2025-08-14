@@ -94,8 +94,21 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     profile['classes'].keys.each do |class_name|
       @class_names[class_name] = {}
     end
+    
+    @class_names['AdminSet'] = {} unless @class_names.key?('AdminSet')
+    
     profile['properties'].each do |key, values|
-      values['available_on']['class'].each do |property_class|
+      available_classes = values.dig('available_on', 'class')
+      
+      next unless available_classes
+      
+      if available_classes.include?('AdminSetResource') && !available_classes.include?('AdminSet')
+        available_classes << 'AdminSet'
+      end
+      
+      available_classes.each do |property_class|
+        @class_names[property_class] ||= {}
+        
         # map some m3 items to what Hyrax expects
         values = values_map(values)
         @class_names[property_class][key] = values
