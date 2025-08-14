@@ -57,7 +57,7 @@ module Freyja
     # @param [Valkyrie::Resource] resource
     # @return [Valkyrie::Resource] the deleted resource
     def delete(resource:)
-     # call super to delete from postgres
+      # call super to delete from postgres
       super(resource: resource)
       # After deletion, we need to ensure that the resource is no longer found
       # because it could still exist in fedora.
