@@ -95,18 +95,25 @@ class Hyrax::FlexibleSchema < ApplicationRecord
       @class_names[class_name] = {}
     end
     
+    # Pre-initialize AdminSet to prevent NoMethodError when auto-including it below
+    # This ensures the hash key exists before we try to assign properties to it
     @class_names['AdminSet'] = {} unless @class_names.key?('AdminSet')
     
     profile['properties'].each do |key, values|
       available_classes = values.dig('available_on', 'class')
       
+      # Skip properties that don't define available_on classes
       next unless available_classes
       
+      # Auto-include AdminSet when AdminSetResource is present for Active Fedora -> Valkyrie migration compatibility
+      # This handles cases where AF AdminSet objects are converted to AdminSetResource but the schema lookup
+      # uses class.to_s ("AdminSet") instead of class.name ("AdminSetResource")
       if available_classes.include?('AdminSetResource') && !available_classes.include?('AdminSet')
         available_classes << 'AdminSet'
       end
       
       available_classes.each do |property_class|
+        # Ensure dynamically added classes are properly initialized in the hash
         @class_names[property_class] ||= {}
         
         # map some m3 items to what Hyrax expects
