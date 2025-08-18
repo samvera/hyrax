@@ -78,6 +78,8 @@ Hyrax.config do |config|
     config.admin_set_model = 'AdminSet'
     config.file_set_model = '::FileSet'
   end
+
+  config.use_valkyrie = false
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"
