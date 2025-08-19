@@ -149,7 +149,7 @@ module Hyrax
     private
 
     def ensure_valkyrie_object
-      return unless curation_concern.respond_to?(:wings?) && curation_concern.wings?
+      return unless wings_backed?
 
       form = work_form_service.build(curation_concern, current_ability, self)
       result = transactions['change_set.update_work'].call(form)
@@ -160,6 +160,10 @@ module Hyrax
         Rails.logger.error "Valkyrie lazy migration failed for work #{curation_concern.id}."
         Rails.logger.error result.failure
       end
+    end
+
+    def wings_backed?
+      curation_concern.respond_to?(:wings?) && curation_concern.wings?
     end
 
     def load_curation_concern
