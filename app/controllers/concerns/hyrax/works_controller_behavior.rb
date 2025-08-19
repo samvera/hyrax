@@ -158,7 +158,7 @@ module Hyrax
         @curation_concern = result.value!
       else
         Rails.logger.error "Valkyrie lazy migration failed for work #{curation_concern.id}."
-        Rails.logger.error result.failure
+        Rails.logger.error "Valkyrie lazy migration failed for work #{curation_concern.id}: #{result.failure}"
       end
     end
 
