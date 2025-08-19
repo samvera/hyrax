@@ -35,6 +35,7 @@ module Hyrax
     class_methods do
       def curation_concern_type=(curation_concern_type)
         load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern, except: [:show, :file_manager, :inspect_work, :manifest]
+        before_action :ensure_valkyrie_object, only: :edit
 
         # Load the fedora resource to get the etag.
         # No need to authorize for the file manager, because it does authorization via the presenter.
@@ -146,6 +147,20 @@ module Hyrax
     end
 
     private
+
+    def ensure_valkyrie_object
+      return unless curation_concern.respond_to?(:wings?) && curation_concern.wings?
+
+      form = work_form_service.build(curation_concern, current_ability, self)
+      result = transactions['change_set.update_work'].call(form)
+
+      if result.success?
+        @curation_concern = result.value!
+      else
+        Rails.logger.error "Valkyrie lazy migration failed for work #{curation_concern.id}."
+        Rails.logger.error result.failure
+      end
+    end
 
     def load_curation_concern
       if Hyrax.config.disable_wings
