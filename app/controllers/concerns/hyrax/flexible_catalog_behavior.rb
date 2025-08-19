@@ -65,7 +65,7 @@ module Hyrax
       end
 
       def facetable?(indexing, itemprop)
-        indexing.include?('facetable') || indexing.include?("#{itemprop}_sim")
+        indexing.include?('facetable')
       end
 
       def remove_old_properties!(previous_properties, current_properties)
