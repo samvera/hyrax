@@ -53,7 +53,7 @@ class JobIoWrapper < ApplicationRecord
   end
 
   def initialize(attributes = {})
-    @use_valkyrie = attributes.delete(:use_valkyrie)
+    @use_valkyrie = attributes&.delete(:use_valkyrie)
     @use_valkyrie = Hyrax.config.use_valkyrie? if @use_valkyrie.nil?
     super(attributes)
   end
