@@ -30,13 +30,9 @@ module Hyrax
       end
 
       def terms
-        return Hyrax::Forms::BatchEditForm.terms
         # we can only edit a fixed set of terms in batch edit mode
         # this avoids the problem of trying to edit terms that are not common to all works types.
-        [:creator, :contributor, :description,
-        :keyword, :resource_type, :license, :publisher, :date_created,
-        :subject, :language, :identifier, :based_near,
-        :related_url]
+        return Hyrax::Forms::BatchEditForm.terms
       end
 
       attr_reader :batch_document_ids
