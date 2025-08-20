@@ -32,7 +32,7 @@ module Hyrax
       def terms
         # we can only edit a fixed set of terms in batch edit mode
         # this avoids the problem of trying to edit terms that are not common to all works types.
-        return Hyrax::Forms::BatchEditForm.terms
+        Hyrax::Forms::BatchEditForm.terms
       end
 
       attr_reader :batch_document_ids
