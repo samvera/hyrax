@@ -125,6 +125,7 @@ module Valkyrie
         def list_delete_errors
           connection.zrange(delete_queue_name + "-error", 0, -1, with_scores: true)
         end
+
         private
 
         def persist(resources)
