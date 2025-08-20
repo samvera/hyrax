@@ -72,7 +72,7 @@ module Hyrax
       ##
       # @return [Enumerable<Symbol>]
       def index_keys
-        config.fetch('index_keys', [])&.map(&:to_sym) || []
+        (config.fetch('indexing', nil) || config.fetch('index_keys', []))&.reject { |k| ['facetable', 'stored_searchable', 'admin_only'].include?(k) }&.map(&:to_sym) || []
       end
 
       ##
