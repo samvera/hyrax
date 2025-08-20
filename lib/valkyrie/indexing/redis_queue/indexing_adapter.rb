@@ -61,7 +61,7 @@ module Valkyrie
           raise
         end
 
-       # If a batch fails, try running them one at a time to get down to just records that really fail
+        # If a batch fails, try running them one at a time to get down to just records that really fail
         def index_error_queue(size: 200)
           size.times do
             set = connection.zpopmin(index_queue_name + "-error", 1)
@@ -125,6 +125,7 @@ module Valkyrie
         def list_delete_errors
           connection.zrange(delete_queue_name + "-error", 0, -1, with_scores: true)
         end
+
         private
 
         def persist(resources)
