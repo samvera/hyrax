@@ -16,6 +16,7 @@
 //
 // Required by Blacklight
 //= require jquery3
+//= require jquery-ui
 //= require rails-ujs
 //= require popper
 //= require twitter/typeahead
@@ -25,6 +26,7 @@
 //= require blacklight/blacklight
 //= require blacklight_gallery
 
+//= require bulkrax/application
 //= require_tree .
 //= require hyrax
 
