@@ -10,11 +10,7 @@ module Hyrax
       include Hyrax::PermissionBehavior
 
       self.required_fields = []
-      self.model_class = Hyrax.primary_work_type
-
-      # Terms that need to exclude from batch edit
-      class_attribute :terms_excluded
-      self.terms_excluded = [:abstract, :label, :source]
+      self.model_class = Valkyrie.config.resource_class_resolver.call(Hyrax.primary_work_type.to_s)
 
       # Contains a list of titles of all the works in the batch
       attr_accessor :names
@@ -34,18 +30,7 @@ module Hyrax
       end
 
       def terms
-        self.class.terms
-      end
-
-      def self.terms
-        return Hyrax::Forms::BatchEditForm.terms if model_class < ActiveFedora::Base
-
-        terms_primary = definitions.select { |_, definition| definition[:primary] }
-                                   .keys.map(&:to_sym)
-        terms_secondary = definitions.select { |_, definition| definition[:display] && !definition[:primary] }
-                                     .keys.map(&:to_sym)
-
-        (terms_primary + terms_secondary) - terms_excluded
+        Hyrax::Forms::BatchEditForm.terms
       end
 
       attr_reader :batch_document_ids
