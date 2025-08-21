@@ -150,15 +150,12 @@ module Hyrax
 
     def ensure_migrated_object
       return unless wings_backed?
-
       form = work_form_service.build(curation_concern, current_ability, self)
       result = transactions['change_set.update_work'].call(form)
 
-      if result.success?
-        @curation_concern = result.value!
-      else
-        raise "Valkyrie lazy migration failed for work #{curation_concern.id}: #{result.failure}"
-      end
+      raise "Valkyrie lazy migration failed for work #{curation_concern.id}: #{result.failure}" unless result.success?
+
+      @curation_concern = result.value!
     end
 
     def wings_backed?
