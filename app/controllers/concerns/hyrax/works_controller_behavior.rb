@@ -149,7 +149,7 @@ module Hyrax
     private
 
     def ensure_migrated_object
-      return unless wings_backed?
+      return unless wings_backed? && Hyrax.config.flexible?
       form = work_form_service.build(curation_concern, current_ability, self)
       result = transactions['change_set.update_work'].call(form)
 
