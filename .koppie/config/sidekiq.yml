@@ -1,6 +1,8 @@
 ---
 :queues:
   - [ingest, 4]
+  - [import, 2]
+  - [export, 2]
   - [batch, 2]
   - [default, 1]
 
