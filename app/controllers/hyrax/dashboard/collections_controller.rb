@@ -6,6 +6,7 @@ module Hyrax
       include Blacklight::AccessControls::Catalog
       include Blacklight::Base
       include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
+      include Hyrax::EnsureMigratedBehavior
 
       configure_blacklight do |config|
         config.search_builder_class = Hyrax::Dashboard::CollectionsSearchBuilder
@@ -185,17 +186,11 @@ module Hyrax
       private
 
       def ensure_migrated_collection
-        return unless wings_backed? && Hyrax.config.flexible?
-
-        result = transactions['change_set.update_collection'].call(form)
-
-        raise "Valkyrie lazy migration failed for collection #{@collection.id}: #{result.failure}" unless result.success?
-
-        @collection = result.value!
-      end
-
-      def wings_backed?
-        @collection.respond_to?(:wings?) && @collection.wings?
+        @collection = ensure_migrated(
+          resource: @collection,
+          form: form,
+          transaction_key: 'change_set.update_collection'
+        )
       end
 
       def create_active_fedora_collection

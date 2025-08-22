@@ -7,6 +7,7 @@ module Hyrax
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
     include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
+    include Hyrax::EnsureMigratedBehavior
 
     included do
       with_themed_layout :decide_layout
@@ -149,13 +150,13 @@ module Hyrax
     private
 
     def ensure_migrated_object
-      return unless wings_backed? && Hyrax.config.flexible?
       form = work_form_service.build(curation_concern, current_ability, self)
-      result = transactions['change_set.update_work'].call(form)
 
-      raise "Valkyrie lazy migration failed for work #{curation_concern.id}: #{result.failure}" unless result.success?
-
-      @curation_concern = result.value!
+      @curation_concern = ensure_migrated(
+        resource: curation_concern,
+        form: form,
+        transaction_key: 'change_set.update_work'
+      )
     end
 
     def wings_backed?
