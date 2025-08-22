@@ -25,19 +25,26 @@ module Hyrax
 
     ##
     # @param resource [Valkyrie::Resource] the resource to check
-    # @param form [ChangeSet] the change set form object for the resource
     # @param transaction_key [String] the key for the update transaction
     #
     # @return [Valkyrie::Resource] the migrated resource if migration was needed,
     #   otherwise the original resource.
-    def ensure_migrated(resource:, form:, transaction_key:)
-      return resource unless Hyrax.config.flexible? && resource.respond_to?(:wings?) && resource.wings?
+    def ensure_migrated(resource:, transaction_key:)
+      return resource unless Hyrax.config.flexible? && wings_backed?(resource)
 
+      # Create a minimal form object to run the transaction.
+      # We can't use the controller's form because it may fail to build
+      # for a Wings-backed object, creating a circular dependency.
+      form = Hyrax::Forms::ResourceForm.for(resource: resource)
       result = transactions[transaction_key].call(form)
 
       raise "Valkyrie lazy migration failed for #{resource.class} #{resource.id}: #{result.failure}" unless result.success?
 
       result.value!
+    end
+
+    def wings_backed?(resource)
+      resource.respond_to?(:wings?) && resource.wings?
     end
   end
 end

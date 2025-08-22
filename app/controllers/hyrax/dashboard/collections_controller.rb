@@ -5,7 +5,7 @@ module Hyrax
     class CollectionsController < Hyrax::My::CollectionsController
       include Blacklight::AccessControls::Catalog
       include Blacklight::Base
-      include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
+      include Hyrax::FlexibleSchemaBehavior
       include Hyrax::EnsureMigratedBehavior
 
       configure_blacklight do |config|
@@ -186,11 +186,17 @@ module Hyrax
       private
 
       def ensure_migrated_collection
+        # We need to know if a migration is going to happen, because if it is,
+        # we need to reset the memoized form.
+        needs_migration = wings_backed?(@collection)
+
         @collection = ensure_migrated(
           resource: @collection,
-          form: form,
           transaction_key: 'change_set.update_collection'
         )
+
+        # If a migration happened, the memoized @form is now stale.
+        @form = nil if needs_migration
       end
 
       def create_active_fedora_collection

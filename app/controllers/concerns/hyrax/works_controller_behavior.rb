@@ -150,17 +150,10 @@ module Hyrax
     private
 
     def ensure_migrated_object
-      form = work_form_service.build(curation_concern, current_ability, self)
-
       @curation_concern = ensure_migrated(
         resource: curation_concern,
-        form: form,
         transaction_key: 'change_set.update_work'
       )
-    end
-
-    def wings_backed?
-      curation_concern.respond_to?(:wings?) && curation_concern.wings?
     end
 
     def load_curation_concern
