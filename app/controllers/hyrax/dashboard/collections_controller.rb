@@ -5,7 +5,8 @@ module Hyrax
     class CollectionsController < Hyrax::My::CollectionsController
       include Blacklight::AccessControls::Catalog
       include Blacklight::Base
-      include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
+      include Hyrax::FlexibleSchemaBehavior
+      include Hyrax::EnsureMigratedBehavior
 
       configure_blacklight do |config|
         config.search_builder_class = Hyrax::Dashboard::CollectionsSearchBuilder
@@ -44,6 +45,8 @@ module Hyrax
       load_and_authorize_resource except: [:index, :create],
                                   instance_name: :collection,
                                   class: Hyrax.config.collection_model
+
+      before_action :ensure_migrated_collection, only: :edit
 
       def deny_collection_access(exception)
         if exception.action == :edit
@@ -181,6 +184,20 @@ module Hyrax
       end
 
       private
+
+      def ensure_migrated_collection
+        # We need to know if a migration is going to happen, because if it is,
+        # we need to reset the memoized form.
+        needs_migration = wings_backed?(@collection)
+
+        @collection = ensure_migrated(
+          resource: @collection,
+          transaction_key: 'change_set.update_collection'
+        )
+
+        # If a migration happened, the memoized @form is now stale.
+        @form = nil if needs_migration
+      end
 
       def create_active_fedora_collection
         # Coming from the UI, a collection type gid should always be present.  Coming from the API, if a collection type gid is not specified,

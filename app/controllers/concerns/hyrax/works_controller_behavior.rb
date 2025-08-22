@@ -7,6 +7,7 @@ module Hyrax
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
     include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
+    include Hyrax::EnsureMigratedBehavior
 
     included do
       with_themed_layout :decide_layout
@@ -35,6 +36,7 @@ module Hyrax
     class_methods do
       def curation_concern_type=(curation_concern_type)
         load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern, except: [:show, :file_manager, :inspect_work, :manifest]
+        before_action :ensure_migrated_object, only: :edit
 
         # Load the fedora resource to get the etag.
         # No need to authorize for the file manager, because it does authorization via the presenter.
@@ -146,6 +148,13 @@ module Hyrax
     end
 
     private
+
+    def ensure_migrated_object
+      @curation_concern = ensure_migrated(
+        resource: curation_concern,
+        transaction_key: 'change_set.update_work'
+      )
+    end
 
     def load_curation_concern
       if Hyrax.config.disable_wings

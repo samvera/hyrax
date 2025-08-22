@@ -6,11 +6,13 @@ module Hyrax
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
     include Hyrax::Breadcrumbs
-    include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
+    include Hyrax::FlexibleSchemaBehavior
+    include Hyrax::EnsureMigratedBehavior
 
     before_action :authenticate_user!, except: [:show, :citation, :stats]
     load_and_authorize_resource class: Hyrax.config.file_set_class
     before_action :build_breadcrumbs, only: [:show, :edit, :stats]
+    before_action :ensure_migrated_file_set, only: :edit
     before_action do
       blacklight_config.track_search_session = false
     end
@@ -90,6 +92,20 @@ module Hyrax
     def citation; end
 
     private
+
+    def ensure_migrated_file_set
+      # We need to know if a migration is going to happen, because if it is,
+      # we need to reset the memoized form.
+      needs_migration = wings_backed?(@file_set)
+
+      @file_set = ensure_migrated(
+        resource: @file_set,
+        transaction_key: 'change_set.update_file_set'
+      )
+
+      # If a migration happened, the memoized @form is now stale.
+      @form = nil if needs_migration
+    end
 
     ##
     # @api public
