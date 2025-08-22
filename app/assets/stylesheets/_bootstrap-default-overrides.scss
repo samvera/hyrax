@@ -31,3 +31,9 @@ $link-hover-decoration: none !default;
     }
   }
 }
+
+// Fixes layout issues on the batch edit form
+#descriptions_display .row,
+#permissions_display .row {
+  display: block;
+}

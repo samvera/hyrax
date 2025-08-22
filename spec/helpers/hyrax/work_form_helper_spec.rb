@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'hyrax/specs/shared_specs'
 
 RSpec.describe Hyrax::WorkFormHelper do
   describe '.form_tabs_for' do
