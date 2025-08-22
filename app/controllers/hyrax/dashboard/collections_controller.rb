@@ -45,6 +45,8 @@ module Hyrax
                                   instance_name: :collection,
                                   class: Hyrax.config.collection_model
 
+      before_action :ensure_migrated_collection, only: :edit
+
       def deny_collection_access(exception)
         if exception.action == :edit
           redirect_to(url_for(action: 'show'), alert: 'You do not have sufficient privileges to edit this document')
@@ -181,6 +183,20 @@ module Hyrax
       end
 
       private
+
+      def ensure_migrated_collection
+        return unless wings_backed? && Hyrax.config.flexible?
+
+        result = transactions['change_set.update_collection'].call(form)
+
+        raise "Valkyrie lazy migration failed for collection #{@collection.id}: #{result.failure}" unless result.success?
+
+        @collection = result.value!
+      end
+
+      def wings_backed?
+        @collection.respond_to?(:wings?) && @collection.wings?
+      end
 
       def create_active_fedora_collection
         # Coming from the UI, a collection type gid should always be present.  Coming from the API, if a collection type gid is not specified,
