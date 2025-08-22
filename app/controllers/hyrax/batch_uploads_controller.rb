@@ -80,6 +80,8 @@ module Hyrax
     def create_update_job(klass)
       operation = BatchCreateOperation.create!(user: current_user,
                                                operation_type: "Batch Create")
+      # Make sure we have the correct model name for the resource
+      klass = Valkyrie.config.resource_class_resolver.call(klass).to_s
       # ActionController::Parameters are not serializable, so cast to a hash
       BatchCreateJob.perform_later(current_user,
                                    params[:title].permit!.to_h,
