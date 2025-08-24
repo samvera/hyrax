@@ -1,132 +1,142 @@
 # frozen_string_literal: true
-require 'rails_helper'
-require 'valkyrie/indexing/redis_queue/indexing_adapter'
+module Valkyrie
+  module Indexing
+    module RedisQueue
+      class IndexingAdapter
+        ##
+        # @!attribute [r] connection
+        #   @return [RSolr::Client]
+        attr_writer :connection
+        attr_accessor :index_queue_name, :delete_queue_name
 
-RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
-  let(:connection) { instance_double(Redis) }
-  let(:index_queue_name) { 'toindex' }
-  let(:delete_queue_name) { 'todelete' }
-  let(:adapter) { described_class.new(connection: connection, index_queue_name: index_queue_name, delete_queue_name: delete_queue_name) }
-  let(:resource) { FactoryBot.valkyrie_create(:hyrax_resource) }
-  let(:resources) { [resource] }
-
-  before do
-    Timecop.freeze(Time.current)
-  end
-
-  after do
-    Timecop.return
-  end
-
-  describe '#initialize' do
-    it 'sets the connection, index_queue_name, and delete_queue_name' do
-      expect(adapter.connection).to eq(connection)
-      expect(adapter.index_queue_name).to eq(index_queue_name)
-      expect(adapter.delete_queue_name).to eq(delete_queue_name)
-    end
-  end
-
-  describe '#save' do
-    it 'persists the resource to the index queue' do
-      expect(connection).to receive(:zadd).with(index_queue_name, Time.current.to_i, resource.id.to_s)
-      adapter.save(resource: resource)
-    end
-  end
-
-  describe '#save_all' do
-    it 'persists multiple resources to the index queue' do
-      resources.map do |r|
-        expect(connection).to receive(:zadd).with(index_queue_name, Time.current.to_i, r.id.to_s)
-      end
-      adapter.save_all(resources: resources)
-    end
-  end
-
-  describe '#delete' do
-    it 'adds the resource ID to the delete queue' do
-      expect(connection).to receive(:zadd).with(delete_queue_name, Time.current.to_i, resource.id.to_s)
-      adapter.delete(resource: resource)
-    end
-  end
-
-  describe '#wipe!' do
-    it 'deletes the index and delete queues' do
-      expect(connection).to receive(:del).with(index_queue_name)
-      expect(connection).to receive(:del).with(delete_queue_name)
-      adapter.wipe!
-    end
-  end
-
-  describe '#reset!' do
-    it 'resets the connection to the default connection' do
-      default_connection = instance_double(Redis)
-      allow(Hyrax.config).to receive(:redis_connection).and_return(default_connection)
-      adapter.reset!
-      expect(adapter.connection).to eq(default_connection)
-    end
-  end
-
-  describe '#index_queue' do
-    let(:set) { [resource.id.to_s] }
-    let(:solr_indexing_adapter) { instance_double(Valkyrie::Indexing::Solr::IndexingAdapter) }
-
-    before do
-      allow(connection).to receive(:zpopmin).with(index_queue_name, 200).and_return(set.map { |id| [id, Time.current.to_i] })
-      allow(Hyrax.query_service).to receive(:find_many_by_ids).with(ids: set).and_return(resources)
-      allow(Valkyrie::IndexingAdapter).to receive(:find).with(:solr_index).and_return(solr_indexing_adapter)
-      allow(solr_indexing_adapter).to receive(:save_all)
-    end
-
-    it 'indexes the resources' do
-      expect(solr_indexing_adapter).to receive(:save_all).with(resources: resources)
-      adapter.index_queue
-    end
-
-    context 'when an error occurs' do
-      before do
-        allow(solr_indexing_adapter).to receive(:save_all).and_raise(StandardError)
-      end
-
-      it 'requeues the items' do
-        set.each do |r|
-          expect(connection).to receive(:zadd).with(index_queue_name, Time.current.to_i, r)
+        ##
+        # @param connection [RSolr::Client] The RSolr connection to index to.
+        def initialize(connection: nil, index_queue_name: 'toindex', delete_queue_name: 'todelete')
+          @connection = connection
+          @index_queue_name = index_queue_name
+          @delete_queue_name = delete_queue_name
         end
-        adapter.index_queue
-      end
-    end
-  end
 
-  describe '#delete_queue' do
-    let(:set) { [resource.id.to_s] }
-    let(:solr_indexing_adapter) { instance_double(Valkyrie::Indexing::Solr::IndexingAdapter) }
-    let(:solr_connection) { instance_double(RSolr::Client) }
-
-    before do
-      allow(connection).to receive(:zpopmin).with(delete_queue_name, 200).and_return(set.map { |id| [id, Time.current.to_i] })
-      allow(Valkyrie::IndexingAdapter).to receive(:find).with(:solr_index).and_return(solr_indexing_adapter)
-      allow(solr_indexing_adapter).to receive(:connection).and_return(solr_connection)
-      allow(solr_connection).to receive(:delete_by_id)
-      allow(solr_connection).to receive(:commit)
-    end
-
-    it 'deletes the resources from Solr' do
-      set.each do |id|
-        expect(solr_connection).to receive(:delete_by_id).with(id.to_s, { softCommit: true })
-      end
-      expect(solr_connection).to receive(:commit)
-      adapter.delete_queue
-    end
-
-    context 'when an error occurs' do
-      before do
-        allow(solr_connection).to receive(:delete_by_id).and_raise(StandardError)
-      end
-
-      it 'requeues the items' do
-        set.each do |r|
-          expect(connection).to receive(:zadd).with(delete_queue_name, Time.current.to_i, r)
+        def connection
+          @connection ||= default_connection
         end
-        adapter.delete_queue
+
+        def save(resource:)
+          persist([resource])
+        end
+
+        def save_all(resources:)
+          persist(resources)
+        end
+
+        # Deletes a Solr Document using the ID
+        # @return [Array<Valkyrie::Resource>] resources which have been deleted from Solr
+        def delete(resource:)
+          connection.zadd(delete_queue_name, Time.current.to_i, resource.id.to_s)
+        end
+
+        # Delete the Solr index of all Documents
+        def wipe!
+          connection.del(index_queue_name)
+          connection.del(index_queue_name + "-error")
+          connection.del(delete_queue_name)
+          connection.del(delete_queue_name + "-error")
+        end
+
+        def reset!
+          self.connection = default_connection
+        end
+
+        def index_queue(size: 200)
+          set = connection.zpopmin(index_queue_name, size)
+          return [] if set.blank?
+          # we have to load these one at a time because find_all_by_id gets duplicates during wings transition
+          resources = set.map { |id, _time| Hyrax.query_service.find_by(id: id) }
+          solr_indexer = Valkyrie::IndexingAdapter.find(:solr_index)
+          solr_indexer.save_all(resources: resources)
+          solr_indexer.connection.commit
+        rescue
+          # if anything goes wrong, try to requeue the items
+          set.each { |id, time| connection.zadd(index_queue_name + "-error", time, id) }
+          raise
+        end
+
+        # If a batch fails, try running them one at a time to get down to just records that really fail
+        def index_error_queue(size: 200)
+          size.times do
+            set = connection.zpopmin(index_queue_name + "-error", 1)
+            return [] if set.blank?
+            # we have to load these one at a time because find_all_by_id gets duplicates during wings transition
+            resources = set.map { |id, _time| Hyrax.query_service.find_by(id: id) }
+            solr_indexer = Valkyrie::IndexingAdapter.find(:solr_index)
+            solr_indexer.save_all(resources: resources)
+            solr_indexer.connection.commit
+          end
+        rescue
+          # if anything goes wrong, try to requeue the items
+          set.each { |id, _time| connection.zadd(index_queue_name + "-error", Time.now.to_i, id) }
+          raise
+        end
+
+        # We reach in to solr directly here to prevent needing to load the objects unnecessarily
+        def delete_queue(size: 200)
+          set = connection.zpopmin(delete_queue_name, size)
+          return [] if set.blank?
+          solr_indexer = Valkyrie::IndexingAdapter.find(:solr_index)
+          set.each do |id, _time|
+            solr_indexer.connection.delete_by_id id.to_s, { softCommit: true }
+          end
+          solr_indexer.connection.commit
+        rescue
+          # if anything goes wrong, try to requeue the items
+          set.each { |id, time| connection.zadd(delete_queue_name + "-error", time, id) }
+          raise
+        end
+
+        # If a batch fails, try running them one at a time to get down to just records that really fail
+        def delete_error_queue(size: 200)
+          size.times do
+            set = connection.zpopmin(delete_queue_name + "-error", 1)
+            return [] if set.blank?
+            solr_indexer = Valkyrie::IndexingAdapter.find(:solr_index)
+            set.each do |id, _time|
+              solr_indexer.connection.delete_by_id id.to_s, { softCommit: true }
+            end
+            solr_indexer.connection.commit
+          end
+        rescue
+          # if anything goes wrong, try to requeue the items
+          set.each { |id, _time| connection.zadd(delete_queue_name + "-error", Time.now.to_i, id) }
+          raise
+        end
+
+        def list_index
+          connection.zrange(index_queue_name, 0, -1, with_scores: true)
+        end
+
+        def list_delete
+          connection.zrange(delete_queue_name, 0, -1, with_scores: true)
+        end
+
+        def list_index_errors
+          connection.zrange(index_queue_name + "-error", 0, -1, with_scores: true)
+        end
+
+        def list_delete_errors
+          connection.zrange(delete_queue_name + "-error", 0, -1, with_scores: true)
+        end
+
+        private
+
+        def persist(resources)
+          resources.map do |r|
+            connection.zadd(index_queue_name, Time.current.to_i, r.id.to_s)
+          end
+        end
+
+        def default_connection
+          Hyrax.config.redis_connection
+        end
       end
     end
   end
