@@ -1,0 +1,120 @@
+---
+attributes:
+  creator:
+    type: string
+    multiple: true
+    form:
+      required: true
+      primary: true
+    index_keys:
+      - "creator_sim"
+      - "creator_tesim"
+    predicate: http://purl.org/dc/elements/1.1/creator
+  contributor:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "contributor_tesim"
+      - "contributor_sim"
+    predicate: http://purl.org/dc/elements/1.1/contributor
+  description:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "description_sim"
+      - "description_tesim"
+    predicate: http://purl.org/dc/elements/1.1/description
+  keyword:
+    type: string
+    multiple: true
+    index_keys:
+      - "keyword_sim"
+      - "keyword_tesim"
+    form:
+      primary: false
+    predicate: http://schema.org/keywords
+  resource_type:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "resource_type_sim"
+      - "resource_type_tesim"
+    predicate: http://purl.org/dc/terms/type
+  license:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "license_sim"
+      - "license_tesim"
+    predicate: http://purl.org/dc/terms/license
+  publisher:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "publisher_sim"
+      - "publisher_tesim"
+    predicate: http://purl.org/dc/elements/1.1/publisher
+  date_created:
+    type: date_time
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "date_created_sim"
+      - "date_created_tesim"
+    predicate: http://purl.org/dc/terms/created
+  subject:
+    type: string
+    multiple: true
+    index_keys:
+      - "subject_sim"
+      - "subject_tesim"
+    form:
+      primary: false
+    predicate: http://purl.org/dc/elements/1.1/subject
+  language:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "language_sim"
+      - "language_tesim"
+    predicate: http://purl.org/dc/elements/1.1/language
+  identifier:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "identifier_sim"
+      - "identifier_tesim"
+    predicate: http://purl.org/dc/terms/identifier
+  based_near:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "based_near_sim"
+      - "based_near_tesim"
+    predicate: http://xmlns.com/foaf/0.1/based_near
+  related_url:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "related_url_sim"
+      - "related_url_tesim"
+    predicate: http://www.w3.org/2000/01/rdf-schema#seeAlso
