@@ -25,7 +25,7 @@ module Hyrax
       end
 
       def required_fields
-        return [] unless Hyrax.config.use_valkyrie?
+        return super unless Hyrax.config.use_valkyrie?
         form_class.required_fields
       end
 
