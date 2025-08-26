@@ -4,7 +4,6 @@ attributes:
     type: string
     multiple: true
     form:
-      required: true
       primary: true
     index_keys:
       - "creator_sim"

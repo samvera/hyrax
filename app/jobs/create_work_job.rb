@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 # This is a job spawned by the BatchCreateJob
 class CreateWorkJob < Hyrax::ApplicationJob
+  sidekiq_options retry: false
+  discard_on StandardError
   queue_as Hyrax.config.ingest_queue_name
 
   before_enqueue do |job|
@@ -28,6 +30,7 @@ class CreateWorkJob < Hyrax::ApplicationJob
 
     return operation.success! if status
     operation.fail!(errors.full_messages.join(' '))
+    raise StandardError, operation.message
   end
 
   private
