@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+
+# It isn't ideal but this form is used for both active fedora and valkyrie.
 module Hyrax
   module Forms
     class BatchUploadForm < Hyrax::Forms::WorkForm
@@ -22,6 +24,18 @@ module Hyrax
         super - [:title]
       end
 
+      def required_fields
+        return [] unless Hyrax.config.use_valkyrie?
+        form_class.required_fields
+      end
+
+      def payload_class
+        @payload_class ||= Valkyrie.config.resource_class_resolver.call(payload_concern)
+      end
+
+      def form_class
+        @form_class ||= "#{payload_class}Form".safe_constantize
+      end
       # # On the batch upload, title is set per-file.
       # def secondary_terms
       #   super - [:title]
