@@ -4,7 +4,7 @@
 module Hyrax
   module Forms
     class BatchUploadForm < Hyrax::Forms::WorkForm
-      self.model_class = BatchUploadItemResource
+      self.model_class = BatchUploadItem
 
       self.terms -= [:title, :resource_type]
 

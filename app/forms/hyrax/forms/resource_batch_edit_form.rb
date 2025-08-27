@@ -2,15 +2,17 @@
 module Hyrax
   module Forms
     class ResourceBatchEditForm < Hyrax::Forms::ResourceForm
-      include Hyrax::FormFields(:basic_metadata) unless Hyrax.config.flexible?
+      include Hyrax::FormFields(:batch_edit_metadata) unless Hyrax.config.flexible?
 
       include Hyrax::ContainedInWorksBehavior
       include Hyrax::DepositAgreementBehavior
       include Hyrax::LeaseabilityBehavior
       include Hyrax::PermissionBehavior
 
+      class_attribute :terms
       self.required_fields = []
       self.model_class = Valkyrie.config.resource_class_resolver.call(Hyrax.primary_work_type.to_s)
+      self.terms = Hyrax::Forms::BatchEditForm.terms
 
       # Contains a list of titles of all the works in the batch
       attr_accessor :names
@@ -27,12 +29,6 @@ module Hyrax
         else
           super(resource: model)
         end
-      end
-
-      def terms
-        # we can only edit a fixed set of terms in batch edit mode
-        # this avoids the problem of trying to edit terms that are not common to all works types.
-        Hyrax::Forms::BatchEditForm.terms
       end
 
       attr_reader :batch_document_ids
@@ -88,7 +84,7 @@ module Hyrax
         # For each of the files in the batch, set the attributes to be the concatenation of all the attributes
         batch_document_ids.each_with_object({}) do |doc_id, combined_attributes|
           work = Hyrax.query_service.find_by(id: doc_id)
-          terms.each do |field|
+          self.class.terms.each do |field|
             combined_attributes[field] ||= []
             combined_attributes[field] = (combined_attributes[field] + Array.wrap(work[field])).uniq
           end
