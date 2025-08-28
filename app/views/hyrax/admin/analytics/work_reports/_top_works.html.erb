@@ -24,16 +24,15 @@
               <td><%= work[0] %></td>
               <td><%= work[2] %></td>
               <td><%= work[3] %></td>
-            </tr>       
+            </tr>
         <% end %>
       </tbody>
     </table>
   </div>
-  
 
   <div class="card-footer">
     <div class="float-right">
-      <%= paginate @top_works %>
+      <%= paginate @top_works, outer_window: 2, theme: 'blacklight' %>
     </div>
   </div>
 

@@ -404,8 +404,10 @@ module Hyrax
                                     .select(:source_id)
                                     .distinct
                                     .pluck(:source_id)
-
-      Hyrax.custom_queries.find_ids_by_model(model: Hyrax::AdministrativeSet, ids: ids).any?
+      return false if ids.empty?
+      Hyrax::SolrQueryService.new.with_ids(ids: ids).query_result(rows: 1000)['response']['docs'].any? do |doc|
+        (Hyrax::ModelRegistry.admin_set_rdf_representations & doc['has_model_ssim']).present?
+      end
     end
 
     def registered_user?

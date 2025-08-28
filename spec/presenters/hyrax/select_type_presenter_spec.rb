@@ -6,7 +6,7 @@ RSpec.describe Hyrax::SelectTypePresenter do
   describe "#icon_class" do
     subject { instance.icon_class }
     # Koppie's associated locales are unset, so should default
-    let(:expected_classes) { I18n.t('hyrax.product_name') == 'Koppie' ? 'fa fa-cube' : 'fa fa-file-text-o' }
+    let(:expected_classes) { Hyrax.config.disable_wings ? 'fa fa-cube' : 'fa fa-file-text-o' }
 
     it { is_expected.to eq expected_classes }
   end
@@ -14,7 +14,7 @@ RSpec.describe Hyrax::SelectTypePresenter do
   describe "#description" do
     subject { instance.description }
     # Koppie's associated locales are unset, so should default
-    let(:expected_description) { I18n.t('hyrax.product_name') == 'Koppie' ? 'General purpose worktype' : 'Generic work works' }
+    let(:expected_description) { Hyrax.config.disable_wings ? 'General purpose worktype' : 'Generic work works' }
 
     it { is_expected.to eq expected_description }
   end

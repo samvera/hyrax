@@ -42,9 +42,13 @@ RSpec.describe Hyrax::PermissionsController do
       end
 
       it 'adds InheritPermisionsJob to the queue' do
-        expect { post :copy_access, params: { id: work } }
-          .to have_enqueued_job(InheritPermissionsJob)
-          .with(work)
+        # Due to performance issues for a Hyrax::Resource in Fedora 6, permissions are copied
+        # during visibility copy instead of reloading in separate InheritPermissionsJob
+        unless work.is_a?(Hyrax::Resource)
+          expect { post :copy_access, params: { id: work } }
+            .to have_enqueued_job(InheritPermissionsJob)
+            .with(work)
+        end
       end
     end
   end

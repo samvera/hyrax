@@ -120,13 +120,12 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
     end
 
     it "sets an social handles" do
-      post :update, params: { id: user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo', linkedin_handle: "link", orcid: '0000-0000-1111-2222' } }
+      post :update, params: { id: user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', linkedin_handle: "link", orcid: '0000-0000-1111-2222' } }
       expect(response).to redirect_to(routes.url_helpers.dashboard_profile_path(user.to_param, locale: 'en'))
       expect(flash[:notice]).to include("Your profile has been updated")
       u = User.find_by_user_key(user.user_key)
       expect(u.twitter_handle).to eq 'twit'
       expect(u.facebook_handle).to eq 'face'
-      expect(u.googleplus_handle).to eq 'goo'
       expect(u.linkedin_handle).to eq 'link'
       expect(u.orcid).to eq 'https://orcid.org/0000-0000-1111-2222'
     end

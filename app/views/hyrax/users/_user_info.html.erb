@@ -20,11 +20,6 @@
   <dd><%= link_to user.twitter_handle, "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
 <% end %>
 
-<% if user.googleplus_handle.present? %>
-  <dt><span class="fa fa-google-plus" aria-hidden="true"></span> Google+ Handle</dt>
-  <dd><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
-<% end %>
-
 <% if user.linkedin_handle.present? %>
   <dt><span class="fa fa-linkedin" aria-hidden="true"></span> LinkedIn</dt>
   <dd><%= link_to "#{@linkedInUrl}", "#{@linkedInUrl}", { target: '_blank' } %></dd>

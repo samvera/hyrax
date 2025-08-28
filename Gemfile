@@ -20,5 +20,6 @@ group :development, :test do
   gem 'rspec'
   gem 'ruby-prof', require: false
   gem 'semaphore_test_boosters'
-  gem "simplecov", require: false
+  gem 'simplecov', require: false
+  gem 'timecop'
 end

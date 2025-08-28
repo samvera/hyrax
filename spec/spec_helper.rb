@@ -2,6 +2,7 @@
 $VERBOSE = nil unless ENV['RUBY_LOUD'] # silence loud Ruby 2.7 deprecations
 ENV['RAILS_ENV'] = 'test'
 ENV['DATABASE_URL'] = ENV['DATABASE_TEST_URL'] if ENV['DATABASE_TEST_URL']
+ENV.delete('APP_NAME') # Prevent custom test app names in specs
 
 # Analytics is turned off by default
 ENV['HYRAX_ANALYTICS'] = 'false'
@@ -161,7 +162,12 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.fixture_paths = [File.expand_path("../fixtures", __FILE__)]
+  if config.respond_to?(:fixture_paths=)
+    config.fixture_paths = [File.expand_path("../fixtures", __FILE__)]
+  else
+    config.fixture_path = File.expand_path("../fixtures", __FILE__)
+  end
+
   config.file_fixture_path = File.expand_path("../fixtures", __FILE__)
   config.use_transactional_fixtures = false
 
@@ -230,14 +236,6 @@ RSpec.configure do |config|
     visit "/assets/application.js"
   end
 
-  config.after do
-    DatabaseCleaner.clean
-    # Ensuring we have a clear queue between each spec.
-    ActiveJob::Base.queue_adapter.enqueued_jobs  = []
-    ActiveJob::Base.queue_adapter.performed_jobs = []
-    User.group_service.clear
-  end
-
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.
@@ -264,6 +262,17 @@ RSpec.configure do |config|
     Warden.test_reset!
     Capybara.reset_sessions!
     page.driver.reset!
+  end
+
+  config.append_after do
+    DatabaseCleaner.clean
+    ActiveRecord::Base.connection_handler.clear_active_connections!(:all)
+    ActiveRecord::Base.connection_handler.flush_idle_connections!(:all)
+
+    # Ensuring we have a clear queue between each spec.
+    ActiveJob::Base.queue_adapter.enqueued_jobs  = []
+    ActiveJob::Base.queue_adapter.performed_jobs = []
+    User.group_service.clear
   end
 
   config.include Capybara::RSpecMatchers, type: :input

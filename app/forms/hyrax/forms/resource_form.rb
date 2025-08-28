@@ -26,6 +26,7 @@ module Hyrax
         end
       end
 
+      include BasedNearFieldBehavior
       class_attribute :model_class
 
       property :human_readable_type, writable: false
@@ -61,6 +62,13 @@ module Hyrax
       end
 
       class << self
+        def inherited(subclass)
+          # this is a noop if based near is not defined on a given model
+          # we need these to be before and included properties
+          subclass.prepend(BasedNearFieldBehavior)
+          super
+        end
+
         ##
         # @api public
         #

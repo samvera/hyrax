@@ -27,8 +27,10 @@ module Hyrax
       # copy visibility
       VisibilityCopyJob.perform_later(curation_concern)
 
-      # copy permissions
-      InheritPermissionsJob.perform_later(curation_concern)
+      # Copy permissions for AF work
+      # Due to performance issues for a Hyrax::Resource in Fedora 6, permissions are copied
+      # during visibility copy instead of reloading and iterating again.
+      InheritPermissionsJob.perform_later(curation_concern) unless curation_concern.is_a?(Hyrax::Resource)
       redirect_to [main_app, curation_concern], notice: I18n.t("hyrax.upload.change_access_flash_message")
     end
   end

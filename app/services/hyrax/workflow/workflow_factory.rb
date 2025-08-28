@@ -50,9 +50,9 @@ module Hyrax
       private
 
       def create_workflow_entity!
-        Sipity::Entity.create!(proxy_for_global_id: Hyrax::GlobalID(work).to_s,
-                               workflow: workflow_for(work),
-                               workflow_state: nil)
+        Sipity::Entity.find_or_create_by!(proxy_for_global_id: Hyrax::GlobalID(work).to_s,
+                                          workflow: workflow_for(work),
+                                          workflow_state: nil)
       end
 
       def assign_specific_roles_to(entity:)

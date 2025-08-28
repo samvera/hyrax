@@ -25,7 +25,7 @@ module Hyrax
   # @see Valkyrie query adapter's #find_inverse_references_by
   #
   class AdministrativeSet < Hyrax::Resource
-    include Hyrax::Schema(:core_metadata)
+    include Hyrax::Schema(:core_metadata) if Hyrax.config.admin_set_include_metadata?
 
     attribute :alternative_title, Valkyrie::Types::Set.of(Valkyrie::Types::String)
     attribute :creator,           Valkyrie::Types::Set.of(Valkyrie::Types::String)
