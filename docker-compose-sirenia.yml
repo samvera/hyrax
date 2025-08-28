@@ -134,7 +134,7 @@ services:
       - sirenia
 
   memcached:
-    image: bitnami/memcached
+    image: memcached:1.6-alpine
     ports:
       - '11213:11211'
     networks:

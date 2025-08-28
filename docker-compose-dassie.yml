@@ -116,7 +116,7 @@ services:
       - hyrax
 
   memcached:
-    image: bitnami/memcached
+    image: memcached:1.6-alpine
     ports:
       - "11211:11211"
     networks:
