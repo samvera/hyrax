@@ -108,7 +108,7 @@ services:
       - koppie
 
   memcached:
-    image: bitnami/memcached
+    image: memcached:1.6-alpine
     ports:
       - '11212:11211'
     networks:
