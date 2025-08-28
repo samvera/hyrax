@@ -32,6 +32,10 @@ RSpec.describe Hyrax::ResourceName do
       Wings::ModelRegistry.register(Hyrax::Test::BookResource, Hyrax::Test::Book)
     end
 
+    after do
+      Wings::ModelRegistry.unregister(Hyrax::Test::BookResource)
+    end
+
     it 'uses the legacy route key' do
       expect(name.route_key).to eq 'test_books'
     end

@@ -53,6 +53,10 @@ RSpec.describe "Workflow state changes", type: :feature do
     Wings::ModelRegistry.register(GenericWorkResource, GenericWork) if defined?(Wings::ModelRegistry)
   end
 
+  after do
+    Wings::ModelRegistry.unregister(GenericWorkResource) if defined?(Wings::ModelRegistry)
+  end
+
   describe 'leaving a comment for non-state changing' do
     it 'will not advance the state' do
       login_as(approving_user, scope: :user)
