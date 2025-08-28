@@ -17,6 +17,10 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
     Wings::ModelRegistry.register(GenericWorkResource, GenericWork) if defined?(Wings::ModelRegistry)
   end
 
+  after do
+    Wings::ModelRegistry.unregister(GenericWorkResource) if defined?(Wings::ModelRegistry)
+  end
+
   context "when the user is not a proxy" do
     before do
       sign_in user
