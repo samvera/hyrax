@@ -30,6 +30,10 @@ RSpec.describe 'hyrax/base/_attributes.html.erb' do
     render 'hyrax/base/attributes', presenter: presenter
   end
 
+  after do
+    Wings::ModelRegistry.unregister(GenericWorkResource) if defined?(Wings::ModelRegistry)
+  end
+
   it 'has links to search for other objects with the same metadata' do
     expect(rendered).to have_link(creator)
     expect(rendered).to have_link(contributor)

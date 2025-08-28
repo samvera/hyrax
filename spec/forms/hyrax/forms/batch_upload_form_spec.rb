@@ -10,6 +10,11 @@ RSpec.describe Hyrax::Forms::BatchUploadForm, :active_fedora do
   let(:ability) { Ability.new(user) }
   let(:user) { build(:user, display_name: 'Jill Z. User') }
 
+  before do
+    allow(Valkyrie.config).to receive(:resource_class_resolver).and_return(->(_name) { model.class })
+    allow(Hyrax.config).to receive(:use_valkyrie?).and_return(false)
+  end
+
   describe "#primary_terms" do
     subject { form.primary_terms }
 

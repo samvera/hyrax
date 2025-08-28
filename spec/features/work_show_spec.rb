@@ -17,6 +17,10 @@ RSpec.describe "work show view" do
       Wings::ModelRegistry.register(GenericWorkResource, GenericWork) if defined?(Wings::ModelRegistry)
     end
 
+    after do
+      Wings::ModelRegistry.unregister(GenericWorkResource) if defined?(Wings::ModelRegistry)
+    end
+
     context "as the work owner" do
       let(:work) do
         create(:work,

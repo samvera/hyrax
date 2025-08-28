@@ -7,6 +7,10 @@ RSpec.describe 'embargo' do
     Wings::ModelRegistry.register(GenericWorkResource, GenericWork) if defined?(Wings::ModelRegistry)
   end
 
+  after do
+    Wings::ModelRegistry.unregister(GenericWorkResource) if defined?(Wings::ModelRegistry)
+  end
+
   def go_to_embargo_mgmt_valkyrie
     click_link 'Edit'
     click_link 'Embargo Management Page'
