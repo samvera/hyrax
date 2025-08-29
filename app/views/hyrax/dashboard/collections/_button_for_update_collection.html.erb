@@ -3,5 +3,6 @@
 <%# label -- button label %>
 <%= button_to label, hyrax.dashboard_collection_path(collection_id),
               method: :post,
-              class: "btn btn-primary submits-batches",
+              class: "btn btn-primary submits-batches modal-submit-button",
+              disabled: true,
               data: { behavior: 'updates-collection' } %>
