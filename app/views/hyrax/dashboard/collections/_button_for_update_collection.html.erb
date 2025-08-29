@@ -4,5 +4,5 @@
 <%= button_to label, hyrax.dashboard_collection_path(collection_id),
               method: :post,
               class: "btn btn-primary submits-batches modal-submit-button",
-              disabled: true,
+              disabled: @add_works_to_collection.blank?,
               data: { behavior: 'updates-collection' } %>

@@ -16,7 +16,7 @@
                   <%= text_field_tag 'member_of_collection_label', @add_works_to_collection_label, disabled: true %>
                   <%= hidden_field_tag 'member_of_collection_ids', @add_works_to_collection %>
                 <% else %>
-                  <select name="member_of_collection_ids" id="member_of_collection_ids" class="form-control collection-select2">
+                  <select name="member_of_collection_ids" id="member_of_collection_ids" class="form-control collection-select2" data-placeholder="<%= t('hyrax.dashboard.my.action.select') %>">
                     <option value=""></option>
                     <% available_collections(work: @presenter&.solr_document).each do |coll| %>
                       <option value="<%= coll.id %>"><%= coll.title.first %></option>

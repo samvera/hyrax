@@ -11,7 +11,7 @@
         <div class="modal-ajax-alert"></div>
         <label><%= t('hyrax.collection.actions.nest_collections.select_label') %></label>
         <input type="hidden" name="source" value="<%= source %>" />
-        <select name="child_id" class="form-control collection-select2">
+        <select name="child_id" class="form-control collection-select2" data-placeholder="<%= t('hyrax.dashboard.my.action.select') %>">
           <option value=""></option>
           <% available_child_collections(collection: presenter).each do |coll| %>
             <option value="<%= coll.id %>"><%= coll.title.first %></option>

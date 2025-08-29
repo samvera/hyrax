@@ -13,7 +13,7 @@
 
         <label><%= t('hyrax.collection.actions.nested_subcollection.select_label') %></label>
         <input type="hidden" name="source" value="<%= source %>" />
-        <select name="parent_id" class="form-control collection-select2">
+        <select name="parent_id" class="form-control collection-select2" data-placeholder="<%= t('hyrax.dashboard.my.action.select') %>">
           <option value=""></option>
         </select>
       </div>
