@@ -6,6 +6,7 @@ ENV.delete('APP_NAME') # Prevent custom test app names in specs
 
 # Analytics is turned off by default
 ENV['HYRAX_ANALYTICS'] = 'false'
+ENV['HYRAX_FLEXIBLE'] = 'false'
 
 require "bundler/setup"
 

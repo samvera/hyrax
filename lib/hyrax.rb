@@ -48,6 +48,8 @@ module Hyrax
     autoload :Zotero
     autoload :Listeners
     autoload :Workflow
+    autoload :SchemaLoader
+    autoload :M3SchemaLoader
     autoload :SimpleSchemaLoader
     autoload :VirusScanner
     autoload :DerivativeBucketedStorage
