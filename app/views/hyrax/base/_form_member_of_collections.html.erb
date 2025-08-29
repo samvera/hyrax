@@ -15,12 +15,12 @@ HTML Properties:
 
   <div class="form-inline mb-3">
       <%= f.label :member_of_collection_ids %>
-      <%= f.input_field :member_of_collection_ids,
-                  prompt: :translate,
-                  data: {
-                    autocomplete: 'collection',
-                    'autocomplete-url' => Rails.application.routes.url_helpers.qa_path + '/search/collections?access=deposit'
-                  } %>
+      <select name="member_of_collection_ids" class="ml-2 form-control collection-select2" style="width: 12rem;">
+        <option value=""></option>
+        <%= available_collections(work: @curation_concern).each do |coll| %>
+          <option value="<%= coll.id %>"><%= coll.title.first %></option>
+        <% end %>
+      </select>
       <a href="#" onclick="return false;" class="btn btn-secondary ml-2" data-behavior="add-relationship"><%= t('.add') %></a>
   </div>
 

@@ -1,4 +1,4 @@
-<div role="dialog" class="modal collection-list-modal fade" id="collection-list-container" tabindex="-1" aria-labelledby="col_add_title">
+<div role="dialog" class="modal collection-list-modal fade disable-unless-selected" id="collection-list-container" tabindex="-1" aria-labelledby="col_add_title">
   <div class="modal-dialog text-left">
       <div class="modal-content">
         <div class="modal-header">
@@ -12,20 +12,17 @@
             <div class="collection-list">
               <div class="form-group">
                 <p><%= t("hyrax.collection.select_form.select_heading") %></p>
-              
                 <% if @add_works_to_collection.present? %>
                   <%= text_field_tag 'member_of_collection_label', @add_works_to_collection_label, disabled: true %>
                   <%= hidden_field_tag 'member_of_collection_ids', @add_works_to_collection %>
                 <% else %>
-                  <%= text_field_tag 'member_of_collection_ids', nil,
-                              prompt: :translate,
-                              data: {
-                                placeholder: t('simple_form.placeholders.defaults.member_of_collection_ids'),
-                                autocomplete: 'collection',
-                                'autocomplete-url' => Rails.application.routes.url_helpers.qa_path + '/search/collections?access=deposit'
-                              } %>
+                  <select name="member_of_collection_ids" id="member_of_collection_ids" class="form-control collection-select2">
+                    <option value=""></option>
+                    <% available_collections(work: @presenter&.solr_document).each do |coll| %>
+                      <option value="<%= coll.id %>"><%= coll.title.first %></option>
+                    <% end %>
+                  </select>
                 <% end %>
-            
               </div>
             </div><!-- collection-list -->
           <% end %> <!-- else -->
