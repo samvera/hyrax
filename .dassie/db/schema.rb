@@ -172,6 +172,13 @@ ActiveRecord::Schema.define(version: 2025_03_28_100249) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "hyrax_flexible_schemas", force: :cascade do |t|
+    t.text "profile"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "contexts"
+  end
+
   create_table "job_io_wrappers", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "uploaded_file_id"

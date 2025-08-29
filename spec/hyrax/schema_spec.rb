@@ -5,14 +5,16 @@ RSpec.describe Hyrax::Schema do
   let(:resource)   { resource_class.new(attributes) }
 
   let(:resource_class) do
-    module Hyrax::Test::Schema
-      class Resource < Hyrax::Resource; end
+    module HyraxSchemaSpecTest
+      module Schema
+        class Resource < Hyrax::Resource; end
+      end
     end
 
-    Hyrax::Test::Schema::Resource
+    HyraxSchemaSpecTest::Schema::Resource
   end
 
-  after { Hyrax::Test.send(:remove_const, :Schema) }
+  after { Object.send(:remove_const, :HyraxSchemaSpecTest) if defined?(HyraxSchemaSpecTest) }
 
   describe 'including' do
     it 'applies the specified schema' do
@@ -94,6 +96,24 @@ RSpec.describe Hyrax::Schema do
 
       expect(saved).to have_attributes(**matchers)
       expect(saved[:date_created].map { |t| DateTime.parse(t.to_s).strftime("%FT%R") }).to match_array(times_parsed)
+    end
+  end
+
+  describe '.default_schema_loader' do
+    context 'when using flexible metadata' do
+      it 'returns an M3SchemaLoader' do
+        allow(Hyrax.config).to receive(:flexible?).and_return(true)
+
+        expect(described_class.default_schema_loader).to be_a(Hyrax::M3SchemaLoader)
+      end
+    end
+
+    context 'when not using flexible metadata' do
+      it 'returns a SimpleSchemaLoader' do
+        allow(Hyrax.config).to receive(:flexible?).and_return(false)
+
+        expect(described_class.default_schema_loader).to be_a(Hyrax::SimpleSchemaLoader)
+      end
     end
   end
 end
