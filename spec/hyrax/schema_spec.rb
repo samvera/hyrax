@@ -99,21 +99,15 @@ RSpec.describe Hyrax::Schema do
     end
   end
 
-  describe '.default_schema_loader' do
-    context 'when using flexible metadata' do
-      it 'returns an M3SchemaLoader' do
-        allow(Hyrax.config).to receive(:flexible?).and_return(true)
-
-        expect(described_class.default_schema_loader).to be_a(Hyrax::M3SchemaLoader)
-      end
+  describe '.m3_schema_loader' do
+    it 'returns an M3SchemaLoader' do
+      expect(described_class.m3_schema_loader).to be_a(Hyrax::M3SchemaLoader)
     end
+  end
 
-    context 'when not using flexible metadata' do
-      it 'returns a SimpleSchemaLoader' do
-        allow(Hyrax.config).to receive(:flexible?).and_return(false)
-
-        expect(described_class.default_schema_loader).to be_a(Hyrax::SimpleSchemaLoader)
-      end
+  describe '.m3_schema_loader' do
+    it 'returns a SimpleSchemaLoader' do
+      expect(described_class.simple_schema_loader).to be_a(Hyrax::SimpleSchemaLoader)
     end
   end
 end

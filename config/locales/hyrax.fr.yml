@@ -55,6 +55,11 @@ fr:
         new: Ajouter une nouvelle collection
       delete: Effacer
       edit: modifier
+      hyrax_metadata_profile:
+        hint: L'importation d'un nouveau profil écrasera le profil existant
+        import: Importer un profil de métadonnées
+        import_metadata_profile: Profil d'importation
+        submit: Importer
       less: Moins
       more: Plus
       refresh: Rafraîchir
@@ -94,6 +99,7 @@ fr:
           note: Les utilisateurs auxquels un nouveau rôle est attribué n'acquièrent un rôle que sur les œuvres déposées après l'attribution de ce rôle.
           permission_destroy_errors:
             admin_group: Le groupe des administrateurs du référentiel ne peut pas être supprimé
+            participants: Les droits de participant de l'ensemble d'administration n'ont pas pu être supprimés.
           permission_update_errors:
             error: Option de mise à jour non valide pour le modèle d'autorisation.
             no_date: Une date est requise pour l'option de publication sélectionnée.
@@ -410,6 +416,7 @@ fr:
         content_blocks: Blocs de contenu
         dashboard: Tableau de bord
         delete_all: Supprimer tout
+        metadata_profiles: Profils de métadonnées
         notifications: Notifications
         pages: Pages
         profile: Profil
@@ -473,9 +480,17 @@ fr:
       workflows:
         index:
           header: Soumissions de révision
+          heading:
+            depositor: Déposant
+            status: statut
+            submission_date: Date de soumission
+            work: Travail
           tabs:
             published: Publié
             under_review: À l'étude
+          works_listing: Liste des travaux
+          works_published: "<strong>%{total_count} œuvres</strong> publiées"
+          works_under_review: "<strong>%{total_count} travaux</strong> en cours d'examen"
     api:
       accepted:
         default: Votre demande a été acceptée pour traitement, mais le traitement n'est pas complet. Consultez le travail pour plus d'informations.
@@ -590,6 +605,11 @@ fr:
         help_html: Sélectionnez le fichier avec le média qui représente ce travail.
         legend_html: Médias représentatifs
       form_share:
+        access_options:
+          creator: Créateur
+          depositor: Déposant
+          manager: Directeur
+          viewer: Téléspectateur
         access_type_to_grant: Type d'accès à accorder
         account_label_without_suffix: "%{account_label} (sans la partie %{suffix})"
         add_sharing: Ajouter un partage
@@ -604,8 +624,8 @@ fr:
         help_html: Sélectionnez le fichier à utiliser comme vignette pour ce travail.
         legend_html: La vignette
       form_visibility_component:
+        subtitle_html: "<small>Qui devrait être en mesure d’afficher ou de télécharger ce contenu?</small>"
         visibility: Visibilité
-        subtitle_html: <small>Qui devrait être en mesure d’afficher ou de télécharger ce contenu?</small>
       inspect_work:
         back_to: Retour à
         entity_id: ID d'entité
@@ -858,6 +878,7 @@ fr:
         form:
           permission_update_errors:
             error: Option de mise à jour non valide pour le modèle d'autorisation.
+            sharing: Les options de partage de la collection n'ont pas pu être mises à jour.
           permission_update_notices:
             participants: Les options de partage de la collection ont été mises à jour.
             sharing: Les options de partage de la collection ont été mises à jour.
@@ -1003,6 +1024,7 @@ fr:
       managed:
         collections: Collections gérées
         works: Travaux gérés
+      metadata_profiles: Profils de métadonnées
       my:
         action:
           add_to_collection: Ajouter à la collection
@@ -1496,6 +1518,7 @@ fr:
       owner:
         edit: Modifier l'accès
       read: Voir le téléchargement
+    read_only: Le référentiel est en mode lecture seule pour la maintenance. Aucune soumission ou modification ne peut être effectuée pour le moment.
     search:
       button:
         html: <span class="fa fa-search"></span> Aller
@@ -1713,6 +1736,8 @@ fr:
         note_html: Seuls les utilisateurs et / ou les groupes ayant reçu un accès spécifique dans la section "Partager avec".
         text: Privé
       restricted_title_attr: Modifier la visibilité de cette ressource
+      unknown:
+        text: Inconnu
     work_button_row:
       attach_child: Attacher l'enfant
     workflow:

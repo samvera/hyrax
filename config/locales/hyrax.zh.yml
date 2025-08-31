@@ -55,6 +55,11 @@ zh:
         new: 添加新集合
       delete: 删除
       edit: 编辑
+      hyrax_metadata_profile:
+        hint: 导入新配置文件将覆盖现有配置文件
+        import: 导入元数据配置文件
+        import_metadata_profile: 导入配置文件
+        submit: 进口
       less: 减
       more: 更多
       refresh: 刷新
@@ -94,6 +99,7 @@ zh:
           note: 授予新角色的用户只能在授予该角色后存储的作品获得角色。
           permission_destroy_errors:
             admin_group: 无法删除存储库管理员组
+            participants: 管理集的参与者权限删除失败。
           permission_update_errors:
             error: 权限模板的更新选项无效。
             no_date: 所选发布项需要一个日期。
@@ -410,6 +416,7 @@ zh:
         content_blocks: 内容块
         dashboard: 仪表盘
         delete_all: 删除所有
+        metadata_profiles: 元数据配置文件
         notifications: 通知
         pages: 网页
         profile: 个人资料
@@ -473,9 +480,17 @@ zh:
       workflows:
         index:
           header: 审查提交
+          heading:
+            depositor: 储户
+            status: 地位
+            submission_date: 提交日期
+            work: 工作
           tabs:
             published: 已出版
             under_review: 在审查中
+          works_listing: 作品列表
+          works_published: 已发布<strong>%{total_count} 部作品</strong>
+          works_under_review: "<strong>%{total_count} 作品</strong>正在审核中"
     api:
       accepted:
         default: 您的请求已被接受，还在处理中，详细信息请见后台作业。
@@ -587,6 +602,11 @@ zh:
         help_html: 选择代表这项工作的媒体文件。
         legend_html: 代表媒体
       form_share:
+        access_options:
+          creator: 创建者
+          depositor: 储户
+          manager: 经理
+          viewer: 查看器
         access_type_to_grant: 要授予的访问类型
         account_label_without_suffix: "%{account_label}（没有%{suffix}部分）"
         add_sharing: 添加共享
@@ -601,8 +621,8 @@ zh:
         help_html: 选择要用作此作品缩略图的文件。
         legend_html: 缩略图
       form_visibility_component:
+        subtitle_html: "<small>谁应该能够查看或下载此内容？</ small>"
         visibility: 可见性
-        subtitle_html: <small>谁应该能够查看或下载此内容？</ small>
       inspect_work:
         back_to: 回到
         entity_id: 实体ID
@@ -855,6 +875,7 @@ zh:
         form:
           permission_update_errors:
             error: 无效的权限模板更新选项。
+            sharing: 该收藏集的共享选项更新失败。
           permission_update_notices:
             participants: 收藏的分享选项已更新。
             sharing: 收藏的分享选项已更新。
@@ -1000,6 +1021,7 @@ zh:
       managed:
         collections: 管理集合
         works: 托管作品
+      metadata_profiles: 元数据配置文件
       my:
         action:
           add_to_collection: 添加到收藏
@@ -1493,6 +1515,7 @@ zh:
       owner:
         edit: 编辑权限
       read: 查看/下载
+    read_only: 由于维护原因，存储库处于只读模式。目前无法进行任何提交或编辑。
     search:
       button:
         html: <span class="fa fa-search"></span> 转到
@@ -1710,6 +1733,8 @@ zh:
         note_html: 非公开保留分享权限。
         text: 非公开
       restricted_title_attr: 更改此资源的公开度
+      unknown:
+        text: 未知
     work_button_row:
       attach_child: 附上孩子
     workflow:

@@ -55,6 +55,11 @@ es:
         new: Añadir Nueva Colección
       delete: Borrar
       edit: Editar
+      hyrax_metadata_profile:
+        hint: Importar un nuevo perfil sobrescribirá el perfil existente
+        import: Importar perfil de metadatos
+        import_metadata_profile: Importar perfil
+        submit: Importar
       less: Menos
       more: Más
       refresh: Refrescar
@@ -94,6 +99,7 @@ es:
           note: Los usuarios a los que se les otorgue un nuevo rol solo obtendrán el rol en los trabajos que se depositen después de que se haya otorgado ese rol.
           permission_destroy_errors:
             admin_group: No se puede eliminar el grupo de administradores del repositorio
+            participants: No se pudieron eliminar los derechos de participante del conjunto administrativo.
           permission_update_errors:
             error: Opción de actualización no válida para la plantilla de permiso.
             no_date: Se requiere una fecha para la opción de lanzamiento seleccionada.
@@ -410,6 +416,7 @@ es:
         content_blocks: Bloques de Contenido
         dashboard: Tablero
         delete_all: Eliminar todos
+        metadata_profiles: Perfiles de metadatos
         notifications: Notificaciones
         pages: Páginas
         profile: Perfil
@@ -473,9 +480,17 @@ es:
       workflows:
         index:
           header: Revise Envíos
+          heading:
+            depositor: Depositor
+            status: estado
+            submission_date: Día de entrega
+            work: Trabajar
           tabs:
             published: Publicados
             under_review: En Revisión
+          works_listing: Listado de obras
+          works_published: "<strong>%{total_count} obras</strong> publicadas"
+          works_under_review: "<strong>%{total_count} funciona</strong> en revisión"
     api:
       accepted:
         default: Su solicitud se ha aceptado para su procesamiento, pero el procesamiento no está completo. Ver tarea para más información.
@@ -589,6 +604,11 @@ es:
         help_html: Seleccione el archivo con los medios que representa este trabajo.
         legend_html: Medios representativos
       form_share:
+        access_options:
+          creator: Creador
+          depositor: Depositor
+          manager: Gerente
+          viewer: Espectador
         access_type_to_grant: Tipo de acceso a otorgar
         account_label_without_suffix: "%{account_label} (sin la parte %{suffix})"
         add_sharing: Agregar Compartir
@@ -603,8 +623,8 @@ es:
         help_html: Seleccione el archivo que se utilizará como miniatura para este trabajo.
         legend_html: Miniatura
       form_visibility_component:
+        subtitle_html: "<small>¿Quién debería poder ver o descargar este contenido?</small>"
         visibility: La visibilidad
-        subtitle_html: <small>¿Quién debería poder ver o descargar este contenido?</small>
       inspect_work:
         back_to: De regreso
         entity_id: ID de entidad
@@ -857,6 +877,7 @@ es:
         form:
           permission_update_errors:
             error: La opción de actualización no válida para la plantilla de permisos.
+            sharing: Las opciones para compartir de la colección no se pudieron actualizar.
           permission_update_notices:
             participants: Las opciones de uso compartido de la colección se han actualizado.
             sharing: Las opciones de uso compartido de la colección se han actualizado.
@@ -909,7 +930,7 @@ es:
             creator: Creador
             depositor: Depositor
             manager: Gerente
-            viewer: Espectador        
+            viewer: Espectador
           add_group: Añadir grupo
           add_sharing: Agregar Compartir
           add_user: Agregar usuario
@@ -1002,6 +1023,7 @@ es:
       managed:
         collections: Colecciones administradas
         works: Trabajos administrados
+      metadata_profiles: Perfiles de metadatos
       my:
         action:
           add_to_collection: Añadir a la colección
@@ -1497,6 +1519,7 @@ es:
       owner:
         edit: Editar acceso
       read: Ver descarga
+    read_only: El repositorio está en modo de solo lectura para mantenimiento. No se pueden realizar envíos ni modificaciones en este momento.
     search:
       button:
         html: <span class="fa fa-search"></span> Ir
@@ -1714,6 +1737,8 @@ es:
         note_html: Sólo los usuarios y / o grupos a los que se les ha dado acceso específico en la sección "Compartir con".
         text: Privado
       restricted_title_attr: Cambiar la visibilidad de este recurso
+      unknown:
+        text: Desconocido
     work_button_row:
       attach_child: Adjuntar niño
     workflow:

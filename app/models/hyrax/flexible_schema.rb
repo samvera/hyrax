@@ -17,7 +17,8 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   end
 
   def self.create_default_schema
-    m3_profile_path = Hyrax.config.default_m3_profile_path || Rails.root.join('config', 'metadata_profiles', 'm3_profile.yaml')
+    m3_profile_path = Hyrax.config.m3_schema_loader.config_paths&.first
+    raise ArgumentError, "No M3 profile found, check the Hyrax.config.schema_loader_config_search_paths" unless m3_profile_path
     Hyrax::FlexibleSchema.first_or_create do |f|
       f.profile = YAML.safe_load_file(m3_profile_path)
     end
@@ -71,12 +72,7 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   private
 
   def validate_profile_classes
-    required_classes = [
-      Hyrax.config.collection_model,
-      Hyrax.config.file_set_model,
-      Hyrax.config.admin_set_model
-    ]
-
+    required_classes = Hyrax.config.flexible_classes
     if profile['classes'].blank?
       errors.add(:profile, "Must specify classes")
     else

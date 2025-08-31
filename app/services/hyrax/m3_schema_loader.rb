@@ -16,6 +16,13 @@ module Hyrax
       end
     end
 
+    def config_paths(schema_name = 'm3_profile')
+      config_search_paths.collect do |root_path|
+        path = root_path.to_s + "/config/metadata_profiles/#{schema_name}.yaml"
+        path if File.exist?(path)
+      end.compact
+    end
+
     private
 
     ##

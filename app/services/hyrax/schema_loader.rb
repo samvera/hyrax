@@ -154,5 +154,9 @@ module Hyrax
     def definitions(_schema_name, _version, _contexts)
       raise NotImplementedError, 'Implement #definitions in a child class'
     end
+
+    def config_search_paths
+      Hyrax.config.schema_loader_config_search_paths
+    end
   end
 end

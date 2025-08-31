@@ -1,0 +1,54 @@
+<% provide :page_title, t(:'hyrax.dashboard.metadata_profiles') %>
+
+<% provide :page_header do %>
+  <h1><span class="fa fa-table" aria-hidden="true"></span> <%= t(:'hyrax.admin.sidebar.metadata_profiles') %></h1>
+  <div class="pull-right">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+      <span class="fa fa-upload" aria-hidden="true"></span>
+      <%= t(:'helpers.action.hyrax_metadata_profile.import_metadata_profile') %>
+    </button>
+  </div>
+<% end %>
+
+<div class="panel panel-default">
+  <div class="card-body">
+    <% if @metadata_profiles.present? %>
+      <div class="table-responsive">
+        <table class="table table-striped datatable">
+          <thead>
+            <tr>
+              <th scope="col">Schema Version</th>
+              <th scope="col">Profile Version</th>
+              <th scope="col">Profile Type</th>
+              <th scope="col">Created At</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @metadata_profiles.order("updated_at DESC").each do |hyrax_metadata_profile| %>
+              <tr>
+
+                <!-- TODO: fix show pgs -->
+                <td><%= hyrax_metadata_profile.schema_version %></td>
+                <td><%= hyrax_metadata_profile.id.to_f %></td>
+                <td><%= hyrax_metadata_profile.metadata_profile_type %></td>
+                <td><%= hyrax_metadata_profile.created_at.strftime("%b %d, %Y") %></td>
+                <th><%= link_to raw('<span class="fa fa-download"></span>'), hyrax.admin_metadata_profile_export_path(hyrax_metadata_profile), target: "_blank" %></th>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        <%= page_entries_info @metadata_profiles %><br />
+        <%= paginate(@metadata_profiles, param_name: :metadata_profile_entries_page) %>
+
+      </div>
+      <% else %>
+        <p>No Metadata Schema Profiles have been created.</p>
+      <% end %>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<%= render 'import_modal' %>

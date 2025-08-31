@@ -46,10 +46,6 @@ module Hyrax
       config_search_paths.collect { |root_path| root_path.to_s + "/config/metadata/#{schema_name}.yaml" }
     end
 
-    def config_search_paths
-      Hyrax.config.simple_schema_loader_config_search_paths
-    end
-
     def metadata_files
       file_name_arr = []
       config_search_paths.each { |root_path| file_name_arr += Dir.entries(root_path.to_s + "/config/metadata/") }
