@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+require 'hyrax/specs/shared_specs'
+
 RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
   routes { Hyrax::Engine.routes }
   let(:admin)   { FactoryBot.create(:admin, email: 'admin@example.com') }

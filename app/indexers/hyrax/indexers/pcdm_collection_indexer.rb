@@ -10,6 +10,7 @@ module Hyrax
       include Hyrax::LocationIndexer
       include Hyrax::ThumbnailIndexer
       include Hyrax::Indexer(:core_metadata) if Hyrax.config.collection_include_metadata?
+      check_if_flexible(Hyrax::PcdmCollection)
 
       self.thumbnail_path_service = CollectionThumbnailPathService
 

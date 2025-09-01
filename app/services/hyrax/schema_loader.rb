@@ -45,6 +45,10 @@ module Hyrax
       end
     end
 
+    def current_version
+      1
+    end
+
     ##
     # @api private
     class AttributeDefinition

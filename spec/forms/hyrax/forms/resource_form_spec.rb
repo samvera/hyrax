@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'hyrax/specs/shared_specs'
+
 RSpec.describe Hyrax::Forms::ResourceForm do
   subject(:form) { described_class.for(work) }
   let(:work)     { Hyrax::Work.new }

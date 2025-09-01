@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+exec "./bin/rails s -b 0.0.0.0"
