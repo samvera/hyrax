@@ -235,7 +235,7 @@ fcrepo:
   postgresql:
     enabled: false
     image:
-      repository: bitnami/postgresql
+      repository: bitnamilegacy/postgresql
       tag: 12.17.0-debian-11-r28
 
 # configuration for an external/existing fits service;
@@ -252,13 +252,13 @@ fits:
 memcached:
   enabled: false
   image:
-    repository: bitnami/memcached
+    repository: bitnamilegacy/memcached
     tag: 1.6.15-debian-11-r12
 
 minio:
   enabled: false
   image:
-    repository: bitnami/minio
+    repository: bitnamilegacy/minio
     tag: 2022.7.4-debian-11-r0
   auth:
     rootUser: hyrax-access-key
@@ -270,7 +270,7 @@ minio:
 postgresql:
   enabled: true
   image:
-    repository: bitnami/postgresql
+    repository: bitnamilegacy/postgresql
     tag: 12.11.0-debian-11-r12
   auth:
     database: hyrax
@@ -292,7 +292,7 @@ postgresql:
 nginx:
   enabled: false
   image:
-    repository: bitnami/nginx
+    repository: bitnamilegacy/nginx
     tag: 1.23.0-debian-11-r1
   # this needs to be set since templates/ingress.yaml tries to
   # evaluate .Values.nginx.service.port, and it needs to at least evaluate to
@@ -430,11 +430,10 @@ nginx:
   #       }
   #   }
 
-
 redis:
   enabled: true
   image:
-    repository: bitnami/redis
+    repository: bitnamilegacy/redis
     tag: 7.0.2-debian-11-r7
   auth:
     password: mysecret
@@ -442,7 +441,7 @@ redis:
 solr:
   enabled: true
   image:
-    repository: bitnami/solr
+    repository: bitnamilegacy/solr
     tag: 8.11.2-debian-11-r4
   containerPorts:
     http: 8983
@@ -458,6 +457,9 @@ solr:
     enabled: true
   zookeeper:
     enabled: true
+    image:
+      repository: bitnamilegacy/zookeeper
+      tag: 3.8.2-debian-11-r9
     persistence:
       enabled: true
 
