@@ -2,11 +2,11 @@ apiVersion: v2
 name: hyrax
 description: An open-source, Samvera-powered digital repository system
 type: application
-version: 3.7.0
+version: 3.7.1
 appVersion: 5.0.0
 dependencies:
   - name: fcrepo
-    version: 2.0.0
+    version: 2.0.2
     repository: oci://ghcr.io/samvera
     condition: fcrepo.enabled
   - name: memcached
