@@ -63,7 +63,7 @@ module Hyrax
       end
 
       def run_workflow_action!(action:)
-        subject = WorkflowActionInfo.new(work, user)
+        subject = Hyrax::WorkflowActionInfo.new(work, user)
         Workflow::WorkflowActionService.run(subject: subject,
                                             action: action)
       end
