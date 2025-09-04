@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "charts/**"
+      - "chart/**"
   workflow_dispatch:
     inputs:
       debug_enabled:
@@ -39,6 +39,7 @@ jobs:
       - name: Run chart-releaser
         uses: samvera-labs/helm-oci-charts-releaser@main
         with:
+          charts_dir: chart
           oci_registry: ghcr.io/samvera
           oci_username: samvera
           oci_password: ${{ secrets.GITHUB_TOKEN }}
