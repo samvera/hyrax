@@ -53,7 +53,8 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
       filename: carrier_wave_sanitized_file.original_filename,
       file_set: file_set,
       use: pcdm_use,
-      user: user
+      user: user,
+      mime_type: carrier_wave_sanitized_file.content_type
     )
   end
 end

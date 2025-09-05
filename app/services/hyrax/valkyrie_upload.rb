@@ -40,7 +40,7 @@ class Hyrax::ValkyrieUpload
 
   def upload(filename:, file_set:, io:, use: Hyrax::FileMetadata::Use::ORIGINAL_FILE, user: nil, mime_type: nil, skip_derivatives: false) # rubocop:disable Metrics/AbcSize
     return version_upload(file_set: file_set, io: io, user: user) if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE && file_set.original_file_id && storage_adapter.supports?(:versions)
-    streamfile = storage_adapter.upload(file: io, original_filename: filename, resource: file_set)
+    streamfile = storage_adapter.upload(file: io, original_filename: filename, resource: file_set, content_type: mime_type)
     file_metadata = Hyrax::FileMetadata(streamfile)
     file_metadata.file_set_id = file_set.id
     file_metadata.pcdm_use = Array(use)
