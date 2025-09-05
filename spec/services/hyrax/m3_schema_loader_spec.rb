@@ -86,4 +86,136 @@ RSpec.describe Hyrax::M3SchemaLoader do
         .to eq(title: { required: true, primary: true, multiple: true })
     end
   end
+
+  describe '#view_definitions_for' do
+    context 'when schema has attributes without view options' do
+      it 'returns empty hash' do
+        expect(schema_loader.view_definitions_for(schema: Monograph.to_s))
+          .to eq({})
+      end
+    end
+
+    context 'when schema has attributes with view options' do
+      let(:profile_with_view) do
+        modified_profile = profile.dup
+        modified_profile['properties']['title']['view'] = {
+          'label' => { 'en' => 'Title', 'es' => 'Título' },
+          'html_dl' => true
+        }
+        modified_profile['properties']['description'] = {
+          'available_on' => {
+            'class' => ['Monograph']
+          },
+          'view' => {
+            'label' => { 'en' => 'Description' },
+            'display' => true
+          },
+          'cardinality' => { 'minimum' => 0 },
+          'multi_value' => true,
+          'property_uri' => 'http://purl.org/dc/terms/description',
+          'range' => 'http://www.w3.org/2001/XMLSchema#string'
+        }
+        modified_profile
+      end
+      let(:schema_with_view) do
+        Hyrax::FlexibleSchema.create(
+          profile: profile_with_view
+        )
+      end
+
+      before do
+        allow(Hyrax::FlexibleSchema).to receive(:find_by).and_return(schema_with_view)
+      end
+
+      it 'returns hash with view definitions for attributes that have view options' do
+        result = schema_loader.view_definitions_for(schema: Monograph.to_s)
+        expect(result).to include(
+          title: {
+            label: { "en" => 'Title', "es" => 'Título' },
+            html_dl: true
+          },
+          description: {
+            label: { "en" => 'Description' },
+            display: true
+          }
+        )
+      end
+
+      it 'excludes attributes without view options' do
+        result = schema_loader.view_definitions_for(schema: Monograph.to_s)
+        expect(result).not_to have_key(:depositor)
+      end
+    end
+
+    context 'with context filtering' do
+      let(:profile_with_context) do
+        modified_profile = profile.dup
+        modified_profile['properties']['title']['view'] = { 'label' => { 'en' => 'Title' } }
+        modified_profile['properties']['contextual_field'] = {
+          'available_on' => {
+            'class' => ['Monograph'],
+            'context' => 'flexible_context'
+          },
+          'view' => { 'label' => { 'en' => 'Contextual Field' } },
+          'cardinality' => { 'minimum' => 0 },
+          'multi_value' => true,
+          'property_uri' => 'http://example.org/contextual_field',
+          'range' => 'http://www.w3.org/2001/XMLSchema#string'
+        }
+        modified_profile
+      end
+      let(:schema_with_context) do
+        Hyrax::FlexibleSchema.create(
+          profile: profile_with_context
+        )
+      end
+
+      before do
+        allow(Hyrax::FlexibleSchema).to receive(:find_by).and_return(schema_with_context)
+      end
+
+      context 'when no context is provided' do
+        it 'excludes fields with context requirements' do
+          result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: nil)
+          expect(result).to include(title: { label: { "en" => 'Title' } })
+          expect(result).not_to have_key(:contextual_field)
+        end
+      end
+
+      context 'when matching context is provided' do
+        it 'includes fields matching the context' do
+          result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'flexible_context')
+          expect(result).to include(
+            title: { label: { "en" => 'Title' } },
+            contextual_field: { label: { "en" => 'Contextual Field' } }
+          )
+        end
+      end
+
+      context 'when non-matching context is provided' do
+        it 'excludes fields with different context requirements' do
+          result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'other_context')
+          expect(result).to include(title: { label: { "en" => 'Title' } })
+          expect(result).not_to have_key(:contextual_field)
+        end
+      end
+    end
+
+    context 'when database is unavailable' do
+      before do
+        allow(Hyrax::FlexibleSchema).to receive(:find_by).and_raise(ActiveRecord::StatementInvalid, "Database error")
+      end
+
+      it 'returns empty hash when database query fails' do
+        expect(schema_loader.view_definitions_for(schema: Monograph.to_s)).to eq({})
+      end
+    end
+
+    context 'with version parameter' do
+      it 'passes version to schema lookup' do
+        expect(Hyrax::FlexibleSchema).to receive(:find_by).with(id: 2)
+        schema_loader.view_definitions_for(schema: Monograph.to_s, version: 2)
+      end
+    end
+  end
 end
