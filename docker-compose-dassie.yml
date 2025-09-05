@@ -116,18 +116,18 @@ services:
       - hyrax
 
   memcached:
-    image: bitnami/memcached
+    image: bitnamilegacy/memcached
     ports:
       - "11211:11211"
     networks:
       - hyrax
 
   redis:
-    image: bitnami/redis:6.2
+    image: bitnamilegacy/redis:6.2
     env_file:
       - .dassie/.env
     volumes:
-      - redis:/bitnami/redis/data
+      - redis:/bitnamilegacy/redis/data
     networks:
       - hyrax
 
