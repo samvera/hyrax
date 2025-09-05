@@ -330,13 +330,30 @@ module Hyrax
       @fixity_service ||= Hyrax::Fixity::ActiveFedoraFixityService
     end
 
-    # This value determines whether to use m3 flexible metadata schema or not
+    # This value determines whether to use flexible metadata / m3 profile ui or not
     attr_writer :flexible
     def flexible
       @flexible ||=
         ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_FLEXIBLE', false))
     end
     alias flexible? flexible
+
+    # This value determines whether to use m3 flexible metadata for core classes or not
+    attr_writer :flexible_classes
+    def flexible_classes
+      flexible_env = ENV.fetch('HYRAX_FLEXIBLE_CLASSES', nil)
+      flexible_env = flexible_env.split(',').map(&:strip) if flexible_env
+      flexible_env ||= if flexible?
+                         [
+                           Hyrax.config.collection_model,
+                           Hyrax.config.file_set_model,
+                           Hyrax.config.admin_set_model
+                         ]
+                       else
+                         []
+                       end
+      @flexible_classes ||= flexible_env
+    end
 
     # This value determines whether to use load the Freyja adapter in dassie
     attr_writer :valkyrie_transition
@@ -1234,7 +1251,9 @@ module Hyrax
       @visibility_map ||= Hyrax::VisibilityMap.instance
     end
 
-    attr_writer :simple_schema_loader_config_search_paths
+    attr_writer :schema_loader_config_search_paths
+    alias simple_schema_loader_config_search_paths= schema_loader_config_search_paths=
+    alias m3_schema_loader_config_search_paths= schema_loader_config_search_paths=
     # A configuration for modifying the SimpleSchemaLoader#config_search_paths
     # which will allow gems to add their own metadata yaml files and easily keep
     # them within the gem.
@@ -1248,9 +1267,11 @@ module Hyrax
     #
     #   Hyrax.config.simple_schema_loader_config_search_paths
     #   => [#<Pathname:/app/samvera>, #<Pathname:/app/samvera/hyrax-webapp>, #<Pathname:/app/samvera/hyrax-webapp/gems/hyrax>]
-    def simple_schema_loader_config_search_paths
-      @simple_schema_loader_config_search_paths ||= [Rails.root, Hyrax::Engine.root]
+    def schema_loader_config_search_paths
+      @schema_loader_config_search_paths ||= [Rails.root, Hyrax::Engine.root]
     end
+    alias simple_schema_loader_config_search_paths schema_loader_config_search_paths
+    alias m3_schema_loader_config_search_paths schema_loader_config_search_paths
 
     private
 

@@ -47,6 +47,95 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
     end
   end
 
+  describe '#view_definitions_for' do
+    context 'when schema has no attributes with view options' do
+      it 'returns empty hash' do
+        # The SimpleSchemaLoader expects objects with a `meta` method like property objects
+        mock_property = double('Property', name: :title, meta: {})
+        schema_with_no_view = [mock_property]
+        result = schema_loader.view_definitions_for(schema: schema_with_no_view)
+        expect(result).to eq({})
+      end
+    end
+
+    context 'when passed schema object directly' do
+      let(:mock_property) do
+        double('Property',
+               name: :test_attribute,
+               meta: { 'view' => { 'label' => { 'en' => 'Test Label' } } })
+      end
+      let(:mock_property_no_view) do
+        double('Property',
+               name: :no_view_attribute,
+               meta: {})
+      end
+      let(:schema_with_view) { [mock_property, mock_property_no_view] }
+
+      it 'processes schema objects with view metadata' do
+        result = schema_loader.view_definitions_for(schema: schema_with_view)
+        expect(result).to eq(
+          'test_attribute' => { 'label' => { 'en' => 'Test Label' } }
+        )
+      end
+
+      it 'excludes properties without view metadata' do
+        result = schema_loader.view_definitions_for(schema: schema_with_view)
+        expect(result).not_to have_key('no_view_attribute')
+      end
+
+      it 'handles properties with nil view metadata' do
+        mock_property_nil = double('Property', name: :nil_view, meta: { 'view' => nil })
+        schema_with_nil = [mock_property_nil]
+        result = schema_loader.view_definitions_for(schema: schema_with_nil)
+        expect(result).to eq({})
+      end
+    end
+
+    context 'when schema has attributes with view options' do
+      let(:mock_property_with_view) do
+        double('Property',
+               name: :sample_attribute,
+               meta: {
+                 'view' => {
+                   'label' => { 'en' => 'Sample Attribute', 'es' => 'Atributo de muestra' },
+                   'display' => true
+                 }
+               })
+      end
+      let(:mock_property_no_view) do
+        double('Property',
+               name: :sample_without_view,
+               meta: {})
+      end
+      let(:schema_with_mixed_view) { [mock_property_with_view, mock_property_no_view] }
+
+      it 'returns hash with view definitions for attributes that have view options' do
+        result = schema_loader.view_definitions_for(schema: schema_with_mixed_view)
+        expect(result).to include(
+          'sample_attribute' => {
+            'label' => { 'en' => 'Sample Attribute', 'es' => 'Atributo de muestra' },
+            'display' => true
+          }
+        )
+      end
+
+      it 'excludes attributes without view options' do
+        result = schema_loader.view_definitions_for(schema: schema_with_mixed_view)
+        expect(result).not_to have_key('sample_without_view')
+      end
+    end
+
+    context 'with version and contexts parameters' do
+      it 'ignores version and contexts parameters as documented' do
+        mock_property = double('Property', name: :title, meta: {})
+        schema_objects = [mock_property]
+        expect do
+          schema_loader.view_definitions_for(schema: schema_objects, version: 2, contexts: ['test'])
+        end.not_to raise_error
+      end
+    end
+  end
+
   describe '#permissive_schema_for_valkrie_adapter' do
     let(:permissive_schema) { schema_loader.permissive_schema_for_valkrie_adapter }
 

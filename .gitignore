@@ -4,6 +4,7 @@
 ruby-version
 ruby-gemset
 .rvmrc
+mise.toml
 Gemfile*.lock
 
 # don't push around data files (for dev envs only)

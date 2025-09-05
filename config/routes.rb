@@ -245,6 +245,11 @@ Hyrax::Engine.routes.draw do
     resource :appearance
     resources :collection_types, except: :show
     resources :collection_type_participants, only: [:create, :destroy]
+    # Metadata profiles routes
+    resources :metadata_profiles, except: [:update, :show, :destroy] do
+      collection { post :import }
+      get 'export'
+    end
   end
 
   resources :content_blocks, only: [] do

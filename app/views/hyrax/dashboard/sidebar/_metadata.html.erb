@@ -1,0 +1,11 @@
+<%# menu item to be inserted when using flexible metadata %>
+<% if Hyrax.config.flexible? && current_ability.can?(:manage, Hyrax::FlexibleSchema) %>
+  <li class="nav-item">
+    <%= menu.nav_link(hyrax.admin_metadata_profiles_path,
+                      class: "nav-link",
+                      onclick: "dontChangeAccordion(event);",
+                      title: t('hyrax.admin.sidebar.metadata_profiles')) do %>
+                        <span class="fa fa-table" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.metadata_profiles') %></span>
+                      <% end %>
+  </li>
+<% end %>

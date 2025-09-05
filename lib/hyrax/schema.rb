@@ -56,7 +56,16 @@ module Hyrax
     ##
     # @!attribute [r] name
     #   @return [Symbol]
-    attr_reader :name
+    attr_reader :name, :version
+
+    ##
+    def self.m3_schema_loader
+      M3SchemaLoader.new
+    end
+
+    def self.simple_schema_loader
+      SimpleSchemaLoader.new
+    end
 
     ##
     # @param [Symbol] schema_name
@@ -64,15 +73,16 @@ module Hyrax
     # @note use Hyrax::Schema(:my_schema) instead
     #
     # @api private
-    def initialize(schema_name, schema_loader: SimpleSchemaLoader.new)
-      @name = schema_name
+    def initialize(schema_name, schema_loader: Hyrax::Schema.simple_schema_loader, schema_version: '1')
+      @name = schema_name.to_s
+      @version = schema_version
       @schema_loader = schema_loader
     end
 
     ##
     # @return [Hash{Symbol => Dry::Types::Type}]
     def attributes
-      @schema_loader.attributes_for(schema: name)
+      @schema_loader.attributes_for(schema: name, version: version)
     end
 
     ##
