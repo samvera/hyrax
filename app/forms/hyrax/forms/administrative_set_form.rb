@@ -6,6 +6,8 @@ module Hyrax
     # @api public
     # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
     class AdministrativeSetForm < Hyrax::Forms::ResourceForm
+      check_if_flexible(Hyrax::AdministrativeSet)
+
       ##
       # @api private
       AdminSetMembersPopulator = lambda do |**_options|
@@ -22,7 +24,7 @@ module Hyrax
 
       property :title, required: true, primary: true
       property :description, primary: true
-      property :contexts, primary: true if Hyrax.config.flexible?
+      property :contexts, primary: true if Hyrax.config.admin_set_flexible?
 
       property :creator
 

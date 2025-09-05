@@ -2,7 +2,7 @@
 
 # Generated via
 #  `rails generate hyrax:collection_resource CollectionResource`
-class CollectionResourceIndexer < Hyrax::PcdmCollectionIndexer
-  include Hyrax::Indexer(:basic_metadata)
-  include Hyrax::Indexer(:collection_resource)
+class CollectionResourceIndexer < Hyrax::Indexers::PcdmCollectionIndexer
+  include Hyrax::Indexer(:basic_metadata) if Hyrax.config.collection_include_metadata?
+  check_if_flexible(CollectionResource)
 end

@@ -25,7 +25,7 @@ module Hyrax
 
     # CurationConcern methods
     delegate :stringify_keys, :human_readable_type, :collection?, :representative_id,
-             :to_s, to: :solr_document
+             :to_s, :schema_version, to: :solr_document
 
     delegate(*Hyrax::CollectionType.settings_attributes, to: :collection_type, prefix: :collection_type_is)
     alias nestable? collection_type_is_nestable?

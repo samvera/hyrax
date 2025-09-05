@@ -60,6 +60,10 @@ module Hyrax
       end
 
       class << self
+        def check_if_flexible(model)
+          include Hyrax::Indexer(model.to_s, index_loader: Hyrax::Schema.m3_schema_loader) if model.flexible?
+        end
+
         ##
         # @api public
         # @param resource [Valkyrie::Resource] an instance of a

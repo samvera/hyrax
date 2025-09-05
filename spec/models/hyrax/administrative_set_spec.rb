@@ -16,7 +16,7 @@ RSpec.describe Hyrax::AdministrativeSet do
 
     context 'with non-wings adapter', valkyrie_adapter: :postgres_adapter do
       before do
-        allow(Hyrax).to receive_message_chain(:config, :disable_wings).and_return(true) # rubocop:disable RSpec/MessageChain
+        allow_any_instance_of(Hyrax::Configuration).to receive(:disable_wings).and_return(true)
         hide_const("Wings") # disable_wings=true removes the Wings constant
       end
       let(:admin_set) { described_class.new(title: 'AdminSet without wings') }

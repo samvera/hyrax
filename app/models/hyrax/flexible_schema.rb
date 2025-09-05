@@ -9,15 +9,15 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   before_save :update_contexts
 
   def self.current_version
-    order("created_at asc").last.profile
+    order("created_at asc").last&.profile
   end
 
   def self.current_schema_id
-    order("created_at asc").last.id
+    order("created_at asc").last&.id
   end
 
   def self.create_default_schema
-    m3_profile_path = Hyrax.config.m3_schema_loader.config_paths&.first
+    m3_profile_path = Hyrax::Schema.m3_schema_loader.config_paths&.first
     raise ArgumentError, "No M3 profile found, check the Hyrax.config.schema_loader_config_search_paths" unless m3_profile_path
     Hyrax::FlexibleSchema.first_or_create do |f|
       f.profile = YAML.safe_load_file(m3_profile_path)
@@ -94,7 +94,7 @@ class Hyrax::FlexibleSchema < ApplicationRecord
       values['available_on']['class'].each do |property_class|
         # map some m3 items to what Hyrax expects
         values = values_map(values)
-        @class_names[property_class][key] = values
+        @class_names[property_class][key] = values unless @class_names[property_class].nil?
       end
     end
     @class_names

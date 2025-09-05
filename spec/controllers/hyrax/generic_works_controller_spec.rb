@@ -209,7 +209,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
       before do
         allow(controller).to receive(:search_results).and_return([nil, document_list])
       end
-      let(:work) { instance_double(GenericWork, id: '99999', to_global_id: '99999') }
+      let(:work) { instance_double(GenericWork, id: '99999', to_global_id: '99999', flexible?: false) }
 
       context 'with a user lacking both workflow permission and read access' do
         before do
@@ -217,7 +217,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
           allow(controller.current_ability).to receive(:can?).with(:read, document).and_return(false)
         end
         let(:document_list) { [] }
-        let(:document) { instance_double(SolrDocument, suppressed?: true) }
+        let(:document) { instance_double(SolrDocument, suppressed?: true, flexible?: false) }
 
         it 'shows the unauthorized message' do
           get :show, params: { id: work.id }
@@ -231,7 +231,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
             allow(controller.current_ability).to receive(:can?).with(:read, document).and_return(true)
           end
           let(:document_list) { [] }
-          let(:document) { instance_double(SolrDocument, suppressed?: true) }
+          let(:document) { instance_double(SolrDocument, suppressed?: true, flexible?: false) }
 
           it 'shows the unavailable message' do
             get :show, params: { id: work.id }

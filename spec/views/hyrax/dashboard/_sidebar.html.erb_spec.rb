@@ -23,6 +23,7 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
     allow(view).to receive(:can?).with(:manage, Hyrax::Feature).and_return(manage_feature)
     allow(view).to receive(:can?).with(:manage, Sipity::WorkflowResponsibility).and_return(manage_workflow)
     allow(view).to receive(:can?).with(:manage, :collection_types).and_return(manage_collection_types)
+    allow(ability).to receive(:can?).with(:manage, Hyrax::FlexibleSchema).and_return(true)
     allow(view).to receive(:current_ability).and_return(ability)
   end
 

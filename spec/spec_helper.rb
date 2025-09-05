@@ -7,6 +7,7 @@ ENV.delete('APP_NAME') # Prevent custom test app names in specs
 # Analytics is turned off by default
 ENV['HYRAX_ANALYTICS'] = 'false'
 ENV['HYRAX_FLEXIBLE'] = 'false'
+ENV['HYRAX_DISABLE_INCLUDE_METADATA'] = 'false'
 
 require "bundler/setup"
 
@@ -54,6 +55,12 @@ require 'hyrax/specs/engine_routes'
 
 require 'rubocop'
 require 'rubocop/rspec/support'
+
+## Require shared specs here
+# Shared specs should all be universally required instead of required once per spec file. However some shared specs currently conflict with each other or cause side effects.
+# In order to work that out over time, any shared spec that is "clean" to include should be added here until all shared specs can be universally required.
+require 'hyrax/specs/shared_specs/simple_work'
+## End shared require
 
 # ensure Hyrax::Schema gets loaded is resolvable for `support/` models
 Hyrax::Schema # rubocop:disable Lint/Void

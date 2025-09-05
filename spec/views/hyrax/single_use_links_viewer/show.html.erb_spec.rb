@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/single_use_links_viewer/show.html.erb' do
-  let(:solr_document) { SolrDocument.new(has_model_ssim: ['FileSet']) }
+  let(:solr_document) { SolrDocument.new(has_model_ssim: ['Hyrax::FileSet']) }
   let(:ability) { double }
 
   let(:hash) { "some-dummy-sha2-hash" }

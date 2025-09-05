@@ -33,7 +33,7 @@ RSpec.describe 'hyrax/base/_items.html.erb', type: :view do
     let(:child2) { double('Thing2', id: 'Thing 2', title: 'Title 2') }
     let(:child3) { double('Thing3', id: 'Thing 3', title: 'Title 3') }
     let(:member_list) { [child1, child2, child3] }
-    let(:solr_document) { double('Solr Doc', id: 'the-id') }
+    let(:solr_document) { double('Solr Doc', id: 'the-id', flexible?: false) }
     let(:presenter) { Hyrax::WorkShowPresenter.new(solr_document, ability, request) }
 
     before do

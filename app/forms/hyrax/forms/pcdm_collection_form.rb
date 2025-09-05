@@ -7,6 +7,7 @@ module Hyrax
     # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
     class PcdmCollectionForm < Hyrax::Forms::ResourceForm # rubocop:disable Metrics/ClassLength
       include Hyrax::FormFields(:core_metadata) if Hyrax.config.collection_include_metadata?
+      check_if_flexible(Hyrax::PcdmCollection)
 
       BannerInfoPrepopulator = lambda do |**_options|
         self.banner_info ||= begin
@@ -66,7 +67,7 @@ module Hyrax
                 .select { |_, definition| definition[:primary] }
                 .keys.map(&:to_sym)
 
-        terms = [:schema_version] + terms if Hyrax.config.flexible?
+        terms = [:schema_version] + terms if model.flexible?
         terms
       end
 

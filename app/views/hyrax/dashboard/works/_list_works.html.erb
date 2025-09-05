@@ -29,7 +29,9 @@
       </div>
     </div>
   </td>
-
+  <% if Hyrax.config.flexible? %>
+    <td class='text-center'><%= document.schema_version.to_f if document.schema_version %></td>
+  <% end %>
   <td class="date text-center"><%= document.date_modified %></td>
   <td class='workflow-state text-center'><%= presenter.workflow.state_label %></td>
   <td class='text-center'><%= render_visibility_link document %></td>

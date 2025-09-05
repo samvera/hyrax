@@ -6,6 +6,7 @@ module Hyrax
     extend ActiveSupport::Concern
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
+    include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
 
     included do
       with_themed_layout :decide_layout
@@ -59,6 +60,7 @@ module Hyrax
       # TODO: move these lines to the work form builder in Hyrax
       curation_concern.depositor = current_user.user_key
       curation_concern.admin_set_id = params[:admin_set_id] || admin_set_id_for_new
+      curation_concern.contexts = Hyrax.query_service.find_by(id: curation_concern.admin_set_id)&.contexts if curation_concern.flexible?
       build_form
     end
 
@@ -177,7 +179,8 @@ module Hyrax
       Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s
     end
 
-    def build_form
+    def build_form(contexts: [])
+      curation_concern.contexts = contexts if contexts.present?
       @form = work_form_service.build(curation_concern, current_ability, self)
     end
 
@@ -189,7 +192,7 @@ module Hyrax
     # @return [#errors]
     # rubocop:disable Metrics/MethodLength
     def create_valkyrie_work
-      form = build_form
+      form = build_form(contexts: params[hash_key_for_curation_concern]['contexts'])
       action = create_valkyrie_work_action.new(form: form,
                                                transactions: transactions,
                                                user: current_user,

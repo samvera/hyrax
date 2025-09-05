@@ -12,6 +12,9 @@
       </label>
     </th>
     <th><%= t("hyrax.dashboard.my.heading.title") %></th>
+    <% if Hyrax.config.collection_flexible? %>
+      <th><%= t("hyrax.dashboard.my.heading.profile_version") %></th>
+    <% end %>
     <% if !current_ability.admin? %>
       <th><%= t("hyrax.dashboard.my.heading.access") %></th>
     <% end %>

@@ -50,6 +50,11 @@ RSpec.describe "Workflow state changes", type: :feature do
     Hyrax::Workflow::PermissionGenerator.call(roles: 'approving', workflow: workflow, agents: approving_user)
     # Need to instantiate the Sipity::Entity for the given work. This is necessary as I'm not creating the work via the UI.
     Hyrax::Workflow::WorkflowFactory.create(work, {}, depositing_user)
+    Wings::ModelRegistry.register(GenericWorkResource, GenericWork) if defined?(Wings::ModelRegistry)
+  end
+
+  after do
+    Wings::ModelRegistry.unregister(GenericWorkResource) if defined?(Wings::ModelRegistry)
   end
 
   describe 'leaving a comment for non-state changing' do

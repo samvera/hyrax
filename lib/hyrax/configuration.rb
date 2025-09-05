@@ -313,7 +313,7 @@ module Hyrax
     #   @return [Boolean] whether to include static metadata for file_sets
     attr_writer :file_set_include_metadata
     def file_set_include_metadata
-      @file_set_include_metadata ||= flexible? ? false : true
+      @file_set_include_metadata ||= disable_include_metadata ? false : true
     end
     alias file_set_include_metadata? file_set_include_metadata
 
@@ -353,6 +353,23 @@ module Hyrax
                          []
                        end
       @flexible_classes ||= flexible_env
+    end
+
+    def admin_set_flexible?
+      flexible_classes.include?(admin_set_model) || (admin_set_class.respond_to?(:flexible?) && admin_set_class.flexible?)
+    end
+
+    def collection_flexible?
+      flexible_classes.include?(collection_model) || (collection_class.respond_to?(:flexible?) && collection_class.flexible?)
+    end
+
+    def file_set_flexible?
+      flexible_classes.include?(file_set_model) || (file_set_class.respond_to?(:flexible?) && file_set_class.flexible?)
+    end
+
+    attr_writer :disable_include_metadata
+    def disable_include_metadata
+      @disable_include_metadata ||= ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_DISABLE_INCLUDE_METADATA', false))
     end
 
     # This value determines whether to use load the Freyja adapter in dassie
@@ -911,7 +928,7 @@ module Hyrax
     #   @return [Boolean] whether to include static metadata for works
     attr_writer :work_include_metadata
     def work_include_metadata
-      @work_include_metadata ||= flexible? ? false : true
+      @work_include_metadata ||= disable_include_metadata ? false : true
     end
     alias work_include_metadata? work_include_metadata
 
@@ -988,7 +1005,7 @@ module Hyrax
     #   @return [Boolean] whether to include static metadata for collections
     attr_writer :collection_include_metadata
     def collection_include_metadata
-      @collection_include_metadata ||= flexible? ? false : true
+      @collection_include_metadata ||= disable_include_metadata ? false : true
     end
     alias collection_include_metadata? collection_include_metadata
 
@@ -1041,7 +1058,7 @@ module Hyrax
     #   @return [Boolean] whether to include static metadata for admin_sets
     attr_writer :admin_set_include_metadata
     def admin_set_include_metadata
-      @admin_set_include_metadata ||= flexible? ? false : true
+      @admin_set_include_metadata ||= disable_include_metadata ? false : true
     end
     alias admin_set_include_metadata? admin_set_include_metadata
 

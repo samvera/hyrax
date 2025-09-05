@@ -9,7 +9,7 @@ module Hyrax
         include Hyrax::FormFields(:core_metadata)
         include Hyrax::FormFields(:file_set_metadata)
       end
-
+      check_if_flexible(Hyrax::FileSet)
       include Hyrax::DepositAgreementBehavior
       include Hyrax::ContainedInWorksBehavior
       include Hyrax::LeaseabilityBehavior

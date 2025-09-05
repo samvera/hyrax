@@ -24,11 +24,44 @@ module Hyrax
       @solr_document = Hyrax::SolrDocument::OrderedMembers.decorate(solr_document)
       @current_ability = current_ability
       @request = request
+      define_dynamic_methods if @solr_document.flexible?
     end
+
+    def define_dynamic_methods # rubocop:disable Metrics/MethodLength
+      Hyrax::FlexibleSchema.default_properties.each do |prop|
+        method_name = prop.to_s
+        property_details = Hyrax::FlexibleSchema.current_version["properties"][method_name]
+        next unless property_details
+
+        index_keys = property_details["indexing"]
+        next unless index_keys
+
+        multi_value = property_details['multiple'] || (property_details['data_type'] == 'array')
+
+        next if self.class.method_defined?(method_name) && solr_document.respond_to?(method_name)
+        # Define the method on the SolrDocument class
+        Hyrax::SolrDocument::OrderedMembers.send(:define_method, method_name) do
+          index_keys.each do |index_key|
+            value = self[index_key]
+            return value if value.present?
+          end
+          multi_value ? [] : ""
+        end
+
+        # Define the method on the Presenter class
+        self.class.send(:define_method, method_name) do
+          @solr_document.send(method_name)
+        end
+      end
+    end # rubocop:enable Metrics/MethodLength
 
     # We cannot rely on the method missing to catch this delegation.  Because
     # most all objects implicitly implicitly implement #to_s
     delegate :to_s, to: :solr_document
+
+    def schema_version
+      solr_document[:schema_version_ssi]
+    end
 
     def page_title
       "#{human_readable_type} | #{title.first} | ID: #{id} | #{I18n.t('hyrax.product_name')}"

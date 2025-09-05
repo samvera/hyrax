@@ -34,6 +34,10 @@ module Hyrax
       self.class.to_rdf_representation
     end
 
+    def flexible?
+      false
+    end
+
     module ClassMethods
       # This governs which partial to draw when you render this type of object
       def _to_partial_path # :nodoc:
@@ -42,6 +46,10 @@ module Hyrax
           collection = ActiveSupport::Inflector.tableize(name)
           "hyrax/#{collection}/#{element}"
         end
+      end
+
+      def flexible?
+        false
       end
     end
   end

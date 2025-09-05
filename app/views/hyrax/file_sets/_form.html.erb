@@ -1,4 +1,6 @@
 <%= simple_form_for [main_app, curation_concern], html: { multipart: true, class: 'nav-safety' } do |f| %>
+  <%= render('shared/schema_version', f: f) if f.object.flexible? %>
+
   <fieldset class="required">
     <span class="col-form-label">
       <%= label_tag 'file_set[title][]', t('.title'),  class: "string optional" %>
