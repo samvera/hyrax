@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'google/cloud/errors'
+
 module Hyrax
   module AnalyticsErrorHandling
     extend ActiveSupport::Concern
