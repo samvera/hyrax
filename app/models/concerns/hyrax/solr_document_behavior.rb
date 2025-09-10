@@ -82,12 +82,15 @@ module Hyrax
 
     # Method to return the model
     def hydra_model(classifier: nil)
-      # finds the model from the solr document
-      model = first('has_model_ssim')&.safe_constantize
-      # this returns nil if it isn't a valid model
-      resource_model = (first('has_model_ssim')&.+ 'Resource')&.safe_constantize if Hyrax.config.valkyrie_transition?
-      # if valkyrie_transition is enabled, we generally want to use the resource model if it exists
-      resource_model || model || model_classifier(classifier).classifier(self).best_model
+      valkyrie_model = "#{hydra_model_name}Resource".safe_constantize if Hyrax.config.valkyrie_transition
+
+      valkyrie_model ||
+        hydra_model_name&.safe_constantize ||
+        model_classifier(classifier).classifier(self).best_model
+    end
+
+    def hydra_model_name
+      @has_model ||= first('has_model_ssim')
     end
 
     def depositor(default = '')
@@ -147,6 +150,18 @@ module Hyrax
 
     def extensions_and_mime_types
       JSON.parse(self['extensions_and_mime_types_ssm'].first).map(&:with_indifferent_access) if self['extensions_and_mime_types_ssm']
+    end
+
+    def schema_version
+      self['schema_version_ssi']
+    end
+
+    def contexts
+      self['contexts_ssim']
+    end
+
+    def flexible?
+      schema_version.present?
     end
 
     private

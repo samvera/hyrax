@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'hyrax/specs/shared_specs/simple_work.rb'
 require 'hyrax/specs/shared_specs/change_set'
 
 RSpec.describe Hyrax::ChangeSet do

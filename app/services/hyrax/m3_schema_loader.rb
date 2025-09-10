@@ -23,6 +23,10 @@ module Hyrax
       end.compact
     end
 
+    def current_version
+      Hyrax::FlexibleSchema.current_schema_id
+    end
+
     private
 
     ##

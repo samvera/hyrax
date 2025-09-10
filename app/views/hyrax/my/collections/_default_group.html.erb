@@ -4,6 +4,9 @@
   <tr>
     <th class="check-all"><label for="check_all" class="sr-only"><%= t("hyrax.dashboard.my.sr.check_all_label") %></label><%= render_check_all %></th>
     <th><%= t("hyrax.dashboard.my.heading.title") %></th>
+    <% if Hyrax.config.collection_flexible? %>
+      <th><%= t("hyrax.dashboard.my.heading.profile_version") %></th>
+    <% end %>
     <th><%= t("hyrax.dashboard.my.heading.type") %></th>
     <th><%= t("hyrax.dashboard.my.heading.last_modified") %></th>
     <th><%= t("hyrax.dashboard.my.heading.items") %></th>

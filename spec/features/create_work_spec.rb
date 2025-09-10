@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
   let(:user) { create(:user) }
   let!(:ability) { ::Ability.new(user) }
@@ -6,13 +7,21 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
   let(:file2) { File.open(fixture_path + '/image.jp2') }
   let!(:uploaded_file1) { Hyrax::UploadedFile.create(file: file1, user: user) }
   let!(:uploaded_file2) { Hyrax::UploadedFile.create(file: file2, user: user) }
-  let(:permission_template) { create(:permission_template, with_admin_set: true, with_active_workflow: true) }
+  let(:permission_template) do
+    # ensure the admin set is indexed properly
+    with_live_indexing { create(:permission_template, with_admin_set: true, with_active_workflow: true) }
+  end
 
   before do
     # Grant the user access to deposit into an admin set.
     create(:permission_template_access, :deposit, permission_template: permission_template, agent_type: 'user', agent_id: user.user_key)
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
     allow(CharacterizeJob).to receive(:perform_later)
+    Wings::ModelRegistry.register(GenericWorkResource, GenericWork) if defined?(Wings::ModelRegistry)
+  end
+
+  after do
+    Wings::ModelRegistry.unregister(GenericWorkResource) if defined?(Wings::ModelRegistry)
   end
 
   context "when the user is not a proxy" do
@@ -138,7 +147,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
     end
   end
 
-  context "with valkyrie resources", index_adapter: :solr_index, valkyrie_adapter: :postgres_adapter do
+  context "with valkyrie resources", valkyrie_adapter: :postgres_adapter do
     before do
       sign_in user
       click_link 'Works'

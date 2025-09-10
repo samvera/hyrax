@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+
+require 'hyrax/specs/shared_specs'
 RSpec.describe Hyrax::BatchEditsController, type: :controller do
   let(:user) { create(:user) }
 

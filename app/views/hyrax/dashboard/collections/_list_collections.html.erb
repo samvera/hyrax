@@ -55,6 +55,9 @@
       </div>
     </div>
   </td>
+  <% if Hyrax.config.collection_flexible? %>
+    <td class='text-center'><%= collection_presenter.schema_version.to_f if collection_presenter.schema_version %></td>
+  <% end %>
   <% if !current_ability.admin? %>
     <td><%= collection_presenter.managed_access %></td>
   <% end %>

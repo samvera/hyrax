@@ -30,9 +30,10 @@ module Hyrax
   #   `Hyrax::VisibilityWriter` (which provide their underlying
   #   implementations).
   #
-  class Resource < Valkyrie::Resource
+  class Resource < Valkyrie::Resource # disable:rubocop Metrics/ClassLength
     include Hyrax::Naming
     include Hyrax::WithEvents
+    include Hyrax::WithEmbargoesAndLeases
 
     attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
     attribute :embargo_id,    Valkyrie::Types::Params::ID
@@ -44,6 +45,21 @@ module Hyrax
              :read_users,  :read_users=, to: :permission_manager
 
     class << self
+      def inherited(subclass)
+        super
+        subclass.acts_as_flexible_resource if Hyrax.config.flexible_classes.include?(subclass.to_s)
+      end
+
+      def acts_as_flexible_resource
+        include Hyrax::Flexibility
+        include Hyrax::Schema(to_s, schema_loader: Hyrax::Schema.m3_schema_loader)
+        Hyrax.config.flexible_classes << to_s unless Hyrax.config.flexible_classes.include?(to_s)
+      end
+
+      def flexible?
+        defined?(super) ? super : false
+      end
+
       ##
       # @return [String] a human readable name for the model
       def human_readable_type
@@ -103,6 +119,10 @@ module Hyrax
       def _hyrax_default_name_class
         Hyrax::ResourceName
       end
+    end
+
+    def flexible?
+      self.class.flexible?
     end
 
     ##
@@ -168,30 +188,6 @@ module Hyrax
 
     def visibility
       visibility_reader.read
-    end
-
-    def embargo=(value)
-      raise TypeError "can't convert #{value.class} into Hyrax::Embargo" unless value.is_a? Hyrax::Embargo
-
-      @embargo = value
-      self.embargo_id = @embargo.id
-    end
-
-    def embargo
-      return @embargo if @embargo
-      @embargo = Hyrax.query_service.find_by(id: embargo_id) if embargo_id.present?
-    end
-
-    def lease=(value)
-      raise TypeError "can't convert #{value.class} into Hyrax::Lease" unless value.is_a? Hyrax::Lease
-
-      @lease = value
-      self.lease_id = @lease.id
-    end
-
-    def lease
-      return @lease if @lease
-      @lease = Hyrax.query_service.find_by(id: lease_id) if lease_id.present?
     end
 
     protected

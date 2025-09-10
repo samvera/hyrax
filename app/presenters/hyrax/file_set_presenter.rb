@@ -41,6 +41,10 @@ module Hyrax
       nil
     end
 
+    def model
+      solr_document.to_model
+    end
+
     def single_use_links
       @single_use_links ||= SingleUseLink.where(item_id: id).map { |link| link_presenter_class.new(link) }
     end

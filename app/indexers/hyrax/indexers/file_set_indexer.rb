@@ -12,6 +12,7 @@ module Hyrax
         include Hyrax::Indexer(:core_metadata)
         include Hyrax::Indexer(:file_set_metadata)
       end
+      check_if_flexible(Hyrax::FileSet)
 
       def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
         super.tap do |solr_doc| # rubocop:disable Metrics/BlockLength

@@ -76,5 +76,11 @@ module Hyrax
         URI::GID.build app: GlobalID.app, model_name: model_name.name, model_id: @id
       end
     end
+
+    ##
+    # @api public
+    def name
+      @model.name
+    end
   end
 end

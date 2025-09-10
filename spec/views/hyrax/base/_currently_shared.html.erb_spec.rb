@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe 'hyrax/base/_currently_shared.html.erb', type: :view do
   let(:user) { stub_model(User) }
 
