@@ -24,12 +24,12 @@ es:
           suppressed_bsi: Estado
           visibility_ssi: Visibilidad
         show:
-          admin_set: 'En Conjunto Administrativo:'
+          admin_set: "En Conjunto Administrativo:"
           based_near_label: Ubicación
           contributor: Colaboradores
           keyword: Palabra Clave
       filters:
-        title: 'Filtrado por:'
+        title: "Filtrado por:"
       start_over: Borrar filtros
   download:
     one: y 1 descarga
@@ -39,8 +39,8 @@ es:
       carrierwave_download_error: No se pudo descargar la imagen.
       carrierwave_integrity_error: No es una imagen.
       carrierwave_processing_error: No se puede cambiar el tamaño de la imagen.
-      extension_blacklist_error: 'La subida de archivos %{extension} no está permitida, tipos prohibidos: %{prohibited_types}'
-      extension_whitelist_error: 'La subida de archivos %{extension} no está permitida, tipos permitidos: %{allowed_types}'
+      extension_blacklist_error: "La subida de archivos %{extension} no está permitida, tipos prohibidos: %{prohibited_types}"
+      extension_whitelist_error: "La subida de archivos %{extension} no está permitida, tipos permitidos: %{allowed_types}"
   helpers:
     action:
       accept: Aceptar
@@ -145,9 +145,9 @@ es:
             title: Espectadores
             type: Tipo
         form_participants:
-          add_group: 'Añadir grupo:'
+          add_group: "Añadir grupo:"
           add_participants: Añadir participantes
-          add_user: 'Añadir usuario:'
+          add_user: "Añadir usuario:"
           current_participants: Participantes actuales
         form_visibility:
           cancel: Cancelar
@@ -160,16 +160,16 @@ es:
             varies:
               any: Permitir que el depositante decida
               between: Entre "ahora" y
-              description: 'Varía -- los depositantes pueden fijar la fecha de lanzamiento para un trabajo individual:'
+              description: "Varía -- los depositantes pueden fijar la fecha de lanzamiento para un trabajo individual:"
               embargo:
                 1yr: Un año después del depósito
                 2yrs: Dos años después del depósito
                 3yrs: Tres años después del depósito
                 6mos: Seis meses después del depósito
                 select: Seleccione el período de embargo...
-              period: 'El depositante puede elegir un período de embargo hasta:'
+              period: "El depositante puede elegir un período de embargo hasta:"
           visibility:
-            description: 'Después de su fecha de lanzamiento, los trabajos de este conjunto pueden ser descubiertos y descargados por:'
+            description: "Después de su fecha de lanzamiento, los trabajos de este conjunto pueden ser descubiertos y descargados por:"
             everyone: Todos -- todos los trabajos de este conjunto serán públicos.
             institution: Institución -- todos los trabajos serán visibles sólo para los usuarios autenticados de esta institución
             restricted: Restringido -- todos los trabajos serán visibles sólo para los administradores y gestores de repositorios y los revisores de este conjunto administrativo
@@ -374,7 +374,7 @@ es:
           update_notice: Participantes actualizados
         form_settings:
           instructions: Esta configuración determina cómo se pueden administrar y descubrir colecciones de este tipo.
-          warning: 'Advertencia: estas configuraciones no se pueden cambiar después de que se haya creado una colección de este tipo.'
+          warning: "Advertencia: estas configuraciones no se pueden cambiar después de que se haya creado una colección de este tipo."
         index:
           breadcrumb: Tipos de colección
           create_new_button: Crear nuevo tipo de colección
@@ -392,7 +392,7 @@ es:
             actions: Comportamiento
             name: Nombre
         multiple_membership_checker:
-          error_preamble: 'Error: ha especificado más de uno de los mismos tipos de colección de membresía única'
+          error_preamble: "Error: ha especificado más de uno de los mismos tipos de colección de membresía única"
           error_type_and_collections: "(tipo: %{type}, colecciones: %{collections})"
         new:
           header: Crear nuevo tipo de colección
@@ -436,7 +436,7 @@ es:
       stats:
         deposited_form:
           end_label: Finalizando [el momento actual es el valor predeterminado]
-          heading: 'Ver Archivos Depositados:'
+          heading: "Ver Archivos Depositados:"
           start_label: Comenzando
         repository_objects:
           series:
@@ -447,14 +447,14 @@ es:
           end_label: Finalizando [el momento actual es el valor predeterminado]
           headers:
             main: Estadísticas de trabajo
-            total: 'Obras totales:'
+            total: "Obras totales:"
             visibility: Totales por visibilidad
           heading: Ver archivos depositados por los usuarios
           start_label: Comenzando
         works:
           headers:
             main: Estadísticas de trabajo
-            total: 'Total de Obras:'
+            total: "Total de Obras:"
             visibility: Totales por visibilidad
       users:
         index:
@@ -510,7 +510,7 @@ es:
         default: "¡Debe iniciar sesión para hacer eso!"
       unprocessable_entity:
         default: El recurso que intentó modificar no se puede modificar de acuerdo a su solicitud.
-    background_attribution_html: ''
+    background_attribution_html: ""
     base:
       attributes:
         table_attribute_name: Nombre del Atributo
@@ -520,7 +520,7 @@ es:
       citations:
         citations: Citas
         endnote: EndNote
-        header: 'Citaciones:'
+        header: "Citaciones:"
         mendeley: Mendeley
         zotero: Zotero
       currently_shared:
@@ -590,7 +590,7 @@ es:
         legend_html: Visibilidad <small>¿Quién debería ser capaz de ver o descargar este contenido?</small>
         management_page: Página de Gestión de Arrendamiento
       form_progress:
-        proxy_depositors: 'Depositantes apoderados: seleccione el usuario en cuyo nombre está depositando'
+        proxy_depositors: "Depositantes apoderados: seleccione el usuario en cuyo nombre está depositando"
         required_agreement: Comprobar el acuerdo de depósito
         required_descriptions: Describa su trabajo
         required_files: Añadir archivos
@@ -653,7 +653,7 @@ es:
         empty: Este %{type} no está actualmente disponible en ninguna colección.
         header: Relaciones
       relationships_parent_row:
-        label: 'En %{type}:'
+        label: "En %{type}:"
       share_with:
         definition_heading: Definiciones de permisos
         definitions_html: "<strong>Ver / Descargar:</strong> este archivo (tanto contenido como metadatos) es accesible desde %{application_name}. <br /> <strong>Editar:</strong> este archivo (tanto contenido como metadatos) se puede editar. Solo puede otorgar este permiso a usuarios y / o grupos %{institution_name}."
@@ -680,7 +680,7 @@ es:
         twitter: Twitter
         twitter_share: Compartir en Twitter
       unauthorized:
-        id: 'ID: %{id}'
+        id: "ID: %{id}"
         is_private: El %{type} al que ha intentado acceder es privado.
         page_is_private: La página a la que ha intentado acceder es privada.
         unauthorized: No autorizado
@@ -715,11 +715,11 @@ es:
         button_label: Eliminar Seleccionados
         deleting_file_from: Eliminar un archivo de %{application_name} es permanente. Haga clic en Aceptar para eliminar este archivo de %{application_name}, o en Cancelar para cancelar esta operación
       edit:
-        apply_changes_to: 'Los cambios se aplicarán a: (%{x_number_of} funciona)'
+        apply_changes_to: "Los cambios se aplicarán a: (%{x_number_of} funciona)"
         batch_edit_descriptions: Descripciones de edición por lotes & nbsp; & nbsp; & nbsp; <small> Haga clic en las etiquetas a continuación para editar las descripciones de trabajo. </small>
         clear_batch: Borrar lote
         descriptions: Descripciones
-        descriptions_title: 'Descripciones:'
+        descriptions_title: "Descripciones:"
         permissions: Permisos
         sharing: Compartir
         visibility: Visibilidad
@@ -789,7 +789,7 @@ es:
         create: Crear Colección
         create_new: Añadir a una nueva Colección
         no_collections: No tiene acceso a ninguna colección existente. Puede crear una nueva colección.
-        select_heading: 'Seleccionar la colección a la que añadir tus archivos:'
+        select_heading: "Seleccionar la colección a la que añadir tus archivos:"
         title: Añadir a la colección
         update: Actualizar Colección
     collection_type:
@@ -818,7 +818,7 @@ es:
         works_in_collection: Trabajos en esta colección
       sort_and_per_page:
         number_of_results_to_display_per_page: Número de resultados a mostrar por página
-        results_per_page: 'Resultados por página:'
+        results_per_page: "Resultados por página:"
         sort_by_html: "<span>Tipo:</span>"
     contact_form:
       button_label: Enviar
@@ -872,7 +872,7 @@ es:
       collections:
         collection_title: Título de la colección
         edit:
-          header: 'Editar colección: %{title}'
+          header: "Editar colección: %{title}"
         files: Archivos
         form:
           permission_update_errors:
@@ -888,7 +888,7 @@ es:
             relationships: Relaciones
             sharing: Compartiendo
         form_branding:
-          alt_text: 'Texto Alternativo:'
+          alt_text: "Texto Alternativo:"
           banner:
             description: Una imagen para mostrar en la parte superior de la página de colección. Para obtener los mejores resultados, cargue una imagen (JPG, GIF o PNG) que tenga al menos 120 píxeles de alto y 1.200 píxeles de ancho.
             label: Bandera
@@ -896,7 +896,7 @@ es:
             description: Opcionalmente, puede cargar una imagen de banner y / o imágenes de logotipo para asociar con esta colección. Si se cargan, estas imágenes se mostrarán en la parte superior de la página de la colección para proporcionar una marca única para la colección.
             label: Marca
           choose_file: Elija Archivo
-          link_url: 'Link URL:'
+          link_url: "Link URL:"
           logo:
             description: Una o más imágenes para mostrar en la parte superior de la página de la colección. Para obtener los mejores resultados, cargue una imagen (JPG, GIF o PNG) de 40 píxeles de altura. Las imágenes más grandes se redimensionarán a 40 píxeles de altura.
             label: Logo
@@ -996,12 +996,12 @@ es:
         show_document_list_menu:
           select: Seleccionar
         show_document_list_row:
-          creator: 'Creador:'
-          depositor: 'Depositor:'
-          edit_access: 'Editar acceso:'
+          creator: "Creador:"
+          depositor: "Depositor:"
+          edit_access: "Editar acceso:"
         sort_and_per_page:
           show_par_page_html: "%{select} Por página"
-          sort_by: 'Ordenar Por:'
+          sort_by: "Ordenar Por:"
         title: Colecciones
         work_action_menu:
           delete_work: Eliminar trabajo
@@ -1063,21 +1063,21 @@ es:
           view_collection: Ver colección
           work_confirmation: El borrado de un trabajo de %{application_name} es permanente. Presione OK para borrar este trabajo de %{application_name}, o Cancelar para cancelar esta operación
         collection_list:
-          description: 'Descripción:'
-          edit_access: 'Editar Acceso:'
-          groups: 'Grupos:'
+          description: "Descripción:"
+          edit_access: "Editar Acceso:"
+          groups: "Grupos:"
           managed_access:
             deposit: Depositar
             manage: Gestionar
             view: Ver
-          users: 'Usuarios:'
+          users: "Usuarios:"
         collections: Mis Colecciones
         collections_report: Informe de cobros
         facet_label:
-          collections: 'Filtrar colecciones:'
-          highlighted: 'Filtrar aspectos destacados:'
-          shared: 'Filtrar archivos compartidos:'
-          works: 'Filtrar trabajos:'
+          collections: "Filtrar colecciones:"
+          highlighted: "Filtrar aspectos destacados:"
+          shared: "Filtrar archivos compartidos:"
+          works: "Filtrar trabajos:"
         heading:
           access: Acceso
           action: Acciones
@@ -1090,6 +1090,7 @@ es:
           highlighted: Destacado
           items: Artículos
           last_modified: Última modificación
+          profile_version: Versión de perfil
           title: Título
           type: Tipo
           visibility: Visibilidad
@@ -1288,7 +1289,8 @@ es:
         save: Salvar
         title: Título
       groups_description:
-        description_html: 'La lista de grupos del listado "Seleccionar un grupo" es una lista de Grupos Administrados por el Usuario de la que que es miembro. Puede seleccionar un grupo específico y asignar un nivel de acceso por archivo dentro de %{application_name}, y del mismo modo puede agregar niveles de acceso de usuarios.
+        description_html:
+          'La lista de grupos del listado "Seleccionar un grupo" es una lista de Grupos Administrados por el Usuario de la que que es miembro. Puede seleccionar un grupo específico y asignar un nivel de acceso por archivo dentro de %{application_name}, y del mismo modo puede agregar niveles de acceso de usuarios.
 
           '
       permission:
@@ -1456,7 +1458,7 @@ es:
       change_tab_message: "¿Seguro que quieres salir de esta pestaña? Cualquier información no guardada se perderá."
     notifications:
       batch_create_failure:
-        message: 'La creación del lote para %{user} falló: %{messages}'
+        message: "La creación del lote para %{user} falló: %{messages}"
         subject: Creación de lote fallido
       batch_create_success:
         message: El lote creado para %{user} pasó.
@@ -1472,7 +1474,7 @@ es:
           subject: Solicitud de cambio de propiedad
           transfer_link_label: las solicitudes de transferencia
         transfer_on_update:
-          comments: 'Comentarios: %{receiver_comment}'
+          comments: "Comentarios: %{receiver_comment}"
           message: Su solicitud de transferencia fue %{status}.
           subject: Cambio de propiedad %{status}
         validation:
@@ -1667,9 +1669,9 @@ es:
         set_all_to_this_resource_type: Establecer todo a este tipo de recurso
         start: comienzo
       js_templates_branding:
-        alt_text: 'Texto alternativo:'
+        alt_text: "Texto alternativo:"
         error: Error
-        link_url: 'URL del enlace:'
+        link_url: "URL del enlace:"
         previous: anterior
         remove: retirar
         remove_new_banner: Eliminar nuevo banner
@@ -1804,7 +1806,7 @@ es:
         require_membership: Un trabajo debe pertenecer a al menos una colección de este tipo
         sharable: Permitir a los usuarios asignar administradores de colecciones, depositantes y espectadores para las colecciones que administran
         share_applies_to_new_works: Cuando se crean nuevos trabajos directamente en la colección, conceda permisos para compartir usuarios y grupos para el nuevo trabajo de acuerdo con sus roles de recopilación.
-        title: ''
+        title: ""
       defaults:
         abstract: Un breve resumen de un artículo de investigación, tesis, revisión, conferencia o cualquier análisis en profundidad de un tema en particular.
         access_right: Contiene información sobre quién puede acceder al recurso o una indicación de su estado de seguridad.

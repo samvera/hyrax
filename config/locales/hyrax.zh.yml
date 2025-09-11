@@ -24,12 +24,12 @@ zh:
           suppressed_bsi: 状况
           visibility_ssi: 公开度
         show:
-          admin_set: '管理集内:'
+          admin_set: "管理集内:"
           based_near_label: 地点
           contributor: 贡献者
           keyword: 关键词
       filters:
-        title: '筛选:'
+        title: "筛选:"
       start_over: 清除筛选
   download:
     one: 和 1 个下载
@@ -145,9 +145,9 @@ zh:
             title: 观众
             type: 类型
         form_participants:
-          add_group: '添加小组:'
+          add_group: "添加小组:"
           add_participants: 添加参与者
-          add_user: '添加用户:'
+          add_user: "添加用户:"
           current_participants: 目前参与者
         form_visibility:
           cancel: 取消
@@ -160,7 +160,7 @@ zh:
             varies:
               any: 存储者可以选择任何延迟发布时间
               between: 存储者可以选择最近时间
-              description: '允许存储者设置发布日期:'
+              description: "允许存储者设置发布日期:"
               embargo:
                 1yr: 存储一年之后
                 2yrs: 存储两年之后
@@ -169,7 +169,7 @@ zh:
                 select: 选择延迟发布期限..
               period: 存储者可以选择延迟发布期限：
           visibility:
-            description: '发布日期之后, 管理集内的作品可以被发现和下载:'
+            description: "发布日期之后, 管理集内的作品可以被发现和下载:"
             everyone: 公开 -- 管理集内的所有作品会公开
             institution: 机构 -- 所有作品只对机构内的认证用户公开
             restricted: 私有 -- 所有作品只会对存储库的管理员和此管理集的管理员与评审员公开
@@ -436,7 +436,7 @@ zh:
       stats:
         deposited_form:
           end_label: 结束 [默认到此刻]
-          heading: '展示存储的文件:'
+          heading: "展示存储的文件:"
           start_label: 开始
         repository_objects:
           series:
@@ -475,7 +475,7 @@ zh:
             name: 名称
             roles: 角色
             user: 用户
-          new_role: '授予角色:'
+          new_role: "授予角色:"
           no_roles: 没有角色
       workflows:
         index:
@@ -510,7 +510,7 @@ zh:
         default: 您必须要先登录才可以做!
       unprocessable_entity:
         default: 您试着要修改的资源按照您的请求无法被修改。
-    background_attribution_html: ''
+    background_attribution_html: ""
     base:
       attributes:
         table_attribute_name: 属性名称
@@ -520,7 +520,7 @@ zh:
       citations:
         citations: 引文
         endnote: 的EndNote
-        header: '引文:'
+        header: "引文:"
         mendeley: Mendeley
         zotero: Zotero只
       currently_shared:
@@ -651,7 +651,7 @@ zh:
         empty: 该 %{type} 目前未纳入任何收藏集内。
         header: 关联
       relationships_parent_row:
-        label: '属于 %{type}:'
+        label: "属于 %{type}:"
       share_with:
         definition_heading: 许可定义
         definitions_html: "<strong>查看/下载：</strong>可以从%{application_name}中访问此文件（内容和元数据）。 <br /> <strong>编辑：</strong>可以<strong>编辑</strong>此文件（包括内容和元数据）。您只能将此权限授予%{institution_name}用户和/或组。"
@@ -1063,19 +1063,19 @@ zh:
         collection_list:
           description: 描述：
           edit_access: 编辑访问：
-          groups: '群:'
+          groups: "群:"
           managed_access:
             deposit: 存款
             manage: 管理
             view: 视图
-          users: '用户:'
+          users: "用户:"
         collections: 你的收藏集
         collections_report: 收藏报告
         facet_label:
-          collections: '筛选您的收藏集:'
-          highlighted: '筛选您的收藏精品:'
-          shared: '筛选您的分享:'
-          works: '筛选作品:'
+          collections: "筛选您的收藏集:"
+          highlighted: "筛选您的收藏精品:"
+          shared: "筛选您的分享:"
+          works: "筛选作品:"
         heading:
           access: 访问
           action: 行动
@@ -1088,6 +1088,7 @@ zh:
           highlighted: 重点
           items: 项目
           last_modified: 上一次更改
+          profile_version: 配置文件版本
           title: 标题
           type: 类型
           visibility: 公开度
@@ -1741,7 +1742,7 @@ zh:
       default:
         deposit: 存储
       load:
-        state_error: '工作流程：%{workflow_name}尚未更新。 您在移除%{entity_count}条目的状况: %{state_name}。 在包含有效条目时，状况不能被移除!'
+        state_error: "工作流程：%{workflow_name}尚未更新。 您在移除%{entity_count}条目的状况: %{state_name}。 在包含有效条目时，状况不能被移除!"
       unauthorized: 该作品目前还在审批中，目前不可用
       unauthorized_parent: 该文件当前不可用，因为其父级工作尚未完成批准过程
     works:
@@ -1800,7 +1801,7 @@ zh:
         require_membership: 作品必须至少属于这种类型的一个集合
         sharable: 允许用户为他们管理的收藏分配收藏管理员，存储者和查看者
         share_applies_to_new_works: 当直接在集合中创建新作品时，根据其集合角色为新作品授予共享用户和组的权限。
-        title: ''
+        title: ""
       defaults:
         abstract: 研究文章，论文，评论，会议程序或对特定主题的任何深入分析的简要概述。
         access_right: 包含有关谁可以访问资源或其安全状态指示的信息。

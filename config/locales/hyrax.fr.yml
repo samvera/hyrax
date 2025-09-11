@@ -24,12 +24,12 @@ fr:
           suppressed_bsi: Statut
           visibility_ssi: Visibilité
         show:
-          admin_set: 'Dans l''ensemble administratif:'
+          admin_set: "Dans l'ensemble administratif:"
           based_near_label: Emplacement
           contributor: Contributeurs
           keyword: Mot-clé
       filters:
-        title: 'Filtrage par:'
+        title: "Filtrage par:"
       start_over: Effacer les filtres
   download:
     one: et 1 téléchargement
@@ -39,8 +39,8 @@ fr:
       carrierwave_download_error: Impossible de télécharger l'image.
       carrierwave_integrity_error: Pas une image.
       carrierwave_processing_error: Impossible de redimensionner l'image.
-      extension_blacklist_error: 'Vous n''êtes pas autorisé à télécharger des fichiers %{extension}, types interdits: %{prohibited_types}'
-      extension_whitelist_error: 'Vous n''êtes pas autorisé à télécharger des fichiers %{extension}, types autorisés: %{allowed_types}'
+      extension_blacklist_error: "Vous n'êtes pas autorisé à télécharger des fichiers %{extension}, types interdits: %{prohibited_types}"
+      extension_whitelist_error: "Vous n'êtes pas autorisé à télécharger des fichiers %{extension}, types autorisés: %{allowed_types}"
   helpers:
     action:
       accept: Acceptez
@@ -145,9 +145,9 @@ fr:
             title: Les spectateurs
             type: Type
         form_participants:
-          add_group: 'Ajouter un groupe:'
+          add_group: "Ajouter un groupe:"
           add_participants: Ajouter des participants
-          add_user: 'Ajouter un utilisateur:'
+          add_user: "Ajouter un utilisateur:"
           current_participants: Participants actuels
         form_visibility:
           cancel: Annuler
@@ -160,16 +160,16 @@ fr:
             varies:
               any: Permettre au déposant de décider
               between: Entre «maintenant» et
-              description: 'Variable - les déposants peuvent définir la date de sortie pour un travail individuel:'
+              description: "Variable - les déposants peuvent définir la date de sortie pour un travail individuel:"
               embargo:
                 1yr: 1 an après le dépôt
                 2yrs: 2 ans après le dépôt
                 3yrs: 3 ans après le dépôt
                 6mos: 6 mois après le dépôt
                 select: Sélectionnez la période d'embargo ...
-              period: 'Le déposant peut choisir la période d''embargo jusqu''à:'
+              period: "Le déposant peut choisir la période d'embargo jusqu'à:"
           visibility:
-            description: 'Après sa date de sortie, les travaux de cet ensemble peuvent être découverts et téléchargés par:'
+            description: "Après sa date de sortie, les travaux de cet ensemble peuvent être découverts et téléchargés par:"
             everyone: Tout le monde - tout fonctionne dans cet ensemble sera public
             institution: Institution - tous les travaux seront visibles uniquement pour les utilisateurs authentifiés de cette institution
             restricted: Restriction - tous les travaux seront visibles uniquement pour les gestionnaires de référentiel et les gestionnaires et les examinateurs de cet ensemble administratif
@@ -374,7 +374,7 @@ fr:
           update_notice: Participants mis à jour
         form_settings:
           instructions: Ces paramètres déterminent comment les collections de ce type peuvent être gérées et découvertes.
-          warning: 'Avertissement: ces paramètres ne peuvent pas être modifiés après la création d''une collection de ce type.'
+          warning: "Avertissement: ces paramètres ne peuvent pas être modifiés après la création d'une collection de ce type."
         index:
           breadcrumb: Types de collection
           create_new_button: Créer un nouveau type de collection
@@ -392,7 +392,7 @@ fr:
             actions: actes
             name: prénom
         multiple_membership_checker:
-          error_preamble: 'Erreur: vous avez spécifié plusieurs des mêmes types de collection de membres uniques'
+          error_preamble: "Erreur: vous avez spécifié plusieurs des mêmes types de collection de membres uniques"
           error_type_and_collections: "(type: %{type}, collections: %{collections})"
         new:
           header: Créer un nouveau type de collection
@@ -436,7 +436,7 @@ fr:
       stats:
         deposited_form:
           end_label: Fin [par défaut pour maintenant]
-          heading: 'Afficher les fichiers déposés:'
+          heading: "Afficher les fichiers déposés:"
           start_label: Début
         repository_objects:
           series:
@@ -447,14 +447,14 @@ fr:
           end_label: Terminer [par défaut pour le moment]
           headers:
             main: Statistiques de travail
-            total: 'Total des travaux :'
+            total: "Total des travaux :"
             visibility: Totaux par visibilité
           heading: Afficher les fichiers déposés par les utilisateurs
           start_label: Départ
         works:
           headers:
             main: Statistiques du travail
-            total: 'Total des travaux:'
+            total: "Total des travaux:"
             visibility: Totaux par visibilité
       users:
         index:
@@ -510,7 +510,7 @@ fr:
         default: Vous devez être connecté pour faire cela!
       unprocessable_entity:
         default: La ressource que vous avez tenté de modifier ne peut pas être modifiée selon votre demande.
-    background_attribution_html: ''
+    background_attribution_html: ""
     base:
       attributes:
         table_attribute_name: Nom d'attribut
@@ -520,7 +520,7 @@ fr:
       citations:
         citations: Citations
         endnote: EndNote
-        header: 'Citations:'
+        header: "Citations:"
         mendeley: Mendeley
         zotero: Zotero
       currently_shared:
@@ -654,7 +654,7 @@ fr:
         empty: Ce %{type} ne se trouve actuellement dans aucune collection.
         header: Des relations
       relationships_parent_row:
-        label: 'Dans %{type}:'
+        label: "Dans %{type}:"
       share_with:
         definition_heading: Définitions d'autorisation
         definitions_html: "<strong>Afficher / Télécharger:</strong> ce fichier (contenu et métadonnées) est accessible depuis %{application_name}. <br /> <strong>Edit:</strong> ce fichier (contenu et métadonnées) peut être modifié. Vous ne pouvez accorder cette autorisation qu'aux utilisateurs et / ou groupes de %{institution_name}."
@@ -681,7 +681,7 @@ fr:
         twitter: Gazouillement
         twitter_share: Partager sur Twitter
       unauthorized:
-        id: 'ID: %{id}'
+        id: "ID: %{id}"
         is_private: Le %{type} auquel vous avez essayé d'accéder est privé
         page_is_private: La page à laquelle vous avez essayé d'accéder est privée
         unauthorized: Non autorisé
@@ -716,11 +716,11 @@ fr:
         button_label: Supprimer la sélection
         deleting_file_from: La suppression d'un fichier de %{application_name} est permanente. Cliquez sur OK pour supprimer ce fichier de %{application_name} ou sur Annuler pour annuler cette opération.
       edit:
-        apply_changes_to: 'Les modifications seront appliquées à: (%{x_number_of} fonctionne)'
+        apply_changes_to: "Les modifications seront appliquées à: (%{x_number_of} fonctionne)"
         batch_edit_descriptions: Modifier les descriptions par lots & nbsp; & nbsp; & nbsp; <small> Cliquez sur les étiquettes ci-dessous pour modifier les descriptions de travail. </ Small>
         clear_batch: Lot clair
         descriptions: Descriptions
-        descriptions_title: 'Descriptions:'
+        descriptions_title: "Descriptions:"
         permissions: Les permissions
         sharing: Partage
         visibility: Visibilité
@@ -790,7 +790,7 @@ fr:
         create: Créer une collection
         create_new: Ajouter à la nouvelle collection
         no_collections: Vous n'avez accès à aucune collection existante. Vous pouvez créer une nouvelle collection.
-        select_heading: 'Sélectionnez la collection pour ajouter vos fichiers à:'
+        select_heading: "Sélectionnez la collection pour ajouter vos fichiers à:"
         title: Ajouter à la collection
         update: Mise à jour de la collection
     collection_type:
@@ -819,7 +819,7 @@ fr:
         works_in_collection: Fonctionne dans cette collection
       sort_and_per_page:
         number_of_results_to_display_per_page: Nombre de résultats à afficher par page
-        results_per_page: 'Résultats par page:'
+        results_per_page: "Résultats par page:"
         sort_by_html: "<span>Trier par:</span>"
     contact_form:
       button_label: Envoyer
@@ -873,7 +873,7 @@ fr:
       collections:
         collection_title: Titre de la collection
         edit:
-          header: 'Modifier la collection: %{title}'
+          header: "Modifier la collection: %{title}"
         files: Des dossiers
         form:
           permission_update_errors:
@@ -889,7 +889,7 @@ fr:
             relationships: Des relations
             sharing: Partage
         form_branding:
-          alt_text: 'Texte alternatif:'
+          alt_text: "Texte alternatif:"
           banner:
             description: Une image à afficher en haut de la page de collection. Pour de meilleurs résultats, téléchargez une image (JPG, GIF ou PNG) d'une hauteur d'au moins 120 pixels et d'une largeur de 1200 pixels.
             label: Bannière
@@ -997,12 +997,12 @@ fr:
         show_document_list_menu:
           select: Sélectionner
         show_document_list_row:
-          creator: 'Créateur:'
-          depositor: 'Déposant:'
-          edit_access: 'Modifier l''accès:'
+          creator: "Créateur:"
+          depositor: "Déposant:"
+          edit_access: "Modifier l'accès:"
         sort_and_per_page:
           show_par_page_html: Afficher %{select} collections par page
-          sort_by: 'Trier par:'
+          sort_by: "Trier par:"
         title: Collections
         work_action_menu:
           delete_work: Supprimer le travail
@@ -1064,21 +1064,21 @@ fr:
           view_collection: Afficher la collection
           work_confirmation: Supprimer un travail de %{application_name} est permanent. Cliquez sur OK pour supprimer ce travail de %{application_name} ou sur Annuler pour annuler cette opération
         collection_list:
-          description: 'La description:'
-          edit_access: 'Modifier l''accès:'
-          groups: 'Groupes:'
+          description: "La description:"
+          edit_access: "Modifier l'accès:"
+          groups: "Groupes:"
           managed_access:
             deposit: Dépôt
             manage: Gérer
             view: Vue
-          users: 'Utilisateurs:'
+          users: "Utilisateurs:"
         collections: Vos collections
         collections_report: Rapport de recouvrement
         facet_label:
-          collections: 'Collections de filtre:'
-          highlighted: 'Faits saillants du filtre:'
-          shared: 'Filtrer les actions:'
-          works: 'Le filtre fonctionne:'
+          collections: "Collections de filtre:"
+          highlighted: "Faits saillants du filtre:"
+          shared: "Filtrer les actions:"
+          works: "Le filtre fonctionne:"
         heading:
           access: Accès
           action: Actes
@@ -1091,6 +1091,7 @@ fr:
           highlighted: Souligné
           items: Articles
           last_modified: Dernière modification
+          profile_version: Version du profil
           title: Titre
           type: Type
           visibility: Visibilité
@@ -1455,7 +1456,7 @@ fr:
       change_tab_message: Êtes-vous sûr de vouloir quitter cet onglet? Toutes les données non enregistrées seront perdues.
     notifications:
       batch_create_failure:
-        message: 'La création par lots pour %{user} a échoué: %{messages}'
+        message: "La création par lots pour %{user} a échoué: %{messages}"
         subject: Lot échouant créer
       batch_create_success:
         message: Le lot créé pour %{user} a été transmis.
@@ -1471,7 +1472,7 @@ fr:
           subject: Demande de changement de propriété
           transfer_link_label: les demandes de transfert
         transfer_on_update:
-          comments: 'Commentaires: %{receiver_comment}'
+          comments: "Commentaires: %{receiver_comment}"
           message: Votre demande de transfert était %{status}.
           subject: Changement de propriété %{status}
         validation:
@@ -1666,9 +1667,9 @@ fr:
         set_all_to_this_resource_type: Définir tout pour ce type de ressource
         start: Début
       js_templates_branding:
-        alt_text: 'Texte alternatif:'
+        alt_text: "Texte alternatif:"
         error: Erreur
-        link_url: 'URL du lien:'
+        link_url: "URL du lien:"
         previous: précédent
         remove: Retirer
         remove_new_banner: Supprimer la nouvelle bannière
@@ -1744,7 +1745,7 @@ fr:
       default:
         deposit: Dépôt
       load:
-        state_error: 'Le flux de travail: %{workflow_name} n''a pas été mis à jour. Vous supprimez un état: %{state_name} avec %{entity_count} entity / s. Un état peut ne pas être supprimé s''il possède des entités actives!'
+        state_error: "Le flux de travail: %{workflow_name} n'a pas été mis à jour. Vous supprimez un état: %{state_name} avec %{entity_count} entity / s. Un état peut ne pas être supprimé s'il possède des entités actives!"
       unauthorized: Le travail n'est actuellement pas disponible car il n'a pas encore terminé le processus d'approbation
       unauthorized_parent: Le fichier n'est actuellement pas disponible car son travail parent n'a pas encore terminé le processus d'approbation
     works:
@@ -1803,7 +1804,7 @@ fr:
         require_membership: Une oeuvre doit appartenir à au moins une collection de ce type
         sharable: Autoriser les utilisateurs à affecter des gestionnaires de collection, des déposants et des lecteurs aux collections qu'ils gèrent
         share_applies_to_new_works: Lorsque de nouveaux travaux sont créés directement dans la collection, accordez aux utilisateurs et aux groupes des autorisations de partage pour le nouveau travail en fonction de leurs rôles de collection.
-        title: ''
+        title: ""
       defaults:
         abstract: Un bref résumé d'un article de recherche, d'une thèse, d'un compte rendu, d'une procédure de conférence ou de toute analyse approfondie d'un sujet particulier.
         access_right: Contient des informations sur les personnes pouvant accéder à la ressource ou une indication de son statut de sécurité.

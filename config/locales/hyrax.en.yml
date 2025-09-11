@@ -24,20 +24,20 @@ en:
           suppressed_bsi: Status
           visibility_ssi: Visibility
         show:
-          admin_set: 'In Administrative Set:'
+          admin_set: "In Administrative Set:"
           based_near_label: Location
           contributor: Contributors
           keyword: Keyword
       filters:
-        title: 'Filtering by:'
+        title: "Filtering by:"
       start_over: Start Over
   errors:
     messages:
       carrierwave_download_error: Couldn't download image.
       carrierwave_integrity_error: Not an image.
       carrierwave_processing_error: Cannot resize image.
-      extension_blacklist_error: 'You are not allowed to upload %{extension} files, prohibited types: %{prohibited_types}'
-      extension_whitelist_error: 'You are not allowed to upload %{extension} files, allowed types: %{allowed_types}'
+      extension_blacklist_error: "You are not allowed to upload %{extension} files, prohibited types: %{prohibited_types}"
+      extension_whitelist_error: "You are not allowed to upload %{extension} files, allowed types: %{allowed_types}"
   helpers:
     action:
       accept: Accept
@@ -90,7 +90,7 @@ en:
           no_works: The administrative set does not contain any works.
           title: List of items in this administrative set
         edit:
-          header: 'Edit Administrative Set: %{title}'
+          header: "Edit Administrative Set: %{title}"
         form:
           cancel: Cancel
           note: Users granted a new role will only gain the role on works that are deposited after that role has been granted.
@@ -142,9 +142,9 @@ en:
             title: Viewers
             type: Type
         form_participants:
-          add_group: 'Add group:'
+          add_group: "Add group:"
           add_participants: Add Participants
-          add_user: 'Add user:'
+          add_user: "Add user:"
           current_participants: Current Participants
         form_visibility:
           cancel: Cancel
@@ -156,15 +156,15 @@ en:
             title: Release
             varies:
               any: Depositor can choose any embargo length; leases are allowed
-              between: 'Depositor can choose embargo up to date:'
-              description: 'Allow depositor to choose settings:'
+              between: "Depositor can choose embargo up to date:"
+              description: "Allow depositor to choose settings:"
               embargo:
                 1yr: 1 year after deposit
                 2yrs: 2 years after deposit
                 3yrs: 3 years after deposit
                 6mos: 6 months after deposit
                 select: Select embargo period..
-              period: 'Depositor can choose embargo period up to:'
+              period: "Depositor can choose embargo period up to:"
           visibility:
             description: Set visibility policies for the administrative set. Setting honors embargo policies above.
             everyone: Public - depositor can only choose public visibility setting
@@ -194,7 +194,7 @@ en:
             and: and
             summary: Summary
             monthly: Monthly
-            custom_range:  Custom Range
+            custom_range: Custom Range
             downloads: downloads
             report_header: Custom Collections Report
             report_generated_on: This report was generated on
@@ -203,10 +203,10 @@ en:
             title: Collection Report
             summary: Summary
             monthly: Monthly
-            custom_range:  Custom Range
+            custom_range: Custom Range
             return_to_btn: Return to Collections Report
             view_collection_btn: View Collection
-            created_by:  Created by
+            created_by: Created by
             last_updated: Last updated on
             collection_type: Collection type
             visibility: Visibility
@@ -251,7 +251,7 @@ en:
             access_to: You have access to
             summary: Summary
             monthly: Monthly
-            custom_range:  Custom Range
+            custom_range: Custom Range
             downloads: downloads
             enable_analytics: Enable Analytics To View Reports
             report_generated_on: This report was generated on
@@ -259,10 +259,10 @@ en:
             title: Work Report
             summary: Summary
             monthly: Monthly
-            custom_range:  Custom Range
+            custom_range: Custom Range
             return_to_btn: Return to Works Report
             view_work_btn: View Work
-            deposited_by:  Deposited by
+            deposited_by: Deposited by
             work_type: Work type
             resource_type: Resource type
             status: Status
@@ -271,9 +271,9 @@ en:
             title: Files
             total_downloads: Total Downloads
           work_counts:
-             total_size: total size
-             child_works: child works
-             files: files
+            total_size: total size
+            child_works: child works
+            files: files
           summary:
             subtitle: Summary of user activity
             unique_visitors: Unique Visitors
@@ -306,11 +306,11 @@ en:
             page_views: Page Views
             file_downloads: File Downloads
         date_range_form:
-            date_range_heading: Customize Date Range
-            start_date: Start Date
-            end_date: End Date
-            set_date_range: Set Report Date Range
-            reset_date_range: Reset Date Range
+          date_range_heading: Customize Date Range
+          start_date: Start Date
+          end_date: End Date
+          set_date_range: Set Report Date Range
+          reset_date_range: Reset Date Range
       appearances:
         show:
           header: Appearance
@@ -363,7 +363,7 @@ en:
           update_notice: Participants Updated
         form_settings:
           instructions: These settings determine how collections of this type can be managed and discovered.
-          warning: 'Warning: These settings cannot be changed after a collection of this type has been created.'
+          warning: "Warning: These settings cannot be changed after a collection of this type has been created."
         index:
           breadcrumb: Collection Types
           create_new_button: Create new collection type
@@ -381,7 +381,7 @@ en:
             actions: Actions
             name: Name
         multiple_membership_checker:
-          error_preamble: 'Error: You have specified more than one of the same single-membership collection type '
+          error_preamble: "Error: You have specified more than one of the same single-membership collection type "
           error_type_and_collections: "(type: %{type}, collections: %{collections})"
         new:
           header: Create New Collection Type
@@ -425,7 +425,7 @@ en:
       stats:
         deposited_form:
           end_label: end [defaults to now]
-          heading: 'Display Files Deposited:'
+          heading: "Display Files Deposited:"
           start_label: Start
         repository_objects:
           series:
@@ -439,7 +439,7 @@ en:
         works:
           headers:
             main: Work Statistics
-            total: 'Total Works:'
+            total: "Total Works:"
             visibility: Totals by Visibility
       users:
         index:
@@ -495,7 +495,7 @@ en:
         default: You must be logged in to do that!
       unprocessable_entity:
         default: The resource you attempted to modify cannot be modified according to your request.
-    background_attribution_html: ''
+    background_attribution_html: ""
     base:
       attributes:
         table_attribute_name: Attribute Name
@@ -505,7 +505,7 @@ en:
       citations:
         citations: Citations
         endnote: EndNote
-        header: 'Citations:'
+        header: "Citations:"
         mendeley: Mendeley
         zotero: Zotero
       currently_shared:
@@ -639,7 +639,7 @@ en:
         empty: This %{type} is not currently in any collections.
         header: Relationships
       relationships_parent_row:
-        label: 'In %{type}:'
+        label: "In %{type}:"
       share_with:
         definition_heading: Permission Definitions
         definitions_html: "<strong>View/Download:</strong> this file (both contents and metadata) is accessible from within %{application_name}.<br /> <strong>Edit:</strong> this file (both contents and metadata) can be edited. You may only grant this permission to %{institution_name} users and/or groups."
@@ -666,7 +666,7 @@ en:
         twitter: Twitter
         twitter_share: Share on Twitter
       unauthorized:
-        id: 'ID: %{id}'
+        id: "ID: %{id}"
         is_private: The %{type} you have tried to access is private
         page_is_private: The page you have tried to access is private
         unauthorized: Unauthorized
@@ -701,11 +701,11 @@ en:
         button_label: Delete Selected
         deleting_file_from: Deleting a file from %{application_name} is permanent. Click OK to delete this file from %{application_name}, or Cancel to cancel this operation
       edit:
-        apply_changes_to: 'Changes will be applied to: (%{x_number_of} works)'
+        apply_changes_to: "Changes will be applied to: (%{x_number_of} works)"
         batch_edit_descriptions: Batch Edit Descriptions &nbsp;&nbsp;&nbsp;<small>Click on labels below to edit work descriptions.</small>
         clear_batch: Clear Batch
         descriptions: Descriptions
-        descriptions_title: 'Descriptions:'
+        descriptions_title: "Descriptions:"
         permissions: Permissions
         sharing: Sharing
         visibility: Visibility
@@ -775,7 +775,7 @@ en:
         create: Save
         create_new: Add to new Collection
         no_collections: You do not have access to any existing collections. You may create a new collection.
-        select_heading: 'Select the collection to add your files to:'
+        select_heading: "Select the collection to add your files to:"
         title: Add to collection
         update: Save changes
     collections:
@@ -797,7 +797,7 @@ en:
         works_in_collection: Works
       sort_and_per_page:
         number_of_results_to_display_per_page: Number of results to display per page
-        results_per_page: 'Results per page:'
+        results_per_page: "Results per page:"
         sort_by_html: "<span>Sort by:</span>"
     collection_type:
       admin_set_title: Admin Set
@@ -861,7 +861,7 @@ en:
         works: Works
         files: Files
         edit:
-          header: 'Edit %{type_title}: %{title}'
+          header: "Edit %{type_title}: %{title}"
         form:
           permission_update_errors:
             error: Invalid update option for permission template.
@@ -876,7 +876,7 @@ en:
             relationships: Relationships
             sharing: Sharing
         form_branding:
-          alt_text: 'Alt Text:'
+          alt_text: "Alt Text:"
           banner:
             description: An image to be displayed at the top of the collection page.  For best results, upload an image (JPG, GIF or PNG) that is at least 120 pixels tall and 1200 pixels wide.
             label: Banner
@@ -884,7 +884,7 @@ en:
             description: Optionally, you can upload a banner image and/or logo images to associate with this collection.  If uploaded, these images will be displayed at the top of the collection page to provide unique branding for the collection.
             label: Branding
           choose_file: Choose File
-          link_url: 'Link URL:'
+          link_url: "Link URL:"
           logo:
             description: One or more images to be displayed at the top of the collection page.  For best results, upload an image (JPG, GIF or PNG) that is 40 pixels in height.  Larger images will be resized to 40 pixels in height.
             label: Logo
@@ -982,14 +982,14 @@ en:
         show_document_list_menu:
           select: Select
         show_document_list_row:
-          creator: 'Creator:'
-          depositor: 'Depositor:'
-          edit_access: 'Edit Access:'
-        title: 'Collections'
+          creator: "Creator:"
+          depositor: "Depositor:"
+          edit_access: "Edit Access:"
+        title: "Collections"
         recent_activity: Recent activity
         sort_and_per_page:
           show_par_page_html: Show %{select} per page
-          sort_by: 'Sort By:'
+          sort_by: "Sort By:"
         work_action_menu:
           delete_work: Delete work
           deleting_from_work: Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation
@@ -1051,19 +1051,19 @@ en:
           work_confirmation: Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation
         collections: Collections
         collection_list:
-          description: 'Description:'
-          edit_access: 'Edit Access:'
-          groups: 'Groups:'
+          description: "Description:"
+          edit_access: "Edit Access:"
+          groups: "Groups:"
           managed_access:
             deposit: Deposit
             manage: Manage
             view: View
-          users: 'Users:'
+          users: "Users:"
         facet_label:
-          collections: 'Filter collections:'
-          highlighted: 'Filter highlights:'
-          shared: 'Filter shares:'
-          works: 'Filter works:'
+          collections: "Filter collections:"
+          highlighted: "Filter highlights:"
+          shared: "Filter shares:"
+          works: "Filter works:"
         heading:
           access: Access
           action: Actions
@@ -1076,6 +1076,7 @@ en:
           highlighted: Highlighted
           items: Items
           last_modified: Last modified
+          profile_version: Profile Version
           title: Title
           type: Type
           visibility: Visibility
@@ -1133,7 +1134,7 @@ en:
       resource_type_graph:
         resource_type: Resource Type
         title: Resource Types
-        count:  Count
+        count: Count
       work_type_graph:
         work_type: Work Type
         title: Work Types
@@ -1204,7 +1205,7 @@ en:
         expired: Expired Active Embargoes
         manage_embargoes: Manage Embargoes
       list_expired_active_embargoes:
-        change_all: 'Change all files within %{cc} to '
+        change_all: "Change all files within %{cc} to "
         deactivate: Deactivate Embargo
         deactivate_selected: Deactivate Embargoes for Selected
         missing: There are no expired embargoes in effect at this time.
@@ -1381,7 +1382,7 @@ en:
         expired: Expired Active Leases
         manage_leases: Manage Leases
       list_expired_active_leases:
-        change_all: 'Change all files within %{cc} to '
+        change_all: "Change all files within %{cc} to "
         deactivate: Deactivate Lease
         deactivate_selected: Deactivate Leases for Selected
         missing: There are no expired leases in effect at this time.
@@ -1438,7 +1439,7 @@ en:
       change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     notifications:
       batch_create_failure:
-        message: 'The batch create for %{user} failed: %{messages}'
+        message: "The batch create for %{user} failed: %{messages}"
         subject: Failing batch create
       batch_create_success:
         message: The batch create for %{user} passed.
@@ -1454,7 +1455,7 @@ en:
           subject: Ownership Change Request
           transfer_link_label: transfer requests
         transfer_on_update:
-          comments: 'Comments: %{receiver_comment}'
+          comments: "Comments: %{receiver_comment}"
           message: Your transfer request was %{status}.
           subject: Ownership Change %{status}
         validation:
@@ -1567,11 +1568,11 @@ en:
       mendeley:
         contact_form: Contact Form
         export_to_mendeley: Export to Mendeley
-        export_to_mendeley_details: 'Exporting to Mendeley is supported via embedded metadata.  If Mendeley does not automatically pick up metadata for deposited files, please report the issue via the '
+        export_to_mendeley_details: "Exporting to Mendeley is supported via embedded metadata.  If Mendeley does not automatically pick up metadata for deposited files, please report the issue via the "
       zotero:
         contact_form: Contact Form
         export_to_zotero: Export to Zotero
-        export_to_zotero_details: 'Exporting to Zotero is supported via embedded metadata.  If Zotero does not automatically pick up metadata for deposited files, please report the issue via the '
+        export_to_zotero_details: "Exporting to Zotero is supported via embedded metadata.  If Zotero does not automatically pick up metadata for deposited files, please report the issue via the "
     toolbar:
       dashboard:
         menu: Dashboard
@@ -1648,9 +1649,9 @@ en:
         set_all_to_this_resource_type: Set all to this Resource Type
         start: Start
       js_templates_branding:
-        alt_text: 'Alt Text:'
+        alt_text: "Alt Text:"
         error: Error
-        link_url: 'Link URL:'
+        link_url: "Link URL:"
         previous: previous
         remove: Remove
         remove_new_banner: Remove New Banner
@@ -1726,7 +1727,7 @@ en:
       default:
         deposit: Deposit
       load:
-        state_error: 'The workflow: %{workflow_name} has not been updated.  You are removing a state: %{state_name} with %{entity_count} entity/ies.  A state may not be removed while it has active entities!'
+        state_error: "The workflow: %{workflow_name} has not been updated.  You are removing a state: %{state_name} with %{entity_count} entity/ies.  A state may not be removed while it has active entities!"
       unauthorized: The work is not currently available because it has not yet completed the approval process
       unauthorized_parent: The file is not currently available because its parent work has not yet completed the approval process
     works:
@@ -1762,7 +1763,7 @@ en:
       collection:
         based_near: A place name related to the collection, such as its site of publication, or the city, state, or country the collection contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>.
         contributor: A person or group you want to recognize for playing a role in the creation of the collection, but not the primary role.
-        creator: 'The person or group responsible for the collection. Usually this is the author of the content. Personal names should be entered with the last name first: Smith, John'
+        creator: "The person or group responsible for the collection. Usually this is the author of the content. Personal names should be entered with the last name first: Smith, John"
         date_created: The date on which the collection was created.
         description: Free-text notes about the collection. Examples include abstracts of a paper or citation information for a journal article.
         identifier: A unique handle identifying the collection. An example would be a DOI for a journal article, or an ISBN or OCLC number for a book.
@@ -1785,7 +1786,7 @@ en:
         require_membership: A work must belong to at least one collection of this type
         sharable: Allow users to assign collection managers, depositors, and viewers for collections they manage
         share_applies_to_new_works: When new works are created directly in the collection, grant sharing users and groups permissions for the new work according to their collection roles.
-        title: ''
+        title: ""
       defaults:
         abstract: A brief summary of a research article, thesis, review, conference proceeding, or any in-depth analysis of a particular subject.
         access_right: Contains information about who can access the resource or an indication of its security status.
