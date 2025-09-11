@@ -9,8 +9,12 @@ profile:
 classes:
   Hyrax::Work:
     display_label: Work
+  GenericWorkResource:
+    display_label: Work
+  Monograph:
+    display_label: Work
   AdministrativeSetResource:
-    diplay_label: AdministrativeSet
+    display_label: AdministrativeSet
   CollectionResource:
     display_label: PcdmCollection
   Hyrax::FileSet:

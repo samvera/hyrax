@@ -28,9 +28,9 @@ HYRAX_FLEXIBLE_CLASSES=Hyrax::AdministrativeSet,CollectionResource,FileSet,Gener
 HYRAX_DISABLE_INCLUDE_METADATA=true
 
 ### Dassie Flexible
-HYRAX_FLEXIBLE=true
-HYRAX_FLEXIBLE_CLASSES=AdministrativeSet,CollectionResource,Hyrax::FileSet,GenericWorkResource,Monograph
-HYRAX_DISABLE_INCLUDE_METADATA=true
+export HYRAX_FLEXIBLE=true
+export HYRAX_FLEXIBLE_CLASSES=AdministrativeSetResource,CollectionResource,Hyrax::FileSet,GenericWorkResource,Monograph
+export HYRAX_DISABLE_INCLUDE_METADATA=true
 
 ## Documentation
 
