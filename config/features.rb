@@ -41,7 +41,7 @@ Flipflop.configure do
 
     feature :batch_upload,
             default: false,
-            description: "Enable uploading batches of works"
+            description: "Enable uploading batches of works. <br /><strong>WARNING:</strong> This feature is not compatible with flexible metadata.".html_safe
 
     feature :proxy_deposit,
             default: true,
