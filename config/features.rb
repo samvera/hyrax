@@ -30,7 +30,12 @@ Flipflop.configure do
 
   feature :batch_upload,
           default: false,
-          description: "Enable uploading batches of works. <br /><strong>WARNING:</strong> Do not enable. This feature is broken and will be addressed in <a href='https://github.com/samvera/hyrax/issues/7185' target='_blank'>https://github.com/samvera/hyrax/issues/7185</a>.".html_safe
+          # rubocop:disable Rails/OutputSafety
+          description: "Enable uploading batches of works. <br /><strong>WARNING:</strong> Do not enable. " \
+                       "This feature is broken and will be addressed in " \
+                       "<a href='https://github.com/samvera/hyrax/issues/7185' target='_blank'>" \
+                       "https://github.com/samvera/hyrax/issues/7185</a>".html_safe
+  # rubocop:enable Rails/OutputSafety
 
   feature :hide_private_items,
           default: false,
