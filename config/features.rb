@@ -30,7 +30,7 @@ Flipflop.configure do
 
   feature :batch_upload,
           default: false,
-          description: "Enable uploading batches of works. <br /><strong>WARNING:</strong> Do not enable. This feature is broken and will be addressed in https://github.com/samvera/hyrax/issues/7185.".html_safe
+          description: "Enable uploading batches of works. <br /><strong>WARNING:</strong> Do not enable. This feature is broken and will be addressed in <a href='https://github.com/samvera/hyrax/issues/7185' target='_blank'>https://github.com/samvera/hyrax/issues/7185</a>.".html_safe
 
   feature :hide_private_items,
           default: false,
