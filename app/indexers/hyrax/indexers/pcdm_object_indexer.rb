@@ -20,6 +20,7 @@ module Hyrax
           solr_doc['admin_set_tesim'] = admin_set_label
           solr_doc["#{Hyrax.config.admin_set_predicate.qname.last}_ssim"] = [resource.admin_set_id.to_s]
           solr_doc['member_of_collection_ids_ssim'] = resource.member_of_collection_ids&.map(&:to_s)
+          solr_doc['member_of_collections_ssim'] = collection_titles_for(resource.member_of_collection_ids)
           solr_doc['member_ids_ssim'] = resource.member_ids&.map(&:to_s)
           solr_doc['depositor_ssim'] = [resource.depositor]
           solr_doc['depositor_tesim'] = [resource.depositor]
@@ -41,6 +42,16 @@ module Hyrax
         return if resource.admin_set_id.blank?
         admin_set = Hyrax.query_service.find_by(id: resource.admin_set_id)
         admin_set.title
+      end
+
+      def collection_titles_for(collection_ids)
+        return [] if collection_ids.blank?
+        collection_ids.map do |id|
+          collection = Hyrax.query_service.find_by(id: id)
+          collection.title&.first
+        rescue Valkyrie::Persistence::ObjectNotFoundError
+          nil
+        end.compact
       end
 
       def index_embargo(doc)
