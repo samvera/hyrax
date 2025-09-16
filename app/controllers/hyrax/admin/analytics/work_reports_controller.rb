@@ -4,6 +4,7 @@ module Hyrax
     module Analytics
       class WorkReportsController < AnalyticsController
         include Hyrax::BreadcrumbsForWorksAnalytics
+        include Hyrax::AnalyticsErrorHandling
         before_action :authenticate_user!
 
         def index

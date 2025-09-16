@@ -1,0 +1,42 @@
+<%# frozen_string_literal: true %>
+<% if @analytics_error %>
+  <div class="alert alert-info" role="alert">
+    <div class="d-flex">
+      <div class="mr-3">
+        <i class="fa fa-info-circle fa-2x text-info" aria-hidden="true"></i>
+      </div>
+      <div class="flex-fill">
+        <h5 class="alert-heading mb-2">Analytics Setup Required</h5>
+        <p class="mb-2"><%= @analytics_error[:message] %></p>
+
+        <% if @analytics_error[:troubleshooting_steps].present? %>
+          <div class="mt-3">
+            <% @analytics_error[:troubleshooting_steps].each_with_index do |step, index| %>
+              <div class="mb-2">
+                <span class="badge badge-primary mr-2"><%= index + 1 %></span>
+                <%= raw(step) %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="mt-3">
+          <% if @analytics_error[:documentation_url].present? %>
+            <a href="<%= @analytics_error[:documentation_url] %>" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm mr-2">
+              Setup Guide
+            </a>
+          <% end %>
+          <button class="btn btn-outline-secondary btn-sm" type="button" data-toggle="collapse" data-target="#technicalDetails" aria-expanded="false" aria-controls="technicalDetails">
+            Technical Details
+          </button>
+        </div>
+
+        <div class="collapse mt-3" id="technicalDetails">
+          <div class="alert alert-light">
+            <small><%= @analytics_error[:details] %></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

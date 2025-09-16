@@ -240,6 +240,48 @@ en:
             collection_page_views: Collection Page Views
             deleted: Collection deleted
             export: Export
+        errors:
+          troubleshooting_steps: "Troubleshooting Steps"
+          documentation_html: "For more information, see the <a href='%{url}' target='_blank' rel='noopener noreferrer'>documentation</a>."
+          permission:
+            title: "Analytics Access Required"
+            message: "The system cannot access your Google Analytics data. This usually means the service account email needs to be granted access to your Google Analytics property."
+            troubleshooting_steps:
+              - "In your Google Analytics account, go to Admin → Account → Account Access Management"
+              - "Click the '+' button to add a new user"
+              - "Enter the service account email address from your credentials file (it looks like: your-service-account@project-name.iam.gserviceaccount.com)"
+              - "Set the role to 'Viewer' and click 'Add'"
+              - "Wait a few minutes for the changes to take effect, then refresh this page"
+            documentation_url: "https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support"
+          invalid_property:
+            title: "Invalid Property ID"
+            message: "The Google Analytics Property ID is invalid. A numeric Property ID is required for Google Analytics 4."
+            troubleshooting_steps:
+              - "Check your Google Analytics 4 settings and ensure you are using the numeric Property ID, not the Measurement ID (which starts with 'G-')."
+              - "Verify the Property ID is correctly configured in your application settings."
+            documentation_url: "https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support"
+          authentication:
+            title: "Authentication Error"
+            message: "There was an issue authenticating with Google Analytics. Please check your credentials."
+            troubleshooting_steps:
+              - "Ensure your `google-analytics.json` (or equivalent) credentials file is correctly formatted and contains valid information."
+              - "Verify that the service account is enabled in your Google Cloud project."
+            documentation_url: "https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support"
+          quota_exceeded:
+            title: "Quota Exceeded"
+            message: "The request rate to the Google Analytics API has been exceeded. Please try again later."
+            troubleshooting_steps:
+              - "Review the Google Analytics API quota limits and your usage."
+              - "Consider implementing backoff strategies for API requests if you are making many requests in a short period."
+            documentation_url: "https://developers.google.com/analytics/devguides/reporting/data/v1/limits-quotas"
+          general:
+            title: "Analytics Configuration Issue"
+            message: "There's a problem with the Google Analytics configuration that requires administrator attention."
+            troubleshooting_steps:
+              - "Contact your system administrator to review the Google Analytics configuration"
+              - "Verify that the service account credentials are correctly configured"
+              - "Ensure the Google Analytics property is set up properly"
+            documentation_url: "https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support"
         work_reports:
           index:
             title: Works Report
