@@ -4,6 +4,8 @@ module Hyrax
     module Analytics
       class CollectionReportsController < AnalyticsController
         include Hyrax::BreadcrumbsForCollectionAnalytics
+        include Hyrax::AnalyticsErrorHandling
+
         def index
           return unless Hyrax.config.analytics_reporting?
 
