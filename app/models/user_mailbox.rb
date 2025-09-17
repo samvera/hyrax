@@ -49,7 +49,9 @@ class UserMailbox
   end
 
   def preferred_locale
-    user.preferred_locale || I18n.default_locale
+    return I18n.default_locale unless I18n.locale_available?(user.preferred_locale)
+
+    user.preferred_locale
   end
 
   def empty_trash(user)
