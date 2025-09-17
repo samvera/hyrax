@@ -13,7 +13,7 @@ module Hyrax
   # @example
   #   Hyrax::ChangeSet(Monograph)
   def self.ChangeSet(resource_class)
-    klass = (resource_class.to_s + "ChangeSet").safe_constantize || Hyrax::ChangeSet
+    klass = (resource_class.name + "ChangeSet").safe_constantize || Hyrax::ChangeSet
     Class.new(klass) do
       (resource_class.fields - resource_class.reserved_attributes).each do |field|
         property field, default: nil

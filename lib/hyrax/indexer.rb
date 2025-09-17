@@ -56,7 +56,7 @@ module Hyrax
           schema_args = if index_loader.is_a?(Hyrax::M3SchemaLoader)
                           document['schema_version_ssi'] = resource.schema_version
                           document['contexts_ssim'] = resource.contexts
-                          { schema: resource.class.to_s, version: resource.schema_version, contexts: resource.contexts }
+                          { schema: resource.class.name, version: resource.schema_version, contexts: resource.contexts }
                         else
                           { schema: schema_name }
                         end
