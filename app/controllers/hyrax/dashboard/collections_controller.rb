@@ -17,7 +17,6 @@ module Hyrax
 
       before_action :filter_docs_with_read_access!, except: [:show, :edit]
       before_action :remove_select_something_first_flash, except: :show
-      before_action :ensure_migrated_collection, only: :edit
 
       include Hyrax::Collections::AcceptsBatches
 
@@ -46,6 +45,7 @@ module Hyrax
       load_and_authorize_resource except: [:index, :create],
                                   instance_name: :collection,
                                   class: Hyrax.config.collection_model
+      before_action :ensure_migrated_collection, only: :edit
 
       def deny_collection_access(exception)
         if exception.action == :edit
@@ -188,7 +188,6 @@ module Hyrax
         # We need to know if a migration is going to happen, because if it is,
         # we need to reset the memoized form.
         needs_migration = wings_backed?(@collection)
-
         @collection = ensure_migrated(
           resource: @collection,
           transaction_key: 'change_set.update_collection'

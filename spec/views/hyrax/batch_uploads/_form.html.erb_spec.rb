@@ -17,6 +17,7 @@ RSpec.describe 'hyrax/batch_uploads/_form.html.erb', :active_fedora, type: :view
   end
 
   before do
+    allow(Hyrax.config).to receive(:use_valkyrie?).and_return(false)
     # Tell rspec where to find form_* partials
     view.lookup_context.prefixes << 'hyrax/base'
     allow(controller).to receive(:current_user).and_return(stub_model(User))
