@@ -34,9 +34,8 @@ module Hyrax
     private
 
     def virus_scan
-      if file.path && Hyrax::VirusScanner.infected?(file.path)
-        errors.add(:file, I18n.t('hyrax.virus_scanner.virus_detected', filename: file.path))
-      end
+      errors.add(:file, I18n.t('hyrax.virus_scanner.virus_detected', filename: file.path)) if
+        file.path && Hyrax::VirusScanner.infected?(file.path)
     end
   end
 end
