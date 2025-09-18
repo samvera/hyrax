@@ -19,13 +19,13 @@ RSpec.describe JobIoWrapper, :active_fedora, type: :model do
     let(:local_file) { File.open(path) }
     let(:relation) { :remastered }
 
-    subject { described_class.create_with_varied_file_handling!(user: user, file_set: file_set, file: file, relation: relation) }
+    subject { described_class.create_with_varied_file_handling!(user: user, file_set: file_set, file: file, relation: relation, use_valkyrie: nil) }
 
     context 'with Rack::Test::UploadedFile' do
       let(:file) { Rack::Test::UploadedFile.new(path, 'image/png') }
 
       it 'creates a JobIoWrapper' do
-        expected_create_args = { user: user, relation: relation.to_s, file_set_id: file_set.id, path: file.path, original_name: 'world.png' }
+        expected_create_args = { user: user, relation: relation.to_s, file_set_id: file_set.id, path: file.path, original_name: 'world.png', use_valkyrie: nil }
         expect(described_class).to receive(:create!).with(expected_create_args)
         subject
       end
@@ -35,7 +35,7 @@ RSpec.describe JobIoWrapper, :active_fedora, type: :model do
       let(:file) { local_file }
 
       it 'creates a JobIoWrapper' do
-        expected_create_args = { user: user, relation: relation.to_s, file_set_id: file_set.id, path: file.path }
+        expected_create_args = { user: user, relation: relation.to_s, file_set_id: file_set.id, path: file.path, use_valkyrie: nil }
         expect(described_class).to receive(:create!).with(expected_create_args)
         subject
       end
@@ -45,7 +45,7 @@ RSpec.describe JobIoWrapper, :active_fedora, type: :model do
       let(:file) { Hyrax::UploadedFile.new(user: user, file_set_uri: file_set.uri, file: local_file) }
 
       it 'creates a JobIoWrapper' do
-        expected_create_args = { user: user, relation: relation.to_s, file_set_id: file_set.id, uploaded_file: file, path: file.uploader.path }
+        expected_create_args = { user: user, relation: relation.to_s, file_set_id: file_set.id, uploaded_file: file, path: file.uploader.path, use_valkyrie: nil }
         expect(described_class).to receive(:create!).with(expected_create_args)
         subject
       end
@@ -185,6 +185,7 @@ RSpec.describe JobIoWrapper, :active_fedora, type: :model do
     let(:file_actor) { Hyrax::Actors::FileActor.new(file_set, subject.relation, user) }
 
     it 'produces an appropriate FileActor' do
+      subject.use_valkyrie = false
       allow(FileSet).to receive(:find).with(file_set_id).and_return(file_set)
       expect(subject.file_actor).to eq(file_actor)
     end
@@ -206,7 +207,11 @@ RSpec.describe JobIoWrapper, :active_fedora, type: :model do
   describe '#file_set' do
     let(:fileset_id) { 'fileset_id' }
     let!(:fileset) { create(:file_set, id: fileset_id) }
-    before { allow(subject).to receive(:file_set_id).and_return(fileset_id) }
+
+    before do
+      allow(subject).to receive(:file_set_id).and_return(fileset_id)
+      subject.use_valkyrie = false
+    end
 
     context 'when finding through active fedora' do
       it 'finds the file set using active fedora and returns an instance of an active fedora file set' do

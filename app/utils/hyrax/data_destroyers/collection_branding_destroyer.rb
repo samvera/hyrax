@@ -20,7 +20,7 @@ module Hyrax
 
           logger.info("Destroying collection branding...")
 
-          Hyrax::CollectionBrandingInfo.destroy_all
+          CollectionBrandingInfo.destroy_all
           logger.info("   collection branding -- DESTROYED")
         end
       end

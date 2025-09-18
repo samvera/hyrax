@@ -87,6 +87,15 @@ RSpec.describe UserMailbox do
             expect(subject.label).to eq 'Sie haben 3 ungelesene Benachrichtigungen'
           end
         end
+
+        context 'when user has an undefined preferred locale' do
+          let(:preferred_locale) { 'invalid-locale-identifier' }
+
+          it 'returns the system default locale' do
+            expect(I18n).to receive(:default_locale).once.and_return('de')
+            expect(subject.label).to eq 'Sie haben 3 ungelesene Benachrichtigungen'
+          end
+        end
       end
     end
   end

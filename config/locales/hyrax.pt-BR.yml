@@ -24,12 +24,12 @@ pt-BR:
           suppressed_bsi: Status
           visibility_ssi: Acesso
         show:
-          admin_set: "No conjunto administrativo:"
+          admin_set: 'No conjunto administrativo:'
           based_near_label: Localização
           contributor: Colaboradores
           keyword: Palavra-chave
       filters:
-        title: "Filtragem por:"
+        title: 'Filtragem por:'
       start_over: Remover filtros
   download:
     one: e 1 download
@@ -39,8 +39,8 @@ pt-BR:
       carrierwave_download_error: Não foi possível baixar a imagem.
       carrierwave_integrity_error: Não é uma imagem.
       carrierwave_processing_error: Não é possível redimensionar a imagem.
-      extension_blacklist_error: "Você não tem permissão para carregar arquivos %{extension}; tipos proibidos: %{prohibited_types}"
-      extension_whitelist_error: "Você não tem permissão para carregar arquivos %{extension}; tipos permitidos: %{allowed_types}"
+      extension_blacklist_error: 'Você não tem permissão para carregar arquivos %{extension}; tipos proibidos: %{prohibited_types}'
+      extension_whitelist_error: 'Você não tem permissão para carregar arquivos %{extension}; tipos permitidos: %{allowed_types}'
   helpers:
     action:
       accept: Aceitar
@@ -93,7 +93,7 @@ pt-BR:
           no_works: O conjunto administrativo não contém nenhuma obra.
           title: Lista de itens neste conjunto administrativo
         edit:
-          header: "Editar Conjunto Administrativo: %{title}"
+          header: 'Editar Conjunto Administrativo: %{title}'
         form:
           cancel: Cancelar
           note: Os usuários que receberam uma nova função só terão a função nas obras que são depositadas depois da concessão da função.
@@ -145,9 +145,9 @@ pt-BR:
             title: Usuários com permissão de acesso
             type: Tipo
         form_participants:
-          add_group: "Acrescentar grupo:"
+          add_group: 'Acrescentar grupo:'
           add_participants: Acrescentar participantes
-          add_user: "Acrescentar usuário:"
+          add_user: 'Acrescentar usuário:'
           current_participants: Participantes atuais
         form_visibility:
           cancel: Cancelar
@@ -160,14 +160,14 @@ pt-BR:
             varies:
               any: O depositante escolhe a duração de embargo; empréstimos são permitidos
               between: O depositante pode embargar até a data de
-              description: "Permitir ao depositante escolher as configurações :"
+              description: 'Permitir ao depositante escolher as configurações :'
               embargo:
                 1yr: 1 ano após o depósito
                 2yrs: 2 anos após o depósito
                 3yrs: 3 anos após o depósito
                 6mos: 6 meses após o depósito
                 select: Selecione o período de embargo ...
-              period: "O depositante pode escolher o período de embargo até:"
+              period: 'O depositante pode escolher o período de embargo até:'
           visibility:
             description: Definir regras de acesso para o conjunto administrativo. Os embargos prevalecem.
             everyone: Aberto - todas as obras neste conjunto serão accessíveis ao público
@@ -252,6 +252,48 @@ pt-BR:
           reset_date_range: Redefinir intervalo de datas
           set_date_range: Definir intervalo de datas do relatório
           start_date: Data de início
+        errors:
+          authentication:
+            documentation_url: https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support
+            message: Ocorreu um problema na autenticação com o Google Analytics. Verifique suas credenciais.
+            title: Erro de autenticação
+            troubleshooting_steps:
+            - Certifique-se de que seu arquivo de credenciais `google-analytics.json` (ou equivalente) esteja formatado corretamente e contenha informações válidas.
+            - Verifique se a conta de serviço está habilitada no seu projeto do Google Cloud.
+          documentation_html: Para mais informações, consulte a <a href='%{url}' target='_blank' rel='noopener noreferrer'>documentação</a> .
+          general:
+            documentation_url: https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support
+            message: Há um problema com a configuração do Google Analytics que requer atenção do administrador.
+            title: Problema de configuração do Analytics
+            troubleshooting_steps:
+            - Entre em contato com o administrador do sistema para revisar a configuração do Google Analytics
+            - Verifique se as credenciais da conta de serviço estão configuradas corretamente
+            - Certifique-se de que a propriedade do Google Analytics esteja configurada corretamente
+          invalid_property:
+            documentation_url: https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support
+            message: O ID da propriedade do Google Analytics é inválido. Um ID de propriedade numérico é necessário para o Google Analytics 4.
+            title: ID de propriedade inválido
+            troubleshooting_steps:
+            - Verifique as configurações do Google Analytics 4 e certifique-se de que está usando o ID numérico da propriedade, não o ID da medição (que começa com 'G-').
+            - Verifique se o ID da propriedade está configurado corretamente nas configurações do seu aplicativo.
+          permission:
+            documentation_url: https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support
+            message: O sistema não consegue acessar seus dados do Google Analytics. Isso geralmente significa que o e-mail da conta de serviço precisa ter acesso à sua propriedade do Google Analytics.
+            title: Acesso analítico necessário
+            troubleshooting_steps:
+            - Na sua conta do Google Analytics, vá para Admin → Conta → Gerenciamento de acesso à conta
+            - Clique no botão '+' para adicionar um novo usuário
+            - 'Digite o endereço de e-mail da conta de serviço do seu arquivo de credenciais (parece: your-service-account@project-name.iam.gserviceaccount.com)'
+            - Defina a função como 'Visualizador' e clique em 'Adicionar'
+            - Aguarde alguns minutos para que as alterações entrem em vigor e atualize esta página.
+          quota_exceeded:
+            documentation_url: https://developers.google.com/analytics/devguides/reporting/data/v1/limits-quotas
+            message: A taxa de solicitações para a API do Google Analytics foi excedida. Tente novamente mais tarde.
+            title: Cota Excedida
+            troubleshooting_steps:
+            - Revise os limites de cota da API do Google Analytics e seu uso.
+            - Considere implementar estratégias de recuo para solicitações de API se você estiver fazendo muitas solicitações em um curto período.
+          troubleshooting_steps: Etapas de solução de problemas
         work_reports:
           custom_range:
             date_range_heading: Personalizar intervalo de datas
@@ -374,7 +416,7 @@ pt-BR:
           update_notice: Participantes Atualizados
         form_settings:
           instructions: Estas configurações determinam como as coleções deste tipo podem ser gerenciadas e descobertas.
-          warning: "Aviso: estas configurações não podem ser alteradas após a criação de uma coleção deste tipo."
+          warning: 'Aviso: estas configurações não podem ser alteradas após a criação de uma coleção deste tipo.'
         index:
           breadcrumb: Tipos de Coleção
           create_new_button: Criar novo tipo de coleção
@@ -392,7 +434,7 @@ pt-BR:
             actions: Ações
             name: Nome
         multiple_membership_checker:
-          error_preamble: "Erro: você especificou mais de uma coleção do mesmo tipo de associação única"
+          error_preamble: 'Erro: você especificou mais de uma coleção do mesmo tipo de associação única'
           error_type_and_collections: "(tipo: %{type}, coleções: %{collections})"
         new:
           header: Criar novo Tipo de Coleção
@@ -435,8 +477,8 @@ pt-BR:
         works_report: Relatório de Obras
       stats:
         deposited_form:
-          end_label: "Encerrar [valor padrão: agora]"
-          heading: "Mostrar arquivos depositados:"
+          end_label: 'Encerrar [valor padrão: agora]'
+          heading: 'Mostrar arquivos depositados:'
           start_label: Iniciar
         repository_objects:
           series:
@@ -444,17 +486,17 @@ pt-BR:
             unknown: Desconhecidos
             unpublished: Inéditos
         user_deposits:
-          end_label: "Encerrando [valor padrão: agora]"
+          end_label: 'Encerrando [valor padrão: agora]'
           headers:
             main: Estatísticas de trabalho
-            total: "Total de obras:"
+            total: 'Total de obras:'
             visibility: Totais por visibilidade
           heading: Exibir arquivos depositados pelos usuários
           start_label: Iniciando
         works:
           headers:
             main: Estatísticas
-            total: "Total de obras:"
+            total: 'Total de obras:'
             visibility: Totais por Acesso
       users:
         index:
@@ -510,7 +552,7 @@ pt-BR:
         default: Você precisa estar logado para fazer isto!
       unprocessable_entity:
         default: O recurso que você tentou modificar não pode ser modificado de acordo com seu pedido.
-    background_attribution_html: ""
+    background_attribution_html: ''
     base:
       attributes:
         table_attribute_name: Nome do Atributo
@@ -520,7 +562,7 @@ pt-BR:
       citations:
         citations: Citações
         endnote: EndNote
-        header: "Citações:"
+        header: 'Citações:'
         mendeley: Mendeley
         zotero: Zotero
       currently_shared:
@@ -647,7 +689,7 @@ pt-BR:
         empty: Este %{type} atualmente não está em nenhuma coleção.
         header: Relações
       relationships_parent_row:
-        label: "Em %{type}:"
+        label: 'Em %{type}:'
       share_with:
         definition_heading: Definições de Permissão
         definitions_html: "<strong>Acesso/Download:</strong> este arquivo (tanto conteúdo quanto metadados) é acessível a partir de %{application_name}.<br /> <strong>Edição:</strong> este arquivo (tanto conteúdo quanto metadados) pode ser editado. Você só pode conceder esta permissão a usuários e grupos do(a) %{institution_name}."
@@ -674,7 +716,7 @@ pt-BR:
         twitter: Twitter
         twitter_share: Compartilhar no Twitter
       unauthorized:
-        id: "ID: %{id}"
+        id: 'ID: %{id}'
         is_private: O %{type} que você tentou acessar é privado
         page_is_private: A página que você tentou acessar é privada
         unauthorized: Não autorizado
@@ -709,11 +751,11 @@ pt-BR:
         button_label: Excluir Selecionado
         deleting_file_from: A exclusão de um arquivo de %{application_name} é permanente. Clique em OK para excluir este arquivo de %{application_name} ou em Cancelar para cancelar esta operação
       edit:
-        apply_changes_to: "As alterações serão aplicadas a: (%{x_number_of} funciona)"
+        apply_changes_to: 'As alterações serão aplicadas a: (%{x_number_of} funciona)'
         batch_edit_descriptions: Descrições de edição em lote & nbsp; & nbsp; & nbsp; <small> Clique nos rótulos abaixo para editar as descrições de trabalho. </small>
         clear_batch: Limpar lote
         descriptions: Descrições
-        descriptions_title: "Descrições:"
+        descriptions_title: 'Descrições:'
         permissions: Permissões
         sharing: Partilha
         visibility: Visibilidade
@@ -783,7 +825,7 @@ pt-BR:
         create: Salvar
         create_new: Acrescentar à nova coleção
         no_collections: Você não tem acesso a nenhuma coleção. Você pode criar uma nova coleção.
-        select_heading: "Selecione a coleção onde acrescentar seus arquivos:"
+        select_heading: 'Selecione a coleção onde acrescentar seus arquivos:'
         title: Acrescentar na coleção
         update: Salvar alterações
     collection_type:
@@ -812,7 +854,7 @@ pt-BR:
         works_in_collection: Obras
       sort_and_per_page:
         number_of_results_to_display_per_page: Número de resultados exibidos por página
-        results_per_page: "Resultados por página:"
+        results_per_page: 'Resultados por página:'
         sort_by_html: "<span>Ordenar por:</span>"
     contact_form:
       button_label: Enviar
@@ -866,7 +908,7 @@ pt-BR:
       collections:
         collection_title: Título da coleção
         edit:
-          header: "Editar %{type_title}: %{title}"
+          header: 'Editar %{type_title}: %{title}'
         files: arquivos
         form:
           permission_update_errors:
@@ -882,7 +924,7 @@ pt-BR:
             relationships: Relações
             sharing: Compartilhamento
         form_branding:
-          alt_text: "Alt Texto:"
+          alt_text: 'Alt Texto:'
           banner:
             description: Uma imagem a ser exibida na parte superior das páginas de coleção. Para obter melhores resultados, carregue uma imagem (JPG, GIF ou PNG) com pelo menos 120 pixels de altura e 1200 pixels de largura.
             label: Faixa
@@ -890,7 +932,7 @@ pt-BR:
             description: Opcionalmente, você pode carregar uma imagem de faixa e/ou imagens de logotipo para associar a esta coleção. Se carregadas, essas imagens serão exibidas no topo da página da coleção para fornecer branding único para a coleção.
             label: Branding
           choose_file: Escolha O Arquivo
-          link_url: "URL do Link:"
+          link_url: 'URL do Link:'
           logo:
             description: Uma ou mais imagens a serem exibidas no topo da página da coleção. Para obter melhores resultados, carregue uma imagem (JPG, GIF ou PNG) com 40 pixels de altura. As imagens maiores serão redimensionadas para 40 pixels de altura.
             label: Logotipo
@@ -990,12 +1032,12 @@ pt-BR:
         show_document_list_menu:
           select: Selecione
         show_document_list_row:
-          creator: "O Criador:"
-          depositor: "Depositante:"
-          edit_access: "Editar acesso:"
+          creator: 'O Criador:'
+          depositor: 'Depositante:'
+          edit_access: 'Editar acesso:'
         sort_and_per_page:
           show_par_page_html: Mostrar %{select} por página
-          sort_by: "Ordenar Por:"
+          sort_by: 'Ordenar Por:'
         title: Coleções
         work_action_menu:
           delete_work: Excluir trabalho
@@ -1012,6 +1054,7 @@ pt-BR:
       heading_actions:
         close: Fechar
         create_work: Criar obra
+        select_admin_set: Depositar no conjunto de administração
         select_type_of_work: Selecionar o tipo de obra
       manage_proxies: Gerenciar Suplentes
       managed:
@@ -1057,21 +1100,21 @@ pt-BR:
           view_collection: Acessar a coleção
           work_confirmation: A eliminação de uma obra do %{application_name} é permanente. Clique em OK para eliminar esta obra de %{application_name} ou Cancelar para cancelar esta operação
         collection_list:
-          description: "Descrição:"
-          edit_access: "Editar acesso:"
-          groups: "Grupos:"
+          description: 'Descrição:'
+          edit_access: 'Editar acesso:'
+          groups: 'Grupos:'
           managed_access:
             deposit: Depósito
             manage: Curatelar
             view: Acesso
-          users: "Usuários:"
+          users: 'Usuários:'
         collections: Coleções
         collections_report: Relatório de cobranças
         facet_label:
-          collections: "Filtrar Coleções:"
-          highlighted: "Filtrar Destaques:"
-          shared: "Filtrar Compartilhamento:"
-          works: "Filtrar obras:"
+          collections: 'Filtrar Coleções:'
+          highlighted: 'Filtrar Destaques:'
+          shared: 'Filtrar Compartilhamento:'
+          works: 'Filtrar obras:'
         heading:
           access: Acesso
           action: Ações
@@ -1161,6 +1204,7 @@ pt-BR:
         files: Arquivos depositados
         heading: Suas estatísticas
         joined_on: Ingressou no
+        work_views: Visualização de metadados
         works: Obras criadas
       tabs:
         admin_sets: Conjuntos de administradores
@@ -1449,7 +1493,7 @@ pt-BR:
       change_tab_message: Tem certeza que quer deixar esta guia? Os dados ainda não salvos serão perdidos.
     notifications:
       batch_create_failure:
-        message: "O lote criado para %{user} falhou: %{messages}"
+        message: 'O lote criado para %{user} falhou: %{messages}'
         subject: Falha na criação de lote
       batch_create_success:
         message: O lote criado para %{user} foi passado.
@@ -1465,7 +1509,7 @@ pt-BR:
           subject: Pedido de Alteração de Propriedade
           transfer_link_label: pedidos de transferência de
         transfer_on_update:
-          comments: "Comentários: %{receiver_comment}"
+          comments: 'Comentários: %{receiver_comment}'
           message: Seu pedido de transferência foi %{status}.
           subject: Alteração de Propriedade %{status}
         validation:
@@ -1660,9 +1704,9 @@ pt-BR:
         set_all_to_this_resource_type: Defina tudo para este tipo de recurso
         start: Começar
       js_templates_branding:
-        alt_text: "Texto alternativo:"
+        alt_text: 'Texto alternativo:'
         error: Erro
-        link_url: "URL do link:"
+        link_url: 'URL do link:'
         previous: anterior
         remove: Remover
         remove_new_banner: Remover novo banner
@@ -1738,7 +1782,7 @@ pt-BR:
       default:
         deposit: Depósito
       load:
-        state_error: "O fluxo de trabalho: %{workflow_name} não foi atualizado. Você está tentando remover um estado: %{state_name} com %{entity_count} entidade(s). Um estado não pode ser removido enquanto ele possui entidades ativas!"
+        state_error: 'O fluxo de trabalho: %{workflow_name} não foi atualizado. Você está tentando remover um estado: %{state_name} com %{entity_count} entidade(s). Um estado não pode ser removido enquanto ele possui entidades ativas!'
       unauthorized: A obra não está disponível no momento porque ainda não completou o processo de aprovação
       unauthorized_parent: O arquivo não está disponível no momento porque seu trabalho principal ainda não concluiu o processo de aprovação
     works:
@@ -1797,7 +1841,7 @@ pt-BR:
         require_membership: Uma obra deve pertencer a pelo menos uma coleção deste tipo
         sharable: Permitir que os usuários especifiquem, para coleções que eles gerenciam, outros gerentes de coleção, depositantes e usuários com permissão de accesso.
         share_applies_to_new_works: Quando novas obras são criadas diretamente na coleção, concede a usuários e grupos com os quais a coleçãoé compartilhada as permissões de acesso à nova obra de acordo com suas funções.
-        title: ""
+        title: ''
       defaults:
         abstract: Um breve resumo de um artigo de pesquisa, tese, revisão, processo de conferência ou qualquer análise aprofundada de um determinado assunto.
         access_right: Contém informações sobre quem pode acessar o recurso ou uma indicação de seu status de segurança.

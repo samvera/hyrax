@@ -7,6 +7,7 @@ RSpec.describe 'Batch creation of works', type: :feature do
     Hyrax::EnsureWellFormedAdminSetService.call
     sign_in user
     allow(Flipflop).to receive(:batch_upload?).and_return true
+    allow(Hyrax.config).to receive(:use_valkyrie?).and_return(false)
   end
 
   it "renders the batch create form" do

@@ -24,12 +24,12 @@ de:
           suppressed_bsi: Status
           visibility_ssi: Sichtbarkeit
         show:
-          admin_set: "Im Admin-Set:"
+          admin_set: 'Im Admin-Set:'
           based_near_label: Ort
           contributor: Mitwirkende
           keyword: Stichwort
       filters:
-        title: "Filtern nach:"
+        title: 'Filtern nach:'
       start_over: Filter löschen
   download:
     one: und 1 Download
@@ -39,8 +39,8 @@ de:
       carrierwave_download_error: Bild konnte nicht heruntergeladen werden.
       carrierwave_integrity_error: Kein Bild.
       carrierwave_processing_error: Bild kann nicht verkleinernt werden.
-      extension_blacklist_error: "Sie dürfen keine %{extension}-Dateien hochladen, nicht erlaubt sind: %{prohibited_types}"
-      extension_whitelist_error: "Sie dürfen keine %{extension}-Dateien hochladen, erlaubt sind: %{allowed_types}"
+      extension_blacklist_error: 'Sie dürfen keine %{extension}-Dateien hochladen, nicht erlaubt sind: %{prohibited_types}'
+      extension_whitelist_error: 'Sie dürfen keine %{extension}-Dateien hochladen, erlaubt sind: %{allowed_types}'
   helpers:
     action:
       accept: Akzeptieren
@@ -145,9 +145,9 @@ de:
             title: Betrachter
             type: Art
         form_participants:
-          add_group: "Gruppe hinzufügen:"
+          add_group: 'Gruppe hinzufügen:'
           add_participants: Nutzer hinzufügen
-          add_user: "Benutzer hinzufügen:"
+          add_user: 'Benutzer hinzufügen:'
           current_participants: Aktuelle Nutzer
         form_visibility:
           cancel: Abbrechen
@@ -160,16 +160,16 @@ de:
             varies:
               any: Dem Deponenten erlauben, sich zu entscheiden
               between: Zwischen „jetzt“ und
-              description: "Variabel - Deponenten können den Freigabedatum für eine einzelne Arbeit festlegen:"
+              description: 'Variabel - Deponenten können den Freigabedatum für eine einzelne Arbeit festlegen:'
               embargo:
                 1yr: 1 Jahr nach Deponierung
                 2yrs: 2 Jahre nach Deponierung
                 3yrs: 3 Jahre nach Deponierung
                 6mos: 6 Monate nach Deponierung
                 select: Wählen Sie die Sperrfrist aus.
-              period: "Der Deponent kann eine Embargo-Frist bis zu:"
+              period: 'Der Deponent kann eine Embargo-Frist bis zu:'
           visibility:
-            description: "Nach dem Release-Datum können die Arbeiten in diesem Admin-Set eingesehen und heruntergeladen werden durch:"
+            description: 'Nach dem Release-Datum können die Arbeiten in diesem Admin-Set eingesehen und heruntergeladen werden durch:'
             everyone: Jeder - alle Arbeiten in diesem Admin-Set werden öffentlich sichtbar sein
             institution: Institution - alle Arbeiten werden nur für authentifizierte Benutzer dieser Institution sichtbar sein
             restricted: Eingeschränkt - alle Arbeiten werden nur für Manager des Repositoriums, Manager und Gutachter dieses Admin-Sets sichtbar sein
@@ -252,6 +252,48 @@ de:
           reset_date_range: Datumsbereich zurücksetzen
           set_date_range: Berichtszeitraum festlegen
           start_date: Startdatum
+        errors:
+          authentication:
+            documentation_url: https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support
+            message: Bei der Authentifizierung mit Google Analytics ist ein Problem aufgetreten. Bitte überprüfen Sie Ihre Anmeldeinformationen.
+            title: Authentifizierungsfehler
+            troubleshooting_steps:
+            - Stellen Sie sicher, dass Ihre Anmeldeinformationsdatei „google-analytics.json“ (oder eine gleichwertige Datei) richtig formatiert ist und gültige Informationen enthält.
+            - Stellen Sie sicher, dass das Dienstkonto in Ihrem Google Cloud-Projekt aktiviert ist.
+          documentation_html: Weitere Informationen finden Sie in der <a href='%{url}' target='_blank' rel='noopener noreferrer'>Dokumentation</a> .
+          general:
+            documentation_url: https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support
+            message: Es liegt ein Problem mit der Google Analytics-Konfiguration vor, das die Aufmerksamkeit eines Administrators erfordert.
+            title: Analytics-Konfigurationsproblem
+            troubleshooting_steps:
+            - Wenden Sie sich an Ihren Systemadministrator, um die Google Analytics-Konfiguration zu überprüfen
+            - Überprüfen Sie, ob die Anmeldeinformationen des Dienstkontos richtig konfiguriert sind.
+            - Stellen Sie sicher, dass die Google Analytics-Eigenschaft richtig eingerichtet ist
+          invalid_property:
+            documentation_url: https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support
+            message: Die Google Analytics-Property-ID ist ungültig. Für Google Analytics 4 ist eine numerische Property-ID erforderlich.
+            title: Ungültige Eigenschafts-ID
+            troubleshooting_steps:
+            - Überprüfen Sie Ihre Google Analytics 4-Einstellungen und stellen Sie sicher, dass Sie die numerische Property-ID und nicht die Mess-ID (die mit „G-“ beginnt) verwenden.
+            - Überprüfen Sie, ob die Eigenschafts-ID in Ihren Anwendungseinstellungen richtig konfiguriert ist.
+          permission:
+            documentation_url: https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support
+            message: Das System kann nicht auf Ihre Google Analytics-Daten zugreifen. Dies bedeutet normalerweise, dass der E-Mail-Adresse des Dienstkontos Zugriff auf Ihre Google Analytics-Property gewährt werden muss.
+            title: Analytics-Zugriff erforderlich
+            troubleshooting_steps:
+            - Gehen Sie in Ihrem Google Analytics-Konto zu Admin → Konto → Kontozugriffsverwaltung
+            - Klicken Sie auf die Schaltfläche „+“, um einen neuen Benutzer hinzuzufügen
+            - 'Geben Sie die E-Mail-Adresse des Dienstkontos aus Ihrer Anmeldeinformationsdatei ein (sie sieht folgendermaßen aus: Ihr-Dienstkonto@Projektname.iam.gserviceaccount.com).'
+            - Legen Sie die Rolle auf „Viewer“ fest und klicken Sie auf „Hinzufügen“.
+            - Warten Sie einige Minuten, bis die Änderungen wirksam werden, und aktualisieren Sie dann diese Seite
+          quota_exceeded:
+            documentation_url: https://developers.google.com/analytics/devguides/reporting/data/v1/limits-quotas
+            message: Die Anforderungsrate an die Google Analytics-API wurde überschritten. Bitte versuchen Sie es später noch einmal.
+            title: Kontingent überschritten
+            troubleshooting_steps:
+            - Überprüfen Sie die Kontingentgrenzen der Google Analytics-API und Ihre Nutzung.
+            - Erwägen Sie die Implementierung von Backoff-Strategien für API-Anfragen, wenn Sie in kurzer Zeit viele Anfragen stellen.
+          troubleshooting_steps: Schritte zur Fehlerbehebung
         work_reports:
           custom_range:
             date_range_heading: Datumsbereich anpassen
@@ -374,7 +416,7 @@ de:
           update_notice: Nutzer aktualisiert
         form_settings:
           instructions: Diese Einstellungen legen fest, wie Sammlungen dieses Typs verwaltet und ermittelt werden können.
-          warning: "Warnung: Diese Einstellungen können nicht geändert werden, nachdem eine Sammlung dieses Typs erstellt wurde."
+          warning: 'Warnung: Diese Einstellungen können nicht geändert werden, nachdem eine Sammlung dieses Typs erstellt wurde.'
         index:
           breadcrumb: Sammlungstypen
           create_new_button: Erstellen Sie einen neuen Sammlungstyp
@@ -392,7 +434,7 @@ de:
             actions: Aktionen
             name: Name
         multiple_membership_checker:
-          error_preamble: "Fehler: Sie haben mehrere derselben Sammlungstypen mit einer einzelnen Mitgliedschaft angegeben"
+          error_preamble: 'Fehler: Sie haben mehrere derselben Sammlungstypen mit einer einzelnen Mitgliedschaft angegeben'
           error_type_and_collections: "(Geben Sie ein: %{type}, Sammlungen: %{collections})"
         new:
           header: Erstellen Sie einen neuen Sammlungstyp
@@ -436,7 +478,7 @@ de:
       stats:
         deposited_form:
           end_label: Ende [Voreinstellung]
-          heading: "Angezeigte Dateien:"
+          heading: 'Angezeigte Dateien:'
           start_label: Beginn
         repository_objects:
           series:
@@ -447,14 +489,14 @@ de:
           end_label: Ende [Voreinstellung]
           headers:
             main: Arbeitsstatistik
-            total: "Gesamte Werke:"
+            total: 'Gesamte Werke:'
             visibility: Summen nach Sichtbarkeit
           heading: Von Benutzern deponierte Dateien anzeigen
           start_label: Beginnend
         works:
           headers:
             main: Statistik Arbeiten
-            total: "Arbeiten gesamt:"
+            total: 'Arbeiten gesamt:'
             visibility: Summen nach Freigabe- und Sichtbarkeitsbeschränkungen
       users:
         index:
@@ -510,7 +552,7 @@ de:
         default: Sie müssen eingeloggt sein!
       unprocessable_entity:
         default: Es ist nicht möglich, die Ressource entsprechend Ihrer Anfrage, zu ändern.
-    background_attribution_html: ""
+    background_attribution_html: ''
     base:
       attributes:
         table_attribute_name: Attributname
@@ -520,7 +562,7 @@ de:
       citations:
         citations: Zitate
         endnote: EndNote
-        header: "Zitate:"
+        header: 'Zitate:'
         mendeley: Mendeley
         zotero: Zotero
       currently_shared:
@@ -647,7 +689,7 @@ de:
         empty: Diese %{type} ist derzeit noch keiner Sammlung zugeordnet.
         header: Beziehungen
       relationships_parent_row:
-        label: "In %{type}:"
+        label: 'In %{type}:'
       share_with:
         definition_heading: Berechtigungsdefinitionen
         definitions_html: "<strong>Ansicht / Download: Auf</strong> diese Datei (sowohl Inhalte als auch Metadaten) kann innerhalb von %{application_name} zugegriffen werden. <br /> <strong>Bearbeiten:</strong> Diese Datei (sowohl Inhalte als auch Metadaten) kann bearbeitet werden. Sie dürfen diese Berechtigung nur Benutzern und / oder Gruppen von %{institution_name} erteilen."
@@ -674,7 +716,7 @@ de:
         twitter: Twitter
         twitter_share: Auf Twitter teilen
       unauthorized:
-        id: "ID: %{id}"
+        id: 'ID: %{id}'
         is_private: Das %{type}, auf das Sie zugreifen wollten, ist privat
         page_is_private: Die Seite, auf die Sie zugreifen wollten, ist privat
         unauthorized: Nicht autorisiert
@@ -709,11 +751,11 @@ de:
         button_label: Ausgewählte Löschen
         deleting_file_from: Das Löschen einer Datei aus %{application_name} ist permanent. Klicken Sie auf OK, um diese Datei von %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
       edit:
-        apply_changes_to: "Änderungen werden angewendet auf: (%{x_number_of} Arbeiten)"
+        apply_changes_to: 'Änderungen werden angewendet auf: (%{x_number_of} Arbeiten)'
         batch_edit_descriptions: Stapelbearbeitung von Beschreibungen & nbsp; & nbsp; & nbsp; <small> Klicken Sie unten auf die Beschriftungen, um die Arbeitsbeschreibungen zu bearbeiten. </ Small>
         clear_batch: Stapelauswahl löschen
         descriptions: Beschreibungen
-        descriptions_title: "Beschreibungen:"
+        descriptions_title: 'Beschreibungen:'
         permissions: Berechtigungen
         sharing: Teilen
         visibility: Sichtbarkeit
@@ -783,7 +825,7 @@ de:
         create: Sammlung erstellen
         create_new: Zu neuer Sammlung hinzufügen
         no_collections: Sie haben keinen Zugang zu vorhandenen Sammlungen. Sie können eine neue Sammlung erstellen.
-        select_heading: "Wählen Sie die Sammlung aus, um Ihre Dateien hinzuzufügen:"
+        select_heading: 'Wählen Sie die Sammlung aus, um Ihre Dateien hinzuzufügen:'
         title: Zur Sammlung hinzufügen
         update: Änderungen speichern
     collection_type:
@@ -812,7 +854,7 @@ de:
         works_in_collection: Arbeiten in dieser Sammlung
       sort_and_per_page:
         number_of_results_to_display_per_page: Anzahl der Ergebnisse die pro Seite angezeigt werden
-        results_per_page: "Ergebnisse pro Seite:"
+        results_per_page: 'Ergebnisse pro Seite:'
         sort_by_html: "<span>Sortieren nach:</span>"
     contact_form:
       button_label: Senden
@@ -866,7 +908,7 @@ de:
       collections:
         collection_title: Sammlungstitel
         edit:
-          header: "Bearbeiten von %{type_title}: %{title}"
+          header: 'Bearbeiten von %{type_title}: %{title}'
         files: Dateien
         form:
           permission_update_errors:
@@ -882,7 +924,7 @@ de:
             relationships: Beziehungen
             sharing: Freigaben
         form_branding:
-          alt_text: "Alternativer Linktext:"
+          alt_text: 'Alternativer Linktext:'
           banner:
             description: Ein Bild, das am oberen Rand der Sammlungsseite angezeigt werden soll. Für beste Ergebnisse laden Sie ein Bild (JPG, GIF oder PNG) hoch, das mindestens 120 Pixel groß und 1200 Pixel breit ist.
             label: Banner
@@ -890,7 +932,7 @@ de:
             description: Optional können Sie ein Bannerbild und / oder Logo-Bilder hochladen, die mit dieser Sammlung verknüpft werden sollen. Wenn diese hochgeladen werden, werden diese Bilder oben auf der Sammlungsseite angezeigt, um ein eindeutiges Markenbildung für die Sammlung bereitzustellen.
             label: Markenbildung
           choose_file: Datei wählen
-          link_url: "URL-Link:"
+          link_url: 'URL-Link:'
           logo:
             description: Ein oder mehrere Bilder, die oben auf der Sammlungsseite angezeigt werden. Für beste Ergebnisse laden Sie ein Bild (JPG, GIF oder PNG) hoch, das 40 Pixel hoch ist. Größere Bilder werden auf 40 Pixel in der Höhe angepasst.
             label: Logo
@@ -990,12 +1032,12 @@ de:
         show_document_list_menu:
           select: Auswählen
         show_document_list_row:
-          creator: "Schöpfer:"
-          depositor: "Deponent:"
-          edit_access: "Zugang bearbeiten:"
+          creator: 'Schöpfer:'
+          depositor: 'Deponent:'
+          edit_access: 'Zugang bearbeiten:'
         sort_and_per_page:
           show_par_page_html: Zeige %{select} pro Seite
-          sort_by: "Sortieren nach:"
+          sort_by: 'Sortieren nach:'
         title: Kollektionen
         work_action_menu:
           delete_work: Arbeit löschen
@@ -1012,6 +1054,7 @@ de:
       heading_actions:
         close: Schließen
         create_work: Arbeit erstellen
+        select_admin_set: Einzahlung in das Admin-Set
         select_type_of_work: Wählen Sie die Art der Arbeit aus
       manage_proxies: Vertreter verwalten
       managed:
@@ -1057,21 +1100,21 @@ de:
           view_collection: Sammlung anzeigen
           work_confirmation: Das Löschen einer Arbeit aus %{application_name} ist dauerhaft. Klicken Sie auf OK, um diese Arbeit aus %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
         collection_list:
-          description: "Beschreibung:"
-          edit_access: "Bearbeiten der Zugriffsrechte:"
-          groups: "Gruppen:"
+          description: 'Beschreibung:'
+          edit_access: 'Bearbeiten der Zugriffsrechte:'
+          groups: 'Gruppen:'
           managed_access:
             deposit: Deponieren
             manage: Verwalten
             view: Ansicht
-          users: "Benutzer:"
+          users: 'Benutzer:'
         collections: Ihre Sammlungen
         collections_report: Sammlungsbericht
         facet_label:
-          collections: "Filter Sammlungen:"
-          highlighted: "Filter Hervorhebungen:"
-          shared: "Filter Freigaben:"
-          works: "Filter Arbeiten:"
+          collections: 'Filter Sammlungen:'
+          highlighted: 'Filter Hervorhebungen:'
+          shared: 'Filter Freigaben:'
+          works: 'Filter Arbeiten:'
         heading:
           access: Zugriff
           action: Aktionen
@@ -1161,6 +1204,7 @@ de:
         files: Dateien deponiert
         heading: Ihre Statistik
         joined_on: Beigetreten am
+        work_views: Metadatenansicht
         works: Arbeiten erstellt
       tabs:
         admin_sets: Admin-Sets
@@ -1449,7 +1493,7 @@ de:
       change_tab_message: Möchten Sie diesen Tab wirklich verlassen? Nicht gespeicherte Daten gehen verloren.
     notifications:
       batch_create_failure:
-        message: "Die Batcherstellung für %{user} ist fehlgeschlagen: %{messages}"
+        message: 'Die Batcherstellung für %{user} ist fehlgeschlagen: %{messages}'
         subject: Fehler beim Batch-Erstellen
       batch_create_success:
         message: Die Batcherstellung für %{user} wurde übergeben.
@@ -1465,7 +1509,7 @@ de:
           subject: Antrag auf Änderung des Eigentums
           transfer_link_label: transfer-Anfragen
         transfer_on_update:
-          comments: "Kommentare: %{receiver_comment}"
+          comments: 'Kommentare: %{receiver_comment}'
           message: Ihre Übertragungsanforderung lautete %{status}.
           subject: Eigentümerwechsel %{status}
         validation:
@@ -1660,9 +1704,9 @@ de:
         set_all_to_this_resource_type: Stellen Sie alle auf diesen Ressourcentyp ein
         start: Start
       js_templates_branding:
-        alt_text: "Alternativtext:"
+        alt_text: 'Alternativtext:'
         error: fehler
-        link_url: "URL verknüpfen:"
+        link_url: 'URL verknüpfen:'
         previous: Bisherige
         remove: Löschen
         remove_new_banner: Neues Banner entfernen
@@ -1738,7 +1782,7 @@ de:
       default:
         deposit: Deponieren
       load:
-        state_error: "Der Workflow: %{workflow_name} wurde nicht aktualisiert. Sie entfernen einen Zustand: %{state_name} mit %{entity_count} Entität(en). Ein Zustand darf nicht entfernt werden, während er aktive Entitäten hat!"
+        state_error: 'Der Workflow: %{workflow_name} wurde nicht aktualisiert. Sie entfernen einen Zustand: %{state_name} mit %{entity_count} Entität(en). Ein Zustand darf nicht entfernt werden, während er aktive Entitäten hat!'
       unauthorized: Die Arbeit ist derzeit nicht verfügbar, da der Begutachtungsprozess noch nicht abgeschlossen ist
       unauthorized_parent: Die Datei ist derzeit nicht verfügbar, da ihre übergeordnete Arbeit den Freigabeprozess noch nicht abgeschlossen hat
     works:
@@ -1797,7 +1841,7 @@ de:
         require_membership: Eine Arbeit muss zu mindestens einer Sammlung dieses Typs gehören
         sharable: Benutzern erlauben, Sammlungsmanager, Deponenten und Betrachter für von ihnen verwaltete Sammlungen zuzuweisen
         share_applies_to_new_works: Wenn neue Arbeiten direkt in der Sammlung erstellt werden, gewähren Sie Benutzern und Gruppen Berechtigungen für die neue Arbeit entsprechend ihrer Sammlungsrollen.
-        title: ""
+        title: ''
       defaults:
         abstract: Eine kurze Zusammenfassung eines Forschungsartikels, einer Abschlussarbeit, eines Reviews, eines Konferenzverfahrens oder einer eingehenden Analyse eines bestimmten Themas.
         access_right: Enthält Informationen darüber, wer auf die Ressource zugreifen kann, oder einen Hinweis auf den Sicherheitsstatus.

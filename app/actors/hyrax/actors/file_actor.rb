@@ -23,6 +23,8 @@ module Hyrax
       # @see IngestJob
       # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
       def ingest_file(io)
+        io.use_valkyrie = false # we are in the actors, we need af objects
+
         Hydra::Works::AddFileToFileSet.call(file_set,
                                             io,
                                             relation,
