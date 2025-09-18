@@ -169,6 +169,8 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
                                                   workflow: workflow,
                                                   agents: user3)
         permission_template.update!(active_workflow: workflow)
+        @start_count_for_user = count_workflow_roles_for(user)
+        @start_count_for_user2 = count_workflow_roles_for(user2)
       end
 
       def count_workflow_roles_for(user)
@@ -179,8 +181,8 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
       it "adds edit_access to the AdminSet itself and grants workflow roles" do
         expect { subject }.to change { permission_template.access_grants.count }.by(1)
-        expect(count_workflow_roles_for(user)).to eq 1
-        expect(count_workflow_roles_for(user2)).to eq 1
+        expect(count_workflow_roles_for(user)).to eq @start_count_for_user + 1
+        expect(count_workflow_roles_for(user2)).to eq @start_count_for_user2 + 1
         expect(count_workflow_roles_for(user3)).to eq 0
         reload = Hyrax.query_service.find_by id: admin_set.id
         expect(reload.edit_users).to match_array [user2.user_key, user.user_key]
