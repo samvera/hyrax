@@ -2,6 +2,7 @@
 # This is a job spawned by the BatchCreateJob
 class CreateWorkJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
+  discard_on StandardError
 
   before_enqueue do |job|
     operation = job.arguments.last
@@ -28,6 +29,7 @@ class CreateWorkJob < Hyrax::ApplicationJob
 
     return operation.success! if status
     operation.fail!(errors.full_messages.join(' '))
+    raise StandardError, operation.message
   end
 
   private

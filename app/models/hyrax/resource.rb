@@ -47,13 +47,13 @@ module Hyrax
     class << self
       def inherited(subclass)
         super
-        subclass.acts_as_flexible_resource if Hyrax.config.flexible_classes.include?(subclass.to_s)
+        subclass.acts_as_flexible_resource if Hyrax.config.flexible_classes.include?(subclass.name)
       end
 
       def acts_as_flexible_resource
         include Hyrax::Flexibility
-        include Hyrax::Schema(to_s, schema_loader: Hyrax::Schema.m3_schema_loader)
-        Hyrax.config.flexible_classes << to_s unless Hyrax.config.flexible_classes.include?(to_s)
+        include Hyrax::Schema(name, schema_loader: Hyrax::Schema.m3_schema_loader)
+        Hyrax.config.flexible_classes << name unless Hyrax.config.flexible_classes.include?(name)
       end
 
       def flexible?
