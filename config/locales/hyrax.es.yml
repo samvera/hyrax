@@ -1763,6 +1763,8 @@ es:
       search_form:
         go: Ir
         search_users: Buscar usuarios
+    virus_scanner:
+      virus_detected: Virus detectado en %{filename}. El archivo no se ha guardado.
     visibility:
       authenticated:
         note_html: Restringir el acceso sólo a usuarios y/o grupos de %{institution}

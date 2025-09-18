@@ -1759,6 +1759,8 @@ zh:
       search_form:
         go: 走
         search_users: 搜索用户
+    virus_scanner:
+      virus_detected: 在 %{filename} 中检测到病毒。该文件尚未保存。
     visibility:
       authenticated:
         note_html: 访问仅限于%{institution}

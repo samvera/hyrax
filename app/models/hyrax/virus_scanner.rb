@@ -38,10 +38,25 @@ module Hyrax
     #
     # @return [Boolean]
     def infected?
-      defined?(ClamAV) ? clam_av_scanner : null_scanner
+      if defined?(Clamby)
+        clamby_scanner
+      elsif defined?(ClamAV)
+        clam_av_scanner
+      else
+        null_scanner
+      end
+    end
+
+    private
+
+    def clamby_scanner
+      scan_result = Clamby.virus?(file)
+      warning("A virus was found in #{file}") if scan_result
+      scan_result
     end
 
     def clam_av_scanner
+      Deprecation.warn(self, "ClamAV support has been deprecated. Please use Clamby instead.")
       scan_result = ClamAV.instance.method(:scanfile).call(file)
       return false if scan_result.zero?
       warning "A virus was found in #{file}: #{scan_result}"
@@ -57,8 +72,6 @@ module Hyrax
         Rails.env.test?
       false
     end
-
-    private
 
     def warning(msg)
       Hyrax.logger&.warn(msg)

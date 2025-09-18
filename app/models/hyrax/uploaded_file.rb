@@ -14,6 +14,8 @@ module Hyrax
              dependent: :destroy
     belongs_to :user, class_name: '::User'
 
+    validate :virus_scan
+
     ##
     # Associate a {FileSet} with this uploaded file.
     #
@@ -27,6 +29,14 @@ module Hyrax
               file_set.id
             end
       update!(file_set_uri: uri)
+    end
+
+    private
+
+    def virus_scan
+      if file.path && Hyrax::VirusScanner.infected?(file.path)
+        errors.add(:file, I18n.t('hyrax.virus_scanner.virus_detected', filename: file.path))
+      end
     end
   end
 end

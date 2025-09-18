@@ -1742,6 +1742,8 @@ en:
       search_form:
         go: Go
         search_users: Search Users
+    virus_scanner:
+      virus_detected: Virus detected in %{filename}. The file has not been saved.
     visibility:
       authenticated:
         note_html: Restrict access to %{institution}.
