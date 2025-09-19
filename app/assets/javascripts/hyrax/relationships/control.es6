@@ -18,15 +18,35 @@ export default class RelationshipsControl {
     this.element = $(element)
     this.members = this.element.data('members')
     this.registry = new Registry(this.element.find('tbody'), paramKey, property, templateId)
-    this.input = this.element.find(`[data-autocomplete]`)
+    this.input = this.element.find(`[data-autocomplete], .collection-select2`)
     this.warning = this.element.find(".message.has-warning")
     this.addButton = this.element.find("[data-behavior='add-relationship']")
     this.errors = null
   }
 
   init() {
+    this.ensureSelect2();
     this.bindAddButton();
     this.displayMembers();
+  }
+
+  ensureSelect2() {
+    // Ensure select2 is initialized on collection-select2 dropdowns
+    // The global initialization should handle this, but we'll check just in case
+    let collectionSelect = this.input.filter('.collection-select2, select[name="member_of_collection_ids"]');
+    if (collectionSelect.length > 0 && !collectionSelect.hasClass('select2-hidden-accessible')) {
+      let dropdownParent = collectionSelect.closest('.modal-body');
+      let options = {
+        placeholder: collectionSelect.data('placeholder') || 'Select',
+        allowClear: true
+      };
+
+      if (dropdownParent.length > 0) {
+        options.dropdownParent = dropdownParent;
+      }
+
+      collectionSelect.select2(options);
+    }
   }
 
   validate() {

@@ -20,7 +20,7 @@ module Hyrax
     include Hyrax::WorkflowsHelper
     include Hyrax::FacetsHelper
     include Hyrax::AttributesHelper
-
+    include Hyrax::WorksHelper
 
     ##
     # @return [Array<String>] the list of admin sets available for creating works for this user
