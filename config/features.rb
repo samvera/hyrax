@@ -34,11 +34,6 @@ Flipflop.configure do
     feature :active_deposit_agreement_acceptance,
             default: Hyrax.config.active_deposit_agreement_acceptance?,
             description: "Require an active acceptance of the deposit agreement by checking a checkbox"
-  # rubocop:disable Layout/LineLength
-  feature :batch_upload,
-          default: false,
-          description: "<strong>NOTICE:</strong> This feature has been temporarily disabled. To add or upload works in bulk, please use the <a href='https://github.com/samvera/bulkrax/wiki' target='_blank'>Bulkrax importer</a>.".html_safe
-  # rubocop:enable Layout/LineLength
 
     # Note, if this is deactivated, a default admin set will be created and all
     # works will be assigned to it when they are created.
