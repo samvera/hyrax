@@ -42,7 +42,8 @@ module Freyja
       new_resource = resource_factory.to_resource(object: orm_object)
       # if the resource was wings and is now a Valkyrie resource, we need to migrate sipity, files, and members
       if Hyrax.config.valkyrie_transition? && was_wings && !new_resource.wings?
-        MigrateFilesToValkyrieJob.perform_later(new_resource) if new_resource.is_a?(Hyrax::FileSet) && new_resource.file_ids.size == 1 && new_resource.file_ids.first.id.to_s.match('/files/')
+        # Check if all file_ids match the '/files/' pattern
+        MigrateFilesToValkyrieJob.perform_later(new_resource) if new_resource.is_a?(Hyrax::FileSet) && new_resource.file_ids.all? { |id_holder| id_holder.id.to_s.match('/files/') }
         # migrate any members if the resource is a Hyrax work
         if new_resource.is_a?(Hyrax::Work)
           member_ids = new_resource.member_ids.map(&:to_s)
