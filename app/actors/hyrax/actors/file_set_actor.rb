@@ -123,7 +123,7 @@ module Hyrax
 
       # uses create! because object must be persisted to serialize for jobs
       def wrapper!(file:, relation:)
-        JobIoWrapper.create_with_varied_file_handling!(user: user, file: file, relation: relation, file_set: file_set)
+        JobIoWrapper.create_with_varied_file_handling!(user: user, file: file, relation: relation, file_set: file_set, use_valkyrie: false)
       end
 
       # For the label, use the original_filename or original_name if it's there.
