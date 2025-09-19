@@ -25,14 +25,15 @@ export default class RelationshipsControl {
   }
 
   init() {
-    this.initializeSelect2();
+    this.ensureSelect2();
     this.bindAddButton();
     this.displayMembers();
   }
 
-  initializeSelect2() {
-    // Initialize select2 on collection-select2 dropdowns
-    let collectionSelect = this.input.filter('.collection-select2');
+  ensureSelect2() {
+    // Ensure select2 is initialized on collection-select2 dropdowns
+    // The global initialization should handle this, but we'll check just in case
+    let collectionSelect = this.input.filter('.collection-select2, select[name="member_of_collection_ids"]');
     if (collectionSelect.length > 0 && !collectionSelect.hasClass('select2-hidden-accessible')) {
       let dropdownParent = collectionSelect.closest('.modal-body');
       let options = {
