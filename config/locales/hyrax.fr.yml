@@ -1762,6 +1762,8 @@ fr:
       search_form:
         go: Aller
         search_users: Rechercher des utilisateurs
+    virus_scanner:
+      virus_detected: Virus détecté dans %{filename}. Le fichier n'a pas été enregistré.
     visibility:
       authenticated:
         note_html: Limiter l'accès aux utilisateurs et / ou groupes exclus de %{institution}

@@ -8,4 +8,9 @@ RSpec.describe Hyrax::UploadedFile do
     temp_dir = Rails.root + 'tmp'
     expect(subject.file.path).to start_with temp_dir.to_s
   end
+
+  it "scans for viruses" do
+    allow(Hyrax::VirusScanner).to receive(:infected?).and_return(true)
+    expect(subject.errors[:file]).to include(/Virus detected/)
+  end
 end

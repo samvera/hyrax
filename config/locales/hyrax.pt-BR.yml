@@ -1755,6 +1755,8 @@ pt-BR:
       search_form:
         go: Vai
         search_users: Pesquisar usuários
+    virus_scanner:
+      virus_detected: Vírus detectado em %{filename}. O arquivo não foi salvo.
     visibility:
       authenticated:
         note_html: Limitar o acesso a apenas usuários e/ou grupos do(a) %{institution}

@@ -1755,6 +1755,8 @@ de:
       search_form:
         go: Los
         search_users: Benutzer suchen
+    virus_scanner:
+      virus_detected: Virus in %{filename} erkannt. Die Datei wurde nicht gespeichert.
     visibility:
       authenticated:
         note_html: Beschränkung des Zugriffs auf %{institution}

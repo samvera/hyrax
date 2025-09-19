@@ -17,5 +17,8 @@ yarn install
 
 db-migrate-seed.sh
 
+# Update ClamAV
+freshclam
+
 # Run the command
 exec "$@"
