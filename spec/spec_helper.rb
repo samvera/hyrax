@@ -221,6 +221,8 @@ RSpec.configure do |config|
     # using :workflow is preferable to :clean_repo, use the former if possible
     # It's important that this comes after DatabaseCleaner.start
     ensure_deposit_available_for(user) if example.metadata[:workflow] && defined?(user)
+
+    allow(Hyrax::VirusScanner).to receive(:infected?).and_return(false) unless example.metadata[:virus_scan]
   end
 
   config.include(ControllerLevelHelpers, type: :view)

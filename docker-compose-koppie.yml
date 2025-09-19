@@ -34,6 +34,7 @@ services:
       - .koppie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
       - bundle:/app/bundle
+      - clamav:/var/lib/clamav
       - hyrax-storage:/app/samvera/hyrax-webapp/storage
       - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
@@ -60,6 +61,7 @@ services:
       - .koppie:/app/samvera/hyrax-webapp
       - .:/app/samvera/hyrax-engine
       - bundle:/app/bundle
+      - clamav:/var/lib/clamav
       - hyrax-storage:/app/samvera/hyrax-webapp/storage
       - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
@@ -145,6 +147,7 @@ services:
 
 volumes:
   bundle:
+  clamav:
   db:
   hyrax-storage:
   hyrax-derivatives:
