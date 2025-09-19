@@ -25,8 +25,27 @@ export default class RelationshipsControl {
   }
 
   init() {
+    this.initializeSelect2();
     this.bindAddButton();
     this.displayMembers();
+  }
+
+  initializeSelect2() {
+    // Initialize select2 on collection-select2 dropdowns
+    let collectionSelect = this.input.filter('.collection-select2');
+    if (collectionSelect.length > 0 && !collectionSelect.hasClass('select2-hidden-accessible')) {
+      let dropdownParent = collectionSelect.closest('.modal-body');
+      let options = {
+        placeholder: collectionSelect.data('placeholder') || 'Select',
+        allowClear: true
+      };
+
+      if (dropdownParent.length > 0) {
+        options.dropdownParent = dropdownParent;
+      }
+
+      collectionSelect.select2(options);
+    }
   }
 
   validate() {
