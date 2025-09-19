@@ -48,6 +48,8 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
 
   describe 'editing' do
     it 'changes the value of each field for all selected works' do
+      skip 'due to temporarily disabling the batch_upload feature'
+      # Ref: https://github.com/samvera/hyrax/issues/7185
       click_on 'batch-edit'
       fill_in_batch_edit_fields_and_verify!
       reloaded_work1 = wings_disabled ? Hyrax.query_service.find_by(id: work1.id) : work1.reload
@@ -97,6 +99,8 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
     end
 
     it 'updates visibility' do
+      skip 'due to temporarily disabling the batch_upload feature'
+      # Ref: https://github.com/samvera/hyrax/issues/7185
       click_on 'batch-edit'
       find('#edit_permissions_link').click
       batch_edit_expand('permissions_visibility')
