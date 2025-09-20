@@ -1,0 +1,18 @@
+// Modify the batch_upload feature flipper to be disabled
+tr[data-feature="batch-upload"] {
+  background-color: #f8f9fa;
+
+  td.name {
+    color: #6c757d !important;
+    opacity: 0.65 !important;
+  }
+
+  td.status .badge {
+    background-color: #dc3545 !important;
+  }
+
+  td.toggle .btn-group {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
