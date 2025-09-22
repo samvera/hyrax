@@ -25,6 +25,8 @@ class JobIoWrapper < ApplicationRecord
   after_initialize :static_defaults
   delegate :read, to: :file
 
+  attr_accessor :use_valkyrie
+
   # Responsible for creating a JobIoWrapper from the given parameters, with a
   # focus on sniffing out attributes from the given :file.
   #
@@ -34,8 +36,8 @@ class JobIoWrapper < ApplicationRecord
   # @param [FileSet] file_set - The associated file set
   # @return [JobIoWrapper]
   # @raise ActiveRecord::RecordInvalid - if the instance is not valid
-  def self.create_with_varied_file_handling!(user:, file:, relation:, file_set:)
-    args = { user: user, relation: relation.to_s, file_set_id: file_set.id }
+  def self.create_with_varied_file_handling!(user:, file:, relation:, file_set:, use_valkyrie: nil)
+    args = { user: user, relation: relation.to_s, file_set_id: file_set.id, use_valkyrie: use_valkyrie }
     if file.is_a?(Hyrax::UploadedFile)
       args[:uploaded_file] = file
       args[:path] = file.uploader.path
@@ -47,6 +49,12 @@ class JobIoWrapper < ApplicationRecord
       raise "Require Hyrax::UploadedFile or File-like object, received #{file.class} object: #{file}"
     end
     create!(args)
+  end
+
+  def initialize(attributes = {})
+    @use_valkyrie = attributes&.delete(:use_valkyrie)
+    @use_valkyrie = Hyrax.config.use_valkyrie? if @use_valkyrie.nil?
+    super(attributes)
   end
 
   def original_name
@@ -63,7 +71,8 @@ class JobIoWrapper < ApplicationRecord
     nil # unable to determine
   end
 
-  def file_set(use_valkyrie: Hyrax.config.query_index_from_valkyrie)
+  def file_set(use_valkyrie: nil)
+    use_valkyrie ||= @use_valkyrie
     return FileSet.find(file_set_id) unless use_valkyrie
     Hyrax.query_service.find_by(id: Valkyrie::ID.new(file_set_id))
   end
