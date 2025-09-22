@@ -8,7 +8,8 @@ require 'wings'
 require 'freyja/metadata_adapter'
 
 RSpec.describe Freyja::Persister, :active_fedora, :clean_repo, valkyrie_adapter: :freyja_adapter do
-  subject(:persister) { described_class.new(adapter: adapter) }
+  subject(:persister) { described_class.new(adapter: adapter, wings_service: wings_service) }
+  let(:wings_service) { Wings::Valkyrie::Persister.new(adapter: adapter) }
   let(:adapter) { Freyja::MetadataAdapter.new }
   let(:query_service) { adapter.query_service }
 
