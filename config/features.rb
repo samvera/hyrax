@@ -2,6 +2,8 @@
 Flipflop.configure do
   # Strategies will be used in the order listed here.
   strategy :cookie
+  # Configuration to prevent features from being enabled
+  strategy Hyrax::Strategies::DisableFeatureStrategy
   strategy :active_record, class: Hyrax::Feature
   strategy Hyrax::Strategies::YamlStrategy, config: Hyrax.config.feature_config_path
   strategy :default
@@ -28,9 +30,11 @@ Flipflop.configure do
           default: Hyrax.config.active_deposit_agreement_acceptance?,
           description: "Require an active acceptance of the deposit agreement by checking a checkbox"
 
+  # rubocop:disable Layout/LineLength
   feature :batch_upload,
           default: false,
-          description: "This functionality has been deprecated. Please use the bulk importer feature (Bulkrax) to perform this function moving forward."
+          description: "<strong>NOTICE:</strong> This feature has been temporarily disabled. To add or upload works in bulk, please use the <a href='https://github.com/samvera/bulkrax/wiki' target='_blank'>Bulkrax importer</a>.".html_safe
+  # rubocop:enable Layout/LineLength
 
   feature :hide_private_items,
           default: false,
@@ -43,6 +47,7 @@ Flipflop.configure do
   feature :cache_work_iiif_manifest,
           default: false,
           description: "Use Rails.cache to cache the JSON document for IIIF manifests"
+
   feature :read_only,
           default: false,
           description: "Put the system into read-only mode. Deposits, edits, approvals and anything that makes a change to the data will be disabled."
