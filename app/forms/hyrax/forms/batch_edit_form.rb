@@ -38,7 +38,6 @@ module Hyrax
          { subject: [] },
          { language: [] },
          { identifier: [] },
-         { based_near: [] },
          { related_url: [] },
          { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
          :on_behalf_of,
