@@ -28,9 +28,9 @@ RSpec.describe 'hyrax/dashboard/collections/_form_for_select_collection.html.erb
     allow(view).to receive(:user_collections).and_return(solr_collections)
   end
 
-  it "uses autocomplete" do
+  it "uses select2" do
     render
-    expect(page).to have_selector('input[data-autocomplete-url="/authorities/search/collections?access=deposit"]')
+    expect(page).to have_selector('select.collection-select2')
   end
 
   context 'when a collection is specified' do
