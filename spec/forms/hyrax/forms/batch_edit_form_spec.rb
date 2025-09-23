@@ -33,7 +33,6 @@ RSpec.describe Hyrax::Forms::BatchEditForm, :active_fedora do
       license: ['license2'],
       subject: ['subject2'],
       identifier: ['id2'],
-      based_near: ['based_near2'],
       related_url: ['related_url2']
     )
   end
