@@ -15,7 +15,6 @@ RSpec.describe Hyrax::Forms::BatchEditForm, :active_fedora do
            license: ['license1'],
            subject: ['subject1'],
            identifier: ['id1'],
-           based_near: ['based_near1'],
            related_url: ['related_url1']
   end
 
@@ -34,7 +33,6 @@ RSpec.describe Hyrax::Forms::BatchEditForm, :active_fedora do
       license: ['license2'],
       subject: ['subject2'],
       identifier: ['id2'],
-      based_near: ['based_near2'],
       related_url: ['related_url2']
     )
   end
@@ -59,7 +57,6 @@ RSpec.describe Hyrax::Forms::BatchEditForm, :active_fedora do
                          :subject,
                          :language,
                          :identifier,
-                         :based_near,
                          :related_url]
     end
   end
@@ -76,7 +73,6 @@ RSpec.describe Hyrax::Forms::BatchEditForm, :active_fedora do
       expect(form.model.subject).to match_array ["subject1", "subject2"]
       expect(form.model.language).to match_array ["en"]
       expect(form.model.identifier).to match_array ["id1", "id2"]
-      expect(form.model.based_near).to match_array ["based_near1", "based_near2"]
       expect(form.model.related_url).to match_array ["related_url1", "related_url2"]
     end
   end
@@ -96,7 +92,6 @@ RSpec.describe Hyrax::Forms::BatchEditForm, :active_fedora do
                          { subject: [] },
                          { language: [] },
                          { identifier: [] },
-                         { based_near: [] },
                          { related_url: [] },
                          { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
                          :on_behalf_of,
