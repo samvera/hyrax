@@ -59,7 +59,13 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
       begin
         # If it doesn't start with fedora, we've likely already migrated it.
         next unless /^fedora:/.match?(file.file_identifier.to_s)
+
         resource.file_ids.delete(file.id)
+
+        # We've observed cases where the extracted text (which doesn't get created in Valkyrie)
+        # does not have a filename and it overrides the original file.  The extracted text should
+        # be in the derivatives, not with the file set.
+        next if file.original_filename.blank?
 
         Tempfile.create do |tempfile|
           tempfile.binmode
@@ -68,7 +74,7 @@ class MigrateFilesToValkyrieJob < Hyrax::ApplicationJob
 
           # valkyrie_file = Hyrax.storage_adapter.upload(resource: resource, file: tempfile, original_filename: file.original_filename)
           valkyrie_file = Hyrax::ValkyrieUpload.file(
-            filename: resource.label,
+            filename: file.original_filename,
             file_set: resource,
             io: tempfile,
             use: file.pcdm_use.select {|use| Hyrax::FileMetadata::Use.use_list.include?(use)},
