@@ -10,6 +10,7 @@ class <%= class_name %>Form < Hyrax::Forms::PcdmObjectForm(<%= class_name %>)
     include Hyrax::FormFields(:basic_metadata)
     include Hyrax::FormFields(:<%= file_name %>)
   end
+  check_if_flexible(<%= class_name %>)
 
   # Define custom form fields using the Valkyrie::ChangeSet interface
   #
