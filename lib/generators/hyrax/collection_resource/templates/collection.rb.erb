@@ -30,5 +30,9 @@ class <%= class_name %> < Hyrax::PcdmCollection
   # * add Valkyrie attributes to this class
   # * update form and indexer to process the attributes
   #
-  include Hyrax::Schema(:<%= file_name %>)
+  if Hyrax.config.collection_include_metadata?
+    include Hyrax::Schema(:basic_metadata)
+    include Hyrax::Schema(:collection_resource)
+    include Hyrax::Schema(:<%= file_name %>)
+  end
 end

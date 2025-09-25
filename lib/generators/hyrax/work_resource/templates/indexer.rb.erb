@@ -8,6 +8,7 @@ class <%= class_name %>Indexer < Hyrax::Indexers::PcdmObjectIndexer(<%= class_na
     include Hyrax::Indexer(:basic_metadata)
     include Hyrax::Indexer(:<%= file_name %>)
   end
+  check_if_flexible(<%= class_name %>)
 
   # Uncomment this block if you want to add custom indexing behavior:
   #  def to_solr
