@@ -68,7 +68,9 @@ module Hyrax
     #   (for job retries). this is for legacy/AttachFilesToWorkJob
     #   compatibility, but could stand for a robust reimplementation.
     #
-    # @param [Enumberable<Hyrax::UploadedFile>] files  files to add
+    # @param [Enumerable<Hyrax::UploadedFile>] files  files to add
+    #
+    # @param [Enumerable<Hash>] file_set_params additional parameters for each file_set
     #
     # @return [WorkFileSetManager] self
     # @raise [ArgumentError] if any of the uploaded files are not an
@@ -83,14 +85,17 @@ module Hyrax
     ##
     # @api public
     #
-    # Create filesets for each added file
+    # Create filesets for each added file, and add some additional metadata passed in file_set_params
+    # Additional metadata will only be set if it is not overriden by the `file_set_args` hash, and if it is a valid part of the schema
     #
     # @return [Boolean] true if all requested files were attached
     def attach
       return true if Array.wrap(files).empty? # short circuit to avoid aquiring a lock we won't use
 
       acquire_lock_for(work.id) do
-        event_payloads = files.each_with_object([]) { |file, arry| arry << make_file_set_and_ingest(file) }
+        event_payloads = files.each_with_object([]).with_index do |(file, arry), index|
+          arry << make_file_set_and_ingest(file, @file_set_params[index] || {})
+        end
         @persister.save(resource: work)
         Hyrax.publisher.publish('object.metadata.updated', object: work, user: files.first.user)
         event_payloads.each do |payload|
@@ -104,8 +109,8 @@ module Hyrax
 
     ##
     # @api private
-    def make_file_set_and_ingest(file)
-      file_set = @persister.save(resource: Hyrax::FileSet.new(file_set_args(file)))
+    def make_file_set_and_ingest(file, file_set_params = {})
+      file_set = @persister.save(resource: Hyrax::FileSet.new(file_set_args(file, file_set_params)))
       Hyrax.publisher.publish('object.deposited', object: file_set, user: file.user)
       file.add_file_set!(file_set)
 
@@ -133,14 +138,19 @@ module Hyrax
     ##
     # @api private
     #
+    # @note the second hash overrides values in the first hash - this along with the schema validations should disallow setting arbitrary attributes
+    #
+    #
     # @return [Hash{Symbol => Object}]
-    def file_set_args(file)
-      { depositor: file.user.user_key,
-        creator: file.user.user_key,
-        date_uploaded: file.created_at,
-        date_modified: Hyrax::TimeService.time_in_utc,
-        label: file.uploader.filename,
-        title: file.uploader.filename }
+    def file_set_args(file, file_set_params = {})
+      file_set_params.merge(
+        { depositor: file.user.user_key,
+          creator: file.user.user_key,
+          date_uploaded: file.created_at,
+          date_modified: Hyrax::TimeService.time_in_utc,
+          label: file.uploader.filename,
+          title: file.uploader.filename }
+      )
     end
 
     ##
