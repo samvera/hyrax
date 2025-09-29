@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'hyrax/specs/spy_listener'
+require 'hyrax/specs/shared_specs/simple_work'
 
 RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
   subject(:service) { described_class.new(work: work) }
@@ -75,6 +76,63 @@ RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
         expect { service.attach }
           .to change { listener.object_metadata_updated }
           .to contain_exactly(have_attributes(payload: include(object: be_work)))
+      end
+
+      context 'with file_set_params' do
+        context 'that are valid' do
+          let(:file_set_params) do
+            [
+              { alternate_ids: ['fs-1'] },
+              { alternate_ids: ['fs-2'] },
+              { alternate_ids: ['fs-3'] }
+            ]
+          end
+
+          it 'assigns the file_set_params to the FileSets' do
+            service.add(files: uploads, file_set_params: file_set_params)
+            service.attach
+            expect(work).to have_file_set_members(have_attributes(alternate_ids: ['fs-1']),
+                                                  have_attributes(alternate_ids: ['fs-2']),
+                                                  have_attributes(alternate_ids: ['fs-3']))
+          end
+        end
+
+        context 'that are not in the schema' do
+          let(:file_set_params) do
+            [
+              { liverwurst: ['not applied 1'] },
+              { liverwurst: ['not applied 2'] },
+              { liverwurst: ['not applied 3'] }
+            ]
+          end
+
+          it 'does not assign the invalid file_set_params to the FileSets' do
+            service.add(files: uploads, file_set_params: file_set_params)
+            service.attach
+            actual_file_sets = Hyrax.custom_queries.find_child_file_sets(resource: work)
+            expect(actual_file_sets.size).to eq(3)
+            actual_file_sets.each do |fs|
+              expect(fs).not_to have_attribute(:liverwurst)
+            end
+          end
+        end
+        context 'that should be set based on the file information' do
+          let(:file_set_params) do
+            [
+              { title: ['not applied 1'] },
+              { title: ['not applied 2'] },
+              { title: ['not applied 3'] }
+            ]
+          end
+
+          it 'does not assign the invalid file_set_params to the FileSets' do
+            service.add(files: uploads, file_set_params: file_set_params)
+            service.attach
+            expect(work).to have_file_set_members(have_attributes(title: ['image.jp2']),
+                                      have_attributes(title: ['image.jp2']),
+                                      have_attributes(title: ['image.jp2']))
+          end
+        end
       end
 
       # we can't use the memory based test_adapter to test asynch,
