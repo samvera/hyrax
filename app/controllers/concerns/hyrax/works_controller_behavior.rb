@@ -220,9 +220,10 @@ module Hyrax
     def update_valkyrie_work
       form = build_form
       return after_update_error(form_err_msg(form)) unless form.validate(params[hash_key_for_curation_concern])
+
       result =
         transactions['change_set.update_work']
-        .with_step_args('work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: params[hash_key_for_curation_concern][:file_set] },
+        .with_step_args('work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: file_set_attributes },
                         'work_resource.update_work_members' => { work_members_attributes: work_members_attributes },
                         'work_resource.save_acl' => { permissions_params: form.input_params["permissions"] })
         .call(form)
@@ -232,6 +233,10 @@ module Hyrax
 
     def work_members_attributes
       params[hash_key_for_curation_concern][:work_members_attributes]&.permit!&.to_h
+    end
+
+    def file_set_attributes
+      params[hash_key_for_curation_concern][:file_set]&.map { |fs| fs.permit!&.to_h }
     end
 
     def form_err_msg(form)
