@@ -60,7 +60,6 @@ module Hyrax
           r = resource || deprecated_resource
           Hyrax::Schema.default_schema_loader.form_definitions_for(schema: r.class.to_s, version: Hyrax::FlexibleSchema.current_schema_id, contexts: r.contexts).map do |field_name, options|
             singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
-            singleton_class.validates field_name.to_sym, presence: true if options.fetch(:required, false)
           end
         end
 

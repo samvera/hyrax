@@ -6,6 +6,17 @@ module Hyrax
     included do
       include Hyrax::BasedNearFieldBehavior
       property :contexts
+
+      validate :validate_flexible_required_fields
+    end
+
+    def validate_flexible_required_fields
+      required_fields = singleton_class.schema_definitions.select { |_, opts| opts[:required] }.keys
+
+      required_fields.each do |field|
+        value = send(field)
+        errors.add(field, :blank) if value.blank?
+      end
     end
 
     # OVERRIDE disposable 0.6.3 to make schema dynamic
