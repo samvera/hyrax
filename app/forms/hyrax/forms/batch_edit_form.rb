@@ -5,8 +5,7 @@ module Hyrax
       # Used for drawing the fields that appear on the page
       self.terms = [:creator, :contributor, :description,
                     :keyword, :resource_type, :license, :publisher, :date_created,
-                    :subject, :language, :identifier, :based_near,
-                    :related_url]
+                    :subject, :language, :identifier, :related_url]
       self.required_fields = []
       self.model_class = Hyrax.primary_work_type
 
@@ -39,7 +38,6 @@ module Hyrax
          { subject: [] },
          { language: [] },
          { identifier: [] },
-         { based_near: [] },
          { related_url: [] },
          { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
          :on_behalf_of,

@@ -25,7 +25,13 @@ class MigrateResourceService
   end
 
   def resource_form
-    @resource_form ||= Hyrax::Forms::ResourceForm.for(resource: resource)
+    # needs to validate the form to prevent potential frozen errors in custom transaction steps
+    @resource_form ||= begin
+      form_params = resource.attributes.to_h.with_indifferent_access
+      form = Hyrax::Forms::ResourceForm.for(resource: resource)
+      form.validate(form_params)
+      form
+    end
   end
 
   def model_events(model)
