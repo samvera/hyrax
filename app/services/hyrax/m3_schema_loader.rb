@@ -25,6 +25,8 @@ module Hyrax
 
     def current_version
       Hyrax::FlexibleSchema.current_schema_id
+    rescue ActiveRecord::StatementInvalid # allow for moments when the database is not yet initialized
+      0
     end
 
     private
