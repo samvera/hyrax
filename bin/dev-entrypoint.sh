@@ -17,8 +17,8 @@ yarn install
 
 db-migrate-seed.sh
 
-# Update ClamAV
-freshclam
+# Update and run ClamAV
+[ "$HYRAX_CLAMAV" = "true" ] && freshclam && clamd
 
 # Run the command
 exec "$@"
