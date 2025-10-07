@@ -7,14 +7,13 @@ module Hyrax
     FAILURE = 'failure'
     SUCCESS = 'success'
 
-    enum(
-      status: {
+    enum :status,
+      {
         FAILURE => FAILURE,
         PENDING => PENDING,
         PERFORMING => PERFORMING,
         SUCCESS => SUCCESS
       }
-    )
 
     self.table_name = 'curation_concerns_operations'
     acts_as_nested_set
