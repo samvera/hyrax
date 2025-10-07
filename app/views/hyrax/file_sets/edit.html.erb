@@ -1,5 +1,5 @@
 <%= render "shared/nav_safety_modal" %>
-<% provide :page_title, title_presenter(curation_concern).page_title %>
+<% provide :page_title, title_presenter(@presenter).page_title %>
 <% provide :page_header do %>
   <h1><span class="fa fa-edit" aria-hidden="true"></span><%= t('.header', file_set: curation_concern) %></h1>
 <% end %>
@@ -16,11 +16,13 @@
             <i class="fa fa-tags" aria-hidden="true"></i> <%= t('.descriptions') %>
           </a>
         </li>
-        <li id="edit_versioning_link" class="nav-item">
-          <a href="#versioning_display" data-toggle="tab" class="nav-link nav-safety-confirm">
-            <i class="fa fa-sitemap" aria-hidden="true"></i> <%= t('.versions') %>
-          </a>
-        </li>
+        <% if @version_list.supports_multiple_versions? %>
+          <li id="edit_versioning_link" class="nav-item">
+            <a href="#versioning_display" data-toggle="tab" class="nav-link nav-safety-confirm">
+              <i class="fa fa-sitemap" aria-hidden="true"></i> <%= t('.versions') %>
+            </a>
+          </li>
+        <% end %>
         <li id="edit_permissions_link" class="nav-item">
           <a href="#permissions_display" data-toggle="tab" class="nav-link nav-safety-confirm">
             <i class="fa fa-key" aria-hidden="true"></i> <%= t('.permissions') %>
