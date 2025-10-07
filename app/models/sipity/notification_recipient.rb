@@ -7,12 +7,11 @@ module Sipity
     belongs_to :notification, class_name: 'Sipity::Notification'
     belongs_to :role, class_name: 'Sipity::Role'
 
-    enum(
-      recipient_strategy: {
+    enum :recipient_strategy,
+      {
         'to' => 'to',
         'cc' => 'cc',
         'bcc' => 'bcc'
       }
-    )
   end
 end
