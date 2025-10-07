@@ -691,10 +691,11 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         sign_in user
         # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
         allow(CharacterizeJob).to receive(:perform_later)
-        Wings::ModelRegistry.register(GenericWorkResource, GenericWork) if defined?(Wings::ModelRegistry)
       end
 
-      after do
+      around do |example|
+        Wings::ModelRegistry.register(GenericWorkResource, GenericWork) if defined?(Wings::ModelRegistry)
+        example.run
         Wings::ModelRegistry.unregister(GenericWorkResource) if defined?(Wings::ModelRegistry)
       end
 
