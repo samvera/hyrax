@@ -32,6 +32,7 @@ gem 'hydra-role-management'
 gem 'hydra-editor', git: 'https://github.com/samvera/hydra-editor.git', branch: 'rails-8'
 gem 'hydra-derivatives', git: 'https://github.com/samvera/hydra-derivatives.git', branch: 'rails-8'
 gem 'hydra-works', git: 'https://github.com/samvera/hydra-works.git', branch: 'rails-8'
+gem 'active-fedora', git: 'https://github.com/samvera/active_fedora.git', branch: 'main'
 
 gemspec name: 'hyrax', path: ENV.fetch('HYRAX_ENGINE_PATH', '..')
 gem 'jbuilder', '~> 2.5'
