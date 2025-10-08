@@ -18,6 +18,7 @@ class Hyrax::FlexibleSchema < ApplicationRecord
 
   def self.create_default_schema
     m3_profile_path = Hyrax.config.default_m3_profile_path || Rails.root.join('config', 'metadata_profiles', 'm3_profile.yaml')
+
     Hyrax::FlexibleSchema.first_or_create do |f|
       f.profile = YAML.safe_load_file(m3_profile_path)
     end
@@ -76,7 +77,6 @@ class Hyrax::FlexibleSchema < ApplicationRecord
       Hyrax.config.file_set_model,
       Hyrax.config.admin_set_model
     ]
-
     if profile['classes'].blank?
       errors.add(:profile, "Must specify classes")
     else
@@ -91,11 +91,21 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   def class_names
     return @class_names if @class_names
     @class_names = {}
+
+    # Safe guard against missing profile
+    return @class_names unless profile['classes']&.is_a?(Hash) && profile['properties']&.is_a?(Hash)
+
     profile['classes'].keys.each do |class_name|
       @class_names[class_name] = {}
     end
+
     profile['properties'].each do |key, values|
+      next unless values.dig('available_on', 'class').is_a?(Array)
+
       values['available_on']['class'].each do |property_class|
+        # Initialize the property_class hash if it doesn't exist
+        @class_names[property_class] ||= {}
+
         # map some m3 items to what Hyrax expects
         values = values_map(values)
         @class_names[property_class][key] = values
