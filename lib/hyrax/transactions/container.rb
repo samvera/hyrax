@@ -26,12 +26,14 @@ module Hyrax
       require 'hyrax/transactions/collection_destroy'
       require 'hyrax/transactions/collection_update'
       require 'hyrax/transactions/file_metadata_destroy'
+      require 'hyrax/transactions/file_set_create'
       require 'hyrax/transactions/file_set_destroy'
       require 'hyrax/transactions/file_set_update'
       require 'hyrax/transactions/work_create'
       require 'hyrax/transactions/work_destroy'
       require 'hyrax/transactions/work_update'
       require 'hyrax/transactions/steps/add_file_sets'
+      require 'hyrax/transactions/steps/add_file'
       require 'hyrax/transactions/steps/add_to_collections'
       require 'hyrax/transactions/steps/add_to_parent'
       require 'hyrax/transactions/steps/apply_collection_type_permissions'
@@ -146,6 +148,10 @@ module Hyrax
       end
 
       namespace 'file_set' do |ops| # Hyrax::FileSet resource
+        ops.register 'add_file' do
+          Steps::AddFile.new
+        end
+
         ops.register 'delete' do
           Steps::DeleteResource.new
         end
