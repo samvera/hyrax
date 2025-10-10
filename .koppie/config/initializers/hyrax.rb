@@ -258,6 +258,8 @@ Hyrax.config do |config|
   # config.admin_set_model = 'AdminSet'
   config.admin_set_model = 'Hyrax::AdministrativeSet'
 
+  config.file_set_model = 'FileSet'
+
   config.work_default_metadata = false
   # When your application is ready to use the valkyrie index instead of the one
   # maintained by active fedora, you will need to set this to true. You will
