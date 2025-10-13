@@ -93,11 +93,12 @@ module Hyrax
       return true if Array.wrap(files).empty? # short circuit to avoid aquiring a lock we won't use
 
       acquire_lock_for(work.id) do
+        reloaded_work = Hyrax.query_service.find_by(id: work.id)
         event_payloads = files.each_with_object([]).with_index do |(file, arry), index|
-          arry << make_file_set_and_ingest(file, @file_set_params[index] || {})
+          arry << make_file_set_and_ingest(file, @file_set_params[index] || {}, reloaded_work: reloaded_work)
         end
-        @persister.save(resource: work)
-        Hyrax.publisher.publish('object.metadata.updated', object: work, user: files.first.user)
+        @persister.save(resource: reloaded_work)
+        Hyrax.publisher.publish('object.metadata.updated', object: reloaded_work, user: files.first.user)
         event_payloads.each do |payload|
           payload.delete(:job).enqueue
           Hyrax.publisher.publish('file.set.attached', payload)
@@ -109,7 +110,7 @@ module Hyrax
 
     ##
     # @api private
-    def make_file_set_and_ingest(file, file_set_params = {})
+    def make_file_set_and_ingest(file, file_set_params = {}, reloaded_work: work)
       file_set = @persister.save(resource: Hyrax::FileSet.new(file_set_args(file, file_set_params)))
       Hyrax.publisher.publish('object.deposited', object: file_set, user: file.user)
       file.add_file_set!(file_set)
@@ -120,7 +121,7 @@ module Hyrax
       # set visibility from params and save
       file_set.visibility = file_set_extra_params(file)[:visibility] if file_set_extra_params(file)[:visibility].present?
       file_set.permission_manager.acl.save if file_set.permission_manager.acl.pending_changes?
-      append_to_work(file_set)
+      append_to_work(file_set, reloaded_work: reloaded_work)
 
       { file_set: file_set, user: file.user, job: ValkyrieIngestJob.new(file) }
     end
@@ -129,10 +130,10 @@ module Hyrax
     # @api private
     #
     # @todo figure out how to know less about Work's ideas about FileSet use here. Maybe post-Wings, work.
-    def append_to_work(file_set)
-      work.member_ids += [file_set.id]
-      work.representative_id = file_set.id if work.respond_to?(:representative_id) && work.representative_id.blank?
-      work.thumbnail_id = file_set.id if work.respond_to?(:thumbnail_id) && work.thumbnail_id.blank?
+    def append_to_work(file_set, reloaded_work: work)
+      reloaded_work.member_ids += [file_set.id]
+      reloaded_work.representative_id = file_set.id if reloaded_work.respond_to?(:representative_id) && reloaded_work.representative_id.blank?
+      reloaded_work.thumbnail_id = file_set.id if reloaded_work.respond_to?(:thumbnail_id) && reloaded_work.thumbnail_id.blank?
     end
 
     ##

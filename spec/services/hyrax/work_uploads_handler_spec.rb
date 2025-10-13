@@ -23,6 +23,38 @@ RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
       expect(listener.object_deposited).to be_empty
       expect(listener.file_set_attached).to be_empty
     end
+    # we can't use the memory based test_adapter to test asynch,
+    context 'when running background jobs', perform_enqueued: [ValkyrieIngestJob], valkyrie_adapter: :wings_adapter do
+      before do
+        # stub out  characterization to avoid system calls
+        characterize = double(run: true)
+        allow(Hyrax.config)
+          .to receive(:characterization_service)
+          .and_return(characterize)
+      end
+
+      it 'persists the uploaded files asynchronously' do
+        testing_work = work
+        work_one = testing_work.dup
+        work_two = testing_work.dup
+        work_three = testing_work.dup
+        thr = Thread.new do
+          [
+            described_class.new(work: work_one).add(files: [uploads[0]]).attach,
+            described_class.new(work: work_two).add(files: [uploads[1]]).attach,
+            described_class.new(work: work_three).add(files: [uploads[2]]).attach
+          ]
+        end
+        thr.join
+        reloaded_work = Hyrax.query_service.find_by(id: testing_work.id)
+        expect(reloaded_work.member_ids.count).to eq(3)
+        expect(Hyrax.query_service.find_members(resource: reloaded_work).count).to eq(3)
+        expect(Hyrax.query_service.find_members(resource: reloaded_work))
+          .to contain_exactly(have_attached_files,
+                              have_attached_files,
+                              have_attached_files)
+      end
+    end
 
     context 'after adding files' do
       before { service.add(files: uploads) }
