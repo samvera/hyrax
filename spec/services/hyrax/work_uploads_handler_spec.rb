@@ -161,8 +161,9 @@ RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
         end
 
         it 'persists the uploaded files asynchronously' do
-          expect { service.attach }
-            .to change { Hyrax.query_service.find_members(resource: work) }
+          service.attach
+          reloaded_work = Hyrax.query_service.find_by(id: work.id)
+          expect(Hyrax.query_service.find_members(resource: reloaded_work))
             .to contain_exactly(have_attached_files,
                                 have_attached_files,
                                 have_attached_files)
