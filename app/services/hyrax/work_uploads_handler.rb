@@ -77,7 +77,7 @@ module Hyrax
     #   `UploadedFile`
     def add(files:, file_set_params: [])
       validate_files(files) &&
-        @files = Array.wrap(files).reject { |f| f.file_set_uri.present? }
+        @files = Array.wrap(files).reject { |f| work.member_ids.include?(f.file_set_uri) }
       @file_set_params = file_set_params || []
       self
     end
@@ -111,10 +111,7 @@ module Hyrax
     ##
     # @api private
     def make_file_set_and_ingest(file, file_set_params = {}, reloaded_work: work)
-      file_set = @persister.save(resource: Hyrax::FileSet.new(file_set_args(file, file_set_params)))
-      Hyrax.publisher.publish('object.deposited', object: file_set, user: file.user)
-      file.add_file_set!(file_set)
-
+      file_set = find_or_create_file_set(file, file_set_params)
       # copy ACLs; should we also be propogating embargo/lease?
       Hyrax::AccessControlList.copy_permissions(source: target_permissions, target: file_set)
 
@@ -134,6 +131,22 @@ module Hyrax
       reloaded_work.member_ids += [file_set.id]
       reloaded_work.representative_id = file_set.id if reloaded_work.respond_to?(:representative_id) && reloaded_work.representative_id.blank?
       reloaded_work.thumbnail_id = file_set.id if reloaded_work.respond_to?(:thumbnail_id) && reloaded_work.thumbnail_id.blank?
+    end
+
+    ##
+    # @api private
+    def find_or_create_file_set(file, file_set_params)
+      if file.file_set_uri
+        # we should probably update other things here as well?
+        file_set = Hyrax.query_service.find_by(id: file.file_set_uri)
+        file_set.file_ids << file.id unless file_set.file_ids.include?(file.id)
+        @persister.save(resource: file_set)
+      else
+        file_set = @persister.save(resource: Hyrax::FileSet.new(file_set_args(file, file_set_params)))
+        Hyrax.publisher.publish('object.deposited', object: file_set, user: file.user)
+        file.add_file_set!(file_set)
+      end
+      file_set
     end
 
     ##
