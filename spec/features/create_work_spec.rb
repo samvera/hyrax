@@ -107,6 +107,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
       within('.media-body') do
         click_link "My Test Work"
       end
+      expect(page).to have_content "image.jp2"
       click_link "image.jp2"
       expect(page).to have_content "image.jp2"
 
