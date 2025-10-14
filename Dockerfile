@@ -8,7 +8,8 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     acl \
     build-essential \
-    clamav \
+    clamav-daemon \
+    clamdscan \
     curl \
     exiftool \
     ffmpeg \
@@ -55,6 +56,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     ln -s /usr/lib/*-linux-gnu/libjemalloc.so.2 /usr/lib/libjemalloc.so.2 && \
+    mkdir -p /var/run/clamav && chown clamav:clamav /var/run/clamav && \
     echo "******** Packages Installed *********"
 
 RUN setfacl -d -m o::rwx /usr/local/bundle && \
@@ -127,6 +129,10 @@ ENV BUILD_GITSHA=$BUILD_GITSHA \
 
 
 FROM hyrax-worker-base AS hyrax-engine-dev
+
+# Reduce memory requirements
+RUN echo "ConcurrentDatabaseReload no" >> /etc/clamav/clamd.conf && \
+    sed -i 's/\(TestDatabases\).*/\1 no/' /etc/clamav/freshclam.conf
 
 USER app
 ARG BUNDLE_WITHOUT=

@@ -35,6 +35,7 @@ module Hyrax
         @params = params
         @work_attributes_key = work_attributes_key
         @work_attributes = @params.fetch(work_attributes_key, {})
+        @file_set_params = work_attributes[:file_set]&.map { |fs| fs.permit! } || []
       end
 
       attr_reader :form, :transactions, :user, :parent_id, :work_attributes, :uploaded_files, :params, :work_attributes_key
@@ -42,7 +43,7 @@ module Hyrax
       ##
       # @api public
       # @return [TrueClass] when the object is valid.
-      # @return [FalseClass] when the object is valid.
+      # @return [FalseClass] when the object is not valid.
       def validate
         form.validate(work_attributes)
       end
@@ -63,7 +64,7 @@ module Hyrax
       def step_args
         {
           'work_resource.add_to_parent' => { parent_id: params[:parent_id], user: user },
-          'work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: work_attributes[:file_set] },
+          'work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: @file_set_params },
           'change_set.set_user_as_depositor' => { user: user },
           'work_resource.change_depositor' => { user: ::User.find_by_user_key(form.on_behalf_of) },
           'work_resource.save_acl' => { permissions_params: form.input_params["permissions"] }

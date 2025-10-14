@@ -109,6 +109,9 @@ require 'webmock/rspec'
 allowed_hosts = %w[chrome chromedriver.storage.googleapis.com fcrepo solr]
 WebMock.disable_net_connect!(allow_localhost: true, allow: allowed_hosts)
 
+require 'clamby'
+Clamby.configure(daemonize: true, fdpass: true)
+
 require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ci_build?
 
