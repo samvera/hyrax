@@ -114,7 +114,7 @@ RSpec.describe Sipity do
     end
 
     it "converts a string to a Sipity::Role if there exists a Sipity::Role with a name equal to the string" do
-      Sipity::Role.create!(name: 'hello')
+      Sipity::Role.find_or_create_by!(name: 'hello')
       expect(described_class.Role('hello')).to be_a(Sipity::Role)
     end
 

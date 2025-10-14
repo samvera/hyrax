@@ -49,7 +49,7 @@ RSpec.describe Hyrax::Ability do
   describe "can?(:review, :submissions)", :clean_repo do
     subject { ability.can?(:review, :submissions) }
 
-    let(:role) { Sipity::Role.create(name: role_name) }
+    let(:role) { Sipity::Role.find_or_create_by(name: role_name) }
     let(:user) { create(:user) }
     let(:permission_template) { create(:permission_template, with_active_workflow: true) }
     let(:workflow) { permission_template.active_workflow }
@@ -67,7 +67,7 @@ RSpec.describe Hyrax::Ability do
       let(:role_name) { 'depositing' }
 
       before do
-        Sipity::Role.create(name: 'approving')
+        Sipity::Role.find_or_create_by(name: 'approving')
         # Admin-ify the user
         allow(user).to receive_messages(groups: ['admin', 'registered'])
       end
@@ -79,7 +79,7 @@ RSpec.describe Hyrax::Ability do
       let(:role_name) { 'depositing' }
 
       before do
-        Sipity::Role.create(name: 'approving')
+        Sipity::Role.find_or_create_by(name: 'approving')
       end
 
       it { is_expected.to be false }
