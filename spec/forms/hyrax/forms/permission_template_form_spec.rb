@@ -162,7 +162,8 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
       end
 
       before do
-        role = Sipity::Role.create(name: 'approving')
+        # This should be a find or create or something similar
+        role = Sipity::Role.find_or_create_by(name: 'approving')
         workflow.workflow_roles.create(role: role)
         # We are testing that this workflow role is removed
         Hyrax::Workflow::PermissionGenerator.call(roles: role,
@@ -354,8 +355,8 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     let(:attributes) { { workflow_id: workflow.id } }
     let(:workflow) { create(:workflow, permission_template: permission_template, active: true) }
     let(:user) { create(:user) }
-    let(:role1) { Sipity::Role.create!(name: 'hello') }
-    let(:role2) { Sipity::Role.create!(name: 'goodbye') }
+    let(:role1) { Sipity::Role.find_or_create_by!(name: 'hello') }
+    let(:role2) { Sipity::Role.find_or_create_by!(name: 'goodbye') }
 
     let(:permission_template) do
       create(:permission_template,
