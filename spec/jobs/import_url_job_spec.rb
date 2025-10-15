@@ -20,6 +20,10 @@ RSpec.describe ImportUrlJob do
       body: File.open(File.expand_path(file_path, __FILE__)).read(1), status: 206, headers: response_headers
     )
 
+    stub_request(:get, "http://example.org#{file_hash}?headers%5BRange%5D=bytes=0-0").to_return(
+      body: File.open(File.expand_path(file_path, __FILE__)).read(1), status: 206, headers: response_headers
+    )
+
     stub_request(:get, "http://example.org#{file_hash}").to_return(
       body: File.open(File.expand_path(file_path, __FILE__)).read, status: 200, headers: response_headers
     )
@@ -119,6 +123,9 @@ RSpec.describe ImportUrlJob do
     context 'when the remote file is unavailable' do
       before do
         stub_request(:get, "http://example.org#{file_hash}").with(headers: { 'Range' => 'bytes=0-0' }).to_return(
+          body: '', status: 406, headers: {}
+        )
+        stub_request(:get, "http://example.org#{file_hash}?headers%5BRange%5D=bytes=0-0").to_return(
           body: '', status: 406, headers: {}
         )
       end
