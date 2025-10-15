@@ -92,17 +92,11 @@ module Hyrax
     def attach
       return true if Array.wrap(files).empty? # short circuit to avoid aquiring a lock we won't use
 
-      acquire_lock_for(work.id) do
-        reloaded_work = Hyrax.query_service.find_by(id: work.id)
-        event_payloads = files.each_with_object([]).with_index do |(file, arry), index|
-          arry << make_file_set_and_ingest(file, @file_set_params[index] || {}, reloaded_work: reloaded_work)
-        end
-        @persister.save(resource: reloaded_work)
-        Hyrax.publisher.publish('object.metadata.updated', object: reloaded_work, user: files.first.user)
-        event_payloads.each do |payload|
-          payload.delete(:job).enqueue
-          Hyrax.publisher.publish('file.set.attached', payload)
-        end
+      event_payloads = create_file_sets(files)
+      append_file_sets_to_work(file_ids: event_payloads.map { |payload| payload[:file_set].id }, user: files.first.user)
+      event_payloads.each do |payload|
+        payload.delete(:job).enqueue
+        Hyrax.publisher.publish('file.set.attached', { file_set: payload[:file_set], user: payload[:user] })
       end
     end
 
@@ -110,27 +104,36 @@ module Hyrax
 
     ##
     # @api private
-    def make_file_set_and_ingest(file, file_set_params = {}, reloaded_work: work)
-      file_set = find_or_create_file_set(file, file_set_params)
-      # copy ACLs; should we also be propogating embargo/lease?
-      Hyrax::AccessControlList.copy_permissions(source: target_permissions, target: file_set)
-
-      # set visibility from params and save
-      file_set.visibility = file_set_extra_params(file)[:visibility] if file_set_extra_params(file)[:visibility].present?
-      file_set.permission_manager.acl.save if file_set.permission_manager.acl.pending_changes?
-      append_to_work(file_set, reloaded_work: reloaded_work)
-
-      { file_set: file_set, user: file.user, job: ValkyrieIngestJob.new(file) }
+    def create_file_sets(files)
+      files.each_with_object([]).with_index do |(file, arry), index|
+        file_set = find_or_create_file_set(file, @file_set_params[index] || {})
+        update_file_set(file_set, file)
+        arry << { file_set: file_set, user: file.user, job: ValkyrieIngestJob.new(file) }
+      end
     end
 
     ##
     # @api private
-    #
-    # @todo figure out how to know less about Work's ideas about FileSet use here. Maybe post-Wings, work.
-    def append_to_work(file_set, reloaded_work: work)
-      reloaded_work.member_ids += [file_set.id]
-      reloaded_work.representative_id = file_set.id if reloaded_work.respond_to?(:representative_id) && reloaded_work.representative_id.blank?
-      reloaded_work.thumbnail_id = file_set.id if reloaded_work.respond_to?(:thumbnail_id) && reloaded_work.thumbnail_id.blank?
+    def append_file_sets_to_work(file_ids:, user:)
+      acquire_lock_for(work.id) do
+        reloaded_work = Hyrax.query_service.find_by(id: work.id)
+        reloaded_work.member_ids += file_ids
+        reloaded_work.representative_id = file_ids.first if reloaded_work.respond_to?(:representative_id) && reloaded_work.representative_id.blank?
+        reloaded_work.thumbnail_id = file_ids.first if reloaded_work.respond_to?(:thumbnail_id) && reloaded_work.thumbnail_id.blank?
+        @persister.save(resource: reloaded_work)
+        Hyrax.publisher.publish('object.metadata.updated', object: reloaded_work, user: user)
+      end
+    end
+
+    ##
+    # @api private
+    def update_file_set(file_set, file)
+      # copy ACLs; should we also be propogating embargo/lease?
+      Hyrax::AccessControlList.copy_permissions(source: target_permissions, target: file_set)
+      # set visibility from params and save
+      file_set.visibility = file_set_extra_params(file)[:visibility] if file_set_extra_params(file)[:visibility].present?
+      file_set.permission_manager.acl.save if file_set.permission_manager.acl.pending_changes?
+      @persister.save(resource: file_set)
     end
 
     ##
