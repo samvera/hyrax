@@ -23,6 +23,39 @@ RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
       expect(listener.object_deposited).to be_empty
       expect(listener.file_set_attached).to be_empty
     end
+    # we can't use the memory based test_adapter to test asynch,
+    context 'when running background jobs', perform_enqueued: [ValkyrieIngestJob], valkyrie_adapter: :wings_adapter do
+      before do
+        # stub out  characterization to avoid system calls
+        characterize = double(run: true)
+        allow(Hyrax.config)
+          .to receive(:characterization_service)
+          .and_return(characterize)
+      end
+
+      it 'persists the uploaded files asynchronously' do
+        described_class.new(work: work.dup).add(files: [uploads[0]]).attach
+        described_class.new(work: work.dup).add(files: [uploads[1]]).attach
+        described_class.new(work: work.dup).add(files: [uploads[2]]).attach
+        reloaded_work = Hyrax.query_service.find_by(id: work.id)
+        expect(Hyrax.query_service.find_members(resource: reloaded_work)).to contain_exactly(have_attached_files,
+        have_attached_files, have_attached_files)
+        expect(reloaded_work.member_ids.count).to eq(3)
+      end
+    end
+
+    context 'when unable to save parent work' do
+      it 'can still persist the FileSet on the parent the second time around' do
+        file = FactoryBot.create(:uploaded_file)
+        file_set = Hyrax.persister.save(resource: Hyrax::FileSet.new(service.send(:file_set_args, file, {})))
+        file.add_file_set!(file_set)
+        expect(file.file_set_uri).to eq(file_set.id)
+        expect(work.member_ids).to be_empty
+        service.add(files: [file]).attach
+        reloaded_work = Hyrax.query_service.find_by(id: work.id)
+        expect(reloaded_work.member_ids).to match_array([file_set.id])
+      end
+    end
 
     context 'after adding files' do
       before { service.add(files: uploads) }
@@ -129,8 +162,9 @@ RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
         end
 
         it 'persists the uploaded files asynchronously' do
-          expect { service.attach }
-            .to change { Hyrax.query_service.find_members(resource: work) }
+          service.attach
+          reloaded_work = Hyrax.query_service.find_by(id: work.id)
+          expect(Hyrax.query_service.find_members(resource: reloaded_work))
             .to contain_exactly(have_attached_files,
                                 have_attached_files,
                                 have_attached_files)
