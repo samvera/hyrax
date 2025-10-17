@@ -96,6 +96,8 @@ jobs:
           docker load --input /tmp/hyrax-dev-${{ github.sha }}.tar
           docker image ls -a
           docker compose -f docker-compose-${{ matrix.ci_test_app }}.yml up -d --quiet-pull --pull missing --no-build
+      - name: Mark hyrax-engine directory as safe for git
+        run: git config --global --add safe.directory /app/samvera/hyrax-engine
       - name: RSpec
         env:
           CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
