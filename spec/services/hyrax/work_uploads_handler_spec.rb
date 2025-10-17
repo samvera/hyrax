@@ -34,25 +34,13 @@ RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
       end
 
       it 'persists the uploaded files asynchronously' do
-        testing_work = work
-        work_one = testing_work.dup
-        work_two = testing_work.dup
-        work_three = testing_work.dup
-        thr = Thread.new do
-          [
-            described_class.new(work: work_one).add(files: [uploads[0]]).attach,
-            described_class.new(work: work_two).add(files: [uploads[1]]).attach,
-            described_class.new(work: work_three).add(files: [uploads[2]]).attach
-          ]
-        end
-        thr.join
-        reloaded_work = Hyrax.query_service.find_by(id: testing_work.id)
+        described_class.new(work: work.dup).add(files: [uploads[0]]).attach
+        described_class.new(work: work.dup).add(files: [uploads[1]]).attach
+        described_class.new(work: work.dup).add(files: [uploads[2]]).attach
+        reloaded_work = Hyrax.query_service.find_by(id: work.id)
+        expect(Hyrax.query_service.find_members(resource: reloaded_work)).to contain_exactly(have_attached_files,
+        have_attached_files, have_attached_files)
         expect(reloaded_work.member_ids.count).to eq(3)
-        expect(Hyrax.query_service.find_members(resource: reloaded_work).count).to eq(3)
-        expect(Hyrax.query_service.find_members(resource: reloaded_work))
-          .to contain_exactly(have_attached_files,
-                              have_attached_files,
-                              have_attached_files)
       end
     end
 
