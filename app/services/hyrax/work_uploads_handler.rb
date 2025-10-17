@@ -23,17 +23,12 @@ module Hyrax
   # `work`, and appends that FileSet to `member_ids`. The `FileSet` will be
   # added in the order that the `UploadedFiles` are passed in. If the work has a
   # `nil` `representative_id` and/or `thumbnail_id`, the first `FileSet` will be
-  # set to that value. An `IngestJob` will be equeued, for each `FileSet`. When
+  # set to that value. An `IngestJob` will be enqueued, for each `FileSet`. When
   # all of the `files` have been processed, the work will be saved with the
   # added members. While this is happening, we take a lock on the work via
   # `Lockable` (Redis/Redlock).
   #
   # This also publishes events as required by `Hyrax.publisher`.
-  #
-  # @todo make this genuinely retry-able. if we fail after creating some of
-  #   the file_sets, but not attaching them to works, we should resolve that
-  #   incomplete work on subsequent runs.
-  #
   #
   # @example
   #   Hyrax::WorkUploadsHandler.new(work: my_work)
@@ -62,11 +57,6 @@ module Hyrax
 
     ##
     # @api public
-    #
-    # @note we immediately and silently discard uploads with an existing
-    #   file_set_uri, in a half-considered attempt at supporting idempotency
-    #   (for job retries). this is for legacy/AttachFilesToWorkJob
-    #   compatibility, but could stand for a robust reimplementation.
     #
     # @param [Enumerable<Hyrax::UploadedFile>] files  files to add
     #
@@ -142,7 +132,6 @@ module Hyrax
       if file.file_set_uri
         # we should probably update other things here as well?
         file_set = Hyrax.query_service.find_by(id: file.file_set_uri)
-        file_set.file_ids << file.id unless file_set.file_ids.include?(file.id)
         @persister.save(resource: file_set)
       else
         file_set = @persister.save(resource: Hyrax::FileSet.new(file_set_args(file, file_set_params)))
