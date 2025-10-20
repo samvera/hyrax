@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 require 'hyrax/transactions'
+require 'hyrax/specs/shared_specs/simple_work'
 
 RSpec.describe Hyrax::Transactions::Steps::AddFileSets, valkyrie_adapter: :test_adapter do
   subject(:step) { described_class.new }
@@ -11,12 +12,14 @@ RSpec.describe Hyrax::Transactions::Steps::AddFileSets, valkyrie_adapter: :test_
   end
 
   context 'with uploaded files' do
-    let(:uploaded_files) { FactoryBot.create_list(:uploaded_file, 4) }
+    let(:uploaded_files) { FactoryBot.create_list(:uploaded_file, 16) }
 
     it 'attaches file_sets for the files' do
       expect(step.call(work, uploaded_files: uploaded_files).value!)
-        .to have_file_set_members(be_persisted, be_persisted,
-                                  be_persisted, be_persisted)
+        .to have_file_set_members(be_persisted, be_persisted, be_persisted, be_persisted,
+                                  be_persisted, be_persisted, be_persisted, be_persisted,
+                                  be_persisted, be_persisted, be_persisted, be_persisted,
+                                  be_persisted, be_persisted, be_persisted, be_persisted)
     end
   end
 end
