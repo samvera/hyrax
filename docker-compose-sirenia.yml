@@ -23,6 +23,7 @@ services:
     depends_on:
       - worker
       - chrome
+      - fcrepo
       - fits
       - memcached
       - postgres
@@ -58,6 +59,7 @@ services:
       - VALKYRIE_METADATA_ADAPTER=fedora_metadata
       - VALKYRIE_STORAGE_ADAPTER=fedora_storage
     depends_on:
+      - fcrepo
       - fits
       - memcached
       - postgres
