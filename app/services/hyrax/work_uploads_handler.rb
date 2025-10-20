@@ -86,10 +86,10 @@ module Hyrax
       return true if Array.wrap(files).empty? # short circuit to avoid aquiring a lock we won't use
 
       event_payloads = create_file_sets(files)
-      append_file_sets_to_work(file_ids: event_payloads.map { |payload| payload[:file_set].id }, user: files.first.user)
+      append_file_sets_to_work(file_ids: event_payloads.map { |payload| payload[:file_set_id] }, user: files.first.user)
       event_payloads.each do |payload|
         payload.delete(:job).enqueue
-        Hyrax.publisher.publish('file.set.attached', payload)
+        Hyrax.publisher.publish('file.set.attached', file_set: Hyrax.query_service.find_by(id: payload[:file_set_id]), user: payload[:user])
       end
     end
 
@@ -101,7 +101,7 @@ module Hyrax
       files.each_with_object([]).with_index do |(file, arry), index|
         file_set = find_or_create_file_set(file, file_set_params[index] || {})
         update_file_set(file_set, file)
-        arry << { file_set: file_set, user: file.user, job: ValkyrieIngestJob.new(file) }
+        arry << { file_set_id: file_set.id, user: file.user, job: ValkyrieIngestJob.new(file) }
       end
     end
 
