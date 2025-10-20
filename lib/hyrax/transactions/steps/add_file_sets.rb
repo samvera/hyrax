@@ -26,16 +26,18 @@ module Hyrax
         def call(obj, uploaded_files: [], file_set_params: [])
           return Success(obj) if uploaded_files.empty? && file_set_params.blank? # Skip if no files to attach
           if @handler.new(work: obj).add(files: uploaded_files, file_set_params: file_set_params).attach
-            reloaded_work = Hyrax.query_service.find_by(id: obj.id)
-            raise "Can't refind the work" unless reloaded_work
-            file_sets = reloaded_work.member_ids.map do |member|
-              Hyrax.query_service.find_by(id: member) if Hyrax.query_service.find_by(id: member).is_a? Hyrax::FileSet
-            end.compact
+            if obj.lease || obj.embargo
+              file_sets = obj.member_ids.map do |member|
+                found = Hyrax.query_service.find_by(id: member)
+                found if found.is_a? Hyrax::FileSet
+              end.compact
 
-            # TODO: improve queries - Non performant to perform single queries. Perhaps queries ids then reject.
-            Hyrax::LeaseManager.create_or_update_lease_on_members(file_sets, reloaded_work) if reloaded_work.lease
-            Hyrax::EmbargoManager.create_or_update_embargo_on_members(file_sets, reloaded_work) if reloaded_work.embargo
-            Success(reloaded_work)
+              # TODO: improve queries - Non performant to perform single queries. Perhaps queries ids then reject.
+              Hyrax::LeaseManager.create_or_update_lease_on_members(file_sets, obj) if obj.lease
+              Hyrax::EmbargoManager.create_or_update_embargo_on_members(file_sets, obj) if obj.embargo
+            end
+
+            Success(obj)
           else
             Failure[:failed_to_attach_file_sets, uploaded_files]
           end

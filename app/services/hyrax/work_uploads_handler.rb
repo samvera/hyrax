@@ -51,6 +51,7 @@ module Hyrax
     # @param [Hyrax::Work] work
     # @param [#save] persister the valkyrie persister to use
     def initialize(work:, persister: Hyrax.persister)
+      # NOTE: this instance variable is re-loaded later in the class, to avoid locking a stale version of the work
       @work = work
       @persister = persister
     end
@@ -109,13 +110,14 @@ module Hyrax
     def append_file_sets_to_work(file_ids:, user:)
       work_id = work.id
       acquire_lock_for(work_id) do
-        reloaded_work = Hyrax.query_service.find_by(id: work_id)
-        reloaded_work.member_ids += file_ids
+        @target_permissions = nil # Clear cached ACL before reloading work
+        @work = Hyrax.query_service.find_by(id: work_id) # reload work so we are sure to have the most recent version after locking
+        work.member_ids += file_ids
         first_file_id = file_ids.first
-        reloaded_work.representative_id = first_file_id if reloaded_work.respond_to?(:representative_id) && reloaded_work.representative_id.blank?
-        reloaded_work.thumbnail_id = first_file_id if reloaded_work.respond_to?(:thumbnail_id) && reloaded_work.thumbnail_id.blank?
-        @persister.save(resource: reloaded_work)
-        Hyrax.publisher.publish('object.metadata.updated', object: reloaded_work, user: user)
+        work.representative_id = first_file_id if work.respond_to?(:representative_id) && work.representative_id.blank?
+        work.thumbnail_id = first_file_id if work.respond_to?(:thumbnail_id) && work.thumbnail_id.blank?
+        @persister.save(resource: work)
+        Hyrax.publisher.publish('object.metadata.updated', object: work, user: user)
       end
     end
 
