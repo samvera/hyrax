@@ -11,10 +11,14 @@ module Hyrax
       class AddFileSets
         include Dry::Monads[:result]
 
+        attr_accessor :file_set_batch_size
+
         ##
         # @param [Class] handler
-        def initialize(handler: Hyrax::WorkUploadsHandler)
+        # @param [Integer] file_set_batch_size - limit the number of FileSets processed at any given time
+        def initialize(handler: Hyrax::WorkUploadsHandler, file_set_batch_size: 1000)
           @handler = handler
+          @file_set_batch_size = file_set_batch_size
         end
 
         ##
@@ -26,15 +30,14 @@ module Hyrax
         def call(obj, uploaded_files: [], file_set_params: [])
           return Success(obj) if uploaded_files.empty? && file_set_params.blank? # Skip if no files to attach
 
-          uploaded_files.in_groups_of(5, false) do |uploaded_file_group|
-            handler = Hyrax::WorkUploadsHandler.new(work: obj).add(files: uploaded_file_group, file_set_params: file_set_params)
-            handler.attach
+          uploaded_files.in_groups_of(file_set_batch_size, false) do |uploaded_file_group|
+            @handler.new(work: obj).add(files: uploaded_file_group, file_set_params: file_set_params).attach
           end
 
           obj = Hyrax.query_service.find_by(id: obj.id)
-
+          obj_file_sets_count = Hyrax.custom_queries.find_child_file_set_ids(resource: obj).size
           update_embargoes_and_leases(obj)
-          if uploaded_files.size == obj.member_ids.size
+          if uploaded_files.size == obj_file_sets_count
             Success(obj)
           else
             Failure[:failed_to_attach_file_sets, uploaded_files]
@@ -43,13 +46,10 @@ module Hyrax
 
         def update_embargoes_and_leases(obj)
           return unless obj.lease || obj.embargo
+          # TODO: Find file sets in batches that respect the file_set_batch_size
+          # and process in batches
+          file_sets = Hyrax.custom_queries.find_child_file_sets(resource: obj)
 
-          file_sets = obj.member_ids.map do |member|
-            found = Hyrax.query_service.find_by(id: member)
-            found if found.is_a? Hyrax::FileSet
-          end.compact
-
-          # TODO: improve queries - Non performant to perform single queries. Perhaps queries ids then reject.
           Hyrax::LeaseManager.create_or_update_lease_on_members(file_sets, obj) if obj.lease
           Hyrax::EmbargoManager.create_or_update_embargo_on_members(file_sets, obj) if obj.embargo
         end

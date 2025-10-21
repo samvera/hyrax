@@ -13,6 +13,7 @@ RSpec.describe Hyrax::Transactions::Steps::AddFileSets, valkyrie_adapter: :test_
 
   context 'with uploaded files' do
     let(:uploaded_files) { FactoryBot.create_list(:uploaded_file, 16) }
+    before { allow(Hyrax::WorkUploadsHandler).to receive(:new).and_call_original }
 
     it 'attaches file_sets for the files' do
       expect(step.call(work, uploaded_files: uploaded_files).value!)
@@ -20,6 +21,22 @@ RSpec.describe Hyrax::Transactions::Steps::AddFileSets, valkyrie_adapter: :test_
                                   be_persisted, be_persisted, be_persisted, be_persisted,
                                   be_persisted, be_persisted, be_persisted, be_persisted,
                                   be_persisted, be_persisted, be_persisted, be_persisted)
+      expect(Hyrax::WorkUploadsHandler).to have_received(:new).once
+    end
+  end
+  context 'with file_set_limit set' do
+    subject(:step) { described_class.new(file_set_batch_size: 5) }
+
+    let(:uploaded_files) { FactoryBot.create_list(:uploaded_file, 16) }
+    before { allow(Hyrax::WorkUploadsHandler).to receive(:new).and_call_original }
+
+    it 'attaches file_sets for the files' do
+      expect(step.call(work, uploaded_files: uploaded_files).value!)
+        .to have_file_set_members(be_persisted, be_persisted, be_persisted, be_persisted,
+                                  be_persisted, be_persisted, be_persisted, be_persisted,
+                                  be_persisted, be_persisted, be_persisted, be_persisted,
+                                  be_persisted, be_persisted, be_persisted, be_persisted)
+      expect(Hyrax::WorkUploadsHandler).to have_received(:new).exactly(4).times
     end
   end
 end

@@ -100,7 +100,7 @@ module Hyrax
     def create_file_sets(files)
       files.each_with_object([]).with_index do |(file, arry), index|
         file_set = find_or_create_file_set(file, file_set_params[index] || {})
-        update_file_set(file_set, file)
+        set_permissions_and_visibility(file_set, file)
         arry << { file_set_id: file_set.id, user: file.user, job: ValkyrieIngestJob.new(file) }
       end
     end
@@ -123,7 +123,7 @@ module Hyrax
 
     ##
     # @api private
-    def update_file_set(file_set, file)
+    def set_permissions_and_visibility(file_set, file)
       # copy ACLs; should we also be propogating embargo/lease?
       Hyrax::AccessControlList.copy_permissions(source: target_permissions, target: file_set)
       # set visibility from params and save
