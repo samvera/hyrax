@@ -150,6 +150,61 @@ RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
           have_attached_files, have_attached_files)
           expect(reloaded_work.member_ids.count).to eq(3)
         end
+        xdescribe 'updating the file_set with parameters' do
+          # This is the scenario that would happen if we successfully created the file sets and attached them to the files, 
+          # but did not successfully add them to the work's member_ids
+          let(:file_set_one) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+          let(:file_set_two) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+          let(:file_set_three) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+          let(:uploaded_file_one) { uploads[0] }
+          let(:uploaded_file_two) { uploads[1] }
+          let(:uploaded_file_three) { uploads[2] }
+          let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :public, members: [file_set_one.id, file_set_two.id]) }
+          let(:file_set_params) do
+            [
+              { alternate_ids: ['fs-1'] },
+              { alternate_ids: ['fs-2'] },
+              { alternate_ids: ['fs-3'] }
+            ]
+          end
+          before do
+            file_set_one.file_ids << uploaded_file_one
+            file_set_two.file_ids << uploaded_file_two
+            uploaded_file_one.add_file_set!(file_set_one)
+            uploaded_file_two.add_file_set!(file_set_two)
+            # work.member_ids << [file_set_one.id, file_set_two.id]
+            Hyrax.persister.save(resource: uploaded_file_one)
+            Hyrax.persister.save(resource: uploaded_file_two)
+            Hyrax.persister.save(resource: file_set_one)
+            Hyrax.persister.save(resource: file_set_two)
+          end
+
+          it 'can update the file_set parameters' do
+            # expect(file_set_one.file_ids).to match_array([uploaded_file_one.id])
+            expect(uploaded_file_one.file_set_uri).to eq(file_set_one.id)
+            expect(uploaded_file_two.file_set_uri).to eq(file_set_two.id)
+            expect(uploaded_file_three.file_set_uri).to be_nil
+            expect(work.member_ids).to match_array([file_set_one.id, file_set_two.id])
+            described_class.new(work: work).add(files: uploads, file_set_params: file_set_params).attach
+            reloaded_work = Hyrax.query_service.find_by(id: work.id)
+            # expect(Hyrax.query_service.find_members(resource: reloaded_work)).to contain_exactly(have_attached_files,
+            # have_attached_files, have_attached_files)
+            
+            expect(reloaded_work).to have_file_set_members(have_attributes(alternate_ids: ['fs-1']),
+                                                  have_attributes(alternate_ids: ['fs-2']),
+                                                  have_attributes(alternate_ids: ['fs-3']))
+          end
+          # it 'can update the file_set parameters' do
+          #   described_class.new(work: work.dup).add(files: [uploads[0]], file_set_params: {}).attach
+          #   described_class.new(work: work.dup).add(files: [uploads[1]], file_set_params: {}).attach
+          #   described_class.new(work: work.dup).add(files: [uploads[2]], file_set_params: {}).attach
+          #   reloaded_work = Hyrax.query_service.find_by(id: work.id)
+          #   expect(Hyrax.query_service.find_members(resource: reloaded_work)).to contain_exactly(have_attached_files,
+          #   have_attached_files, have_attached_files)
+          #   expect(reloaded_work.member_ids.count).to eq(3)
+          # end
+        end
+
       end
     end
 
