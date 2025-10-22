@@ -116,6 +116,27 @@ RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
             end
           end
         end
+
+        context 'that are already in the existing hash' do
+          let(:file_set_params) do
+            [
+              { title: nil },
+              { title: nil },
+              { title: [] }
+            ]
+          end
+
+          it 'does not override with empty values' do
+            service.add(files: uploads, file_set_params: file_set_params)
+            service.attach
+            actual_file_sets = Hyrax.custom_queries.find_child_file_sets(resource: work)
+            expect(actual_file_sets.size).to eq(3)
+            actual_file_sets.each do |fs|
+              expect(fs).to have_attribute(:title)
+              expect(fs.title).not_to be_empty
+            end
+          end
+        end
       end
 
       # we can't use the memory based test_adapter to test asynch,

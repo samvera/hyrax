@@ -148,7 +148,7 @@ module Hyrax
         date_uploaded: file.created_at,
         date_modified: Hyrax::TimeService.time_in_utc,
         label: file.uploader.filename,
-        title: file.uploader.filename }.merge(file_set_params)
+        title: file.uploader.filename }.merge(file_set_params.compact_blank)
     end
 
     ##
