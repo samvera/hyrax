@@ -87,7 +87,7 @@ module Hyrax
         @view_options
       end
 
-     def display_label
+      def display_label
         return @display_label if @display_label
         @display_label = config.fetch('display_label', {})&.with_indifferent_access || {}
         @display_label = { default: @display_label } if @display_label.is_a?(String)

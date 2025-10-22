@@ -8,7 +8,7 @@ module Hyrax
 
     def index_field_label(document, field)
       field_config = index_fields(document)[field]
-      return field_config.label if field_config && field_config.custom_label
+      return field_config.label if field_config&.custom_label
       field_label(
         :"blacklight.search.fields.index.#{field}",
         :"blacklight.search.fields.#{field}",
@@ -16,6 +16,5 @@ module Hyrax
         field.to_s.humanize
       )
     end
-
   end
 end
