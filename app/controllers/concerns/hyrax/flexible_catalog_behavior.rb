@@ -11,10 +11,9 @@ module Hyrax
 
         current_profile = previous_profile if current_profile.nil?
         remove_old_properties!(previous_profile['properties'].keys, current_profile['properties'].keys) if current_profile != previous_profile
-
         properties_hash = current_profile['properties']
         properties_hash.each do |itemprop, prop|
-          label = prop['display_label']&.fetch('default', nil) || itemprop.titleize
+          label = display_label_for(itemprop, prop)
           indexing = prop['indexing']
           next if indexing.nil?
 
@@ -29,8 +28,16 @@ module Hyrax
               index_args[:link_to_facet] = "#{itemprop}_sim"
             end
 
-            name = "#{itemprop}_tesim"
-            unless blacklight_config.index_fields[name].present?
+            name = blacklight_config.index_fields.keys.detect { |key| key.start_with?(itemprop) }
+            name ||= "#{itemprop}_tesim"
+
+            if blacklight_config.index_fields[name].present?
+              if label
+                blacklight_config.index_fields[name].label = t(label, default: label)
+                blacklight_config.index_fields[name].custom_label = true
+              end
+              blacklight_config.index_fields[name].itemprop = itemprop
+            else
               blacklight_config.add_index_field(name, index_args)
             end
 
@@ -55,6 +62,13 @@ module Hyrax
       end
 
       private
+
+      def display_label_for(field_name, config)
+        display_label = config.fetch('display_label', {})&.with_indifferent_access || {}
+        display_label = { default: display_label } if display_label.is_a?(String)
+        display_label[:default] = field_name.to_s.humanize if display_label[:default].blank?
+        display_label[I18n.locale] || display_label[:default]
+      end
 
       def stored_searchable?(indexing, itemprop)
         indexing.include?('stored_searchable') || indexing.include?("#{itemprop}_tesim")
