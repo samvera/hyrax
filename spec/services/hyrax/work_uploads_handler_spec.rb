@@ -132,7 +132,7 @@ RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
       end
 
       # we can't use the memory based test_adapter to test asynch,
-      context 'when running background jobs', perform_enqueued: [ValkyrieIngestJob] do
+      context 'when running background jobs', perform_enqueued: [ValkyrieIngestJob], valkyrie_adapter: :wings_adapter do
         before do
           # stub out  characterization to avoid system calls
           characterize = double(run: true)

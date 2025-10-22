@@ -38,5 +38,9 @@ RSpec.describe Hyrax::Transactions::Steps::AddFileSets, valkyrie_adapter: :test_
                                   be_persisted, be_persisted, be_persisted, be_persisted)
       expect(Hyrax::WorkUploadsHandler).to have_received(:new).exactly(4).times
     end
+
+    it 'returns a success object' do
+      expect(step.call(work, uploaded_files: uploaded_files)).to be_success
+    end
   end
 end

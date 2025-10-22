@@ -30,20 +30,22 @@ module Hyrax
         def call(obj, uploaded_files: [], file_set_params: [])
           return Success(obj) if uploaded_files.empty? && file_set_params.blank? # Skip if no files to attach
 
-          uploaded_files.in_groups_of(file_set_batch_size, false) do |uploaded_file_group|
+          result_size = uploaded_files.in_groups_of(file_set_batch_size, false) do |uploaded_file_group|
             @handler.new(work: obj).add(files: uploaded_file_group, file_set_params: file_set_params).attach
-          end
-
+          end.size
           obj = Hyrax.query_service.find_by(id: obj.id)
-          obj_file_sets_count = Hyrax.custom_queries.find_child_file_set_ids(resource: obj).size
           update_embargoes_and_leases(obj)
-          if uploaded_files.size == obj_file_sets_count
+          if uploaded_files.size == result_size # If not all the uploaded files went through the handler successfully, report failure
             Success(obj)
           else
             Failure[:failed_to_attach_file_sets, uploaded_files]
           end
         end
 
+        private
+
+        ##
+        # @api private
         def update_embargoes_and_leases(obj)
           return unless obj.lease || obj.embargo
           # TODO: Find file sets in batches that respect the file_set_batch_size
