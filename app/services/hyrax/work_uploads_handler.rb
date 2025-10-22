@@ -6,7 +6,7 @@ module Hyrax
   #
   # Mediates uploads to a work.
   #
-  # Given an existing Work object, `#add` some set of files, then call `#attach`
+  # Given an existing Work object, `#add` some set of uploaded_files, then call `#attach`
   # to handle creation/attachment of File Sets, and trigger persistence of files
   # to the storage backend.
   #
@@ -16,16 +16,19 @@ module Hyrax
   # attribute, by supporting another file/IO class, etc...) can use a different
   # `Handler` implementation. The only guarantee made by the _interface_ is that
   # the process of persisting the relationship between `work` and the provided
-  # `files` will start when `#attach` is called.
+  # `uploaded_files` will start when `#attach` is called.
   #
   # This base implementation accepts only `Hyrax::UploadedFile` instances and,
   # for each one, creates a `Hyrax::FileSet` with permissions matching those on
   # `work`, and appends that FileSet to `member_ids`. The `FileSet` will be
   # added in the order that the `UploadedFiles` are passed in. If the work has a
   # `nil` `representative_id` and/or `thumbnail_id`, the first `FileSet` will be
-  # set to that value. An `IngestJob` will be enqueued, for each `FileSet`. When
+  # set to that value. A `ValkyrieIngestJob` will be enqueued, for each `FileSet`. When
   # all of the `files` have been processed, the work will be saved with the
-  # added members. While this is happening, we take a lock on the work via
+  # added members. 
+  # 
+  # While we are appending the member_ids to the work and updating the 
+  # representative_id and thumbnail_ids, we take a lock on the work via
   # `Lockable` (Redis/Redlock).
   #
   # This also publishes events as required by `Hyrax.publisher`.
