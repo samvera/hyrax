@@ -53,15 +53,14 @@ properties:
       sources:
       - 'null'
     definition:
-      default: Enter a standardized title for display. If only one
-        title is needed, transcribe the title from the source
-        itself.
+      default: Enter a standardized title for display. If only one title is needed,
+        transcribe the title from the source itself.
     display_label:
-      default: Title
+      default: blacklight.search.fields.show.title_tesim
     index_documentation: displayable, searchable
     indexing:
-    - 'title_sim'
-    - 'title_tesim'
+    - title_sim
+    - title_tesim
     form:
       required: true
       primary: true
@@ -90,11 +89,11 @@ properties:
       maximum: 1
     multi_value: false
     display_label:
-      default: Date Modified
+      default: blacklight.search.fields.show.date_modified_dtsi
     property_uri: http://purl.org/dc/terms/modified
     range: http://www.w3.org/2001/XMLSchema#dateTime
     sample_values:
-    - "2024-06-06 21:06:51 +0000"
+    - '2024-06-06 21:06:51 +0000'
   date_uploaded:
     available_on:
       class:
@@ -109,11 +108,11 @@ properties:
       maximum: 1
     multi_value: false
     display_label:
-      default: Date Uploaded
+      default: blacklight.search.fields.show.date_uploaded_dtsi
     property_uri: http://purl.org/dc/terms/dateSubmitted
     range: http://www.w3.org/2001/XMLSchema#dateTime
     sample_values:
-    - "2024-06-06 21:06:51 +0000"
+    - '2024-06-06 21:06:51 +0000'
   depositor:
     available_on:
       class:
@@ -135,7 +134,7 @@ properties:
       default: Depositor
     index_documentation: searchable
     indexing:
-    - 'depositor_tesim'
+    - depositor_tesim
     property_uri: http://id.loc.gov/vocabulary/relators/dpt
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
@@ -152,10 +151,10 @@ properties:
       sources:
       - 'null'
     display_label:
-      default: Creator
+      default: blacklight.search.fields.show.creator_tesim
     index_documentation: searchable
     indexing:
-    - 'creator_tesim'
+    - creator_tesim
     property_uri: http://purl.org/dc/elements/1.1/creator
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
