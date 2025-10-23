@@ -25,7 +25,7 @@ namespace :hyrax do
         existing_hash = nil if !existing_hash.is_a?(Hash) || existing_hash.keys.size <= 1
         existing_hash ||= property_data['display_label'] if property_data['display_label'].is_a?(Hash) && property_data['display_label'].keys.size > 1
 
-        profile_editor.profile_data['properties'][property_name]['display_label'] = existing_hash.present? ? existing_hash : {}
+        profile_editor.profile_data['properties'][property_name]['display_label'] = existing_hash.presence || {}
         profile_editor.profile_data['properties'][property_name]['display_label']['default'] = profile_editor.find_i18n(default_label)
         profile_editor.profile_data['properties'][property_name]['view'].delete('label') if profile_editor.profile_data['properties'][property_name]['view'].present?
       end
