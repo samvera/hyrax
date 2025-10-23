@@ -85,7 +85,7 @@ module I18n
 
     private
 
-    def search_nested_translations(hash, target_value, current_path, results, exact, scope_prefix)
+    def search_nested_translations(hash, target_value, current_path, results, exact, scope_prefix) # rubocop:disable Metrics/ParameterLists, Metrics/MethodLength
       hash.each do |key, value|
         path = current_path + [key]
 
@@ -174,9 +174,7 @@ if defined?(Rails)
     def translation_debug(key, options = {})
       result = I18n.lookup_with_info(key, **options)
 
-      if defined?(Rails.logger) && Rails.logger
-        Rails.logger.debug "I18n Debug: #{result.inspect}"
-      end
+      Rails.logger.debug "I18n Debug: #{result.inspect}" if defined?(Rails.logger) && Rails.logger
 
       result
     end
