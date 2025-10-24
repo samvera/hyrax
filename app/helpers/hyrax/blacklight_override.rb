@@ -11,6 +11,7 @@ module Hyrax
       return field_config.label if field_config&.custom_label
       field_label(
         :"blacklight.search.fields.index.#{field}",
+        :"blacklight.search.fields.show.#{field}",
         :"blacklight.search.fields.#{field}",
         (field_config.label if field_config),
         field.to_s.humanize

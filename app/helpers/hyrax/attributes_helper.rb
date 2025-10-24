@@ -67,9 +67,15 @@ module Hyrax
       if hash_of_locales.present?
         view_options[:label] = hash_of_locales[locale] || hash_of_locales[:default]
       else
-        view_options[:label] = (view_options[:render_term] || field_name).to_s.humanize
+        view_options[:label] = (view_options[:render_term] || field_name).to_s
       end
-      view_options[:label] = t(view_options[:label], default: view_options[:label])
+      field = view_options[:label]
+      view_options[:label] = field_label(
+        :"blacklight.search.fields.index.#{field}",
+        :"blacklight.search.fields.show.#{field}",
+        :"blacklight.search.fields.#{field}",
+        field.to_s.humanize
+      )
       view_options
     end
   end
