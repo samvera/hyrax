@@ -53,7 +53,7 @@ properties:
         Enter a standardized title for display. If only one title is needed,
         transcribe the title from the source itself.
     display_label:
-      default: Title
+      default: blacklight.search.fields.show.title_tesim
     index_documentation: displayable, searchable
     indexing:
       - title_sim
@@ -84,20 +84,19 @@ properties:
       maximum: 1
     data_type: string
     display_label:
-      default: Date Modified
+      de: Zuletzt geändert
+      en: Last modified
+      es: Última modificación
+      fr: Dernière modification
+      it: Ultima modifica
+      pt-BR: Última modificação
+      zh: 最新修改
+      default: blacklight.search.fields.show.date_modified_dtsi
     property_uri: http://purl.org/dc/terms/modified
     range: http://www.w3.org/2001/XMLSchema#dateTime
     sample_values:
       - "2024-06-06 21:06:51 +0000"
     view:
-      label:
-        de: "Zuletzt geändert"
-        en: "Last modified"
-        es: "Última modificación"
-        fr: "Dernière modification"
-        it: "Ultima modifica"
-        pt-BR: "Última modificação"
-        zh: "最新修改"
       html_dl: true
   date_uploaded:
     available_on:
@@ -113,7 +112,7 @@ properties:
       maximum: 1
     data_type: string
     display_label:
-      default: Date Uploaded
+      default: blacklight.search.fields.show.date_uploaded_dtsi
     property_uri: http://purl.org/dc/terms/dateSubmitted
     range: http://www.w3.org/2001/XMLSchema#dateTime
     sample_values:
@@ -161,7 +160,7 @@ properties:
       sources:
         - "null"
     display_label:
-      default: Creator
+      default: blacklight.search.fields.show.creator_tesim
     index_documentation: displayable, searchable
     indexing:
       - creator_sim
@@ -173,7 +172,7 @@ properties:
     sample_values:
       - Julie Allinson
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
   license:
     available_on:
@@ -192,7 +191,7 @@ properties:
       sources:
         - "null"
     display_label:
-      default: License
+      default: blacklight.search.fields.show.license_tesim
     index_documentation: displayable, searchable
     indexing:
       - license_sim
@@ -204,7 +203,7 @@ properties:
     sample_values:
       - http://creativecommons.org/licenses/by/3.0/us/
     view:
-      render_as: "external_link"
+      render_as: external_link
       html_dl: true
   abstract:
     available_on:
@@ -281,6 +280,8 @@ properties:
       sources:
         - "null"
     display_label:
+      en: Alternative Title
+      es: Título Alternativo
       default: Alternative Title
     index_documentation: displayable, searchable
     indexing:
@@ -293,9 +294,6 @@ properties:
     sample_values:
       - Alternate Title Example
     view:
-      label:
-        en: "Alternative Title"
-        es: "Título Alternativo"
       html_dl: true
   arkivo_checksum:
     available_on:
@@ -338,7 +336,7 @@ properties:
       sources:
         - "null"
     display_label:
-      default: Location
+      default: blacklight.search.fields.show.based_near_label
     index_documentation: displayable, searchable
     indexing:
       - based_near_sim
@@ -350,8 +348,7 @@ properties:
     sample_values:
       - San Diego, California, United States
     view:
-      label: Based Near
-      render_term: "based_near_label_tesim"
+      render_term: based_near_label_tesim
       html_dl: true
   bibliographic_citation:
     available_on:
@@ -399,7 +396,7 @@ properties:
       sources:
         - "null"
     display_label:
-      default: Contributor
+      default: blacklight.search.fields.show.contributor_tesim
     index_documentation: displayable, searchable
     indexing:
       - contributor_tesim
@@ -411,7 +408,7 @@ properties:
     sample_values:
       - Julie Allinson
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
   date_created:
     available_on:
@@ -430,7 +427,7 @@ properties:
       sources:
         - "null"
     display_label:
-      default: Date Created
+      default: blacklight.search.fields.show.date_created_tesim
     index_documentation: displayable, searchable
     indexing:
       - date_created_sim
@@ -442,8 +439,8 @@ properties:
     sample_values:
       - "2024-06-06 21:06:51 +0000"
     view:
-      render_as: "linked"
-      search_field: "date_created_tesim"
+      render_as: linked
+      search_field: date_created_tesim
       html_dl: true
   description:
     available_on:
@@ -462,7 +459,7 @@ properties:
       sources:
         - "null"
     display_label:
-      default: Description
+      default: blacklight.search.fields.show.description_tesim
     index_documentation: displayable, searchable
     indexing:
       - description_sim
@@ -490,7 +487,7 @@ properties:
       sources:
         - "null"
     display_label:
-      default: Identifier
+      default: blacklight.search.fields.show.identifier_tesim
     index_documentation: displayable, searchable
     indexing:
       - identifier_sim
@@ -502,8 +499,8 @@ properties:
     sample_values:
       - abc123
     view:
-      render_as: "linked"
-      search_field: "identifier_tesim"
+      render_as: linked
+      search_field: identifier_tesim
       html_dl: true
   import_url:
     available_on:
@@ -544,7 +541,7 @@ properties:
       sources:
         - "null"
     display_label:
-      default: Keyword
+      default: blacklight.search.fields.show.keyword
     index_documentation: displayable, searchable
     indexing:
       - keyword_sim
@@ -557,7 +554,7 @@ properties:
       - Metadata
       - Repository
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
   label:
     available_on:
@@ -600,7 +597,7 @@ properties:
       sources:
         - "null"
     display_label:
-      default: Language
+      default: blacklight.search.fields.show.language_tesim
     index_documentation: displayable, searchable
     indexing:
       - language_sim
@@ -613,7 +610,7 @@ properties:
       - English
       - Spanish
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
   publisher:
     available_on:
@@ -632,7 +629,7 @@ properties:
       sources:
         - "null"
     display_label:
-      default: Publisher
+      default: blacklight.search.fields.show.publisher_tesim
     index_documentation: displayable, searchable
     indexing:
       - publisher_sim
@@ -644,7 +641,7 @@ properties:
     sample_values:
       - Scholastic
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
   related_url:
     available_on:
@@ -675,7 +672,7 @@ properties:
     sample_values:
       - http://example.com/resource1
     view:
-      render_as: "external_link"
+      render_as: external_link
       html_dl: true
   relative_path:
     available_on:
@@ -730,7 +727,7 @@ properties:
       - Article
       - Conference Proceeding
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
   rights_notes:
     available_on:
@@ -779,7 +776,7 @@ properties:
       sources:
         - "null"
     display_label:
-      default: Rights Statement
+      default: blacklight.search.fields.show.rights_statement_tesim
     index_documentation: displayable, searchable
     indexing:
       - rights_statement_sim
@@ -792,7 +789,7 @@ properties:
       - http://rightsstatements.org/vocab/InC/1.0/
     view:
       html_dl: true
-      render_as: "rights_statement"
+      render_as: rights_statement
   source:
     available_on:
       class:
@@ -841,7 +838,7 @@ properties:
       sources:
         - "null"
     display_label:
-      default: Subject
+      default: blacklight.search.fields.show.subject_tesim
     index_documentation: displayable, searchable
     indexing:
       - subject_sim
@@ -854,7 +851,7 @@ properties:
       - Art
       - Science
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
   dimensions:
     available_on:
@@ -885,5 +882,5 @@ properties:
       - 50" x 20"
       - 5 m x 10 m x 8 m
     view:
-      render_as: "faceted"
+      render_as: faceted
       html_dl: true
