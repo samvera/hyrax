@@ -33,7 +33,7 @@ module Hyrax
 
             if blacklight_config.index_fields[name].present?
               if label
-                blacklight_config.index_fields[name].label = t(label, default: label)
+                blacklight_config.index_fields[name].label = I18n.t(label, default: label)
                 blacklight_config.index_fields[name].custom_label = true
               end
               blacklight_config.index_fields[name].itemprop = itemprop
