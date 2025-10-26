@@ -66,6 +66,7 @@ class Hyrax::ValkyrieUpload
 
     Hyrax.publisher.publish("file.uploaded", metadata: saved_metadata, skip_derivatives: skip_derivatives)
     Hyrax.publisher.publish('file.metadata.updated', metadata: saved_metadata, user: user, skip_derivatices: skip_derivatives)
+    on_file_uploaded(metadata: saved_metadata, skip_derivatives: skip_derivatives)
 
     saved_metadata
   end
@@ -75,6 +76,7 @@ class Hyrax::ValkyrieUpload
 
     Hyrax::VersioningService.create(file_metadata, user, io)
     Hyrax.publisher.publish("file.uploaded", metadata: file_metadata)
+    on_file_uploaded(metadata: saved_metadata, skip_derivatives: false)
     ContentNewVersionEventJob.perform_later(file_set, user)
   end
 
@@ -88,5 +90,14 @@ class Hyrax::ValkyrieUpload
     file_set.file_ids += [file_metadata.id]
     Hyrax.persister.save(resource: file_set)
     Hyrax.publisher.publish('object.membership.updated', object: file_set, user: user)
+  end
+
+  private
+
+  def on_file_uploaded(metadata: nil, skip_derivatives: true)
+    # Run characterization for original file only and allow optional skip paramater
+    return if skip_derivatives || !metadata&.original_file?
+
+    ValkyrieCharacterizationJob.perform_now(metadata.id.to_s)
   end
 end

@@ -16,10 +16,30 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
     saved = Hyrax.persister.save(resource: metadata)
     Hyrax.publisher.publish('file.metadata.updated', metadata: saved, user: user)
 
+    file_set = Hyrax.query_service.find_by(id: saved.file_set_id)
+
     Hyrax.publisher.publish('file.characterized',
-                            file_set: Hyrax.query_service.find_by(id: saved.file_set_id),
+                            file_set: file_set,
                             file_id: saved.id.to_s,
                             path_hint: saved.file_identifier.to_s)
+
+    # def on_file_characterized(event)
+    # file_set = Hyrax.query_service.find_by(id: saved.file_set_id)
+
+    case file_set
+    when ActiveFedora::Base # ActiveFedora
+      CreateDerivativesJob
+        .perform_now(file_set, saved.id.to_s, saved.file_identifier.to_s)
+    else
+      ValkyrieCreateDerivativesJob
+        .perform_now(file_set.id.to_s, saved.id.to_s)
+      parent = Hyrax.custom_queries.find_parent_work(resource: file_set)
+      if parent && parent.thumbnail_id != file_set.id
+        Hyrax.logger.debug { "Reindexing #{parent.id} due to creation of thumbnail derivatives." }
+        Hyrax.index_adapter.save(resource: parent)
+      end
+    end
+    # end
   end
 
   ##

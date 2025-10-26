@@ -15,11 +15,11 @@ class ValkyrieCreateDerivativesJob < Hyrax::ApplicationJob
   private
 
   def reindex_parent(file_set_id)
-    file_set = Hyrax.query_service.find_by(id: file_set_id)
-    return unless file_set
-    parent = Hyrax.custom_queries.find_parent_work(resource: file_set)
-    return unless parent&.thumbnail_id == file_set.id
-    Hyrax.logger.debug { "Reindexing #{parent.id} due to creation of thumbnail derivatives." }
-    Hyrax.index_adapter.save(resource: parent)
+    # file_set = Hyrax.query_service.find_by(id: file_set_id)
+    # return unless file_set
+    # parent = Hyrax.custom_queries.find_parent_work(resource: file_set)
+    # return unless parent&.thumbnail_id == file_set.id
+    # Hyrax.logger.debug { "Reindexing #{parent.id} due to creation of thumbnail derivatives." }
+    # Hyrax.index_adapter.save(resource: parent)
   end
 end
