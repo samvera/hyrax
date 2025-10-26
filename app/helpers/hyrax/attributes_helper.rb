@@ -76,12 +76,17 @@ module Hyrax
         view_options[:label] = (view_options[:render_term] || field_name).to_s
       end
       field = view_options[:label]
-      view_options[:label] = field_label(
-        :"blacklight.search.fields.index.#{field}",
-        :"blacklight.search.fields.show.#{field}",
-        :"blacklight.search.fields.#{field}",
-        field.to_s.humanize
-      )
+      translate = I18n.t(field, default: field) if field.match(/\./)
+      if translate && translate != field
+        view_options[:label] = translate
+      else
+        view_options[:label] = field_label(
+          :"blacklight.search.fields.index.#{field}",
+          :"blacklight.search.fields.show.#{field}",
+          :"blacklight.search.fields.#{field}",
+          field.to_s.humanize
+        )
+      end
       view_options
     end
   end
