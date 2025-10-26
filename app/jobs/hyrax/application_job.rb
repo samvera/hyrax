@@ -14,13 +14,5 @@ module Hyrax
         end
       end
     end
-
-    def perform_later(*args)
-      if provider_job_id.present? && Flipflop.deterministic_jobs?
-        perform_now(*args)
-      else
-        super
-      end
-    end
   end
 end
