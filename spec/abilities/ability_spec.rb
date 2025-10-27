@@ -67,7 +67,7 @@ RSpec.describe Hyrax::Ability do
       let(:role_name) { 'depositing' }
 
       before do
-        Sipity::Role.create(name: 'approving')
+        Sipity::Role.find_or_create_by(name: 'approving')
         # Admin-ify the user
         allow(user).to receive_messages(groups: ['admin', 'registered'])
       end
@@ -79,7 +79,7 @@ RSpec.describe Hyrax::Ability do
       let(:role_name) { 'depositing' }
 
       before do
-        Sipity::Role.create(name: 'approving')
+        Sipity::Role.find_or_create_by(name: 'approving')
       end
 
       it { is_expected.to be false }

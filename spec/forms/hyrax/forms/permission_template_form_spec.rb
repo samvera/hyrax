@@ -356,8 +356,8 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     let(:attributes) { { workflow_id: workflow.id } }
     let(:workflow) { create(:workflow, permission_template: permission_template, active: true) }
     let(:user) { create(:user) }
-    let(:role1) { Sipity::Role.create!(name: 'hello') }
-    let(:role2) { Sipity::Role.create!(name: 'goodbye') }
+    let(:role1) { Sipity::Role.find_or_create_by!(name: 'hello') }
+    let(:role2) { Sipity::Role.find_or_create_by!(name: 'goodbye') }
 
     let(:permission_template) do
       create(:permission_template,
