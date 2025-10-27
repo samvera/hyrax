@@ -9,13 +9,18 @@ module Hyrax
     def index_field_label(document, field)
       field_config = index_fields(document)[field]
       return field_config.label if field_config&.custom_label
-      field_label(
-        :"blacklight.search.fields.index.#{field}",
-        :"blacklight.search.fields.show.#{field}",
-        :"blacklight.search.fields.#{field}",
-        (field_config.label if field_config),
-        field.to_s.humanize
-      )
+      translate = I18n.t(field_config.label, default: field_config.label) if field_config&.label&.match(/\./)
+      if translate && translate != field_config.label
+        field_label(translate, field_config.label, field.to_s.humanize)
+      else
+        field_label(
+          :"blacklight.search.fields.index.#{field}",
+          :"blacklight.search.fields.show.#{field}",
+          :"blacklight.search.fields.#{field}",
+          (field_config.label if field_config),
+            field.to_s.humanize
+        )
+      end
     end
   end
 end
