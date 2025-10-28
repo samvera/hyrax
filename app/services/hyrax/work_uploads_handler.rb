@@ -142,15 +142,13 @@ module Hyrax
     def find_or_create_file_set(file, file_set_params)
       file_set_uri = file.file_set_uri
       if file_set_uri
-        # we should probably update other things here as well?
-        file_set = Hyrax.query_service.find_by(id: file_set_uri)
-        @persister.save(resource: file_set)
+        Hyrax.query_service.find_by(id: file_set_uri)
       else
         file_set = @persister.save(resource: Hyrax::FileSet.new(file_set_args(file, file_set_params)))
         Hyrax.publisher.publish('object.deposited', object: file_set, user: file.user)
         file.add_file_set!(file_set)
+        file_set
       end
-      file_set
     end
 
     ##
