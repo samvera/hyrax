@@ -25,9 +25,9 @@ module Hyrax
   # `nil` `representative_id` and/or `thumbnail_id`, the first `FileSet` will be
   # set to that value. A `ValkyrieIngestJob` will be enqueued, for each `FileSet`. When
   # all of the `files` have been processed, the work will be saved with the
-  # added members. 
-  # 
-  # While we are appending the member_ids to the work and updating the 
+  # added members.
+  #
+  # While we are appending the member_ids to the work and updating the
   # representative_id and thumbnail_ids, we take a lock on the work via
   # `Lockable` (Redis/Redlock).
   #
