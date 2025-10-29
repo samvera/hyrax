@@ -54,39 +54,34 @@ module Hyrax
     #        {:render_term=>:based_near_label, :label=>{"en"=>"Title", "es"=>"Título"}, :html_dl=>true}
     # @return [String] the field name to be used for rendering
     def conform_field(field_name, options_hash)
-      options = HashWithIndifferentAccess.new(options_hash)
-      HashWithIndifferentAccess.new(options)['render_term'] || field_name
+      options_hash&.with_indifferent_access&.fetch('render_term', nil) || field_name
     end
 
     # @param [String] field name
     # @param [Hash<Hash>] a nested hash of view options...
     #        {:label=>{"en"=>"Title", "es"=>"Título"}, :html_dl=>true}
     # @return [Hash] the transformed options for the field
-    def conform_options(field_name, options_hash)
-      options = HashWithIndifferentAccess.new(options_hash)
-      options_hash = HashWithIndifferentAccess.new(options)
-      hash_of_locales = options_hash['render_term'] || options_hash['label'] || {}
-      current_locale = params['locale'] || I18n.locale.to_s
+    def conform_options(field_name, view_options)
+      hash_of_locales = view_options.delete(:display_label) || {}
 
-      unless hash_of_locales.present?
-        options[:label] = field_name.to_s.humanize
-        return options
+      if hash_of_locales.present?
+        view_options[:label] = hash_of_locales[locale] || hash_of_locales[:default]
+      else
+        view_options[:label] = (view_options[:render_term] || field_name).to_s
       end
-
-      return options_hash if hash_of_locales.is_a?(String) || hash_of_locales.empty?
-
-      # If the params locale is found in the hash of locales, use that value
-      if hash_of_locales[current_locale].present?
-        options[:label] = hash_of_locales[current_locale]
-      # If the params locale is not found, fall back to english
-      elsif hash_of_locales['en']
-        options[:label] = hash_of_locales['en']
-      # If the params locale is not found and english is not found, use the first value in the hash as a fallback
-      elsif hash_of_locales['en'].nil? && hash_of_locales[current_locale].nil?
-        options[:label] = hash_of_locales.values.first
+      field = view_options[:label]
+      translate = I18n.t(field, default: field) if field.match(/\./)
+      if translate && translate != field
+        view_options[:label] = translate
+      else
+        view_options[:label] = field_label(
+          :"blacklight.search.fields.index.#{field}",
+          :"blacklight.search.fields.show.#{field}",
+          :"blacklight.search.fields.#{field}",
+          field.to_s.humanize
+        )
       end
-
-      options
+      view_options
     end
   end
 end
