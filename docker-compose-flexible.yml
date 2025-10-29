@@ -1,0 +1,166 @@
+# Requires Docker Compose v2
+name: koppie
+services:
+  web:
+    build:
+      context: .
+      target: hyrax-engine-dev
+      args:
+        - EXTRA_APK_PACKAGES=git less
+        - BUNDLE_GEMFILE=Gemfile.koppie
+    image: ghcr.io/samvera/hyrax-dev:${GITHUB_SHA:-latest}
+    command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
+    stdin_open: true
+    tty: true
+    user: root
+    env_file:
+      - .koppie/.env
+    environment:
+      - RAILS_ROOT=/app/samvera/hyrax-webapp
+    depends_on:
+      - worker
+      - chrome
+      - fits
+      - memcached
+      - postgres
+      - redis
+      - solr
+    ports:
+      - 3001:3000
+      - 9877:9876
+      - 1049:1048
+    volumes:
+      - ./bin:/app/samvera
+      - .koppie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
+      - bundle:/app/bundle
+      - clamav:/var/lib/clamav
+      - hyrax-storage:/app/samvera/hyrax-webapp/storage
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - koppie
+
+  worker:
+    image: ghcr.io/samvera/hyrax-dev:${GITHUB_SHA:-latest}
+    entrypoint: worker-entrypoint.sh
+    command: sh -c 'bundle exec sidekiq'
+    user: root
+    env_file:
+      - .koppie/.env
+    depends_on:
+      - fits
+      - memcached
+      - postgres
+      - redis
+      - solr
+    volumes:
+      - ./bin:/app/samvera
+      - .koppie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
+      - bundle:/app/bundle
+      - clamav:/var/lib/clamav
+      - hyrax-storage:/app/samvera/hyrax-webapp/storage
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - koppie
+
+  chrome:
+    image: selenium/standalone-chromium:4
+    environment:
+      #      - START_XVFB=false
+      - SE_NODE_SESSION_TIMEOUT=800
+      - SE_ENABLE_TRACING=false
+      - SE_ENABLE_BROWSER_LEFTOVERS_CLEANUP=true
+      - SE_BROWSER_ARGS_DISABLE_DSHM=--disable-dev-shm-usage
+      - SE_BROWSER_ARGS_HEADLESS=--headless=new
+    #    logging:
+    #      driver: none
+    volumes:
+      - /dev/shm:/dev/shm
+    shm_size: 2g
+    ports:
+      - "4446:4444"
+      - "5961:5900"
+      - "7961:7900"
+    networks:
+      - koppie
+
+  postgres:
+    image: postgres:15-alpine
+    env_file:
+      - .koppie/.env
+    ports:
+      - "5433:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - koppie
+
+  fits:
+    image: ghcr.io/samvera/fitsservlet:1.6.0
+    ports:
+      - 8080
+    networks:
+      - koppie
+
+  memcached:
+    image: bitnamilegacy/memcached
+    ports:
+      - "11212:11211"
+    networks:
+      - koppie
+
+  redis:
+    image: bitnamilegacy/redis:6.2
+    env_file:
+      - .koppie/.env
+    volumes:
+      - redis:/bitnamilegacy/redis/data
+    networks:
+      - koppie
+
+  solr:
+    image: solr:9.9
+    env_file:
+      - .koppie/.env
+    ports:
+      - 8984:8983
+    command:
+      - sh
+      - "-c"
+      - "precreate-core koppie-test /opt/solr/server/configsets/hyraxconf; solr-precreate koppie /opt/solr/server/configsets/hyraxconf"
+    volumes:
+      - solr_home:/var/solr:cached
+      - .koppie/solr:/opt/solr/server/configsets/hyraxconf
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 524288
+    networks:
+      - koppie
+
+volumes:
+  bundle:
+  clamav:
+  db:
+  hyrax-storage:
+  hyrax-derivatives:
+  hyrax-uploads:
+  rails-public:
+  rails-tmp:
+  redis:
+  sidekiq-public:
+  sidekiq-tmp:
+  solr_home:
+
+networks:
+  koppie:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-koppie
