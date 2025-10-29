@@ -82,7 +82,24 @@ module Hyrax
       ##
       # @return [Hash{Symbol => Object}]
       def view_options
-        config.fetch('view', {})&.symbolize_keys || {}
+        # prefer display_label over view:label for labels, make available in the view
+        @view_options = config.fetch('view', {})&.with_indifferent_access || {}
+        Deprecation.warn(self, 'view: label is deprecated, use display_label instead') if @view_options[:label].present?
+        @view_options.delete(:label)
+        @view_options[:display_label] = display_label
+        @view_options[:admin_only] = admin_only?
+        @view_options
+      end
+
+      def display_label
+        return @display_label if @display_label
+        @display_label = config.fetch('display_label', {})&.with_indifferent_access || {}
+        @display_label = { default: @display_label } if @display_label.is_a?(String)
+        @display_label
+      end
+
+      def admin_only?
+        @admin_only ||= config.fetch('admin_only', false) || config['indexing']&.include?('admin_only')
       end
 
       ##

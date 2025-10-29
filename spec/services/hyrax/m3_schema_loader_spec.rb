@@ -89,9 +89,14 @@ RSpec.describe Hyrax::M3SchemaLoader do
 
   describe '#view_definitions_for' do
     context 'when schema has attributes without view options' do
-      it 'returns empty hash' do
+      it 'returns display labels and admin flag' do
         expect(schema_loader.view_definitions_for(schema: Monograph.to_s))
-          .to eq({})
+          .to eq({
+                   date_modified: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_modified_dtsi" } },
+                   date_uploaded: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_uploaded_dtsi" } },
+                   depositor: { "admin_only" => false, "display_label" => { "default" => "Depositor" } },
+                   title: { "admin_only" => false, "display_label" => { "default" => "blacklight.search.fields.show.title_tesim" } }
+                 })
       end
     end
 
@@ -130,20 +135,12 @@ RSpec.describe Hyrax::M3SchemaLoader do
       it 'returns hash with view definitions for attributes that have view options' do
         result = schema_loader.view_definitions_for(schema: Monograph.to_s)
         expect(result).to include(
-          title: {
-            label: { "en" => 'Title', "es" => 'Título' },
-            html_dl: true
-          },
-          description: {
-            label: { "en" => 'Description' },
-            display: true
-          }
+          date_modified: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_modified_dtsi" } },
+          date_uploaded: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_uploaded_dtsi" } },
+          depositor: { "admin_only" => false, "display_label" => { "default" => "Depositor" } },
+          description: { "admin_only" => nil, "display" => true, "display_label" => {} },
+          title: { "admin_only" => false, "display_label" => { "default" => "blacklight.search.fields.show.title_tesim" }, "html_dl" => true }
         )
-      end
-
-      it 'excludes attributes without view options' do
-        result = schema_loader.view_definitions_for(schema: Monograph.to_s)
-        expect(result).not_to have_key(:depositor)
       end
     end
 
@@ -177,7 +174,7 @@ RSpec.describe Hyrax::M3SchemaLoader do
       context 'when no context is provided' do
         it 'excludes fields with context requirements' do
           result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: nil)
-          expect(result).to include(title: { label: { "en" => 'Title' } })
+          expect(result).to include(title: { admin_only: false, display_label: { default: "blacklight.search.fields.show.title_tesim" } })
           expect(result).not_to have_key(:contextual_field)
         end
       end
@@ -186,8 +183,11 @@ RSpec.describe Hyrax::M3SchemaLoader do
         it 'includes fields matching the context' do
           result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'flexible_context')
           expect(result).to include(
-            title: { label: { "en" => 'Title' } },
-            contextual_field: { label: { "en" => 'Contextual Field' } }
+            contextual_field: { "admin_only" => nil, "display_label" => {} },
+            date_modified: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_modified_dtsi" } },
+            date_uploaded: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_uploaded_dtsi" } },
+            depositor: { "admin_only" => false, "display_label" => { "default" => "Depositor" } },
+            title: { "admin_only" => false, "display_label" => { "default" => "blacklight.search.fields.show.title_tesim" } }
           )
         end
       end
@@ -195,7 +195,7 @@ RSpec.describe Hyrax::M3SchemaLoader do
       context 'when non-matching context is provided' do
         it 'excludes fields with different context requirements' do
           result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'other_context')
-          expect(result).to include(title: { label: { "en" => 'Title' } })
+          expect(result).to include(title: { admin_only: false, display_label: { default: "blacklight.search.fields.show.title_tesim" } })
           expect(result).not_to have_key(:contextual_field)
         end
       end

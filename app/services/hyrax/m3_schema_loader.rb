@@ -10,7 +10,8 @@ module Hyrax
   class M3SchemaLoader < Hyrax::SchemaLoader
     def view_definitions_for(schema:, version: 1, contexts: nil)
       definitions(schema, version, contexts).each_with_object({}) do |definition, hash|
-        next if definition.view_options.empty?
+        view_options = definition.view_options
+        next if view_options.without(:display_label).empty?
 
         hash[definition.name] = definition.view_options
       end

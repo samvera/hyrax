@@ -11,7 +11,7 @@ module Hyrax
     def view_definitions_for(schema:, version: 1, contexts: nil) # rubocop:disable Lint/UnusedMethodArgument
       schema.each_with_object({}) do |property, metadata|
         view_options = property.meta['view']
-        metadata[property.name.to_s] = view_options unless view_options.nil?
+        metadata[property.name.to_s] = view_options.with_indifferent_access unless view_options.nil?
       end
     end # rubocop:enable Lint/UnusedMethodArgument
 
