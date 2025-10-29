@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'hyrax/specs/shared_specs/simple_work'
+
 RSpec.describe AttachFilesToWorkJob, :active_fedora, perform_enqueued: [AttachFilesToWorkJob] do
   let(:file1) { File.open(fixture_path + '/world.png') }
   let(:file2) { File.open(fixture_path + '/image.jp2') }
@@ -132,15 +134,14 @@ RSpec.describe AttachFilesToWorkJob, :active_fedora, perform_enqueued: [AttachFi
         end
 
         describe 'with existing files' do
-          let(:file_set)       { create(:file_set) }
-          let(:uploaded_file1) { build(:uploaded_file, file: file1, file_set_uri: 'http://example.com/file_set') }
+          let(:file_set) { create(:file_set, :with_original_file) }
 
-          it 'skips files that already have a FileSet' do
+          it 'attaches the file_sets to the parent work' do
             id = generic_work.id
             expect(Hyrax.custom_queries.find_child_file_sets(resource: generic_work).count).to eq 0
             described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
             generic_work = Hyrax.query_service.find_by(id: id)
-            expect(Hyrax.custom_queries.find_child_file_sets(resource: generic_work).count).to eq 1
+            expect(Hyrax.custom_queries.find_child_file_sets(resource: generic_work).count).to eq 2
           end
         end
       end
