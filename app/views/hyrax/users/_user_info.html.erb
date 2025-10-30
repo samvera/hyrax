@@ -11,65 +11,70 @@
 <% end %>
 
 <% if user.facebook_handle.present? %>
-  <dt><span class="fa fa-facebook" aria-hidden="true"></span> Facebook Handle</dt>
+  <dt><span class="fa fa-facebook" aria-hidden="true"></span> <%= I18n.t("hyrax.users.user_info.facebook_handle", :default => "Facebook Handle") %></dt>
   <dd><%= link_to user.facebook_handle, "http://facebook.com/#{user.facebook_handle}", {target:'_blank'} %></dd>
 <% end %>
 
 <% if user.twitter_handle.present? %>
-  <dt><span class="fa fa-twitter" aria-hidden="true"></span> Twitter Handle</dt>
+  <dt><span class="fa fa-twitter" aria-hidden="true"></span> <%= I18n.t("hyrax.users.user_info.twitter_handle", :default => "Twitter Handle") %></dt>
   <dd><%= link_to user.twitter_handle, "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
 <% end %>
 
+<% if user.googleplus_handle.present? %>
+  <dt><span class="fa fa-google-plus" aria-hidden="true"></span> <%= I18n.t("hyrax.users.user_info.googleplus_handle", :default => "Google+ Handle") %></dt>
+  <dd><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
+<% end %>
+
 <% if user.linkedin_handle.present? %>
-  <dt><span class="fa fa-linkedin" aria-hidden="true"></span> LinkedIn</dt>
+  <dt><span class="fa fa-linkedin" aria-hidden="true"></span> <%= I18n.t("hyrax.users.user_info.linkedin", :default => "LinkedIn") %></dt>
   <dd><%= link_to "#{@linkedInUrl}", "#{@linkedInUrl}", { target: '_blank' } %></dd>
 <% end %>
 
-  <dt><span class="fa fa-envelope" aria-hidden="true"></span> Email</dt>
+  <dt><span class="fa fa-envelope" aria-hidden="true"></span> <%= I18n.t("hyrax.users.user_info.email", :default => "Email") %></dt>
   <dd><%= mail_to user.email %></dd>
 
   <% if user.chat_id %>
-    <dt><span class="fa fa-bullhorn" aria-hidden="true"></span> Chat ID</dt>
+    <dt><span class="fa fa-bullhorn" aria-hidden="true"></span> <%= I18n.t("hyrax.users.user_info.chat_id", :default => "Chat ID") %></dt>
     <dd><%= user.chat_id %></dd>
   <% end %>
 
   <% if user.website %>
-    <dt><span class="fa fa-globe" aria-hidden="true"></span> Website(s)</dt>
+    <dt><span class="fa fa-globe" aria-hidden="true"></span> <%= I18n.t("hyrax.users.user_info.website", :default => "Website(s)") %></dt>
     <dd><%= iconify_auto_link(user.website) %></dd>
   <% end %>
 
   <% if user.title %>
-    <dt>Title</dt>
+    <dt><%= I18n.t("hyrax.users.user_info.title", :default => "Title") %></dt>
     <dd><%= user.title %></dd>
   <% end %>
 
   <% if user.admin_area %>
-    <dt>Administrative Area</dt>
+    <dt><%= I18n.t("hyrax.users.user_info.administrative_area", :default => "Administrative Area") %></dt>
     <dd><%= user.admin_area %></dd>
   <% end %>
 
   <% if user.department %>
-    <dt>Department</dt>
+    <dt><%= I18n.t("hyrax.users.user_info.department", :default => "Department") %></dt>
     <dd><%= user.department %></dd>
   <% end %>
 
   <% if user.office %>
-    <dt>Office</dt>
+    <<dt><%= I18n.t("hyrax.users.user_info.office", :default => "Office") %></dt>
     <dd><%= user.office %></dd>
   <% end %>
 
   <% if user.address %>
-    <dt><span class="fa fa-map-marker" aria-hidden="true"></span> Address</dt>
+    <dt><span class="fa fa-map-marker" aria-hidden="true"></span> <%= I18n.t("hyrax.users.user_info.address", :default => "Address") %></dt>
     <dd><%= user.address %></dd>
   <% end %>
 
   <% if user.affiliation %>
-    <dt>Affiliation</dt>
+    <dt><%= I18n.t("hyrax.users.user_info.affiliation", :default => "Affiliation") %></dt>
     <dd><%= user.affiliation %></dd>
   <% end %>
 
   <% if user.telephone %>
-    <dt><span class="fa fa-phone" aria-hidden="true"></span> Telephone</dt>
+    <dt><span class="fa fa-phone" aria-hidden="true"></span> <%= I18n.t("hyrax.users.user_info.telephone", :default => "Telephone") %></dt>
     <dd><%= link_to_telephone(user) %></dd>
   <% end %>
 

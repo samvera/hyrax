@@ -1,9 +1,6 @@
-The file(s)
-<%=
-  total_shown = 20
-  file_sets.first(total_shown)
+<%=total_shown = 20
+  files = file_sets.first(total_shown)
            .map { |fs| link_to(fs, file_set_url(fs)) }
            .tap { |fs| fs << '...' if file_sets.length > total_shown }
-           .join(', ')
-%>
- could not be updated.  You do not have sufficient privileges to edit it.
+           .join(', ') 
+  I18n.t('hyrax.file_sets.asset_permissions_denial_flash.message', files: files, :default => "The file(s) %{files} could not be updated.  You do not have sufficient privileges to edit it."); %>
