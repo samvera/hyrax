@@ -17,7 +17,7 @@
   <% end %>
 
   <!-- Sharingbutton Twitter -->
-  <%= link_to "https://twitter.com/intent/tweet/?#{{text: page_title, url: share_url}.to_param}", 'aria-label': t(:'hyrax.base.social_media.twitter_share'), class: 'resp-sharing-button__link', target: '_blank', rel: 'noopener noreferrer', title: t('hyrax.base.social_media.twitter') do %>
+  <%= link_to "https://x.com/intent/tweet/?#{{text: page_title, url: share_url}.to_param}", 'aria-label': t(:'hyrax.base.social_media.twitter_share'), class: 'resp-sharing-button__link', target: '_blank', rel: 'noopener noreferrer', title: t('hyrax.base.social_media.twitter') do %>
     <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
       <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
           <title><%= t(:'hyrax.base.social_media.twitter_share') %></title>

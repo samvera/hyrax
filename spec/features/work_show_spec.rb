@@ -171,7 +171,7 @@ RSpec.describe "work show view" do
         expect(page).not_to have_selector "form#fileupload"
 
         # has some social media buttons
-        expect(page).to have_link '', href: "https://twitter.com/intent/tweet/?#{page_title}&url=#{CGI.escape(app_host)}%2Fconcern%2Fgeneric_works%2F#{work.id}"
+        expect(page).to have_link '', href: "https://x.com/intent/tweet/?#{page_title}&url=#{CGI.escape(app_host)}%2Fconcern%2Fgeneric_works%2F#{work.id}"
 
         # exports EndNote
         expect(page).to have_link 'EndNote'
