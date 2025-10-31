@@ -10,7 +10,7 @@ RSpec.describe 'hyrax/base/_social_media.html.erb', type: :view do
   it 'renders various social media share links' do
     expect(page).to have_selector '.resp-sharing-button__link'
     expect(page).to have_link '', href: 'https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fexample.com%2F'
-    expect(page).to have_link '', href: 'https://twitter.com/intent/tweet/?text=Example&url=http%3A%2F%2Fexample.com%2F'
+    expect(page).to have_link '', href: 'https://x.com/intent/tweet/?text=Example&url=http%3A%2F%2Fexample.com%2F'
     expect(page).to have_link '', href: 'https://www.tumblr.com/widgets/share/tool?canonicalUrl=http%3A%2F%2Fexample.com%2F&posttype=link&shareSource=tumblr_share_button'
   end
 
