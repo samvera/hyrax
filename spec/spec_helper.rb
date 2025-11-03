@@ -356,7 +356,7 @@ RSpec.configure do |config|
     adapter_name = example.metadata[:valkyrie_adapter]
 
     if [:wings_adapter, :freyja_adapter, :frigg_adapter].include?(adapter_name)
-      skip("Don't test Wings when it is dasabled") if Hyrax.config.disable_wings
+      skip("Don't test Wings when it is disabled") if Hyrax.config.disable_wings
       unless adapter_name == :wings_adapter
         Valkyrie::StorageAdapter.register(
           Valkyrie::Storage::Disk.new(base_path: Rails.root.join("tmp", "storage", "files"),

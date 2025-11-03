@@ -232,7 +232,8 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
           expect(flash[:notice]).to be_html_safe
           expect(flash[:notice]).to eq I18n.t("hyrax.works.create.after_create_html",
                                               application_name: I18n.t('hyrax.product_name', default: 'Hyrax'))
-          expect(assigns(:curation_concern)).to have_file_set_members(be_persisted, be_persisted)
+          reloaded_work = Hyrax.query_service.find_by(id: assigns(:curation_concern).id)
+          expect(reloaded_work).to have_file_set_members(be_persisted, be_persisted)
         end
 
         let(:uploads) { FactoryBot.create_list(:uploaded_file, 2, user: user) }
@@ -254,8 +255,8 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
                      uploaded_files: uploads.map(&:id) }
 
           get :create, params: params
-
-          expect(assigns(:curation_concern)).to have_file_set_members(have_attributes(visibility: 'open'), have_attributes(visibility: 'open'))
+          reloaded_work = Hyrax.query_service.find_by(id: assigns(:curation_concern).id)
+          expect(reloaded_work).to have_file_set_members(have_attributes(visibility: 'open'), have_attributes(visibility: 'open'))
         end
       end
 
@@ -580,7 +581,8 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
                      uploaded_files: uploads.map(&:id) }
 
           get :update, params: params
-          expect(assigns(:curation_concern)).to have_file_set_members(be_persisted, be_persisted)
+          reloaded_work = Hyrax.query_service.find_by(id: assigns(:curation_concern).id)
+          expect(reloaded_work).to have_file_set_members(be_persisted, be_persisted)
         end
 
         it 'sets the file visibility' do
@@ -591,7 +593,8 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
                      uploaded_files: uploads.map(&:id) }
 
           get :update, params: params
-          expect(assigns(:curation_concern)).to have_file_set_members(have_attributes(visibility: 'open'), have_attributes(visibility: 'open'))
+          reloaded_work = Hyrax.query_service.find_by(id: assigns(:curation_concern).id)
+          expect(reloaded_work).to have_file_set_members(have_attributes(visibility: 'open'), have_attributes(visibility: 'open'))
         end
       end
 

@@ -6,7 +6,7 @@ module Hyrax
   #
   # Mediates uploads to a work.
   #
-  # Given an existing Work object, `#add` some set of files, then call `#attach`
+  # Given an existing Work object, `#add` some set of uploaded_files, then call `#attach`
   # to handle creation/attachment of File Sets, and trigger persistence of files
   # to the storage backend.
   #
@@ -16,24 +16,22 @@ module Hyrax
   # attribute, by supporting another file/IO class, etc...) can use a different
   # `Handler` implementation. The only guarantee made by the _interface_ is that
   # the process of persisting the relationship between `work` and the provided
-  # `files` will start when `#attach` is called.
+  # `uploaded_files` will start when `#attach` is called.
   #
   # This base implementation accepts only `Hyrax::UploadedFile` instances and,
   # for each one, creates a `Hyrax::FileSet` with permissions matching those on
   # `work`, and appends that FileSet to `member_ids`. The `FileSet` will be
   # added in the order that the `UploadedFiles` are passed in. If the work has a
   # `nil` `representative_id` and/or `thumbnail_id`, the first `FileSet` will be
-  # set to that value. An `IngestJob` will be equeued, for each `FileSet`. When
+  # set to that value. A `ValkyrieIngestJob` will be enqueued, for each `FileSet`. When
   # all of the `files` have been processed, the work will be saved with the
-  # added members. While this is happening, we take a lock on the work via
+  # added members.
+  #
+  # While we are appending the member_ids to the work and updating the
+  # representative_id and thumbnail_ids, we take a lock on the work via
   # `Lockable` (Redis/Redlock).
   #
   # This also publishes events as required by `Hyrax.publisher`.
-  #
-  # @todo make this genuinely retry-able. if we fail after creating some of
-  #   the file_sets, but not attaching them to works, we should resolve that
-  #   incomplete work on subsequent runs.
-  #
   #
   # @example
   #   Hyrax::WorkUploadsHandler.new(work: my_work)
@@ -56,17 +54,13 @@ module Hyrax
     # @param [Hyrax::Work] work
     # @param [#save] persister the valkyrie persister to use
     def initialize(work:, persister: Hyrax.persister)
+      # NOTE: this instance variable is re-loaded later in the class, to avoid locking a stale version of the work
       @work = work
       @persister = persister
     end
 
     ##
     # @api public
-    #
-    # @note we immediately and silently discard uploads with an existing
-    #   file_set_uri, in a half-considered attempt at supporting idempotency
-    #   (for job retries). this is for legacy/AttachFilesToWorkJob
-    #   compatibility, but could stand for a robust reimplementation.
     #
     # @param [Enumerable<Hyrax::UploadedFile>] files  files to add
     #
@@ -75,9 +69,11 @@ module Hyrax
     # @return [WorkFileSetManager] self
     # @raise [ArgumentError] if any of the uploaded files are not an
     #   `UploadedFile`
+    # Get rid of the word "file" in here
+    # Dig into why / if we get a FileMetadata here
     def add(files:, file_set_params: [])
       validate_files(files) &&
-        @files = Array.wrap(files).reject { |f| f.file_set_uri.present? }
+        @files = Array.wrap(files).reject { |file| work.member_ids.include?(file.file_set_uri) }
       @file_set_params = file_set_params || []
       self
     end
@@ -92,16 +88,11 @@ module Hyrax
     def attach
       return true if Array.wrap(files).empty? # short circuit to avoid aquiring a lock we won't use
 
-      acquire_lock_for(work.id) do
-        event_payloads = files.each_with_object([]).with_index do |(file, arry), index|
-          arry << make_file_set_and_ingest(file, @file_set_params[index] || {})
-        end
-        @persister.save(resource: work)
-        Hyrax.publisher.publish('object.metadata.updated', object: work, user: files.first.user)
-        event_payloads.each do |payload|
-          payload.delete(:job).enqueue
-          Hyrax.publisher.publish('file.set.attached', payload)
-        end
+      event_payloads = create_file_sets(files)
+      append_file_sets_to_work(file_ids: event_payloads.map { |payload| payload[:file_set_id] }, user: files.first.user)
+      event_payloads.each do |payload|
+        payload.delete(:job).enqueue
+        Hyrax.publisher.publish('file.set.attached', file_set: Hyrax.query_service.find_by(id: payload[:file_set_id]), user: payload[:user])
       end
     end
 
@@ -109,30 +100,55 @@ module Hyrax
 
     ##
     # @api private
-    def make_file_set_and_ingest(file, file_set_params = {})
-      file_set = @persister.save(resource: Hyrax::FileSet.new(file_set_args(file, file_set_params)))
-      Hyrax.publisher.publish('object.deposited', object: file_set, user: file.user)
-      file.add_file_set!(file_set)
-
-      # copy ACLs; should we also be propogating embargo/lease?
-      Hyrax::AccessControlList.copy_permissions(source: target_permissions, target: file_set)
-
-      # set visibility from params and save
-      file_set.visibility = file_set_extra_params(file)[:visibility] if file_set_extra_params(file)[:visibility].present?
-      file_set.permission_manager.acl.save if file_set.permission_manager.acl.pending_changes?
-      append_to_work(file_set)
-
-      { file_set: file_set, user: file.user, job: ValkyrieIngestJob.new(file) }
+    def create_file_sets(files)
+      files.each_with_object([]).with_index do |(file, arry), index|
+        file_set = find_or_create_file_set(file, file_set_params[index] || {})
+        set_permissions_and_visibility(file_set, file)
+        arry << { file_set_id: file_set.id, user: file.user, job: ValkyrieIngestJob.new(file) }
+      end
     end
 
     ##
     # @api private
-    #
-    # @todo figure out how to know less about Work's ideas about FileSet use here. Maybe post-Wings, work.
-    def append_to_work(file_set)
-      work.member_ids += [file_set.id]
-      work.representative_id = file_set.id if work.respond_to?(:representative_id) && work.representative_id.blank?
-      work.thumbnail_id = file_set.id if work.respond_to?(:thumbnail_id) && work.thumbnail_id.blank?
+    def append_file_sets_to_work(file_ids:, user:)
+      work_id = work.id
+      acquire_lock_for(work_id) do
+        @target_permissions = nil # Clear cached ACL before reloading work
+        @work = Hyrax.query_service.find_by(id: work_id) # reload work so we are sure to have the most recent version after locking
+        work.member_ids += file_ids
+        first_file_id = file_ids.first
+        work.representative_id = first_file_id if work.respond_to?(:representative_id) && work.representative_id.blank?
+        work.thumbnail_id = first_file_id if work.respond_to?(:thumbnail_id) && work.thumbnail_id.blank?
+        @persister.save(resource: work)
+        Hyrax.publisher.publish('object.metadata.updated', object: work, user: user)
+      end
+    end
+
+    ##
+    # @api private
+    def set_permissions_and_visibility(file_set, file)
+      # copy ACLs; should we also be propogating embargo/lease?
+      Hyrax::AccessControlList.copy_permissions(source: target_permissions, target: file_set)
+      # set visibility from params and save
+      file_visibility = file_set_extra_params(file)[:visibility]
+      file_set.visibility = file_visibility if file_visibility.present?
+      permission_manager = file_set.permission_manager.acl
+      permission_manager.save if permission_manager.pending_changes?
+      @persister.save(resource: file_set)
+    end
+
+    ##
+    # @api private
+    def find_or_create_file_set(file, file_set_params)
+      file_set_uri = file.file_set_uri
+      if file_set_uri
+        Hyrax.query_service.find_by(id: file_set_uri)
+      else
+        file_set = @persister.save(resource: Hyrax::FileSet.new(file_set_args(file, file_set_params)))
+        Hyrax.publisher.publish('object.deposited', object: file_set, user: file.user)
+        file.add_file_set!(file_set)
+        file_set
+      end
     end
 
     ##
@@ -143,12 +159,14 @@ module Hyrax
     #
     # @return [Hash{Symbol => Object}]
     def file_set_args(file, file_set_params = {})
-      { depositor: file.user.user_key,
-        creator: file.user.user_key,
+      filename = file.uploader.filename
+      user_key = file.user.user_key
+      { depositor: user_key,
+        creator: user_key,
         date_uploaded: file.created_at,
         date_modified: Hyrax::TimeService.time_in_utc,
-        label: file.uploader.filename,
-        title: file.uploader.filename }.merge(file_set_params)
+        label: filename,
+        title: filename }.merge(file_set_params)
     end
 
     ##
