@@ -83,7 +83,9 @@ module Hyrax
       # @return [Hash{Symbol => Object}]
       def view_options
         # prefer display_label over view:label for labels, make available in the view
-        @view_options = config.fetch('view', {})&.with_indifferent_access || {}
+        @view_options = config.fetch('view', {})&.with_indifferent_access
+        # if the metadata property does not have a `view` key, the property should not be displayed
+        return {} if @view_options.blank?
         Deprecation.warn(self, 'view: label is deprecated, use display_label instead') if @view_options[:label].present?
         @view_options.delete(:label)
         @view_options[:display_label] = display_label
