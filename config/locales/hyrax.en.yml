@@ -927,6 +927,10 @@ en:
       type_label: Issue Type
     content_blocks:
       cancel: Cancel
+      form:
+        announcement: announcement
+        marketing: marketing
+        researcher: researcher
       tabs:
         announcement_text: Announcement Text
         featured_researcher: Featured Researcher
