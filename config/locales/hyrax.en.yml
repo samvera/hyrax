@@ -1898,6 +1898,9 @@ en:
         no_preview: No preview available
       update:
         header: Edit Work
+  layouts:
+    error:
+      system_error: System Error
   shared:
     nav_safety_modal:
       cancel: Cancel
