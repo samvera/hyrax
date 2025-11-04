@@ -1898,6 +1898,13 @@ en:
         no_preview: No preview available
       update:
         header: Edit Work
+  shared:
+    nav_safety_modal:
+      cancel: Cancel
+      ok: OK
+    schema_version:
+      created_on_version: Created On Version
+      version_after_save: Version After Save
   simple_form:
     hints:
       admin_set:
