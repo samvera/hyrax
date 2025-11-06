@@ -149,6 +149,7 @@ it:
           add_participants: Aggiungi partecipanti
           add_user: 'Aggiungi utente:'
           current_participants: Partecipanti attuali
+          as: come
         form_visibility:
           cancel: Annulla
           page_description: Il controllo delle impostazioni di rilascio e visibilità quando le opere aggiunte a questo set sono disponibili per la scoperta e il download e chi può scoprirle e scaricarle.
@@ -187,6 +188,25 @@ it:
           item_list_header: Funziona in questo set
         show_actions:
           confirm_delete: Sei sicuro di voler eliminare questo set amministrativo? Questa azione non può essere annullata.
+        index:
+          creator: Creatore
+          date_created: Data creata
+          no_administrative_sets_have_been_created: Non sono stati creati gruppi amministrativi.
+          title: Titolo
+          works: Lavori
+        show_document_list:
+          actions: Azioni
+          date_uploaded: Data caricata
+          list_of_items_in_this_administrative_set: Elenco delle voci in questo insieme amministrativo
+          status: Stato
+          title: Titolo
+          visibility: Visibilità
+        show_document_list_row:
+          creator: 'Creatore:'
+          depositor: 'Depositatore:'
+          edit_access: 'Modifica accesso:'
+          groups: 'Gruppi:'
+          users: 'Utenti:'
       analytics:
         collection_reports:
           custom_range:
@@ -357,6 +377,7 @@ it:
             top_works: I migliori lavori
             work_title: Titolo del lavoro
             work_views: Visualizzazioni della pagina di lavoro
+            id: ID
           work_counts:
             child_works: bambino lavora
             files: File
@@ -414,9 +435,11 @@ it:
           remove_success: Rimosso il partecipante
           submit: Inserisci
           update_notice: Aggiornamento dei partecipanti
+          as: come
         form_settings:
           instructions: Queste impostazioni determinano in che modo è possibile gestire e scoprire raccolte di questo tipo.
           warning: 'Avvertenza: queste impostazioni non possono essere modificate dopo aver creato una collezione di questo tipo.'
+          apply_to_new_works: APPLICAZIONE A NUOVI LAVORATORI
         index:
           breadcrumb: Tipi di raccolta
           create_new_button: Crea un nuovo tipo di raccolta
@@ -447,6 +470,7 @@ it:
           description: Descrizione
           feature: Caratteristica
           header: Caratteristiche
+          status: Stato
       sidebar:
         activity: Attività
         analytics: Analisi
@@ -498,6 +522,27 @@ it:
             main: Statistiche di lavoro
             total: 'Totale opere:'
             visibility: Totale per visibilità
+        date_form:
+          load_stats: Stats di carico
+        deposits:
+          deposited: depositato
+          deposits_by_users: Depositi dagli utenti
+        new_users:
+          newest_users: Utenti più recenti %{utenti}
+          of: di
+          registered: registrato
+          total: 'Totale:'
+        stats_by_date:
+          explanation: Le statistiche in questa sezione sono filtrate dalle date inserite nel modulo sottostante. I dati non sono filtrati a meno che il modulo di data non sia stato compilato. La data di inizio è richiesta e l'estremità predefinita è ora.
+          statistics_by_date: Statistiche per data
+        top_data:
+          explanation_with_limit: Le statistiche in questa sezione mostrano gli elementi top %{limit} per ogni categoria
+          most_actie_users: La maggior parte degli utenti attivi (top %{count})
+          top_file_format: Formati file superiori (top %{count})
+          top_file_formats_and_users: Formati di file e utenti
+          view_top: Visualizza top %{number}
+        workflows:
+          show_number_per_page: Mostra %{number}) per pagina
       users:
         index:
           access_label: Ultimo accesso
@@ -621,6 +666,7 @@ it:
         header:
           actions: Azione
           title: Titolo della collezione
+        display_data_info: Questa tabella visualizzerà i dati solo se le opere sono assegnate alle collezioni
       form_permission:
         visibility: Visibilità <small> Chi dovrebbe essere in grado di visualizzare o scaricare questo contenuto? </small>
       form_permission_under_embargo:
@@ -682,6 +728,7 @@ it:
         users: utenti
         workflow: Flusso di lavoro
         workflow_comments: Commenti sul flusso di lavoro
+        solr: Sol
       items:
         actions: Azioni
         date_uploaded: Data caricata
@@ -739,6 +786,8 @@ it:
         previous_comments: Commenti precedenti
         review_comment: Commento di revisione
         title: Revisione e approvazione
+      member_of_collections:
+        member_of_collections: Membro delle Collezioni
     base/unauthorized:
       is_private: Lo %{type} a cui hai provato ad accedere è privato
       unauthorized: non autorizzato
@@ -765,6 +814,7 @@ it:
         permissions: permessi
         sharing: compartecipazione
         visibility: Visibilità
+        save_changes: Salvare le modifiche
     batch_uploads:
       disabled: Caratteristica disabilitata dall'amministratore
       files:
@@ -784,6 +834,9 @@ it:
     citations:
       work:
         citation_formats: Formati di citazione
+        apa: APA
+        chicago: Chicago
+        mla: MLA
     collection:
       actions:
         add_existing_works:
@@ -886,6 +939,10 @@ it:
         featured_researcher: Ricercatore in primo piano
         marketing_text: Testo di marketing
       updated: Blocchi di contenuto aggiornati.
+      form:
+        announcement: annuncio
+        marketing: marketing
+        researcher: ricercatore
     controls:
       about: Di
       contact: contatto
@@ -1041,6 +1098,8 @@ it:
           creator: 'Creatore:'
           depositor: 'Depositante:'
           edit_access: 'Modifica accesso:'
+          groups: 'Gruppi:'
+          users: 'Utenti:'
         sort_and_per_page:
           show_par_page_html: Mostra %{select} per pagina
           sort_by: 'Ordina Per:'
@@ -1383,6 +1442,8 @@ it:
         save: Salva revisione
         save_your_note: Devi fare clic su "Salva revisione" per ripristinare una versione precedente di questo file
         upload: Carica nuova versione
+      asset_permissions_denial_flash:
+        message: Il file(i) %{files} non potrebbe essere aggiornato. Non hai privilegi sufficienti per modificarlo."
     help:
       header: Supporto utente
       override_text: Utilizza app / views / static / help.html.erb per ignorare questo file.
@@ -1544,6 +1605,13 @@ it:
         status: Stato
         title: operazioni
         updated: aggiornato
+      show:
+        message_header: Messaggio
+        message_label: 'Messaggio:'
+        operation_type_header: Tipo di operazione
+        status: stato
+        status_header: Stato
+        status_label: 'Stato:'
     pages:
       cancel: Annulla
       tabs:
@@ -1552,6 +1620,11 @@ it:
         help_page: Pagina di aiuto
         terms_page: Condizioni d'uso
       updated: Pagine aggiornate.
+      form:
+        about: circa
+        agreement: accordo
+        help: aiuto
+        terms: termini
     passive_consent_to_agreement: Salvo questo lavoro accetto il
     permission_levels:
       edit: Accesso in modifica
@@ -1614,6 +1687,10 @@ it:
         help: '%{application_name} non è stato in grado di individuare il collegamento monouso. Questo link è scaduto o era stato utilizzato in precedenza. Ci scusiamo per il disagio. Potresti essere interessato a utilizzare <a href="/help/"> la pagina di aiuto </a> per cercare soluzioni.'
         link_expired_not_found: Link monouso scaduto o non trovato
         link_not_found: Link monouso non trovato
+      show:
+        actions: Azioni
+        descriptions: 'Descrizioni:'
+        download: Scarica (può essere utilizzato solo una volta)
     sort_label: Ordina l'elenco degli articoli
     static:
       mendeley:
@@ -1747,6 +1824,7 @@ it:
       activity_log:
         date: Data
         user_activity: Attività dell'utente
+        no_user_activity: Nessuna attività utente
       index:
         avatar: Avatar
         department: Dipartimento
@@ -1761,6 +1839,19 @@ it:
       search_form:
         go: Partire
         search_users: Cerca utenti
+      user_info:
+        administrative_area: Spazio amministrativo
+        affiliation: Affiliazione
+        chat_id: ID chat
+        department: Dipartimento
+        email: Email
+        facebook_handle: Maniglia Facebook
+        linkedin: LinkedIn
+        office: Ufficio
+        telephone: Telefono
+        title: Titolo
+        twitter_handle: Gestione Twitter
+        website: Sito web(i)
     virus_scanner:
       virus_detected: Virus rilevato in %{filename}. Il file non è stato salvato.
     visibility:
@@ -1818,6 +1909,10 @@ it:
         no_preview: nessuna anteprima disponibile
       update:
         header: Modifica lavoro
+    permissions:
+      confirm:
+        confirm: Si', per favore.
+        deny: No, lo aggiornero' manualmente.
   simple_form:
     hints:
       admin_set:
@@ -1919,3 +2014,17 @@ it:
   total_view:
     one: Quest'opera ha 1 vista totale
     other: Questo lavoro ha %{count} visualizzazioni totali
+  catalog:
+    edit_partials:
+      default_details:
+        title: 'Titolo:'
+  layouts:
+    error:
+      system_error: Errore di sistema
+  shared:
+    nav_safety_modal:
+      cancel: Annulla
+      ok: OK
+    schema_version:
+      created_on_version: Creato sulla versione
+      version_after_save: Versione dopo il salvataggio
