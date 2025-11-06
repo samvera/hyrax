@@ -149,6 +149,7 @@ fr:
           add_participants: Ajouter des participants
           add_user: 'Ajouter un utilisateur:'
           current_participants: Participants actuels
+          as: comme
         form_visibility:
           cancel: Annuler
           page_description: Le contrôle des paramètres de libération et de visibilité lorsque les travaux ajoutés à cet ensemble sont disponibles pour la découverte et le téléchargement et qui peut les découvrir et les télécharger.
@@ -187,6 +188,25 @@ fr:
           item_list_header: Fonctionne dans cet ensemble
         show_actions:
           confirm_delete: Êtes-vous sûr de vouloir supprimer cet ensemble administratif? Cette action ne peut pas être annulée.
+        index:
+          creator: Créateur
+          date_created: Date de création
+          no_administrative_sets_have_been_created: Aucun ensemble administratif n'a été créé.
+          title: Titre
+          works: Travaux
+        show_document_list:
+          actions: Actions
+          date_uploaded: Date de chargement
+          list_of_items_in_this_administrative_set: Liste des éléments de cet ensemble administratif
+          status: État
+          title: Titre
+          visibility: Visibilité
+        show_document_list_row:
+          creator: 'Créateur :'
+          depositor: 'Dépositaire:'
+          edit_access: "Modifier l'accès & #160;:"
+          groups: 'Groupes:'
+          users: 'Utilisateurs :'
       analytics:
         collection_reports:
           custom_range:
@@ -357,6 +377,7 @@ fr:
             top_works: Meilleurs travaux
             work_title: Titre du travail
             work_views: Vues de la page de travail
+            id: NUMÉRO D'IDENTIFICATION
           work_counts:
             child_works: enfant travaille
             files: des dossiers
@@ -414,9 +435,11 @@ fr:
           remove_success: Participant supprimé
           submit: Ajouter
           update_notice: Participants mis à jour
+          as: comme
         form_settings:
           instructions: Ces paramètres déterminent comment les collections de ce type peuvent être gérées et découvertes.
           warning: 'Avertissement: ces paramètres ne peuvent pas être modifiés après la création d''une collection de ce type.'
+          apply_to_new_works: APPLIQUEZ AUX NOUVEAUX TRAVAUX
         index:
           breadcrumb: Types de collection
           create_new_button: Créer un nouveau type de collection
@@ -447,6 +470,7 @@ fr:
           description: Description
           feature: Caractéristique
           header: Caractéristiques
+          status: État
       sidebar:
         activity: Activité
         analytics: Analytique
@@ -498,6 +522,27 @@ fr:
             main: Statistiques du travail
             total: 'Total des travaux:'
             visibility: Totaux par visibilité
+        date_form:
+          load_stats: Charger les statistiques
+        deposits:
+          deposited: déposé
+          deposits_by_users: Dépôts par les utilisateurs
+        new_users:
+          newest_users: Les nouveaux utilisateurs %{utilisateurs}
+          of: des
+          registered: enregistrés
+          total: Total général
+        stats_by_date:
+          explanation: Les statistiques de cette section sont filtrées par les dates indiquées dans le formulaire ci-dessous. Les données ne sont pas filtrées sauf si le formulaire de date a été rempli. La date de début est requise et la fin par défaut est maintenant.
+          statistics_by_date: Statistiques par date
+        top_data:
+          explanation_with_limit: Les statistiques de la présente section indiquent les éléments les plus importants pour chaque catégorie
+          most_actie_users: Utilisateurs les plus actifs (en haut %{count})
+          top_file_format: Formats de fichiers supérieurs (en haut %{count})
+          top_file_formats_and_users: Haut Formats de fichiers et utilisateurs
+          view_top: Afficher le haut %{numéro}
+        workflows:
+          show_number_per_page: Afficher %{numéro}) par page
       users:
         index:
           access_label: Dernier accès
@@ -622,6 +667,7 @@ fr:
         header:
           actions: action
           title: Titre de la collection
+        display_data_info: Ce tableau n'affichera les données que si les œuvres sont affectées aux collections
       form_permission:
         visibility: Visibilité <small> Qui devrait être en mesure d’afficher ou de télécharger ce contenu? </small>
       form_permission_under_embargo:
@@ -683,6 +729,7 @@ fr:
         users: Utilisateurs
         workflow: Flux de travail
         workflow_comments: Commentaires sur le workflow
+        solr: Solaire
       items:
         actions: actes
         date_uploaded: Date de téléchargement
@@ -740,6 +787,8 @@ fr:
         previous_comments: Commentaires précédents
         review_comment: Commentaire d'examen
         title: Révision et approbation
+      member_of_collections:
+        member_of_collections: Membre des recouvrements
     base/unauthorized:
       is_private: Le %{type} auquel vous avez essayé d'accéder est privé
       unauthorized: Non autorisé
@@ -766,6 +815,7 @@ fr:
         permissions: Les permissions
         sharing: Partage
         visibility: Visibilité
+        save_changes: Enregistrer les modifications
     batch_uploads:
       disabled: Fonction désactivée par l'administrateur
       files:
@@ -785,6 +835,9 @@ fr:
     citations:
       work:
         citation_formats: Formats de citation
+        apa: APA
+        chicago: Chicago
+        mla: MLA
     collection:
       actions:
         add_existing_works:
@@ -887,6 +940,10 @@ fr:
         featured_researcher: Chercheur en vedette
         marketing_text: Texte de marketing
       updated: Les blocs de contenu sont mis à jour.
+      form:
+        announcement: annonce
+        marketing: commercialisation
+        researcher: chercheur
     controls:
       about: Sur
       contact: Contact
@@ -1042,6 +1099,8 @@ fr:
           creator: 'Créateur:'
           depositor: 'Déposant:'
           edit_access: 'Modifier l''accès:'
+          groups: 'Groupes:'
+          users: 'Utilisateurs :'
         sort_and_per_page:
           show_par_page_html: Afficher %{select} collections par page
           sort_by: 'Trier par:'
@@ -1384,6 +1443,8 @@ fr:
         save: Enregistrer la révision
         save_your_note: Vous devez cliquer sur "Enregistrer la révision". pour revenir à une version précédente de ce fichier
         upload: Télécharger une nouvelle version
+      asset_permissions_denial_flash:
+        message: Le ou les fichiers %{files} n'ont pas pu être mis à jour. Vous n'avez pas suffisamment de privilèges pour le modifier."
     help:
       header: Support utilisateur
       override_text: Utilisez application / views / static / help.html.erb pour remplacer ce fichier.
@@ -1545,6 +1606,13 @@ fr:
         status: Statut
         title: Opérations
         updated: Mis à jour
+      show:
+        message_header: Message
+        message_label: 'Message :'
+        operation_type_header: Type d'opération
+        status: état
+        status_header: État
+        status_label: 'État :'
     pages:
       cancel: Annuler
       tabs:
@@ -1553,6 +1621,11 @@ fr:
         help_page: Page d'aide
         terms_page: Conditions d'utilisation
       updated: Pages mises à jour.
+      form:
+        about: à propos
+        agreement: accord
+        help: aide
+        terms: termes
     passive_consent_to_agreement: En enregistrant ce travail, j'accepte le
     permission_levels:
       edit: Modifier l'accès
@@ -1615,6 +1688,10 @@ fr:
         help: '%{application_name} n''a pas pu localiser le lien à usage unique. Ce lien a expiré ou a déjà été utilisé. Nous nous excusons pour le dérangement. Vous pouvez être intéressé par <a href="/help/"> la page d''aide </a> pour rechercher des solutions.'
         link_expired_not_found: Lien à usage unique expiré ou introuvable
         link_not_found: Lien à usage unique introuvable
+      show:
+        actions: Actions
+        descriptions: Désignation des marchandises
+        download: Téléchargement (ne peut être utilisé qu'une seule fois)
     sort_label: Trier la liste des articles
     static:
       mendeley:
@@ -1748,6 +1825,7 @@ fr:
       activity_log:
         date: Rendez-vous amoureux
         user_activity: Activité de l'utilisateur
+        no_user_activity: Aucune activité utilisateur
       index:
         avatar: Avatar
         department: département
@@ -1762,6 +1840,19 @@ fr:
       search_form:
         go: Aller
         search_users: Rechercher des utilisateurs
+      user_info:
+        administrative_area: Domaine administratif
+        affiliation: Affiliation
+        chat_id: Numéro de clavardage
+        department: Département
+        email: Courriel
+        facebook_handle: Poignée Facebook
+        linkedin: LinkedIn
+        office: Bureau
+        telephone: Téléphone
+        title: Titre
+        twitter_handle: Poignée Twitter
+        website: Site(s) Web
     virus_scanner:
       virus_detected: Virus détecté dans %{filename}. Le fichier n'a pas été enregistré.
     visibility:
@@ -1819,6 +1910,10 @@ fr:
         no_preview: Aucun aperçu disponible
       update:
         header: Modifier le travail
+    permissions:
+      confirm:
+        confirm: Oui, s'il vous plaît.
+        deny: Non, je vais le mettre à jour manuellement.
   simple_form:
     hints:
       admin_set:
@@ -1920,3 +2015,17 @@ fr:
   total_view:
     one: Ce travail a 1 vue totale
     other: Ce travail a zxzxxx0 vues au total
+  catalog:
+    edit_partials:
+      default_details:
+        title: 'Titre:'
+  layouts:
+    error:
+      system_error: Erreur système
+  shared:
+    nav_safety_modal:
+      cancel: Annuler
+      ok: TRÈS BIEN
+    schema_version:
+      created_on_version: Création en version
+      version_after_save: Version après l'enregistrement
