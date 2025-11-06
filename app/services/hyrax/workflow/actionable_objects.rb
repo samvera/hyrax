@@ -53,12 +53,12 @@ module Hyrax
         docs = Hyrax::SolrQueryService.new.with_ids(ids: ids_and_states.map(&:first))
                                       .solr_documents(page: @page, rows: @per_page, sort: 'system_create_dtsi ASC')
 
+        # Only yield objects for which a Solr document exists
         docs.each do |solr_doc|
+          next if solr_doc.blank?
           object = ObjectInWorkflowDecorator.new(solr_doc)
           _, state = ids_and_states.find { |id, _| id == object.id }
-
           object.workflow_state = state
-
           yield object
         end
       end
@@ -66,8 +66,11 @@ module Hyrax
       ##
       # @return [Integer] total number of entities selected
       def total_count
-        PermissionQuery.scope_entities_for_the_user(user: user, workflow_state_filter: workflow_state_filter)
-                       .count
+        entities = PermissionQuery.scope_entities_for_the_user(user: user, workflow_state_filter: workflow_state_filter)
+        return 0 if entities.none?
+        ids = entities.pluck(:proxy_for_global_id).map { |gid| GlobalID.new(gid).model_id }
+        docs = Hyrax::SolrQueryService.new.with_ids(ids: ids).solr_documents
+        docs.size
       end
 
       private
