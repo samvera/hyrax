@@ -1,10 +1,10 @@
 <div>
   <h1 class="lower"><%= @presenter %></h1>
-    <h2 class="non lower">Actions</h2>
+    <h2 class="non lower"><%= I18n.t("hyrax.single_use_links_viewer.show.actions", :default => "Actions")%></h2>
     <p>
-      <%= link_to "Download (can only be used once)", @download_link, target: :_blank %>
+      <%= link_to I18n.t("hyrax.single_use_links_viewer.show.download", :default => "Download (can only be used once)"), @download_link, target: :_blank %>
     </p>
-  <h2> Descriptions:</h2>
+  <h2><%= I18n.t("hyrax.single_use_links_viewer.show.descriptions", :default => " Descriptions:") %></h2>
 
   <%= render 'attributes', presenter: @presenter %>
 </div>

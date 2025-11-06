@@ -3,7 +3,7 @@
 
   <div id="multipleEdit">
       <dl class="defList fl-theme-mist">
-      <%= editable_metadata_field(@document_fedora, "descMetadata", :title, label: "Title:") %>
+      <%= editable_metadata_field(@document_fedora, "descMetadata", :title, label: I18n.t("catalog._edit_partials.default_details.title", :default => "Title:")) %>
       </dl>
     </div>
   </div>
