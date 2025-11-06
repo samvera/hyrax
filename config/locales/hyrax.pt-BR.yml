@@ -149,6 +149,7 @@ pt-BR:
           add_participants: Acrescentar participantes
           add_user: 'Acrescentar usuário:'
           current_participants: Participantes atuais
+          as: como
         form_visibility:
           cancel: Cancelar
           page_description: As configurações de divulgação e acesso determinam as opções disponíveis aos depositantes quando submetem uma obra a este conjunto. Mudanças na configuração não afetam obras já depositadas.
@@ -187,6 +188,25 @@ pt-BR:
           item_list_header: Obras neste conjunto
         show_actions:
           confirm_delete: Tem certeza de que deseja excluir este conjunto administrativo? Essa ação não pode ser revertida.
+        index:
+          creator: Criador
+          date_created: Data criada
+          no_administrative_sets_have_been_created: Nenhum conjunto administrativo foi criado.
+          title: Título
+          works: Funciona
+        show_document_list:
+          actions: Ações
+          date_uploaded: Data enviada
+          list_of_items_in_this_administrative_set: Lista de itens neste conjunto administrativo
+          status: Situação
+          title: Título
+          visibility: Visibilidade
+        show_document_list_row:
+          creator: 'Criador:'
+          depositor: 'Depositário:'
+          edit_access: 'Editar acesso:'
+          groups: 'Grupos:'
+          users: 'Usuários:'
       analytics:
         collection_reports:
           custom_range:
@@ -357,6 +377,7 @@ pt-BR:
             top_works: Principais obras
             work_title: Título de Trabalho
             work_views: Exibições da página de trabalho
+            id: ID
           work_counts:
             child_works: criança trabalha
             files: arquivos
@@ -414,9 +435,11 @@ pt-BR:
           remove_success: Participante removido
           submit: Acrescentar
           update_notice: Participantes Atualizados
+          as: como
         form_settings:
           instructions: Estas configurações determinam como as coleções deste tipo podem ser gerenciadas e descobertas.
           warning: 'Aviso: estas configurações não podem ser alteradas após a criação de uma coleção deste tipo.'
+          apply_to_new_works: APLICAR A NOVAS OBRAS
         index:
           breadcrumb: Tipos de Coleção
           create_new_button: Criar novo tipo de coleção
@@ -447,6 +470,7 @@ pt-BR:
           description: Descrição
           feature: Característica
           header: Características
+          status: Situação
       sidebar:
         activity: Atividade
         analytics: Analytics
@@ -498,6 +522,27 @@ pt-BR:
             main: Estatísticas
             total: 'Total de obras:'
             visibility: Totais por Acesso
+        date_form:
+          load_stats: Carregar Stats
+        deposits:
+          deposited: depósito
+          deposits_by_users: Depósitos dos Usuários
+        new_users:
+          newest_users: Usuários mais recentes
+          of: de
+          registered: registrado
+          total: 'Total:'
+        stats_by_date:
+          explanation: As estatísticas nesta seção são filtradas pelas datas indicadas no formulário abaixo. Os dados não são filtrados a menos que o formulário de data tenha sido preenchido. A data de início é necessária e o fim padrão é agora.
+          statistics_by_date: Estatísticas por Data
+        top_data:
+          explanation_with_limit: Estatísticas nesta seção mostram os itens de topo para cada categoria
+          most_actie_users: Usuários mais ativos
+          top_file_format: Formatos de arquivos superiores (top % {conte})
+          top_file_formats_and_users: Top File Formats e Usuários
+          view_top: Veja o topo % {número}
+        workflows:
+          show_number_per_page: Mostrar% {número}) por página
       users:
         index:
           access_label: Último acesso
@@ -615,6 +660,7 @@ pt-BR:
         header:
           actions: Ação
           title: Título da coleção
+        display_data_info: Esta tabela só exibirá dados se os trabalhos forem atribuídos às coleções
       form_permission:
         visibility: Visibilidade <small> Quem deve conseguir visualizar ou baixar este conteúdo? </small>
       form_permission_under_embargo:
@@ -676,6 +722,7 @@ pt-BR:
         users: Comercial
         workflow: Fluxo de trabalho
         workflow_comments: Comentários de fluxo de trabalho
+        solr: Solr
       items:
         actions: Ações
         date_uploaded: Data de carga
@@ -733,6 +780,8 @@ pt-BR:
         previous_comments: Comentários anteriores
         review_comment: Comentário da revisão
         title: Revisão e aprovação
+      member_of_collections:
+        member_of_collections: Membro das Coleções
     base/unauthorized:
       is_private: O %{type} que você tentou acessar é privado
       unauthorized: Não autorizado
@@ -759,6 +808,7 @@ pt-BR:
         permissions: Permissões
         sharing: Partilha
         visibility: Visibilidade
+        save_changes: Salvar mudanças
     batch_uploads:
       disabled: Recurso desativado pelo administrador
       files:
@@ -778,6 +828,9 @@ pt-BR:
     citations:
       work:
         citation_formats: Formatos de citação
+        apa: APA
+        chicago: Chicago
+        mla: MLA
     collection:
       actions:
         add_existing_works:
@@ -880,6 +933,10 @@ pt-BR:
         featured_researcher: Pesquisador em destaque
         marketing_text: Texto de marketing
       updated: Blocos de conteúdo atualizados.
+      form:
+        announcement: anúncio
+        marketing: marketing
+        researcher: pesquisador
     controls:
       about: Sobre
       contact: Contato
@@ -1035,6 +1092,8 @@ pt-BR:
           creator: 'O Criador:'
           depositor: 'Depositante:'
           edit_access: 'Editar acesso:'
+          groups: 'Grupos:'
+          users: 'Usuários:'
         sort_and_per_page:
           show_par_page_html: Mostrar %{select} por página
           sort_by: 'Ordenar Por:'
@@ -1377,6 +1436,8 @@ pt-BR:
         save: Salvar Revisão
         save_your_note: Você deve clicar em "Salvar revisão". reverter uma versão anterior deste arquivo
         upload: Carregar nova versão
+      asset_permissions_denial_flash:
+        message: Os arquivos não puderam ser atualizados. Você não tem privilégios suficientes para editá-lo."
     help:
       header: Suporte ao usuário
       override_text: Usar app/views/static/help.html.erb para substituir este arquivo.
@@ -1538,6 +1599,13 @@ pt-BR:
         status: Status
         title: Operações
         updated: Atualizada
+      show:
+        message_header: Mensagem
+        message_label: 'Mensagem:'
+        operation_type_header: Tipo de Operação
+        status: status
+        status_header: Situação
+        status_label: 'Status:'
     pages:
       cancel: Cancelar
       tabs:
@@ -1546,6 +1614,11 @@ pt-BR:
         help_page: Página de Ajuda
         terms_page: Termos de uso
       updated: Páginas atualizadas.
+      form:
+        about: sobre
+        agreement: acordo
+        help: socorro
+        terms: termos
     passive_consent_to_agreement: Ao salvar esta obra, aceito o
     permission_levels:
       edit: Editar acesso
@@ -1608,6 +1681,10 @@ pt-BR:
         help: '%{application_name} não pôde localizar o link de uso único. Este link expirou ou foi usado anteriormente. Pedimos desculpas pela inconveniência. Talvez você esteja interessado em usar a <a href="/help/"> página de ajuda </a> para procurar soluções.'
         link_expired_not_found: Link de uso único expirado ou não encontrado
         link_not_found: Link de uso único não encontrado
+      show:
+        actions: Ações
+        descriptions: 'Descrições:'
+        download: Baixe (só pode ser usado uma vez)
     sort_label: Ordene a lista de itens
     static:
       mendeley:
@@ -1741,6 +1818,7 @@ pt-BR:
       activity_log:
         date: Encontro
         user_activity: Atividade do Usuário
+        no_user_activity: Nenhuma atividade do usuário
       index:
         avatar: Avatar
         department: Departamento
@@ -1755,6 +1833,19 @@ pt-BR:
       search_form:
         go: Vai
         search_users: Pesquisar usuários
+      user_info:
+        administrative_area: Área Administrativa
+        affiliation: Afiliação
+        chat_id: ID do chat
+        department: Departamento
+        email: E-mail
+        facebook_handle: Maçaneta do Facebook
+        linkedin: LinkedIn
+        office: Escritório
+        telephone: Telefone
+        title: Título
+        twitter_handle: Twitter Handle
+        website: Site(s)
     virus_scanner:
       virus_detected: Vírus detectado em %{filename}. O arquivo não foi salvo.
     visibility:
@@ -1812,6 +1903,10 @@ pt-BR:
         no_preview: Ainda não disponível
       update:
         header: Editar obra
+    permissions:
+      confirm:
+        confirm: Sim, por favor.
+        deny: Não, atualizarei manualmente.
   simple_form:
     hints:
       admin_set:
@@ -1913,3 +2008,17 @@ pt-BR:
   total_view:
     one: Este trabalho tem 1 visualização total
     other: Este trabalho tem %{count} visualizações totais
+  catalog:
+    edit_partials:
+      default_details:
+        title: 'Título:'
+  layouts:
+    error:
+      system_error: Erro no sistema
+  shared:
+    nav_safety_modal:
+      cancel: Cancelar
+      ok: ESTÁ BEM
+    schema_version:
+      created_on_version: Criado na versão
+      version_after_save: Versão Depois de Salvar
