@@ -1,4 +1,5 @@
-<%=total_shown = 20
+<%=
+  total_shown = 20
   files = file_sets.first(total_shown)
            .map { |fs| link_to(fs, file_set_url(fs)) }
            .tap { |fs| fs << '...' if file_sets.length > total_shown }
