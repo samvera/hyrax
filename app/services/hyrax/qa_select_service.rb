@@ -27,7 +27,9 @@ module Hyrax
     #
     # @raise [KeyError] when the key has no `active:` status
     def active?(id)
-      authority.find(id).fetch('active')
+      result = authority.find(id)
+      return false if result.empty?
+      result&.fetch('active')
     end
 
     ##
@@ -62,7 +64,7 @@ module Hyrax
     #   is an appropriate next step?
     def include_current_value(value, _index, render_options, html_options)
       unless value.blank? || active?(value)
-        html_options[:class] += ' force-select'
+        html_options[:class] += [' force-select']
         render_options += [[label(value) { value }, value]]
       end
       [render_options, html_options]
