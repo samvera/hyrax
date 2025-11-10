@@ -2,7 +2,7 @@
 require 'rake'
 
 RSpec.describe "Rake tasks" do
-  describe "hyrax:embargo:deactivate_expired", :clean_repo do
+  describe "hyrax:embargo:deactivate_expired", :clean_repo, :frozen_time do
     let!(:active) do
       [FactoryBot.valkyrie_create(:hyrax_work, :under_embargo),
        FactoryBot.valkyrie_create(:hyrax_work, :under_embargo)]
@@ -15,6 +15,8 @@ RSpec.describe "Rake tasks" do
 
     before do
       load_rake_environment [File.expand_path("../../../lib/tasks/embargo_lease.rake", __FILE__)]
+      # Once we set up al the active and expired emabrgos in the let! advance the clock one day
+      travel_to Time.now + 1.day
     end
 
     it "adds embargo history for expired embargoes" do

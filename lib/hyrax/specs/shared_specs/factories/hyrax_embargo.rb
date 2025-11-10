@@ -16,7 +16,7 @@ FactoryBot.define do
     end
 
     trait :expired do
-      embargo_release_date { (Time.zone.today - 1).to_datetime }
+      embargo_release_date { (Time.zone.today).to_datetime }
     end
   end
 end

@@ -2,7 +2,7 @@
 require 'rails_helper'
 require 'valkyrie/indexing/redis_queue/indexing_adapter'
 
-RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
+RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter, :frozen_time do
   let(:connection) { instance_double(Redis) }
   let(:index_queue_name) { 'toindex' }
   let(:delete_queue_name) { 'todelete' }
@@ -12,13 +12,6 @@ RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter do
   let(:resource) { FactoryBot.valkyrie_create(:hyrax_resource) }
   let(:resources) { [resource] }
 
-  before do
-    Timecop.freeze(Time.current)
-  end
-
-  after do
-    Timecop.return
-  end
 
   describe '#initialize' do
     it 'sets the connection, index_queue_name, and delete_queue_name' do
