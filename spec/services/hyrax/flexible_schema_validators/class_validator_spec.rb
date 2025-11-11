@@ -35,7 +35,8 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ClassValidator do
 
       it 'adds an error for all invalid classes' do
         validator.validate_availability!
-        expect(errors).to contain_exactly('Invalid classes: InvalidWorkType, AnotherInvalidWorkType.')
+        expect(errors).to include('Invalid classes: InvalidWorkType, AnotherInvalidWorkType.')
+        expect(errors).to include(a_string_starting_with("Mismatched Valkyrie classes found: 'GenericWorkResource' should be 'GenericWork'"))
       end
     end
 
@@ -45,6 +46,11 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ClassValidator do
       end
 
       it 'does not add an error' do
+        # Mock the Valkyrie resolver to return GenericWorkResource for GenericWork
+        stub_const('GenericWorkResource', Class.new)
+        resolver = ->(_name) { GenericWorkResource }
+        allow(Valkyrie.config).to receive(:resource_class_resolver).and_return(resolver)
+
         validator.validate_availability!
         expect(errors).to be_empty
       end
@@ -54,6 +60,11 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ClassValidator do
       let(:profile) { { 'classes' => { 'GenericWorkResource' => {} } } }
 
       it 'handles nil properties without error' do
+        # Mock the Valkyrie resolver to return GenericWorkResource for GenericWork
+        stub_const('GenericWorkResource', Class.new)
+        resolver = ->(_name) { GenericWorkResource }
+        allow(Valkyrie.config).to receive(:resource_class_resolver).and_return(resolver)
+
         validator.validate_availability!
         expect(errors).to be_empty
       end

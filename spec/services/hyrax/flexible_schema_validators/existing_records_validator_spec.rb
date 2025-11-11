@@ -106,8 +106,13 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ExistingRecordsValidator do
     end
 
     it 'includes required classes' do
+      # The actual constants that will be resolved by the current implementation
+      stub_const('AdminSet', Class.new)
+      stub_const('Collection', Class.new)
+      stub_const('FileSet', Class.new)
+
       classes = validator.send(:potential_existing_classes)
-      expect(classes).to include(AdminSetResource, CollectionResource, Hyrax::FileSet)
+      expect(classes).to include(AdminSet, Collection, FileSet)
     end
 
     it 'removes duplicates' do

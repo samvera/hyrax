@@ -102,7 +102,7 @@ module Hyrax
         message = mismatched_classes.map do |mismatch|
           "'#{mismatch[:non_resource]}' should be '#{mismatch[:resource]}'"
         end.join(', ')
-        @errors << "Mismatched Valkyrie classes found: #{message}. If a Valkyrie model exists, the profile must use the '...Resource' class name."
+        @errors << "Mismatched Valkyrie classes found: #{message}."
       end
 
       # Appends a formatted error message for any invalid classes.

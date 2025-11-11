@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'set'
-
 module Hyrax
   module FlexibleSchemaValidators
     # Validates that classes with existing records in the repository are not removed from the profile.

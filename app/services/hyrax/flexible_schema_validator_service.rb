@@ -1,14 +1,8 @@
 # frozen_string_literal: true
 
-require 'json_schemer'
-require_relative 'core_metadata_validator'
-require_relative 'flexible_schema_validators/schema_validator'
-require_relative 'flexible_schema_validators/class_validator'
-require_relative 'flexible_schema_validators/existing_records_validator'
-
 module Hyrax
   class FlexibleSchemaValidatorService
-    DEFAULT_SCHEMA = Rails.root.join('lib', 'flexible', 'm3_json_schema.json')
+    DEFAULT_SCHEMA = Hyrax::Engine.root.join('config', 'metadata_profiles', 'm3_json_schema.json')
     REQUIRED_CLASSES = [
       Hyrax.config.admin_set_model,
       Hyrax.config.collection_model,
@@ -67,7 +61,7 @@ module Hyrax
     #
     # @return [void]
     def validate_core_metadata
-      CoreMetadataValidator.new(profile: profile, errors: @errors).validate!
+      FlexibleSchemaValidators::CoreMetadataValidator.new(profile: profile, errors: @errors).validate!
     end
 
     # Runs JSON schema validation and translates resulting errors into
@@ -113,7 +107,7 @@ module Hyrax
     end
 
     # Validates that a `label` property exists and that it is available on
-    # `Hyrax::FileSet`.
+    # `Hyrax.config.file_set_model`.
     #
     # @return [void]
     def validate_label_prop
@@ -124,9 +118,9 @@ module Hyrax
       end
 
       available_on_classes = label_prop.dig('available_on', 'class')
-      return if available_on_classes&.include?('Hyrax::FileSet')
+      return if available_on_classes&.include?(Hyrax.config.file_set_model.gsub(/^::/, ''))
 
-      @errors << "Label must be available on Hyrax::FileSet."
+      @errors << "Label must be available on #{Hyrax.config.file_set_model}."
     end
   end
 end
