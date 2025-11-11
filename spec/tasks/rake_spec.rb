@@ -16,7 +16,7 @@ RSpec.describe "Rake tasks" do
     before do
       load_rake_environment [File.expand_path("../../../lib/tasks/embargo_lease.rake", __FILE__)]
       # Once we set up al the active and expired emabrgos in the let! advance the clock one day
-      travel_to Time.now + 1.day
+      travel_to Time.zone.now + 1.day
     end
 
     it "adds embargo history for expired embargoes" do

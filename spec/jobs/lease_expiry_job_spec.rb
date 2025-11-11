@@ -7,6 +7,10 @@ RSpec.describe LeaseExpiryJob, :clean_repo do
     let!(:work_with_expired_lease) { valkyrie_create(:hyrax_work, :with_expired_enforced_lease) }
     let!(:file_set_with_expired_lease) { valkyrie_create(:hyrax_file_set, :with_expired_enforced_lease) }
 
+    before do
+      travel_to Time.zone.now + 1.day
+    end
+
     describe '#records_with_expired_leases' do
       it 'returns all records with expired leases' do
         record_ids = described_class.new.records_with_expired_leases.map(&:id)

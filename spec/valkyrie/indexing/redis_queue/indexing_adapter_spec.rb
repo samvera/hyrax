@@ -12,7 +12,6 @@ RSpec.describe Valkyrie::Indexing::RedisQueue::IndexingAdapter, :frozen_time do
   let(:resource) { FactoryBot.valkyrie_create(:hyrax_resource) }
   let(:resources) { [resource] }
 
-
   describe '#initialize' do
     it 'sets the connection, index_queue_name, and delete_queue_name' do
       expect(adapter.connection).to eq(connection)
