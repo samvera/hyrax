@@ -14,8 +14,10 @@ module Hyrax
     attribute :lease_expiration_date,   Valkyrie::Types::DateTime
     attribute :lease_history,           Valkyrie::Types::Array
 
+    # Fix releasing leases on the day they are expired - this solves a 1 second bug around how
+    # midnights are calculated, which causes day of leases to incorrectly set the permissions to private
     def active?
-      (lease_expiration_date.present? && Hyrax::TimeService.time_in_utc < lease_expiration_date)
+      (lease_expiration_date.present? && Time.zone.today.end_of_day < lease_expiration_date)
     end
   end
 end

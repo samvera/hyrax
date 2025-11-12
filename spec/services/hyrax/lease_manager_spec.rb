@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::LeaseManager do
+RSpec.describe Hyrax::LeaseManager, :frozen_time do
   subject(:manager) { described_class.new(resource: resource) }
   let(:resource)    { Hyrax::Resource.new }
 
@@ -10,7 +10,11 @@ RSpec.describe Hyrax::LeaseManager do
 
   shared_context 'with expired lease' do
     let(:resource) { FactoryBot.build(:hyrax_resource, lease: lease) }
-    let(:lease)    { FactoryBot.create(:hyrax_lease, :expired) }
+    let!(:lease) { FactoryBot.create(:hyrax_lease, :expired) }
+
+    before do
+      travel_to Time.zone.now + 2.days
+    end
   end
 
   describe '#apply' do

@@ -21,5 +21,4 @@ group :development, :test do
   gem 'ruby-prof', require: false
   gem 'semaphore_test_boosters'
   gem 'simplecov', require: false
-  gem 'timecop'
 end

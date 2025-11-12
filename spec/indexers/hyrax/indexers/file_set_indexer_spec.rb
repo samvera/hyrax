@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Indexers::FileSetIndexer, if: Hyrax.config.use_valkyrie? do
+RSpec.describe Hyrax::Indexers::FileSetIndexer, :frozen_time, if: Hyrax.config.use_valkyrie? do
   include Hyrax::FactoryHelpers
 
   let(:fileset_id) { 'fs1' }
@@ -242,7 +242,7 @@ RSpec.describe Hyrax::Indexers::FileSetIndexer, if: Hyrax.config.use_valkyrie? d
     end
 
     context 'with a valid embargo' do
-      let(:embargo) { FactoryBot.create(:hyrax_embargo) }
+      let!(:embargo) { FactoryBot.create(:hyrax_embargo) }
 
       before { allow(file_set).to receive(:embargo_id).and_return(embargo.id) }
 
@@ -255,9 +255,12 @@ RSpec.describe Hyrax::Indexers::FileSetIndexer, if: Hyrax.config.use_valkyrie? d
     end
 
     context 'with an expired embargo' do
-      let(:embargo) { FactoryBot.create(:hyrax_embargo, :expired) }
+      let!(:embargo) { FactoryBot.create(:hyrax_embargo, :expired) }
 
-      before { allow(file_set).to receive(:embargo_id).and_return(embargo.id) }
+      before do
+        travel_to Time.zone.now + 2.days
+        allow(file_set).to receive(:embargo_id).and_return(embargo.id)
+      end
 
       it 'sets the embargo expiration date and visibility settings' do
         expect(subject['embargo_release_date_dtsi']).to be nil
@@ -268,7 +271,7 @@ RSpec.describe Hyrax::Indexers::FileSetIndexer, if: Hyrax.config.use_valkyrie? d
     end
 
     context 'with a valid lease' do
-      let(:lease) { FactoryBot.create(:hyrax_lease) }
+      let!(:lease) { FactoryBot.create(:hyrax_lease) }
 
       before { allow(file_set).to receive(:lease_id).and_return(lease.id) }
 
@@ -281,9 +284,12 @@ RSpec.describe Hyrax::Indexers::FileSetIndexer, if: Hyrax.config.use_valkyrie? d
     end
 
     context 'with an expired lease' do
-      let(:lease) { FactoryBot.create(:hyrax_lease, :expired) }
+      let!(:lease) { FactoryBot.create(:hyrax_lease, :expired) }
 
-      before { allow(file_set).to receive(:lease_id).and_return(lease.id) }
+      before do
+        travel_to Time.zone.now + 2.days
+        allow(file_set).to receive(:lease_id).and_return(lease.id)
+      end
 
       it 'sets the lease expiration date and visibility settings' do
         expect(subject['lease_expiration_date_dtsi']).to be nil

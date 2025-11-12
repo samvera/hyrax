@@ -1,11 +1,15 @@
 # frozen_string_literal: true
-RSpec.describe EmbargoExpiryJob, :clean_repo do
+RSpec.describe EmbargoExpiryJob, :clean_repo, :frozen_time do
   subject { described_class }
 
   context "with Valkyrie resources" do
     let(:embargoed_work) { valkyrie_create(:hyrax_work, :under_embargo) }
-    let(:work_with_expired_embargo) { valkyrie_create(:hyrax_work, :with_expired_enforced_embargo) }
-    let(:file_set_with_expired_embargo) { valkyrie_create(:hyrax_file_set, :with_expired_enforced_embargo) }
+    let!(:work_with_expired_embargo) { valkyrie_create(:hyrax_work, :with_expired_enforced_embargo) }
+    let!(:file_set_with_expired_embargo) { valkyrie_create(:hyrax_file_set, :with_expired_enforced_embargo) }
+
+    before do
+      travel_to Time.zone.now + 1.day
+    end
 
     describe '#records_with_expired_embargos' do
       it 'returns all records with expired embargos' do
