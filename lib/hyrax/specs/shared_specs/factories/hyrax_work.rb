@@ -2,6 +2,7 @@
 
 ##
 # Use this factory for generic Hyrax/HydraWorks Works in valkyrie.
+# rubocop:disable Metrics/BlockLength
 FactoryBot.define do
   factory :hyrax_work, class: 'Hyrax::Test::SimpleWork' do
     trait :under_embargo do
@@ -32,6 +33,19 @@ FactoryBot.define do
       after(:create) do |work, _e|
         Hyrax::LeaseManager.new(resource: work).apply
         work.permission_manager.acl.save
+      end
+    end
+
+    trait :with_expiring_enforced_lease do
+      after(:build) do |work, _evaluator|
+        work.lease = FactoryBot.valkyrie_create(:hyrax_lease, :expiring)
+      end
+
+      after(:create) do |work, _evaluator|
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_return(10.days.ago)
+        Hyrax::LeaseManager.new(resource: work).apply
+        work.permission_manager.acl.save
+        allow(Hyrax::TimeService).to receive(:time_in_utc).and_call_original
       end
     end
 
