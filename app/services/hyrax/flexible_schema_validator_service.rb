@@ -118,9 +118,10 @@ module Hyrax
       end
 
       available_on_classes = label_prop.dig('available_on', 'class')
-      return if available_on_classes&.include?(Hyrax.config.file_set_model.gsub(/^::/, ''))
+      file_set_model_name = Hyrax.config.file_set_model.gsub(/^::/, '')
+      return if available_on_classes&.include?(file_set_model_name)
 
-      @errors << "Label must be available on #{Hyrax.config.file_set_model}."
+      @errors << "Label must be available on #{file_set_model_name}."
     end
   end
 end

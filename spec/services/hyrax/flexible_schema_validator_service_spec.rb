@@ -5,6 +5,10 @@ RSpec.describe Hyrax::FlexibleSchemaValidatorService do
   let(:profile) { YAML.safe_load_file(yaml) }
   let(:yaml) { Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'm3_profile.yaml').to_s }
 
+  before do
+    allow_any_instance_of(Hyrax::FlexibleSchemaValidatorService).to receive(:required_classes).and_return(['AdminSet', 'Collection', 'FileSet'])
+  end
+
   describe '#validate' do
     context 'with a valid schema' do
       before { service.validate! }
@@ -24,7 +28,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidatorService do
         end
 
         it 'is invalid' do
-          expect(service.errors.first).to eq "Missing required classes: #{service.required_classes.join(', ')}."
+          expect(service.errors.first).to eq "Missing required classes: AdminSet, Collection, FileSet."
         end
       end
 
@@ -52,9 +56,9 @@ RSpec.describe Hyrax::FlexibleSchemaValidatorService do
             "Schema error at `/properties/title/available_on/class`: Invalid value `nil` for type `array`.",
             "Schema error at `/properties/creator`: Missing required properties: 'available_on'.",
             "Property 'title' must be available on all classes, but is missing from: AdminSet, " \
-            "Collection, FileSet, GenericWork.",
+            "Collection, FileSet, GenericWork, Monograph.",
             "Property 'creator' must be available on all classes, but is missing from: AdminSet, " \
-            "Collection, FileSet, GenericWork."
+            "Collection, FileSet, GenericWork, Monograph."
           )
         end
       end
@@ -85,14 +89,14 @@ RSpec.describe Hyrax::FlexibleSchemaValidatorService do
           end
         end
 
-        context 'when it is not available on Hyrax::FileSet' do
+        context 'when it is not available on FileSet' do
           before do
             profile['properties']['label']['available_on']['class'] = ['GenericWork']
             service.validate!
           end
 
           it 'is invalid' do
-            expect(service.errors.first).to eq 'Label must be available on ::FileSet.'
+            expect(service.errors.first).to eq 'Label must be available on FileSet.'
           end
         end
 
