@@ -4,7 +4,7 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   serialize :profile, coder: YAML
   serialize :contexts, coder: YAML
 
-  validate :validate_profile_classes
+  validate :validate_profile
 
   before_save :update_contexts
 
@@ -71,16 +71,12 @@ class Hyrax::FlexibleSchema < ApplicationRecord
 
   private
 
-  def validate_profile_classes
-    required_classes = Hyrax.config.flexible_classes
-    if profile['classes'].blank?
-      errors.add(:profile, "Must specify classes")
-    else
-      missing_classes = required_classes - profile['classes'].keys
-      unless missing_classes.empty?
-        missing_classes_list = missing_classes.join(', ')
-        errors.add(:profile, "Must include #{missing_classes_list}")
-      end
+  def validate_profile
+    validation_service = Hyrax::FlexibleSchemaValidatorService.new(profile:)
+    validation_service.validate!
+
+    validation_service.errors.each do |e|
+      errors.add(:profile, e.to_s)
     end
   end
 

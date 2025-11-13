@@ -1,0 +1,487 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/m3_json_schema.json",
+  "type": "object",
+  "title": "The M3 JSON Schema",
+  "comment": "profile, classes and properties are required; contexts and mappings are not",
+  "required": [
+    "m3_version",
+    "profile",
+    "classes",
+    "properties"
+  ],
+  "properties": {
+
+    "m3_version": {
+      "$id": "#/properties/m3_version",
+      "type": "string",
+      "title": "Schema Version",
+      "readOnly": true,
+      "default": "1.0.beta2",
+      "description": "Version number for the M3 specification. Change this to make a new release. Instances will be validated to check they have this version in place.",
+      "pattern": "1.0.beta2"
+    },
+
+    "profile": {
+      "$id": "#/properties/profile",
+      "type": "object",
+      "title": "Profile Information",
+      "description": "Administrative information about the profile or model defined in the file.",
+      "additionalProperties": false,
+      "required": [
+        "responsibility",
+        "date_modified"
+      ],
+      "properties": {
+        "date_modified": {
+          "$id": "#/properties/profile/date_modified",
+          "title": "Date Modified",
+          "description": "the date the profile was last altered",
+          "type": "string",
+          "format": "date",
+          "comment": "In YAML, dates must be wrapped in quotes to be validated by json schema",
+          "examples": [
+            "2019-07-03"
+          ]
+        },
+        "responsibility": {
+          "$id": "#/properties/profile/responsibility",
+          "title": "Responsiblity",
+          "description": "uri for the organization or individual responsible for maintaining the profile",
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "https://wiki.duraspace.org/display/samvera/Samvera+Metadata+Interest+Group"
+          ]
+        },
+        "responsibility_statement": {
+          "$id": "#/properties/profile/responsibility_statement",
+          "title": "Reponsibility Statement",
+          "description": "statement of the organization or individual responsible for maintaining the profile",
+          "type": "string",
+          "examples": [
+            "Samvera Metadata Interest Group"
+          ]
+        },
+        "type": {
+          "$id": "#/properties/profile/type",
+          "title": "Type",
+          "description": "type of thing does the profile describe",
+          "type": "string",
+          "examples": [
+            "metadata models"
+          ]
+        },
+        "version": {
+          "$id": "#/properties/profile/version",
+          "title": "Version",
+          "description": "version of the profile",
+          "type": "number",
+          "readOnly": true,
+          "default": 0.0,
+          "examples": [
+            0.8
+          ]
+        }
+      }
+    },
+    "classes": {
+      "$id": "#/properties/classes",
+      "type": "object",
+      "title": "Class Definitions",
+      "description": "Definition of the classes used in the profile. Classes should be provided with a generic local name for the class, in CamelCase.",
+      "comment": "Class names are pattern matched.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["display_label"],
+        "properties": {
+          "display_label": {
+            "type": "string",
+            "description": "Human-readable label for the class.",
+            "comment": "For classes, display label is a string.",
+            "examples": [
+              "Generic Work"
+            ]
+          },
+          "schema_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URI for the class, from a local or shared ontology."
+          },
+          "contexts": {
+            "type": "array",
+            "description": "A list of contexts in which this class may be used. Empty is taken to indicate all contexts.",
+            "comment": "Contexts must match a context defined in the contexts block.",
+            "items": {
+              "type": "string"
+            },
+            "examples": [
+              ["chem"]
+            ]
+          }
+        }
+      },
+      "propertyNames": {
+        "pattern": "[A-Z]+[A-Z]?[a-z]*$"
+      },
+      "examples": [
+        {
+          "GenericWork": {
+            "display_label": "Generic Work"
+          }
+        },
+        {
+          "Collection": {
+            "display_label": "Collection"
+          }
+        },
+        {
+          "Agent": {
+            "display_label": "Agent",
+            "schema_uri": "http://id.loc.gov/ontologies/bibframe/Agent"
+          }
+        }
+      ]
+    },
+    "contexts": {
+      "$id": "#/properties/contexts",
+      "type": "object",
+      "title": "Context Definitions",
+      "description": "Definition of the contexts used in the profile. Contexts should be provided with a stable generic local name for the context. Names must be lower case alpha characters separated with underscores.",
+      "comment": "Context names are pattern matched.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["display_label"],
+        "properties": {
+          "display_label": {
+            "type": "string",
+            "description": "Human-readable label for the context.",
+            "comment": "For contexts, display label is a string.",
+            "examples": [
+              "Department of Chemistry"
+            ]
+          }
+        }
+      },
+      "propertyNames": {
+        "pattern": "^[a-z_]*$"
+      },
+      "examples": [
+        {
+          "chem": {
+            "display_label": "Department of Chemistry"
+          }
+        }
+      ]
+    },
+    "properties": {
+      "$id": "#/properties/properties",
+      "type": "object",
+      "title": "Property Definitions",
+      "description": "Definition of the properties used in the model. Properties should be provided with a stable generic local name for the property. Names must be lower case alpha characters separated with underscores.",
+      "comment": "Property names pattern matched.",
+      "propertyNames": {
+        "pattern": "^[a-z_]*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["display_label", "available_on", "range"],
+        "properties": {
+
+          "display_label": {
+            "type": "object",
+            "description": "Human-readable label for the property.  Class or context specific display_labels provided as a list using the class and value.",
+            "properties": {
+              "default": {
+                "type": "string",
+                "description": "Default value."
+              }
+            },
+            "additionalProperties": {
+              "type": "string"
+            },
+            "examples": [
+              {
+                "default": "Default display label.",
+                "MyCustomWorkType": "Context dependent display label.",
+                "project_x": "Project specific display label"
+              }
+            ]
+          },
+          "available_on": {
+            "type": "object",
+            "description": "The classes (objects and/or work types) or contexts this property is available on (defined in 'classes' or 'contexts' section.)",
+            "properties": {
+              "class": {
+                "comment": "Listed values must match a class defined in the classes block.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "context": {
+                "comment": "Listed values must match a context defined in the contexts block.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "examples": [
+              {
+                "class": [
+                  "Collection",
+                  "MyCustomWorkType"
+                ],
+                "context": [
+                  "chem"
+                ]
+              }
+            ]
+          },
+          "cardinality": {
+            "type": "object",
+            "description": "System cardinality and obligation.",
+            "properties": {
+              "minimum": {
+                "type": "integer",
+                "description": "Minimum number of values the property must have.  If there is no value provided, the assumed default minimum is 0. A minimum of 1 means the property is required.",
+                "default": 0,
+                "examples": [
+                  1
+                ]
+              },
+              "maximum": {
+                "type": "integer",
+                "description": "Maximum number of values the property may have.  If there is no value provided, the assumed default maximum is unlimited.",
+                "examples": [
+                  5
+                ]
+              }
+            },
+            "examples": [
+              {
+                "cardinality": {
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              }
+            ]
+          },
+          "indexing": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "anyOf": [
+                {
+                  "pattern": "^[a-z_]+_(tesi|tesim|teim|ssi|sim|ssm|bsi|isi|dts|dtsi|ti|si|ss|is|bs|dt|ssim)$"
+                },
+                {
+                  "enum": ["facetable", "admin_only", "stored_searchable"]
+                }
+              ]
+            },
+            "description": "Solr index key to map to, or behavioral flag (facetable, admin_only)."
+          },
+          "definition": {
+            "type": "object",
+            "description": "The definition for the metadata property being described.",
+            "properties": {
+              "default": {
+                "type": "string",
+                "description": "Default value."
+              }
+            },
+            "additionalProperties": {
+              "type": "string"
+            },
+            "examples": [
+              {
+                "default": "Default display label.",
+                "MyCustomWorkType": "Context dependent display label."
+              }
+            ]
+          },
+          "usage_guidelines": {
+            "type": "object",
+            "description": "Description of how the defined property should be used (helper text, hints, deposit text, etc.)",
+            "properties": {
+              "default": {
+                "type": "string",
+                "description": "Default value."
+              }
+            },
+            "additionalProperties": {
+              "type": "string"
+            },
+            "examples": [
+              {
+                "default": "Default display label.",
+                "MyCustomWorkType": "Context dependent display label."
+              }
+            ]
+          },
+          "requirement": {
+            "type": "string",
+            "description": "Whether the property is required, optional, recommended, etc. from a best practices standpoint. Please use cardinality - minimum to programmatically set a property to be required.",
+            "examples": [
+              "recommended, if applicable"
+            ]
+          },
+          "controlled_value": {
+            "type": "object",
+            "description": "",
+            "properties": {
+              "format": {
+                "type": "string",
+                "description": "Controlled vocabulary constraint on the property's value.",
+                "examples": []
+              },
+              "sources": {
+                "type": "array",
+                "description": "Link to a controlled vocabulary source list or file path to a config file listing accepted values.",
+                "items": {
+                  "type": "string"
+                },
+                "examples": []
+              }
+            },
+            "examples": [
+              {
+                "controlled_value": {
+                  "format": "http://www.w3.org/2001/XMLSchema#anyURI",
+                  "sources": [
+                    "/qa/terms/local/roles/"
+                  ]
+                }
+              }
+            ]
+          },
+          "sample_value": {
+            "type": "array",
+            "description": "Example value(s) for the property.",
+            "items": {
+              "type": "string"
+            },
+            "examples": [
+              [
+                "Smith, John",
+                "Library of Congress"
+              ]
+            ]
+          },
+          "property_uri": {
+            "type": "string",
+            "format": "uri",
+            "description": "URI for the property, from a local or shared ontology.",
+            "examples": [
+              "http://purl.org/dc/elements/1.1/creator"
+            ]
+          },
+          "range": {
+            "type": "string",
+            "format": "uri",
+            "description": "Class constraint on the property's value.  If there is no value provided, the assumed default range is http://www.w3.org/2000/01/rdf-schema#Literal",
+            "default": "http://www.w3.org/2000/01/rdf-schema#Literal",
+            "examples": [
+              "http://www.w3.org/2000/01/rdf-schema#Literal"
+            ]
+          },
+          "data_type": {
+            "type": "string",
+            "enum": ["array", "string"],
+            "description": "Indicates whether the property can accept multiple values (\"array\") or a single value (\"string\").",
+            "default": "string",
+            "examples": [
+              "array",
+              "string"
+            ]
+          },
+          "syntax": {
+            "type": "string",
+            "description": "Type constraint on the property's value. If there is no value provided, the assumed default data_type is http://www.w3.org/2001/XMLSchema#string. If multiple data types are possible, general best practice is to use the most specific type that applies to all values.  If multiple types are listed, the lowest common denominator will be used for validation.",
+            "examples": [
+              "edtf"
+            ]
+          },
+          "index_documentation": {
+            "type": "string",
+            "description": "Free text documentation field about whether a property should be faceted, searchable, displayable, treated as text, etc.",
+            "examples": [
+              "searchable, displayable, creator facet"
+            ]
+          },
+          "validations": {
+            "type": "object",
+            "description": "Regular Expression pattern each value must match to be valid.",
+            "properties": {
+              "match_regex": {
+                "type": "string",
+                "description": "Regular Expression pattern each value must match to be valid.",
+                "examples": [
+                  "^[a-z_]*$"
+                ]
+              }
+            },
+            "examples": [
+              {
+                "validations": {
+                  "match_regex": "^[a-z_]*$"
+                }
+              }
+            ]
+          },
+          "mapping": {
+            "type": "object",
+            "description": "A pair value defining the target property for a mapping (defined in 'mapping definitions' section.)",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "propertyNames": {
+              "pattern": "^[a-z_]*$"
+            },
+            "examples": [
+              {
+                "dpla": "http://purl.org/dc/elements/1.1/creator"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "mappings": {
+      "$id": "#/properties/mappings",
+      "type": "object",
+      "title": "Mapping Definitions",
+      "description": "Definition of the mappings to different services or target schemas referenced in the profile.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "propertyNames": {
+        "pattern": "^[a-z_]*$"
+      },
+      "examples": [
+        {
+          "dpla": {
+            "name": "Digital Public Library of America"
+          }
+        },
+        {
+          "datacite": {
+            "name": "DataCite"
+          }
+        },
+        {
+          "dc": {
+            "name": "Dublin Core"
+          }
+        }
+      ]
+    }
+  }
+}

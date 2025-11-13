@@ -92,6 +92,7 @@ RSpec.describe Hyrax::M3SchemaLoader do
       it 'returns display labels and admin flag' do
         expect(schema_loader.view_definitions_for(schema: Monograph.to_s))
           .to eq({
+                   creator: { "admin_only" => false, "display_label" => { "default" => "Creator" } },
                    date_modified: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_modified_dtsi" } },
                    date_uploaded: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_uploaded_dtsi" } },
                    depositor: { "admin_only" => false, "display_label" => { "default" => "Depositor" } },

@@ -63,6 +63,7 @@ SUMMARY
   spec.add_dependency 'hydra-works', '>= 0.16'
   spec.add_dependency 'iiif_manifest', '>= 0.3', '< 2.0'
   spec.add_dependency 'json-schema' # for Arkivo
+  spec.add_dependency 'json_schemer' # Required for m3 schema validation
   spec.add_dependency 'legato', '~> 0.3'
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
   spec.add_dependency 'listen', '~> 3.9'
