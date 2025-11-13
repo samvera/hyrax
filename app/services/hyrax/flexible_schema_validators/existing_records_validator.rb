@@ -64,12 +64,7 @@ module Hyrax
       # Gathers all unique, canonical model classes that could potentially have records.
       # @return [Array<Class>]
       def potential_existing_classes
-        models = [
-          Hyrax.config.file_set_model.constantize,
-          Hyrax.config.admin_set_model.constantize,
-          Hyrax.config.collection_model.constantize
-        ].compact
-
+        models = @required_classes
         Hyrax.config.registered_curation_concern_types.each do |concern_type|
           models << Valkyrie.config.resource_class_resolver.call(concern_type)
         rescue NameError, LoadError

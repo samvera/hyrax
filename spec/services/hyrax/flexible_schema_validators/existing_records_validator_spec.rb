@@ -4,13 +4,14 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ExistingRecordsValidator do
   subject(:validator) { described_class.new(profile, required_classes, errors) }
 
   let(:profile) { {} }
-  let(:required_classes) { ['AdminSetResource', 'CollectionResource', 'Hyrax::FileSet'] }
+  let(:required_classes) { ['AdminSet', 'Collection', 'FileSet'] }
   let(:errors) { [] }
 
   before do
-    stub_const('AdminSetResource', Class.new)
-    stub_const('CollectionResource', Class.new)
+    stub_const('AdminSet', Class.new)
+    stub_const('Collection', Class.new)
     stub_const('Hyrax::FileSet', Class.new)
+    allow_any_instance_of(Hyrax::FlexibleSchemaValidatorService).to receive(:required_classes).and_return(['AdminSet', 'Collection', 'FileSet'])
   end
 
   describe '#initialize' do
@@ -112,7 +113,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ExistingRecordsValidator do
       stub_const('FileSet', Class.new)
 
       classes = validator.send(:potential_existing_classes)
-      expect(classes).to include(AdminSet, Collection, FileSet)
+      expect(classes).to include("AdminSet", "Collection", "FileSet")
     end
 
     it 'removes duplicates' do
