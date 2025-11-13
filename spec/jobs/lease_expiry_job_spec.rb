@@ -1,18 +1,15 @@
 # frozen_string_literal: true
-RSpec.describe LeaseExpiryJob, :clean_repo do
+RSpec.describe LeaseExpiryJob, :clean_repo, :frozen_time do
   subject { described_class }
 
   context 'with Valkyrie resources' do
     let!(:leased_work) { valkyrie_create(:hyrax_work, :under_lease) }
-    let!(:work_with_expired_lease) { valkyrie_create(:hyrax_work, :with_expired_enforced_lease) }
-    let!(:file_set_with_expired_lease) { valkyrie_create(:hyrax_file_set, :with_expired_enforced_lease) }
-
-    before do
-      travel_to Time.zone.now + 1.day
-    end
+    let!(:work_with_expired_lease) { valkyrie_create(:hyrax_work, :with_expiring_enforced_lease) }
+    let!(:file_set_with_expired_lease) { valkyrie_create(:hyrax_file_set, :with_expiring_enforced_lease) }
 
     describe '#records_with_expired_leases' do
       it 'returns all records with expired leases' do
+        travel_to Time.zone.now + 1.day
         record_ids = described_class.new.records_with_expired_leases.map(&:id)
         expect(record_ids.count).to eq(2)
         expect(record_ids).to include(work_with_expired_lease.id)
@@ -23,6 +20,7 @@ RSpec.describe LeaseExpiryJob, :clean_repo do
     describe '#perform' do
       it 'expires leases on works with expired leases' do
         expect(work_with_expired_lease.visibility).to eq('open')
+        travel_to Time.zone.now + 1.day
         described_class.new.perform
         reloaded = Hyrax.query_service.find_by(id: work_with_expired_lease.id)
         expect(reloaded.visibility).to eq('authenticated')
@@ -30,6 +28,7 @@ RSpec.describe LeaseExpiryJob, :clean_repo do
 
       it 'expires leases on filesets with expired leases' do
         expect(file_set_with_expired_lease.visibility).to eq('open')
+        travel_to Time.zone.now + 1.day
         described_class.new.perform
         reloaded = Hyrax.query_service.find_by(id: file_set_with_expired_lease.id)
         expect(reloaded.visibility).to eq('authenticated')
