@@ -8,6 +8,10 @@ Flipflop.configure do
   strategy Hyrax::Strategies::YamlStrategy, config: Hyrax.config.feature_config_path
   strategy :default
 
+  feature :deterministic_jobs,
+          default: false,
+          description: "Run child jobs inline when called from a parent job"
+
   feature :proxy_deposit,
           default: true,
           description: "Depositors may designate proxies to deposit works on their behalf"
