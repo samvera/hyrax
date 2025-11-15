@@ -32,7 +32,7 @@ SUMMARY
   # NOTE: rails does not follow sem-ver conventions, it's
   # minor version releases can include breaking changes; see
   # http://guides.rubyonrails.org/maintenance_policy.html
-  spec.add_dependency 'rails', '> 6.1', '< 8.0'
+  spec.add_dependency 'rails', '~> 8.0'
 
   spec.add_dependency 'active-fedora', '~> 15.0'
   spec.add_dependency 'almond-rails', '~> 0.1'
@@ -85,7 +85,7 @@ SUMMARY
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 5.10'
   spec.add_dependency 'valkyrie', '~> 3.5'
-  spec.add_dependency 'view_component', '~> 2.74.1' # Pin until blacklight is updated with workaround for https://github.com/ViewComponent/view_component/issues/1565
+  spec.add_dependency 'view_component'
   spec.add_dependency 'sprockets', '3.7.2' # 3.7.3 fails feature specs
   spec.add_dependency 'sass-rails', '~> 6.0'
   spec.add_dependency 'select2-rails', '~> 3.5'
