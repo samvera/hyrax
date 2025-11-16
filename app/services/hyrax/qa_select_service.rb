@@ -63,8 +63,9 @@ module Hyrax
     #   that this service knows about HTML rendering details. Maybe a factory
     #   is an appropriate next step?
     def include_current_value(value, _index, render_options, html_options)
+      force_select = html_options[:class].is_a?(Array) ? [' force-select'] : ' force-select'
       unless value.blank? || active?(value)
-        html_options[:class] += [' force-select']
+        html_options[:class] += force_select
         render_options += [[label(value) { value }, value]]
       end
       [render_options, html_options]
