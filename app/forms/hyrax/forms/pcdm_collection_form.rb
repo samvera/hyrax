@@ -33,7 +33,7 @@ module Hyrax
         end
       end
 
-      property :depositor, required: true
+      property :depositor
       property :collection_type_gid, required: true
       property :visibility, default: VisibilityIntention::PRIVATE
 
