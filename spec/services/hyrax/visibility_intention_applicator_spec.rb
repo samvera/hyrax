@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # NOTE: Leases and Embargoes have separate managers for Valkyrie objects.
-RSpec.describe Hyrax::VisibilityIntentionApplicator, :active_fedora do
+RSpec.describe Hyrax::VisibilityIntentionApplicator, :active_fedora, :frozen_time do
   subject(:applicator) { described_class.new(intention: intention) }
   let(:work)           { build(:work) }
 
@@ -29,7 +29,7 @@ RSpec.describe Hyrax::VisibilityIntentionApplicator, :active_fedora do
     context 'when applying an embargo' do
       let(:after)    { Hyrax::VisibilityIntention::PUBLIC }
       let(:params)   { [end_date, during, after] }
-      let(:end_date) { (Time.zone.now + 2).to_s }
+      let(:end_date) { (Time.zone.now + 2.days).to_s }
       let(:during)   { Hyrax::VisibilityIntention::PRIVATE }
 
       let(:intention) do
@@ -51,7 +51,7 @@ RSpec.describe Hyrax::VisibilityIntentionApplicator, :active_fedora do
       let(:after)    { Hyrax::VisibilityIntention::PUBLIC }
       let(:during)   { Hyrax::VisibilityIntention::PRIVATE }
       let(:params)   { [end_date, during, after] }
-      let(:end_date) { (Time.zone.now + 2).to_s }
+      let(:end_date) { (Time.zone.now + 2.days).to_s }
 
       let(:intention) do
         instance_double(Hyrax::VisibilityIntention,
