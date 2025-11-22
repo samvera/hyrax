@@ -51,6 +51,7 @@ See the official [Flexible Metadata Documentation](https://samvera.atlassian.net
   * does collection resource get the right schema include?
   * resource form based near helper removed... do we need it?
 * document steps to make existing app flexible
+
 - generator options to add flexibility
   - app generator should have a flag to turn flexible metadata on or off
     - that flag should set the `flexible` configuration option to `true` or `false`
