@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::EmbargoService, :clean_repo do
+RSpec.describe Hyrax::EmbargoService, :clean_repo, :frozen_time do
   subject(:service) { described_class }
   let(:future_date) { 2.days.from_now }
   let(:past_date) { 2.days.ago }
@@ -40,6 +40,7 @@ RSpec.describe Hyrax::EmbargoService, :clean_repo do
 
       context 'after the embargo is released' do
         before do
+          travel_to Time.zone.now + 1.day
           Hyrax::EmbargoManager.release_embargo_for(resource: work_with_expired_enforced_embargo1)
           work_with_expired_enforced_embargo1.permission_manager.acl.save
         end

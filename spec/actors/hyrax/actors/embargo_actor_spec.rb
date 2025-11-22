@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Actors::EmbargoActor, :clean_repo do
+RSpec.describe Hyrax::Actors::EmbargoActor, :clean_repo, :frozen_time do
   let(:actor) { described_class.new(work) }
   let(:restricted_vis) { 'restricted' }
   let(:authenticated_vis) { 'authenticated' }
@@ -45,6 +45,10 @@ RSpec.describe Hyrax::Actors::EmbargoActor, :clean_repo do
 
       context 'with an expired embargo' do
         let!(:work) { FactoryBot.valkyrie_create(:hyrax_work, :with_expired_enforced_embargo) }
+
+        before do
+          travel_to Time.zone.now + 1.day
+        end
 
         it 'releases the embargo' do
           expect { actor.destroy }
