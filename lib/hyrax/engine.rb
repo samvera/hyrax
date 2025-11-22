@@ -21,6 +21,7 @@ module Hyrax
     require 'valkyrie'
     require 'cancancan'
     require 'blacklight'
+    require 'json_schemer'
 
     require 'hydra/derivatives'
     require 'hyrax/active_fedora_dummy_model'
