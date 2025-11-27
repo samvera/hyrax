@@ -95,7 +95,7 @@ SUMMARY
   spec.add_development_dependency 'capybara-screenshot', '~> 1.0'
   spec.add_development_dependency 'database_cleaner', '>= 1.3'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
-  spec.add_development_dependency "factory_bot", '~> 4.4'
+  spec.add_development_dependency "factory_bot"
   spec.add_development_dependency 'mida', '~> 0.3'
   spec.add_development_dependency 'okcomputer'
   spec.add_development_dependency 'pg', '~> 1.2'
