@@ -568,6 +568,7 @@ es:
       currently_shared:
         currently_sharing: Compartido actualmente con
         table_title_access: Nivel de acceso
+        table_title_action: Acción
         table_title_user: Persona / Grupo
       file_manager:
         back_to: De vuelta a
