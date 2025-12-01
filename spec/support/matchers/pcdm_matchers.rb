@@ -15,7 +15,7 @@ RSpec::Matchers.define :have_attached_files do |*expected_files|
       values_match?(expected_files, @actual_files)
   end
 
-  failure_message_for_should do |actual_file_set|
+  failure_message do |actual_file_set|
     if expected_files.empty?
       "Expected #{actual_file_set} to have at least one file.\n" \
       "Found #{@actual_files}."
