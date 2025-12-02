@@ -31,7 +31,7 @@ Rails.application.reloader.to_prepare do
 
   Riiif::Engine.config.cache_duration = 1.day
   # Defaults to using Imagemagick - Set use_vips to true in order to use vips. lib-vips is already installed as part of hyrax-base
-  # Must be using git ref 9a375 or newer
+  # Must be using riiif 2.8 or newer
   # Riiif::Engine.config.use_vips = false
 end
 
