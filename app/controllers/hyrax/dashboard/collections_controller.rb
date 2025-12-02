@@ -621,7 +621,10 @@ module Hyrax
       end
 
       def after_create_errors(errors) # for valkyrie
+        collection_type_id = params[:collection_type_id].presence || default_collection_type.id
+        @collection.collection_type_gid = CollectionType.find(collection_type_id).to_global_id
         return after_create_errors_for_active_fedora(errors) if @collection.is_a? ActiveFedora::Base
+
         respond_to do |wants|
           wants.html do
             flash[:error] = errors.to_s
