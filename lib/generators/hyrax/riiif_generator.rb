@@ -17,7 +17,7 @@ class Hyrax::RiiifGenerator < Rails::Generators::Base
   end
 
   def add_to_gemfile
-    gem 'riiif', git: 'https://github.com/sul-dlss/riiif.git', ref: '9a375'
+    gem 'riiif', '~> 2.8'
   end
 
   def copy_initializer
