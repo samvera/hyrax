@@ -95,32 +95,27 @@ RSpec.describe Hyrax::M3SchemaLoader do
     end
 
     context 'when work type properties have display_label, admin_only, and additional view options' do
-      it 'returns only properties with additional view options' do
-        expect(schema_loader.view_definitions_for(schema: GenericWork.to_s))
-          .to eq({
-                   title: { "html_dl" => true, "display_label" => { "default" => "blacklight.search.fields.show.title_tesim" }, "admin_only" => false },
-                   keyword: { "render_as" => "faceted", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false }
-                 })
-      end
-
       let(:profile_with_view) do
         modified_profile = profile.dup
-        modified_profile['properties']['title']['view'] = {
-          'label' => { 'en' => 'Title', 'es' => 'Título' },
+        modified_profile['properties']['creator']['view'] = {
+          'label' => { 'en' => 'Creator' },
           'html_dl' => true
         }
+        modified_profile['properties']['abstract']['available_on']['class'] << 'Monograph'
         modified_profile['properties']['description'] = {
           'available_on' => {
             'class' => ['Monograph']
           },
-          'view' => {
-            'label' => { 'en' => 'Description' },
-            'display' => true
-          },
           'cardinality' => { 'minimum' => 0 },
-          'multi_value' => true,
+          'data_type' => 'array',
           'property_uri' => 'http://purl.org/dc/terms/description',
-          'range' => 'http://www.w3.org/2001/XMLSchema#string'
+          'range' => 'http://www.w3.org/2001/XMLSchema#string',
+          'display_label' => {
+            'default' => 'blacklight.search.fields.show.description_tesim'
+          },
+          'view' => {
+            'html_dl' => true
+          }
         }
         modified_profile
       end
@@ -132,6 +127,20 @@ RSpec.describe Hyrax::M3SchemaLoader do
 
       before do
         allow(Hyrax::FlexibleSchema).to receive(:find_by).and_return(schema_with_view)
+      end
+
+      it 'returns only properties with additional view options' do
+        expect(schema_loader.view_definitions_for(schema: GenericWork.to_s))
+          .to eq({
+                   creator: { "html_dl" => true, "display_label" => { "default" => "Creator" }, "admin_only" => false },
+                   keyword: { "render_as" => "faceted", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
+                   abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
+                 })
+      end
+
+      it 'excludes deprecated view.label from properties' do
+        result = schema_loader.view_definitions_for(schema: Monograph.to_s)
+        expect(result[:creator]).to eq({ "display_label" => { "default" => "Creator" }, "admin_only" => false, "html_dl" => true })
       end
 
       it 'returns hash with view definitions for attributes that have view options' do
