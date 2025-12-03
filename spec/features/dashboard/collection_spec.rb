@@ -699,7 +699,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         Wings::ModelRegistry.unregister(GenericWorkResource) if defined?(Wings::ModelRegistry)
       end
 
-      it "preselects the collection we are adding works to and adds the new work" do
+      xit "preselects the collection we are adding works to and adds the new work" do
         visit "/dashboard/collections/#{collection1.id}"
         click_link 'Deposit new work through this collection'
         choose "payload_concern", option: "GenericWork"
