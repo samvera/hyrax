@@ -83,7 +83,7 @@ module Hyrax
     # Method to return the model
     def hydra_model(classifier: nil)
       model_name = first('has_model_ssim')
-      valkyrie_model = "#{model_name}Resource".safe_constantize if Hyrax.config.valkyrie_transition
+      valkyrie_model = "#{model_name}Resource".safe_constantize if Hyrax.config.valkyrie_transition?
 
       valkyrie_model ||
         model_name&.safe_constantize ||
