@@ -139,36 +139,22 @@ RSpec.describe Hyrax::M3SchemaLoader do
       end
 
       it 'excludes deprecated view.label from properties' do
-        result = schema_loader.view_definitions_for(schema: Monograph.to_s)
-        expect(result[:creator]).to eq({ "display_label" => { "default" => "Creator" }, "admin_only" => false, "html_dl" => true })
-      end
-
-      it 'returns hash with view definitions for attributes that have view options' do
-        result = schema_loader.view_definitions_for(schema: Monograph.to_s)
-        expect(result).to include(
-          date_modified: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_modified_dtsi" } },
-          date_uploaded: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_uploaded_dtsi" } },
-          depositor: { "admin_only" => false, "display_label" => { "default" => "Depositor" } },
-          description: { "admin_only" => nil, "display" => true, "display_label" => {} },
-          title: { "admin_only" => false, "display_label" => { "default" => "blacklight.search.fields.show.title_tesim" }, "html_dl" => true }
-        )
+        expect(schema_loader.view_definitions_for(schema: Monograph.to_s)[:creator])
+          .to eq({
+                   "display_label" => { "default" => "Creator" }, "admin_only" => false, "html_dl" => true
+                 })
       end
     end
 
     context 'with context filtering' do
       let(:profile_with_context) do
         modified_profile = profile.dup
-        modified_profile['properties']['title']['view'] = { 'label' => { 'en' => 'Title' } }
-        modified_profile['properties']['contextual_field'] = {
-          'available_on' => {
-            'class' => ['Monograph'],
-            'context' => 'flexible_context'
-          },
-          'view' => { 'label' => { 'en' => 'Contextual Field' } },
-          'cardinality' => { 'minimum' => 0 },
-          'multi_value' => true,
-          'property_uri' => 'http://example.org/contextual_field',
-          'range' => 'http://www.w3.org/2001/XMLSchema#string'
+        modified_profile['properties']['keyword']['available_on'] = {
+          'class' => ['Monograph'],
+          'context' => 'flexible_context'
+        }
+        modified_profile['properties']['abstract']['available_on'] = {
+          'class' => ['Monograph']
         }
         modified_profile
       end
@@ -185,29 +171,32 @@ RSpec.describe Hyrax::M3SchemaLoader do
       context 'when no context is provided' do
         it 'excludes fields with context requirements' do
           result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: nil)
-          expect(result).to include(title: { admin_only: false, display_label: { default: "blacklight.search.fields.show.title_tesim" } })
-          expect(result).not_to have_key(:contextual_field)
+          expect(result)
+            .to eq(
+              abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
+            )
+          expect(result).not_to have_key(:context)
         end
       end
 
-      context 'when matching context is provided' do
+      context 'when a context is provided' do
         it 'includes fields matching the context' do
-          result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'flexible_context')
-          expect(result).to include(
-            contextual_field: { "admin_only" => nil, "display_label" => {} },
-            date_modified: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_modified_dtsi" } },
-            date_uploaded: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_uploaded_dtsi" } },
-            depositor: { "admin_only" => false, "display_label" => { "default" => "Depositor" } },
-            title: { "admin_only" => false, "display_label" => { "default" => "blacklight.search.fields.show.title_tesim" } }
-          )
+          expect(schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'flexible_context'))
+            .to eq(
+              keyword: { "render_as" => "faceted", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
+              abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
+            )
         end
       end
 
       context 'when non-matching context is provided' do
         it 'excludes fields with different context requirements' do
           result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'other_context')
-          expect(result).to include(title: { admin_only: false, display_label: { default: "blacklight.search.fields.show.title_tesim" } })
-          expect(result).not_to have_key(:contextual_field)
+          expect(result)
+            .to eq(
+              abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
+            )
+          expect(result).not_to have_key(:context)
         end
       end
     end
