@@ -88,20 +88,21 @@ RSpec.describe Hyrax::M3SchemaLoader do
   end
 
   describe '#view_definitions_for' do
-    context 'when schema has attributes without view options' do
-      it 'returns display labels and admin flag' do
-        expect(schema_loader.view_definitions_for(schema: Monograph.to_s))
-          .to eq({
-                   creator: { "admin_only" => false, "display_label" => { "default" => "Creator" } },
-                   date_modified: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_modified_dtsi" } },
-                   date_uploaded: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_uploaded_dtsi" } },
-                   depositor: { "admin_only" => false, "display_label" => { "default" => "Depositor" } },
-                   title: { "admin_only" => false, "display_label" => { "default" => "blacklight.search.fields.show.title_tesim" } }
-                 })
+    context 'when work type properties have only display_label and admin_only with no additional view options' do
+      it 'returns nothing' do
+        expect(schema_loader.view_definitions_for(schema: Monograph.to_s)).to eq({})
       end
     end
 
-    context 'when schema has attributes with view options' do
+    context 'when work type properties have display_label, admin_only, and additional view options' do
+      it 'returns only properties with additional view options' do
+        expect(schema_loader.view_definitions_for(schema: GenericWork.to_s))
+          .to eq({
+                   title: { "html_dl" => true, "display_label" => { "default" => "blacklight.search.fields.show.title_tesim" }, "admin_only" => false },
+                   keyword: { "render_as" => "faceted", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false }
+                 })
+      end
+
       let(:profile_with_view) do
         modified_profile = profile.dup
         modified_profile['properties']['title']['view'] = {
