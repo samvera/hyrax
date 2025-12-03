@@ -11,9 +11,6 @@ else
 end
 
 gem 'active-fedora', git: 'https://github.com/samvera/active_fedora.git', branch: 'main'
-gem 'hydra-derivatives', git: 'https://github.com/samvera/hydra-derivatives.git', branch: 'rails-8'
-gem 'hydra-editor', git: 'https://github.com/samvera/hydra-editor.git', branch: 'rails-8'
-gem 'hydra-works', git: 'https://github.com/samvera/hydra-works.git', branch: 'rails-8'
 
 group :development, :test do
   gem 'benchmark-ips'
