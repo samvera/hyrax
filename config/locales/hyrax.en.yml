@@ -1597,6 +1597,13 @@ en:
         link_expired_not_found: Single Use Link Expired or Not Found
         link_not_found: Single use link Not Found
     sort_label: Sort the listing of items
+    sort:
+      uploaded:
+        desc: "date uploaded (newest first)"
+        asc: "date uploaded (oldest first)"
+      modified:
+        desc: "date modified (newest first)"
+        asc: "date modified (oldest first)"
     stats:
       work:
         header: Work Analytics

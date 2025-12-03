@@ -1613,6 +1613,13 @@ zh:
         link_expired_not_found: 单次使用链接已过期或未找到
         link_not_found: 单用链接未找到
     sort_label: 对清单中单件排序
+    sort:
+      uploaded:
+        desc: "上传日期（最新优先）"
+        asc: "上传日期（最旧优先）"
+      modified:
+        desc: "修改日期（最新优先）"
+        asc: "修改日期（最旧优先）"
     static:
       mendeley:
         contact_form: 联系表

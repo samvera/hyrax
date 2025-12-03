@@ -1609,6 +1609,13 @@ de:
         link_expired_not_found: Single Use Link abgelaufen oder nicht gefunden
         link_not_found: Single Use Link nicht gefunden
     sort_label: Sortieren Sie die Auflistung der Artikel
+    sort:
+      uploaded:
+        desc: "Datum hochgeladen (neueste zuerst)"
+        asc: "Datum hochgeladen (älteste zuerst)"
+      modified:
+        desc: "Datum geändert (neueste zuerst)"
+        asc: "Datum geändert (älteste zuerst)"
     static:
       mendeley:
         contact_form: Kontakt Formular
