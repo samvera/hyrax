@@ -194,3 +194,30 @@ properties:
     view:
       render_as: "faceted"
       html_dl: true
+  abstract:
+    available_on:
+      class:
+        - FileSet
+        - Collection
+        - GenericWork
+    cardinality:
+      minimum: 0
+    data_type: array
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+        - "null"
+    display_label:
+      default: Abstract
+    index_documentation: displayable, searchable
+    indexing:
+      - abstract_sim
+      - abstract_tesim
+    form:
+      primary: false
+    property_uri: http://purl.org/dc/terms/abstract
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+      - This is an abstract.
+    view:
+      html_dl: true

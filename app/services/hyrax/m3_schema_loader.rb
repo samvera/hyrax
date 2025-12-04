@@ -11,7 +11,9 @@ module Hyrax
     def view_definitions_for(schema:, version: 1, contexts: nil)
       definitions(schema, version, contexts).each_with_object({}) do |definition, hash|
         view_options = definition.view_options
-        next if view_options.without(:display_label).empty?
+        # display_label and admin_only keys are always added to the view_options hash
+        # if there are no other view options, skip this field
+        next if view_options.without(:display_label, :admin_only).empty?
 
         hash[definition.name] = definition.view_options
       end
