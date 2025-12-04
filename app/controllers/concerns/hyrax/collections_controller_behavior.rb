@@ -3,7 +3,8 @@ module Hyrax
   module CollectionsControllerBehavior
     extend ActiveSupport::Concern
     include Blacklight::AccessControls::Catalog
-    include Blacklight::Base
+    include Blacklight::Configurable
+    include Blacklight::SearchContext
 
     included do
       # include the display_trophy_link view helper method

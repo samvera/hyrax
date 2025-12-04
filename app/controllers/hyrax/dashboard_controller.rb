@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   class DashboardController < ApplicationController
-    include Blacklight::Base
+    include Blacklight::Configurable
+    include Blacklight::SearchContext
     include Hyrax::Breadcrumbs
     with_themed_layout 'dashboard'
     before_action :authenticate_user!
