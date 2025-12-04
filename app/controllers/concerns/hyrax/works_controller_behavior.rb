@@ -4,7 +4,8 @@ require 'iiif_manifest'
 module Hyrax
   module WorksControllerBehavior
     extend ActiveSupport::Concern
-    include Blacklight::Base
+    include Blacklight::Configurable
+    include Blacklight::SearchContext
     include Blacklight::AccessControls::Catalog
     include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
     include Hyrax::EnsureMigratedBehavior
