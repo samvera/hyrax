@@ -39,7 +39,7 @@ module Hyrax
 
     def instance
       # Deprecation warning for calling from outside of the Hyrax::SolrService class
-      Deprecation.warn(self, rsolr_call_warning) unless caller[1].include?("#{self.class.name.underscore}.rb")
+      Deprecation.warn(rsolr_call_warning) unless caller[1].include?("#{self.class.name.underscore}.rb")
 
       @old_service.instance
     end
