@@ -37,6 +37,20 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     []
   end
 
+  # Retrieve the required data to use for mappings
+  def self.mappings_data_for(mapping = 'simple_dc_pmh')
+    # for OAI-PMH we need the mappings and indexing info
+    # for properties with the specified mapping
+    return {} unless current_version
+    current_version['properties'].each_with_object({}) do |(key, values), obj|
+      next unless values['mappings'] && values['mappings'][mapping]
+      obj[key] = {
+        'indexing' => values['indexing'],
+        'mappings' => { mapping => values['mappings'][mapping] }
+      }
+    end
+  end
+
   def update_contexts
     self.contexts = profile['contexts']
   end

@@ -4,7 +4,8 @@ module Hyrax
     ## Shows a list of all collections to the admins
     class CollectionsController < Hyrax::My::CollectionsController
       include Blacklight::AccessControls::Catalog
-      include Blacklight::Base
+      include Blacklight::Configurable
+      include Blacklight::SearchContext
       include Hyrax::FlexibleSchemaBehavior if Hyrax.config.collection_flexible?
       include Hyrax::EnsureMigratedBehavior
 

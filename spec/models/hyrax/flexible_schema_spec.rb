@@ -33,4 +33,40 @@ RSpec.describe Hyrax::FlexibleSchema, type: :model do
       end
     end
   end
+
+  describe '#mappings_data_for' do
+    before do
+      allow(described_class).to receive(:current_version).and_return(subject.profile)
+    end
+
+    context 'when mapping exists' do
+      let(:mapping_data) { described_class.mappings_data_for('simple_dc_pmh') }
+      let(:result_data) do
+        { "title" => { "indexing" => ["title_sim", "title_tesim"],
+                       "mappings" => { "simple_dc_pmh" => "dc:title" } } }
+      end
+
+      it 'returns the correct mappings data' do
+        expect(mapping_data).to eq(result_data)
+      end
+    end
+
+    context 'when mapping does not exist' do
+      it 'returns an empty hash' do
+        mapping_data = described_class.mappings_data_for('non_existent_mapping')
+        expect(mapping_data).to eq({})
+      end
+    end
+
+    context 'when profile does not exist' do
+      before do
+        allow(described_class).to receive(:current_version).and_return(nil)
+      end
+
+      it 'returns an empty hash' do
+        mapping_data = described_class.mappings_data_for('simple_dc_pmh')
+        expect(mapping_data).to eq({})
+      end
+    end
+  end
 end
