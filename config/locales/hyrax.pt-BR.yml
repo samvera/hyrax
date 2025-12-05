@@ -568,7 +568,7 @@ pt-BR:
       currently_shared:
         currently_sharing: Atualmente compartilhado com
         table_title_access: Nível de acesso
-        table_title_user: Pessoa / Grupo
+        table_title_user: Usuário/Grupo
       file_manager:
         back_to: De volta para
         toolbar: Barra de ferramentas

@@ -568,7 +568,8 @@ it:
       currently_shared:
         currently_sharing: Attualmente condiviso con
         table_title_access: Livello di accesso
-        table_title_user: Persona / Gruppo
+        table_title_user: Utente/Gruppo
+        table_title_action: Azione
       file_manager:
         back_to: Torna alla
         toolbar: Barra degli strumenti

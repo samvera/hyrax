@@ -553,7 +553,8 @@ en:
       currently_shared:
         currently_sharing: Currently Shared With
         table_title_access: Access Level
-        table_title_user: Person/Group
+        table_title_user: User/Group
+        table_title_action: Action
       file_manager:
         back_to: Back to
         toolbar: Toolbar

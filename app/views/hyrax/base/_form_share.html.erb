@@ -49,7 +49,12 @@
 
 <script type="text/x-tmpl" id="tmpl-work-grant">
   <tr>
-    <td><label class="col-form-label">{%= o.name %}</label></td>
-    <td><div class="col-sm-10">{%= o.accessLabel %}<button class="btn close">&times;</button></div></td>
+    <td class="user-group"><label class="col-form-label">{%= o.name %}</label></td>
+    <td>{%= o.accessLabel %}</td>
+    <td class="action">
+      <button class="btn btn-danger remove" aria-label="<%= t('helpers.action.remove') %>">
+        <%= t('helpers.action.remove') %>
+      </button>
+    </td>
   </tr>
 </script>

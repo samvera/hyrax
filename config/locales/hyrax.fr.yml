@@ -569,6 +569,7 @@ fr:
         currently_sharing: Actuellement partagé avec
         table_title_access: Niveau d'accès
         table_title_user: Personne / Groupe
+        table_title_action: Action
       file_manager:
         back_to: Revenir à
         toolbar: Outils

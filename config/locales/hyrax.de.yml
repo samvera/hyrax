@@ -568,7 +568,8 @@ de:
       currently_shared:
         currently_sharing: Derzeit geteilt mit
         table_title_access: Zugriffsebene
-        table_title_user: Person / Gruppe
+        table_title_user: Benutzer/Gruppe
+        table_title_action: Aktion
       file_manager:
         back_to: Zurück zu
         toolbar: Symbolleiste
