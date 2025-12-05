@@ -10,7 +10,7 @@ module Hyrax
 
     def method_missing(method_name, *arguments, &block)
       if scope&.respond_to?(method_name)
-        Deprecation.warn(self.class, "Calling `#{method_name}` on scope " \
+        Deprecation.warn("Calling `#{method_name}` on scope " \
           'is deprecated and will be removed in Blacklight 8. Call #to_h first if you ' \
           ' need to use hash methods (or, preferably, use your own SearchState implementation)')
         scope&.public_send(method_name, *arguments, &block)
