@@ -568,7 +568,7 @@ zh:
       currently_shared:
         currently_sharing: 目前与之共享
         table_title_access: 访问权限
-        table_title_user: 人/组
+        table_title_user: 用户/组
         table_title_action: 操作
       file_manager:
         back_to: 回到
