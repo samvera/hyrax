@@ -17,37 +17,52 @@
 <% gscholar = Hyrax::GoogleScholarPresenter.new(@presenter) %>
 
 <% if gscholar.scholarly? %>
-<% content_for(:gscholar_meta) do %>
-  <meta name="description" content="<%= gscholar.description %>" />
-  <meta name="citation_title" content="<%= gscholar.title %>" />
+  <% content_for(:gscholar_meta) do %>
+    <meta name="description" content="<%= gscholar.description %>" />
+    <meta name="citation_title" content="<%= gscholar.title %>" />
 
-  <% gscholar.authors.each do |author| %>
-  <meta name="citation_author" content="<%= author %>" />
+    <% gscholar.authors.each do |author| %>
+      <meta name="citation_author" content="<%= author %>" />
+    <% end %>
+
+    <% if gscholar.publication_date.present? %>
+      <meta name="citation_publication_date" content="<%= gscholar.publication_date %>" />
+    <% end %>
+
+    <% if gscholar.pdf_url.present? %>
+      <meta name="citation_pdf_url" content="<%= gscholar.pdf_url %>" />
+    <% end %>
+
+    <% if gscholar.keywords.present? %>
+      <meta name="citation_keywords" content="<%= gscholar.keywords %>" />
+    <% end %>
+
+    <% if gscholar.publisher.present? %>
+      <meta name="citation_publisher" content="<%= gscholar.publisher %>" />
+    <% end %>
+
+    <% if gscholar.degree_grantor.present?  %>
+      <meta name="citation_dissertation_institution" content="<%= gscholar.degree_grantor %>" />
+    <% end %>
+
+    <% if gscholar.journal_title.present? %>
+      <meta name="citation_journal_title" content="<%= gscholar.journal_title %>" />
+    <% end %>
+
+    <% if gscholar.volume.present? %>
+      <meta name="citation_volume" content="<%= gscholar.volume %>" />
+    <% end %>
+
+    <% if gscholar.issue.present? %>
+      <meta name="citation_issue" content="<%= gscholar.issue %>" />
+    <% end %>
+
+    <% if gscholar.first_page.present? %>
+      <meta name="citation_firstpage" content="<%= gscholar.first_page %>" />
+    <% end %>
+
+    <% if gscholar.last_page.present? %>
+      <meta name="citation_lastpage" content="<%= gscholar.last_page %>" />
+    <% end %>
   <% end %>
-
-  <% if gscholar.publication_date.present? %>
-  <meta name="citation_publication_date" content="<%= gscholar.publication_date %>" />
-  <% end %>
-
-  <% if gscholar.pdf_url.present? %>
-  <meta name="citation_pdf_url" content="<%= gscholar.pdf_url %>" />
-  <% end %>
-
-  <% if gscholar.keywords.present? %>
-  <meta name="citation_keywords" content="<%= gscholar.keywords %>" />
-  <% end %>
-
-  <% if gscholar.publisher.present? %>
-  <meta name="citation_publisher" content="<%= gscholar.publisher %>" />
-  <% end %>
-
-  <!-- Hyrax does not yet support these metadata -->
-  <!--
-    <meta name="citation_journal_title" content=""/>
-    <meta name="citation_volume" content=""/>
-    <meta name="citation_issue" content=""/>
-    <meta name="citation_firstpage" content=""/>
-    <meta name="citation_lastpage" content=""/>
-  -->
-<% end %>
 <% end %>
