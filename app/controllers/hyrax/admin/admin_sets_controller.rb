@@ -145,7 +145,7 @@ module Hyrax
     end
 
     def valkyrie_create
-      form.validate(admin_set_params) &&
+      if form.validate(admin_set_params)
         @admin_set = transactions['change_set.create_admin_set']
                      .with_step_args(
                        'change_set.set_user_as_creator' => { user: current_user },
@@ -155,8 +155,11 @@ module Hyrax
                        setup_form # probably should do some real error handling here
                        render :edit
                      end
-      @admin_set = admin_set_create_service.call!(admin_set: @admin_set, creating_user: current_user)
-      after_create
+        @admin_set = admin_set_create_service.call!(admin_set: @admin_set, creating_user: current_user)
+        after_create
+      else
+        after_create_error(err_msg: form.errors.full_messages.to_sentence)
+      end
     rescue RuntimeError => err
       after_create_error(err_msg: err.message)
     end
