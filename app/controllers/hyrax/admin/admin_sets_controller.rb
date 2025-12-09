@@ -146,22 +146,26 @@ module Hyrax
 
     def valkyrie_create
       if form.validate(admin_set_params)
-        @admin_set = transactions['change_set.create_admin_set']
-                     .with_step_args(
-                       'change_set.set_user_as_creator' => { user: current_user },
-                       'admin_set_resource.apply_collection_type_permissions' => { user: current_user }
-                     )
-                     .call(form).value_or do |_failure|
-                       setup_form # probably should do some real error handling here
-                       render :edit
-                     end
-        @admin_set = admin_set_create_service.call!(admin_set: @admin_set, creating_user: current_user)
-        after_create
+        valkyrie_create_detail
       else
         after_create_error(err_msg: form.errors.full_messages.to_sentence)
       end
     rescue RuntimeError => err
       after_create_error(err_msg: err.message)
+    end
+
+    def valkyrie_create_detail
+      @admin_set = transactions['change_set.create_admin_set']
+                   .with_step_args(
+                     'change_set.set_user_as_creator' => { user: current_user },
+                     'admin_set_resource.apply_collection_type_permissions' => { user: current_user }
+                   )
+                   .call(form).value_or do |_failure|
+                     setup_form # probably should do some real error handling here
+                     render :edit
+                   end
+      @admin_set = admin_set_create_service.call!(admin_set: @admin_set, creating_user: current_user)
+      after_create
     end
 
     def active_fedora_create
