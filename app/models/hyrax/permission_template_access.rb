@@ -18,13 +18,12 @@ module Hyrax
     GROUP = 'group'
     USER = 'user'
 
-    enum(
-      access: {
+    enum :access,
+      {
         VIEW => VIEW,
         DEPOSIT => DEPOSIT,
         MANAGE => MANAGE
       }
-    )
 
     # @api public
     #
