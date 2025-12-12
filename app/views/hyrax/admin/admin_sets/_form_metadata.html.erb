@@ -1,5 +1,23 @@
-<%= f.input :title %>
-<%= f.input :description, as: :text %>
+<div id="base-terms">
+  <% f.object.primary_terms.each do |term| %>
+    <% next if term == :contexts %>
+    <%= f.input term %>
+  <% end %>
+</div>
 <% if Hyrax.config.flexible? && Hyrax.config.admin_set_class.new.respond_to?(:contexts) %>
   <%= f.input :contexts, collection: Hyrax::FlexibleSchema.last.context_select, input_html: { multiple: true } %>
+<% end %>
+<% if f.object.display_additional_fields? %>
+  <%= link_to t('hyrax.collection.form.additional_fields'),
+          '#extended-terms',
+          class: 'btn btn-secondary additional-fields',
+          data: { toggle: 'collapse' },
+          role: "button",
+          'aria-expanded'=> "false",
+          'aria-controls'=> "extended-terms" %>
+  <div id="extended-terms" class='collapse'>
+    <% f.object.secondary_terms.each do |term| %>
+      <%= f.input term %>
+    <% end %>
+  </div>
 <% end %>
