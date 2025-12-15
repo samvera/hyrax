@@ -213,8 +213,6 @@ module Hyrax
     end
 
     def blacklight_dynamic_sitemap
-      say_status('info', '[Hyrax] SHOULD BE COPYING BLACKLIGHT DYNAMIC SITEMAP SHOW BUILDER', :blue)
-
       copy_file 'app/views/blacklight_dynamic_sitemap/sitemap/show.xml.builder', 'app/views/blacklight_dynamic_sitemap/sitemap/show.xml.builder'
     end
   end
