@@ -7,15 +7,6 @@ def build_model_exclusion_filter
 end
 
 BlacklightDynamicSitemap::Engine.config.tap do |config|
-  # New UUID-based apps can use the id field directly for efficient sitemap generation.
-  # Apps using Noids need to add hashed_id_ssi to Solr (see gem documentation).
-  config.hashed_id_field = if Hyrax.config.enable_noids?
-                             # Noid IDs use alphanumeric characters - need separate hashed field
-                             'hashed_id_ssi'
-                           else
-                             # UUID IDs are hex-based - can use id field directly
-                             'id'
-                           end
   config.unique_id_field = 'id'
 
   model_exclusion_filter = build_model_exclusion_filter
@@ -36,4 +27,16 @@ BlacklightDynamicSitemap::Engine.config.tap do |config|
       ]
     )
   }
+end
+
+Rails.application.config.after_initialize do
+  # New UUID-based apps can use the id field directly for efficient sitemap generation.
+  # Apps using Noids need to add hashed_id_ssi to Solr (see gem documentation).
+  BlacklightDynamicSitemap::Engine.config.hashed_id_field = if Hyrax.config.enable_noids?
+                                                              # Noid IDs use alphanumeric characters - need separate hashed field
+                                                              'hashed_id_ssi'
+                                                            else
+                                                              # UUID IDs are hex-based - can use id field directly
+                                                              'id'
+                                                            end
 end
