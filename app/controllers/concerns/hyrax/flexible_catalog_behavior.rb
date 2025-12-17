@@ -14,7 +14,8 @@ module Hyrax
         properties_hash = current_profile['properties']
         properties_hash.each do |itemprop, prop|
           label = display_label_for(itemprop, prop)
-          view_options = view_options(itemprop, prop)
+
+          view_options = prop['view']
           indexing = prop['indexing']
           next if indexing.nil?
 
@@ -29,16 +30,6 @@ module Hyrax
               index_args[:link_to_facet] = "#{itemprop}_sim"
             end
 
-            # Add helper_method for render_as if it exists in the view options
-            render_as = view_options&.dig('render_as')
-            case render_as
-            when 'linked'
-              index_args[:helper_method] = :index_field_link
-              index_args[:field_name] = itemprop
-            when 'external_link'
-              index_args[:helper_method] = :iconify_auto_link
-            end
-
             name = blacklight_config.index_fields.keys.detect { |key| key.start_with?(itemprop) }
             name ||= "#{itemprop}_tesim"
 
@@ -48,9 +39,28 @@ module Hyrax
                 blacklight_config.index_fields[name].custom_label = true
               end
               blacklight_config.index_fields[name].itemprop = itemprop
+              # for properties that DO exist in the CatalogController
+              if require_view_helper_method?(view_options)
+                # add or update the helper method so linked fields will render correctly in the index view
+                blacklight_config.index_fields[name].helper_method = view_option_for_helper_method(view_options)
+                # the helper method for index_field_link needs the field name
+                blacklight_config.index_fields[name].field_name = itemprop
+              end
             else
-              # if a field doesn't exist in the config, add it
+              # for properties that DO NOT exist in the catalog controller
+              if require_view_helper_method?(view_options)
+                # add the view helper method to the arguments hash when creating a property
+                index_args[:helper_method] = view_option_for_helper_method(view_options)
+                # the helper method for index_field_link needs the field name
+                index_args[:field_name] = itemprop
+              end
+              # if a property in the metadata profile doesn't exist in the CatalogController, add it
               blacklight_config.add_index_field(name, index_args)
+
+              # all index fields get this property so an admin can hide a property from the catalog search results
+              # by adding the name of the property via admin dashboard > Settings > Accounts > Hidden index fields
+              # NOTE: it is likely this will be handled by the metadata profile in the future
+              blacklight_config.index_fields[name].if = :render_in_tenant?
             end
 
             qf = blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
@@ -75,8 +85,21 @@ module Hyrax
 
       private
 
-      def view_options(_itemprop, prop)
-        prop.fetch('view', {})&.with_indifferent_access || {}
+      # Returns true if the view options require a helper method to render the linked field correctly in the index view
+      # @param view_options [Hash] the view options ex: {"render_as"=>"linked", "html_dl"=>true}
+      # @return [Boolean] to determine if the view_option_for_helper_method should be called
+      def require_view_helper_method?(view_options)
+        view_options.present? && %w[external_link linked rights_statement].include?(view_options.dig('render_as'))
+      end
+
+      # Returns the helper method that will render the linked field correctly in the index view
+      # @param view_options [Hash] the view options ex: {"render_as"=>"linked", "html_dl"=>true}
+      # @return [Symbol] helper method from Hyrax::HyraxHelperBehavior
+      def view_option_for_helper_method(view_options)
+        render_as = view_options.dig('render_as')
+        return :iconify_auto_link if render_as == 'external_link'
+        return :index_field_link if render_as == 'linked'
+        return :rights_statement_links if render_as == 'rights_statement'
       end
 
       def display_label_for(field_name, config)
