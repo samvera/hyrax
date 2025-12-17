@@ -34,6 +34,7 @@ module Hyrax
   17. Install jquery-datatables
   18. Initializes the noid-rails database-backed minter
   19. Generates RIIIF image server implementation
+  20. Removes the public/robots.txt in favor of a dynamic one
          """
 
     def run_required_generators
@@ -201,6 +202,10 @@ module Hyrax
 
     def lando
       copy_file '.lando.yml'
+    end
+
+    def remove_robots
+      remove_file 'public/robots.txt'
     end
 
     def dotenv
