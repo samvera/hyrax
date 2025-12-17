@@ -14,6 +14,7 @@ module Hyrax
         properties_hash = current_profile['properties']
         properties_hash.each do |itemprop, prop|
           label = display_label_for(itemprop, prop)
+          view_options = view_options(itemprop, prop)
           indexing = prop['indexing']
           next if indexing.nil?
 
@@ -28,6 +29,16 @@ module Hyrax
               index_args[:link_to_facet] = "#{itemprop}_sim"
             end
 
+            # Add helper_method for render_as if it exists in the view options
+            render_as = view_options&.dig('render_as')
+            case render_as
+            when 'linked'
+              index_args[:helper_method] = :index_field_link
+              index_args[:field_name] = itemprop
+            when 'external_link'
+              index_args[:helper_method] = :iconify_auto_link
+            end
+
             name = blacklight_config.index_fields.keys.detect { |key| key.start_with?(itemprop) }
             name ||= "#{itemprop}_tesim"
 
@@ -38,6 +49,7 @@ module Hyrax
               end
               blacklight_config.index_fields[name].itemprop = itemprop
             else
+              # if a field doesn't exist in the config, add it
               blacklight_config.add_index_field(name, index_args)
             end
 
@@ -62,6 +74,10 @@ module Hyrax
       end
 
       private
+
+      def view_options(_itemprop, prop)
+        prop.fetch('view', {})&.with_indifferent_access || {}
+      end
 
       def display_label_for(field_name, config)
         display_label = config.fetch('display_label', {})&.with_indifferent_access || {}
