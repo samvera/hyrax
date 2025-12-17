@@ -35,6 +35,7 @@ module Hyrax
   18. Initializes the noid-rails database-backed minter
   19. Generates RIIIF image server implementation
   20. Adds show builder for blacklight_dynamic_sitemaps
+  21. Removes the public/robots.txt in favor of a dynamic one
          """
 
     def run_required_generators
@@ -203,6 +204,10 @@ module Hyrax
 
     def lando
       copy_file '.lando.yml'
+    end
+
+    def remove_robots
+      remove_file 'public/robots.txt'
     end
 
     def dotenv
