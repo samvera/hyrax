@@ -16,9 +16,9 @@ RSpec.describe Hyrax::CustomQueries::FindByPropertyValue, :clean_repo do
       resources
       expect(query_handler.find_ids_by_property_pairs(pairs: { depositor: user1.to_s })).to contain_exactly(resource1.id, resource3.id)
       expect(query_handler.find_ids_by_property_pairs(pairs: { title: '"Resource One!"', depositor: user1.to_s },
-                                                      field_types: {'title': :stored_searchable})).to contain_exactly(resource1.id)
+                                                      field_types: { 'title': :stored_searchable })).to contain_exactly(resource1.id)
       expect(query_handler.find_ids_by_property_pairs(pairs: { title: '"Resource One!"', depositor: user2.to_s },
-                                                      field_types: {'title': :stored_searchable})).to be_empty
+                                                      field_types: { 'title': :stored_searchable })).to be_empty
     end
   end
 
@@ -28,9 +28,9 @@ RSpec.describe Hyrax::CustomQueries::FindByPropertyValue, :clean_repo do
       resources
       expect(query_handler.find_many_by_property_pairs(pairs: { depositor: user1.to_s })).to contain_exactly(resource1, resource3)
       expect(query_handler.find_many_by_property_pairs(pairs: { title: '"Resource One!"', depositor: user1.to_s },
-                                                      field_types: {'title': :stored_searchable})).to contain_exactly(resource1)
+                                                       field_types: { 'title': :stored_searchable })).to contain_exactly(resource1)
       expect(query_handler.find_many_by_property_pairs(pairs: { title: '"Resource One!"', depositor: user2.to_s },
-                                                      field_types: {'title': :stored_searchable})).to be_empty
+                                                       field_types: { 'title': :stored_searchable })).to be_empty
     end
   end
 
@@ -40,8 +40,8 @@ RSpec.describe Hyrax::CustomQueries::FindByPropertyValue, :clean_repo do
       resources
       expect(query_handler.find_many_by_property_value(property: 'depositor', value: user1.to_s)).to contain_exactly(resource1, resource3)
       expect(query_handler.find_many_by_property_value(property: 'title',
-                                                  value: '"Resource One!"',
-                                                  field_type: :stored_searchable)).to contain_exactly(resource1)
+                                                       value: '"Resource One!"',
+                                                       field_type: :stored_searchable)).to contain_exactly(resource1)
     end
   end
 
