@@ -52,7 +52,7 @@ if Hyrax.config.valkyrie_transition?
       Hyrax::CustomQueries::FindModelsByAccess,
       Hyrax::CustomQueries::FindCountBy,
       Hyrax::CustomQueries::FindByDateRange,
-      # Hyrax::CustomQueries::FindBySourceIdentifier  # from bulkrax
+      Hyrax::CustomQueries::FindByPropertyValue
     ].each do |handler|
       Hyrax.query_service.services[0].custom_queries.register_query_handler(handler)
     end
