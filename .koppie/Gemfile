@@ -10,7 +10,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'bootstrap', '~> 4.0'
-gem 'bulkrax'
+gem 'bulkrax', github: 'samvera/bulkrax', branch: 'grounded'
 gem 'clamby', '~> 1.6', require: ENV['HYRAX_CLAMAV'] == 'true'
 gem 'clamby', '~> 1.6'
 gem 'coffee-rails', '~> 4.2'
