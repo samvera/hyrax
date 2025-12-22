@@ -45,5 +45,37 @@ module Hyrax
     def self.for(resource)
       Hyrax::ChangeSet(resource.class).new(resource)
     end
+
+    ##
+    # @api public
+    #
+    # Forms should be initialized with an explicit +resource:+ parameter to
+    # match indexers.
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    def initialize(resource = nil)
+      if resource.flexible?
+        self.class.deserializer_class = nil # need to reload this on first use after schema is loaded
+        singleton_class.schema_definitions = self.class.definitions
+        context = resource.respond_to?(:context) ? resource.context : nil
+        Hyrax::Schema.m3_schema_loader.form_definitions_for(
+          schema: resource.class.name,
+          version: Hyrax::FlexibleSchema.current_schema_id,
+          contexts: context).map do |field_name, options|
+            singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: []
+          )
+        end
+
+        hash = resource.attributes.dup
+        hash[:schema_version] = Hyrax::FlexibleSchema.current_schema_id
+        resource = resource.class.new(hash)
+        # find any fields removed by the new schema
+        to_remove = singleton_class.definitions.select { |k, v| !resource.respond_to?(k) && v.instance_variable_get("@options")[:display] }
+        to_remove.keys.each do |removed_field|
+          singleton_class.definitions.delete(removed_field)
+        end
+      end
+
+      super(resource)
+    end # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
   end
 end
