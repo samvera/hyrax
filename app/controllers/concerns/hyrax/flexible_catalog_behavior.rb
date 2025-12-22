@@ -32,7 +32,9 @@ module Hyrax
 
             name = blacklight_config.index_fields.keys.detect { |key| key.start_with?(itemprop) }
             name ||= "#{itemprop}_tesim"
-
+    # blacklight_config.index_fields.keys
+    # ["all_text_timv", "all_text_tsimv", "title_tesim", "description_tesim", "keyword_tesim", "subject_tesim", "creator_tesim", "date_tesim", "contributor_tesim", "proxy_depositor_ssim", "depositor_tesim", "publisher_tesim", "based_near_label_tesim", "language_tesim", "date_uploaded_dtsi", "date_modified_dtsi", "date_created_tesim", "rights_statement_tesim", "license_tesim", "resource_type_tesim", "file_format_tesim", "identifier_tesim", "related_url_tesim", "embargo_release_date_dtsi", "lease_expiration_date_dtsi", "learning_resource_type_tesim", "education_level_tesim", "audience_tesim", "discipline_tesim"]
+# debugger
             if blacklight_config.index_fields[name].present?
               if label
                 blacklight_config.index_fields[name].label = I18n.t(label, default: label)
@@ -56,6 +58,7 @@ module Hyrax
               end
               # if a property in the metadata profile doesn't exist in the CatalogController, add it
               blacklight_config.add_index_field(name, index_args)
+# RuntimeError Exception: A index_field with the key depositor_tesim already exists.
 
               # all index fields get this property so an admin can hide a property from the catalog search results
               # by adding the name of the property via admin dashboard > Settings > Accounts > Hidden index fields
