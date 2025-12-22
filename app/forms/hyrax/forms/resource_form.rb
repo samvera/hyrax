@@ -7,11 +7,6 @@ module Hyrax
     #
     # This form wraps +Hyrax::ChangeSet+ in the +HydraEditor::Form+ interface.
     class ResourceForm < Hyrax::ChangeSet # rubocop:disable Metrics/ClassLength
-      # These do not get auto loaded when using a flexible schema and should instead
-      # be added to the individual Form classes for a work type or smart enough
-      # to be selective as to when they trigger
-      include FlexibleFormBehavior if Hyrax.config.flexible?
-
       ##
       # @api private
       #
@@ -52,17 +47,7 @@ module Hyrax
       #
       # Forms should be initialized with an explicit +resource:+ parameter to
       # match indexers.
-      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       def initialize(deprecated_resource = nil, resource: nil)
-        if Hyrax.config.flexible?
-          self.class.deserializer_class = nil # need to reload this on first use after schema is loaded
-          singleton_class.schema_definitions = self.class.definitions
-          r = resource || deprecated_resource
-          Hyrax::Schema.default_schema_loader.form_definitions_for(schema: r.class.to_s, version: Hyrax::FlexibleSchema.current_schema_id, contexts: r.contexts).map do |field_name, options|
-            singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
-          end
-        end
-
         if resource.nil?
           if !deprecated_resource.nil?
             Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. Pass the resource with `resource:` instead."
@@ -71,21 +56,9 @@ module Hyrax
             super()
           end
         else
-          # make a new resource with all of the existing attributes
-          if Hyrax.config.flexible?
-            hash = resource.attributes.dup
-            hash[:schema_version] = Hyrax::FlexibleSchema.current_schema_id
-            resource = resource.class.new(hash)
-            # find any fields removed by the new schema
-            to_remove = singleton_class.definitions.select { |k, v| !resource.respond_to?(k) && v.instance_variable_get("@options")[:display] }
-            to_remove.keys.each do |removed_field|
-              singleton_class.definitions.delete(removed_field)
-            end
-          end
-
           super(resource)
         end
-      end # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      end
 
       class << self
         ##
