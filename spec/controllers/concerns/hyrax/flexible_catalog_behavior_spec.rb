@@ -5,6 +5,9 @@ require 'rails_helper'
 RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
   let(:base_profile) { YAML.safe_load_file(Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'm3_profile.yaml')) }
 
+  # adds additional properties to the base profile to
+  # include properties that do not exist in the blacklight
+  # config with various indexing and view options
   let(:custom_properties) do
     YAML.safe_load(<<-YAML)
       properties:
@@ -34,21 +37,6 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
           range: http://www.w3.org/2001/XMLSchema#string
           view:
             html_dl: true
-        external_link:
-          available_on:
-            class:
-              - GenericWork
-              - Monograph
-          display_label:
-            default: External Link
-          indexing:
-            - external_link_tesim
-            - external_link_sim
-          property_uri: http://example.org/external_link
-          range: http://www.w3.org/2001/XMLSchema#string
-          view:
-            render_as: external_link
-            html_dl: true
         related_resource:
           available_on:
             class:
@@ -59,6 +47,21 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
           indexing:
             - related_resource_tesim
             - related_resource_sim
+          property_uri: http://example.org/related_resource
+          range: http://www.w3.org/2001/XMLSchema#string
+          view:
+            render_as: external_link
+            html_dl: true
+        medium:
+          available_on:
+            class:
+              - GenericWork
+              - Monograph
+          display_label:
+            default: Medium
+          indexing:
+            - medium_tesim
+            - medium_sim
           property_uri: http://purl.org/dc/terms/relation
           range: http://www.w3.org/2001/XMLSchema#string
           view:
@@ -67,29 +70,16 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
     YAML
   end
 
-  before do
-    # Clean up any existing schemas
-    Hyrax::FlexibleSchema.destroy_all
-
-    # Enable flexible metadata
-    allow(Hyrax.config).to receive(:flexible?).and_return(true)
-  end
-
-  after do
-    Hyrax::FlexibleSchema.destroy_all
-  end
-
   controller(ApplicationController) do
     include Blacklight::Configurable
     include Blacklight::SearchContext
-    include Hyrax::FlexibleCatalogBehavior # rubocop:disable RSpec/DescribedClass
+    include Hyrax::FlexibleCatalogBehavior
 
     configure_blacklight do |config|
       config.search_builder_class = Hyrax::CatalogSearchBuilder
       config.default_solr_params = { qt: 'search', rows: 10 }
 
-      # Start with a clean blacklight config - no pre-existing index fields
-      # This tests the scenario where all properties need to be added dynamically
+      # tests the scenario where all properties need to be added dynamically
       config.add_search_field('all_fields') do |field|
         field.solr_parameters = { qf: String.new('') }
       end
@@ -103,154 +93,121 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
 
   describe 'loading flexible metadata profile' do
     before do
-      routes.draw { get 'index' => 'anonymous#index' }
-    end
+      # ensure flexible metadata is enabled
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
 
-    before do
-      # Create the schema in the database by merging base profile with custom properties
+      # set up routes for the anonymous controller
+      routes.draw { get 'index' => 'anonymous#index' }
+
+      # create the schema in the database by merging base profile with custom properties
       Hyrax::FlexibleSchema.create!(profile: base_profile.deep_merge(custom_properties))
 
-      # Manually trigger load_flexible_schema since it's a class method that runs once
-      # We need to call it after the schema is created
+      # manually trigger load_flexible_schema since it's a class method
       controller.class.load_flexible_schema
-
-      get :index
-      blacklight_config = controller.blacklight_config
     end
 
-
-    # title - has indexing: title_sim, title_tesim (facetable)
-    # date_modified - no indexing defined
-    # date_uploaded - no indexing defined
-    # depositor - has indexing: depositor_tesim, depositor_ssim
-    # creator - has indexing: creator_sim, creator_tesim (facetable)
-    # label - has indexing: label_sim, label_tesim (facetable)
-    # keyword - has indexing: keyword_sim, keyword_tesim (facetable), has view: render_as: "faceted"
-    # abstract - has indexing: abstract_sim, abstract_tesim (facetable)
-    # publication_date - has indexing: publication_date_tesim, publication_date_sim (facetable)
-    # department - has indexing: department_tesim, department_sim (facetable)
-    # external_link - has indexing: external_link_tesim, external_link_sim
-    # related_resource - has indexing: related_resource_tesim, related_resource_sim
-
-
-
-    it 'loads flexible schema properties into blacklight config' do
-#<Blacklight::Configuration::IndexField label="Title", itemprop="name", if=:render_in_tenant?, key="title_tesim", field="title_tesim", unless=false, presenter=Blacklight::FieldPresenter>
-#<Blacklight::Configuration::IndexField label="Owner", helper_method=:link_to_profile, if=:render_in_tenant?, key="depositor_tesim", field="depositor_tesim", unless=false, presenter=Blacklight::FieldPresenter>
-
-
-      expect(blacklight_config.index_fields).to have_key('title_tesim')
-      expect(blacklight_config.index_fields).to have_key('depositor_tesim')
-      expect(blacklight_config.index_fields).to have_key('creator_tesim')
-      expect(blacklight_config.index_fields).to have_key('label_tesim')
-      expect(blacklight_config.index_fields).to have_key('keyword_tesim')
-      expect(blacklight_config.index_fields).to have_key('abstract_tesim')
-      expect(blacklight_config.index_fields).to have_key('publication_date_tesim')
-      expect(blacklight_config.index_fields).to have_key('department_tesim')
-      expect(blacklight_config.index_fields).to have_key('external_link_tesim')
-      expect(blacklight_config.index_fields).to have_key('related_resource_tesim')
+    after do
+      # clean up created schemas after each test
+      Hyrax::FlexibleSchema.destroy_all
     end
 
-    it 'sets correct labels for index fields' do
+    let(:blacklight_config) do
       get :index
-
-      blacklight_config = controller.blacklight_config
-
-      expect(blacklight_config.index_fields['title_tesim'].label).to eq('Title')
-      expect(blacklight_config.index_fields['depositor_tesim'].label).to eq('Depositor')
-      expect(blacklight_config.index_fields['creator_tesim'].label).to eq('Creator')
-      expect(blacklight_config.index_fields['label_tesim'].label).to eq('Label')
-      expect(blacklight_config.index_fields['keyword_tesim'].label).to eq('Keyword')
-      expect(blacklight_config.index_fields['abstract_tesim'].label).to eq('Abstract')
-      expect(blacklight_config.index_fields['publication_date_tesim'].label).to eq('Publication Date')
-      expect(blacklight_config.index_fields['department_tesim'].label).to eq('Department')
-      expect(blacklight_config.index_fields['external_link_tesim'].label).to eq('External Link')
-      expect(blacklight_config.index_fields['publication_date_tesim'].label).to eq('Publication Date')
-      expect(blacklight_config.index_fields['department_tesim'].label).to eq('Department')
-      expect(blacklight_config.index_fields['external_link_tesim'].label).to eq('External Link')
-      expect(blacklight_config.index_fields['related_resource_tesim'].label).to eq('Related Resource')
+      controller.blacklight_config
     end
 
-    it 'sets itemprop for index fields' do
-      get :index
+    context 'properties with indexing' do
+      it 'are checked for existence in the blacklight config' do
+        # metadata properties from spec/fixtures/files/m3_profile.yaml
+        %w[title_tesim depositor_tesim creator_tesim label_tesim keyword_tesim abstract_tesim].each do |field|
+          expect(blacklight_config.index_fields).to have_key(field)
+        end
+      end
 
-      blacklight_config = controller.blacklight_config
+      it 'are added to the blacklight config' do
+        # metadata properties from custom_properties should be added then checked for existence in the blacklight config
+        %w[publication_date_tesim department_tesim related_resource_tesim medium_tesim].each do |field|
+          expect(blacklight_config.index_fields).to have_key(field)
+        end
+      end
 
-      expect(blacklight_config.index_fields['title_tesim'].itemprop).to eq('title')
-      expect(blacklight_config.index_fields['author_name_tesim'].itemprop).to eq('author_name')
-      expect(blacklight_config.index_fields['publication_date_tesim'].itemprop).to eq('publication_date')
+      it 'have a label property in blacklight config' do
+        # gets the display_label from the metadata profile and adds it as the label attribute in blacklight config
+        expected_labels = {
+          'depositor_tesim' => 'Depositor',
+          'creator_tesim' => 'Creator',
+          'label_tesim' => 'Label',
+          'abstract_tesim' => 'Abstract',
+          'department_tesim' => 'Department',
+          'publication_date_tesim' => 'Publication Date',
+          'medium_tesim' => 'Medium',
+          'related_resource_tesim' => 'Related Resource'
+        }
+
+        expected_labels.each do |field, label|
+          expect(blacklight_config.index_fields[field].label).to eq(label)
+        end
+      end
+
+      it 'have an itemprop property added to the blacklight config' do
+        # itemprop is the property name that gets mapped to the Solr field name
+        %w[title depositor creator label abstract publication_date department related_resource medium].each do |field|
+          expect(blacklight_config.index_fields[field + '_tesim'].itemprop).to eq(field)
+        end
+      end
+
+      it 'adds helper methods for properties with render_as view options' do
+        # related_resource_tesim should have iconify_auto_link helper
+        expect(blacklight_config.index_fields['related_resource_tesim'].helper_method).to eq(:iconify_auto_link)
+        expect(blacklight_config.index_fields['related_resource_tesim'].field_name).to eq('related_resource')
+
+        # medium_tesim should have index_field_link helper
+        expect(blacklight_config.index_fields['medium_tesim'].helper_method).to eq(:index_field_link)
+        expect(blacklight_config.index_fields['medium_tesim'].field_name).to eq('medium')
+
+        # department_tesim should not have helper methods
+        expect(blacklight_config.index_fields['department_tesim'].helper_method).to be_nil
+      end
+
+      it 'have the render_in_tenant? condition added to the blacklight config' do
+        # all fields should have the render_in_tenant? condition
+        # this allows admins to hide properties from catalog search results via the UI
+        %w[publication_date_tesim department_tesim related_resource_tesim medium_tesim].each do |field|
+          expect(blacklight_config.index_fields[field].if).to eq(:render_in_tenant?)
+        end
+      end
     end
 
-    it 'adds facet fields for facetable properties' do
-      get :index
+    context 'properties with sidebar faceting' do
+      it 'have a facet field added to the blacklight config' do
+        # if the  property has facetable in the indexing section of the metadata profile, ensure the _sim field is added to the blacklight config
+        %w[keyword publication_date department].each do |field|
+          expect(blacklight_config.facet_fields).to have_key(field + '_sim')
+        end
 
-      blacklight_config = controller.blacklight_config
+        # verify non-facetable properties don't have facet fields
+        %w[related_resource medium].each do |field|
+          expect(blacklight_config.facet_fields).not_to have_key(field + '_sim')
+        end
+      end
 
-      # Verify facet fields are added for facetable properties
-      expect(blacklight_config.facet_fields).to have_key('title_sim')
-      expect(blacklight_config.facet_fields).to have_key('publication_date_sim')
-      expect(blacklight_config.facet_fields).to have_key('department_sim')
-
-      # Verify non-facetable properties don't have facet fields
-      expect(blacklight_config.facet_fields).not_to have_key('author_name_sim')
-      expect(blacklight_config.facet_fields).not_to have_key('external_link_sim')
+      it 'have a link_to_facet property added to the blacklight config' do
+        # if the property has render_as: linked ensure the link_to_facet has the _sim field name
+        %w[keyword publication_date department].each do |field|
+          expect(blacklight_config.index_fields[field + '_tesim'].link_to_facet).to eq(field + '_sim')
+        end
+      end
     end
 
-    it 'sets link_to_facet for facetable index fields' do
-      get :index
+    context 'search fields' do
+      it 'have the properties added to the search qf parameter' do
+        qf = blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
 
-      blacklight_config = controller.blacklight_config
-
-      expect(blacklight_config.index_fields['title_tesim'].link_to_facet).to eq('title_sim')
-      expect(blacklight_config.index_fields['publication_date_tesim'].link_to_facet).to eq('publication_date_sim')
-      expect(blacklight_config.index_fields['department_tesim'].link_to_facet).to eq('department_sim')
-    end
-
-    it 'adds properties to search qf parameter' do
-      get :index
-
-      blacklight_config = controller.blacklight_config
-      qf = blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
-
-      # Verify all 6 custom properties are added to the search query fields
-      expect(qf).to include('title_tesim')
-      expect(qf).to include('author_name_tesim')
-      expect(qf).to include('publication_date_tesim')
-      expect(qf).to include('department_tesim')
-      expect(qf).to include('external_link_tesim')
-      expect(qf).to include('related_resource_tesim')
-    end
-
-    it 'sets helper methods for fields with render_as view options' do
-      get :index
-
-      blacklight_config = controller.blacklight_config
-
-      # External link should have iconify_auto_link helper
-      expect(blacklight_config.index_fields['external_link_tesim'].helper_method).to eq(:iconify_auto_link)
-      expect(blacklight_config.index_fields['external_link_tesim'].field_name).to eq('external_link')
-
-      # Related resource should have index_field_link helper
-      expect(blacklight_config.index_fields['related_resource_tesim'].helper_method).to eq(:index_field_link)
-      expect(blacklight_config.index_fields['related_resource_tesim'].field_name).to eq('related_resource')
-
-      # Regular fields should not have helper methods
-      expect(blacklight_config.index_fields['author_name_tesim'].helper_method).to be_nil
-    end
-
-    it 'sets render_in_tenant? condition for all dynamically added index fields' do
-      get :index
-
-      blacklight_config = controller.blacklight_config
-
-      # All dynamically added fields should have the render_in_tenant? condition
-      # This allows admins to hide properties from catalog search results
-      expect(blacklight_config.index_fields['title_tesim'].if).to eq(:render_in_tenant?)
-      expect(blacklight_config.index_fields['author_name_tesim'].if).to eq(:render_in_tenant?)
-      expect(blacklight_config.index_fields['publication_date_tesim'].if).to eq(:render_in_tenant?)
-      expect(blacklight_config.index_fields['department_tesim'].if).to eq(:render_in_tenant?)
-      expect(blacklight_config.index_fields['external_link_tesim'].if).to eq(:render_in_tenant?)
-      expect(blacklight_config.index_fields['related_resource_tesim'].if).to eq(:render_in_tenant?)
+        # verify the custom_properties are added to the search query fields
+        %w[title_tesim publication_date_tesim department_tesim related_resource_tesim medium_tesim].each do |field|
+          expect(qf).to include(field)
+        end
+      end
     end
   end
 
@@ -368,4 +325,3 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
     end
   end
 end
-
