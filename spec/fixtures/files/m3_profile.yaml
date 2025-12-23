@@ -193,6 +193,7 @@ properties:
       - Metadata
       - Repository
     view:
+      render_as: linked
       html_dl: true
   abstract:
     available_on:
