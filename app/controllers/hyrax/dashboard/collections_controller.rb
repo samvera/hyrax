@@ -85,12 +85,12 @@ module Hyrax
       end
 
       def after_create
-        Deprecation.warn("Method `#after_create` will be removed in Hyrax 4.0.")
+        Hyrax.deprecator(4).warn("Method `#after_create` should have been removed in Hyrax 4.0 but still exists. It will be removed in Hyrax 6.0.")
         after_create_response # call private method for processing
       end
 
       def after_create_error
-        Deprecation.warn("Method `#after_create_error` will be removed in Hyrax 4.0.")
+        Hyrax.deprecator(4).warn("Method `#after_create_error` should have been removed in Hyrax 4.0 but still exists. It will be removed in Hyrax 6.0.")
         after_create_errors("") # call private method for processing
       end
 
@@ -110,12 +110,12 @@ module Hyrax
       end
 
       def after_update
-        Deprecation.warn("Method `#after_update` will be removed in Hyrax 4.0.")
+        Hyrax.deprecator(4).warn("Method `#after_update` should have been removed in Hyrax 4.0 but still exists. It will be removed in Hyrax 6.0.")
         after_update_response # call private method for processing
       end
 
       def after_update_error
-        Deprecation.warn("Method `#after_update_error` will be removed in Hyrax 4.0.")
+        Hyrax.deprecator(4).warn("Method `#after_update_error` should have been removed in Hyrax 4.0 but still exists. It will be removed in Hyrax 6.0.")
         after_update_errors(@collection.errors) # call private method for processing
       end
 
