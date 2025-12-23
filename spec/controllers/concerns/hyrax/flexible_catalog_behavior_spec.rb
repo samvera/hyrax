@@ -93,22 +93,20 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
 
   describe 'loading flexible metadata profile' do
     before do
-      # ensure flexible metadata is enabled
       allow(Hyrax.config).to receive(:flexible?).and_return(true)
-
-      # set up routes for the anonymous controller
       routes.draw { get 'index' => 'anonymous#index' }
 
-      # create the schema in the database by merging base profile with custom properties
-      Hyrax::FlexibleSchema.create!(profile: base_profile.deep_merge(custom_properties))
+      # mock the schema retrieval to avoid database interactions
+      mock_schema = double('FlexibleSchema',
+        profile: base_profile.deep_merge(custom_properties))
 
-      # manually trigger load_flexible_schema since it's a class method
+      allow(Hyrax::FlexibleSchema)
+        .to receive_message_chain(:order, :last)
+        .with("created_at asc")
+        .with(2)
+        .and_return([mock_schema])
+
       controller.class.load_flexible_schema
-    end
-
-    after do
-      # clean up created schemas after each test
-      Hyrax::FlexibleSchema.destroy_all
     end
 
     let(:blacklight_config) do
