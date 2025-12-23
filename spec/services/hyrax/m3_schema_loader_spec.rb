@@ -133,7 +133,7 @@ RSpec.describe Hyrax::M3SchemaLoader do
         expect(schema_loader.view_definitions_for(schema: GenericWork.to_s))
           .to eq({
                    creator: { "html_dl" => true, "display_label" => { "default" => "Creator" }, "admin_only" => false },
-                   keyword: { "render_as" => "faceted", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
+                   keyword: { "render_as" => "linked", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
                    abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
                  })
       end
@@ -183,7 +183,7 @@ RSpec.describe Hyrax::M3SchemaLoader do
         it 'includes fields matching the context' do
           expect(schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'flexible_context'))
             .to eq(
-              keyword: { "render_as" => "faceted", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
+              keyword: { "render_as" => "linked", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
               abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
             )
         end
