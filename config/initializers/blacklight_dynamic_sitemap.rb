@@ -3,6 +3,7 @@ require 'hyrax/model_registry'
 
 def build_model_exclusion_filter
   classes_to_exclude = Hyrax::ModelRegistry.file_set_class_names + Hyrax::ModelRegistry.admin_set_class_names + ["Hyrax::FileMetadata"]
+  classes_to_exclude.map! { |klass| klass.gsub(/^::/, '') }.uniq!
   "-has_model_ssim:(\"#{classes_to_exclude.join('" OR "')}\")"
 end
 
