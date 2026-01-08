@@ -21,7 +21,8 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     raise ArgumentError, "No M3 profile found, check the Hyrax.config.schema_loader_config_search_paths" unless m3_profile_path
     schema = Hyrax::FlexibleSchema.first
     return if schema
-    Hyrax::FlexibleSchema.create(profile: YAML.safe_load_file(m3_profile_path), validate: false)
+    schema = Hyrax::FlexibleSchema.new(profile: YAML.safe_load_file(m3_profile_path))
+    schema.save(validate: false)
   end
 
   # Retrieve the properties for the model / work type
