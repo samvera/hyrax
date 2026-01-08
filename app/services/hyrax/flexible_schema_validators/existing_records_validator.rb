@@ -64,16 +64,19 @@ module Hyrax
       # Gathers all unique, canonical model classes that could potentially have records.
       # @return [Array<Class>]
       def potential_existing_classes
-        models = @required_classes.clone
+        return @models if @models.present?
+        @models = @required_classes.clone.map(&:safe_constantize)
         Hyrax.config.registered_curation_concern_types.each do |concern_type|
-          models << Valkyrie.config.resource_class_resolver.call(concern_type)
+          resource = concern_type.match(/Resource$/) ? concern_type : "#{concern_type}Resource"
+          resource.safe_constantize
+          @models << Valkyrie.config.resource_class_resolver.call(concern_type)
         rescue NameError, LoadError
           # This can happen if a concern is registered but its class is not loadable.
           # We can safely ignore it, as it couldn't have records anyway.
           Rails.logger.warn "Could not resolve model class for registered concern: #{concern_type}"
         end
 
-        models.uniq
+        @models.uniq!
       end
     end
   end
