@@ -20,7 +20,6 @@ module Hyrax
       def validate!
         profile_classes_set = Set.new(@profile.fetch('classes', {}).keys)
         classes_with_records = []
-
         potential_existing_classes.each do |model_class|
           model_identifier = model_class.to_s
           counterpart_identifier = counterpart_for(model_identifier)
@@ -77,6 +76,7 @@ module Hyrax
         end
 
         @models.uniq!
+        @models
       end
     end
   end
