@@ -67,7 +67,7 @@ module Hyrax
         return @models if @models.present?
         @models = @required_classes.clone.map(&:safe_constantize)
         Hyrax.config.registered_curation_concern_types.each do |concern_type|
-          resource = concern_type.match(/Resource$/) ? concern_type : "#{concern_type}Resource"
+          resource = concern_type.match?(/Resource$/) ? concern_type : "#{concern_type}Resource"
           resource.safe_constantize
           @models << Valkyrie.config.resource_class_resolver.call(concern_type)
         rescue NameError, LoadError
