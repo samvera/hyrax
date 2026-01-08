@@ -19,9 +19,9 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   def self.create_default_schema
     m3_profile_path = Hyrax::Schema.m3_schema_loader.config_paths&.first
     raise ArgumentError, "No M3 profile found, check the Hyrax.config.schema_loader_config_search_paths" unless m3_profile_path
-    Hyrax::FlexibleSchema.first_or_create do |f|
-      f.profile = YAML.safe_load_file(m3_profile_path)
-    end
+    schema = Hyrax::FlexibleSchema.first
+    return if schema
+    Hyrax::FlexibleSchema.create(profile: YAML.safe_load_file(m3_profile_path), validate: false)
   end
 
   # Retrieve the properties for the model / work type
