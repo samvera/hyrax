@@ -23,6 +23,7 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     return if schema
     schema = Hyrax::FlexibleSchema.new(profile: YAML.safe_load_file(m3_profile_path))
     schema.save(validate: false)
+    schema
   end
 
   # Retrieve the properties for the model / work type
