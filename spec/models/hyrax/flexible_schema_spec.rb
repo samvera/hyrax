@@ -66,6 +66,101 @@ RSpec.describe Hyrax::FlexibleSchema, type: :model do
       it 'returns an empty hash' do
         mapping_data = described_class.mappings_data_for('simple_dc_pmh')
         expect(mapping_data).to eq({})
+
+
+  describe 'property name resolution' do
+    let(:profile_with_names) do
+      {
+        'profile' => {
+          'responsibility_statement' => 'Test Profile',
+          'date_modified' => '2024-06-01'
+        },
+        'properties' => {
+          'title_primary' => {
+            'name' => 'title',
+            'available_on' => { 'class' => ['GenericWorkResource'], 'context' => ['primary_context'] },
+            'range' => 'http://www.w3.org/2001/XMLSchema#string',
+            'property_uri' => 'http://purl.org/dc/terms/title'
+          },
+          'title_alternative' => {
+            'name' => 'title',
+            'available_on' => { 'class' => ['GenericWorkResource'], 'context' => ['alternative_context'] },
+            'range' => 'http://www.w3.org/2001/XMLSchema#string',
+            'property_uri' => 'http://purl.org/dc/terms/alternative'
+          },
+          'description_fallback' => {
+            'available_on' => { 'class' => ['GenericWorkResource'] },
+            'range' => 'http://www.w3.org/2001/XMLSchema#string',
+            'property_uri' => 'http://purl.org/dc/terms/description'
+          }
+        },
+        'classes' => {
+          'GenericWorkResource' => { 'display_label' => 'Generic Work' }
+        },
+        'contexts' => {
+          'primary_context' => { 'display_label' => 'Primary Context' },
+          'alternative_context' => { 'display_label' => 'Alternative Context' }
+        }
+      }
+    end
+
+    subject { described_class.create(profile: profile_with_names) }
+
+    context 'with name attribute' do
+      it 'uses name for storage key' do
+        attributes = subject.attributes_for('GenericWorkResource')
+
+        expect(attributes).to have_key('title')
+        expect(attributes).not_to have_key('title_primary')
+        expect(attributes).not_to have_key('title_alternative')
+      end
+    end
+
+    context 'without name attribute' do
+      it 'falls back to YAML key' do
+        attributes = subject.attributes_for('GenericWorkResource')
+
+        expect(attributes).to have_key('description_fallback')
+      end
+    end
+
+    context 'conflict validation' do
+      it 'allows same name with non-overlapping contexts' do
+        expect(subject).to be_valid
+      end
+
+      it 'rejects same name with overlapping contexts' do
+        conflicting_profile = profile_with_names.deep_dup
+        conflicting_profile['properties']['title_conflict'] = {
+          'name' => 'title',
+          'available_on' => {
+            'class' => ['GenericWorkResource'],
+            'context' => ['primary_context']  # Conflicts with title_primary
+          },
+          'range' => 'http://www.w3.org/2001/XMLSchema#string',
+          'property_uri' => 'http://purl.org/dc/terms/title'
+        }
+
+        conflicting_schema = described_class.create(profile: conflicting_profile)
+        expect(conflicting_schema).not_to be_valid
+        expect(conflicting_schema.errors[:profile]).to include(/Property name 'title' conflicts/)
+      end
+
+      it 'rejects same name with overlapping classes and no contexts' do
+        conflicting_profile = profile_with_names.deep_dup
+        conflicting_profile['properties']['title_no_context'] = {
+          'name' => 'title',
+          'available_on' => {
+            'class' => ['GenericWorkResource']
+            # No context specified
+          },
+          'range' => 'http://www.w3.org/2001/XMLSchema#string',
+          'property_uri' => 'http://purl.org/dc/terms/title'
+        }
+
+        conflicting_schema = described_class.create(profile: conflicting_profile)
+        expect(conflicting_schema).not_to be_valid
+        expect(conflicting_schema.errors[:profile]).to include(/Property name 'title' conflicts/)
       end
     end
   end

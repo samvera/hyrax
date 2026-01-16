@@ -20,6 +20,10 @@ classes:
 contexts:
   flexible_context:
     display_label: Flexible Metadata Example
+  primary_context:
+    display_label: Primary Context
+  alternative_context:
+    display_label: Alternative Context
 mappings:
   blacklight:
     name: Additional Blacklight Solr Mappings
@@ -221,3 +225,49 @@ properties:
       - This is an abstract.
     view:
       html_dl: true
+    - Julie Allinson
+  title_primary:
+    name: title
+    available_on:
+      class:
+      - GenericWorkResource
+      context:
+      - primary_context
+    cardinality:
+      minimum: 1
+    multi_value: true
+    display_label:
+      default: Primary Title
+    property_uri: http://purl.org/dc/terms/title
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Primary title example
+  title_alternative:
+    name: title
+    available_on:
+      class:
+      - GenericWorkResource
+      context:
+      - alternative_context
+    cardinality:
+      minimum: 0
+    multi_value: true
+    display_label:
+      default: Alternative Title
+    property_uri: http://purl.org/dc/terms/alternative
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - Alternative title example
+  description_fallback:
+    available_on:
+      class:
+      - GenericWorkResource
+    cardinality:
+      minimum: 0
+    multi_value: true
+    display_label:
+      default: Description (Fallback Test)
+    property_uri: http://purl.org/dc/terms/description
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+    - This property tests fallback to key name
