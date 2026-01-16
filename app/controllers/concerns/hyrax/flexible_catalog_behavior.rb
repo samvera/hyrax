@@ -144,5 +144,10 @@ module Hyrax
       self.class.load_flexible_schema
       super
     end
+
+    # Hook to allow optional rendering at the app level
+    def render_optionally?
+      true
+    end
   end
 end
