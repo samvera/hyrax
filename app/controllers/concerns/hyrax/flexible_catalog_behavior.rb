@@ -61,7 +61,7 @@ module Hyrax
               # all index fields get this property so an admin can hide a property from the catalog search results
               # by adding the name of the property via admin dashboard > Settings > Accounts > Hidden index fields
               # NOTE: it is likely this will be handled by the metadata profile in the future
-              blacklight_config.index_fields[name].if = :render_in_tenant?
+              blacklight_config.index_fields[name].if = :render_optionally?
             end
 
             qf = blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
