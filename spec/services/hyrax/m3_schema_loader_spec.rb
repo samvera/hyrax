@@ -215,7 +215,9 @@ RSpec.describe Hyrax::M3SchemaLoader do
       it 'passes version to schema lookup' do
         expect(Hyrax::FlexibleSchema).to receive(:find_by).with(id: 2)
         schema_loader.view_definitions_for(schema: Monograph.to_s, version: 2)
-
+      end
+    end
+  end
 
   describe 'AttributeDefinition name resolution' do
     let(:schema_with_names) do
