@@ -225,14 +225,13 @@ properties:
       - This is an abstract.
     view:
       html_dl: true
-    - Julie Allinson
   title_primary:
     name: title
     available_on:
       class:
-      - GenericWorkResource
+        - GenericWork
       context:
-      - primary_context
+        - primary_context
     cardinality:
       minimum: 1
     multi_value: true
@@ -241,14 +240,14 @@ properties:
     property_uri: http://purl.org/dc/terms/title
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
-    - Primary title example
+      - Primary title example
   title_alternative:
     name: title
     available_on:
       class:
-      - GenericWorkResource
+        - GenericWork
       context:
-      - alternative_context
+        - alternative_context
     cardinality:
       minimum: 0
     multi_value: true
@@ -257,11 +256,11 @@ properties:
     property_uri: http://purl.org/dc/terms/alternative
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
-    - Alternative title example
+      - Alternative title example
   description_fallback:
     available_on:
       class:
-      - GenericWorkResource
+        - GenericWork
     cardinality:
       minimum: 0
     multi_value: true
@@ -270,4 +269,4 @@ properties:
     property_uri: http://purl.org/dc/terms/description
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
-    - This property tests fallback to key name
+      - This property tests fallback to key name
