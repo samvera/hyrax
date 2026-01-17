@@ -133,7 +133,7 @@ class Hyrax::FlexibleSchema < ApplicationRecord
 
     # Conflict if there's any overlap in both classes AND contexts
     class_overlap = (classes1 & classes2).any?
-    context_overlap = (contexts1 & contexts2).any?
+    context_overlap = !(contexts1 & contexts2).empty?
 
     class_overlap && context_overlap
   end

@@ -66,36 +66,94 @@ RSpec.describe Hyrax::FlexibleSchema, type: :model do
       it 'returns an empty hash' do
         mapping_data = described_class.mappings_data_for('simple_dc_pmh')
         expect(mapping_data).to eq({})
-
+      end
+    end
+  end
 
   describe 'property name resolution' do
     let(:profile_with_names) do
       {
+        'm3_version' => '1.0.beta2',
         'profile' => {
+          'responsibility' => 'https://wiki.duraspace.org/display/samvera/Samvera+Metadata+Interest+Group',
           'responsibility_statement' => 'Test Profile',
           'date_modified' => '2024-06-01'
         },
         'properties' => {
+          'title' => {
+            'display_label' => { 'default' => 'Title' },
+            'available_on' => { 'class' => ['GenericWork', 'Hyrax::AdministrativeSet', 'CollectionResource', 'FileSet'] },
+            'range' => 'http://www.w3.org/2001/XMLSchema#string',
+            'property_uri' => 'http://purl.org/dc/terms/title',
+            'data_type' => 'array',
+            'indexing' => ['title_sim', 'title_tesim'],
+            'cardinality' => { 'minimum' => 1 }
+          },
           'title_primary' => {
             'name' => 'title',
-            'available_on' => { 'class' => ['GenericWorkResource'], 'context' => ['primary_context'] },
+            'display_label' => { 'default' => 'Title Primary' },
+            'available_on' => { 'class' => ['GenericWork'], 'context' => ['primary_context'] },
             'range' => 'http://www.w3.org/2001/XMLSchema#string',
-            'property_uri' => 'http://purl.org/dc/terms/title'
+            'property_uri' => 'http://purl.org/dc/terms/title',
+            'data_type' => 'array',
+            'indexing' => ['title_sim', 'title_tesim'],
+            'cardinality' => { 'minimum' => 1 }
           },
           'title_alternative' => {
             'name' => 'title',
-            'available_on' => { 'class' => ['GenericWorkResource'], 'context' => ['alternative_context'] },
+            'display_label' => { 'default' => 'Title Alternative' },
+            'available_on' => { 'class' => ['GenericWork'], 'context' => ['alternative_context'] },
             'range' => 'http://www.w3.org/2001/XMLSchema#string',
-            'property_uri' => 'http://purl.org/dc/terms/alternative'
+            'property_uri' => 'http://purl.org/dc/terms/alternative',
+            'data_type' => 'array',
+            'indexing' => ['title_sim', 'title_tesim'],
+            'cardinality' => { 'minimum' => 1 }
           },
           'description_fallback' => {
-            'available_on' => { 'class' => ['GenericWorkResource'] },
+            'display_label' => { 'default' => 'Description' },
+            'available_on' => { 'class' => ['GenericWork'] },
             'range' => 'http://www.w3.org/2001/XMLSchema#string',
             'property_uri' => 'http://purl.org/dc/terms/description'
+          },
+          'date_modified' => {
+            'display_label' => { 'default' => 'Date Modified' },
+            'available_on' => { 'class' => ['GenericWork', 'Hyrax::AdministrativeSet', 'CollectionResource', 'FileSet'] },
+            'range' => 'http://www.w3.org/2001/XMLSchema#dateTime',
+            'property_uri' => 'http://purl.org/dc/terms/modified'
+          },
+          'date_uploaded' => {
+            'display_label' => { 'default' => 'Date Uploaded' },
+            'available_on' => { 'class' => ['GenericWork', 'Hyrax::AdministrativeSet', 'CollectionResource', 'FileSet'] },
+            'range' => 'http://www.w3.org/2001/XMLSchema#dateTime',
+            'property_uri' => 'http://purl.org/dc/terms/dateSubmitted'
+          },
+          'depositor' => {
+            'display_label' => { 'default' => 'Depositor' },
+            'available_on' => { 'class' => ['GenericWork', 'Hyrax::AdministrativeSet', 'CollectionResource', 'FileSet'] },
+            'range' => 'http://www.w3.org/2001/XMLSchema#string',
+            'property_uri' => 'http://id.loc.gov/vocabulary/relators/dpt',
+            'indexing' => ['depositor_ssim', 'depositor_tesim']
+          },
+          'creator' => {
+            'display_label' => { 'default' => 'Creator' },
+            'available_on' => { 'class' => ['GenericWork', 'Hyrax::AdministrativeSet', 'CollectionResource', 'FileSet'] },
+            'range' => 'http://www.w3.org/2001/XMLSchema#string',
+            'property_uri' => 'http://purl.org/dc/elements/1.1/creator',
+            'data_type' => 'array',
+            'indexing' => ['creator_sim', 'creator_tesim']
+          },
+          'label' => {
+            'display_label' => { 'default' => 'Label' },
+            'available_on' => { 'class' => ['FileSet'] },
+            'range' => 'http://www.w3.org/2001/XMLSchema#string',
+            'property_uri' => 'http://www.w3.org/2000/01/rdf-schema#label'
           }
         },
         'classes' => {
-          'GenericWorkResource' => { 'display_label' => 'Generic Work' }
+          'GenericWork' => { 'display_label' => 'Generic Work' },
+          'Hyrax::AdministrativeSet' => { 'display_label' => 'Administrative Set' },
+          'CollectionResource' => { 'display_label' => 'Collection' },
+          'FileSet' => { 'display_label' => 'File Set' }
         },
         'contexts' => {
           'primary_context' => { 'display_label' => 'Primary Context' },
@@ -108,7 +166,7 @@ RSpec.describe Hyrax::FlexibleSchema, type: :model do
 
     context 'with name attribute' do
       it 'uses name for storage key' do
-        attributes = subject.attributes_for('GenericWorkResource')
+        attributes = subject.attributes_for('GenericWork')
 
         expect(attributes).to have_key('title')
         expect(attributes).not_to have_key('title_primary')
@@ -118,7 +176,7 @@ RSpec.describe Hyrax::FlexibleSchema, type: :model do
 
     context 'without name attribute' do
       it 'falls back to YAML key' do
-        attributes = subject.attributes_for('GenericWorkResource')
+        attributes = subject.attributes_for('GenericWork')
 
         expect(attributes).to have_key('description_fallback')
       end
@@ -133,12 +191,16 @@ RSpec.describe Hyrax::FlexibleSchema, type: :model do
         conflicting_profile = profile_with_names.deep_dup
         conflicting_profile['properties']['title_conflict'] = {
           'name' => 'title',
+          'display_label' => { 'default' => 'Title Conflict' },
           'available_on' => {
-            'class' => ['GenericWorkResource'],
-            'context' => ['primary_context']  # Conflicts with title_primary
+            'class' => ['GenericWork'],
+            'context' => ['primary_context'] # Conflicts with title_primary
           },
           'range' => 'http://www.w3.org/2001/XMLSchema#string',
-          'property_uri' => 'http://purl.org/dc/terms/title'
+          'property_uri' => 'http://purl.org/dc/terms/title',
+          'data_type' => 'array',
+          'indexing' => ['title_sim', 'title_tesim'],
+          'cardinality' => { 'minimum' => 1 }
         }
 
         conflicting_schema = described_class.create(profile: conflicting_profile)
@@ -150,12 +212,16 @@ RSpec.describe Hyrax::FlexibleSchema, type: :model do
         conflicting_profile = profile_with_names.deep_dup
         conflicting_profile['properties']['title_no_context'] = {
           'name' => 'title',
+          'display_label' => { 'default' => 'Title No Context' },
           'available_on' => {
-            'class' => ['GenericWorkResource']
+            'class' => ['GenericWork']
             # No context specified
           },
           'range' => 'http://www.w3.org/2001/XMLSchema#string',
-          'property_uri' => 'http://purl.org/dc/terms/title'
+          'property_uri' => 'http://purl.org/dc/terms/title',
+          'data_type' => 'array',
+          'indexing' => ['title_sim', 'title_tesim'],
+          'cardinality' => { 'minimum' => 1 }
         }
 
         conflicting_schema = described_class.create(profile: conflicting_profile)
