@@ -33,7 +33,11 @@
         <div class="tab-content">
           <div id="descriptions_display" class="tab-pane show active">
             <h2><%= t('.descriptions') %></h2>
-            <%= render "form", form_object: @form %>
+            <% if @form.is_a?(Hyrax::Forms::ResourceForm) %>
+              <%= render "valkyrie_form", form_object: @form %>
+            <% else %>
+              <%= render "form", form_object: @form %>
+            <% end %>
           </div>
           <%= render "permission", file_set: curation_concern, form_object: @form %>
           <%= render "versioning", file_set: curation_concern %>
