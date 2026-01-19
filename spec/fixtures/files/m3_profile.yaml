@@ -188,6 +188,7 @@ properties:
     indexing:
       - keyword_sim
       - keyword_tesim
+      - facetable
     form:
       primary: false
     property_uri: http://schema.org/keywords
@@ -196,7 +197,7 @@ properties:
       - Metadata
       - Repository
     view:
-      render_as: "faceted"
+      render_as: linked
       html_dl: true
   abstract:
     available_on:
