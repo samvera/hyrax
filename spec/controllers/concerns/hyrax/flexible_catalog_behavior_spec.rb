@@ -167,11 +167,11 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
         expect(blacklight_config.index_fields['department_tesim'].helper_method).to be_nil
       end
 
-      it 'have the render_in_tenant? condition added to the blacklight config' do
-        # all fields should have the render_in_tenant? condition
-        # this allows admins to hide properties from catalog search results via the UI
+      it 'have the render_optionally? condition added to the blacklight config' do
+        # all fields should have the render_optionally? condition
+        # this allows a Hyku hook to hide properties from catalog search results
         %w[publication_date_tesim department_tesim related_resource_tesim medium_tesim].each do |field|
-          expect(blacklight_config.index_fields[field].if).to eq(:render_in_tenant?)
+          expect(blacklight_config.index_fields[field].if).to eq(:render_optionally?)
         end
       end
     end
