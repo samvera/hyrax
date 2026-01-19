@@ -62,7 +62,12 @@ module Hyrax
         available_on_classes = properties.values.flat_map do |prop|
           prop.dig('available_on', 'class')
         end.compact
-        (profile_classes + available_on_classes).uniq
+
+        clean_class_names(profile_classes + available_on_classes).uniq
+      end
+
+      def clean_class_names(names)
+        names.map { |name| name.to_s.strip.gsub(/^::/, '') }
       end
 
       # Validates a single class, checking for registration as a curation concern
@@ -74,7 +79,6 @@ module Hyrax
       # @return [void]
       def validate_class(klass, invalid_classes, mismatched_valkyrie_classes)
         base_class_name = klass.gsub(/(?<=.)Resource$/, '')
-
         unless Hyrax.config.registered_curation_concern_types.include?(base_class_name)
           invalid_classes << klass
           return

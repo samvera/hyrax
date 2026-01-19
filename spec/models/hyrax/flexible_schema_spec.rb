@@ -82,7 +82,7 @@ RSpec.describe Hyrax::FlexibleSchema, type: :model do
         'properties' => {
           'title' => {
             'display_label' => { 'default' => 'Title' },
-            'available_on' => { 'class' => ['GenericWork', 'Hyrax::AdministrativeSet', 'CollectionResource', 'FileSet'] },
+            'available_on' => { 'class' => ['GenericWork', Hyrax.config.admin_set_model, Hyrax.config.collection_model, 'FileSet'] },
             'range' => 'http://www.w3.org/2001/XMLSchema#string',
             'property_uri' => 'http://purl.org/dc/terms/title',
             'data_type' => 'array',
@@ -117,26 +117,26 @@ RSpec.describe Hyrax::FlexibleSchema, type: :model do
           },
           'date_modified' => {
             'display_label' => { 'default' => 'Date Modified' },
-            'available_on' => { 'class' => ['GenericWork', 'Hyrax::AdministrativeSet', 'CollectionResource', 'FileSet'] },
+            'available_on' => { 'class' => ['GenericWork', Hyrax.config.admin_set_model, Hyrax.config.collection_model, 'FileSet'] },
             'range' => 'http://www.w3.org/2001/XMLSchema#dateTime',
             'property_uri' => 'http://purl.org/dc/terms/modified'
           },
           'date_uploaded' => {
             'display_label' => { 'default' => 'Date Uploaded' },
-            'available_on' => { 'class' => ['GenericWork', 'Hyrax::AdministrativeSet', 'CollectionResource', 'FileSet'] },
+            'available_on' => { 'class' => ['GenericWork', Hyrax.config.admin_set_model, Hyrax.config.collection_model, 'FileSet'] },
             'range' => 'http://www.w3.org/2001/XMLSchema#dateTime',
             'property_uri' => 'http://purl.org/dc/terms/dateSubmitted'
           },
           'depositor' => {
             'display_label' => { 'default' => 'Depositor' },
-            'available_on' => { 'class' => ['GenericWork', 'Hyrax::AdministrativeSet', 'CollectionResource', 'FileSet'] },
+            'available_on' => { 'class' => ['GenericWork', Hyrax.config.admin_set_model, Hyrax.config.collection_model, 'FileSet'] },
             'range' => 'http://www.w3.org/2001/XMLSchema#string',
             'property_uri' => 'http://id.loc.gov/vocabulary/relators/dpt',
             'indexing' => ['depositor_ssim', 'depositor_tesim']
           },
           'creator' => {
             'display_label' => { 'default' => 'Creator' },
-            'available_on' => { 'class' => ['GenericWork', 'Hyrax::AdministrativeSet', 'CollectionResource', 'FileSet'] },
+            'available_on' => { 'class' => ['GenericWork', Hyrax.config.admin_set_model, Hyrax.config.collection_model, 'FileSet'] },
             'range' => 'http://www.w3.org/2001/XMLSchema#string',
             'property_uri' => 'http://purl.org/dc/elements/1.1/creator',
             'data_type' => 'array',
@@ -151,8 +151,8 @@ RSpec.describe Hyrax::FlexibleSchema, type: :model do
         },
         'classes' => {
           'GenericWork' => { 'display_label' => 'Generic Work' },
-          'Hyrax::AdministrativeSet' => { 'display_label' => 'Administrative Set' },
-          'CollectionResource' => { 'display_label' => 'Collection' },
+          Hyrax.config.admin_set_model => { 'display_label' => 'Administrative Set' },
+          Hyrax.config.collection_model => { 'display_label' => 'Collection' },
           'FileSet' => { 'display_label' => 'File Set' }
         },
         'contexts' => {
