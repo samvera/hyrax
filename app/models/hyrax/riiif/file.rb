@@ -3,13 +3,9 @@
 module Hyrax
   module Riiif
     class File < ::Riiif::File
-      extend ActiveSupport::Concern
+      include ActiveSupport::Benchmarkable
 
-      included do
-        include ActiveSupport::Benchmarkable
-
-        attr_reader :id
-      end
+      attr_reader :id
 
       def initialize(input_path, tempfile = nil, id:)
         super(input_path, tempfile)
