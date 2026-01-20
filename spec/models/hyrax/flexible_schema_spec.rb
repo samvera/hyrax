@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-RSpec.describe Hyrax::FlexibleSchema, type: :model do
+RSpec.describe Hyrax::FlexibleSchema, :clean_repo, type: :model do
   let(:profile_file_path) { File.join(fixture_path, 'files', 'm3_profile.yaml') }
   let(:profile_data) { YAML.load_file(profile_file_path) }
 
