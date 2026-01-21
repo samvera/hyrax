@@ -4,5 +4,5 @@
   <input type="date" name="stats_filters[start_date]" value="<%= @presenter.stats_filters[:start_date] %>" placeholder="yyyy-mm-dd"></input>
   <%= f.label "end [defaults to now]" %>
   <input type="date" name="stats_filters[end_date]" value="<%= @presenter.stats_filters[:end_date] %>" placeholder="yyyy-mm-dd"></input>
-  <%= f.submit "Load Stats" %>
+  <%= f.submit I18n.t("hyrax.admin.stats.date_form.load_stats", :default => "Load Stats") %>
 <%- end %>
