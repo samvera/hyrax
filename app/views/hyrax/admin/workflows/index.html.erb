@@ -24,7 +24,7 @@
                   <fieldset class="col-12">
                     <legend class="sr-only"><%= t('hyrax.dashboard.my.sr.results_per_page') %></legend>
                     <%= label_tag :per_page do %>
-                        Show <%= select_tag :per_page, options_for_select(Hyrax.config.range_for_number_of_results_to_display_per_page.map(&:to_s), h(params[:per_page])), title: "entries" %> per page
+                      <%= I18n.t('hyrax.admin.workflows.show_number_per_page', number: (select_tag :per_page, options_for_select(Hyrax.config.range_for_number_of_results_to_display_per_page.map(&:to_s), h(params[:per_page])), title: "entries"), :default => "Show %{number}) per page"); %>
                     <% end %>
                     <%= render Blacklight::HiddenSearchStateComponent.new(params: search_state.params_for_search.except(:per_page, :sort, :utf8)) %>
                   </fieldset>

@@ -10,7 +10,7 @@
     <% valid_events = events.reject { |event| event[:action].blank? || event[:timestamp].blank? } %>
     <% if valid_events.empty? %>
       <tr>
-        <td colspan="2">No user activity</td>
+        <td colspan="2"><%= I18n.t("hyrax.users.activity_log.no_user_activity", :default => "No user activity") %></td>
       </tr>
     <% else %>
       <% valid_events.each do |event| %>
