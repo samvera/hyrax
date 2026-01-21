@@ -64,7 +64,7 @@ module Hyrax
       # @param [Hash<String, Object>] config
       def initialize(name, config)
         @config = config
-        @name   = name.to_sym
+        @name   = (config['name'] || name).to_sym
       end
 
       ##
