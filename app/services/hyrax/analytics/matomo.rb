@@ -179,8 +179,8 @@ module Hyrax
           response.is_a?(Hash) && response["result"] == "error"
         end
 
-        def get(params)
-          response = Faraday.get(config.base_url, params)
+        def post(params)
+          response = Faraday.post(config.base_url, params)
           return [] if response.status != 200
           api_response = JSON.parse(response.body)
           return [] if contains_matomo_error?(api_response)
@@ -198,7 +198,7 @@ module Hyrax
             token_auth: config.auth_token
           }
           params.merge!(additional_params)
-          get(params)
+          post(params)
         end
       end
     end
