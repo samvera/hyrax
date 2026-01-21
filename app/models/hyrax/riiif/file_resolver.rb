@@ -56,7 +56,7 @@ else
   module Hyrax
     module Riiif
       class FileResolver
-        def initialize
+        def initialize(*)
           raise 'Riiif not available'
         end
       end
