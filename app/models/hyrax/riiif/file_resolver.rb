@@ -52,4 +52,14 @@ if defined?(Riiif::Image)
       end
     end
   end
+else
+  module Hyrax
+    module Riiif
+      class FileResolver
+        def initialize
+          raise 'Riiif not available'
+        end
+      end
+    end
+  end
 end

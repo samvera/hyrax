@@ -30,4 +30,14 @@ if defined?(::Riiif::File)
       end
     end
   end
+else
+  module Hyrax
+    module Riiif
+      class File
+        def initialize(_input_path, _tempfile = nil, id:)
+          raise 'Riiif not available'
+        end
+      end
+    end
+  end
 end
