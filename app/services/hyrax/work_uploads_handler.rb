@@ -110,7 +110,7 @@ module Hyrax
     ##
     # @api private
     def make_file_set_and_ingest(file, file_set_params = {})
-      file_set = @persister.save(resource: Hyrax::FileSet.new(file_set_args(file, file_set_params)))
+      file_set = @persister.save(resource: Hyrax.config.file_set_class.new(file_set_args(file, file_set_params)))
       Hyrax.publisher.publish('object.deposited', object: file_set, user: file.user)
       file.add_file_set!(file_set)
 
