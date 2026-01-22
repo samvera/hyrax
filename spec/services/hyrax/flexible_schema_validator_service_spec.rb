@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::FlexibleSchemaValidatorService do
+RSpec.describe Hyrax::FlexibleSchemaValidatorService, :clean_repo do
   subject(:service) { described_class.new(profile: profile) }
   let(:profile) { YAML.safe_load_file(yaml) }
   let(:yaml) { Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'm3_profile.yaml').to_s }
