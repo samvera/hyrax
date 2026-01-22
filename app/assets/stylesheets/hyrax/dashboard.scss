@@ -66,6 +66,8 @@ body.dashboard {
       font-size: $h2-font-size;
       margin-left: $table-cell-padding-sm;
       margin-top: $input-btn-padding-y;
+      flex: 1 1 auto;
+      min-width: 0; // Prevents overflow
 
       .fa {
         color: $gray;
@@ -75,6 +77,25 @@ body.dashboard {
 
     .btn {
       margin-bottom: $input-btn-padding-y;
+      flex-shrink: 0; // Prevents button from shrinking
+      white-space: nowrap; // Prevents button text from wrapping
+    }
+
+    // Ensure flexbox container works on different screen sizes
+    .d-flex {
+      width: 100%;
+    } 
+
+    @media screen and (max-width: 767px) {
+      h1 {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .btn {
+        width: 100%;
+        margin-top: 0.5rem;
+      }
     }
   }
 
@@ -121,7 +142,7 @@ body.dashboard {
   }
 
   .user-activity .card-body {
-    overflow: scroll;
+    overflow: auto;
     max-height: 20em;
   }
 

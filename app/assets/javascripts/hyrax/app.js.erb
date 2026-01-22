@@ -154,9 +154,124 @@ Hyrax = {
 
     // Minimize/maximize the dashboard sidebar
     sidebar: function () {
+        var updateSidebarState = function() {
+            var isMobile = $(window).width() < 992;
+            var $sidebar = $('.sidebar');
+            var $toggle = $('.sidebar-toggle');
+            var isMaximized = $sidebar.hasClass('maximized');
+            
+            if (isMobile) {
+                // On mobile, ensure sidebar is collapsed
+                $('.sidebar, .main-content').removeClass('maximized');
+                $toggle.attr('aria-expanded', 'false');
+            } else {
+                // On desktop, ensure sidebar is maximized
+                $('.sidebar, .main-content').addClass('maximized');
+                $toggle.attr('aria-expanded', 'true');
+            }
+        };
+
+        // Prevent keyboard focus from reaching greyed-out content
+        var manageFocusTrap = function() {
+            var isMobile = $(window).width() < 992;
+            var $mainContent = $('.main-content');
+            var isMaximized = $mainContent.hasClass('maximized');
+            
+            if (isMobile && isMaximized) {
+                // Set tabindex on all focusable elements in greyed-out content
+                $mainContent.find('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])').each(function() {
+                    if (!$(this).attr('data-original-tabindex')) {
+                        $(this).attr('data-original-tabindex', $(this).attr('tabindex') || '0');
+                        $(this).attr('tabindex', '-1');
+                    }
+                });
+            } else {
+                $mainContent.find('[data-original-tabindex]').each(function() {
+                    var originalTabindex = $(this).attr('data-original-tabindex');
+                    $(this).attr('tabindex', originalTabindex === '0' ? null : originalTabindex);
+                    $(this).removeAttr('data-original-tabindex');
+                });
+            }
+        };
+
+        var toggleSidebar = function() {
+            var $sidebar = $('.sidebar');
+            var $toggle = $('.sidebar-toggle');
+            var $mainContent = $('.main-content');
+            var isMobile = $(window).width() < 992;
+            var isMaximized = $sidebar.hasClass('maximized');
+            
+            $('.sidebar, .main-content').toggleClass('maximized');
+            $toggle.attr('aria-expanded', !isMaximized);
+            
+            // Manage sidebar state changes
+            manageFocusTrap();
+            
+            // Focus management for accessibility
+            if (isMobile) {
+                if (!isMaximized) {
+                    // Sidebar focus to first element in sidebar
+                    var $firstFocusable = $sidebar.find('a, button, [tabindex]:not([tabindex="-1"])').first();
+                    if ($firstFocusable.length) {
+                        setTimeout(function() {
+                            $firstFocusable.focus();
+                        }, 100);
+                    }
+                } else {
+                    // Return focus to toggle button
+                    $toggle.focus();
+                }
+            }
+        };
+
+        // Set initial state
+        updateSidebarState();
+        manageFocusTrap();
+        
+        // Add initialized class to prevent the flash of open sidebar on mobile page load
+        $('.sidebar, .main-content').addClass('js-initialized');
+
+        // Update state when window is resized
+        $(window).on('resize', function() {
+            updateSidebarState();
+            manageFocusTrap();
+        });
+
+        // Toggle sidebar on click
         $('.sidebar-toggle').on('click', function() {
-            $('.sidebar, .main-content').toggleClass('maximized')
-        })
+            toggleSidebar();
+        });
+
+        // Toggle sidebar on keyboard press
+        $('.sidebar-toggle').on('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleSidebar();
+            }
+        });
+
+        // Close sidebar when clicking backdrop on mobile
+        $('.sidebar-backdrop').on('click', function() {
+            if ($(window).width() < 992) {
+                $('.sidebar, .main-content').removeClass('maximized');
+                $('.sidebar-toggle').attr('aria-expanded', 'false');
+                manageFocusTrap();
+                $('.sidebar-toggle').focus();
+            }
+        });
+
+        // Close sidebar on Escape key when open on mobile
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Escape' && $(window).width() < 992) {
+                var $sidebar = $('.sidebar');
+                if ($sidebar.hasClass('maximized')) {
+                    $('.sidebar, .main-content').removeClass('maximized');
+                    $('.sidebar-toggle').attr('aria-expanded', 'false');
+                    manageFocusTrap();
+                    $('.sidebar-toggle').focus();
+                }
+            }
+        });
     },
 
     // Add and reorder files attached to works
