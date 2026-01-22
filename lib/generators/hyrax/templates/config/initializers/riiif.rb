@@ -13,7 +13,7 @@ Rails.application.reloader.to_prepare do
   end
 
   if Hyrax.config.use_valkyrie?
-    Riiif::Image.file_resolver = Hyrax::RiiifFileResolver.new
+    Riiif::Image.file_resolver = Hyrax::Riiif::FileResolver.new
   else
     Riiif::Image.file_resolver = Riiif::HttpFileResolver.new
 
@@ -33,83 +33,4 @@ Rails.application.reloader.to_prepare do
   # Defaults to using Imagemagick - Set use_vips to true in order to use vips. lib-vips is already installed as part of hyrax-base
   # Must be using riiif 2.8 or newer
   # Riiif::Engine.config.use_vips = false
-end
-
-module Hyrax
-  # Adds file locking to Riiif::File
-  # @see RiiifFileResolver
-  Rails.application.reloader.to_prepare do
-    class RiiifFile < Riiif::File
-      include ActiveSupport::Benchmarkable
-
-      attr_reader :id
-      def initialize(input_path, tempfile = nil, id:)
-        super(input_path, tempfile)
-        raise(ArgumentError, "must specify id") if id.blank?
-        @id = id
-      end
-
-      # Wrap extract in a read lock and benchmark it
-      def extract(transformation, image_info = nil)
-        Riiif::Image.file_resolver.file_locks[id].with_read_lock do
-          benchmark "RiiifFile extracted #{path} with #{transformation.to_params}", level: :debug do
-            super
-          end
-        end
-      end
-
-      private
-
-      def logger
-        Hyrax.logger
-      end
-    end
-  end
-
-  class RiiifFileResolver
-    include ActiveSupport::Benchmarkable
-
-    # @param [String] id from iiif manifest
-    # @return [Riiif::File]
-    def find(id)
-      path = nil
-      file_locks[id].with_write_lock do
-        path = build_path(id)
-        path = build_path(id, force: true) unless File.exist?(path) # Ensures the file is locally available
-      end
-      RiiifFile.new(path, id: id)
-    end
-
-    # tracks individual file locks
-    # @see RiiifFile
-    # @return [Concurrent::Map<Concurrent::ReadWriteLock>]
-    def file_locks
-      @file_locks ||= Concurrent::Map.new do |k, v|
-        k.compute_if_absent(v) { Concurrent::ReadWriteLock.new }
-      end
-    end
-
-    private
-
-    def build_path(id, force: false)
-      Riiif::Image.cache.fetch("riiif:" + Digest::MD5.hexdigest("path:#{id}"),
-                               expires_in: Riiif::Image.expires_in,
-                               force: force) do
-        load_file(id)
-      end
-    end
-
-    def load_file(id)
-      benchmark "RiiifFileResolver loaded #{id}", level: :debug do
-        fs_id = id.sub(/\A([^\/]*)\/.*/, '\1')
-        file_set = Hyrax.query_service.find_by(id: fs_id)
-        file_metadata = Hyrax.custom_queries.find_original_file(file_set: file_set)
-        file_metadata.file.disk_path.to_s # Stores a local copy in tmpdir
-      end
-    end
-
-    def logger
-      Hyrax.logger
-    end
-  end
 end
