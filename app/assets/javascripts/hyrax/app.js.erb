@@ -27,19 +27,19 @@ Hyrax = {
     // The AdminSet edit page
     adminSetEditor: function() {
       var AdminSetControls = require('hyrax/admin/admin_set_controls');
-      var controls = new AdminSetControls($('#admin-set-controls'));
+      new AdminSetControls($('#admin-set-controls'));
     },
 
     // The collectionType edit page
     collectionTypeEditor: function() {
       var CollectionTypeControls = require('hyrax/admin/collection_type_controls');
-      var controls = new CollectionTypeControls($('#collection-types-controls'));
+      new CollectionTypeControls($('#collection-types-controls'));
     },
 
     // The Collection edit page
     collectionEditor: function() {
       var CollectionControls = require('hyrax/collections/editor');
-      var controls = new CollectionControls($('#collection-edit-controls'));
+      new CollectionControls($('#collection-edit-controls'));
     },
 
     // Collections v2 - collections related js should (over time) be moved here
@@ -52,7 +52,7 @@ Hyrax = {
     // Collection types
     collectionTypes: function() {
       var CollectionTypes = require('hyrax/collection_types');
-      var collection_types = new CollectionTypes($('.collection-types-wrapper'))
+      new CollectionTypes($('.collection-types-wrapper'));
     },
 
     collectionUtilities: function() {
@@ -82,7 +82,7 @@ Hyrax = {
 
     // The work edit page
     workEditor: function () {
-        var element = $("[data-behavior='work-form']")
+        var element = $("[data-behavior='work-form']");
         if (element.length > 0) {
           var Editor = require('hyrax/editor');
           new Editor(element).init();
@@ -119,8 +119,8 @@ Hyrax = {
         <% if Hyrax.config.realtime_notifications? %>
         var consumer = ActionCable.createConsumer("<%= Hyrax::Engine.routes.url_helpers.notifications_endpoint_path %>");
         consumer.subscriptions.create("Hyrax::NotificationsChannel", {
-            connected: function(data) {
-                this.perform("update_locale", { locale: $('html').attr('lang') });
+            connected: function() {
+                 this.perform("update_locale", { locale: $('html').attr('lang') });
             },
 
             received: function(data) {
@@ -154,29 +154,47 @@ Hyrax = {
 
     // Minimize/maximize the dashboard sidebar
     sidebar: function () {
+        // Cache jQuery selectors
+        var $sidebar = $('.sidebar');
+        var $toggle = $('.sidebar-toggle');
+        var $mainContent = $('.main-content');
+        var $sidebarElements = $('.sidebar, .main-content');
+
+        var isMobileView = function() {
+            return $(window).width() < 992;
+        };
+
+        var closeSidebar = function() {
+            $sidebarElements.removeClass('maximized');
+            $toggle.attr('aria-expanded', 'false');
+            manageFocusTrap();
+            $toggle.focus();
+        };
+
         var updateSidebarState = function() {
-            var isMobile = $(window).width() < 992;
-            var $sidebar = $('.sidebar');
-            var $toggle = $('.sidebar-toggle');
+            var isMobile = isMobileView();
             var isMaximized = $sidebar.hasClass('maximized');
-            
+
             if (isMobile) {
                 // On mobile, ensure sidebar is collapsed
-                $('.sidebar, .main-content').removeClass('maximized');
-                $toggle.attr('aria-expanded', 'false');
+                if (isMaximized) {
+                    $sidebarElements.removeClass('maximized');
+                    $toggle.attr('aria-expanded', 'false');
+                }
             } else {
                 // On desktop, ensure sidebar is maximized
-                $('.sidebar, .main-content').addClass('maximized');
-                $toggle.attr('aria-expanded', 'true');
+                if (!isMaximized) {
+                    $sidebarElements.addClass('maximized');
+                    $toggle.attr('aria-expanded', 'true');
+                }
             }
         };
 
         // Prevent keyboard focus from reaching greyed-out content
         var manageFocusTrap = function() {
-            var isMobile = $(window).width() < 992;
-            var $mainContent = $('.main-content');
+            var isMobile = isMobileView();
             var isMaximized = $mainContent.hasClass('maximized');
-            
+
             if (isMobile && isMaximized) {
                 // Set tabindex on all focusable elements in greyed-out content
                 $mainContent.find('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])').each(function() {
@@ -195,18 +213,15 @@ Hyrax = {
         };
 
         var toggleSidebar = function() {
-            var $sidebar = $('.sidebar');
-            var $toggle = $('.sidebar-toggle');
-            var $mainContent = $('.main-content');
-            var isMobile = $(window).width() < 992;
+            var isMobile = isMobileView();
             var isMaximized = $sidebar.hasClass('maximized');
-            
-            $('.sidebar, .main-content').toggleClass('maximized');
+
+            $sidebarElements.toggleClass('maximized');
             $toggle.attr('aria-expanded', !isMaximized);
-            
+
             // Manage sidebar state changes
             manageFocusTrap();
-            
+
             // Focus management for accessibility
             if (isMobile) {
                 if (!isMaximized) {
@@ -227,9 +242,9 @@ Hyrax = {
         // Set initial state
         updateSidebarState();
         manageFocusTrap();
-        
+
         // Add initialized class to prevent the flash of open sidebar on mobile page load
-        $('.sidebar, .main-content').addClass('js-initialized');
+        $sidebarElements.addClass('js-initialized');
 
         // Update state when window is resized
         $(window).on('resize', function() {
@@ -238,12 +253,12 @@ Hyrax = {
         });
 
         // Toggle sidebar on click
-        $('.sidebar-toggle').on('click', function() {
+        $toggle.on('click', function() {
             toggleSidebar();
         });
 
         // Toggle sidebar on keyboard press
-        $('.sidebar-toggle').on('keydown', function(e) {
+        $toggle.on('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 toggleSidebar();
@@ -252,23 +267,16 @@ Hyrax = {
 
         // Close sidebar when clicking backdrop on mobile
         $('.sidebar-backdrop').on('click', function() {
-            if ($(window).width() < 992) {
-                $('.sidebar, .main-content').removeClass('maximized');
-                $('.sidebar-toggle').attr('aria-expanded', 'false');
-                manageFocusTrap();
-                $('.sidebar-toggle').focus();
+            if (isMobileView()) {
+                closeSidebar();
             }
         });
 
         // Close sidebar on Escape key when open on mobile
         $(document).on('keydown', function(e) {
-            if (e.key === 'Escape' && $(window).width() < 992) {
-                var $sidebar = $('.sidebar');
+            if (e.key === 'Escape' && isMobileView()) {
                 if ($sidebar.hasClass('maximized')) {
-                    $('.sidebar, .main-content').removeClass('maximized');
-                    $('.sidebar-toggle').attr('aria-expanded', 'false');
-                    manageFocusTrap();
-                    $('.sidebar-toggle').focus();
+                    closeSidebar();
                 }
             }
         });
