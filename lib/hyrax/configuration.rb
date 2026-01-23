@@ -308,6 +308,10 @@ module Hyrax
       file_set_model.constantize
     end
 
+    def valkyrie_file_set_class
+      file_set_class.ancestors.include?(ActiveFedora::Base) ? Hyrax::FileSet : file_set_class
+    end
+
     ##
     # @!attribute [rw] file_set_include_metadata
     #   @return [Boolean] whether to include static metadata for file_sets
