@@ -1,0 +1,17 @@
+# See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+#
+# To ban all spiders from the entire site uncomment the next two lines:
+# User-agent: *
+# Disallow: /
+User-agent: *
+# Disable crawling filters - it'll just slow down discovery of useful resources - better that they page.
+Disallow: /catalog*f[
+Disallow: /catalog*f%5B
+# Bots can't log in.
+Disallow: /users
+Disallow: /dashboard
+Disallow: /embargoes
+Disallow: /leases
+Disallow: /admin
+# Tell them where they should look!
+Sitemap: <%= "#{request.base_url}/sitemap" %>%

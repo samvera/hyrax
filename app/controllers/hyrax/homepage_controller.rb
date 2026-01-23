@@ -18,6 +18,13 @@ class Hyrax::HomepageController < ApplicationController
     recent
   end
 
+  def robots
+    expires_in 1.day, public: true
+    respond_to do |format|
+      format.text
+    end
+  end
+
   private
 
   # Return 5 collections
