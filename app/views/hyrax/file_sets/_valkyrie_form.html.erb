@@ -1,8 +1,12 @@
 <%= simple_form_for [main_app, form_object], html: { multipart: true, class: 'nav-safety' } do |f| %>
-  <%= render('shared/schema_version', f: f) if curation_concern.flexible? %>
-
-  <div id="base-terms">
+  <% if curation_concern.flexible? %>
+    <div class="col-md-3 pull-right">
+      <%= render('shared/schema_version', f: f) %>
+    </div>
+  <% end %>
+  <div id="base-terms" class="<%= curation_concern.flexible? ? 'col-md-9' : 'col-md-12' %>">
     <% f.object.primary_terms.each do |term| %>
+      <% next if [:contexts, :schema_version].include?(term) %>
       <%= f.input term %>
     <% end %>
   </div>
