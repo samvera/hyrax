@@ -1,0 +1,176 @@
+# Requires Docker Compose v2
+name: allinson
+services:
+  web:
+    build:
+      context: .
+      target: hyrax-engine-dev
+      args:
+        - EXTRA_APK_PACKAGES=git less
+        - BUNDLE_GEMFILE=Gemfile.allinson
+    image: ghcr.io/samvera/hyrax-dev:${GITHUB_SHA:-latest}
+    command: sh -c 'bundle exec puma -v -b tcp://0.0.0.0:3000'
+    stdin_open: true
+    tty: true
+    user: root
+    env_file:
+      - .koppie/.env
+    environment:
+      - APP_NAME=allinson
+      - RAILS_ROOT=/app/samvera/hyrax-webapp
+      - HYRAX_FLEXIBLE=true
+      - HYRAX_FLEXIBLE_CLASSES=Hyrax::AdministrativeSet,CollectionResource,FileSet,GenericWork,Monograph
+      - HYRAX_DISABLE_INCLUDE_METADATA=true
+    depends_on:
+      - worker
+      - chrome
+      - fits
+      - memcached
+      - postgres
+      - redis
+      - solr
+    ports:
+      - 3003:3000
+      - 9879:9876
+      - 1051:1048
+    volumes:
+      - ./bin:/app/samvera
+      - .koppie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
+      - bundle:/app/bundle
+      - clamav:/var/lib/clamav
+      - hyrax-storage:/app/samvera/hyrax-webapp/storage
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - allinson
+
+  worker:
+    image: ghcr.io/samvera/hyrax-dev:${GITHUB_SHA:-latest}
+    entrypoint: worker-entrypoint.sh
+    command: sh -c 'bundle exec sidekiq'
+    user: root
+    env_file:
+      - .koppie/.env
+    environment:
+      - APP_NAME=allinson
+      - RAILS_ROOT=/app/samvera/hyrax-webapp
+      - HYRAX_FLEXIBLE=true
+      - HYRAX_FLEXIBLE_CLASSES=Hyrax::AdministrativeSet,CollectionResource,FileSet,GenericWork,Monograph
+      - HYRAX_DISABLE_INCLUDE_METADATA=true
+    depends_on:
+      - fits
+      - memcached
+      - postgres
+      - redis
+      - solr
+    volumes:
+      - ./bin:/app/samvera
+      - .koppie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
+      - bundle:/app/bundle
+      - clamav:/var/lib/clamav
+      - hyrax-storage:/app/samvera/hyrax-webapp/storage
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - allinson
+
+  chrome:
+    image: selenium/standalone-chromium:4
+    environment:
+      #      - START_XVFB=false
+      - SE_NODE_SESSION_TIMEOUT=800
+      - SE_ENABLE_TRACING=false
+      - SE_ENABLE_BROWSER_LEFTOVERS_CLEANUP=true
+      - SE_BROWSER_ARGS_DISABLE_DSHM=--disable-dev-shm-usage
+      - SE_BROWSER_ARGS_HEADLESS=--headless=new
+    #    logging:
+    #      driver: none
+    volumes:
+      - /dev/shm:/dev/shm
+    shm_size: 2g
+    ports:
+      - "4448:4444"
+      - "5963:5900"
+      - "7963:7900"
+    networks:
+      - allinson
+
+  postgres:
+    image: postgres:15-alpine
+    env_file:
+      - .koppie/.env
+    ports:
+      - "5435:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - allinson
+
+  fits:
+    image: ghcr.io/samvera/fitsservlet:1.6.0
+    ports:
+      - 8080
+    networks:
+      - allinson
+
+  memcached:
+    image: bitnamilegacy/memcached
+    ports:
+      - "11214:11211"
+    networks:
+      - allinson
+
+  redis:
+    image: bitnamilegacy/redis:6.2
+    env_file:
+      - .koppie/.env
+    volumes:
+      - redis:/bitnamilegacy/redis/data
+    networks:
+      - allinson
+
+  solr:
+    image: solr:9.9
+    env_file:
+      - .koppie/.env
+    ports:
+      - 8986:8983
+    command:
+      - sh
+      - "-c"
+      - "precreate-core koppie-test /opt/solr/server/configsets/hyraxconf; solr-precreate koppie /opt/solr/server/configsets/hyraxconf"
+    volumes:
+      - solr_home:/var/solr:cached
+      - .koppie/solr:/opt/solr/server/configsets/hyraxconf
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 524288
+    networks:
+      - allinson
+
+volumes:
+  bundle:
+  clamav:
+  db:
+  hyrax-storage:
+  hyrax-derivatives:
+  hyrax-uploads:
+  rails-public:
+  rails-tmp:
+  redis:
+  sidekiq-public:
+  sidekiq-tmp:
+  solr_home:
+
+networks:
+  allinson:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-allinson
