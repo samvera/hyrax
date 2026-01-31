@@ -74,6 +74,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:iiif_info_url_builder=) }
   it { is_expected.to respond_to(:iiif_manifest_cache_duration) }
   it { is_expected.to respond_to(:iiif_manifest_cache_duration=) }
+  it { is_expected.to respond_to(:iiif_manifest_factory) }
+  it { is_expected.to respond_to(:iiif_manifest_factory=) }
   it { is_expected.to respond_to(:iiif_metadata_fields) }
   it { is_expected.to respond_to(:iiif_metadata_fields=) }
   it { is_expected.to respond_to(:libreoffice_path) }

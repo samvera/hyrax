@@ -457,6 +457,7 @@ module Hyrax
     attr_writer :iiif_info_url_builder
     attr_writer :iiif_metadata_fields
     attr_writer :iiif_manifest_cache_duration
+    attr_writer :iiif_manifest_factory
     attr_writer :rendering_predicate
 
     # Enable IIIF image service. This is required to use the
@@ -522,6 +523,16 @@ module Hyrax
     # @see https://api.rubyonrails.org/classes/ActiveSupport/Cache/Store.html#method-i-fetch
     def iiif_manifest_cache_duration
       @iiif_manifest_cache_duration ||= 30.days.to_i
+    end
+
+    ##
+    # Factory class for generating IIIF manifests
+    #
+    # @see Hyrax::ManifestBuilderService
+    #
+    # @return [Class]
+    def iiif_manifest_factory
+      @iiif_manifest_factory ||= ::IIIFManifest::ManifestFactory
     end
 
     ##
