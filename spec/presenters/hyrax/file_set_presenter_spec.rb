@@ -338,6 +338,34 @@ RSpec.describe Hyrax::FileSetPresenter do
           its(:display_image) { is_expected.to be_instance_of IIIFManifest::DisplayImage }
           its(:display_image) { is_expected.to have_attributes(url: "http://test.host/images/#{uri_segment_escape(id)}/full/600,/0/default.jpg") }
 
+          context 'format handling' do
+            context 'when mime_type is present in solr document' do
+              it 'uses mime_type as the format' do
+                expect(presenter.display_image.format).to eq('image/jp2')
+              end
+            end
+
+            context 'when mime_type is nil' do
+              before { allow(presenter).to receive(:mime_type).and_return(nil) }
+
+              context 'with rgba alpha channels' do
+                before { allow(presenter).to receive(:alpha_channels).and_return('rgba') }
+
+                it 'returns image/png format' do
+                  expect(presenter.display_image.format).to eq('image/png')
+                end
+              end
+
+              context 'without rgba alpha channels' do
+                before { allow(presenter).to receive(:alpha_channels).and_return(nil) }
+
+                it 'returns image/jpeg format' do
+                  expect(presenter.display_image.format).to eq('image/jpeg')
+                end
+              end
+            end
+          end
+
           context 'with custom image size default' do
             let(:custom_image_size) { '666,' }
 
