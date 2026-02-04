@@ -113,7 +113,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ExistingRecordsValidator do
       stub_const('FileSet', Class.new)
 
       classes = validator.send(:potential_existing_classes)
-      expect(classes).to include("AdminSet", "Collection", "FileSet")
+      expect(classes).to include(AdminSet, Collection, FileSet)
     end
 
     it 'removes duplicates' do

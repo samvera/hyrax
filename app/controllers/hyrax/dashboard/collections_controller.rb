@@ -4,7 +4,8 @@ module Hyrax
     ## Shows a list of all collections to the admins
     class CollectionsController < Hyrax::My::CollectionsController
       include Blacklight::AccessControls::Catalog
-      include Blacklight::Base
+      include Blacklight::Configurable
+      include Blacklight::SearchContext
       include Hyrax::FlexibleSchemaBehavior if Hyrax.config.collection_flexible?
       include Hyrax::EnsureMigratedBehavior
 
@@ -445,7 +446,7 @@ module Hyrax
         # TODO: REMOVE in 3.0 - part of deprecation of permission attributes
         permissions = attributes.delete("permissions_attributes")
         return [] unless permissions
-        Deprecation.warn(self, "Passing in permissions_attributes parameter with a new collection is deprecated and support will be removed from Hyrax 3.0. " \
+        Deprecation.warn("Passing in permissions_attributes parameter with a new collection is deprecated and support will be removed from Hyrax 3.0. " \
                                "Use Hyrax::PermissionTemplate instead to grant Manage, Deposit, or View access.")
         participants = []
         permissions.each do |p|

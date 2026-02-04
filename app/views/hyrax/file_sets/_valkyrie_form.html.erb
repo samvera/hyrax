@@ -1,0 +1,37 @@
+<%= simple_form_for [main_app, form_object], html: { multipart: true, class: 'nav-safety' } do |f| %>
+  <% if curation_concern.flexible? %>
+    <div class="col-md-3 pull-right">
+      <%= render('shared/schema_version', f: f) %>
+    </div>
+  <% end %>
+  <div id="base-terms" class="<%= curation_concern.flexible? ? 'col-md-9' : 'col-md-12' %>">
+    <% f.object.primary_terms.each do |term| %>
+      <% next if [:contexts, :schema_version].include?(term) %>
+      <%= f.input term %>
+    <% end %>
+  </div>
+  <% if f.object.display_additional_fields? %>
+    <%= link_to t('hyrax.collection.form.additional_fields'),
+            '#extended-terms',
+            class: 'btn btn-secondary additional-fields',
+            data: { toggle: 'collapse' },
+            role: "button",
+            'aria-expanded'=> "false",
+            'aria-controls'=> "extended-terms" %>
+    <div id="extended-terms" class="collapse">
+      <% f.object.secondary_terms.each do |term| %>
+        <%= f.input term %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-md-12 form-actions">
+      <%= f.submit(
+        (curation_concern.persisted? ? t('.save') : t('.attach_to', parent: @parent.human_readable_type)),
+        class: 'btn btn-primary'
+      ) %>
+      <%= link_to t('.cancel'), parent_path(@parent), class: 'btn btn-link' %>
+    </div>
+  </div>
+<% end %>

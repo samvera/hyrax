@@ -34,6 +34,7 @@ module Hyrax
   17. Install jquery-datatables
   18. Initializes the noid-rails database-backed minter
   19. Generates RIIIF image server implementation
+  20. Adds show builder for blacklight_dynamic_sitemaps
          """
 
     def run_required_generators
@@ -65,6 +66,7 @@ module Hyrax
 
       inject_into_file 'config/routes.rb', after: /devise_for :users\s*\n/ do
         "  mount Qa::Engine => '/authorities'\n"\
+        "  mount BlacklightDynamicSitemap::Engine => '/'\n"\
         "  mount Hyrax::Engine, at: '/'\n"\
         "  resources :welcome, only: 'index'\n"\
         "  root 'hyrax/homepage#index'\n"\
@@ -208,6 +210,10 @@ module Hyrax
       gem_group :development, :test do
         gem 'dotenv-rails', '~> 2.8'
       end
+    end
+
+    def blacklight_dynamic_sitemap
+      copy_file 'app/views/blacklight_dynamic_sitemap/sitemap/show.xml.builder', 'app/views/blacklight_dynamic_sitemap/sitemap/show.xml.builder'
     end
   end
 end

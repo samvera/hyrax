@@ -8,7 +8,7 @@ module Hyrax
       # Cast any array values on the model to scalars.
       def [](key)
         return super if key == :thumbnail_id
-        super.first
+        super&.first
       end
 
       def permission_template

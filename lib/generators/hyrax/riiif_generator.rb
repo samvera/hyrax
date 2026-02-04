@@ -17,7 +17,7 @@ class Hyrax::RiiifGenerator < Rails::Generators::Base
   end
 
   def add_to_gemfile
-    gem 'riiif', '~> 2.1'
+    gem 'riiif', '~> 2.8'
   end
 
   def copy_initializer

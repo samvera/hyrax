@@ -88,38 +88,34 @@ RSpec.describe Hyrax::M3SchemaLoader do
   end
 
   describe '#view_definitions_for' do
-    context 'when schema has attributes without view options' do
-      it 'returns display labels and admin flag' do
-        expect(schema_loader.view_definitions_for(schema: Monograph.to_s))
-          .to eq({
-                   creator: { "admin_only" => false, "display_label" => { "default" => "Creator" } },
-                   date_modified: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_modified_dtsi" } },
-                   date_uploaded: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_uploaded_dtsi" } },
-                   depositor: { "admin_only" => false, "display_label" => { "default" => "Depositor" } },
-                   title: { "admin_only" => false, "display_label" => { "default" => "blacklight.search.fields.show.title_tesim" } }
-                 })
+    context 'when work type properties have only display_label and admin_only with no additional view options' do
+      it 'returns nothing' do
+        expect(schema_loader.view_definitions_for(schema: Monograph.to_s)).to eq({})
       end
     end
 
-    context 'when schema has attributes with view options' do
+    context 'when work type properties have display_label, admin_only, and additional view options' do
       let(:profile_with_view) do
         modified_profile = profile.dup
-        modified_profile['properties']['title']['view'] = {
-          'label' => { 'en' => 'Title', 'es' => 'Título' },
+        modified_profile['properties']['creator']['view'] = {
+          'label' => { 'en' => 'Creator' },
           'html_dl' => true
         }
+        modified_profile['properties']['abstract']['available_on']['class'] << 'Monograph'
         modified_profile['properties']['description'] = {
           'available_on' => {
             'class' => ['Monograph']
           },
-          'view' => {
-            'label' => { 'en' => 'Description' },
-            'display' => true
-          },
           'cardinality' => { 'minimum' => 0 },
-          'multi_value' => true,
+          'data_type' => 'array',
           'property_uri' => 'http://purl.org/dc/terms/description',
-          'range' => 'http://www.w3.org/2001/XMLSchema#string'
+          'range' => 'http://www.w3.org/2001/XMLSchema#string',
+          'display_label' => {
+            'default' => 'blacklight.search.fields.show.description_tesim'
+          },
+          'view' => {
+            'html_dl' => true
+          }
         }
         modified_profile
       end
@@ -133,32 +129,32 @@ RSpec.describe Hyrax::M3SchemaLoader do
         allow(Hyrax::FlexibleSchema).to receive(:find_by).and_return(schema_with_view)
       end
 
-      it 'returns hash with view definitions for attributes that have view options' do
-        result = schema_loader.view_definitions_for(schema: Monograph.to_s)
-        expect(result).to include(
-          date_modified: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_modified_dtsi" } },
-          date_uploaded: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_uploaded_dtsi" } },
-          depositor: { "admin_only" => false, "display_label" => { "default" => "Depositor" } },
-          description: { "admin_only" => nil, "display" => true, "display_label" => {} },
-          title: { "admin_only" => false, "display_label" => { "default" => "blacklight.search.fields.show.title_tesim" }, "html_dl" => true }
-        )
+      it 'returns only properties with additional view options' do
+        expect(schema_loader.view_definitions_for(schema: GenericWork.to_s))
+          .to eq({
+                   creator: { "html_dl" => true, "display_label" => { "default" => "Creator" }, "admin_only" => false },
+                   keyword: { "render_as" => "linked", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
+                   abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
+                 })
+      end
+
+      it 'excludes deprecated view.label from properties' do
+        expect(schema_loader.view_definitions_for(schema: Monograph.to_s)[:creator])
+          .to eq({
+                   "display_label" => { "default" => "Creator" }, "admin_only" => false, "html_dl" => true
+                 })
       end
     end
 
     context 'with context filtering' do
       let(:profile_with_context) do
         modified_profile = profile.dup
-        modified_profile['properties']['title']['view'] = { 'label' => { 'en' => 'Title' } }
-        modified_profile['properties']['contextual_field'] = {
-          'available_on' => {
-            'class' => ['Monograph'],
-            'context' => 'flexible_context'
-          },
-          'view' => { 'label' => { 'en' => 'Contextual Field' } },
-          'cardinality' => { 'minimum' => 0 },
-          'multi_value' => true,
-          'property_uri' => 'http://example.org/contextual_field',
-          'range' => 'http://www.w3.org/2001/XMLSchema#string'
+        modified_profile['properties']['keyword']['available_on'] = {
+          'class' => ['Monograph'],
+          'context' => 'flexible_context'
+        }
+        modified_profile['properties']['abstract']['available_on'] = {
+          'class' => ['Monograph']
         }
         modified_profile
       end
@@ -175,29 +171,32 @@ RSpec.describe Hyrax::M3SchemaLoader do
       context 'when no context is provided' do
         it 'excludes fields with context requirements' do
           result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: nil)
-          expect(result).to include(title: { admin_only: false, display_label: { default: "blacklight.search.fields.show.title_tesim" } })
-          expect(result).not_to have_key(:contextual_field)
+          expect(result)
+            .to eq(
+              abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
+            )
+          expect(result).not_to have_key(:context)
         end
       end
 
-      context 'when matching context is provided' do
+      context 'when a context is provided' do
         it 'includes fields matching the context' do
-          result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'flexible_context')
-          expect(result).to include(
-            contextual_field: { "admin_only" => nil, "display_label" => {} },
-            date_modified: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_modified_dtsi" } },
-            date_uploaded: { "admin_only" => nil, "display_label" => { "default" => "blacklight.search.fields.show.date_uploaded_dtsi" } },
-            depositor: { "admin_only" => false, "display_label" => { "default" => "Depositor" } },
-            title: { "admin_only" => false, "display_label" => { "default" => "blacklight.search.fields.show.title_tesim" } }
-          )
+          expect(schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'flexible_context'))
+            .to eq(
+              keyword: { "render_as" => "linked", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
+              abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
+            )
         end
       end
 
       context 'when non-matching context is provided' do
         it 'excludes fields with different context requirements' do
           result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'other_context')
-          expect(result).to include(title: { admin_only: false, display_label: { default: "blacklight.search.fields.show.title_tesim" } })
-          expect(result).not_to have_key(:contextual_field)
+          expect(result)
+            .to eq(
+              abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
+            )
+          expect(result).not_to have_key(:context)
         end
       end
     end
@@ -216,6 +215,52 @@ RSpec.describe Hyrax::M3SchemaLoader do
       it 'passes version to schema lookup' do
         expect(Hyrax::FlexibleSchema).to receive(:find_by).with(id: 2)
         schema_loader.view_definitions_for(schema: Monograph.to_s, version: 2)
+      end
+    end
+  end
+
+  describe 'AttributeDefinition name resolution' do
+    let(:schema_with_names) do
+      Hyrax::FlexibleSchema.create(
+        profile: {
+          'profile' => { 'responsibility_statement' => 'Test Profile', 'date_modified' => '2024-01-01' },
+          'properties' => {
+            'title_primary' => {
+              'name' => 'title',
+              'available_on' => { 'class' => ['Monograph'] },
+              'range' => 'http://www.w3.org/2001/XMLSchema#string',
+              'property_uri' => 'http://purl.org/dc/terms/title'
+            },
+            'description_key' => {
+              'available_on' => { 'class' => ['Monograph'] },
+              'range' => 'http://www.w3.org/2001/XMLSchema#string',
+              'property_uri' => 'http://purl.org/dc/terms/description'
+            }
+          },
+          'classes' => { 'Monograph' => {} }
+        }
+      )
+    end
+
+    context 'with name attribute' do
+      it 'creates AttributeDefinition with name from config' do
+        allow(Hyrax::FlexibleSchema).to receive(:find_by).and_return(schema_with_names)
+        definitions = schema_loader.send(:definitions, 'Monograph', 1)
+
+        title_definition = definitions.find { |d| d.name == :title }
+        expect(title_definition).not_to be_nil
+        expect(title_definition.name).to eq(:title)
+      end
+    end
+
+    context 'without name attribute' do
+      it 'creates AttributeDefinition with YAML key as name' do
+        allow(Hyrax::FlexibleSchema).to receive(:find_by).and_return(schema_with_names)
+        definitions = schema_loader.send(:definitions, 'Monograph', 1)
+
+        description_definition = definitions.find { |d| d.name == :description_key }
+        expect(description_definition).not_to be_nil
+        expect(description_definition.name).to eq(:description_key)
       end
     end
   end

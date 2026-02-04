@@ -48,7 +48,7 @@ module Hyrax
 
       # Defines a callback for a given hook.
       def set(hook, warn: true, &block)
-        Deprecation.warn(self, warning_for_set) if warn
+        Deprecation.warn(warning_for_set) if warn
         raise NoBlockGiven, "a block is required when setting a callback" unless block_given?
         @callbacks[hook] = proc(&block)
       end
@@ -60,7 +60,7 @@ module Hyrax
 
       # Runs the callback defined for a given hook, with the arguments provided
       def run(hook, *args, warn: true, **opts)
-        Deprecation.warn(self, warning_for_run) if warn
+        Deprecation.warn(warning_for_run) if warn
         raise NotEnabled unless enabled?(hook)
         return nil unless set?(hook)
         @callbacks[hook].call(*args, **opts)

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   class SingleUseLinksViewerController < DownloadsController
-    include Blacklight::Base
+    include Blacklight::Configurable
+    include Blacklight::SearchContext
     include Blacklight::AccessControls::Catalog
     include ActionDispatch::Routing::PolymorphicRoutes
 

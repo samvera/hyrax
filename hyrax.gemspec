@@ -38,6 +38,7 @@ SUMMARY
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'blacklight', '~> 7.29'
+  spec.add_dependency 'blacklight_dynamic_sitemap', '~> 1.0'
   spec.add_dependency 'blacklight-gallery', '~> 4.6.4'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
   spec.add_dependency 'browse-everything', '>= 0.16', '< 2.0'
@@ -68,6 +69,7 @@ SUMMARY
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
   spec.add_dependency 'listen', '~> 3.9'
   spec.add_dependency 'mailboxer', '~> 0.12'
+  spec.add_dependency 'multi_json', '1.18.0' # Locked below 1.19.1 because undefined method `except' for an instance of JSON::Ext::Generator::State
   spec.add_dependency 'nest', '~> 3.1'
   spec.add_dependency 'noid-rails', '~> 3.0'
   spec.add_dependency 'oauth'
