@@ -1614,6 +1614,13 @@ pt-BR:
         link_expired_not_found: Link de uso único expirado ou não encontrado
         link_not_found: Link de uso único não encontrado
     sort_label: Ordene a lista de itens
+    sort:
+      uploaded:
+        desc: "data de upload (mais recente primeiro)"
+        asc: "data de upload (mais antigo primeiro)"
+      modified:
+        desc: "data de modificação (mais recente primeiro)"
+        asc: "data de modificação (mais antigo primeiro)"
     static:
       mendeley:
         contact_form: Formulário de Contato

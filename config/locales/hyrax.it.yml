@@ -1621,6 +1621,13 @@ it:
         link_expired_not_found: Link monouso scaduto o non trovato
         link_not_found: Link monouso non trovato
     sort_label: Ordina l'elenco degli articoli
+    sort:
+      uploaded:
+        desc: "data di caricamento (più recente prima)"
+        asc: "data di caricamento (più vecchio prima)"
+      modified:
+        desc: "data di modifica (più recente prima)"
+        asc: "data di modifica (più vecchio prima)"
     static:
       mendeley:
         contact_form: Modulo di Contatto

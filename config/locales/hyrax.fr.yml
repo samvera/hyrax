@@ -1622,6 +1622,13 @@ fr:
         link_expired_not_found: Lien à usage unique expiré ou introuvable
         link_not_found: Lien à usage unique introuvable
     sort_label: Trier la liste des articles
+    sort:
+      uploaded:
+        desc: "date de téléchargement (le plus récent d'abord)"
+        asc: "date de téléchargement (le plus ancien d'abord)"
+      modified:
+        desc: "date de modification (le plus récent d'abord)"
+        asc: "date de modification (le plus ancien d'abord)"
     static:
       mendeley:
         contact_form: Formulaire de contact
