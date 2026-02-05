@@ -76,10 +76,14 @@ module Hyrax
     #
     # @return [void]
     def validate_required_classes
-      missing_classes = required_classes - profile['classes'].keys
+      missing_classes = clean_class_names(required_classes) - clean_class_names(profile['classes'].keys)
       return if missing_classes.empty?
 
       @errors << "Missing required classes: #{missing_classes.join(', ')}."
+    end
+
+    def clean_class_names(names)
+      names.map { |name| name.to_s.strip.gsub(/^::/, '') }
     end
 
     # Checks that any class referenced in the profile is a registered

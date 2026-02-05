@@ -1315,6 +1315,11 @@ en:
         cancel: Cancel
         save: Save
         title: Title
+      valkyrie_form:
+        attach_to: Attach to %{parent}
+        cancel: Cancel
+        save: Save
+        title: Title
       groups_description:
         description_html: The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that you are a member of.  You may select a specific group and assign an access level for a file within %{application_name}, similarly to adding user access levels.
       permission:

@@ -15,6 +15,7 @@
       <div class="sidebar maximized">
         <%= render 'hyrax/dashboard/sidebar' %>
       </div>
+      <div class="sidebar-backdrop" aria-hidden="true"></div>
       <div class="main-content maximized<%= " admin-stats" if request.fullpath.include? '/admin/stats' %>">
         <%= render_breadcrumbs builder: Hyrax.config.breadcrumb_builder %>
         <%= render '/flash_msg' %>
@@ -26,7 +27,7 @@
           </div>
         <% end %>
 
-          <a name="skip-to-content" id="skip-to-content"></a>
+          <div id="skip-to-content"></div>
           <%= render 'shared/read_only' if Flipflop.read_only? %>
           <%= content_for?(:content) ? yield(:content) : yield %>
 

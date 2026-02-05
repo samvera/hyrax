@@ -1,6 +1,8 @@
 <% menu = Hyrax::MenuPresenter.new(self) %>
-<div class="sidebar-toggle"><span class="fa fa-chevron-circle-right"></span></div>
-<nav aria-label="sidebar-nav">
+<button type="button" class="sidebar-toggle" aria-label="Toggle sidebar navigation" aria-expanded="true" aria-controls="sidebar-nav">
+  <span class="fa fa-chevron-circle-right" aria-hidden="true"></span>
+</button>
+<nav id="sidebar-nav" aria-label="sidebar navigation">
   <ul class="nav nav-pills flex-column">
     <li class="nav-item">
       <div class="profile">
