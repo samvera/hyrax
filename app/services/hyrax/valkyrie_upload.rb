@@ -50,7 +50,7 @@ class Hyrax::ValkyrieUpload
 
     if use == Hyrax::FileMetadata::Use::ORIGINAL_FILE
       # Set file set label.
-      reset_title = file_set.title.first == file_set.label
+      reset_title = (file_set.title.first == file_set.label || (file_set.title.blank? && file_set.label.blank?))
       # set title to label if that's how it was before this characterization
       file_set.title = file_metadata.original_filename if reset_title
       # always set the label to the original_name
