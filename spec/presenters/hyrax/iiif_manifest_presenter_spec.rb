@@ -91,7 +91,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
 
   describe Hyrax::IiifManifestPresenter::DisplayImagePresenter do
     subject(:presenter) { described_class.new(solr_doc) }
-    let(:solr_doc) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: file_set).to_solr) }
+    let(:solr_doc) { SolrDocument.new(Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr) }
 
     before do
       original_file_metadata
@@ -110,13 +110,195 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
 
       context 'when no original file is indexed' do
         let(:solr_doc) do
-          index_hash = Hyrax::ValkyrieIndexer.for(resource: file_set).to_solr
+          index_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
           index_hash.delete('original_file_id_ssi')
 
           SolrDocument.new(index_hash)
         end
 
         shared_examples 'tests for image resolution'
+      end
+    end
+
+    describe '#display_content' do
+      let(:ability) { Ability.new(user) }
+      let(:user) { create(:user) }
+      let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, :public) }
+
+      subject(:presenter) { described_class.new(solr_doc) }
+
+      before do
+        presenter.hostname = 'samvera.org'
+        presenter.ability = ability
+        allow(Flipflop).to receive(:iiif_av?).and_return(true)
+      end
+
+      context 'when flipper is disabled' do
+        let(:solr_doc) { SolrDocument.new(Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr) }
+
+        before { allow(Flipflop).to receive(:iiif_av?).and_return(false) }
+
+        it { expect(presenter.display_content).to be_nil }
+      end
+
+      context 'when user cannot read' do
+        let(:solr_doc) { SolrDocument.new(Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr) }
+
+        before do
+          allow(ability).to receive(:can?).with(:read, anything).and_return(false)
+        end
+
+        it { expect(presenter.display_content).to be_nil }
+      end
+
+      context 'with video file' do
+        let(:original_file_metadata) do
+          valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                          file_set: file_set,
+                          mime_type: 'video/mp4',
+                          width: 1920,
+                          height: 1080,
+                          duration: ['120'])
+        end
+
+        let(:solr_doc) do
+          original_file_metadata
+          solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
+          solr_hash['mime_type_ssi'] = 'video/mp4'
+          solr_hash['width_is'] = 1920
+          solr_hash['height_is'] = 1080
+          solr_hash['duration_tesim'] = ['120']
+          SolrDocument.new(solr_hash)
+        end
+
+        it 'returns video display content' do
+          content = presenter.display_content
+
+          expect(content).to be_a(IIIFManifest::V3::DisplayContent)
+        end
+      end
+
+      context 'with audio file' do
+        let(:original_file_metadata) do
+          valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                          file_set: file_set,
+                          mime_type: 'audio/mpeg',
+                          duration: ['180'])
+        end
+
+        let(:solr_doc) do
+          original_file_metadata
+          solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
+          solr_hash['mime_type_ssi'] = 'audio/mpeg'
+          solr_hash['duration_tesim'] = ['180']
+          SolrDocument.new(solr_hash)
+        end
+
+        context 'when using UniversalViewer' do
+          it 'returns audio display content' do
+            allow(Hyrax.config).to receive(:iiif_av_viewer).and_return(:universal_viewer)
+            content = presenter.display_content
+
+            expect(content).to be_a(IIIFManifest::V3::DisplayContent)
+            expect(content.type).to eq('Sound')
+            expect(content.format).to eq('audio/mp3')
+            expect(content.url).to include('samvera.org/iiif_av/content/')
+          end
+        end
+
+        context 'when using non-UniversalViewer' do
+          it 'returns audio display content' do
+            allow(Hyrax.config).to receive(:iiif_av_viewer).and_return(:some_other_viewer)
+            content = presenter.display_content
+
+            expect(content).to be_a(IIIFManifest::V3::DisplayContent)
+            expect(content.type).to eq('Sound')
+            expect(content.format).to eq('audio/mpeg')
+            expect(content.url).to include('samvera.org/iiif_av/content/')
+          end
+        end
+      end
+
+      context 'with image file' do
+        let(:solr_doc) do
+          original_file_metadata
+          SolrDocument.new(Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr)
+        end
+
+        before do
+          allow(Hyrax.config).to receive(:iiif_manifest_factory).and_return(::IIIFManifest::V3::ManifestFactory)
+        end
+
+        it 'returns image display content when using v3 factory' do
+          content = presenter.display_content
+
+          expect(content).to be_a(IIIFManifest::V3::DisplayContent)
+          expect(content.type).to eq('Image')
+        end
+
+        context 'when using v2 factory' do
+          before do
+            allow(Hyrax.config).to receive(:iiif_manifest_factory)
+              .and_return(::IIIFManifest::ManifestFactory)
+          end
+
+          it 'returns nil to let display_image handle v2' do
+            expect(presenter.display_content).to be_nil
+          end
+        end
+      end
+
+      describe 'duration formatting' do
+        let(:original_file_metadata) do
+          valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                          file_set: file_set,
+                          mime_type: 'video/mp4')
+        end
+
+        context 'with duration in seconds' do
+          let(:solr_doc) do
+            original_file_metadata
+            solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
+            solr_hash['mime_type_ssi'] = 'video/mp4'
+            solr_hash['duration_tesim'] = ['120']
+            SolrDocument.new(solr_hash)
+          end
+
+          it 'converts to float' do
+            content = presenter.display_content
+            expect(content.duration).to eq(120.0)
+          end
+        end
+
+        context 'with duration in time format' do
+          let(:solr_doc) do
+            original_file_metadata
+            solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
+            solr_hash['mime_type_ssi'] = 'video/mp4'
+            solr_hash['duration_tesim'] = ['0:02:00']
+            SolrDocument.new(solr_hash)
+          end
+
+          it 'converts to seconds' do
+            content = presenter.display_content
+            expect(content.duration).to eq(120.0)
+          end
+        end
+
+        context 'with duration including milliseconds' do
+          let(:solr_doc) do
+            original_file_metadata
+            solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
+            solr_hash['mime_type_ssi'] = 'video/mp4'
+            solr_hash['duration_tesim'] = ['0:0:02:500']
+            SolrDocument.new(solr_hash)
+          end
+
+          it 'converts to seconds with milliseconds' do
+            content = presenter.display_content
+            expect(content.duration).to eq(2.5)
+          end
+        end
       end
     end
   end
@@ -224,7 +406,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
   end
 
   describe '#work_presenters' do
-    it('is empty') { expect(presenter.work_presenters).to be_empty } 
+    it('is empty') { expect(presenter.work_presenters).to be_empty }
 
     context 'when the work has member works' do
       let(:work) { build(:monograph, :with_member_works) }
