@@ -6,8 +6,13 @@ ENV.delete('APP_NAME') # Prevent custom test app names in specs
 
 # Analytics is turned off by default
 ENV['HYRAX_ANALYTICS'] = 'false'
+
+# Controlling Flexible Metadata is done per test application, but the test suite needs
+# to disable it for now because disabling the inclusion of core/basic metadata has a huge
+# impact on the suite.  It can be explicitly enabled or mocked where appropriate.
 ENV['HYRAX_FLEXIBLE'] = 'false'
 ENV['HYRAX_DISABLE_INCLUDE_METADATA'] = 'false'
+ENV['HYRAX_FLEXIBLE_CLASSES'] = 'none'
 
 require "bundler/setup"
 
@@ -206,9 +211,20 @@ RSpec.configure do |config|
     Hyrax.config.geonames_username = 'hyrax-test'
     # Initialize query_service class attribute by calling to avoid it sometimes being set to test_adapter
     Hyrax::SolrQueryService.query_service
-    # disable analytics except for specs which will have proper api mocks
+
+    if Hyrax.config.flexible?
+      flexible_schema = Hyrax::FlexibleSchema.create do |f|
+        Hyrax::Test::SimpleWork.acts_as_flexible_resource
+        Hyrax::FileSet.acts_as_flexible_resource
+        Hyrax.config.register_curation_concern("hyrax/test/simple_work")
+        Hyrax.config.register_curation_concern("hyrax/file_set")
+        f.profile = YAML.safe_load_file(Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'm3_profile-allinson.yaml'))
+      end
+      puts "Flexible schema #{flexible_schema.title} -- FOUND OR CREATED"
+    end
   end
 
+  # disable analytics except for specs which will have proper api mocks
   config.before :all do
     Hyrax.config.analytics = false
   end
