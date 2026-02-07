@@ -49,7 +49,7 @@
                     <%= link_to document, [main_app, document] %>
                   </td>
                   <td>
-                    <%= safe_join(document.creator, tag(:br)) %>
+                    <%= document.depositor %>
                   </td>
                   <td>
                     <%= document.date_modified %>
