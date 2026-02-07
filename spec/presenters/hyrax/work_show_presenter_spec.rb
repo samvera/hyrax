@@ -126,6 +126,50 @@ RSpec.describe Hyrax::WorkShowPresenter do
         it { is_expected.to be false }
       end
     end
+
+    context 'with representative audio' do
+      let(:representative_id) { 'representative-123' }
+      let(:representative_present) { true }
+      let(:representative_presenter) do
+        double('representative', present?: true, image?: false, audio?: true, video?: false)
+      end
+
+      before do
+        allow(Flipflop).to receive(:iiif_av?).and_return(true)
+      end
+
+      it { is_expected.to be true }
+
+      context 'when iiif_av flipper is disabled' do
+        before do
+          allow(Flipflop).to receive(:iiif_av?).and_return(false)
+        end
+
+        it { is_expected.to be false }
+      end
+    end
+
+    context 'with representative video' do
+      let(:representative_id) { 'representative-123' }
+      let(:representative_present) { true }
+      let(:representative_presenter) do
+        double('representative', present?: true, image?: false, audio?: false, video?: true)
+      end
+
+      before do
+        allow(Flipflop).to receive(:iiif_av?).and_return(true)
+      end
+
+      it { is_expected.to be true }
+
+      context 'when iiif_av flipper is disabled' do
+        before do
+          allow(Flipflop).to receive(:iiif_av?).and_return(false)
+        end
+
+        it { is_expected.to be false }
+      end
+    end
   end
 
   describe '#stats_path' do
@@ -613,9 +657,50 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
   describe '#iiif_viewer' do
     subject { presenter.iiif_viewer }
+    let(:representative_id) { 'representative-123' }
+    let(:representative_presenter) do
+      double('representative', present?: true, image?: false, audio?: audio_boolean, video?: video_boolean)
+    end
+    let(:audio_boolean) { false }
+    let(:video_boolean) { false }
+    let(:member_presenter_factory) { instance_double(Hyrax::MemberPresenterFactory) }
+
+    before do
+      presenter.member_presenter_factory = member_presenter_factory
+      allow(member_presenter_factory)
+        .to receive(:member_presenters)
+        .with(['representative-123'])
+        .and_return([representative_presenter])
+      allow(Flipflop).to receive(:iiif_av?).and_return(true)
+      allow(Hyrax.config).to receive(:iiif_av_viewer).and_return(:ramp)
+    end
 
     it 'defaults to universal viewer' do
       expect(subject).to be :universal_viewer
+    end
+
+    context 'with representative audio' do
+      let(:audio_boolean) { true }
+
+      it { is_expected.to be :ramp }
+    end
+
+    context 'with representative video' do
+      let(:video_boolean) { true }
+
+      it { is_expected.to be :ramp }
+    end
+
+    context 'when iiif_av flipper is disabled' do
+      let(:video_boolean) { true }
+
+      before do
+        allow(Flipflop).to receive(:iiif_av?).and_return(false)
+      end
+
+      it 'falls back to universal viewer' do
+        expect(subject).to be :universal_viewer
+      end
     end
   end
 end
