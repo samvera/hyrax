@@ -458,6 +458,8 @@ module Hyrax
     attr_writer :iiif_metadata_fields
     attr_writer :iiif_manifest_cache_duration
     attr_writer :iiif_manifest_factory
+    attr_writer :iiif_av_url_builder
+    attr_writer :iiif_av_viewer
     attr_writer :rendering_predicate
 
     # Enable IIIF image service. This is required to use the
@@ -533,6 +535,30 @@ module Hyrax
     # @return [Class]
     def iiif_manifest_factory
       @iiif_manifest_factory ||= ::IIIFManifest::ManifestFactory
+    end
+
+    ##
+    # URL that resolves to an AV stream provided to a IIIF presentation manifest
+    #
+    # @return [#call] lambda/proc that generates a URL to an AV stream
+    def iiif_av_url_builder
+      @iiif_av_url_builder ||= lambda do |file_location_uri, _base_url|
+        # Reverse engineering Hyrax::DerivativePath
+        path = file_location_uri.sub(/^#{Hyrax.config.derivatives_path}/, '')
+        id_path, file_path = path.split('-', 2)
+        file_set_id = id_path.delete('/')
+        filename = file_path[0, file_path.size / 2]
+        Hyrax::Engine.routes.url_helpers.download_path(file_set_id, file: filename)
+      end
+    end
+
+    ##
+    # A symbol that represents the viewer to render for AV items.
+    # Defaults to :universal_viewer but hopefully we can develop more options
+    #
+    # @return [:symbol] viewer partial name
+    def iiif_av_viewer
+      @iiif_av_viewer ||= :universal_viewer
     end
 
     ##
