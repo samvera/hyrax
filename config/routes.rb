@@ -65,6 +65,12 @@ Hyrax::Engine.routes.draw do
     end
   end
 
+  scope '/iiif_av' do
+    get 'content/:id/:label', to: 'iiif_av#content', as: :iiif_av_content
+    get 'auth_token/:id', to: 'iiif_av#auth_token', as: :iiif_av_auth_token
+    get 'sign_in', to: 'iiif_av#sign_in', as: :iiif_av_sign_in
+  end
+
   resources :files, only: [] do
     member do
       get :citation, controller: :citations, action: :file, as: :citations
