@@ -21,7 +21,7 @@ module Hyrax
     # @return [Hash] a Ruby hash representation of a IIIF manifest document
     #
     # @see Hyrax::WorksControllerBehavior
-    def self.manifest_for(presenter:, iiif_manifest_factory: ::IIIFManifest::ManifestFactory)
+    def self.manifest_for(presenter:, iiif_manifest_factory: Hyrax.config.iiif_manifest_factory)
       new(iiif_manifest_factory: iiif_manifest_factory)
         .manifest_for(presenter: presenter)
     end
@@ -36,7 +36,7 @@ module Hyrax
     #
     # @param iiif_manifest_factory [Class] a class that initializes with presenter
     #        object and returns an object that responds to `#to_h`
-    def initialize(iiif_manifest_factory: ::IIIFManifest::ManifestFactory)
+    def initialize(iiif_manifest_factory: Hyrax.config.iiif_manifest_factory)
       @manifest_factory = iiif_manifest_factory
     end
 
@@ -56,33 +56,27 @@ module Hyrax
     # @api private
     # @param presenter [Hyrax::WorkShowPresenter]
     def sanitized_manifest(presenter:)
-      # ::IIIFManifest::ManifestBuilder#to_h returns a
-      # IIIFManifest::ManifestBuilder::IIIFManifest, not a Hash.
-      # to get a Hash, we have to call its #to_json, then parse.
-      #
-      # wild times. maybe there's a better way to do this with the
-      # ManifestFactory interface?
       manifest = manifest_factory.new(presenter).to_h
-      hash = JSON.parse(manifest.to_json)
-
-      hash['label'] = sanitize_value(hash['label']) if hash.key?('label')
-      hash['description'] = Array(hash['description'])&.collect { |elem| sanitize_value(elem) } if hash.key?('description')
-
-      hash['sequences']&.each do |sequence|
-        sequence['canvases']&.each do |canvas|
-          canvas['label'] = sanitize_value(canvas['label'])
-        end
-      end
-
-      hash
+      hash = manifest.respond_to?(:inner_hash) ? manifest.inner_hash : JSON.parse(manifest.to_json)
+      deep_sanitize(hash)
     end
 
     ##
     # @api private
-    # @param [#to_s] text
-    # @return [String] a sanitized verison of `text`
-    def sanitize_value(text)
-      Loofah.fragment(text.to_s).scrub!(:prune).to_s
+    # Recursively sanitizes all strings in a nested data structure
+    # @param obj [Object] the object to sanitize (Hash, Array, String, or other)
+    # @return [Object] sanitized version maintaining the original structure
+    def deep_sanitize(obj)
+      case obj
+      when Hash
+        obj.transform_values { |v| deep_sanitize(v) }
+      when Array
+        obj.map { |v| deep_sanitize(v) }
+      when String
+        CGI.unescapeHTML(Loofah.fragment(obj.to_s).scrub!(:prune).to_s)
+      else
+        obj
+      end
     end
   end
 end

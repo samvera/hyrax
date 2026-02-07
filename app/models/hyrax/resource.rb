@@ -34,6 +34,7 @@ module Hyrax
     include Hyrax::Naming
     include Hyrax::WithEvents
     include Hyrax::WithEmbargoesAndLeases
+    include Hyrax::Suppressible
 
     attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
     attribute :embargo_id,    Valkyrie::Types::Params::ID
