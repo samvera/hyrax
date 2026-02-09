@@ -133,7 +133,7 @@ RSpec.describe Hyrax::M3SchemaLoader do
         expect(schema_loader.view_definitions_for(schema: GenericWork.to_s))
           .to eq({
                    creator: { "html_dl" => true, "display_label" => { "default" => "Creator" }, "admin_only" => false },
-                   keyword: { "render_as" => "faceted", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
+                   keyword: { "render_as" => "linked", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
                    abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
                  })
       end
@@ -183,7 +183,7 @@ RSpec.describe Hyrax::M3SchemaLoader do
         it 'includes fields matching the context' do
           expect(schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'flexible_context'))
             .to eq(
-              keyword: { "render_as" => "faceted", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
+              keyword: { "render_as" => "linked", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
               abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
             )
         end
@@ -215,6 +215,52 @@ RSpec.describe Hyrax::M3SchemaLoader do
       it 'passes version to schema lookup' do
         expect(Hyrax::FlexibleSchema).to receive(:find_by).with(id: 2)
         schema_loader.view_definitions_for(schema: Monograph.to_s, version: 2)
+      end
+    end
+  end
+
+  describe 'AttributeDefinition name resolution' do
+    let(:schema_with_names) do
+      Hyrax::FlexibleSchema.create(
+        profile: {
+          'profile' => { 'responsibility_statement' => 'Test Profile', 'date_modified' => '2024-01-01' },
+          'properties' => {
+            'title_primary' => {
+              'name' => 'title',
+              'available_on' => { 'class' => ['Monograph'] },
+              'range' => 'http://www.w3.org/2001/XMLSchema#string',
+              'property_uri' => 'http://purl.org/dc/terms/title'
+            },
+            'description_key' => {
+              'available_on' => { 'class' => ['Monograph'] },
+              'range' => 'http://www.w3.org/2001/XMLSchema#string',
+              'property_uri' => 'http://purl.org/dc/terms/description'
+            }
+          },
+          'classes' => { 'Monograph' => {} }
+        }
+      )
+    end
+
+    context 'with name attribute' do
+      it 'creates AttributeDefinition with name from config' do
+        allow(Hyrax::FlexibleSchema).to receive(:find_by).and_return(schema_with_names)
+        definitions = schema_loader.send(:definitions, 'Monograph', 1)
+
+        title_definition = definitions.find { |d| d.name == :title }
+        expect(title_definition).not_to be_nil
+        expect(title_definition.name).to eq(:title)
+      end
+    end
+
+    context 'without name attribute' do
+      it 'creates AttributeDefinition with YAML key as name' do
+        allow(Hyrax::FlexibleSchema).to receive(:find_by).and_return(schema_with_names)
+        definitions = schema_loader.send(:definitions, 'Monograph', 1)
+
+        description_definition = definitions.find { |d| d.name == :description_key }
+        expect(description_definition).not_to be_nil
+        expect(description_definition.name).to eq(:description_key)
       end
     end
   end

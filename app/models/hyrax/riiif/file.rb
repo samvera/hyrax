@@ -1,0 +1,43 @@
+# frozen_string_literal: true
+if defined?(::Riiif::File)
+  module Hyrax
+    module Riiif
+      class File < ::Riiif::File
+        include ActiveSupport::Benchmarkable
+
+        attr_reader :id
+
+        def initialize(input_path, tempfile = nil, id:)
+          super(input_path, tempfile)
+          raise(ArgumentError, "must specify id") if id.blank?
+          @id = id
+        end
+
+        # Wrap extract in a read lock and benchmark it
+        def extract(transformation, image_info = nil)
+          ::Riiif::Image.file_resolver.file_locks[id].with_read_lock do
+            benchmark "Hyrax::Riiif::File extracted #{path} with #{transformation.to_params}", level: :debug do
+              super
+            end
+          end
+        end
+
+        private
+
+        def logger
+          Hyrax.logger
+        end
+      end
+    end
+  end
+else
+  module Hyrax
+    module Riiif
+      class File
+        def initialize(*)
+          raise 'Riiif not available'
+        end
+      end
+    end
+  end
+end

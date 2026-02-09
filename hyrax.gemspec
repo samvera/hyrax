@@ -69,6 +69,7 @@ SUMMARY
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
   spec.add_dependency 'listen', '~> 3.9'
   spec.add_dependency 'mailboxer', '~> 0.12'
+  spec.add_dependency 'multi_json', '1.18.0' # Locked below 1.19.1 because undefined method `except' for an instance of JSON::Ext::Generator::State
   spec.add_dependency 'nest', '~> 3.1'
   spec.add_dependency 'noid-rails', '~> 3.0'
   spec.add_dependency 'oauth'
