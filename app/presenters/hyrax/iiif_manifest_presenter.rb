@@ -188,6 +188,7 @@ module Hyrax
       delegate_all
 
       include Hyrax::DisplaysImage
+      include Hyrax::DisplaysContent
 
       ##
       # @!attribute [w] ability
