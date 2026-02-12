@@ -95,7 +95,10 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     before do
       allow(Hyrax.config).to receive(:flexible?).and_return(true)
       allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
-      work.contexts = ['special_context']
+      allow(work).to receive(:flexible?).and_return(true)
+      allow(work).to receive(:respond_to?).and_call_original
+      allow(work).to receive(:respond_to?).with(:contexts).and_return(true)
+      allow(work).to receive(:contexts).and_return(['special_context'])
     end
 
     it 'passes the resource contexts to form_definitions_for so context-specific fields are included' do
