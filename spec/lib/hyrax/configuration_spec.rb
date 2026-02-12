@@ -62,8 +62,6 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:file_set_indexer) }
   it { is_expected.to respond_to(:file_set_indexer=) }
   it { is_expected.to respond_to(:identifier_registrars) }
-  it { is_expected.to respond_to(:iiif_av_url_builder) }
-  it { is_expected.to respond_to(:iiif_av_url_builder=) }
   it { is_expected.to respond_to(:iiif_av_viewer) }
   it { is_expected.to respond_to(:iiif_av_viewer=) }
   it { is_expected.to respond_to(:iiif_image_compliance_level_uri) }

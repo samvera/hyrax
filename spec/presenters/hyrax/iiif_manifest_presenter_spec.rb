@@ -202,7 +202,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
             expect(content).to be_a(IIIFManifest::V3::DisplayContent)
             expect(content.type).to eq('Sound')
             expect(content.format).to eq('audio/mp3')
-            expect(content.url).to include('samvera.org/iiif_av/content/')
+            expect(content.url).to include("samvera.org/downloads/#{file_set.id}")
           end
         end
 
@@ -214,7 +214,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
             expect(content).to be_a(IIIFManifest::V3::DisplayContent)
             expect(content.type).to eq('Sound')
             expect(content.format).to eq('audio/mpeg')
-            expect(content.url).to include('samvera.org/iiif_av/content/')
+            expect(content.url).to include("downloads/#{file_set.id}")
           end
         end
       end

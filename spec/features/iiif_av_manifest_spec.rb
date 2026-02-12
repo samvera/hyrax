@@ -53,7 +53,7 @@ RSpec.describe 'building a IIIF AV Manifest', :aggregate_failures do
       video_content = body.first
       expect(video_content['type']).to eq('Video')
       expect(video_content['format']).to eq('video/mp4')
-      expect(video_content['id']).to include('/iiif_av/content/')
+      expect(video_content['id']).to include("/downloads/#{file_sets.first.id}")
     end
   end
 
@@ -88,6 +88,7 @@ RSpec.describe 'building a IIIF AV Manifest', :aggregate_failures do
         audio_content = body.first
         expect(audio_content['type']).to eq('Sound')
         expect(audio_content['format']).to eq('audio/mp3')
+        expect(audio_content['id']).to include("/downloads/#{file_sets.first.id}")
       end
     end
 
@@ -108,6 +109,7 @@ RSpec.describe 'building a IIIF AV Manifest', :aggregate_failures do
         audio_content = body.first
         expect(audio_content['type']).to eq('Sound')
         expect(audio_content['format']).to eq('audio/mpeg')
+        expect(audio_content['id']).to include("/downloads/#{file_sets.first.id}")
       end
     end
   end

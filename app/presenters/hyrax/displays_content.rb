@@ -58,7 +58,7 @@ module Hyrax
     def video_content
       # @see https://github.com/samvera-labs/iiif_manifest
       IIIFManifest::V3::DisplayContent.new(
-        Hyrax::Engine.routes.url_helpers.iiif_av_content_url(id, label: 'mp4', host: hostname),
+        download_path('mp4'),
         label: 'mp4',
         width: Array(width).first.try(:to_i),
         height: Array(height).first.try(:to_i),
@@ -70,7 +70,7 @@ module Hyrax
 
     def audio_content
       IIIFManifest::V3::DisplayContent.new(
-        Hyrax::Engine.routes.url_helpers.iiif_av_content_url(id, label: 'mp3', host: hostname),
+        download_path('mp3'),
         label: 'mp3',
         duration: conformed_duration,
         type: 'Sound',
