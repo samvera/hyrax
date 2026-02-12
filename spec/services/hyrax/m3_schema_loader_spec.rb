@@ -122,7 +122,7 @@ RSpec.describe Hyrax::M3SchemaLoader do
       it 'includes context-specific fields when matching context is provided' do
         result = schema_loader.form_definitions_for(schema: Monograph.to_s, contexts: ['primary_context'])
         expect(result).to include(:title, :dimensions)
-        expect(result[:dimensions]).to eq(primary: false, multiple: true)
+        expect(result[:dimensions]).to eq(primary: false, multiple: true, required: false)
       end
 
       it 'excludes context-specific fields when non-matching context is provided' do
