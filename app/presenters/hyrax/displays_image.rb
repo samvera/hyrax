@@ -15,7 +15,7 @@ module Hyrax
       return nil unless latest_file_id
 
       # @see https://github.com/samvera-labs/iiif_manifest
-      IIIFManifest::DisplayImage.new(display_image_url(request.base_url),
+      IIIFManifest::DisplayImage.new(display_image_url,
                                      format: image_format(alpha_channels),
                                      width: width,
                                      height: height,
@@ -24,7 +24,12 @@ module Hyrax
 
     private
 
-    def display_image_url(base_url)
+    def base_url_for_iiif
+      respond_to?(:request) && request ? request.base_url : hostname
+    end
+
+    def display_image_url(base_url = nil)
+      base_url ||= base_url_for_iiif
       Hyrax.config.iiif_image_url_builder.call(
         latest_file_id,
         base_url,
@@ -33,8 +38,10 @@ module Hyrax
       )
     end
 
-    def iiif_endpoint(file_id, base_url: request.base_url)
+    def iiif_endpoint(file_id, base_url: nil)
       return unless Hyrax.config.iiif_image_server?
+      base_url ||= base_url_for_iiif
+
       IIIFManifest::IIIFEndpoint.new(
         Hyrax.config.iiif_info_url_builder.call(file_id, base_url),
         profile: Hyrax.config.iiif_image_compliance_level_uri

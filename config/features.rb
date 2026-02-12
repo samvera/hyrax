@@ -11,6 +11,10 @@ Flipflop.configure do
             default: false,
             description: "Use Rails.cache to cache the JSON document for IIIF manifests"
 
+    feature :iiif_av,
+            default: false,
+            description: "Enable support for IIIF AV content in manifests."
+
     feature :hide_private_items,
             default: false,
             description: "Do not show the private items."

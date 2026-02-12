@@ -61,4 +61,12 @@ RSpec.describe Flipflop do
       is_expected.to be false
     end
   end
+
+  describe "iiif_av?" do
+    subject { described_class.iiif_av? }
+
+    it "defaults to false" do
+      is_expected.to be false
+    end
+  end
 end
