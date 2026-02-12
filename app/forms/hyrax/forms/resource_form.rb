@@ -54,8 +54,8 @@ module Hyrax
         if r.flexible?
           self.class.deserializer_class = nil # need to reload this on first use after schema is loaded
           singleton_class.schema_definitions = self.class.definitions
-          context = r.respond_to?(:context) ? r.context : nil
-          Hyrax::Schema.m3_schema_loader.form_definitions_for(schema: r.class.name, version: Hyrax::FlexibleSchema.current_schema_id, contexts: context).map do |field_name, options|
+          contexts = r.respond_to?(:contexts) ? r.contexts : nil
+          Hyrax::Schema.m3_schema_loader.form_definitions_for(schema: r.class.name, version: Hyrax::FlexibleSchema.current_schema_id, contexts: contexts).map do |field_name, options|
             singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
           end
         end
