@@ -57,46 +57,26 @@ module Hyrax
 
     def video_content
       # @see https://github.com/samvera-labs/iiif_manifest
-      streams = stream_urls
-      if streams.present?
-        streams.collect { |label, _url| video_display_content(label) }
-      else
-        video_display_content('mp4')
-      end
-    end
-
-    def video_display_content(label = '')
       IIIFManifest::V3::DisplayContent.new(
-        Hyrax::Engine.routes.url_helpers.iiif_av_content_url(id, label: label, host: hostname),
-        label: label,
+        Hyrax::Engine.routes.url_helpers.iiif_av_content_url(id, label: 'mp4', host: hostname),
+        label: 'mp4',
         width: Array(width).first.try(:to_i),
         height: Array(height).first.try(:to_i),
         duration: conformed_duration,
         type: 'Video',
-        format: mime_type,
-        auth_service: auth_service
+        format: mime_type
       )
     end
 
     def audio_content
-      streams = stream_urls
-      if streams.present?
-        streams.collect { |label, _url| audio_display_content(label) }
-      else
-        audio_display_content('mp3')
-      end
-    end
-
-    def audio_display_content(label = '')
       IIIFManifest::V3::DisplayContent.new(
-        Hyrax::Engine.routes.url_helpers.iiif_av_content_url(id, label: label, host: hostname),
-        label: label,
+        Hyrax::Engine.routes.url_helpers.iiif_av_content_url(id, label: 'mp3', host: hostname),
+        label: 'mp3',
         duration: conformed_duration,
         type: 'Sound',
         # I think UV has a bug where if it's 'audio/mpeg' then it would load, so adding this
         # workaround to use 'audio/mp3' (which isn't even an official MIME type).
-        format: Hyrax.config.iiif_av_viewer == :universal_viewer ? 'audio/mp3' : mime_type,
-        auth_service: auth_service
+        format: Hyrax.config.iiif_av_viewer == :universal_viewer ? 'audio/mp3' : mime_type
       )
     end
 
@@ -104,66 +84,29 @@ module Hyrax
       Hyrax::Engine.routes.url_helpers.download_url(object, file: extension, host: hostname)
     end
 
-    def stream_urls
-      return {} if object['derivatives_metadata_ssi'].blank?
-      files_metadata = JSON.parse(object['derivatives_metadata_ssi'])
-      file_locations = files_metadata.select { |f| f['file_location_uri'].present? }
-      streams = {}
-      if file_locations.present?
-        file_locations.each do |f|
-          streams[f['label']] = Hyrax.config.iiif_av_url_builder.call(
-            f['file_location_uri'],
-            hostname
-          )
-        end
-      end
-      streams
-    end
-
-    # rubocop:disable Metrics/MethodLength
-    def auth_service
-      return if ability.can?(:read, object)
-
-      {
-        "context": "http://iiif.io/api/auth/1/context.json",
-        "@id": Rails.application.routes.url_helpers.new_user_session_url(host: hostname, iiif_auth_login: true),
-        "@type": "AuthCookieService1",
-        "confirmLabel": I18n.t('hyrax.iiif_av.auth.confirmLabel'),
-        "description": I18n.t('hyrax.iiif_av.auth.description'),
-        "failureDescription": I18n.t('hyrax.iiif_av.auth.failureDescription'),
-        "failureHeader": I18n.t('hyrax.iiif_av.auth.failureHeader'),
-        "header": I18n.t('hyrax.iiif_av.auth.header'),
-        "label": I18n.t('hyrax.iiif_av.auth.label'),
-        "profile": "http://iiif.io/api/auth/1/login",
-        "service": [
-          {
-            "@id": Hyrax::Engine.routes.url_helpers.iiif_av_auth_token_url(id: id, host: hostname),
-            "@type": "AuthTokenService1",
-            "profile": "http://iiif.io/api/auth/1/token"
-          },
-          {
-            "@id": Rails.application.routes.url_helpers.destroy_user_session_url(host: hostname),
-            "@type": "AuthLogoutService1",
-            "label": I18n.t('hyrax.iiif_av.auth.logoutLabel'),
-            "profile": "http://iiif.io/api/auth/1/logout"
-          }
-        ]
-      }
-    end
-    # rubocop:enable Metrics/MethodLength
-
+    # rubocop:disable Metrics/AbcSize
     def conformed_duration
-      if Array(object.duration)&.first&.count(':') == 3
-        # takes care of milliseconds like ["0:0:01:001"]
-        Time.zone.parse(Array(object.duration).first.sub(/.*\K:/, '.')).seconds_since_midnight
-      elsif Array(object.duration)&.first&.include?(':')
-        # if object.duration evaluates to something like ["0:01:00"] which will get converted to seconds
-        Time.zone.parse(Array(object.duration).first).seconds_since_midnight
+      duration_string = Array(object.duration).first
+      return nil if duration_string.blank?
+
+      # Handle plain numeric values (e.g., "25 s", "120")
+      return duration_string.to_f unless duration_string.include?(':')
+
+      # Parse time-formatted strings
+      parts = duration_string.split(':').map(&:to_i)
+
+      case parts.length
+      when 2 # MM:SS
+        parts[0] * 60.0 + parts[1]
+      when 3 # H:MM:SS
+        parts[0] * 3600.0 + parts[1] * 60.0 + parts[2]
+      when 4 # H:MM:SS:mmm (milliseconds)
+        parts[0] * 3600.0 + parts[1] * 60.0 + parts[2] + (parts[3] / 1000.0)
       else
-        # handles cases if object.duration evaluates to something like ['25 s']
-        Array(object.duration).first.try(:to_f)
+        duration_string.to_f # fallback
       end
     end
+    # rubocop:enable Metrics/AbcSize
   end
   # rubocop:enable Metrics/ModuleLength
 end

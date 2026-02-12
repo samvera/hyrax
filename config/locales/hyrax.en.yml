@@ -1410,15 +1410,6 @@ en:
     icons:
       collection: fa fa-cubes
       default: fa fa-cube
-    iiif_av:
-      auth:
-        confirmLabel: "Login"
-        description: "You must log in to view this content."
-        failureDescription: "<a href=\"http://example.org/policy\">Access Policy</a>"
-        failureHeader: "Authentication Failed"
-        header: "Please Log In"
-        label: "Login Required"
-        logoutLabel: "Log out"
     leases:
       edit:
         header:

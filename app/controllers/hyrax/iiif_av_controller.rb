@@ -10,11 +10,12 @@ module Hyrax
       label = params[:label]
       if request.head?
         return head :ok if valid_token? || can?(:read, params[:id])
+
         head :unauthorized
       else
         return head :unauthorized unless presenter
-        return redirect_to hyrax.download_path(file_set_id, file: label, locale: nil) unless stream_urls[label]
-        redirect_to stream_urls[label], allow_other_host: true
+
+        redirect_to hyrax.download_path(file_set_id, file: label, locale: nil)
       end
     end
 
@@ -63,24 +64,6 @@ module Hyrax
         return nil unless curation_concern
         # Use the show presenter configured in the FileSetsController
         Hyrax::FileSetsController.show_presenter.new(curation_concern, current_ability, request)
-      end
-    end
-
-    # Duplicated here from Hyrax::IiifAv::DisplaysContent
-    def stream_urls
-      @stream_urls ||= begin
-        return {} if presenter.solr_document['derivatives_metadata_ssi'].blank?
-        files_metadata = JSON.parse(presenter.solr_document['derivatives_metadata_ssi'])
-        file_locations = files_metadata.select { |f| f['file_location_uri'].present? }
-        return {} if file_locations.blank?
-        streams = {}
-        file_locations.each do |f|
-          streams[f['label']] = Hyrax.config.iiif_av_url_builder.call(
-            f['file_location_uri'],
-            request.base_url
-          )
-        end
-        streams
       end
     end
   end

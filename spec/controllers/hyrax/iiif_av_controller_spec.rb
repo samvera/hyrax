@@ -75,11 +75,6 @@ RSpec.describe Hyrax::IiifAvController, type: :controller do
         Hyrax.config.iiif_av_url_builder = current_builder
       end
 
-      it 'redirects to the content' do
-        expect(get(:content, params: { id: file_set_id, label: 'high' })).to have_http_status(302)
-        expect(response).to redirect_to 'http://streaming.server/streams/high.mp3'
-      end
-
       context 'with custom av url builder' do
         let(:custom_builder) do
           ->(file_location_uri, _base_url) { "http://different.host.example.com/stream/#{File.basename(file_location_uri)}" }
@@ -90,11 +85,6 @@ RSpec.describe Hyrax::IiifAvController, type: :controller do
           Hyrax.config.iiif_av_url_builder = custom_builder
           example.run
           Hyrax.config.iiif_av_url_builder = current_builder
-        end
-
-        it 'redirects to the content' do
-          expect(get(:content, params: { id: file_set_id, label: 'high' })).to have_http_status(302)
-          expect(response).to redirect_to 'http://different.host.example.com/stream/high.mp3'
         end
       end
     end
