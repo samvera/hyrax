@@ -88,6 +88,25 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe 'flexible form with contexts' do
+    let(:work) { build(:monograph) }
+    let(:schema_loader) { instance_double(Hyrax::M3SchemaLoader, form_definitions_for: { title: { required: true, primary: true } }) }
+
+    before do
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
+      allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
+      work.contexts = ['special_context']
+    end
+
+    it 'passes the resource contexts to form_definitions_for so context-specific fields are included' do
+      described_class.for(resource: work)
+
+      expect(schema_loader).to have_received(:form_definitions_for) do |args|
+        expect(Array(args[:contexts])).to contain_exactly('special_context')
+      end
+    end
+  end
+
   describe '#based_near' do
     subject(:form) { form_class.new(work) }
 
