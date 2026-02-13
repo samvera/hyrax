@@ -344,10 +344,38 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
           it 'has file sets the user can read' do
             readable = valkyrie_create(:hyrax_file_set, :with_files, :in_work, work: work, read_users: [user])
 
+            allow_any_instance_of(Hyrax::IiifManifestPresenter::DisplayImagePresenter)
+              .to receive(:display_image).and_return(double('DisplayImage'))
+
             expect(presenter.file_set_presenters)
               .to contain_exactly(have_attributes(id: readable.id))
           end
         end
+      end
+    end
+
+    context 'when the work has both displayable and non-displayable file sets' do
+      let(:text_file_metadata) do
+        valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                        file_set: text_file_set,
+                        mime_type: 'text/plain')
+      end
+
+      let(:text_file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+      let(:work) { valkyrie_create(:monograph, members: [file_set, text_file_set, second_file_set]) }
+
+      before do
+        original_file_metadata
+        second_file_metadata
+        text_file_metadata
+      end
+
+      it 'only includes file sets with displayable content' do
+        expect(presenter.file_set_presenters.count).to eq 2
+        expect(presenter.file_set_presenters.map(&:id))
+          .to contain_exactly(file_set.id, second_file_set.id)
+        expect(presenter.file_set_presenters.map(&:id))
+          .not_to include(text_file_set.id)
       end
     end
   end
