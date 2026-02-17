@@ -1,0 +1,23 @@
+===============================================================================
+                  Ramp IIIF A/V Player Installation Complete!
+===============================================================================
+
+     Next steps:
+       1. Start your Rails server
+       2. Upload an audio or video file to a work
+       3. The Ramp player will render automatically on the work show page
+
+     Customization:
+       Edit the React component:
+         app/javascript/components/RampPlayer.jsx
+
+       Override the view partial:
+         app/views/hyrax/base/iiif_viewers/_ramp.html.erb
+
+       Change viewer configuration in config/initializers/hyrax.rb:
+         config.iiif_av_viewer = :ramp  # or :universal_viewer
+
+     For more information:
+       Ramp documentation: https://github.com/samvera-labs/ramp
+
+===============================================================================
