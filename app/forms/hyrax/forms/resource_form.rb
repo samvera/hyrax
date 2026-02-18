@@ -132,7 +132,7 @@ module Hyrax
         private
 
         def apply_admin_set_contexts(resource:, admin_set_id:)
-          return unless admin_set_id.present?
+          return if admin_set_id.blank?
           return unless resource.respond_to?(:flexible?) && resource.flexible?
           contexts = Array(Hyrax.query_service.find_by(id: admin_set_id)&.contexts)
           resource.contexts = contexts if contexts.present?

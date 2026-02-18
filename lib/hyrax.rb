@@ -164,19 +164,30 @@ module Hyrax
   # @param admin_set_id [String, nil] ID of the admin set to resolve contexts from
   # @return [Dry::Types::Hash] the schema, including any context-gated properties
   def self.schema_for(klass, admin_set_id: nil)
-    contexts = if admin_set_id.present?
-                 admin_set = query_service.find_by(id: admin_set_id)
-                 admin_set.respond_to?(:contexts) ? Array(admin_set.contexts) : []
-               else
-                 []
-               end
+    contexts = schema_contexts_for(admin_set_id)
+    resolve_schema(klass, contexts)
+  rescue Valkyrie::Persistence::ObjectNotFoundError
+    fallback_schema(klass)
+  end
 
+  def self.schema_contexts_for(admin_set_id)
+    return [] if admin_set_id.blank?
+    admin_set = query_service.find_by(id: admin_set_id)
+    admin_set.respond_to?(:contexts) ? Array(admin_set.contexts) : []
+  end
+  private_class_method :schema_contexts_for
+
+  def self.resolve_schema(klass, contexts)
     if contexts.present? && klass.respond_to?(:flexible?) && klass.flexible?
       klass.new(contexts: contexts).singleton_class.schema || klass.schema
     else
       klass.new.singleton_class.schema || klass.schema
     end
-  rescue Valkyrie::Persistence::ObjectNotFoundError
+  end
+  private_class_method :resolve_schema
+
+  def self.fallback_schema(klass)
     klass.new.singleton_class.schema || klass.schema
   end
+  private_class_method :fallback_schema
 end

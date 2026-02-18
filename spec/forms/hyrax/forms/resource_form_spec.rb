@@ -57,7 +57,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       before do
         allow(Hyrax.config).to receive(:flexible?).and_return(true)
         allow(Hyrax.query_service).to receive(:find_by).with(id: 'gone')
-          .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
+                                                       .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
       end
 
       it 'builds the form without raising' do

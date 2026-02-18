@@ -11,7 +11,11 @@ RSpec.describe Hyrax do
   describe '.schema_for' do
     let(:field) { double('Field', name: :title) }
     let(:non_flexible_klass) do
-      klass = Class.new { def self.name; 'TestWork'; end }
+      klass = Class.new do
+        def self.name
+          'TestWork'
+        end
+      end
       schema_fields = [field]
       klass.define_singleton_method(:schema) { schema_fields }
       klass
@@ -30,7 +34,11 @@ RSpec.describe Hyrax do
       let(:flex_instance)  { double('instance', contexts: nil) }
       let(:flex_singleton) { double('singleton', schema: [field, ctx_field]) }
       let(:flex_klass) do
-        klass = Class.new { def self.name; 'FlexWork'; end }
+        klass = Class.new do
+          def self.name
+            'FlexWork'
+          end
+        end
         allow(klass).to receive(:flexible?).and_return(true)
         allow(klass).to receive(:new).with(contexts: ['special_context']).and_return(flex_instance)
         allow(flex_instance).to receive(:singleton_class).and_return(flex_singleton)
@@ -51,7 +59,7 @@ RSpec.describe Hyrax do
     context 'when the admin set is not found' do
       before do
         allow(Hyrax.query_service).to receive(:find_by).with(id: 'missing')
-          .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
+                                                       .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
       end
 
       it 'falls back to the base schema without raising' do
