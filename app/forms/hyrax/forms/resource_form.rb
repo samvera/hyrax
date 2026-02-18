@@ -101,16 +101,24 @@ module Hyrax
         ##
         # @api public
         #
-        # Factory for generic, per-work froms
+        # Factory for generic, per-work forms.
+        #
+        # When +admin_set_id+ is provided and the resource supports flexible metadata,
+        # the admin set's contexts are applied to the resource before building the form
+        # so that context-gated fields appear correctly.
         #
         # @example
         #   monograph  = Monograph.new
         #   change_set = Hyrax::Forms::ResourceForm.for(resource: monograph)
-        def for(deprecated_resource = nil, resource: nil)
+        #
+        # @example with admin set context
+        #   change_set = Hyrax::Forms::ResourceForm.for(resource: monograph, admin_set_id: '123')
+        def for(deprecated_resource = nil, resource: nil, admin_set_id: nil)
           if resource.nil? && !deprecated_resource.nil?
             Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. Pass the resource with `resource:` instead."
-            return self.for(resource: deprecated_resource)
+            return self.for(resource: deprecated_resource, admin_set_id: admin_set_id)
           end
+          apply_admin_set_contexts(resource: resource, admin_set_id: admin_set_id)
           klass = "#{resource.class.name}Form".safe_constantize
           klass ||= Hyrax::Forms::ResourceForm(resource.class)
           begin
@@ -119,6 +127,17 @@ module Hyrax
             Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. #{klass} should be updated accordingly."
             klass.new(resource)
           end
+        end
+
+        private
+
+        def apply_admin_set_contexts(resource:, admin_set_id:)
+          return unless admin_set_id.present?
+          return unless resource.respond_to?(:flexible?) && resource.flexible?
+          contexts = Array(Hyrax.query_service.find_by(id: admin_set_id)&.contexts)
+          resource.contexts = contexts if contexts.present?
+        rescue Valkyrie::Persistence::ObjectNotFoundError
+          nil
         end
 
         ##
@@ -153,6 +172,7 @@ module Hyrax
         def expose_class
           @expose_class = Class.new(Disposable::Expose).from(schema_definitions.values)
         end
+        public :expose_class
       end
       ##
       # @param [#to_s] attr

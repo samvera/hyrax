@@ -29,6 +29,43 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '.for' do
+    context 'with admin_set_id for a flexible resource' do
+      let(:work) { build(:monograph) }
+      let(:admin_set) { double('AdminSet', contexts: ['special_context']) }
+
+      before do
+        allow(Hyrax.config).to receive(:flexible?).and_return(true)
+        allow(Hyrax.query_service).to receive(:find_by).with(id: 'set-1').and_return(admin_set)
+        work.contexts = [] # start without contexts
+      end
+
+      it 'sets the admin set contexts on the resource before building the form' do
+        described_class.for(resource: work, admin_set_id: 'set-1')
+        expect(work.contexts).to include('special_context')
+      end
+    end
+
+    context 'when admin_set_id is nil' do
+      it 'does not modify the resource' do
+        expect { described_class.for(resource: work, admin_set_id: nil) }
+          .not_to change { work.respond_to?(:contexts) ? Array(work.contexts) : nil }
+      end
+    end
+
+    context 'when the admin set is not found' do
+      before do
+        allow(Hyrax.config).to receive(:flexible?).and_return(true)
+        allow(Hyrax.query_service).to receive(:find_by).with(id: 'gone')
+          .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
+      end
+
+      it 'builds the form without raising' do
+        expect { described_class.for(resource: work, admin_set_id: 'gone') }.not_to raise_error
+      end
+    end
+  end
+
   describe '.model_class' do
     it 'is the class of the configured work' do
       expect(Hyrax::Forms::ResourceForm(work.class).model_class)

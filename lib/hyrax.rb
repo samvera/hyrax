@@ -149,4 +149,34 @@ module Hyrax
   def self.custom_queries
     query_service.custom_queries
   end
+
+  ##
+  # @api public
+  #
+  # Returns the Valkyrie schema for a model class, loading context-specific
+  # properties when the model is flexible and the admin set has contexts assigned.
+  #
+  # This is the single point of context resolution for flexible metadata so that
+  # callers (e.g. Bulkrax) do not need to know about HYRAX_FLEXIBLE, contexts, or
+  # the Flexibility concern.
+  #
+  # @param klass [Class] a Valkyrie model class
+  # @param admin_set_id [String, nil] ID of the admin set to resolve contexts from
+  # @return [Dry::Types::Hash] the schema, including any context-gated properties
+  def self.schema_for(klass, admin_set_id: nil)
+    contexts = if admin_set_id.present?
+                 admin_set = query_service.find_by(id: admin_set_id)
+                 admin_set.respond_to?(:contexts) ? Array(admin_set.contexts) : []
+               else
+                 []
+               end
+
+    if contexts.present? && klass.respond_to?(:flexible?) && klass.flexible?
+      klass.new(contexts: contexts).singleton_class.schema || klass.schema
+    else
+      klass.new.singleton_class.schema || klass.schema
+    end
+  rescue Valkyrie::Persistence::ObjectNotFoundError
+    klass.new.singleton_class.schema || klass.schema
+  end
 end
