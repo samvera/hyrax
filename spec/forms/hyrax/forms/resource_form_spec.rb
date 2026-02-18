@@ -33,11 +33,15 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     context 'with admin_set_id for a flexible resource' do
       let(:work) { build(:monograph) }
       let(:admin_set) { double('AdminSet', contexts: ['special_context']) }
+      let(:work_contexts) { [] }
 
       before do
         allow(Hyrax.config).to receive(:flexible?).and_return(true)
         allow(Hyrax.query_service).to receive(:find_by).with(id: 'set-1').and_return(admin_set)
-        work.contexts = [] # start without contexts
+        allow(work).to receive(:flexible?).and_return(true)
+        allow(work).to receive(:contexts=).with(anything) { |v| work_contexts.replace(Array(v)) }
+        allow(work).to receive(:contexts).and_return(work_contexts)
+        work_contexts.clear # start without contexts
       end
 
       it 'sets the admin set contexts on the resource before building the form' do

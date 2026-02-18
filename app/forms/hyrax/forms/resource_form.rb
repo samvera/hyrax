@@ -172,7 +172,8 @@ module Hyrax
         def expose_class
           @expose_class = Class.new(Disposable::Expose).from(schema_definitions.values)
         end
-        public :expose_class
+
+        public :expose_class, :required_fields, :required_fields=, :schema_definitions, :schema_definitions=
       end
       ##
       # @param [#to_s] attr
