@@ -1,29 +1,5 @@
 <%# run `bundle exec rails g hyrax:ramp:install` to install Ramp IIIF A/V player %>
-<% content_for(:head) do %>
-  <%= javascript_pack_tag 'application' %>
-  <%= stylesheet_pack_tag 'application' %>
-<% end %>
-<div id="ramp-player" class="ramp-player">
-  <%= react_component("RampPlayer", { manifestUrl: main_app.polymorphic_url([main_app, :manifest, presenter], { locale: I18n.locale }) }) %>
-</div>
-<script>
-  function loadRampPlayer() {
-    // RAMP player caches the previous manifest URL, so we must unmount/remount
-    // the React component to ensure it loads the correct manifest for this work.
-    // We also need to wait for the Webpacker pack to load asynchronously before
-    // ReactRailsUJS is available, using requestAnimationFrame to retry until ready.
-    if (typeof ReactRailsUJS === 'undefined') {
-      requestAnimationFrame(loadRampPlayer);
-      return;
-    }
-
-    ReactRailsUJS.unmountComponents();
-    ReactRailsUJS.mountComponents();
-  }
-
-  if (document.readyState === 'complete') {
-    loadRampPlayer();
-  } else {
-    window.addEventListener('load', loadRampPlayer);
-  }
-</script>
+<%= javascript_include_tag 'ramp', type: 'module' %>
+<%= react_component('RampPlayer', props: {
+  manifestUrl: main_app.polymorphic_url([main_app, :manifest, presenter], { locale: I18n.locale })
+}) %>
