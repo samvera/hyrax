@@ -458,6 +458,7 @@ module Hyrax
     attr_writer :iiif_metadata_fields
     attr_writer :iiif_manifest_cache_duration
     attr_writer :iiif_manifest_factory
+    attr_writer :iiif_av_viewer
     attr_writer :rendering_predicate
 
     # Enable IIIF image service. This is required to use the
@@ -533,6 +534,15 @@ module Hyrax
     # @return [Class]
     def iiif_manifest_factory
       @iiif_manifest_factory ||= ::IIIFManifest::ManifestFactory
+    end
+
+    ##
+    # A symbol that represents the viewer to render for AV items.
+    # Defaults to :universal_viewer but hopefully we can develop more options
+    #
+    # @return [:symbol] viewer partial name
+    def iiif_av_viewer
+      @iiif_av_viewer ||= :universal_viewer
     end
 
     ##

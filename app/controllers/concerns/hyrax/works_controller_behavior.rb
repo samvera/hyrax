@@ -167,7 +167,7 @@ module Hyrax
 
     def iiif_manifest_builder
       self.class.iiif_manifest_builder ||
-        (Flipflop.cache_work_iiif_manifest? ? Hyrax::CachingIiifManifestBuilder.new : Hyrax::ManifestBuilderService.new)
+        (Flipflop.cache_work_iiif_manifest? ? Hyrax::CachingIiifManifestBuilder.new : Hyrax::ManifestBuilderService.new(iiif_manifest_factory: manifest_factory_for_work))
     end
 
     def iiif_manifest_presenter
@@ -558,6 +558,20 @@ module Hyrax
       end
 
       AdminSetSelectionPresenter.new(admin_sets: admin_sets)
+    end
+
+    def manifest_factory_for_work
+      return ::IIIFManifest::V3::ManifestFactory if av_content?
+
+      Hyrax.config.iiif_manifest_factory
+    end
+
+    def av_content?
+      return false unless Flipflop.iiif_av?
+
+      iiif_manifest_presenter.file_set_presenters.any? do |file_set|
+        file_set.video? || file_set.audio?
+      end
     end
   end
 end

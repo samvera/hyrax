@@ -9,7 +9,7 @@ module Deprecation
   module DeprecationWarningPatch
     def warn(*args)
       # if the first argument being passed is a string,
-      # the caller is using the Rails-style siganture,
+      # the caller is using the Rails-style signature,
       # so we need to pass a dummy first argument to
       # the older gem method
       if args.first.is_a?(String)

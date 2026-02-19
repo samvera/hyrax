@@ -38,18 +38,18 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     allow(view).to receive(:dashboard_collection_path).and_return("/dashboard/collection/123")
     allow(view).to receive(:collection_path).and_return("/collection/123")
 
-    stub_template '_search_form.html.erb' => 'search form'
+    stub_template 'hyrax/dashboard/collections/_search_form.html.erb' => 'search form'
     stub_template 'hyrax/dashboard/collections/_sort_and_per_page.html.erb' => 'sort and per page'
-    stub_template '_document_list.html.erb' => 'document list'
+    stub_template 'hyrax/dashboard/collections/_document_list.html.erb' => 'document list'
     # This is tested ./spec/views/hyrax/dashboard/collections/_show_actions.html.erb_spec.rb
-    stub_template '_show_actions.html.erb' => '<div class="stubbed-actions">THE COLLECTION ACTIONS</div>'
-    stub_template '_show_subcollection_actions.html.erb' => '<div class="stubbed-actions">THE SUBCOLLECTION ACTIONS</div>'
-    stub_template '_show_add_items_actions.html.erb' => '<div class="stubbed-actions">THE ADD ITEMS ACTIONS</div>'
-    stub_template '_show_parent_collections.html.erb' => '<div class="stubbed-actions">THE PARENT COLLECTIONS LIST</div>'
-    stub_template '_subcollection_list.html.erb' => '<div class="stubbed-actions">THE SUB-COLLECTIONS LIST</div>'
+    stub_template 'hyrax/dashboard/collections/_show_actions.html.erb' => '<div class="stubbed-actions">THE COLLECTION ACTIONS</div>'
+    stub_template 'hyrax/dashboard/collections/_show_subcollection_actions.html.erb' => '<div class="stubbed-actions">THE SUBCOLLECTION ACTIONS</div>'
+    stub_template 'hyrax/dashboard/collections/_show_add_items_actions.html.erb' => '<div class="stubbed-actions">THE ADD ITEMS ACTIONS</div>'
+    stub_template 'hyrax/dashboard/collections/_show_parent_collections.html.erb' => '<div class="stubbed-actions">THE PARENT COLLECTIONS LIST</div>'
+    stub_template 'hyrax/dashboard/collections/_subcollection_list.html.erb' => '<div class="stubbed-actions">THE SUB-COLLECTIONS LIST</div>'
     stub_template 'hyrax/collections/_paginate.html.erb' => 'paginate'
-    stub_template 'hyrax/collections/_media_display.html.erb' => '<span class="fa fa-cubes collection-icon-search"></span>'
-    stub_template 'hyrax/my/collections/_modal_add_to_collection.html.erb' => 'modal add as subcollection'
+    stub_template 'hyrax/dashboard/collections/_media_display.html.erb' => '<span class="fa fa-cubes collection-icon-search"></span>'
+    stub_template 'hyrax/dashboard/collections/_modal_add_to_collection.html.erb' => 'modal add as subcollection'
     stub_template 'hyrax/my/collections/_modal_add_subcollection.html.erb' => 'modal add as parent'
   end
 
@@ -59,7 +59,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     expect(rendered).to have_css('.stubbed-actions', text: 'THE COLLECTION ACTIONS')
     expect(rendered).to have_css('.stubbed-actions', text: 'THE SUBCOLLECTION ACTIONS')
     expect(rendered).to have_css('.stubbed-actions', text: 'THE ADD ITEMS ACTIONS')
-    expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
+    expect(rendered).to have_css('span.fa.fa-cubes.collection-icon-search')
     expect(rendered).not_to have_text('Search Results within this Collection')
   end
 
@@ -74,7 +74,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
       expect(rendered).to have_css('.stubbed-actions', text: 'THE COLLECTION ACTIONS')
       expect(rendered).to have_css('.stubbed-actions', text: 'THE SUBCOLLECTION ACTIONS')
       expect(rendered).to have_css('.stubbed-actions', text: 'THE ADD ITEMS ACTIONS')
-      expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
+      expect(rendered).to have_css('span.fa.fa-cubes.collection-icon-search')
       expect(rendered).not_to have_text('Search Results within this Collection')
     end
   end
