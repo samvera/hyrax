@@ -149,4 +149,62 @@ module Hyrax
   def self.custom_queries
     query_service.custom_queries
   end
+
+  ##
+  # Returns the schema for a resource class, optionally scoped by admin set contexts.
+  #
+  # When +admin_set_id+ is present and flexible schema is enabled, the admin set's
+  # contexts are used so flexible resources get a context-aware schema. If the
+  # admin set is not found, falls back to the base schema without raising.
+  #
+  # @param klass [Class] a Valkyrie resource class (e.g. Hyrax::Work)
+  # @param admin_set_id [String, nil] optional admin set id to resolve contexts from
+  # @return [Dry::Types::Schema, Array] the schema (keys/types or enumerable of keys)
+  def self.schema_for(klass:, admin_set_id: nil)
+    contexts = if admin_set_id.blank? || !config.flexible?
+                 []
+               else
+                 schema_contexts_for(admin_set_id)
+               end
+    resolve_schema(klass, contexts)
+  rescue Valkyrie::Persistence::ObjectNotFoundError
+    fallback_schema(klass)
+  end
+
+  ##
+  # @api private
+  #
+  # @param admin_set_id [String]
+  # @return [Array<String>] context identifiers from the admin set, or []
+  def self.schema_contexts_for(admin_set_id)
+    return [] if admin_set_id.blank?
+    admin_set = query_service.find_by(id: admin_set_id)
+    admin_set.respond_to?(:contexts) ? Array(admin_set.contexts) : []
+  end
+  private_class_method :schema_contexts_for
+
+  ##
+  # @api private
+  #
+  # @param klass [Class]
+  # @param contexts [Array<String>]
+  # @return [Dry::Types::Schema, Array] the resolved schema for the class and contexts
+  def self.resolve_schema(klass, contexts)
+    if contexts.present? && klass.respond_to?(:flexible?) && klass.flexible?
+      klass.new(contexts: contexts).singleton_class.schema || klass.schema
+    else
+      klass.new.singleton_class.schema || klass.schema
+    end
+  end
+  private_class_method :resolve_schema
+
+  ##
+  # @api private
+  #
+  # @param klass [Class]
+  # @return [Dry::Types::Schema, Array] the base schema when admin set lookup fails
+  def self.fallback_schema(klass)
+    klass.new.singleton_class.schema || klass.schema
+  end
+  private_class_method :fallback_schema
 end
