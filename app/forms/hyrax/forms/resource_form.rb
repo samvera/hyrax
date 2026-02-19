@@ -134,7 +134,9 @@ module Hyrax
         def apply_admin_set_contexts(resource:, admin_set_id:)
           return if admin_set_id.blank?
           return unless resource.respond_to?(:flexible?) && resource.flexible?
-          contexts = Array(Hyrax.query_service.find_by(id: admin_set_id)&.contexts)
+          admin_set = Hyrax.query_service.find_by(id: admin_set_id)
+          return if admin_set.blank? || !admin_set.respond_to?(:contexts)
+          contexts = Array(admin_set.contexts)
           resource.contexts = contexts if contexts.present?
         rescue Valkyrie::Persistence::ObjectNotFoundError
           nil

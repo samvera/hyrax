@@ -164,7 +164,13 @@ module Hyrax
   # @param admin_set_id [String, nil] ID of the admin set to resolve contexts from
   # @return [Dry::Types::Hash] the schema, including any context-gated properties
   def self.schema_for(klass, admin_set_id: nil)
-    contexts = schema_contexts_for(admin_set_id)
+    contexts = if admin_set_id.blank?
+                 []
+               elsif !config.flexible?
+                 [] # avoid repository lookup when flexible metadata is disabled
+               else
+                 schema_contexts_for(admin_set_id)
+               end
     resolve_schema(klass, contexts)
   rescue Valkyrie::Persistence::ObjectNotFoundError
     fallback_schema(klass)

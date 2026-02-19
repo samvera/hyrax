@@ -9,6 +9,8 @@ RSpec.describe Hyrax do
   end
 
   describe '.schema_for' do
+    # Unit tests use a simplified schema (array of field-like objects) to exercise the resolution
+    # path. The real Valkyrie schema is a Dry::Types hash; callers (e.g. Bulkrax) use .map { |k| k.name.to_s }.
     let(:field) { double('Field', name: :title) }
     let(:non_flexible_klass) do
       klass = Class.new do
@@ -23,6 +25,11 @@ RSpec.describe Hyrax do
 
     it 'returns the schema for a non-flexible class without admin_set_id' do
       expect(described_class.schema_for(non_flexible_klass)).to include(field)
+    end
+
+    it 'returns a schema that callers can map to property names (contract)' do
+      schema = described_class.schema_for(non_flexible_klass)
+      expect(schema.map { |k| k.name.to_s }).to include('title')
     end
 
     it 'returns base schema when admin_set_id is nil' do
