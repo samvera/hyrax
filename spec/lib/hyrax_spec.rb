@@ -9,8 +9,6 @@ RSpec.describe Hyrax do
   end
 
   describe '.schema_for' do
-    # Unit tests use a simplified schema (array of field-like objects) to exercise the resolution
-    # path. The real Valkyrie schema is a Dry::Types hash; callers (e.g. Bulkrax) use .map { |k| k.name.to_s }.
     let(:field) { double('Field', name: :title) }
     let(:non_flexible_klass) do
       klass = Class.new do

@@ -41,7 +41,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
         allow(work).to receive(:flexible?).and_return(true)
         allow(work).to receive(:contexts=).with(anything) { |v| work_contexts.replace(Array(v)) }
         allow(work).to receive(:contexts).and_return(work_contexts)
-        work_contexts.clear # start without contexts
+        work_contexts.clear
       end
 
       it 'sets the admin set contexts on the resource before building the form' do

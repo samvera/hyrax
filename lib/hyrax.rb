@@ -150,24 +150,9 @@ module Hyrax
     query_service.custom_queries
   end
 
-  ##
-  # @api public
-  #
-  # Returns the Valkyrie schema for a model class, loading context-specific
-  # properties when the model is flexible and the admin set has contexts assigned.
-  #
-  # This is the single point of context resolution for flexible metadata so that
-  # callers (e.g. Bulkrax) do not need to know about HYRAX_FLEXIBLE, contexts, or
-  # the Flexibility concern.
-  #
-  # @param klass [Class] a Valkyrie model class
-  # @param admin_set_id [String, nil] ID of the admin set to resolve contexts from
-  # @return [Dry::Types::Hash] the schema, including any context-gated properties
   def self.schema_for(klass, admin_set_id: nil)
-    contexts = if admin_set_id.blank?
+    contexts = if admin_set_id.blank? || !config.flexible?
                  []
-               elsif !config.flexible?
-                 [] # avoid repository lookup when flexible metadata is disabled
                else
                  schema_contexts_for(admin_set_id)
                end
