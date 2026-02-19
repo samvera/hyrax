@@ -1427,8 +1427,8 @@ fr:
         tab_label: Chargé récemment
         title: Chargé récemment
     icons:
-      collection: Fa fa-cubes
-      default: Fa fa-cube
+      collection: fa fa-cubes
+      default: fa fa-cube
     leases:
       edit:
         header:
