@@ -54,6 +54,7 @@ RSpec.describe Hyrax do
       let(:admin_set) { double('AdminSet', contexts: ['special_context']) }
 
       before do
+        allow(Hyrax.config).to receive(:flexible?).and_return(true)
         allow(Hyrax.query_service).to receive(:find_by).with(id: 'set-1').and_return(admin_set)
       end
 
@@ -71,6 +72,15 @@ RSpec.describe Hyrax do
 
       it 'falls back to the base schema without raising' do
         expect { described_class.schema_for(non_flexible_klass, admin_set_id: 'missing') }.not_to raise_error
+      end
+    end
+
+    context 'with a real Valkyrie resource class (Hyrax::Work)' do
+      it 'returns a schema with keys/types (e.g. title)' do
+        schema = described_class.schema_for(Hyrax::Work)
+        keys = schema.respond_to?(:keys) ? schema.keys : schema
+        key_names = keys.map { |k| (k.respond_to?(:name) ? k.name : k).to_s.chomp('?').to_sym }
+        expect(key_names).to include(:title)
       end
     end
   end
