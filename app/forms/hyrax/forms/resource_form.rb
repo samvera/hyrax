@@ -98,6 +98,14 @@ module Hyrax
           include Hyrax::FormFields(model.to_s, definition_loader: Hyrax::Schema.m3_schema_loader)
         end
 
+        ##
+        # @api public
+        #
+        # Factory for generic, per-work froms
+        #
+        # @example
+        #   monograph  = Monograph.new
+        #   change_set = Hyrax::Forms::ResourceForm.for(resource: monograph)
         def for(deprecated_resource = nil, resource: nil, admin_set_id: nil)
           if resource.nil? && !deprecated_resource.nil?
             Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. Pass the resource with `resource:` instead."

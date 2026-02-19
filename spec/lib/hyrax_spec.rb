@@ -22,16 +22,16 @@ RSpec.describe Hyrax do
     end
 
     it 'returns the schema for a non-flexible class without admin_set_id' do
-      expect(described_class.schema_for(non_flexible_klass)).to include(field)
+      expect(described_class.schema_for(klass: non_flexible_klass)).to include(field)
     end
 
     it 'returns a schema that callers can map to property names (contract)' do
-      schema = described_class.schema_for(non_flexible_klass)
+      schema = described_class.schema_for(klass: non_flexible_klass)
       expect(schema.map { |k| k.name.to_s }).to include('title')
     end
 
     it 'returns base schema when admin_set_id is nil' do
-      expect(described_class.schema_for(non_flexible_klass, admin_set_id: nil)).to include(field)
+      expect(described_class.schema_for(klass: non_flexible_klass, admin_set_id: nil)).to include(field)
     end
 
     context 'when the admin set has contexts and the model is flexible' do
@@ -57,7 +57,7 @@ RSpec.describe Hyrax do
       end
 
       it 'returns a schema that includes the context-specific field' do
-        schema = described_class.schema_for(flex_klass, admin_set_id: 'set-1')
+        schema = described_class.schema_for(klass: flex_klass, admin_set_id: 'set-1')
         expect(schema).to include(ctx_field)
       end
     end
@@ -69,13 +69,13 @@ RSpec.describe Hyrax do
       end
 
       it 'falls back to the base schema without raising' do
-        expect { described_class.schema_for(non_flexible_klass, admin_set_id: 'missing') }.not_to raise_error
+        expect { described_class.schema_for(klass: non_flexible_klass, admin_set_id: 'missing') }.not_to raise_error
       end
     end
 
     context 'with a real Valkyrie resource class (Hyrax::Work)' do
       it 'returns a schema with keys/types (e.g. title)' do
-        schema = described_class.schema_for(Hyrax::Work)
+        schema = described_class.schema_for(klass: Hyrax::Work)
         keys = schema.respond_to?(:keys) ? schema.keys : schema
         key_names = keys.map { |k| (k.respond_to?(:name) ? k.name : k).to_s.chomp('?').to_sym }
         expect(key_names).to include(:title)
