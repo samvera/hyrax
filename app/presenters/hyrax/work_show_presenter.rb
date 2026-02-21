@@ -83,11 +83,9 @@ module Hyrax
 
     # @return [Boolean] render a IIIF viewer
     def iiif_viewer?
-      return false unless Hyrax.config.iiif_image_server? || Flipflop.iiif_av?
-
       representative_id.present? &&
         representative_presenter.present? &&
-        (av_viewable? || image_viewable?)
+        (av_viewable? || image_viewable? || pdf_viewable?)
     end
 
     alias universal_viewer? iiif_viewer?
@@ -366,6 +364,11 @@ module Hyrax
     def image_viewable?
       return false unless Hyrax.config.iiif_image_server?
       representative_presenter.image? && members_include_viewable_image?
+    end
+
+    def pdf_viewable?
+      return false unless Flipflop.iiif_pdf?
+      representative_presenter.pdf?
     end
   end
 end

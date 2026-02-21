@@ -12,8 +12,14 @@ Flipflop.configure do
             description: "Use Rails.cache to cache the JSON document for IIIF manifests"
 
     feature :iiif_av,
+            title: "IIIF A/V Support",
             default: false,
-            description: "Enable support for IIIF AV content in manifests."
+            description: "Enable support for A/V content in IIIF v3 manifests."
+
+    feature :iiif_pdf,
+            title: "IIIF PDF Support",
+            default: false,
+            description: "Enable support for PDF content in IIIF v3 manifests."
 
     feature :hide_private_items,
             default: false,

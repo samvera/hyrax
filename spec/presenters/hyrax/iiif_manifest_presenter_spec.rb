@@ -175,6 +175,12 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
           content = presenter.display_content
 
           expect(content).to be_a(IIIFManifest::V3::DisplayContent)
+          expect(content.type).to eq('Video')
+          expect(content.format).to eq('video/mp4')
+          expect(content.url).to include("samvera.org/downloads/#{file_set.id}")
+          expect(content.thumbnail).to contain_exactly(
+            hash_including(type: 'Image', format: 'image/jpeg')
+          )
         end
       end
 
@@ -203,6 +209,9 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
             expect(content.type).to eq('Sound')
             expect(content.format).to eq('audio/mp3')
             expect(content.url).to include("samvera.org/downloads/#{file_set.id}")
+            expect(content.thumbnail).to contain_exactly(
+              hash_including(type: 'Image', format: 'image/png')
+            )
           end
         end
 
@@ -215,6 +224,9 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
             expect(content.type).to eq('Sound')
             expect(content.format).to eq('audio/mpeg')
             expect(content.url).to include("downloads/#{file_set.id}")
+            expect(content.thumbnail).to contain_exactly(
+              hash_including(type: 'Image', format: 'image/png')
+            )
           end
         end
       end
@@ -244,6 +256,43 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
 
           it 'returns nil to let display_image handle v2' do
             expect(presenter.display_content).to be_nil
+          end
+        end
+
+        context 'with pdf file' do
+          let(:original_file_metadata) do
+            valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                            file_set: file_set,
+                            mime_type: 'application/pdf')
+          end
+
+          let(:solr_doc) do
+            original_file_metadata
+            solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
+            solr_hash['mime_type_ssi'] = 'application/pdf'
+            SolrDocument.new(solr_hash)
+          end
+
+          before do
+            allow(Flipflop).to receive(:iiif_pdf?).and_return(true)
+          end
+
+          it 'returns pdf display content' do
+            content = presenter.display_content
+
+            expect(content).to be_a(IIIFManifest::V3::DisplayContent)
+            expect(content.type).to eq('Text')
+            expect(content.format).to eq('application/pdf')
+            expect(content.url).to include("downloads/#{file_set.id}")
+            expect(content.thumbnail).to contain_exactly(
+              hash_including(type: 'Image', format: 'image/jpeg')
+            )
+          end
+
+          context 'when iiif_pdf flipper is disabled' do
+            before { allow(Flipflop).to receive(:iiif_pdf?).and_return(false) }
+
+            it { expect(presenter.display_content).to be_nil }
           end
         end
       end
