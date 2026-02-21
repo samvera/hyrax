@@ -59,7 +59,8 @@ module Hyrax
         height: Array(height).first.try(:to_i),
         duration: conformed_duration,
         type: 'Video',
-        format: mime_type
+        format: mime_type,
+        thumbnail: thumbnail
       )
     end
 
@@ -71,7 +72,12 @@ module Hyrax
         type: 'Sound',
         # I think UV has a bug where if it's 'audio/mpeg' then it would load, so adding this
         # workaround to use 'audio/mp3' (which isn't even an official MIME type).
-        format: Hyrax.config.iiif_av_viewer == :universal_viewer ? 'audio/mp3' : mime_type
+        format: Hyrax.config.iiif_av_viewer == :universal_viewer ? 'audio/mp3' : mime_type,
+        thumbnail: [{
+          id: "#{hostname}/assets/audio.png",
+          type: 'Image',
+          format: 'image/png'
+        }]
       )
     end
 
@@ -80,12 +86,21 @@ module Hyrax
         download_path('pdf'),
         label: 'pdf',
         type: 'Text',
-        format: mime_type
+        format: mime_type,
+        thumbnail: thumbnail
       )
     end
 
     def download_path(extension)
       Hyrax::Engine.routes.url_helpers.download_url(object, file: extension, host: hostname)
+    end
+
+    def thumbnail
+      [{
+        id: download_path('thumbnail'),
+        type: 'Image',
+        format: 'image/jpeg'
+      }]
     end
 
     # rubocop:disable Metrics/AbcSize

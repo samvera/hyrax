@@ -18,6 +18,10 @@
         padding: 0;
         overflow: hidden;
       }
+      #uv .thumbs a.thumb {
+        display: block;
+        overflow: hidden;
+      }
     </style>
   </head>
   <body>
@@ -38,11 +42,11 @@
         if (configUrl) {
           uv.on("configure", function({ config, cb }) {
             cb(
-              // new Promise(function (resolve) {
-              //   fetch(configUrl).then(function (response) {
-              //     resolve(response.json());
-              //   });
-              // })
+              new Promise(function (resolve) {
+                fetch(configUrl).then(function (response) {
+                  resolve(response.json());
+                });
+              })
             );
           })
         }

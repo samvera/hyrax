@@ -175,6 +175,12 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
           content = presenter.display_content
 
           expect(content).to be_a(IIIFManifest::V3::DisplayContent)
+          expect(content.type).to eq('Video')
+          expect(content.format).to eq('video/mp4')
+          expect(content.url).to include("samvera.org/downloads/#{file_set.id}")
+          expect(content.thumbnail).to contain_exactly(
+            hash_including(type: 'Image', format: 'image/jpeg')
+          )
         end
       end
 
@@ -203,6 +209,9 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
             expect(content.type).to eq('Sound')
             expect(content.format).to eq('audio/mp3')
             expect(content.url).to include("samvera.org/downloads/#{file_set.id}")
+            expect(content.thumbnail).to contain_exactly(
+              hash_including(type: 'Image', format: 'image/png')
+            )
           end
         end
 
@@ -215,6 +224,9 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
             expect(content.type).to eq('Sound')
             expect(content.format).to eq('audio/mpeg')
             expect(content.url).to include("downloads/#{file_set.id}")
+            expect(content.thumbnail).to contain_exactly(
+              hash_including(type: 'Image', format: 'image/png')
+            )
           end
         end
       end
@@ -272,6 +284,9 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
             expect(content.type).to eq('Text')
             expect(content.format).to eq('application/pdf')
             expect(content.url).to include("downloads/#{file_set.id}")
+            expect(content.thumbnail).to contain_exactly(
+              hash_including(type: 'Image', format: 'image/jpeg')
+            )
           end
 
           context 'when iiif_pdf flipper is disabled' do
