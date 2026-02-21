@@ -246,6 +246,40 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
             expect(presenter.display_content).to be_nil
           end
         end
+
+        context 'with pdf file' do
+          let(:original_file_metadata) do
+            valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                            file_set: file_set,
+                            mime_type: 'application/pdf')
+          end
+
+          let(:solr_doc) do
+            original_file_metadata
+            solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
+            solr_hash['mime_type_ssi'] = 'application/pdf'
+            SolrDocument.new(solr_hash)
+          end
+
+          before do
+            allow(Flipflop).to receive(:iiif_pdf?).and_return(true)
+          end
+
+          it 'returns pdf display content' do
+            content = presenter.display_content
+
+            expect(content).to be_a(IIIFManifest::V3::DisplayContent)
+            expect(content.type).to eq('Text')
+            expect(content.format).to eq('application/pdf')
+            expect(content.url).to include("downloads/#{file_set.id}")
+          end
+
+          context 'when iiif_pdf flipper is disabled' do
+            before { allow(Flipflop).to receive(:iiif_pdf?).and_return(false) }
+
+            it { expect(presenter.display_content).to be_nil }
+          end
+        end
       end
 
       describe 'duration formatting' do

@@ -8,23 +8,18 @@ module Hyrax
     #
     # @return [IIIFManifest::V3::DisplayContent] the display content required by the manifest builder.
     def display_content
-      return nil unless display_content?
+      return nil unless ability.can?(:read, object)
 
       return image_content if image?
-      return video_content if video?
-      return audio_content if audio?
+      return video_content if video? && Flipflop.iiif_av?
+      return audio_content if audio? && Flipflop.iiif_av?
+      return pdf_content if pdf? && Flipflop.iiif_pdf?
     end
 
     private
 
-    def display_content?
-      return false unless Flipflop.iiif_av?
-
-      content_supported? && ability.can?(:read, object)
-    end
-
     def content_supported?
-      video? || audio? || image?
+      video? || audio? || image? || pdf?
     end
 
     def image_content
@@ -77,6 +72,15 @@ module Hyrax
         # I think UV has a bug where if it's 'audio/mpeg' then it would load, so adding this
         # workaround to use 'audio/mp3' (which isn't even an official MIME type).
         format: Hyrax.config.iiif_av_viewer == :universal_viewer ? 'audio/mp3' : mime_type
+      )
+    end
+
+    def pdf_content
+      IIIFManifest::V3::DisplayContent.new(
+        download_path('pdf'),
+        label: 'pdf',
+        type: 'Text',
+        format: mime_type
       )
     end
 
