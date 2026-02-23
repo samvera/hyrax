@@ -561,7 +561,7 @@ module Hyrax
     end
 
     def manifest_factory_for_work
-      return ::IIIFManifest::V3::ManifestFactory if av_content?
+      return ::IIIFManifest::V3::ManifestFactory if av_content? || pdf_content?
 
       Hyrax.config.iiif_manifest_factory
     end
@@ -572,6 +572,12 @@ module Hyrax
       iiif_manifest_presenter.file_set_presenters.any? do |file_set|
         file_set.video? || file_set.audio?
       end
+    end
+
+    def pdf_content?
+      return false unless Flipflop.iiif_pdf?
+
+      iiif_manifest_presenter.file_set_presenters.any?(&:pdf?)
     end
   end
 end

@@ -170,6 +170,33 @@ RSpec.describe Hyrax::WorkShowPresenter do
         it { is_expected.to be false }
       end
     end
+
+    context 'with representative pdf' do
+      let(:representative_id) { 'representative-123' }
+      let(:representative_presenter) do
+        double('representative', present?: true, image?: false, audio?: false, video?: false, pdf?: true)
+      end
+      let(:member_presenter_factory) { instance_double(Hyrax::MemberPresenterFactory) }
+
+      before do
+        presenter.member_presenter_factory = member_presenter_factory
+        allow(member_presenter_factory)
+          .to receive(:member_presenters)
+          .with(['representative-123'])
+          .and_return([representative_presenter])
+        allow(Flipflop).to receive(:iiif_pdf?).and_return(true)
+      end
+
+      it { is_expected.to be true }
+
+      context 'when iiif_pdf flipper is disabled' do
+        before do
+          allow(Flipflop).to receive(:iiif_pdf?).and_return(false)
+        end
+
+        it { is_expected.to be false }
+      end
+    end
   end
 
   describe '#stats_path' do
