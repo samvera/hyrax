@@ -10,6 +10,8 @@ else
   gemspec
 end
 
+gem 'active-fedora', git: 'https://github.com/samvera/active_fedora.git', branch: 'main'
+
 group :development, :test do
   gem 'benchmark-ips'
   gem 'easy_translate'
