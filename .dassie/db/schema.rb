@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_03_28_100249) do
+ActiveRecord::Schema.define(version: 2025_08_26_142481) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +104,8 @@ ActiveRecord::Schema.define(version: 2025_03_28_100249) do
     t.integer "total_file_set_entries", default: 0
     t.integer "processed_works", default: 0
     t.integer "failed_works", default: 0
+    t.integer "processed_children", default: 0
+    t.integer "failed_children", default: 0
     t.index ["importer_id"], name: "index_bulkrax_importer_runs_on_importer_id"
   end
 
