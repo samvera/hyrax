@@ -48,7 +48,7 @@ module Hyrax
       # @return [Array<Valkyrie::Resource>] found resources, if any
       def find_many_by_property_pairs(pairs:, field_suffix: :ssim, **options)
         found_ids = find_ids_by_property_pairs(pairs: pairs, field_suffix: field_suffix, **options)
-        @query_service.find_many_by_ids(ids: found_ids)
+        @query_service.find_many_by_ids(ids: found_ids).to_a  # Wings emits an Enumerator
       end
 
       ##
