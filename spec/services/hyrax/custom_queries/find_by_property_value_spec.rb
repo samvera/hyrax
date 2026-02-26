@@ -4,9 +4,9 @@ RSpec.describe Hyrax::CustomQueries::FindByPropertyValue, :clean_repo do
 
   let(:resources) { [resource1, resource2, resource3] }
   # Title contains quotes and special characters to test string escaping
-  let(:resource1) { FactoryBot.valkyrie_create(:hyrax_work, title: '"Resource One!"', depositor: user1) }
-  let(:resource2) { FactoryBot.valkyrie_create(:hyrax_work, title: 'Resource Two', depositor: user2) }
-  let(:resource3) { FactoryBot.valkyrie_create(:hyrax_work, title: 'Resource Three', depositor: user1) }
+  let(:resource1) { FactoryBot.valkyrie_create(:hyrax_work, title: '"Resource One!"', depositor: user1.user_key) }
+  let(:resource2) { FactoryBot.valkyrie_create(:hyrax_work, title: 'Resource Two', depositor: user2.user_key) }
+  let(:resource3) { FactoryBot.valkyrie_create(:hyrax_work, title: 'Resource Three', depositor: user1.user_key) }
   let(:user1) { FactoryBot.create(:user) }
   let(:user2) { FactoryBot.create(:user) }
 
