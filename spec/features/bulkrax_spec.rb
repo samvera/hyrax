@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe 'Bulkrax', :js, :workflow, :clean_repo,
+RSpec.describe 'Bulkrax', :js, :workflow, :clean_repo, skip: !Hyrax.config.disable_wings,
                perform_enqueued: true do
   let(:user) { create(:admin) }
 
