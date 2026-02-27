@@ -9,7 +9,12 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
   let(:manage_feature) { false }
   let(:manage_workflow) { false }
   let(:manage_collection_types) { false }
-  let(:ability) { double('current ability', can_create_any_work?: false) }
+  let(:ability) do
+    double('current ability',
+           can_create_any_work?: false,
+           can_import_works?: false,
+           can_export_works?: false)
+  end
 
   before do
     allow(view).to receive(:signed_in?).and_return(true)
