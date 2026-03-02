@@ -304,18 +304,48 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
                           mime_type: 'video/mp4')
         end
 
-        context 'with duration in seconds' do
+        context 'with duration as plain milliseconds' do
           let(:solr_doc) do
             original_file_metadata
             solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
             solr_hash['mime_type_ssi'] = 'video/mp4'
-            solr_hash['duration_tesim'] = ['120']
+            solr_hash['duration_tesim'] = ['120000']
             SolrDocument.new(solr_hash)
           end
 
-          it 'converts to float' do
+          it 'converts milliseconds to seconds' do
             content = presenter.display_content
             expect(content.duration).to eq(120.0)
+          end
+        end
+
+        context 'with duration as plain milliseconds (large value)' do
+          let(:solr_doc) do
+            original_file_metadata
+            solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
+            solr_hash['mime_type_ssi'] = 'video/mp4'
+            solr_hash['duration_tesim'] = ['30527']
+            SolrDocument.new(solr_hash)
+          end
+
+          it 'converts milliseconds to seconds' do
+            content = presenter.display_content
+            expect(content.duration).to eq(30.527)
+          end
+        end
+
+        context 'with duration in seconds with unit suffix' do
+          let(:solr_doc) do
+            original_file_metadata
+            solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
+            solr_hash['mime_type_ssi'] = 'video/mp4'
+            solr_hash['duration_tesim'] = ['25 s']
+            SolrDocument.new(solr_hash)
+          end
+
+          it 'converts to seconds' do
+            content = presenter.display_content
+            expect(content.duration).to eq(25.0)
           end
         end
 

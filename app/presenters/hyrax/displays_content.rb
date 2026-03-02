@@ -103,13 +103,15 @@ module Hyrax
       }]
     end
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def conformed_duration
       duration_string = Array(object.duration).first
       return nil if duration_string.blank?
 
-      # Handle plain numeric values (e.g., "25 s", "120")
-      return duration_string.to_f unless duration_string.include?(':')
+      # Handle values with explicit seconds unit (e.g., "25 s")
+      return duration_string.to_f if duration_string.match?(/\A[\d.]+\s*s\z/)
+      # Handle plain millisecond values (e.g., "120000")
+      return duration_string.to_f / 1000.0 unless duration_string.include?(':')
 
       # Parse time-formatted strings
       parts = duration_string.split(':').map(&:to_i)
@@ -125,7 +127,7 @@ module Hyrax
         duration_string.to_f # fallback
       end
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
   end
   # rubocop:enable Metrics/ModuleLength
 end
