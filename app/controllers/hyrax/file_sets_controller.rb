@@ -51,6 +51,7 @@ module Hyrax
 
     # GET /concern/file_sets/:id
     def edit
+      @file_set_admin_set_option = file_set_admin_set_option
       initialize_edit_form
     end
 
@@ -284,6 +285,19 @@ module Hyrax
       end
     end
 
+    # Retrieves the admin set the file_set belongs to
+    def file_set_admin_set_option
+      return @admin_set_option if @admin_set_option
+      parent_work = parent(file_set: presenter)
+      admin_set_tesim = parent_work.solr_document[:admin_set_tesim].first
+
+      service = Hyrax::AdminSetService.new(self)
+      admin_set_option = Hyrax::AdminSetOptionsPresenter.new(service).select_options.reject do |option|
+        option[0] != admin_set_tesim
+      end
+      admin_set_option
+    end
+
     def initialize_edit_form
       guard_for_workflow_restriction_on!(parent: parent)
 
@@ -296,6 +310,7 @@ module Hyrax
       end
       @version_list = Hyrax::VersionListPresenter.for(file_set: file_set)
       @groups = current_user.groups
+      @is_admin = current_ability.admin?
     end
 
     include WorkflowsHelper # Provides #workflow_restriction?, and yes I mean include not helper; helper exposes the module methods
