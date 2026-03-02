@@ -1624,6 +1624,13 @@ es:
         link_expired_not_found: Enlace de uso único caducado o no encontrado
         link_not_found: Enlace de uso único no encontrado
     sort_label: Ordenar el listado de elementos
+    sort:
+      uploaded:
+        desc: "fecha de carga (más reciente primero)"
+        asc: "fecha de carga (más antiguo primero)"
+      modified:
+        desc: "fecha de modificación (más reciente primero)"
+        asc: "fecha de modificación (más antiguo primero)"
     static:
       mendeley:
         contact_form: Formulario de contacto
