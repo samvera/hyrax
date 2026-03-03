@@ -52,11 +52,13 @@ RSpec.describe Hyrax::FlexibleSchemaValidatorService, :clean_repo do
         end
 
         it 'is invalid' do
+          # GenericWork is still covered for `title` via the title_primary and title_alternative
+          # name aliases in the fixture profile, so it is not listed as missing.
           expect(service.errors).to contain_exactly(
             "Schema error at `/properties/title/available_on/class`: Invalid value `nil` for type `array`.",
             "Schema error at `/properties/creator`: Missing required properties: 'available_on'.",
             "Property 'title' must be available on all classes, but is missing from: AdminSet, " \
-            "Collection, FileSet, GenericWork, Monograph.",
+            "Collection, FileSet, Monograph.",
             "Property 'creator' must be available on all classes, but is missing from: AdminSet, " \
             "Collection, FileSet, GenericWork, Monograph."
           )
