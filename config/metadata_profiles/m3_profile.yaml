@@ -143,6 +143,8 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
       - Julie Allinson
+  # creator is needed on the class but is set in a transaction so no form input is needed.
+  # This allows for the creator to be set on an AdministrativeSet but not be required on the form.
   creator_hidden:
     name: creator
     available_on:
