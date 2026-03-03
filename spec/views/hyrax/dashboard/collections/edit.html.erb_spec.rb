@@ -8,7 +8,8 @@ RSpec.describe 'hyrax/dashboard/collections/edit.html.erb', type: :view do
     assign(:collection, collection)
     assign(:form, form)
     allow(Hyrax::CollectionType).to receive(:for).with(collection: collection).and_return(collection_type)
-    stub_template '_form.html.erb' => 'my-edit-form partial'
+    stub_template 'hyrax/dashboard/collections/_form.html.erb' => 'my-edit-form partial'
+    stub_template 'hyrax/dashboard/collections/_flash_msg.html.erb' => 'flash_msg partial'
     stub_template '_flash_msg.html.erb' => 'flash_msg partial'
 
     render

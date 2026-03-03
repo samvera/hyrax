@@ -54,8 +54,8 @@ module Hyrax
         if r.flexible?
           self.class.deserializer_class = nil # need to reload this on first use after schema is loaded
           singleton_class.schema_definitions = self.class.definitions
-          context = r.respond_to?(:context) ? r.context : nil
-          Hyrax::Schema.m3_schema_loader.form_definitions_for(schema: r.class.name, version: Hyrax::FlexibleSchema.current_schema_id, contexts: context).map do |field_name, options|
+          contexts = r.respond_to?(:contexts) ? r.contexts : nil
+          Hyrax::Schema.m3_schema_loader.form_definitions_for(schema: r.class.name, version: Hyrax::FlexibleSchema.current_schema_id, contexts: contexts).map do |field_name, options|
             singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
           end
         end
@@ -106,11 +106,12 @@ module Hyrax
         # @example
         #   monograph  = Monograph.new
         #   change_set = Hyrax::Forms::ResourceForm.for(resource: monograph)
-        def for(deprecated_resource = nil, resource: nil)
+        def for(deprecated_resource = nil, resource: nil, admin_set_id: nil)
           if resource.nil? && !deprecated_resource.nil?
             Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. Pass the resource with `resource:` instead."
-            return self.for(resource: deprecated_resource)
+            return self.for(resource: deprecated_resource, admin_set_id: admin_set_id)
           end
+          apply_admin_set_contexts(resource: resource, admin_set_id: admin_set_id)
           klass = "#{resource.class.name}Form".safe_constantize
           klass ||= Hyrax::Forms::ResourceForm(resource.class)
           begin
@@ -119,6 +120,19 @@ module Hyrax
             Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. #{klass} should be updated accordingly."
             klass.new(resource)
           end
+        end
+
+        private
+
+        def apply_admin_set_contexts(resource:, admin_set_id:)
+          return if admin_set_id.blank?
+          return unless resource.respond_to?(:flexible?) && resource.flexible?
+          admin_set = Hyrax.query_service.find_by(id: admin_set_id)
+          return unless admin_set&.respond_to?(:contexts)
+          contexts = Array(admin_set.contexts)
+          resource.contexts = contexts if contexts.present?
+        rescue Valkyrie::Persistence::ObjectNotFoundError
+          nil
         end
 
         ##
@@ -153,6 +167,8 @@ module Hyrax
         def expose_class
           @expose_class = Class.new(Disposable::Expose).from(schema_definitions.values)
         end
+
+        public :expose_class, :required_fields, :required_fields=, :schema_definitions, :schema_definitions=
       end
       ##
       # @param [#to_s] attr

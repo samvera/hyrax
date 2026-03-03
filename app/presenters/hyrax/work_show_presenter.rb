@@ -83,11 +83,9 @@ module Hyrax
 
     # @return [Boolean] render a IIIF viewer
     def iiif_viewer?
-      Hyrax.config.iiif_image_server? &&
-        representative_id.present? &&
+      representative_id.present? &&
         representative_presenter.present? &&
-        representative_presenter.image? &&
-        members_include_viewable_image?
+        (av_viewable? || image_viewable? || pdf_viewable?)
     end
 
     alias universal_viewer? iiif_viewer?
@@ -107,7 +105,11 @@ module Hyrax
     #   <h3>My IIIF Viewer!</h3>
     #   <a href=<%= main_app.polymorphic_url([main_app, :manifest, presenter], { locale: nil }) %>>Manifest</a>
     def iiif_viewer
-      :universal_viewer
+      if representative_presenter.present? && av_viewable?
+        Hyrax.config.iiif_av_viewer
+      else
+        :universal_viewer
+      end
     end
 
     # @return FileSetPresenter presenter for the representative FileSets
@@ -352,6 +354,21 @@ module Hyrax
 
     def members_include_viewable_image?
       file_set_presenters.any? { |presenter| presenter.image? && current_ability.can?(:read, presenter.id) }
+    end
+
+    def av_viewable?
+      return false unless Flipflop.iiif_av?
+      representative_presenter.video? || representative_presenter.audio?
+    end
+
+    def image_viewable?
+      return false unless Hyrax.config.iiif_image_server?
+      representative_presenter.image? && members_include_viewable_image?
+    end
+
+    def pdf_viewable?
+      return false unless Flipflop.iiif_pdf?
+      representative_presenter.pdf?
     end
   end
 end

@@ -1,0 +1,3 @@
+source_identifier,model,file,parents,title,description,creator
+c1,Collection,,,A Test Collection,This is a test collection,a_hyrax_user
+w1,GenericWork,octothorpe-1.ptif.tiff;octothorpe-2.ptif.tiff,c1,A Test Work,These are test images.,a_hyrax_user

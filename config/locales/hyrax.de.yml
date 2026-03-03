@@ -1420,8 +1420,8 @@ de:
         tab_label: Zuletzt hochgeladen
         title: Zuletzt hochgeladen
     icons:
-      collection: Fa-würfel
-      default: Fa fa-würfel
+      collection: fa fa-cube
+      default: fa fa-cube
     leases:
       edit:
         header:

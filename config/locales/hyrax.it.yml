@@ -1426,8 +1426,8 @@ it:
         tab_label: Recentemente caricati
         title: Recentemente caricati
     icons:
-      collection: Fa fa-cubetti
-      default: Fa fa-cubo
+      collection: fa fa-cubes
+      default: fa fa-cube
     leases:
       edit:
         header:

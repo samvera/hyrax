@@ -5,12 +5,12 @@ RSpec.describe "hyrax/admin/admin_sets/show.html.erb", type: :view do
   let(:presenter) { Hyrax::AdminSetPresenter.new(solr_document, ability) }
 
   before do
-    stub_template '_collection_description.html.erb' => ''
-    stub_template '_show_actions.erb' => ''
-    stub_template '_show_descriptions.erb' => ''
-    stub_template '_sort_and_per_page.html.erb' => 'sort and per page'
-    stub_template '_document_list.html.erb' => 'document list'
-    stub_template '_paginate.html.erb' => 'paginate'
+    stub_template 'hyrax/admin/admin_sets/_collection_description.html.erb' => ''
+    stub_template 'hyrax/admin/admin_sets/_show_actions.html.erb' => ''
+    stub_template 'hyrax/admin/admin_sets/_show_descriptions.html.erb' => ''
+    stub_template 'hyrax/admin/admin_sets/_sort_and_per_page.html.erb' => 'sort and per page'
+    stub_template 'hyrax/admin/admin_sets/_document_list.html.erb' => 'document list'
+    stub_template 'hyrax/admin/admin_sets/_paginate.html.erb' => 'paginate'
 
     assign(:member_docs, [])
     assign(:presenter, presenter)
