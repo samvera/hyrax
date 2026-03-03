@@ -1,4 +1,4 @@
-<%= simple_form_for [main_app, form_object], url: main_app.hyrax_file_set_path(form_object), html: { multipart: true, class: 'nav-safety' } do |f| %>
+<%= simple_form_for [main_app, form_object], url: main_app.hyrax_file_set_path(form_object), html: { multipart: true, class: 'nav-safety', data: { behavior: 'file-set-form', 'param-key' => form_object.model_name.param_key } } do |f| %>
   <% if curation_concern.flexible? %>
     <div class="col-md-3 pull-right">
       <%= render('shared/schema_version', f: f) %>
