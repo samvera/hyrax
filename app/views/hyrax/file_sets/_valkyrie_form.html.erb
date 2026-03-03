@@ -1,4 +1,4 @@
-<%= simple_form_for [main_app, form_object], html: { multipart: true, class: 'nav-safety' } do |f| %>
+<%= simple_form_for [main_app, form_object], url: main_app.hyrax_file_set_path(form_object), html: { multipart: true, class: 'nav-safety' } do |f| %>
   <% if curation_concern.flexible? %>
     <div class="col-md-3 pull-right">
       <%= render('shared/schema_version', f: f) %>
@@ -7,7 +7,7 @@
   <div id="base-terms" class="<%= curation_concern.flexible? ? 'col-md-9' : 'col-md-12' %>">
     <% f.object.primary_terms.each do |term| %>
       <% next if [:contexts, :schema_version].include?(term) %>
-      <%= f.input term %>
+      <%= render_edit_field_partial(term, f: f, curation_concern: curation_concern) %>
     <% end %>
   </div>
   <% if f.object.display_additional_fields? %>
@@ -20,7 +20,7 @@
             'aria-controls'=> "extended-terms" %>
     <div id="extended-terms" class="collapse">
       <% f.object.secondary_terms.each do |term| %>
-        <%= f.input term %>
+        <%= render_edit_field_partial(term, f: f, curation_concern: curation_concern) %>
       <% end %>
     </div>
   <% end %>
