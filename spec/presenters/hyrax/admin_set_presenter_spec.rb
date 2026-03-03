@@ -112,7 +112,7 @@ RSpec.describe Hyrax::AdminSetPresenter, :clean_repo do
     context 'when flexible and admin set class responds to contexts' do
       before do
         allow(Hyrax.config).to receive(:flexible?).and_return(true)
-        allow(Hyrax.config.admin_set_class.new).to receive(:respond_to?).with(:contexts).and_return(true)
+        allow_any_instance_of(Hyrax.config.admin_set_class).to receive(:respond_to?).with(:contexts).and_return(true)
       end
 
       it 'includes :contexts' do
