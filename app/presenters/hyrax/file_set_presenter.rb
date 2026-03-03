@@ -6,6 +6,7 @@ module Hyrax
     include CharacterizationBehavior
     include WithEvents
     include DisplaysImage
+    include MissingMethodBehavior
 
     attr_accessor :solr_document, :current_ability, :request
 
@@ -18,23 +19,7 @@ module Hyrax
       @request = request
     end
 
-    # CurationConcern methods
-    delegate :stringify_keys, :human_readable_type, :collection?, :image?, :video?,
-             :audio?, :pdf?, :office_document?, :representative_id, :to_s,
-             :extensions_and_mime_types, to: :solr_document
-
-    # Methods used by blacklight helpers
-    delegate :has?, :first, :fetch, to: :solr_document
-
-    # Metadata Methods
-    delegate :title, :label, :description, :creator, :contributor, :subject,
-             :publisher, :language, :date_uploaded,
-             :embargo_release_date, :lease_expiration_date,
-             :depositor, :keyword, :title_or_label, :keyword,
-             :date_created, :date_modified, :itemtype,
-             :original_file_id,
-             to: :solr_document
-
+    delegate :to_s, to: :solr_document
     delegate :member_of_collection_ids, to: :parent
 
     def workflow

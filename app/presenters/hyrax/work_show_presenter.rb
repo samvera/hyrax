@@ -3,6 +3,7 @@ module Hyrax
   class WorkShowPresenter
     include ModelProxy
     include PresentsAttributes
+    include MissingMethodBehavior
 
     ##
     # @!attribute [w] member_presenter_factory
@@ -280,15 +281,6 @@ module Hyrax
     end
 
     private
-
-    def method_missing(method_name, *args, &block)
-      return solr_document.public_send(method_name, *args, &block) if solr_document.respond_to?(method_name)
-      super
-    end
-
-    def respond_to_missing?(method_name, include_private = false)
-      solr_document.respond_to?(method_name, include_private) || super
-    end
 
     # list of item ids to display is based on ordered_ids
     def authorized_item_ids(filter_unreadable: Flipflop.hide_private_items?)
