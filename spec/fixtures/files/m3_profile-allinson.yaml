@@ -191,6 +191,7 @@ properties:
     indexing:
       - creator_sim
       - creator_tesim
+      - facetable
     form:
       primary: true
     property_uri: http://purl.org/dc/elements/1.1/creator
@@ -384,6 +385,7 @@ properties:
     indexing:
       - based_near_sim
       - based_near_tesim
+      - facetable
     form:
       primary: false
     property_uri: http://xmlns.com/foaf/0.1/based_near
@@ -449,6 +451,7 @@ properties:
     indexing:
       - contributor_tesim
       - contributor_sim
+      - facetable
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/contributor
@@ -608,6 +611,7 @@ properties:
     indexing:
       - keyword_sim
       - keyword_tesim
+      - facetable
     form:
       primary: false
     property_uri: http://schema.org/keywords
@@ -668,6 +672,7 @@ properties:
     indexing:
       - language_sim
       - language_tesim
+      - facetable
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/language
@@ -703,6 +708,7 @@ properties:
     indexing:
       - publisher_sim
       - publisher_tesim
+      - facetable
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/publisher
@@ -797,6 +803,7 @@ properties:
     indexing:
       - resource_type_sim
       - resource_type_tesim
+      - facetable
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/type
@@ -865,6 +872,7 @@ properties:
     indexing:
       - rights_statement_sim
       - rights_statement_tesim
+      - facetable
     form:
       primary: true
     property_uri: http://www.europeana.eu/schemas/edm/rights
@@ -933,6 +941,7 @@ properties:
     indexing:
       - subject_sim
       - subject_tesim
+      - facetable
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/subject
@@ -975,3 +984,114 @@ properties:
     view:
       render_as: faceted
       html_dl: true
+  monograph_title:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Monograph Title
+    property_uri: http://hyrax-example.com/monograph_title
+    range: http://www.w3.org/2001/XMLSchema#string
+  record_info:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Record Info
+    form:
+      required: true
+      primary: true
+    indexing:
+      - record_info_tesim
+    property_uri: http://hyrax-example.com/record_info
+    range: http://www.w3.org/2001/XMLSchema#string
+  place_of_publication:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Place of Publication
+    form:
+      required: false
+      primary: true
+    property_uri: http://hyrax-example.com/place_of_publication
+    range: http://www.w3.org/2001/XMLSchema#string
+  genre:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Genre
+    form:
+      primary: true
+    property_uri: http://hyrax-example.com/genre
+    range: http://www.w3.org/2001/XMLSchema#string
+  series_title:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Series Title
+    form:
+      primary: false
+    property_uri: http://hyrax-example.com/series_title
+    range: http://www.w3.org/2001/XMLSchema#string
+  target_audience:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+    data_type: array
+    display_label:
+      default: Target Audience
+    form:
+      multiple: true
+    property_uri: http://hyrax-example.com/target_audience
+    range: http://www.w3.org/2001/XMLSchema#string
+  table_of_contents:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Table of Contents
+    form:
+      multiple: false
+    property_uri: http://hyrax-example.com/table_of_contents
+    range: http://www.w3.org/2001/XMLSchema#string
+  date_of_issuance:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Date of Issuance
+    property_uri: http://hyrax-example.com/date_of_issuance
+    range: http://www.w3.org/2001/XMLSchema#string
