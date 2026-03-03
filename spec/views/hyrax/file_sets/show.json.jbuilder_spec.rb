@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/file_sets/show.json.jbuilder' do
   let(:presenter) do
-    instance_double(Hyrax::FileSetPresenter,
-                    id: '123',
-                    title: ['title'],
-                    label: '',
-                    creator: ['Janet'],
-                    depositor: '',
-                    date_uploaded: '',
-                    date_modified: '')
+    double(Hyrax::FileSetPresenter,
+           id: '123',
+           title: ['title'],
+           label: '',
+           creator: ['Janet'],
+           depositor: '',
+           date_uploaded: '',
+           date_modified: '')
   end
 
   before do
