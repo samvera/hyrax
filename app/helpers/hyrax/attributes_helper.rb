@@ -3,7 +3,7 @@
 module Hyrax
   module AttributesHelper
     def view_options_for(presenter)
-      model_name = presenter.model.model_name.name
+      model_name = presenter.model.model_name.klass.to_s
       if presenter.respond_to?(:flexible?) && presenter.flexible?
         Hyrax::Schema.m3_schema_loader.view_definitions_for(schema: model_name, version: presenter.solr_document.schema_version, contexts: presenter.solr_document.contexts)
       else
