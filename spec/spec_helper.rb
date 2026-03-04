@@ -248,6 +248,18 @@ RSpec.configure do |config|
         has_flexible = indexer_class.ancestors.any? { |a| a.is_a?(Hyrax::Indexer) && a.index_loader.is_a?(Hyrax::M3SchemaLoader) rescue false }
         indexer_class.check_if_flexible(model_class) unless has_flexible
       end
+
+      # Re-run check_if_flexible on form classes that may have been loaded
+      # before acts_as_flexible_resource. Same timing issue as indexers.
+      [
+        [Hyrax::Forms::PcdmCollectionForm, Hyrax::PcdmCollection],
+        [Hyrax::Forms::AdministrativeSetForm, Hyrax::AdministrativeSet],
+      ].each do |form_class, model_class|
+        unless form_class.ancestors.include?(Hyrax::FlexibleFormBehavior)
+          form_class.check_if_flexible(model_class)
+        end
+      end
+
       puts "Flexible schema #{flexible_schema.title} -- FOUND OR CREATED"
     end
   end
