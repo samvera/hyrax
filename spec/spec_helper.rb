@@ -232,6 +232,22 @@ RSpec.configure do |config|
       Hyrax::PcdmCollection.acts_as_flexible_resource
       Hyrax::FileSet.acts_as_flexible_resource
       Hyrax::Test::SimpleWork.acts_as_flexible_resource
+
+      # Re-run check_if_flexible on indexer classes that may have been loaded
+      # before the acts_as_flexible_resource calls above. When RSpec loads spec
+      # files, class references in describe blocks trigger autoloading of indexer
+      # classes. Their class bodies evaluate check_if_flexible() at that point,
+      # but the model classes are not yet flexible (acts_as_flexible_resource
+      # has not run). This retroactively includes the M3SchemaLoader indexer
+      # module for any indexer that missed it.
+      [
+        [Hyrax::Indexers::PcdmCollectionIndexer, Hyrax::PcdmCollection],
+        [Hyrax::Indexers::FileSetIndexer, Hyrax::FileSet],
+        [Hyrax::Indexers::AdministrativeSetIndexer, Hyrax::AdministrativeSet],
+      ].each do |indexer_class, model_class|
+        has_flexible = indexer_class.ancestors.any? { |a| a.is_a?(Hyrax::Indexer) && a.index_loader.is_a?(Hyrax::M3SchemaLoader) rescue false }
+        indexer_class.check_if_flexible(model_class) unless has_flexible
+      end
       puts "Flexible schema #{flexible_schema.title} -- FOUND OR CREATED"
     end
   end
