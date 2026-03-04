@@ -145,7 +145,6 @@ module Hyrax
     end
 
     def valkyrie_create
-      form.creator = [current_user.user_key] if form.respond_to?(:creator=) && Array(form.try(:creator)).empty?
       if form.validate(admin_set_params)
         valkyrie_create_detail
       else
