@@ -1360,6 +1360,8 @@ en:
         file_details: File Details
         fixity_check: Fixity Check
         not_yet_characterized: Not Yet Characterized
+      metadata:
+        metadata: Metadata
       versioning:
         choose_file: Choose New Version File
         current: Current Version

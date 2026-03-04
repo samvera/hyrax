@@ -1379,6 +1379,8 @@ es:
         file_details: Los Detalles Del Archivo
         fixity_check: La Fijeza De Verificación
         not_yet_characterized: Aún No Se Caracteriza
+      metadata:
+        metadata: Metadatos
       versioning:
         choose_file: Elija el archivo de nueva versión
         current: Versión actual

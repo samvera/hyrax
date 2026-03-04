@@ -1377,6 +1377,8 @@ fr:
         file_details: Description du fichier
         fixity_check: Vérification de la fixité
         not_yet_characterized: Pas encore caractérisé
+      metadata:
+        metadata: Métadonnées
       versioning:
         choose_file: Choisissez un nouveau fichier de version
         current: Version actuelle
