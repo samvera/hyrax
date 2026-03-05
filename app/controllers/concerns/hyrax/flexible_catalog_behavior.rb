@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 module Hyrax
-  module FlexibleCatalogBehavior # rubocop:disable Metrics/ModuleLength
+  module FlexibleCatalogBehavior
     extend ActiveSupport::Concern
 
-    class_methods do # rubocop:disable Metrics/BlockLength
-      def load_flexible_schema # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+    class_methods do
+      def load_flexible_schema
         previous_profile, current_profile = Hyrax::FlexibleSchema.order("created_at asc").last(2).map(&:profile)
         return if previous_profile.blank? && current_profile.blank?
 
         current_profile = previous_profile if current_profile.nil?
         remove_old_properties!(previous_profile['properties'].keys, current_profile['properties'].keys) if current_profile != previous_profile
         properties_hash = current_profile['properties']
-        properties_hash.each do |itemprop, prop| # rubocop:disable Metrics/BlockLength
+        properties_hash.each do |itemprop, prop|
           label = display_label_for(itemprop, prop)
 
           view_options = prop['view']
@@ -20,11 +20,15 @@ module Hyrax
           next if indexing.nil?
 
           if stored_searchable?(indexing, itemprop)
-            index_args = { itemprop: itemprop, label: label }
+            index_args = { itemprop:, label: }
 
-            index_args[:if] = ->(context, _field_config, _document) { context.try(:current_user)&.admin? } if admin_only?(indexing)
+            if admin_only?(indexing)
+              index_args[:if] = lambda { |context, _field_config, _document| context.try(:current_user)&.admin? }
+            end
 
-            index_args[:link_to_facet] = "#{itemprop}_sim" if facetable?(indexing, itemprop)
+            if facetable?(indexing, itemprop)
+              index_args[:link_to_facet] = "#{itemprop}_sim"
+            end
 
             name = blacklight_config.index_fields.keys.detect { |key| key.start_with?(itemprop) }
             name ||= "#{itemprop}_tesim"
@@ -63,18 +67,23 @@ module Hyrax
             end
 
             qf = blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
-            qf << " #{name}" unless qf.include?(name)
+            unless qf.include?(name)
+              qf << " #{name}"
+            end
           end
 
-          name = "#{itemprop}_sim"
           if facetable?(indexing, itemprop)
-            if blacklight_config.facet_fields[name].blank?
-              facet_args = { label: label }
-              facet_args[:if] = ->(context, _field_config, _document) { context.try(:current_user)&.admin? } if indexing.include?("admin_only")
+            name = "#{itemprop}_sim"
+            unless blacklight_config.facet_fields[name].present?
+              facet_args = { label: }
+              if indexing.include?("admin_only")
+                facet_args[:if] = lambda { |context, _field_config, _document| context.try(:current_user)&.admin? }
+              end
               blacklight_config.add_facet_field(name, **facet_args)
             end
           else
             # if the property does not have facetable in the indexing section of the metadata profile, remove the facet field from the blacklight config
+            name = "#{itemprop}_sim"
             blacklight_config.facet_fields.delete(name)
           end
         end
@@ -114,7 +123,7 @@ module Hyrax
         indexing.include?("admin_only")
       end
 
-      def facetable?(indexing, _itemprop)
+      def facetable?(indexing, itemprop)
         indexing.include?('facetable')
       end
 

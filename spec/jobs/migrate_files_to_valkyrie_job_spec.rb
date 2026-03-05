@@ -4,10 +4,9 @@ require 'wings'
 RSpec.describe MigrateFilesToValkyrieJob, index_adapter: :solr_index, valkyrie_adapter: :freyja_adapter, perform_enqueued: [MigrateFilesToValkyrieJob] do
   let(:user)      { create(:user) }
   let(:content) { File.open(fixture_path + '/' + label) }
-  let(:uploaded_file1) { build(:uploaded_file, file: file) }
+  let(:uploaded_file1) { build(:uploaded_file, file:) }
   let(:fedora_file_set) { create(:file_set, title: ['Some title'], label: label, content: content) }
-  let!(:pcdm_file) do
-    pcdm_file = fedora_file_set.files.first
+  let!(:pcdm_file) do pcdm_file = fedora_file_set.files.first
     pcdm_file.content = 'foo'
     pcdm_file.original_name = label
     pcdm_file.height = '111'
@@ -33,7 +32,7 @@ RSpec.describe MigrateFilesToValkyrieJob, index_adapter: :solr_index, valkyrie_a
     described_class.new.attribute_mapping.each do |k, v|
       expect(valkyrized_file_set.original_file.send(k)).to match_array(pcdm_file.send(v))
     end
-    solr_doc = Hyrax.index_adapter.connection.get("select", params: { q: "id:#{valkyrized_file_set.id}" })["response"]["docs"].first
+    solr_doc = Hyrax.index_adapter.connection.get("select", params: { q: "id:#{valkyrized_file_set.id.to_s}" })["response"]["docs"].first
     expect(solr_doc['width_is']).to eq(222)
   end
 end
