@@ -101,9 +101,9 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
 
       it 'also reindexes the parent work' do
         allow(Hyrax.custom_queries).to receive(:find_parent_work).with(resource: file_set).and_return(work)
-        saved_before = fake_adapter.saved_resources.dup
+        count_before = fake_adapter.saved_resources.length
         listener.on_object_metadata_updated(event)
-        newly_saved = fake_adapter.saved_resources - saved_before
+        newly_saved = fake_adapter.saved_resources.drop(count_before)
         expect(newly_saved).to contain_exactly(file_set, work)
       end
 
@@ -112,9 +112,9 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
 
         it 'does not reindex the parent work' do
           allow(Hyrax.custom_queries).to receive(:find_parent_work).with(resource: file_set).and_return(work)
-          saved_before = fake_adapter.saved_resources.dup
+          count_before = fake_adapter.saved_resources.length
           listener.on_object_metadata_updated(event)
-          newly_saved = fake_adapter.saved_resources - saved_before
+          newly_saved = fake_adapter.saved_resources.drop(count_before)
           expect(newly_saved).to contain_exactly(file_set)
         end
       end
