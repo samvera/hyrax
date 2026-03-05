@@ -33,11 +33,11 @@ module Hyrax
 
         # Antics to cope with all of the how the custom queries work.
         if defined?(Wings::ModelRegistry)
-          models = models.map do |model|
+          models = models.map { |model|
             Wings::ModelRegistry.reverse_lookup(model)
-                   rescue NoMethodError
-                     nil
-          end.compact
+          rescue NoMethodError
+            nil
+          }.compact
         end
 
         models.flat_map do |model|

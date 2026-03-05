@@ -103,7 +103,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
       shared_examples 'tests for image resolution'
 
       context 'with non-image file_set' do
-        let(:original_file_metadata) { }
+        let(:original_file_metadata) {}
 
         it('returns nil') { expect(presenter.display_image).to be_nil }
       end
@@ -409,7 +409,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
         let(:work) { valkyrie_create(:monograph, members: [valkyrie_create(:monograph), file_set, second_file_set]) }
 
         it 'gives presenters only for the file set members' do
-          fs_members = work.member_ids.map { |id| Hyrax.query_service.find_by(id:) }.select(&:file_set?)
+          fs_members = work.member_ids.map { |id| Hyrax.query_service.find_by(id: id) }.select(&:file_set?)
 
           expect(presenter.file_set_presenters)
             .to contain_exactly(*fs_members.map { |member| have_attributes(id: member.id) })
@@ -527,7 +527,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
         let(:work) { valkyrie_create(:monograph, :with_file_and_work) }
 
         it 'gives presenters only for the work members' do
-          work_members = work.member_ids.map{ |id| Hyrax.query_service.find_by(id:) }.select(&:work?)
+          work_members = work.member_ids.map { |id| Hyrax.query_service.find_by(id: id) }.select(&:work?)
 
           expect(presenter.work_presenters)
             .to contain_exactly(*work_members.map { |member| have_attributes(id: member.id) })

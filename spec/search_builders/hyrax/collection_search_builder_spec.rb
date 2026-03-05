@@ -49,9 +49,9 @@ RSpec.describe Hyrax::CollectionSearchBuilder do
     context 'when access is :deposit' do
       let(:access) { "deposit" }
       let(:access_grant) do
-        { agent_type:,
+        { agent_type: agent_type,
           agent_id: user.user_key,
-          access: Hyrax::PermissionTemplateAccess::DEPOSIT}
+          access: Hyrax::PermissionTemplateAccess::DEPOSIT }
       end
       let!(:collection) do
         valkyrie_create(:hyrax_collection, user: user, access_grants: [access_grant])
