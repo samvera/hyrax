@@ -314,6 +314,21 @@ module Hyrax
       tag.span("", class: [Hyrax::ModelIcon.css_class_for(::Collection), "collection-icon-search"])
     end
 
+    # Returns alt text for a thumbnail image.
+    # When the document has a custom thumbnail (thumbnail_alt_text indexed), delegates to
+    # alt_text_for_view to get the specific alt text. Otherwise returns a generic fallback
+    # (hyrax.sr.thumbnail) indicating a default representative image is shown.
+    # Apps can override this method to inject content-block lookups or other custom logic.
+    #
+    # @param document [SolrDocument]
+    # @param block_name [String] unused here; provided for API compatibility with overrides
+    # @return [String]
+    def thumbnail_alt_text_for(document, block_name: nil) # rubocop:disable Lint/UnusedMethodArgument
+      return document.alt_text_for_view if document.thumbnail_alt_text.present?
+
+      t('hyrax.sr.thumbnail')
+    end
+
     def collection_title_by_id(id)
       solr_docs = controller.blacklight_config.repository.find(id).docs
       return nil if solr_docs.empty?

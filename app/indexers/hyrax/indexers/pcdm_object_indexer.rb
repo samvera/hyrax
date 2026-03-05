@@ -27,6 +27,7 @@ module Hyrax
           solr_doc['depositor_tesim'] = [resource.depositor]
           solr_doc['hasRelatedMediaFragment_ssim'] = [resource.representative_id.to_s]
           solr_doc['hasRelatedImage_ssim'] = [resource.thumbnail_id.to_s]
+          solr_doc['thumbnail_alt_text_tesim'] = thumbnail_alt_text(resource.thumbnail_id)
           solr_doc['hasFormat_ssim'] = resource.rendering_ids&.map(&:to_s) if resource.rendering_ids.present?
           index_embargo(solr_doc)
           index_lease(solr_doc)
@@ -34,6 +35,14 @@ module Hyrax
       end
 
       private
+
+      def thumbnail_alt_text(thumbnail_id)
+        return if thumbnail_id.blank?
+        file_set = Hyrax.query_service.find_by(id: thumbnail_id)
+        Array(file_set.try(:alt_text)).first.presence
+      rescue Valkyrie::Persistence::ObjectNotFoundError, Hyrax::ObjectNotFoundError
+        nil
+      end
 
       def suppressed?(resource)
         Hyrax::ResourceStatus.new(resource: resource).inactive?
