@@ -238,9 +238,7 @@ RSpec.configure do |config|
       # in the DB. At that time, the M3SchemaLoader fell back to a default schema
       # missing app-specific attributes (e.g. record_info for Monograph).
       # Re-calling acts_as_flexible_resource now loads the real profile.
-      [Monograph, GenericWork, CollectionResource].each do |klass|
-        klass.acts_as_flexible_resource
-      end
+      [Monograph, GenericWork, CollectionResource].each(&:acts_as_flexible_resource)
 
       # Unregister engine base classes from curation concerns now that schema
       # validation has passed. Keeping them registered causes routing errors:
@@ -263,9 +261,13 @@ RSpec.configure do |config|
         [Hyrax::Indexers::FileSetIndexer, Hyrax::FileSet],
         [Hyrax::Indexers::AdministrativeSetIndexer, Hyrax::AdministrativeSet],
         [MonographIndexer, Monograph],
-        [GenericWorkIndexer, GenericWork],
+        [GenericWorkIndexer, GenericWork]
       ].each do |indexer_class, model_class|
-        has_flexible = indexer_class.ancestors.any? { |a| a.is_a?(Hyrax::Indexer) && a.index_loader.is_a?(Hyrax::M3SchemaLoader) rescue false }
+        has_flexible = indexer_class.ancestors.any? do |a|
+          a.is_a?(Hyrax::Indexer) && a.index_loader.is_a?(Hyrax::M3SchemaLoader)
+        rescue
+          false
+        end
         indexer_class.check_if_flexible(model_class) unless has_flexible
       end
 
@@ -275,11 +277,9 @@ RSpec.configure do |config|
         [Hyrax::Forms::PcdmCollectionForm, Hyrax::PcdmCollection],
         [Hyrax::Forms::AdministrativeSetForm, Hyrax::AdministrativeSet],
         [MonographForm, Monograph],
-        [GenericWorkForm, GenericWork],
+        [GenericWorkForm, GenericWork]
       ].each do |form_class, model_class|
-        unless form_class.ancestors.include?(Hyrax::FlexibleFormBehavior)
-          form_class.check_if_flexible(model_class)
-        end
+        form_class.check_if_flexible(model_class) unless form_class.ancestors.include?(Hyrax::FlexibleFormBehavior)
       end
 
       puts "Flexible schema #{flexible_schema.title} -- FOUND OR CREATED"
@@ -299,11 +299,11 @@ RSpec.configure do |config|
       # create_default_schema falls back to the generic koppie profile,
       # which is missing allinson-only properties (record_info, genre, etc.)
       # and facetable flags (keyword), causing form and catalog failures.
-      if Hyrax.config.flexible?
-        DatabaseCleaner.strategy = :truncation, { except: %w[hyrax_flexible_schemas] }
-      else
-        DatabaseCleaner.strategy = :truncation
-      end
+      DatabaseCleaner.strategy = if Hyrax.config.flexible?
+                                   [:truncation, { except: %w[hyrax_flexible_schemas] }]
+                                 else
+                                   :truncation
+                                 end
     else
       DatabaseCleaner.strategy = :transaction
       DatabaseCleaner.start

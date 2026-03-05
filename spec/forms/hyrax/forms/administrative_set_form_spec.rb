@@ -81,9 +81,7 @@ RSpec.describe Hyrax::Forms::AdministrativeSetForm do
         it 'returns error messages for missing field' do
           expect(form.validate(params_missing_title)).to eq false
           expect(form.errors.messages).to include(title: include("can't be blank"))
-          if Hyrax.config.flexible?
-            expect(form.errors.messages).to include(creator: ["can't be blank"])
-          end
+          expect(form.errors.messages).to include(creator: ["can't be blank"]) if Hyrax.config.flexible?
         end
       end
     end
