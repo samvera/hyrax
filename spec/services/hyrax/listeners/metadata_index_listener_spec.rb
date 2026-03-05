@@ -101,9 +101,10 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
 
       it 'also reindexes the parent work' do
         allow(Hyrax.custom_queries).to receive(:find_parent_work).with(resource: file_set).and_return(work)
-        expect { listener.on_object_metadata_updated(event) }
-          .to change { fake_adapter.saved_resources }
-          .to include(file_set, work)
+        saved_before = fake_adapter.saved_resources.dup
+        listener.on_object_metadata_updated(event)
+        newly_saved = fake_adapter.saved_resources - saved_before
+        expect(newly_saved).to contain_exactly(file_set, work)
       end
 
       context 'when the file set is not the thumbnail' do
@@ -111,9 +112,10 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
 
         it 'does not reindex the parent work' do
           allow(Hyrax.custom_queries).to receive(:find_parent_work).with(resource: file_set).and_return(work)
-          expect { listener.on_object_metadata_updated(event) }
-            .to change { fake_adapter.saved_resources }
-            .to contain_exactly(file_set)
+          saved_before = fake_adapter.saved_resources.dup
+          listener.on_object_metadata_updated(event)
+          newly_saved = fake_adapter.saved_resources - saved_before
+          expect(newly_saved).to contain_exactly(file_set)
         end
       end
 

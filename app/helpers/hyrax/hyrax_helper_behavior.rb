@@ -324,7 +324,7 @@ module Hyrax
     # @param block_name [String] unused here; provided for API compatibility with overrides
     # @return [String]
     def thumbnail_alt_text_for(document, block_name: nil) # rubocop:disable Lint/UnusedMethodArgument
-      return document.alt_text_for_view if document.thumbnail_alt_text.present?
+      return document.alt_text_for_view if document.respond_to?(:thumbnail_alt_text) && document.thumbnail_alt_text.present?
 
       t('hyrax.sr.thumbnail')
     end
