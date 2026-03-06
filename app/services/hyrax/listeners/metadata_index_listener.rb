@@ -52,6 +52,8 @@ module Hyrax
 
       ##
       # Re-index the resource.
+      # If the updated object is a file set used as the thumbnail of a parent work,
+      # also reindex that parent so thumbnail_alt_text_tesim stays fresh.
       #
       # Called when 'object.metadata.updated' event is published
       # @param [Dry::Events::Event] event
@@ -59,6 +61,7 @@ module Hyrax
       def on_object_metadata_updated(event)
         return unless resource? event[:object]
         Hyrax.index_adapter.save(resource: event[:object])
+        reindex_parent_for_thumbnail(event[:object]) if event[:object].file_set?
       end
 
       ##
@@ -95,6 +98,14 @@ module Hyrax
       end
 
       private
+
+      def reindex_parent_for_thumbnail(file_set)
+        parent = Hyrax.custom_queries.find_parent_work(resource: file_set)
+        return unless parent&.thumbnail_id == file_set.id
+        Hyrax.index_adapter.save(resource: parent)
+      rescue Valkyrie::Persistence::ObjectNotFoundError, Hyrax::ObjectNotFoundError
+        nil
+      end
 
       def resource?(resource)
         return true if resource.is_a? Valkyrie::Resource

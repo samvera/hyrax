@@ -145,7 +145,6 @@ properties:
   creator:
     available_on:
       class:
-        - Hyrax::AdministrativeSet
         - FileSet
         - CollectionResource
         - Monograph
@@ -165,6 +164,35 @@ properties:
       - creator_tesim
     form:
       primary: true
+    property_uri: http://purl.org/dc/elements/1.1/creator
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+      - Julie Allinson
+    view:
+      render_as: faceted
+      html_dl: true
+  # creator is needed on the class but is set in a transaction so no form input is needed.
+  # This allows for the creator to be set on an AdministrativeSet but not be required on the form.
+  creator_hidden:
+    name: creator
+    available_on:
+      class:
+        - Hyrax::AdministrativeSet
+    cardinality:
+      minimum: 0
+    data_type: array
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+        - "null"
+    display_label:
+      default: blacklight.search.fields.show.creator_tesim
+    index_documentation: displayable, searchable
+    indexing:
+      - creator_sim
+      - creator_tesim
+    form:
+      display: false
     property_uri: http://purl.org/dc/elements/1.1/creator
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
@@ -288,6 +316,32 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
       - Alternate Title Example
+    view:
+      html_dl: true
+  alt_text:
+    available_on:
+      class:
+        - FileSet
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: array
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+        - "null"
+    display_label:
+      default: Alt Text
+    index_documentation: displayable, searchable
+    indexing:
+      - alt_text_sim
+      - alt_text_tesim
+    form:
+      primary: true
+    property_uri: https://schema.org/description
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+      - A description of the file for accessibility purposes.
     view:
       html_dl: true
   arkivo_checksum:

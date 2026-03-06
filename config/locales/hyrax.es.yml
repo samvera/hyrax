@@ -1626,6 +1626,8 @@ es:
         link_expired_not_found: Enlace de uso único caducado o no encontrado
         link_not_found: Enlace de uso único no encontrado
     sort_label: Ordenar el listado de elementos
+    sr:
+      thumbnail: imagen representativa predeterminada
     static:
       mendeley:
         contact_form: Formulario de contacto
