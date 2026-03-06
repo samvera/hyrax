@@ -19,7 +19,7 @@ module Hyrax
 
     def extract_id(obj)
       uri = case obj
-            when String
+            when String, Valkyrie::ID
               URI(obj)
             when URI
               obj
