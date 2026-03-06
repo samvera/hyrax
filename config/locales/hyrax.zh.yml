@@ -1374,6 +1374,8 @@ zh:
         file_details: 文件的详细信息
         fixity_check: 固定性检查
         not_yet_characterized: 没有特征
+      metadata:
+        metadata: 元数据
       versioning:
         choose_file: 选择新版本文件
         current: 当前版本

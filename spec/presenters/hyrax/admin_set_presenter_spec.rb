@@ -108,6 +108,38 @@ RSpec.describe Hyrax::AdminSetPresenter, :clean_repo do
     end
   end
 
+  describe '.terms' do
+    context 'when flexible and admin set class responds to contexts' do
+      before do
+        allow(Hyrax.config).to receive(:flexible?).and_return(true)
+        allow_any_instance_of(Hyrax.config.admin_set_class).to receive(:respond_to?).with(:contexts).and_return(true)
+      end
+
+      it 'includes :contexts' do
+        expect(described_class.terms).to include(:contexts)
+      end
+    end
+
+    context 'when not flexible' do
+      before do
+        allow(Hyrax.config).to receive(:flexible?).and_return(false)
+      end
+
+      it 'does not include :contexts' do
+        expect(described_class.terms).not_to include(:contexts)
+      end
+    end
+  end
+
+  describe '#contexts' do
+    let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
+    let(:solr_document) { SolrDocument.new('contexts_ssim' => ['special_context']) }
+
+    it 'delegates to solr_document' do
+      expect(presenter.contexts).to eq(['special_context'])
+    end
+  end
+
   describe '#allow_batch?' do
     let(:admin_set) { valkyrie_create(:hyrax_admin_set) }
     let(:work) { valkyrie_create(:hyrax_work, title: ['Example Work Title'], admin_set_id: admin_set.id) }
