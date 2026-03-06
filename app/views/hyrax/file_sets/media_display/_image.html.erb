@@ -15,7 +15,7 @@
     <div>
       <%= document_presenter(file_set)&.thumbnail&.thumbnail_tag(
                     class: "representative-media",
-                    alt: file_set.alt_text_for_view,
+                    alt: file_set&.alt_text_for_view,
                     role: "presentation") %>
     </div>
 <% end %>
