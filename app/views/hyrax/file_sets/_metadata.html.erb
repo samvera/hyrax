@@ -1,0 +1,35 @@
+<h2><%= t('.metadata') %></h2>
+<dl class="file-show-term file-show-details">
+  <% if Hyrax.config.flexible? %>
+    <% view_options_for(@presenter).each do |field, options| %>
+      <% next if options["admin_only"] && !current_user&.admin? %>
+      <% next if field == :admin_note && !@presenter.editor? %>
+      <% values = Array(@presenter.try(field)).reject(&:blank?) %>
+      <% next if values.empty? %>
+      <% label = options["display_label"][I18n.locale.to_s] || t(options["display_label"]["default"]) %>
+      <div class="row">
+        <dt class="col-5"><%= label %></dt>
+        <dd class="col-7"><%= auto_link(values.join(', '), html: { target: '_blank' }) %></dd>
+      </div>
+    <% end %>
+  <% else %>
+    <% { description: nil, creator: nil, license: nil, subject: nil, keyword: nil,
+         date_created: nil, related_url: nil, resource_type: nil }.each_key do |field| %>
+      <% values = Array(@presenter.try(field)).reject(&:blank?) %>
+      <% next if values.empty? %>
+      <div class="row">
+        <dt class="col-5"><%= t("blacklight.search.fields.show.#{field}_tesim", default: field.to_s.humanize) %></dt>
+        <dd class="col-7"><%= auto_link(values.join(', '), html: { target: '_blank' }) %></dd>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% [:embargo_release_date, :lease_expiration_date].each do |field| %>
+    <% value = @presenter.try(field) %>
+    <% next unless value.present? %>
+    <div class="row">
+      <dt class="col-5"><%= t("blacklight.search.fields.show.#{field}_dtsi", default: field.to_s.humanize) %></dt>
+      <dd class="col-7"><%= value %></dd>
+    </div>
+  <% end %>
+</dl>

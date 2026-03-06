@@ -98,7 +98,7 @@ module Hyrax
     ##
     # @return [Array<String>]
     def show_partials
-      ['show_details']
+      %w[show_details metadata]
     end
 
     private
