@@ -16,6 +16,9 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
     allow(controller).to receive(:current_user).and_return(user)
     # Stub visibility, or it will hit fedora
     allow(work).to receive(:visibility).and_return('open')
+    # Stub admin set lookup to avoid hitting Solr during prepopulate!
+    allow(Hyrax::AdminSetCreateService).to receive(:find_or_create_default_admin_set)
+      .and_return(double(id: 'admin_set/default'))
   end
 
   context "for a new object" do
