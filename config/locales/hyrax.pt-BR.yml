@@ -1616,6 +1616,8 @@ pt-BR:
         link_expired_not_found: Link de uso único expirado ou não encontrado
         link_not_found: Link de uso único não encontrado
     sort_label: Ordene a lista de itens
+    sr:
+      thumbnail: imagem representativa padrão
     static:
       mendeley:
         contact_form: Formulário de Contato

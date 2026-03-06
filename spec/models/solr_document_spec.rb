@@ -157,6 +157,41 @@ RSpec.describe ::SolrDocument, type: :model do
     its(:endnote_filename) { is_expected.to eq("1234.endnote") }
   end
 
+  describe '#alt_text_for_view' do
+    context 'when the document is a file set' do
+      let(:attributes) { { 'has_model_ssim' => 'FileSet', 'alt_text_tesim' => ['Custom alt'], 'title_tesim' => ['My File'] } }
+
+      it 'returns the alt_text when present' do
+        expect(document.alt_text_for_view).to eq('Custom alt')
+      end
+
+      context 'when alt_text is blank' do
+        let(:attributes) { { 'has_model_ssim' => 'FileSet', 'alt_text_tesim' => [], 'title_tesim' => ['My File'] } }
+
+        it 'falls back to title' do
+          expect(document.alt_text_for_view).to eq('My File')
+        end
+      end
+    end
+
+    context 'when the document is a work with thumbnail_alt_text' do
+      let(:attributes) { { 'has_model_ssim' => 'GenericWork', 'thumbnail_alt_text_tesim' => ['Thumbnail alt'], 'title_tesim' => ['My Work'] } }
+
+      it 'returns the thumbnail_alt_text' do
+        expect(document.alt_text_for_view).to eq('Thumbnail alt')
+      end
+    end
+
+    context 'when the document is a work without thumbnail_alt_text' do
+      let(:attributes) { { 'has_model_ssim' => 'GenericWork', 'thumbnail_alt_text_tesim' => [], 'title_tesim' => ['My Work'] } }
+
+      it 'returns the title concatenated with the thumbnail i18n label' do
+        expected = "My Work #{I18n.t('hyrax.homepage.admin_sets.thumbnail')}"
+        expect(document.alt_text_for_view).to eq(expected)
+      end
+    end
+  end
+
   describe "#admin_set?" do
     let(:attributes) { { 'has_model_ssim' => Hyrax.config.admin_set_model } }
 

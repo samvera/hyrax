@@ -14,7 +14,7 @@
     <% end %>
   <% else %>
     <% { description: nil, creator: nil, license: nil, subject: nil, keyword: nil,
-         date_created: nil, related_url: nil, resource_type: nil }.each_key do |field| %>
+         date_created: nil, related_url: nil, resource_type: nil, alt_text: nil }.each_key do |field| %>
       <% values = Array(@presenter.try(field)).reject(&:blank?) %>
       <% next if values.empty? %>
       <div class="row">

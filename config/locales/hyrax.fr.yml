@@ -1624,6 +1624,8 @@ fr:
         link_expired_not_found: Lien à usage unique expiré ou introuvable
         link_not_found: Lien à usage unique introuvable
     sort_label: Trier la liste des articles
+    sr:
+      thumbnail: image représentative par défaut
     static:
       mendeley:
         contact_form: Formulaire de contact
