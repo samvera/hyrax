@@ -41,17 +41,17 @@ module Hyrax
 
         next if self.class.method_defined?(method_name) && solr_document.respond_to?(method_name)
         # Define the method on the SolrDocument class
-        Hyrax::SolrDocument::OrderedMembers.send(:define_method, method_name) do
+        Hyrax::SolrDocument::OrderedMembers.send(:define_method, method_name) do |*_args|
           index_keys.each do |index_key|
             value = self[index_key]
-            return value if value.present?
+            return (multi_value ? Array.wrap(value) : value) if value.present?
           end
           multi_value ? [] : ""
         end
 
         # Define the method on the Presenter class
-        self.class.send(:define_method, method_name) do
-          @solr_document.send(method_name)
+        self.class.send(:define_method, method_name) do |*args|
+          @solr_document.send(method_name, *args)
         end
       end
     end # rubocop:enable Metrics/MethodLength
