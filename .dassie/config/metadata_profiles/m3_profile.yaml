@@ -183,7 +183,7 @@ properties:
     name: creator
     available_on:
       class:
-        - Hyrax::AdministrativeSet
+        - AdministrativeSetResource
     cardinality:
       minimum: 0
     data_type: array

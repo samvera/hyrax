@@ -321,7 +321,7 @@ properties:
   alt_text:
     available_on:
       class:
-        - Hyrax::FileSet
+        - FileSet
     cardinality:
       minimum: 0
       maximum: 1
