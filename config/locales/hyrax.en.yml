@@ -1607,6 +1607,8 @@ en:
         link_expired_not_found: Single Use Link Expired or Not Found
         link_not_found: Single use link Not Found
     sort_label: Sort the listing of items
+    sr:
+      thumbnail: Default representative image
     stats:
       work:
         header: Work Analytics

@@ -40,8 +40,16 @@ module Hyrax
         end
       end
 
+      def alt_text_for_view
+        return alt_text.first.presence || title.first if file_set?
+
+        thumbnail_alt_text.first || "#{title.first} #{I18n.t('hyrax.homepage.admin_sets.thumbnail')}"
+      end
+
       included do
         attribute :alternative_title, Solr::Array, "alternative_title_tesim"
+        attribute :alt_text, Solr::Array, "alt_text_tesim"
+        attribute :thumbnail_alt_text, Solr::Array, "thumbnail_alt_text_tesim"
         attribute :identifier, Solr::Array, "identifier_tesim"
         attribute :based_near, Solr::Array, "based_near_tesim"
         attribute :based_near_label, Solr::Array, "based_near_label_tesim"

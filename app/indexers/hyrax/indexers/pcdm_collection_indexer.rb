@@ -21,7 +21,15 @@ module Hyrax
           index_document[:member_of_collection_ids_ssim] = resource.member_of_collection_ids.map(&:to_s)
           index_document[:depositor_ssim] = [resource.depositor]
           index_document[:depositor_tesim] = [resource.depositor]
+          index_document['thumbnail_alt_text_tesim'] = thumbnail_alt_text(resource.id.to_s)
         end
+      end
+
+      private
+
+      def thumbnail_alt_text(collection_id)
+        branding = CollectionBrandingInfo.where(collection_id: collection_id, role: "thumbnail").first
+        branding&.alt_text.presence
       end
     end
   end

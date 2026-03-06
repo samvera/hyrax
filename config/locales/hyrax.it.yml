@@ -1623,6 +1623,8 @@ it:
         link_expired_not_found: Link monouso scaduto o non trovato
         link_not_found: Link monouso non trovato
     sort_label: Ordina l'elenco degli articoli
+    sr:
+      thumbnail: immagine rappresentativa predefinita
     static:
       mendeley:
         contact_form: Modulo di Contatto

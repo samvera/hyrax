@@ -1617,6 +1617,8 @@ de:
         link_expired_not_found: Single Use Link abgelaufen oder nicht gefunden
         link_not_found: Single Use Link nicht gefunden
     sort_label: Sortieren Sie die Auflistung der Artikel
+    sr:
+      thumbnail: Standardrepräsentationsbild
     static:
       mendeley:
         contact_form: Kontakt Formular
