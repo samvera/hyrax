@@ -16,7 +16,7 @@ RSpec.describe 'catalog/_index_list_default', type: :view do
   it "displays metadata" do # rubocop:disable RSpec/AnyInstance
     allow_any_instance_of(Blacklight::Rendering::LinkToFacet)
       .to receive(:search_path).with(any_args).and_return('http://example.com')
-    view.define_singleton_method(:render_optionally?) { |*_args| true }
+    controller.define_singleton_method(:render_optionally?) { |*_args| true }
     render 'catalog/index_list_default', document: document
 
     expect(rendered).not_to include 'Title:'
