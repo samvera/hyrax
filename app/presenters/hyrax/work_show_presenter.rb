@@ -28,7 +28,7 @@ module Hyrax
       define_dynamic_methods if @solr_document.flexible?
     end
 
-    def define_dynamic_methods # rubocop:disable Metrics/MethodLength
+    def define_dynamic_methods # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
       Hyrax::FlexibleSchema.default_properties.each do |prop|
         method_name = prop.to_s
         property_details = Hyrax::FlexibleSchema.current_version["properties"][method_name]
