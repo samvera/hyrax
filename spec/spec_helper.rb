@@ -10,9 +10,6 @@ ENV['HYRAX_ANALYTICS'] = 'false'
 # Controlling Flexible Metadata is done per test application, but the test suite needs
 # to disable it for now because disabling the inclusion of core/basic metadata has a huge
 # impact on the suite.  It can be explicitly enabled or mocked where appropriate.
-ENV['HYRAX_FLEXIBLE'] = 'false'
-ENV['HYRAX_DISABLE_INCLUDE_METADATA'] = 'false'
-ENV['HYRAX_FLEXIBLE_CLASSES'] = 'none'
 
 require "bundler/setup"
 
@@ -213,13 +210,78 @@ RSpec.configure do |config|
     Hyrax::SolrQueryService.query_service
 
     if Hyrax.config.flexible?
+      # Register engine base classes as curation concerns and in flexible_classes
+      # so FlexibleSchema profile validation passes. The validator checks that
+      # all profile classes are in registered_curation_concern_types.
+      Hyrax.config.register_curation_concern("hyrax/work")
+      Hyrax.config.register_curation_concern("hyrax/pcdm_collection")
+      Hyrax.config.register_curation_concern("hyrax/test/simple_work")
+      Hyrax.config.register_curation_concern("hyrax/file_set")
+      %w[Hyrax::Work Hyrax::PcdmCollection Hyrax::FileSet Hyrax::Test::SimpleWork].each do |klass|
+        Hyrax.config.flexible_classes << klass unless Hyrax.config.flexible_classes.include?(klass)
+      end
+
       flexible_schema = Hyrax::FlexibleSchema.create do |f|
-        Hyrax::Test::SimpleWork.acts_as_flexible_resource
-        Hyrax::FileSet.acts_as_flexible_resource
-        Hyrax.config.register_curation_concern("hyrax/test/simple_work")
-        Hyrax.config.register_curation_concern("hyrax/file_set")
         f.profile = YAML.safe_load_file(Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'm3_profile-allinson.yaml'))
       end
+
+      # Set up flexible metadata for engine base classes used in specs.
+      # Must happen after FlexibleSchema.create so the schema record exists
+      # when Hyrax::Schema loads attributes from the database.
+      Hyrax::Work.acts_as_flexible_resource
+      Hyrax::PcdmCollection.acts_as_flexible_resource
+      Hyrax::FileSet.acts_as_flexible_resource
+      Hyrax::Test::SimpleWork.acts_as_flexible_resource
+
+      # Also re-initialize app-level model classes. Their inherited() callback
+      # ran during class definition (app boot), before the FlexibleSchema existed
+      # in the DB. At that time, the M3SchemaLoader fell back to a default schema
+      # missing app-specific attributes (e.g. record_info for Monograph).
+      # Re-calling acts_as_flexible_resource now loads the real profile.
+      [Monograph, GenericWork, CollectionResource].each(&:acts_as_flexible_resource)
+
+      # Unregister engine base classes from curation concerns now that schema
+      # validation has passed. Keeping them registered causes routing errors:
+      # new_polymorphic_path(Hyrax::Work) tries to generate new_hyrax_work_path
+      # which doesn't exist, crashing any page with the work type modal.
+      # They remain in flexible_classes for metadata purposes.
+      %w[hyrax/work hyrax/pcdm_collection hyrax/test/simple_work hyrax/file_set].each do |concern|
+        Hyrax.config.instance_variable_get(:@registered_concerns).delete(concern)
+      end
+
+      # Re-run check_if_flexible on indexer classes that may have been loaded
+      # before the acts_as_flexible_resource calls above. When RSpec loads spec
+      # files, class references in describe blocks trigger autoloading of indexer
+      # classes. Their class bodies evaluate check_if_flexible() at that point,
+      # but the model classes are not yet flexible (acts_as_flexible_resource
+      # has not run). This retroactively includes the M3SchemaLoader indexer
+      # module for any indexer that missed it.
+      [
+        [Hyrax::Indexers::PcdmCollectionIndexer, Hyrax::PcdmCollection],
+        [Hyrax::Indexers::FileSetIndexer, Hyrax::FileSet],
+        [Hyrax::Indexers::AdministrativeSetIndexer, Hyrax::AdministrativeSet],
+        [MonographIndexer, Monograph],
+        [GenericWorkIndexer, GenericWork]
+      ].each do |indexer_class, model_class|
+        has_flexible = indexer_class.ancestors.any? do |a|
+          a.is_a?(Hyrax::Indexer) && a.index_loader.is_a?(Hyrax::M3SchemaLoader)
+        rescue
+          false
+        end
+        indexer_class.check_if_flexible(model_class) unless has_flexible
+      end
+
+      # Re-run check_if_flexible on form classes that may have been loaded
+      # before acts_as_flexible_resource. Same timing issue as indexers.
+      [
+        [Hyrax::Forms::PcdmCollectionForm, Hyrax::PcdmCollection],
+        [Hyrax::Forms::AdministrativeSetForm, Hyrax::AdministrativeSet],
+        [MonographForm, Monograph],
+        [GenericWorkForm, GenericWork]
+      ].each do |form_class, model_class|
+        form_class.check_if_flexible(model_class) unless form_class.ancestors.include?(Hyrax::FlexibleFormBehavior)
+      end
+
       puts "Flexible schema #{flexible_schema.title} -- FOUND OR CREATED"
     end
   end
@@ -231,7 +293,17 @@ RSpec.configure do |config|
 
   config.before do |example|
     if example.metadata[:type] == :feature && Capybara.current_driver != :rack_test
-      DatabaseCleaner.strategy = :truncation
+      # Preserve the flexible_schemas table across feature specs. The
+      # before(:suite) block creates a FlexibleSchema from the allinson
+      # test profile. Without this exclusion, truncation deletes it and
+      # create_default_schema falls back to the generic koppie profile,
+      # which is missing allinson-only properties (record_info, genre, etc.)
+      # and facetable flags (keyword), causing form and catalog failures.
+      DatabaseCleaner.strategy = if Hyrax.config.flexible?
+                                   [:truncation, { except: %w[hyrax_flexible_schemas] }]
+                                 else
+                                   :truncation
+                                 end
     else
       DatabaseCleaner.strategy = :transaction
       DatabaseCleaner.start
