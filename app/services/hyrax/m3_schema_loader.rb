@@ -99,9 +99,7 @@ module Hyrax
         options = super
 
         # Check if minimum cardinality makes this field required
-        if cardinality_required?
-          options = options.merge(required: true)
-        end
+        options = options.merge(required: true) if cardinality_required?
 
         options
       end
