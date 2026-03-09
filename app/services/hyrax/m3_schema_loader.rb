@@ -50,7 +50,7 @@ module Hyrax
         next if contexts.present? && config['context'].present? && !(Array(contexts) & Array(config['context'])).any?
 
         # Wew, we are in the clear to use this field
-        AttributeDefinition.new(name, config)
+        M3AttributeDefinition.new(name, config)
       end.compact
     rescue ActiveRecord::StatementInvalid
       Rails.logger.error "Skipping definition load for migrations to run"
@@ -87,5 +87,34 @@ module Hyrax
           "context" => nil } }
     end
     # rubocop:enable Metrics/MethodLength
+
+    ##
+    # @api private
+    #
+    # M3-specific AttributeDefinition that properly handles cardinality-based requirements
+    class M3AttributeDefinition < Hyrax::SchemaLoader::AttributeDefinition
+      ##
+      # @return [Hash{Symbol => Object}]
+      def form_options
+        options = super
+
+        # Check if minimum cardinality makes this field required
+        if cardinality_required?
+          options = options.merge(required: true)
+        end
+
+        options
+      end
+
+      private
+
+      def cardinality_required?
+        cardinality = config['cardinality']
+        return false unless cardinality.is_a?(Hash)
+
+        minimum = cardinality['minimum']
+        minimum.present? && minimum.to_i >= 1
+      end
+    end
   end
 end

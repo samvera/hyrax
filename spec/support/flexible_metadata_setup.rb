@@ -106,6 +106,7 @@ module FlexibleMetadataSetup
     def form_model_pairs
       [
         [Hyrax::Forms::PcdmCollectionForm, Hyrax::PcdmCollection],
+        [Hyrax::Forms::FileSetForm, Hyrax::FileSet],
         [Hyrax::Forms::AdministrativeSetForm, Hyrax::AdministrativeSet],
         [MonographForm, Monograph],
         [GenericWorkForm, GenericWork]
