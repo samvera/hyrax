@@ -1,23 +1,32 @@
-name: Trigger Nurax build
+name: Release Gem
 on:
   workflow_dispatch:
-  release:
-    types: [released]
+  push:
+    tags:
+      - hyrax-v*
 
 jobs:
-  trigger:
+  push:
+    if: github.repository == 'samvera/hyrax'
+    name: Push gem to RubyGems.org
     runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
+      contents: write # IMPORTANT: this permission is required for `rake release` to push the release tag
+
+    environment: release
+    
     steps:
-    - id: latest-release
-      uses: pozetroninc/github-action-get-latest-release@v0.7.0
-      with:
-        repository: ${{ github.repository }}
-        token: ${{ github.token }}
-        excludes: prerelease, draft
-    - uses: peter-evans/repository-dispatch@v2.1.1
-      if: ${{ steps.latest-release.outputs.release == github.ref_name }}
-      with:
-         token: ${{ secrets.NURAX_ACCESS_TOKEN }}
-         event-type: release
-         repository: samvera-labs/nurax
-         client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+      # Set up
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+          ruby-version: ruby
+
+      # Release
+      - uses: rubygems/release-gem@v1
