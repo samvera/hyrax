@@ -2,6 +2,8 @@
 Flipflop.configure do
   # Strategies will be used in the order listed here.
   strategy :cookie
+  # Configuration to prevent features from being enabled
+  strategy Hyrax::Strategies::DisableFeatureStrategy
   strategy :active_record, class: Hyrax::Feature
   strategy Hyrax::Strategies::YamlStrategy, config: Hyrax.config.feature_config_path
   strategy :default
@@ -49,9 +51,11 @@ Flipflop.configure do
             default: true,
             description: "Ability to assign uploaded items to an admin set"
 
+    # rubocop:disable Layout/LineLength
     feature :batch_upload,
             default: false,
-            description: "Enable uploading batches of works"
+            description: "<strong>NOTICE:</strong> This feature has been temporarily disabled. To add or upload works in bulk, please use the <a href='https://github.com/samvera/bulkrax/wiki' target='_blank'>Bulkrax importer</a>.".html_safe
+    # rubocop:enable Layout/LineLength
 
     feature :proxy_deposit,
             default: true,
