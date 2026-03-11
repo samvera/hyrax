@@ -1376,6 +1376,8 @@ it:
         file_details: Dettagli File
         fixity_check: Fissità Di Controllo
         not_yet_characterized: Non Ancora Caratterizzati
+      metadata:
+        metadata: Metadati
       versioning:
         choose_file: Scegli New Version File
         current: Versione attuale
@@ -1621,6 +1623,8 @@ it:
         link_expired_not_found: Link monouso scaduto o non trovato
         link_not_found: Link monouso non trovato
     sort_label: Ordina l'elenco degli articoli
+    sr:
+      thumbnail: immagine rappresentativa predefinita
     static:
       mendeley:
         contact_form: Modulo di Contatto

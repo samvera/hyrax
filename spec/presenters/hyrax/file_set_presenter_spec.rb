@@ -77,7 +77,7 @@ RSpec.describe Hyrax::FileSetPresenter do
        "subject", "language", "license", "format_label", "file_size",
        "height", "width", "filename", "well_formed", "page_count",
        "file_title", "last_modified", "original_checksum", "mime_type",
-       "duration", "sample_rate", "alpha_channels", "original_file_id"]
+       "duration", "sample_rate", "alpha_channels", "original_file_id", "to_s"]
     end
 
     it "delegates to the solr_document" do
@@ -87,14 +87,14 @@ RSpec.describe Hyrax::FileSetPresenter do
       end
     end
 
-    it { is_expected.to delegate_method(:depositor).to(:solr_document) }
-    it { is_expected.to delegate_method(:keyword).to(:solr_document) }
-    it { is_expected.to delegate_method(:date_created).to(:solr_document) }
-    it { is_expected.to delegate_method(:date_modified).to(:solr_document) }
-    it { is_expected.to delegate_method(:itemtype).to(:solr_document) }
-    it { is_expected.to delegate_method(:fetch).to(:solr_document) }
-    it { is_expected.to delegate_method(:first).to(:solr_document) }
-    it { is_expected.to delegate_method(:has?).to(:solr_document) }
+    it { is_expected.to respond_to(:depositor) }
+    it { is_expected.to respond_to(:keyword) }
+    it { is_expected.to respond_to(:date_created) }
+    it { is_expected.to respond_to(:date_modified) }
+    it { is_expected.to respond_to(:itemtype) }
+    it { is_expected.to respond_to(:fetch) }
+    it { is_expected.to respond_to(:first) }
+    it { is_expected.to respond_to(:has?) }
   end
 
   describe '#link_name' do

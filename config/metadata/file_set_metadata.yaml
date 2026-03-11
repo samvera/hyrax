@@ -32,6 +32,15 @@ attributes:
   #   primary: false
   # missing: access_right
   # missing: alternative_title
+  alt_text:
+    type: string
+    multiple: false
+    form:
+      primary: true
+    index_keys:
+      - "alt_text_sim"
+      - "alt_text_tesim"
+    predicate: https://schema.org/description
   based_near:
     type: string
     multiple: true

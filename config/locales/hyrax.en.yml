@@ -93,6 +93,8 @@ en:
           header: "Edit Administrative Set: %{title}"
         form:
           cancel: Cancel
+          contexts:
+            none: "-- No context (remove all contexts) --"
           note: Users granted a new role will only gain the role on works that are deposited after that role has been granted.
           permission_destroy_errors:
             admin_group: The repository administrators group cannot be removed
@@ -1358,6 +1360,8 @@ en:
         file_details: File Details
         fixity_check: Fixity Check
         not_yet_characterized: Not Yet Characterized
+      metadata:
+        metadata: Metadata
       versioning:
         choose_file: Choose New Version File
         current: Current Version
@@ -1603,6 +1607,8 @@ en:
         link_expired_not_found: Single Use Link Expired or Not Found
         link_not_found: Single use link Not Found
     sort_label: Sort the listing of items
+    sr:
+      thumbnail: Default representative image
     stats:
       work:
         header: Work Analytics

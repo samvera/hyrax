@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 module Hyrax
   class AdminSetPresenter < CollectionPresenter
+    delegate :contexts, to: :solr_document
+
+    def self.terms
+      base = super
+      if Hyrax.config.flexible? && Hyrax.config.admin_set_class.new.respond_to?(:contexts)
+        base | [:contexts]
+      else
+        base
+      end
+    end
+
     ##
     # @return [Boolean] true if there are items
     def any_items?

@@ -22,6 +22,7 @@ Hyrax = {
         this.sidebar();
         this.batchSelect();
         this.internationalizationHelper();
+        this.fileSetEditor();
     },
 
     // The AdminSet edit page
@@ -86,6 +87,15 @@ Hyrax = {
         if (element.length > 0) {
           var Editor = require('hyrax/editor');
           new Editor(element).init();
+        }
+    },
+
+    // The file set edit page
+    fileSetEditor: function () {
+        var element = $("[data-behavior='file-set-form']");
+        if (element.length > 0) {
+            var Editor = require('hyrax/editor');
+            new Editor(element).init();
         }
     },
 
