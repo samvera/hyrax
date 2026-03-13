@@ -204,6 +204,10 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       allow(Hyrax::FlexibleSchema).to receive(:current_schema_id).and_return(1)
     end
 
+    after do
+      Hyrax.config.flexible_classes.delete('TestFlexibleWork')
+    end
+
     it 'does not include the removed field in secondary_terms' do
       described_class.for(resource: work)
 
