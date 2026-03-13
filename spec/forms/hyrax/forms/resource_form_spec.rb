@@ -34,9 +34,11 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       let(:work) { build(:monograph) }
       let(:admin_set) { double('AdminSet', contexts: ['special_context']) }
       let(:work_contexts) { [] }
+      let(:schema_loader) { instance_double(Hyrax::M3SchemaLoader, form_definitions_for: { title: { required: true, primary: true } }) }
 
       before do
         allow(Hyrax.config).to receive(:flexible?).and_return(true)
+        allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
         allow(Hyrax.query_service).to receive(:find_by).with(id: 'set-1').and_return(admin_set)
         allow(work).to receive(:flexible?).and_return(true)
         allow(work).to receive(:contexts=).with(anything) { |v| work_contexts.replace(Array(v)) }
