@@ -111,6 +111,7 @@ SUMMARY
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
   # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
   spec.add_development_dependency 'bixby', '~> 5.0', '>= 5.0.2' # bixby 5 briefly dropped Ruby 2.5
+  spec.add_development_dependency 'rubocop-ast', '>= 1.17.0', '< 1.30' # pin to range compatible with rubocop 1.28.2
   spec.add_development_dependency 'shoulda-callback-matchers'
   spec.add_development_dependency 'shoulda-matchers'
   spec.add_development_dependency 'webmock'
