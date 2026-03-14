@@ -55,7 +55,8 @@ module Hyrax
           self.class.deserializer_class = nil # need to reload this on first use after schema is loaded
           singleton_class.schema_definitions = self.class.definitions
           contexts = r.respond_to?(:contexts) ? r.contexts : nil
-          Hyrax::Schema.m3_schema_loader.form_definitions_for(schema: r.class.name, version: Hyrax::FlexibleSchema.current_schema_id, contexts: contexts).map do |field_name, options|
+          current_schema_fields = Hyrax::Schema.m3_schema_loader.form_definitions_for(schema: r.class.name, version: Hyrax::FlexibleSchema.current_schema_id, contexts: contexts)
+          current_schema_fields.each do |field_name, options|
             singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
           end
         end
@@ -79,8 +80,9 @@ module Hyrax
             hash = resource.attributes.dup
             hash[:schema_version] = Hyrax::FlexibleSchema.current_schema_id
             resource = resource.class.new(hash)
-            # find any fields removed by the new schema
-            to_remove = singleton_class.definitions.select { |k, v| !resource.respond_to?(k) && v.instance_variable_get("@options")[:display] }
+            # find any fields removed by the current schema
+            current_field_keys = current_schema_fields.keys.map(&:to_s)
+            to_remove = singleton_class.definitions.select { |k, v| !current_field_keys.include?(k.to_s) && v.instance_variable_get("@options")[:display] }
             to_remove.keys.each do |removed_field|
               singleton_class.definitions.delete(removed_field)
             end
