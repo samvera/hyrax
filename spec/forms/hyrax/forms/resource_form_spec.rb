@@ -34,9 +34,11 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       let(:work) { build(:monograph) }
       let(:admin_set) { double('AdminSet', contexts: ['special_context']) }
       let(:work_contexts) { [] }
+      let(:schema_loader) { instance_double(Hyrax::M3SchemaLoader, form_definitions_for: { title: { required: true, primary: true } }) }
 
       before do
         allow(Hyrax.config).to receive(:flexible?).and_return(true)
+        allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
         allow(Hyrax.query_service).to receive(:find_by).with(id: 'set-1').and_return(admin_set)
         allow(work).to receive(:flexible?).and_return(true)
         allow(work).to receive(:contexts=).with(anything) { |v| work_contexts.replace(Array(v)) }
@@ -148,6 +150,73 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       expect(schema_loader).to have_received(:form_definitions_for) do |args|
         expect(Array(args[:contexts])).to contain_exactly('special_context')
       end
+    end
+  end
+
+  describe 'flexible form after M3 profile update removes a field' do
+    # Regression: when a field (e.g. :video_embed) is removed from the M3 profile at
+    # runtime, the form should not raise NoMethodError on prepopulate! or secondary_terms.
+    #
+    # Root cause: acts_as_flexible_resource bakes attributes onto the model class at boot
+    # via `include Hyrax::Schema(name, schema_loader: ...)`, so respond_to?(:video_embed)
+    # is genuinely true on the model instance even after the profile is updated.
+    # ResourceForm#initialize uses respond_to? to decide what to prune from
+    # singleton_class.definitions, so the stale field is never removed.
+    #
+    # We use a real anonymous model class that actually calls acts_as_flexible_resource
+    # so that respond_to?(:video_embed) is concretely true — not stubbed.
+
+    # boot_attributes: what the schema loader returns during acts_as_flexible_resource.
+    # This permanently wires :video_embed onto the model class as a real Valkyrie attribute.
+    let(:boot_attributes) do
+      { video_embed: Valkyrie::Types::Array.of(Valkyrie::Types::String) }
+    end
+
+    # current_form_defs: mutable hash — tests clear it to simulate a profile update
+    let(:current_form_defs) do
+      { 'video_embed' => { required: false, primary: false, display: true } }
+    end
+
+    let(:schema_loader) do
+      loader = instance_double(Hyrax::M3SchemaLoader)
+      allow(loader).to receive(:current_version).and_return(1)
+      allow(loader).to receive(:attributes_for).and_return(boot_attributes)
+      allow(loader).to receive(:form_definitions_for) { current_form_defs }
+      allow(loader).to receive(:index_rules_for).and_return({})
+      loader
+    end
+
+    # A fresh anonymous work class per example; acts_as_flexible_resource is called once
+    # here, permanently baking :video_embed onto the class via Hyrax::Schema inclusion.
+    let(:work_class) do
+      klass = Class.new(Hyrax::Work) do
+        def self.name
+          'TestFlexibleWork'
+        end
+      end
+      klass.acts_as_flexible_resource
+      klass
+    end
+
+    let(:work) { work_class.new }
+
+    before do
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
+      allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
+      allow(Hyrax::FlexibleSchema).to receive(:current_schema_id).and_return(1)
+    end
+
+    after do
+      Hyrax.config.flexible_classes.delete('TestFlexibleWork')
+    end
+
+    it 'does not include the removed field in secondary_terms' do
+      described_class.for(resource: work)
+
+      current_form_defs.clear
+
+      form = described_class.for(resource: work)
+      expect(form.secondary_terms).not_to include(:video_embed)
     end
   end
 
