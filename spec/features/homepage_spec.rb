@@ -9,6 +9,7 @@ RSpec.describe "The homepage", :clean_repo do
     # The homepage templates call depositor(default_message) with one arg,
     # causing ArgumentError. This is a production code bug to be fixed in
     # WorkShowPresenter; skip these tests until then.
+    # see https://github.com/samvera/hyrax/issues/7386
     skip("Flexible metadata: depositor method redefined without args by WorkShowPresenter#define_dynamic_methods") if Hyrax.config.flexible?
     create(:featured_work, work_id: work1.id)
   end
