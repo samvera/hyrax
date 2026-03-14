@@ -158,7 +158,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       end
     end
   end
-  
+
   describe 'flexible form after M3 profile update removes a field' do
     # Regression: when a field (e.g. :video_embed) is removed from the M3 profile at
     # runtime, the form should not raise NoMethodError on prepopulate! or secondary_terms.
@@ -225,7 +225,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       expect(form.secondary_terms).not_to include(:video_embed)
     end
   end
-  
+
   describe '#based_near', unless: Hyrax.config.flexible? do
     subject(:form) { form_class.new(work) }
 
