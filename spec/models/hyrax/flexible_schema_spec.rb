@@ -70,6 +70,25 @@ RSpec.describe Hyrax::FlexibleSchema, :clean_repo, type: :model do
     end
   end
 
+  describe '#warnings' do
+    it 'returns an ActiveModel::Errors-like object' do
+      expect(subject.warnings).to respond_to(:add, :any?, :full_messages)
+    end
+
+    context 'when the validator service has warnings' do
+      before do
+        validator = instance_double(Hyrax::FlexibleSchemaValidatorService, validate!: nil, errors: [], warnings: ['date_created must be defined on GenericWork'])
+        allow(Hyrax::FlexibleSchemaValidatorService).to receive(:new).and_return(validator)
+      end
+
+      it 'populates warnings after validation' do
+        schema = described_class.create(profile: profile_data)
+        expect(schema.warnings.any?).to be true
+        expect(schema.warnings.full_messages).to include(/date_created must be defined on GenericWork/)
+      end
+    end
+  end
+
   describe 'property name resolution' do
     let(:profile_with_names) do
       {

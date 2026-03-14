@@ -1391,6 +1391,10 @@ it:
         save: Salva revisione
         save_your_note: Devi fare clic su "Salva revisione" per ripristinare una versione precedente di questo file
         upload: Carica nuova versione
+    flexible_schema_validators:
+      sort_properties_validator:
+        warnings:
+          message: "%{property} deve essere definito su %{classes} per supportare l'ordinamento su tale proprietà, a meno che non sia stato indicizzato %{property}_ssi su un altro campo."
     help:
       header: Supporto utente
       override_text: Utilizza app / views / static / help.html.erb per ignorare questo file.

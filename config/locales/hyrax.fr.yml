@@ -1392,6 +1392,10 @@ fr:
         save: Enregistrer la révision
         save_your_note: Vous devez cliquer sur "Enregistrer la révision". pour revenir à une version précédente de ce fichier
         upload: Télécharger une nouvelle version
+    flexible_schema_validators:
+      sort_properties_validator:
+        warnings:
+          message: "%{property} doit être défini sur %{classes} pour permettre le tri sur cette propriété, à moins que vous n'ayez indexé %{property}_ssi sur un autre champ."
     help:
       header: Support utilisateur
       override_text: Utilisez application / views / static / help.html.erb pour remplacer ce fichier.
