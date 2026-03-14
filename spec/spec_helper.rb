@@ -7,10 +7,6 @@ ENV.delete('APP_NAME') # Prevent custom test app names in specs
 # Analytics is turned off by default
 ENV['HYRAX_ANALYTICS'] = 'false'
 
-# Controlling Flexible Metadata is done per test application, but the test suite needs
-# to disable it for now because disabling the inclusion of core/basic metadata has a huge
-# impact on the suite.  It can be explicitly enabled or mocked where appropriate.
-
 require "bundler/setup"
 
 def ci_build?
