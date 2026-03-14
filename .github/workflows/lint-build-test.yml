@@ -99,7 +99,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ci_test_app: [dassie,koppie,sirenia]
+        ci_test_app: [dassie,koppie,sirenia,allinson]
         ci_node_total: [4]
         ci_node_index: [0,1,2,3]
     steps:

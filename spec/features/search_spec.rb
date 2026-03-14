@@ -66,8 +66,12 @@ RSpec.shared_examples "search functionality" do |_adapter|
       expect(page).to have_content('collection title abc')
       expect(page).to have_selector("//img")
 
-      expect(page.body).to include "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=taco&amp;locale=en\">taco</a></span>"
-      expect(page.body).to include "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=mustache&amp;locale=en\">mustache</a></span>"
+      # In flexible mode, FlexibleCatalogBehavior sets the itemprop to the
+      # profile property name ("keyword") rather than the original catalog
+      # controller value ("keywords").
+      kw_itemprop = Hyrax.config.flexible? ? "keyword" : "keywords"
+      expect(page.body).to include "<span itemprop=\"#{kw_itemprop}\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=taco&amp;locale=en\">taco</a></span>"
+      expect(page.body).to include "<span itemprop=\"#{kw_itemprop}\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=mustache&amp;locale=en\">mustache</a></span>"
     end
   end
 end
