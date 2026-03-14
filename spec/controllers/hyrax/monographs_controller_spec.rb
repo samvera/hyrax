@@ -19,6 +19,16 @@ RSpec.describe Hyrax::MonographsController do
           '1' => { id: child3.id.to_s } }
       end
 
+      before do
+        # Use a null index adapter to prevent Solr indexing errors from
+        # propagating through event listeners and failing the transaction.
+        # The Save and UpdateWorkMembers steps publish events that trigger
+        # synchronous Solr indexing via MetadataIndexListener; if Solr is
+        # unavailable, those listener errors propagate uncaught through the
+        # transaction and cause the update to silently fail.
+        allow(Hyrax).to receive(:index_adapter).and_return(Valkyrie::Indexing::NullIndexingAdapter.new)
+      end
+
       it "can add and remove children" do
         # Force evaluation of all children before the update request
         expect(work.member_ids.length).to eq 2
@@ -27,6 +37,7 @@ RSpec.describe Hyrax::MonographsController do
         child3
 
         patch :update, params: { id: work, monograph: { work_members_attributes: attributes } }
+        expect(response).to be_redirect
         reloaded = Hyrax.query_service.find_by(id: work.id)
         expect(reloaded.member_ids).to contain_exactly(child2.id, child3.id)
       end
