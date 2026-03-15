@@ -20,6 +20,10 @@ RSpec.describe 'Editing an existing Hyrax::Work Resource', :js, :workflow, :feat
   scenario 'edit the work' do
     visit edit_hyrax_monograph_path(work)
 
+    # Wait for FieldManager JS to initialize the title field before filling it in.
+    # FieldManager adds "Add another" buttons; their presence signals JS is ready.
+    expect(page).to have_content('Add another Title')
+
     fill_in('Title', with: 'Updated by Edit Work Spec')
 
     click_link('Relationships')
