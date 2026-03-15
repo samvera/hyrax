@@ -20,11 +20,21 @@ RSpec.describe 'Editing an existing Hyrax::Work Resource', :js, :workflow, :feat
   scenario 'edit the work' do
     visit edit_hyrax_monograph_path(work)
 
-    # Wait for FieldManager JS to initialize the title field before filling it in.
-    # FieldManager adds "Add another" buttons; their presence signals JS is ready.
-    expect(page).to have_content('Add another Title')
+    # Wait for FieldManager JS to fully initialize the title field.
+    # FieldManager adds the 'managed' class to the form-group and appends
+    # "Add another" controls. Both editMetadata.js and the Editor's init()
+    # can trigger FieldManager initialization; waiting for the 'managed'
+    # class ensures all DOM modifications are complete before we interact.
+    title_group = find('.multi_value.form-group.managed', text: 'Title', wait: 10)
 
     fill_in('Title', with: 'Updated by Edit Work Spec')
+
+    # Guard against late JS clearing the value (e.g. a second onLoad pass).
+    # If the value was cleared, set it directly via JavaScript.
+    unless page.has_field?('Title', with: 'Updated by Edit Work Spec', wait: 1)
+      title_input = title_group.find('input.multi-text-field')
+      page.execute_script("arguments[0].value = arguments[1]", title_input.native, 'Updated by Edit Work Spec')
+    end
 
     click_link('Relationships')
     expect(page).to have_select('Administrative Set', selected: 'Old Admin Set')

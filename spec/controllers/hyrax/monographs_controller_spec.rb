@@ -20,13 +20,16 @@ RSpec.describe Hyrax::MonographsController do
       end
 
       before do
-        # Use a null index adapter to prevent Solr indexing errors from
-        # propagating through event listeners and failing the transaction.
-        # The Save and UpdateWorkMembers steps publish events that trigger
-        # synchronous Solr indexing via MetadataIndexListener; if Solr is
-        # unavailable, those listener errors propagate uncaught through the
-        # transaction and cause the update to silently fail.
-        allow(Hyrax).to receive(:index_adapter).and_return(Valkyrie::Indexing::NullIndexingAdapter.new)
+        # Suppress all event publishing to prevent listener side-effects from
+        # failing the transaction. The Save and UpdateWorkMembers steps publish
+        # events (object.metadata.updated, object.membership.updated) that
+        # trigger synchronous listeners (MetadataIndexListener, etc.). If any
+        # listener raises (e.g. Solr unavailable), the exception propagates
+        # uncaught through the transaction and causes the update to silently
+        # fail, returning Failure instead of Success.
+        # Stubbing the index adapter alone is insufficient because exceptions
+        # can originate from any listener in the chain.
+        allow(Hyrax.publisher).to receive(:publish)
       end
 
       it "can add and remove children" do
