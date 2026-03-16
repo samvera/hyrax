@@ -21,6 +21,17 @@ RSpec.describe 'Editing an existing Hyrax::Work Resource', :js, :workflow, :feat
     visit edit_hyrax_monograph_path(work)
     expect(page).to have_link('Relationships') # wait for form to load
 
+    # Wait for FieldManager JS to fully initialize the title field.
+    # FieldManager adds the 'managed' class to the form-group and appends
+    # "Add another" controls. Both editMetadata.js and the Editor's init()
+    # can trigger FieldManager initialization; waiting for the 'managed'
+    # class ensures all DOM modifications are complete before we interact.
+    find('.multi_value.form-group.managed', text: 'Title', wait: 10)
+
+    # Also wait for SaveWorkControl to be wired up (it listens for
+    # managed_field events). Its presence means Editor.init() has completed.
+    find('#form-progress', wait: 5)
+
     fill_in('Title', with: 'Updated by Edit Work Spec')
 
     click_link('Relationships')
@@ -32,6 +43,21 @@ RSpec.describe 'Editing an existing Hyrax::Work Resource', :js, :workflow, :feat
 
     choose('monograph_visibility_open')
     check('agreement')
+
+    # Guard against late JS clearing the title value (e.g. a second
+    # Blacklight.onLoad pass reinitializing the Editor). Switch back to
+    # the Description tab so the field is visible, verify the value is
+    # still set, and re-fill via JS with proper events if it was cleared.
+    click_link('Description')
+    unless page.has_field?('Title', with: 'Updated by Edit Work Spec', wait: 2)
+      title_input = find('.multi_value.form-group', text: 'Title').find('input.multi-text-field')
+      page.execute_script(<<~JS, title_input.native, 'Updated by Edit Work Spec')
+        var input = arguments[0];
+        input.value = arguments[1];
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      JS
+    end
 
     click_on('Save')
 

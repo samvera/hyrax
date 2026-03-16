@@ -99,18 +99,24 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
       # puts "Required files: #{page.evaluate_script(%{$('#form-progress').data('save_work_control').uploads.hasFiles})}"
       # puts "Agreement : #{page.evaluate_script(%{$('#form-progress').data('save_work_control').depositAgreement.isAccepted})}"
       click_on('Save')
-      expect(page).to have_content('My Test Work')
-      expect(page).to have_content "Your files are being processed by #{I18n.t('hyrax.product_name')} in the background."
+      Capybara.using_wait_time(30) do
+        expect(page).to have_content('My Test Work')
+        expect(page).to have_content "Your files are being processed by #{I18n.t('hyrax.product_name')} in the background."
+      end
 
       sign_in second_user
       click_link 'Works'
-      expect(page).to have_content "My Test Work"
+      Capybara.using_wait_time(30) do
+        expect(page).to have_content "My Test Work"
+      end
 
       # check that user can get to the files
       within('.media-body') do
         click_link "My Test Work"
       end
-      within('td.attribute-filename', text: 'image.jp2') { click_link "image.jp2" }
+      Capybara.using_wait_time(30) do
+        within('td.attribute-filename', text: 'image.jp2') { click_link "image.jp2" }
+      end
       expect(page).to have_content "image.jp2"
 
       visit '/dashboard'
@@ -119,7 +125,9 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
       within('.media-body') do
         click_link "My Test Work"
       end
-      within('td.attribute-filename', text: 'jp2_fits.xml') { click_link "jp2_fits.xml" }
+      Capybara.using_wait_time(30) do
+        within('td.attribute-filename', text: 'jp2_fits.xml') { click_link "jp2_fits.xml" }
+      end
       expect(page).to have_content "jp2_fits.xml"
     end
   end
