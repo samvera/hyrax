@@ -16,6 +16,9 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
     allow(controller).to receive(:current_user).and_return(user)
     # Stub visibility, or it will hit fedora
     allow(work).to receive(:visibility).and_return('open')
+    # Stub admin set lookup to avoid hitting Solr during prepopulate!
+    allow(Hyrax::AdminSetCreateService).to receive(:find_or_create_default_admin_set)
+      .and_return(double(id: 'admin_set/default'))
   end
 
   context "for a new object" do
@@ -117,6 +120,11 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
     before do
       # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
       allow(work).to receive_messages(new_record?: false, new_record: false)
+      # Stub admin set lookup to avoid hitting Solr during prepopulate!
+      allow(Hyrax::AdminSetCreateService).to receive(:find_or_create_default_admin_set)
+        .and_return(double(id: 'admin_set/default'))
+      # ResourceForm copies the model, so new_record stubs are lost; stub agreement on the form
+      allow(form).to receive(:agreement_accepted).and_return(true)
       assign(:form, form)
       allow(Hyrax.config).to receive(:active_deposit_agreement_acceptance)
         .and_return(true)
