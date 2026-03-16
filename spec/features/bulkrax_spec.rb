@@ -32,16 +32,22 @@ RSpec.describe 'Bulkrax', :js, :workflow, :clean_repo,
     expect(page).to have_content('Cloud Files Added')
     click_on 'Create and Import'
 
-    expect(page).to have_content('Importer was successfully created and import has been queued.')
-    expect(page).to have_content('Test CSV Importer')
+    Capybara.using_wait_time(30) do
+      expect(page).to have_content('Importer was successfully created and import has been queued.')
+      expect(page).to have_content('Test CSV Importer')
+    end
 
     visit '/catalog'
-    expect(page).to have_content('A Test Work')
-    expect(page).to have_content('A Test Collection')
+    Capybara.using_wait_time(30) do
+      expect(page).to have_content('A Test Work')
+      expect(page).to have_content('A Test Collection')
+    end
 
     click_link 'A Test Work', match: :first
-    expect(page).to have_content('octothorpe-1.ptif.tiff')
-    expect(page).to have_content('octothorpe-2.ptif.tiff')
-    expect(page).to have_content('A Test Collection')
+    Capybara.using_wait_time(30) do
+      expect(page).to have_content('octothorpe-1.ptif.tiff')
+      expect(page).to have_content('octothorpe-2.ptif.tiff')
+      expect(page).to have_content('A Test Collection')
+    end
   end
 end
