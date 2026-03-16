@@ -30,7 +30,17 @@ RSpec.describe 'records/edit_fields/_language.html.erb', type: :view do
 
   context 'Valkyrie' do
     let(:work) { Monograph.new }
-    let(:form) { Hyrax::Forms::ResourceForm.for(work) }
+    let(:form) do
+      # Build a fresh form class with language field explicitly included,
+      # to avoid dependency on MonographForm's class-level conditional state
+      # which can vary based on test ordering.
+      form_class = Class.new(Hyrax::Forms::ResourceForm) do
+        self.model_class = Monograph
+        include Hyrax::FormFields(:core_metadata)
+        include Hyrax::FormFields(:basic_metadata)
+      end
+      form_class.new(resource: work)
+    end
 
     include_examples 'check for language autocomplete url'
   end
