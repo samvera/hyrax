@@ -51,6 +51,12 @@ RSpec.describe Hyrax::Forms::ResourceForm do
         work_contexts.clear
       end
 
+      after do
+        RSpec::Mocks.space.proxy_for(Hyrax.config).reset if RSpec::Mocks.space.registered?(Hyrax.config)
+        RSpec::Mocks.space.proxy_for(Hyrax::Schema).reset if RSpec::Mocks.space.registered?(Hyrax::Schema)
+        RSpec::Mocks.space.proxy_for(Hyrax.query_service).reset if RSpec::Mocks.space.registered?(Hyrax.query_service)
+      end
+
       it 'sets the admin set contexts on the resource before building the form' do
         described_class.for(resource: work, admin_set_id: 'set-1')
         expect(work.contexts).to include('special_context')
