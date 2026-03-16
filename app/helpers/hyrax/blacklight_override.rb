@@ -6,6 +6,7 @@ module Hyrax
       t('hyrax.product_name', default: super)
     end
 
+    # rubocop:disable Metrics/MethodLength
     def index_field_label(document, field)
       field_config = index_fields(document)[field]
       return field_config.label.call if field_config&.custom_label && field_config.label.respond_to?(:call)
@@ -23,5 +24,6 @@ module Hyrax
         )
       end
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end
