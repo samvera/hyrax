@@ -36,7 +36,7 @@ module Hyrax
             # for properties that DO exist in the CatalogController
             if blacklight_config.index_fields[name].present?
               if label
-                blacklight_config.index_fields[name].label = I18n.t(label, default: label)
+                blacklight_config.index_fields[name].label = label
                 blacklight_config.index_fields[name].custom_label = true
               end
               blacklight_config.index_fields[name].itemprop = itemprop
@@ -110,7 +110,12 @@ module Hyrax
         display_label = config.fetch('display_label', {})&.with_indifferent_access || {}
         display_label = { default: display_label } if display_label.is_a?(String)
         display_label[:default] = field_name.to_s.humanize if display_label[:default].blank?
-        display_label[I18n.locale] || display_label[:default]
+        # Return a lambda so locale and translation are resolved at render time,
+        # not at initialize time (before before_action :set_locale runs).
+        lambda { |*|
+          label = display_label[I18n.locale] || display_label[:default]
+          I18n.t(label, default: label)
+        }
       end
 
       def stored_searchable?(indexing, itemprop)
