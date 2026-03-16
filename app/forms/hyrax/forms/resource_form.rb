@@ -64,6 +64,12 @@ module Hyrax
         if resource.nil?
           if !deprecated_resource.nil?
             Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. Pass the resource with `resource:` instead."
+            # Remove form definitions for attributes the model doesn't support,
+            # mirroring the cleanup in the resource: keyword path below.
+            if deprecated_resource.respond_to?(:flexible?) && deprecated_resource.flexible?
+              to_remove = singleton_class.definitions.select { |k, v| !deprecated_resource.respond_to?(k) && v.instance_variable_get("@options")[:display] }
+              to_remove.keys.each { |removed_field| singleton_class.definitions.delete(removed_field) }
+            end
             super(deprecated_resource)
           else
             super()
