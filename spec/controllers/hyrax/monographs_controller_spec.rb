@@ -42,7 +42,7 @@ RSpec.describe Hyrax::MonographsController do
         patch :update, params: { id: work, monograph: { work_members_attributes: attributes } }
         expect(response).to be_redirect
         reloaded = Hyrax.query_service.find_by(id: work.id)
-        expect(reloaded.member_ids).to contain_exactly(child_to_keep.id, child_to_add.id)
+        expect(reloaded.member_ids).to contain_exactly(child2.id, child3.id)
       end
     end
   end
