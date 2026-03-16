@@ -41,6 +41,8 @@ module Hyrax
               end
               blacklight_config.index_fields[name].itemprop = itemprop
 
+              blacklight_config.index_fields[name].link_to_facet = index_args[:link_to_facet]
+
               if require_view_helper_method?(view_options)
                 # add or update the helper method so linked fields will render correctly in the index view
                 blacklight_config.index_fields[name].helper_method = view_option_for_helper_method(view_options)

@@ -11,6 +11,8 @@ RSpec.describe 'hyrax/file_sets/_permission.html.erb', type: :view do
 
   before do
     stub_template "hyrax/file_sets/_permission_form.html.erb" => 'a form'
+    # ResourceForm#initialize copies the model, so stub persisted? on the form
+    allow(form_object).to receive(:persisted?).and_return(true)
     render 'hyrax/file_sets/permission', file_set: file_set, form_object: form_object
   end
 

@@ -16,7 +16,7 @@ module Hyrax
         #
         # @return [Dry::Monads::Result]
         def call(obj)
-          obj.admin_set_id ||= Hyrax::EnsureWellFormedAdminSetService.call
+          obj.admin_set_id = Hyrax::EnsureWellFormedAdminSetService.call if obj.admin_set_id.to_s.blank?
 
           Success(obj)
         end

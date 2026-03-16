@@ -21,6 +21,10 @@ classes:
     display_label: Hyrax FileSet
   Hyrax::Test::SimpleWork:
     display_label: Test SimpleWork
+  Hyrax::Work:
+    display_label: Hyrax Work
+  Hyrax::PcdmCollection:
+    display_label: Hyrax PcdmCollection
 contexts:
   flexible_context:
     display_label: Flexible Metadata Example
@@ -48,6 +52,8 @@ properties:
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 1
     data_type: array
@@ -87,6 +93,8 @@ properties:
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
       maximum: 1
@@ -116,6 +124,8 @@ properties:
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
       maximum: 1
@@ -136,6 +146,8 @@ properties:
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
       maximum: 1
@@ -164,6 +176,8 @@ properties:
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 1
     data_type: array
@@ -177,6 +191,7 @@ properties:
     indexing:
       - creator_sim
       - creator_tesim
+      - facetable
     form:
       primary: true
     property_uri: http://purl.org/dc/elements/1.1/creator
@@ -191,10 +206,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -222,10 +240,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -256,6 +277,9 @@ properties:
         - Hyrax::Test::SimpleWork
         - GenericWork
         - FileSet
+        - Hyrax::FileSet
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -285,6 +309,8 @@ properties:
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -316,6 +342,8 @@ properties:
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
       maximum: 1
@@ -337,10 +365,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -354,6 +385,7 @@ properties:
     indexing:
       - based_near_sim
       - based_near_tesim
+      - facetable
     form:
       primary: false
     property_uri: http://xmlns.com/foaf/0.1/based_near
@@ -371,6 +403,8 @@ properties:
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -397,10 +431,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -414,6 +451,7 @@ properties:
     indexing:
       - contributor_tesim
       - contributor_sim
+      - facetable
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/contributor
@@ -428,10 +466,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -460,10 +501,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -488,10 +532,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -523,6 +570,8 @@ properties:
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
       maximum: 1
@@ -542,10 +591,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -559,6 +611,7 @@ properties:
     indexing:
       - keyword_sim
       - keyword_tesim
+      - facetable
     form:
       primary: false
     property_uri: http://schema.org/keywords
@@ -599,10 +652,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -616,6 +672,7 @@ properties:
     indexing:
       - language_sim
       - language_tesim
+      - facetable
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/language
@@ -631,10 +688,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -648,6 +708,7 @@ properties:
     indexing:
       - publisher_sim
       - publisher_tesim
+      - facetable
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/publisher
@@ -662,10 +723,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -693,10 +757,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
       maximum: 1
@@ -716,10 +783,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -733,6 +803,7 @@ properties:
     indexing:
       - resource_type_sim
       - resource_type_tesim
+      - facetable
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/type
@@ -748,10 +819,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -778,10 +852,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -795,6 +872,7 @@ properties:
     indexing:
       - rights_statement_sim
       - rights_statement_tesim
+      - facetable
     form:
       primary: true
     property_uri: http://www.europeana.eu/schemas/edm/rights
@@ -809,10 +887,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -840,10 +921,13 @@ properties:
       class:
         - Hyrax::AdministrativeSet
         - FileSet
+        - Hyrax::FileSet
         - CollectionResource
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
+        - Hyrax::PcdmCollection
     cardinality:
       minimum: 0
     data_type: array
@@ -857,6 +941,7 @@ properties:
     indexing:
       - subject_sim
       - subject_tesim
+      - facetable
     form:
       primary: false
     property_uri: http://purl.org/dc/elements/1.1/subject
@@ -873,6 +958,7 @@ properties:
         - Monograph
         - Hyrax::Test::SimpleWork
         - GenericWork
+        - Hyrax::Work
       context:
         - special_context
     cardinality:
@@ -898,3 +984,114 @@ properties:
     view:
       render_as: faceted
       html_dl: true
+  monograph_title:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Monograph Title
+    property_uri: http://hyrax-example.com/monograph_title
+    range: http://www.w3.org/2001/XMLSchema#string
+  record_info:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Record Info
+    form:
+      required: true
+      primary: true
+    indexing:
+      - record_info_tesim
+    property_uri: http://hyrax-example.com/record_info
+    range: http://www.w3.org/2001/XMLSchema#string
+  place_of_publication:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Place of Publication
+    form:
+      required: false
+      primary: true
+    property_uri: http://hyrax-example.com/place_of_publication
+    range: http://www.w3.org/2001/XMLSchema#string
+  genre:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Genre
+    form:
+      primary: true
+    property_uri: http://hyrax-example.com/genre
+    range: http://www.w3.org/2001/XMLSchema#string
+  series_title:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Series Title
+    form:
+      primary: false
+    property_uri: http://hyrax-example.com/series_title
+    range: http://www.w3.org/2001/XMLSchema#string
+  target_audience:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+    data_type: array
+    display_label:
+      default: Target Audience
+    form:
+      multiple: true
+    property_uri: http://hyrax-example.com/target_audience
+    range: http://www.w3.org/2001/XMLSchema#string
+  table_of_contents:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Table of Contents
+    form:
+      multiple: false
+    property_uri: http://hyrax-example.com/table_of_contents
+    range: http://www.w3.org/2001/XMLSchema#string
+  date_of_issuance:
+    available_on:
+      class:
+        - Monograph
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: string
+    display_label:
+      default: Date of Issuance
+    property_uri: http://hyrax-example.com/date_of_issuance
+    range: http://www.w3.org/2001/XMLSchema#string
