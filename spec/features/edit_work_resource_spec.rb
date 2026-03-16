@@ -19,12 +19,16 @@ RSpec.describe 'Editing an existing Hyrax::Work Resource', :js, :workflow, :feat
 
   scenario 'edit the work' do
     visit edit_hyrax_monograph_path(work)
+    expect(page).to have_link('Relationships') # wait for form to load
 
     fill_in('Title', with: 'Updated by Edit Work Spec')
 
     click_link('Relationships')
-    expect(page).to have_select('Administrative Set', selected: 'Old Admin Set')
-    select('New Admin Set', from: 'Administrative Set')
+    # Wait for Relationships tab content to be visible (avoids CI flakiness)
+    expect(page).to have_selector('#relationships.tab-pane.active', visible: true)
+    # Use select id for stability (label can vary by locale)
+    expect(page).to have_select('monograph_admin_set_id', selected: 'Old Admin Set')
+    select('New Admin Set', from: 'monograph_admin_set_id')
 
     choose('monograph_visibility_open')
     check('agreement')
@@ -32,7 +36,7 @@ RSpec.describe 'Editing an existing Hyrax::Work Resource', :js, :workflow, :feat
     click_on('Save')
 
     expect(page).to have_content 'Updated by Edit Work Spec'
-
+    expect(page).to have_css('.work-title-wrapper', wait: 10) # wait for show page to render
     within(".work-title-wrapper") do
       expect(page).to have_content('Public')
     end
