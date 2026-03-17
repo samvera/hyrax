@@ -5,6 +5,10 @@ module Hyrax
       @authority ||= Qa::Authorities::Local.subauthority_for('resource_types')
     end
 
+    def self.authority=(val)
+      @authority = val
+    end
+
     def self.select_options
       authority.all.map do |element|
         [element[:label], element[:id]]
