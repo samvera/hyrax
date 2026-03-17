@@ -27,7 +27,11 @@ RSpec.describe 'Editing a work', :clean_repo, type: :feature do
   end
 
   context 'when the user changes permissions' do
-    let(:work) { valkyrie_create(:monograph, title: ['Haiku'], creator: ['Test Author'], record_info: ['Test record info'], depositor: user.user_key, admin_set_id: default_admin_set.id, edit_users: [user.user_key]) }
+    let(:work) do
+      valkyrie_create(:monograph, title: ['Haiku'], creator: ['Test Author'],
+                                  record_info: ['Test record info'], depositor: user.user_key,
+                                  admin_set_id: default_admin_set.id, edit_users: [user.user_key])
+    end
 
     it 'confirms copying permissions to files using Hyrax layout and shows updated value', js: true do
       # e.g. /concern/generic_works/jq085k20z/edit
