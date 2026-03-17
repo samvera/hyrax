@@ -20,7 +20,11 @@ RSpec.describe 'catalog/_index_list_default', type: :view do
     # Blacklight field rendering checks :if conditions (e.g. :render_optionally?
     # set by FlexibleCatalogBehavior) via context.class.instance_method(condition),
     # so the method must be defined on the class, not just stubbed on the instance.
-    view.class.include(Module.new { def render_optionally?; true; end })
+    view.class.include(Module.new do
+      def render_optionally?
+        true
+      end
+    end)
 
     # Mock the facet link rendering in a more targeted way
     allow_any_instance_of(Blacklight::Rendering::LinkToFacet)
