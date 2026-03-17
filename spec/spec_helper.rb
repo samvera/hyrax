@@ -35,6 +35,23 @@ ActiveRecord::Base.descendants.each(&:reset_column_information)
 ActiveRecord::Migration.maintain_test_schema!
 
 require 'active_fedora/cleaner'
+
+# Track whether anything has been written to Fedora since the last clean.
+# This avoids expensive HTTP DELETE round-trips to Fedora when nothing changed.
+$fedora_dirty = true # assume dirty on boot (conservative)
+
+module FedoraDirtyTracking
+  def save(*args, **kwargs)
+    $fedora_dirty = true
+    super
+  end
+
+  def destroy(*args, **kwargs)
+    $fedora_dirty = true
+    super
+  end
+end
+ActiveFedora::Base.prepend(FedoraDirtyTracking)
 require 'devise'
 require 'devise/version'
 require 'mida'
@@ -154,10 +171,12 @@ ActiveJob::Base.queue_adapter = :test
 
 def clean_active_fedora_repository
   return if Hyrax.config.disable_wings
+  return unless $fedora_dirty
   ActiveFedora::Cleaner.clean!
   # The JS is executed in a different thread, so that other thread
   # may think the root path has already been created:
   ActiveFedora.fedora.connection.send(:init_base_path)
+  $fedora_dirty = false
 end
 
 RSpec.configure do |config|
