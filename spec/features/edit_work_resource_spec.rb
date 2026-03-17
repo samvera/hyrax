@@ -46,18 +46,23 @@ RSpec.describe 'Editing an existing Hyrax::Work Resource', :js, :workflow, :feat
 
     # Guard against late JS clearing the title value (e.g. a second
     # Blacklight.onLoad pass reinitializing the Editor). Switch back to
-    # the Description tab so the field is visible, verify the value is
-    # still set, and re-fill via JS with proper events if it was cleared.
+    # the Description tab and forcibly set the title via JS right before
+    # submitting to avoid any race with JS reinitialization.
     click_link('Description')
-    unless page.has_field?('Title', with: 'Updated by Edit Work Spec', wait: 2)
-      title_input = find('.multi_value.form-group', text: 'Title').find('input.multi-text-field')
-      page.execute_script(<<~JS, title_input.native, 'Updated by Edit Work Spec')
-        var input = arguments[0];
-        input.value = arguments[1];
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-      JS
-    end
+    sleep 1 # allow any pending JS reinitialization to settle
+
+    # Always set via JS + native events to ensure the value sticks
+    title_input = find('.multi_value.form-group', text: 'Title').find('input.multi-text-field')
+    page.execute_script(<<~JS, title_input.native, 'Updated by Edit Work Spec')
+      var input = arguments[0];
+      input.focus();
+      input.value = arguments[1];
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    JS
+
+    # Verify the value is set before submitting
+    expect(page).to have_field('Title', with: 'Updated by Edit Work Spec')
 
     click_on('Save')
 

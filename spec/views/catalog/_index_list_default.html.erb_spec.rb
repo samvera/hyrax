@@ -17,6 +17,10 @@ RSpec.describe 'catalog/_index_list_default', type: :view do
     # Set up proper view context and mocks without affecting global state
     allow(view).to receive(:current_ability).and_return(double('Ability'))
 
+    # Blacklight field rendering checks :if conditions (e.g. :render_optionally?
+    # set by FlexibleCatalogBehavior) against the view context
+    allow(view).to receive(:render_optionally?).and_return(true)
+
     # Mock the facet link rendering in a more targeted way
     allow_any_instance_of(Blacklight::Rendering::LinkToFacet)
       .to receive(:search_path).and_return('http://example.com')
