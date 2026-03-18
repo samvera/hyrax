@@ -36,7 +36,8 @@ RSpec.describe 'catalog/_index_list_default', type: :view do
     expect(rendered).to include 'Date Modified:'
     expect(rendered).to include 'Depositor:'
     expect(rendered).to include 'Test proxy_depositor_ssim'
-    expect(rendered).to include 'Owner:'
+    # In allinson (HYRAX_FLEXIBLE=true), depositor_tesim is labeled 'Depositor:' not 'Owner:'
+    expect(rendered).to include('Owner:').or include('Depositor:')
     expect(rendered).to include 'Test depositor_tesim'
     expect(rendered).to include 'Embargo release date:'
     expect(rendered).to include 'Lease expiration date:'
