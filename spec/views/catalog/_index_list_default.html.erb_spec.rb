@@ -14,15 +14,12 @@ RSpec.describe 'catalog/_index_list_default', type: :view do
   let(:document) { SolrDocument.new(attributes) }
 
   before do
-    # Set up proper view context and mocks without affecting global state
     allow(view).to receive(:current_ability).and_return(double('Ability'))
 
-    # Blacklight 7.41+ calls context.method(:render_optionally?) on the view instance.
-    # Define it as a singleton method so it's found regardless of which instance is used.
-    view.define_singleton_method(:render_optionally?) { true }
-    controller.class.define_method(:render_optionally?) { true }
+    # In allinson (HYRAX_FLEXIBLE=true), FlexibleCatalogBehavior adds `if: :render_optionally?`
+    # to all index_fields. Remove those conditions so Blacklight never tries to resolve the method.
+    CatalogController.blacklight_config.index_fields.each_value { |field| field.if = nil }
 
-    # Mock the facet link rendering in a more targeted way
     allow_any_instance_of(Blacklight::Rendering::LinkToFacet)
       .to receive(:search_path).and_return('http://example.com')
   end
