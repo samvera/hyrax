@@ -12,7 +12,6 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'bootstrap', '~> 4.0'
 gem 'bulkrax', github: 'samvera/bulkrax', branch: 'grounded'
 gem 'clamby', '~> 1.6', require: ENV['HYRAX_CLAMAV'] == 'true'
-gem 'clamby', '~> 1.6'
 gem 'coffee-rails', '~> 4.2'
 gem 'dalli'
 gem 'devise'
@@ -27,7 +26,7 @@ if RUBY_PLATFORM =~ /musl/
 # # Disabled due to dependency mismatches in Alpine packages (grpc 1.62.1 needs protobuf ~> 3.25)
 #   path '/usr/lib/ruby/gems/3.3.0' do
   gem 'google-protobuf', force_ruby_platform: true
-  gem 'grpc', force_ruby_platform: true
+  gem 'grpc', '~> 1.74', force_ruby_platform: true
 #   end
 end
 

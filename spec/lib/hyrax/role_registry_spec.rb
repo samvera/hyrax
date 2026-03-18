@@ -35,10 +35,17 @@ RSpec.describe Hyrax::RoleRegistry do
   end
 
   describe '#persist_registered_roles!' do
-    subject { role_registry.persist_registered_roles! }
-
     it 'creates Sipity::Role records for each role_name' do
-      expect { subject }.to change { Sipity::Role.count }.by(role_registry.role_names.count)
+      # Use unique test-only role names so the assertion is independent of
+      # whether the default roles (approving/depositing/managing) already exist
+      # from prior specs that call persist_registered_roles! or WorkflowImporter.
+      custom_registry = described_class.new
+      custom_registry.add(name: 'test_only_alpha', description: 'Test only role alpha')
+      custom_registry.add(name: 'test_only_beta', description: 'Test only role beta')
+
+      expect { custom_registry.persist_registered_roles! }
+        .to change { Sipity::Role.where(name: %w[test_only_alpha test_only_beta]).count }
+        .by(2)
     end
   end
 end
