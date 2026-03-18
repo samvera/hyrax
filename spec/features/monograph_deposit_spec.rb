@@ -28,9 +28,11 @@ RSpec.describe 'Creating a new Monograph (Valkyrie work)', :js, :workflow, :clea
     end
 
     click_link "Descriptions" # switch tab
+    expect(page).to have_field('Title')
     # form fields for basic metadata
     fill_in('Title', with: 'Monograph Work (created by test)')
     click_on("Additional fields")
+    expect(page).to have_field('Abstract')
     fill_in('Abstract', with: 'A formal abstract.')
     fill_in('Access Right', with: 'Open Access')
     fill_in('Creator', with: 'Tove Jansson')
@@ -42,6 +44,9 @@ RSpec.describe 'Creating a new Monograph (Valkyrie work)', :js, :workflow, :clea
 
     click_on('Save')
 
+    # Wait for redirect to the show page before extracting the work ID
+    expect(page).to have_content('Monograph Work (created by test)')
+
     monograph_id = current_url.split('/').last.split('?').first
     monograph = Hyrax.query_service.find_by(id: monograph_id)
 
@@ -52,7 +57,6 @@ RSpec.describe 'Creating a new Monograph (Valkyrie work)', :js, :workflow, :clea
                           creator: contain_exactly('Tove Jansson'),
                           record_info: 'some details about the record')
 
-    expect(page).to have_content('Monograph Work (created by test)')
     expect(page).to have_content('Tove Jansson')
   end
 end
