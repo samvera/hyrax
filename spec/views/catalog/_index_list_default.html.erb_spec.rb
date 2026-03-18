@@ -17,14 +17,10 @@ RSpec.describe 'catalog/_index_list_default', type: :view do
     # Set up proper view context and mocks without affecting global state
     allow(view).to receive(:current_ability).and_return(double('Ability'))
 
-    # Blacklight field rendering checks :if conditions (e.g. :render_optionally?
-    # set by FlexibleCatalogBehavior) via context.class.instance_method(condition),
-    # so the method must be defined on the class, not just stubbed on the instance.
-    view.class.include(Module.new do
-      def render_optionally?
-        true
-      end
-    end)
+    # Blacklight 7.41+ calls context.method(:render_optionally?) on the view instance.
+    # Define it as a singleton method so it's found regardless of which instance is used.
+    view.define_singleton_method(:render_optionally?) { true }
+    controller.class.define_method(:render_optionally?) { true }
 
     # Mock the facet link rendering in a more targeted way
     allow_any_instance_of(Blacklight::Rendering::LinkToFacet)
