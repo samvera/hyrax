@@ -49,7 +49,7 @@ module Hyrax
     end
 
     def image_format(channels)
-      mime_type || (channels&.include?('rgba') ? 'image/png' : 'image/jpeg')
+      channels&.include?('rgba') ? 'image/png' : 'image/jpeg'
     end
 
     ##

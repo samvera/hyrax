@@ -339,12 +339,6 @@ RSpec.describe Hyrax::FileSetPresenter do
           its(:display_image) { is_expected.to have_attributes(url: "http://test.host/images/#{uri_segment_escape(id)}/full/600,/0/default.jpg") }
 
           context 'format handling' do
-            context 'when mime_type is present in solr document' do
-              it 'uses mime_type as the format' do
-                expect(presenter.display_image.format).to eq('image/jp2')
-              end
-            end
-
             context 'when mime_type is nil' do
               before { allow(presenter).to receive(:mime_type).and_return(nil) }
 
