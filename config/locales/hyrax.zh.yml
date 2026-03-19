@@ -1389,6 +1389,10 @@ zh:
         save: 保存修订
         save_your_note: 您必须点击“保存修订版”还原此文件的先前版本
         upload: 上传新版本
+    flexible_schema_validators:
+      sort_properties_validator:
+        warnings:
+          message: "%{property} 必须在 %{classes} 上定义才能支持该属性的排序，除非您已在其他字段上索引了 %{property}_ssi。"
     help:
       header: 用户支持
       override_text: 用 app/views/static/help.html.erb 取代此文件。

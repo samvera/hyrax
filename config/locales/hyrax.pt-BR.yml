@@ -1384,6 +1384,10 @@ pt-BR:
         save: Salvar Revisão
         save_your_note: Você deve clicar em "Salvar revisão". reverter uma versão anterior deste arquivo
         upload: Carregar nova versão
+    flexible_schema_validators:
+      sort_properties_validator:
+        warnings:
+          message: "%{property} deve ser definido em %{classes} para oferecer suporte à ordenação por essa propriedade, a menos que você tenha indexado %{property}_ssi em algum outro campo."
     help:
       header: Suporte ao usuário
       override_text: Usar app/views/static/help.html.erb para substituir este arquivo.

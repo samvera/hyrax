@@ -9,6 +9,10 @@ class Hyrax::FlexibleSchema < ApplicationRecord
 
   before_save :update_contexts
 
+  def warnings
+    @warnings ||= ActiveModel::Errors.new(self)
+  end
+
   def self.current_version
     order("created_at asc").last&.profile
   end
@@ -94,6 +98,10 @@ class Hyrax::FlexibleSchema < ApplicationRecord
 
     validation_service.errors.each do |e|
       errors.add(:profile, e.to_s)
+    end
+
+    validation_service.warnings.each do |w|
+      warnings.add(:profile, "Warning: #{w.to_s}")
     end
   end
 
