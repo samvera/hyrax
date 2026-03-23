@@ -118,6 +118,16 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
 
         shared_examples 'tests for image resolution'
       end
+
+      context 'when using v3 manifest factory' do
+        before do
+          allow(Hyrax.config).to receive(:iiif_manifest_factory).and_return(::IIIFManifest::V3::ManifestFactory)
+        end
+
+        it 'returns nil to avoid duplicate annotations (display_content handles v3 images)' do
+          expect(presenter.display_image).to be_nil
+        end
+      end
     end
 
     describe '#display_content' do

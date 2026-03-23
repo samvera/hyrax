@@ -1375,6 +1375,10 @@ en:
         save: Save Revision
         save_your_note: You must click "Save Revision" to revert a previous version of this file
         upload: Upload New Version
+    flexible_schema_validators:
+      sort_properties_validator:
+        warnings:
+          message: "%{property} must be defined on %{classes} to support sorting on that property, unless you have indexed %{property}_ssi on some other field."
     help:
       header: User Support
       override_text: Use app/views/static/help.html.erb to override this file.

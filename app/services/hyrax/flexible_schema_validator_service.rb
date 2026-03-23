@@ -9,7 +9,7 @@ module Hyrax
       Hyrax.config.file_set_model
     ].map { |str| str.gsub(/^::/, '') }
 
-    attr_reader :profile, :schema, :schemer, :errors
+    attr_reader :profile, :schema, :schemer, :errors, :warnings
 
     # Initializes a new FlexibleSchemaValidatorService.
     #
@@ -22,6 +22,7 @@ module Hyrax
       @schema = schema
       @schemer = JSONSchemer.schema(schema)
       @errors = []
+      @warnings = []
     end
 
     # Execute all validation routines and populate {#errors} with any
@@ -36,6 +37,7 @@ module Hyrax
       validate_schema
       validate_label_prop
       validate_core_metadata
+      validate_sort_properties
     end
 
     # The default JSON schema used when no custom schema is provided.
@@ -108,6 +110,13 @@ module Hyrax
     # @return [void]
     def validate_existing_records_classes_defined
       FlexibleSchemaValidators::ExistingRecordsValidator.new(profile, required_classes, @errors).validate!
+    end
+
+    # Validates that any properties needed to support sorting catalog search results.
+    #
+    # @return [void]
+    def validate_sort_properties
+      FlexibleSchemaValidators::SortPropertiesValidator.new(profile, @warnings).validate!
     end
 
     # Validates that a `label` property exists and that it is available on
