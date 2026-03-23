@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::InstallIiifViewerService do
   let(:viewer) { :clover }
-  let(:dest_root) { Pathname.new("/app/samvera/hyrax-engine/tmp") }
+  let(:dest_root) { Hyrax::Engine.root.join("tmp") }
   let(:config) { dest_root.join('config', 'initializers', 'hyrax.rb').to_s }
 
   before do
@@ -11,7 +11,7 @@ RSpec.describe Hyrax::InstallIiifViewerService do
     end
     # Reset the viewer config
     Hyrax.config.iiif_av_viewer = Hyrax::Configuration.new.iiif_av_viewer
-    FileUtils.mkdir_p("/app/samvera/hyrax-engine/tmp/config/initializers")
+    FileUtils.mkdir_p(Hyrax::Engine.root.join("tmp", "config", "initializers"))
     File.open(config, 'w') do |f|
       f.write("Hyrax.config do |config|\n\nend")
     end

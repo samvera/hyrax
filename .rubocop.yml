@@ -20,10 +20,6 @@ Lint/ImplicitStringConcatenation:
   Exclude:
     - 'lib/generators/hyrax/**/*'
 
-Lint/MissingSuper:
-  Exclude:
-    - 'app/services/hyrax/install_iiif_viewer_service.rb'
-
 Rails/Output:
   Exclude:
     - 'lib/generators/**/*'

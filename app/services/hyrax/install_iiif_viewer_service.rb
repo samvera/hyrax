@@ -45,9 +45,10 @@ module Hyrax
     # Currently, the only accepted option is :clover, but we may add more.
     def initialize(viewer, options = {})
       @viewer = viewer
-      self.destination_root = Rails.env.test? ? File.join(Hyrax::Engine.root, "tmp") : Rails.root
-      self.options = options
-      self.behavior = :revoke if self.options[:behavior] == :revoke
+      # If testing, copy files to tmp to avoid conflicts with dev env
+      dest_root = Rails.env.test? ? File.join(Hyrax::Engine.root, "tmp") : Rails.root
+      # See rails/thor gem - Thor::Base#initialize for superclass definition
+      super([], {}, options.merge(destination_root: dest_root))
     end
 
     def copy_viewer_files
@@ -55,7 +56,7 @@ module Hyrax
       directory(@viewer.to_s, viewer_path)
       return unless behavior == :revoke && Dir.exist?(viewer_path)
       FileUtils.rmdir(viewer_path)
-      say_status :remove, "public/#{@viewer}", :red
+      say_status :remove, viewer_path, :red
     end
 
     def copy_partial
