@@ -202,6 +202,7 @@ module Hyrax
       #
       # @return [IIIFManifest::DisplayImage] the display image required by the manifest builder.
       def display_image
+        return nil if Hyrax.config.iiif_manifest_factory == ::IIIFManifest::V3::ManifestFactory
         return nil unless model.image?
         return nil unless latest_file_id
 

@@ -73,6 +73,8 @@ Let's break down the above command:
 
 _**Note:**_ The `bundle exec rspec` portion of the command runs the whole test suite. See the [rspec command documentation](https://github.com/rspec/rspec-core#the-rspec-command) for how to refine your test runs.
 
+**If you get "You have already activated rspec-support X, but your Gemfile requires rspec-support Y"** when running specs, you are not using the engine's bundle. Always use `bundle exec rspec` (never plain `rspec`). If you shell into the container and run from `/app/samvera/hyrax-engine`, force the engine's Gemfile: `BUNDLE_GEMFILE=Gemfile bundle exec rspec ./spec/path/to/spec.rb`.
+
 #### The Docker Container Named "web"
 
 As a developer, you may need to run commands against the Hyrax-based application and/or the Hyrax engine.  Examples

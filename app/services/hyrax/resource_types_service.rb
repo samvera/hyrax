@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 module Hyrax
   module ResourceTypesService
-    mattr_accessor :authority
-    self.authority = Qa::Authorities::Local.subauthority_for('resource_types')
+    def self.authority
+      @authority ||= Qa::Authorities::Local.subauthority_for('resource_types')
+    end
+
+    def self.authority=(val)
+      @authority = val
+    end
 
     def self.select_options
       authority.all.map do |element|

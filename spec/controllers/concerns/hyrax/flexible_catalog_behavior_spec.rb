@@ -143,7 +143,9 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
         }
 
         expected_labels.each do |field, label|
-          expect(blacklight_config.index_fields[field].label).to eq(label)
+          stored = blacklight_config.index_fields[field].label
+          resolved = stored.respond_to?(:call) ? stored.call : stored
+          expect(resolved).to eq(label)
         end
       end
 
@@ -226,30 +228,30 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
   end
 
   describe '.display_label_for' do
-    it 'returns the display label from the config' do
+    it 'returns a callable that resolves the default label' do
       label = controller.class.send(:display_label_for, 'test_field',
                                      { 'display_label' => { 'default' => 'Test Label' } })
-      expect(label).to eq('Test Label')
+      expect(label.call).to eq('Test Label')
     end
 
-    it 'returns humanized field name when display_label is blank' do
+    it 'returns a callable that resolves to humanized field name when display_label is blank' do
       label = controller.class.send(:display_label_for, 'test_field', {})
-      expect(label).to eq('Test field')
+      expect(label.call).to eq('Test field')
     end
 
-    it 'uses locale-specific label when available' do
+    it 'resolves locale-specific label at call time when locale is :es' do
+      label = controller.class.send(:display_label_for, 'test_field',
+                                     { 'display_label' => { 'default' => 'Test Label', 'es' => 'Etiqueta de prueba' } })
       I18n.with_locale(:es) do
-        label = controller.class.send(:display_label_for, 'test_field',
-                                       { 'display_label' => { 'default' => 'Test Label', 'es' => 'Etiqueta de prueba' } })
-        expect(label).to eq('Etiqueta de prueba')
+        expect(label.call).to eq('Etiqueta de prueba')
       end
     end
 
     it 'falls back to default when locale-specific label is not available' do
+      label = controller.class.send(:display_label_for, 'test_field',
+                                     { 'display_label' => { 'default' => 'Test Label', 'es' => 'Etiqueta de prueba' } })
       I18n.with_locale(:fr) do
-        label = controller.class.send(:display_label_for, 'test_field',
-                                       { 'display_label' => { 'default' => 'Test Label', 'es' => 'Etiqueta de prueba' } })
-        expect(label).to eq('Test Label')
+        expect(label.call).to eq('Test Label')
       end
     end
   end
