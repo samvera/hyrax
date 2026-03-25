@@ -1,6 +1,6 @@
 <div class="viewer-wrapper">
   <iframe title="image view" 
-    src="<%= universal_viewer_base_url %>#?manifest=<%= main_app.polymorphic_url [main_app, :manifest, presenter], { locale: nil } %>&config=<%= universal_viewer_config_url %>" 
+    src="<%= iiif_viewer_base_url(presenter.iiif_viewer) %>#?manifest=<%= main_app.polymorphic_url [main_app, :manifest, presenter], { locale: nil } %>&config=<%= universal_viewer_config_url %>" 
     allowfullscreen="true" 
     frameborder="0" 
   ></iframe>

@@ -51,6 +51,26 @@ RSpec.describe Hyrax::IiifHelper, type: :helper do
     end
   end
 
+  describe 'iiif_viewer_base_url' do
+    subject { helper.iiif_viewer_base_url(iiif_viewer) }
+
+    context 'with universal_viewer' do
+      let(:iiif_viewer) { :universal_viewer }
+
+      it 'defaults to universal viewer base path' do
+        expect(subject).to eq "http://test.host/uv/uv.html"
+      end
+    end
+
+    context 'with a different viewer' do
+      let(:iiif_viewer) { :clover }
+
+      it 'returns the viewer base path' do
+        expect(subject).to eq "http://test.host/clover/clover.html"
+      end
+    end
+  end
+
   describe '#universal_viewer_config_url' do
     subject { helper.universal_viewer_config_url }
 
