@@ -34,8 +34,8 @@ module Hyrax
       File.open(config).each_line do |line|
         regex = /config.iiif_av_viewer = .*/
         if behavior == :revoke
-          # When removing/revoking, we return nil if the line includes 
-          # our viewer name because we want to delete the line instead 
+          # When removing/revoking, we return nil if the line includes
+          # our viewer name because we want to delete the line instead
           # of using it as the "after" anchor.
           lastmatch = line if line.match?(regex) && line.exclude?(viewer.to_s)
         elsif line.match?(regex)
