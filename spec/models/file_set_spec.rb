@@ -113,6 +113,10 @@ RSpec.describe FileSet, :active_fedora do
       expect(subject).to respond_to(:alpha_channels)
     end
 
+    it 'has transcript_ids property' do
+      expect(subject).to respond_to(:transcript_ids)
+    end
+
     it 'redefines to_param to make redis keys more recognizable' do
       expect(subject.to_param).to eq subject.id
     end

@@ -22,7 +22,8 @@ RSpec.describe Hyrax::FileSetIndexer, :active_fedora do
       resource_type: ['Book'],
       identifier: ['urn:isbn:1234567890'],
       based_near: ['Medina, Saudi Arabia'],
-      related_url: ['http://example.org/TheWork/']
+      related_url: ['http://example.org/TheWork/'],
+      transcript_ids: ['foo678910']
     )
   end
 
@@ -110,6 +111,7 @@ RSpec.describe Hyrax::FileSetIndexer, :active_fedora do
       expect(subject['duration_tesim']).to eq ['0:1']
       expect(subject['sample_rate_tesim']).to eq ['sample rate']
       expect(subject['original_file_id_ssi']).to eq "foo12345/files/#{file_set.original_file.id}/fcr:versions/version1"
+      expect(subject['transcript_ids_ssim']).to eq ["foo678910"]
     end
 
     context "when original_file is not versioned" do

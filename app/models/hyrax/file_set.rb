@@ -63,6 +63,9 @@ module Hyrax
 
     attribute :file_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID) # id for FileMetadata resources
 
+    # id(s) of sibling file sets that act as transcripts (for audio/video file sets only)
+    attribute :transcript_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
+
     # @return [Hyrax::FileMetadata, nil]
     def original_file
       Hyrax.custom_queries.find_original_file(file_set: self)
