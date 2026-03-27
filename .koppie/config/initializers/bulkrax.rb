@@ -19,10 +19,10 @@ Rails.application.reloader.to_prepare do
     config.file_model_class = Hyrax.config.file_set_class
 
     # Path to store pending imports
-    # config.import_path = 'tmp/imports'
+    config.import_path = Hyrax.config.upload_path.call.join('imports').to_s
 
     # Path to store exports before download
-    # config.export_path = 'tmp/exports'
+    config.export_path = Hyrax.config.upload_path.call.join('exports').to_s
 
     # Server name for oai request header
     # config.server_name = 'my_server@name.com'
