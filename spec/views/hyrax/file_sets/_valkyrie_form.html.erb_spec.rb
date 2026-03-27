@@ -8,9 +8,17 @@ RSpec.describe 'hyrax/file_sets/_valkyrie_form.html.erb', type: :view do
 
   before do
     skip 'Valkyrie only' if file_set.class < ActiveFedora::Base
+    allow(controller).to receive(:current_ability).and_return(ability)
     allow(view).to receive(:curation_concern).and_return(curation_concern)
     allow(view).to receive(:parent_path).and_return('/works/1')
     assign(:parent, parent)
+
+    # Transcript field
+    allow(view).to receive(:render_transcript_ids_field?).and_return true
+    allow(Hyrax::Forms::FileSetForm).to receive(:valid_transcripts).and_return(
+      [SolrDocument.new(id: "baz", title_tesim: "foo")]
+    )
+
     render partial: 'hyrax/file_sets/valkyrie_form', locals: { form_object: form }
   end
 
@@ -32,5 +40,10 @@ RSpec.describe 'hyrax/file_sets/_valkyrie_form.html.erb', type: :view do
 
   it 'renders based_near with autocomplete url' do
     expect(rendered).to have_selector('div[data-autocomplete-url="/authorities/search/geonames"][data-field-name="based_near"]')
+  end
+
+  it 'renders the transcripts form' do
+    expect(rendered).to have_select("file_set[transcript_ids][]", options: ["", "foo"])
+    expect(rendered).to have_css("option[value='baz']", text: "foo")
   end
 end

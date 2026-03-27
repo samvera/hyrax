@@ -8,9 +8,6 @@ module Hyrax
   # @note this service is for `Hyrax::FileSet` Valkyrie Resources. for
   #   ActiveFedora file sets see Hydra::Works::MimeTypes
   class FileSetTypeService
-    DEFAULT_AUDIO_TYPES = ['audio/mp3', 'audio/mpeg', 'audio/wav',
-                           'audio/x-wave', 'audio/x-wav', 'audio/ogg'].freeze
-
     ##
     # @!attribute [r] file_set
     #   @return [Hyrax::FileSet]
@@ -42,11 +39,22 @@ module Hyrax
       audio_types.include?(mime_type)
     end
 
+    ##
+    # @return [Boolean]
+    def video?
+      video_types.include?(mime_type)
+    end
+
     private
 
     def audio_types
       return ::FileSet.audio_mime_types if defined?(::FileSet) && ::FileSet.respond_to?(:audio_mime_types)
-      DEFAULT_AUDIO_TYPES
+      Hyrax.config.mime_types_map.fetch(:audio_mime_types)
+    end
+
+    def video_types
+      return ::FileSet.video_mime_types if defined?(::FileSet) && ::FileSet.respond_to?(:video_mime_types)
+      Hyrax.config.mime_types_map.fetch(:video_mime_types)
     end
   end
 end

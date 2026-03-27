@@ -1309,6 +1309,10 @@ en:
         header: Edit %{file_set}
         permissions: Permissions
         versions: Versions
+        form:
+          transcript_ids:
+            title: Transcript(s)
+            help_html: Select file(s) for displaying as captions or subtitles of this file. File(s) must be children of the same parent work and be in <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API/Web_Video_Text_Tracks_Format" target="_blank">Web Video Text Tracks (VTT) format</a>.
       extra_fields_modal:
         additional: Additional
         label: Additional %{label}(s)

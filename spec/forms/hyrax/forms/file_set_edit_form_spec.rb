@@ -11,7 +11,7 @@ RSpec.describe Hyrax::Forms::FileSetEditForm, :active_fedora do
       expect(subject.terms).to eq(
         [:resource_type, :title, :creator, :contributor, :description, :keyword,
          :license, :publisher, :date_created, :subject, :language, :identifier,
-         :based_near, :related_url,
+         :based_near, :related_url, :transcript_ids,
          :visibility_during_embargo, :visibility_after_embargo, :embargo_release_date,
          :visibility_during_lease, :visibility_after_lease, :lease_expiration_date,
          :visibility]

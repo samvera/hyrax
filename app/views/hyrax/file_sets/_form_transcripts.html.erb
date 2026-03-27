@@ -1,0 +1,18 @@
+<% if render_transcript_ids_field?(curation_concern) %>
+  <div class="row">
+    <div class="col-md-12 mt-2">
+      <fieldset id="file-set-transcripts">
+        <legend>
+          <%= t("hyrax.file_sets.edit.form.transcript_ids.title") %>
+        </legend>
+        <div class="form-group">
+          <span class="form-text"><%= t("hyrax.file_sets.edit.form.transcript_ids.help_html") %></span>
+          <%= f.select :transcript_ids,
+                       form_transcript_ids_select_for(curation_concern),
+                       { include_blank: true },
+                       { class: 'form-control', multiple: true } %>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+<% end %>
