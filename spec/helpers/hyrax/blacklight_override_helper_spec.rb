@@ -20,6 +20,25 @@ RSpec.describe Hyrax::BlacklightOverride, type: :helper do
       end
     end
 
+    context 'when custom_label is not set and label is a lambda set by FlexibleCatalogBehavior#display_label_for' do
+      let(:field_config) do
+        display_label = { 'default' => 'Source Identifier' }.with_indifferent_access
+        lbl = lambda { |*|
+          label = display_label[I18n.locale] || display_label[:default]
+          I18n.t(label, default: label)
+        }
+        double('FieldConfig', custom_label: nil, label: lbl)
+      end
+
+      it 'calls the lambda without raising NoMethodError' do
+        expect { index_field_label(document, 'subject_tesim') }.not_to raise_error
+      end
+
+      it 'returns the result of calling the lambda' do
+        expect(index_field_label(document, 'subject_tesim')).to eq('Source Identifier')
+      end
+    end
+
     context 'when custom_label is true and label is a lambda' do
       let(:field_config) do
         display_label = { 'en' => 'Subject', 'es' => 'Materia', 'default' => 'Subject' }.with_indifferent_access
