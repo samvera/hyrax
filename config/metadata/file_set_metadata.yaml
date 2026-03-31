@@ -102,6 +102,8 @@ attributes:
     form:
       primary: false
     predicate: http://purl.org/dc/elements/1.1/language
+    index_keys:
+      - "language_tesim"
   # required: license
   publisher:
     type: string
