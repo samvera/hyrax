@@ -163,6 +163,10 @@ module Hyrax
     def flexible?
       schema_version.present?
     end
+    
+    def transcript_ids
+      self['transcript_ids_ssim']
+    end
 
     private
 

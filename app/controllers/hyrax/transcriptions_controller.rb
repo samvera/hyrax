@@ -3,7 +3,7 @@
 module Hyrax
   class TranscriptionsController < ApplicationController
     def show
-      file_metadata = Hyrax.query_service.find_by(id: params[:id])
+      file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: params[:id])
       file_object = Hyrax.storage_adapter.find_by(id: file_metadata.file_identifier)
       transcription = file_object.read
 

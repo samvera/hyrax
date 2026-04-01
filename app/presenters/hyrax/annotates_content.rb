@@ -11,28 +11,31 @@ module Hyrax
     private
 
     def transcription_content
-      transcriptions.map do |hash|
+      transcriptions.map do |doc|
         IIIFManifest::V3::AnnotationContent.new(
           type: 'Annotation',
           motivation: 'supplementing',
-          body_id: captions_url(hash['file_ids_ssim'].first),
+          body_id: captions_url(file_id(doc)),
           format: 'text/vtt',
-          label: hash['title_tesim']&.first || 'Captions',
-          language: hash['language_tesim']&.first || 'en'
+          label: doc['title_tesim']&.first || 'Captions',
+          language: doc['language_tesim']&.first || 'en'
         )
       end
     end
 
     def transcriptions
       @transcriptions ||= begin
-                            parent = Hyrax::SolrService.query("member_ids_ssim:#{id}", rows: 1, fl: "member_ids_ssim").first
-                            member_ids = parent['member_ids_ssim']
-                            mime_type = 'text/vtt'
-                            fl = 'title_tesim,language_tesim,file_ids_ssim'
-                            results = Hyrax::SolrService.query("id:(#{member_ids.join(' OR ')}) AND mime_type_ssi:#{mime_type}", rows: 100, fl: fl)
-
+                            results = Hyrax::SolrQueryService.new
+                                                             .with_ids(ids: self.object.transcript_ids)
+                                                             .accessible_by(ability: ability, action: :read)
+                                                             .solr_documents
                             sort_transcriptions_by_language(results)
                           end
+    end
+    
+    def file_id(doc)
+      return doc['file_ids_ssim'].first if doc['file_ids_ssim']
+      doc['original_file_id_ssi']
     end
 
     def captions_url(file_id)
@@ -43,10 +46,10 @@ module Hyrax
       current_locale = I18n.locale.to_s
 
       # Sort alphabetically by language code
-      sorted = results.sort_by { |hash| hash['language_tesim']&.first || '' }
+      sorted = results.sort_by { |doc| doc['language_tesim']&.first || '' }
 
       # Move current locale to front
-      sorted.partition { |hash| hash['language_tesim']&.first == current_locale }.flatten
+      sorted.partition { |doc| doc['language_tesim']&.first == current_locale }.flatten
     end
   end
 end
