@@ -20,7 +20,7 @@ RSpec.describe Hyrax::TranscriptionsController do
       get :show, params: { id: vtt_file_metadata.id }
       expect(response).to be_successful
       expect(response.body).to eq vtt_content
-      expect(response.headers['Content-Type']).to eq 'text/vtt'
+      expect(response.headers['Content-Type']).to eq 'text/vtt; charset=utf-8'
       expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
       expect(response.headers['Content-Disposition']).to include 'inline'
     end

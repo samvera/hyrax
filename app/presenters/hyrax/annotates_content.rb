@@ -24,10 +24,11 @@ module Hyrax
     end
 
     def transcriptions
+      return [] if self.object.transcript_ids.blank?
       @transcriptions ||= begin
                             results = Hyrax::SolrQueryService.new
-                                                             .with_ids(ids: self.object.transcript_ids)
                                                              .accessible_by(ability: ability, action: :read)
+                                                             .with_ids(ids: self.object.transcript_ids)
                                                              .solr_documents
                             sort_transcriptions_by_language(results)
                           end

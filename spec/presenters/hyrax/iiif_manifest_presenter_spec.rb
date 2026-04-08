@@ -390,97 +390,101 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
         end
       end
     end
-  end
-  
-  describe '#annotation_content' do
-    let(:ability) { Ability.new(user) }
-    let(:user) { create(:user) }
-    let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, :public) }
-    let(:work) { valkyrie_create(:monograph, members: [file_set, vtt_file_set]) }
 
-    let(:video_file_metadata) do
-      valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
-                      file_set: file_set,
-                      mime_type: 'video/mp4',
-                      duration: ['120'])
-    end
+    describe '#annotation_content' do
+      let(:ability) { Ability.new(user) }
+      let(:user) { create(:user) }
+      let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, :public) }
+      let(:work) { valkyrie_create(:monograph, members: [file_set, vtt_file_set]) }
 
-    let(:vtt_file_path) { fixture_path + '/sample.vtt' }
-    let(:vtt_file) { File.open(vtt_file_path) }
-    let(:vtt_uploaded_file) { FactoryBot.create(:uploaded_file, file: vtt_file) }
-
-    let(:vtt_file_metadata) do
-      valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
-                      file_set: vtt_file_set,
-                      original_filename: 'sample.vtt',
-                      mime_type: 'text/vtt',
-                      file: vtt_uploaded_file)
-    end
-
-    let(:vtt_file_set) do
-      FactoryBot.valkyrie_create(:hyrax_file_set,
-                                 :public,
-                                 title: ['English Captions'],
-                                 language: ['en'])
-    end
-
-    let(:solr_doc) do
-      video_file_metadata
-      vtt_file_metadata
-      work # ensure work is created with members
-
-      solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
-      solr_hash['mime_type_ssi'] = 'video/mp4'
-      solr_hash['duration_tesim'] = ['120']
-      SolrDocument.new(solr_hash)
-    end
-
-    subject(:presenter) { described_class.new(solr_doc) }
-
-    before do
-      presenter.hostname = 'samvera.org'
-      presenter.ability = ability
-    end
-
-    context 'with video file and vtt file set' do
-      it 'returns transcription annotations' do
-        annotations = presenter.annotation_content
-
-        expect(annotations).to be_an(Array)
-        expect(annotations.first).to be_a(IIIFManifest::V3::AnnotationContent)
-        expect(annotations.first.type).to eq('Annotation')
-        expect(annotations.first.motivation).to eq('supplementing')
-        expect(annotations.first.format).to eq('text/vtt')
-        expect(annotations.first.language).to eq('en')
-        expect(annotations.first.label).to eq('English Captions')
-        expect(annotations.first.body_id).to include('transcriptions')
-        expect(annotations.first.body_id).to end_with('.vtt')
+      let(:video_file_metadata) do
+        valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                        file_set: file_set,
+                        mime_type: 'video/mp4',
+                        duration: ['120'])
       end
-    end
 
-    context 'with video file but no vtt file sets' do
-      let(:work) { valkyrie_create(:monograph, members: [file_set]) }
+      let(:vtt_file_path) { fixture_path + '/sample.vtt' }
+      let(:vtt_file) { File.open(vtt_file_path) }
+      let(:vtt_uploaded_file) { FactoryBot.create(:uploaded_file, file: vtt_file) }
 
-      it 'returns empty array' do
-        annotations = presenter.annotation_content
-
-        expect(annotations).to eq([])
+      let(:vtt_file_metadata) do
+        valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                        file_set: vtt_file_set,
+                        original_filename: 'sample.vtt',
+                        mime_type: 'text/vtt',
+                        file: vtt_uploaded_file)
       end
-    end
 
-    context 'with non-video/audio file' do
-      let(:image_file_metadata) do
-        valkyrie_create(:hyrax_file_metadata, :original_file, :image, :with_file,
-                        file_set: file_set)
+      let(:vtt_file_set) do
+        FactoryBot.valkyrie_create(:hyrax_file_set,
+                                   :public,
+                                   title: ['English Captions'],
+                                   language: ['en'])
       end
 
       let(:solr_doc) do
-        image_file_metadata
-        SolrDocument.new(Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr)
+        video_file_metadata
+        vtt_file_metadata
+        work # ensure work is created with members
+
+        solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
+        solr_hash['mime_type_ssi'] = 'video/mp4'
+        solr_hash['duration_tesim'] = ['120']
+        SolrDocument.new(solr_hash)
       end
 
-      it 'returns nil' do
-        expect(presenter.annotation_content).to be_nil
+      subject(:presenter) { described_class.new(solr_doc) }
+
+      before do
+        presenter.hostname = 'samvera.org'
+        presenter.ability = ability
+      end
+
+      context 'with video file and vtt file set' do
+        before do
+          allow(solr_doc).to receive(:transcript_ids).and_return([vtt_file_set.id.to_s])
+        end
+        
+        it 'returns transcription annotations' do
+          annotations = presenter.annotation_content
+
+          expect(annotations).to be_an(Array)
+          expect(annotations.first).to be_a(IIIFManifest::V3::AnnotationContent)
+          expect(annotations.first.type).to eq('Annotation')
+          expect(annotations.first.motivation).to eq('supplementing')
+          expect(annotations.first.format).to eq('text/vtt')
+          expect(annotations.first.language).to eq('en')
+          expect(annotations.first.label).to eq('English Captions')
+          expect(annotations.first.body_id).to include('transcriptions')
+          expect(annotations.first.body_id).to end_with('.vtt')
+        end
+      end
+
+      context 'with video file but no vtt file sets' do
+        let(:work) { valkyrie_create(:monograph, members: [file_set]) }
+
+        it 'returns empty array' do
+          annotations = presenter.annotation_content
+
+          expect(annotations).to eq([])
+        end
+      end
+
+      context 'with non-video/audio file' do
+        let(:image_file_metadata) do
+          valkyrie_create(:hyrax_file_metadata, :original_file, :image, :with_file,
+                          file_set: file_set)
+        end
+
+        let(:solr_doc) do
+          image_file_metadata
+          SolrDocument.new(Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr)
+        end
+
+        it 'returns nil' do
+          expect(presenter.annotation_content).to be_nil
+        end
       end
     end
   end
