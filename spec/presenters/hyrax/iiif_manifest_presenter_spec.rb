@@ -420,8 +420,10 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
         FactoryBot.valkyrie_create(:hyrax_file_set,
                                    :public,
                                    title: ['English Captions'],
-                                   language: ['en'])
+                                   language: language)
       end
+      
+      let(:language) { ['en'] }
 
       let(:solr_doc) do
         video_file_metadata
@@ -484,6 +486,57 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
 
         it 'returns nil' do
           expect(presenter.annotation_content).to be_nil
+        end
+      end
+      
+      context 'when transcript has language' do
+        before do
+          allow(solr_doc).to receive(:transcript_ids).and_return([vtt_file_set.id.to_s])
+        end
+        
+        context 'with a 3-letter language code' do
+          let(:language) { ['eng'] }
+          
+          it 'returns the 2-letter language code' do
+            annotations = presenter.annotation_content
+            expect(annotations.first.language).to eq('en')
+          end
+        end
+
+        context 'with 2-letter language code' do
+          let(:language) { ['en'] }
+          
+          it 'returns the 2-letter language code' do
+            annotations = presenter.annotation_content
+            expect(annotations.first.language).to eq('en')
+          end
+        end
+        
+        context 'with a URI' do
+          let(:language) { ['http://id.loc.gov/vocabulary/iso639-3/zho'] }
+
+          it 'returns the 2-letter language code' do
+            annotations = presenter.annotation_content
+            expect(annotations.first.language).to eq('zh')
+          end
+        end
+        
+        context 'with a language name' do
+          let(:language) { ['German'] }
+
+          it 'returns the 2-letter language code' do
+            annotations = presenter.annotation_content
+            expect(annotations.first.language).to eq('de')
+          end
+        end
+        
+        context 'with no parseable language' do
+          let(:language) { ['xyz'] }
+          
+          it 'falls back to en' do
+            annotations = presenter.annotation_content
+            expect(annotations.first.language).to eq('en')
+          end
         end
       end
     end

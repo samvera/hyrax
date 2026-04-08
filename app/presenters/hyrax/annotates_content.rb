@@ -18,7 +18,7 @@ module Hyrax
           body_id: captions_url(file_id(doc)),
           format: 'text/vtt',
           label: doc['title_tesim']&.first || 'Captions',
-          language: doc['language_tesim']&.first || 'en'
+          language: coerce_language_type(doc['language_tesim']&.first) || 'en'
         )
       end
     end
@@ -47,10 +47,26 @@ module Hyrax
       current_locale = I18n.locale.to_s
 
       # Sort alphabetically by language code
-      sorted = results.sort_by { |doc| doc['language_tesim']&.first || '' }
+      sorted = results.sort_by { |doc| coerce_language_type(doc['language_tesim']&.first) || '' }
 
       # Move current locale to front
-      sorted.partition { |doc| doc['language_tesim']&.first == current_locale }.flatten
+      sorted.partition { |doc| coerce_language_type(doc['language_tesim']&.first) == current_locale }.flatten
+    end
+    
+    # Convert language value to a 2-letter code, if possible.
+    # This is used by IIIF for internationalization.
+    def coerce_language_type(value)
+      return if value.nil?
+      if URI.parse(value).scheme
+        # This is probably a Library of Congress languages URI
+        # like http://id.loc.gov/vocabulary/iso639-3/eng.
+        # Extract the code from the URI
+        LanguageList::LanguageInfo.find(value.split("/").last).try(:iso_639_1)
+      else
+        # Otherwise, assume it is a language code/name and try
+        # to convert it to a 2-letter code
+        LanguageList::LanguageInfo.find(value).try(:iso_639_1)
+      end
     end
   end
 end
