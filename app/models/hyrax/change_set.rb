@@ -45,5 +45,12 @@ module Hyrax
     def self.for(resource)
       Hyrax::ChangeSet(resource.class).new(resource)
     end
+
+    def clean_id_fields_before_sync
+      id_fields = fields.keys.select { |k| k.include?('_id') }
+      multiple_id_fields_with_empties = id_fields.select { |f| fields[f].is_a?(Array) && fields[f].any?(&:empty?) }
+
+      multiple_id_fields_with_empties.each { |f| fields[f] = fields[f].reject(&:empty?) }
+    end
   end
 end
