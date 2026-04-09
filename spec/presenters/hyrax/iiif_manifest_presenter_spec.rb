@@ -397,23 +397,11 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
       let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, :public) }
       let(:work) { valkyrie_create(:monograph, members: [file_set, vtt_file_set]) }
 
-      let(:video_file_metadata) do
-        valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
-                        file_set: file_set,
-                        mime_type: 'video/mp4',
-                        duration: ['120'])
-      end
-
-      let(:vtt_file_path) { fixture_path + '/sample.vtt' }
-      let(:vtt_file) { File.open(vtt_file_path) }
-      let(:vtt_uploaded_file) { FactoryBot.create(:uploaded_file, file: vtt_file) }
-
       let(:vtt_file_metadata) do
         valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
                         file_set: vtt_file_set,
                         original_filename: 'sample.vtt',
-                        mime_type: 'text/vtt',
-                        file: vtt_uploaded_file)
+                        mime_type: 'text/vtt')
       end
 
       let(:vtt_file_set) do
@@ -423,10 +411,9 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
                                    language: language)
       end
       
-      let(:language) { ['en'] }
+      let(:language) { [] }
 
       let(:solr_doc) do
-        video_file_metadata
         vtt_file_metadata
         work # ensure work is created with members
 
@@ -461,6 +448,88 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
           expect(annotations.first.body_id).to include('transcriptions')
           expect(annotations.first.body_id).to end_with('.vtt')
         end
+
+        context 'when transcript has language' do
+          context 'with a 3-letter language code' do
+            let(:language) { ['eng'] }
+
+            it 'returns the 2-letter language code' do
+              annotations = presenter.annotation_content
+              expect(annotations.first.language).to eq('en')
+            end
+          end
+
+          context 'with 2-letter language code' do
+            let(:language) { ['en'] }
+
+            it 'returns the 2-letter language code' do
+              annotations = presenter.annotation_content
+              expect(annotations.first.language).to eq('en')
+            end
+          end
+
+          context 'with a URI' do
+            let(:language) { ['http://id.loc.gov/vocabulary/iso639-3/zho'] }
+
+            it 'returns the 2-letter language code' do
+              annotations = presenter.annotation_content
+              expect(annotations.first.language).to eq('zh')
+            end
+          end
+
+          context 'with a language name' do
+            let(:language) { ['German'] }
+
+            it 'returns the 2-letter language code' do
+              annotations = presenter.annotation_content
+              expect(annotations.first.language).to eq('de')
+            end
+          end
+
+          context 'with no parseable language' do
+            let(:language) { ['xyz'] }
+
+            it 'falls back to en' do
+              annotations = presenter.annotation_content
+              expect(annotations.first.language).to eq('en')
+            end
+          end
+
+          context 'with a locale' do
+            let(:vtt_file_set) do
+              FactoryBot.valkyrie_create(:hyrax_file_set,
+                                         :public,
+                                         title: ['English Captions'],
+                                         language: ['en'])
+            end
+            let(:vtt_file_set_2) do
+              FactoryBot.valkyrie_create(:hyrax_file_set,
+                                         :public,
+                                         title: ['English Captions'],
+                                         language: ['ur'])
+            end
+            
+            let!(:vtt_file_metadata_2) do
+              valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                              file_set: vtt_file_set_2,
+                              original_filename: 'sample.vtt',
+                              mime_type: 'text/vtt')
+            end
+
+            let(:work) { valkyrie_create(:monograph, members: [file_set, vtt_file_set, vtt_file_set_2]) }
+
+            before do
+              allow(solr_doc).to receive(:transcript_ids).and_return(
+                [vtt_file_set.id.to_s, vtt_file_set_2.id.to_s]
+              )
+              allow(I18n).to receive(:locale).and_return(:ur)
+            end
+
+            it 'moves the current locale/language to the top of the transcript list' do
+              expect(presenter.annotation_content.map(&:language)).to eq ['ur','en']
+            end
+          end
+        end
       end
 
       context 'with video file but no vtt file sets' do
@@ -489,56 +558,6 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
         end
       end
       
-      context 'when transcript has language' do
-        before do
-          allow(solr_doc).to receive(:transcript_ids).and_return([vtt_file_set.id.to_s])
-        end
-        
-        context 'with a 3-letter language code' do
-          let(:language) { ['eng'] }
-          
-          it 'returns the 2-letter language code' do
-            annotations = presenter.annotation_content
-            expect(annotations.first.language).to eq('en')
-          end
-        end
-
-        context 'with 2-letter language code' do
-          let(:language) { ['en'] }
-          
-          it 'returns the 2-letter language code' do
-            annotations = presenter.annotation_content
-            expect(annotations.first.language).to eq('en')
-          end
-        end
-        
-        context 'with a URI' do
-          let(:language) { ['http://id.loc.gov/vocabulary/iso639-3/zho'] }
-
-          it 'returns the 2-letter language code' do
-            annotations = presenter.annotation_content
-            expect(annotations.first.language).to eq('zh')
-          end
-        end
-        
-        context 'with a language name' do
-          let(:language) { ['German'] }
-
-          it 'returns the 2-letter language code' do
-            annotations = presenter.annotation_content
-            expect(annotations.first.language).to eq('de')
-          end
-        end
-        
-        context 'with no parseable language' do
-          let(:language) { ['xyz'] }
-          
-          it 'falls back to en' do
-            annotations = presenter.annotation_content
-            expect(annotations.first.language).to eq('en')
-          end
-        end
-      end
     end
   end
 

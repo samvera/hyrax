@@ -18,7 +18,7 @@ module Hyrax
           body_id: captions_url(file_id(doc)),
           format: 'text/vtt',
           label: doc['title_tesim']&.first || 'Captions',
-          language: coerce_language_type(doc['language_tesim']&.first) || 'en'
+          language: coerce_language_type(doc.language&.first) || 'en'
         )
       end
     end
@@ -47,10 +47,10 @@ module Hyrax
       current_locale = I18n.locale.to_s
 
       # Sort alphabetically by language code
-      sorted = results.sort_by { |doc| coerce_language_type(doc['language_tesim']&.first) || '' }
+      sorted = results.sort_by { |doc| coerce_language_type(doc.language&.first) || '' }
 
       # Move current locale to front
-      sorted.partition { |doc| coerce_language_type(doc['language_tesim']&.first) == current_locale }.flatten
+      sorted.partition { |doc| coerce_language_type(doc.language&.first) == current_locale }.flatten
     end
     
     # Convert language value to a 2-letter code, if possible.
