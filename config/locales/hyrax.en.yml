@@ -1310,9 +1310,8 @@ en:
         permissions: Permissions
         versions: Versions
         form:
-          transcript_ids:
-            title: Transcript(s)
-            help_html: Select file(s) for displaying as captions or subtitles of this file. File(s) must be children of the same parent work and be in <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API/Web_Video_Text_Tracks_Format" target="_blank">Web Video Text Tracks (VTT) format</a>.
+          language:
+            title: Language
       extra_fields_modal:
         additional: Additional
         label: Additional %{label}(s)
@@ -1869,6 +1868,9 @@ en:
         rights_notes: Contains information about rights held in and over the resource.
         subject: Headings or index terms describing what the work is about; these do need to conform to an existing vocabulary.
         title: A name to aid in identifying a work.
+      file_set:
+        language: The language of the file's content. For audio/video transcriptions, this can be the <a href="https://id.loc.gov/vocabulary/iso639-2.html" target="_blank">ISO 639-2</a> code, the <a href="https://id.loc.gov/vocabulary/iso639-3.html" target="_blank">ISO 639-3</a> code, or the English name of the language.
+        transcript_ids: Select file(s) for displaying as captions or subtitles of this file. File(s) must be children of the same parent work and be in <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API/Web_Video_Text_Tracks_Format" target="_blank">Web Video Text Tracks (VTT) format</a>.
     labels:
       collection:
         size: Size
@@ -1908,6 +1910,9 @@ en:
         visibility_after_lease: then restrict it to
         visibility_during_embargo: Restricted to
         visibility_during_lease: Is available to
+      file_set:
+        language: Language
+        transcript_ids: Transcript(s)
       proxy_deposit_request:
         sender_comment: Comments
         transfer_to: User

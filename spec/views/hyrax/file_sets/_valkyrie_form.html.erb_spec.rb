@@ -46,4 +46,8 @@ RSpec.describe 'hyrax/file_sets/_valkyrie_form.html.erb', type: :view do
     expect(rendered).to have_select("file_set[transcript_ids][]", options: ["", "foo"])
     expect(rendered).to have_css("option[value='baz']", text: "foo")
   end
+
+  it 'renders the language form field' do
+    expect(rendered).to have_selector('input[name="file_set[language][]"]')
+  end
 end

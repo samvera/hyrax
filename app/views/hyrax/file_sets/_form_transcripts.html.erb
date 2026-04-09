@@ -3,10 +3,10 @@
     <div class="col-md-12 mt-2">
       <fieldset id="file-set-transcripts">
         <legend>
-          <%= t("hyrax.file_sets.edit.form.transcript_ids.title") %>
+          <%= t("simple_form.labels.file_set.transcript_ids") %>
         </legend>
         <div class="form-group">
-          <span class="form-text"><%= t("hyrax.file_sets.edit.form.transcript_ids.help_html") %></span>
+          <span class="form-text"><%= sanitize(t("simple_form.hints.file_set.transcript_ids")) %></span>
           <%= f.select :transcript_ids,
                        form_transcript_ids_select_for(curation_concern),
                        { include_blank: true },

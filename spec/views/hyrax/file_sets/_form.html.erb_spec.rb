@@ -24,6 +24,10 @@ RSpec.describe 'hyrax/file_sets/_form.html.erb', type: :view do
     expect(rendered).to have_selector('input[name="file_set[title][]"]')
   end
 
+  it 'renders a language form field' do
+    expect(rendered).to have_selector('input[name="file_set[language][]"]')
+  end
+
   it 'renders transcripts form' do
     expect(rendered).to have_select("file_set[transcript_ids][]", options: ["", "foo"])
     expect(rendered).to have_css("option[value='baz']", text: "foo")
