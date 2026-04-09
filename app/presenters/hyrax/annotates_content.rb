@@ -23,18 +23,20 @@ module Hyrax
       end
     end
 
+    # @return [Array<SolrDocument>] the solr documents that correspond to the a/v file set's transcript_ids
     def transcriptions
-      return [] if self.object.transcript_ids.blank?
+      return [] if object.transcript_ids.blank?
       @transcriptions ||= begin
                             results = Hyrax::SolrQueryService.new
                                                              .accessible_by(ability: ability, action: :read)
-                                                             .with_ids(ids: self.object.transcript_ids)
+                                                             .with_ids(ids: object.transcript_ids)
                                                              .solr_documents
                             sort_transcriptions_by_language(results)
                           end
     end
-    
+
     def file_id(doc)
+      # Hyrax file sets have file_ids_ssim. ActiveFedora file sets have original_file_id_ssi
       return doc['file_ids_ssim'].first if doc['file_ids_ssim']
       doc['original_file_id_ssi']
     end
@@ -52,18 +54,20 @@ module Hyrax
       # Move current locale to front
       sorted.partition { |doc| coerce_language_type(doc.language&.first) == current_locale }.flatten
     end
-    
+
     # Convert language value to a 2-letter code, if possible.
-    # This is used by IIIF for internationalization.
+    # The code is used by IIIF for internationalization.
+    # @return [String or NilClass] - the 2-letter code or nil if unparseable
     def coerce_language_type(value)
       return if value.nil?
       if URI.parse(value).scheme
         # This is probably a Library of Congress languages URI
-        # like http://id.loc.gov/vocabulary/iso639-3/eng.
-        # Extract the code from the URI
+        # like http://id.loc.gov/vocabulary/iso639-3/eng, which can
+        # be configured with the Questioning Authority gem.
+        # Extract the code from the URI.
         LanguageList::LanguageInfo.find(value.split("/").last).try(:iso_639_1)
       else
-        # Otherwise, assume it is a language code/name and try
+        # Otherwise, assume it is a language code or name and try
         # to convert it to a 2-letter code
         LanguageList::LanguageInfo.find(value).try(:iso_639_1)
       end

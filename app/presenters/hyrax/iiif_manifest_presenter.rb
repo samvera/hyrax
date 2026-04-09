@@ -133,13 +133,13 @@ module Hyrax
     # @return [Array<Hash{String => String}>]
     def homepage
       [{
-         'id' => Rails.application.routes.url_helpers.polymorphic_url(model, host: hostname),
-         'type' => 'Text',
-         'format' => 'text/html',
-         'label' => { 'none' => [Array(title).first || ''] }
-       }]
+        'id' => Rails.application.routes.url_helpers.polymorphic_url(model, host: hostname),
+        'type' => 'Text',
+        'format' => 'text/html',
+        'label' => { 'none' => [Array(title).first || ''] }
+      }]
     end
-    
+
     ##
     # @return [Boolean]
     def work?

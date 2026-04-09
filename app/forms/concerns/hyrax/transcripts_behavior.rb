@@ -14,7 +14,7 @@ module Hyrax
                                .with_ids(ids: parent.member_ids.map(&:to_s))
                                .accessible_by(ability: current_ability, action: :edit)
                                .solr_documents(
-                                 fq: "#{mime_type_filter_query}",
+                                 fq: mime_type_filter_query.to_s,
                                  fl: "id,title_tesim",
                                  rows: 1000
                                )
