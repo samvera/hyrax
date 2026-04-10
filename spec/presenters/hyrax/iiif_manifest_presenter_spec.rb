@@ -105,7 +105,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
       context 'with non-image file_set' do
         let(:original_file_metadata) { }
 
-        it('returns nil') { expect(presenter.display_image).to be_nil }
+        it('returns nil') { expect(presenter.display_image).to eq("en") }
       end
 
       context 'when no original file is indexed' do

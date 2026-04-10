@@ -7,6 +7,7 @@ module Hyrax
     include WithEvents
     include DisplaysImage
     include MissingMethodBehavior
+    include DisplaysTranscripts
 
     attr_accessor :solr_document, :current_ability, :request
 
@@ -122,5 +123,6 @@ module Hyrax
                                         presenter_class: WorkShowPresenter,
                                         presenter_args: current_ability).first
     end
+    
   end
 end

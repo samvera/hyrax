@@ -5,6 +5,10 @@
         <source src="<%= hyrax.download_path(file_set, file: 'ogg', mime_type: 'audio/ogg') %>" type="audio/ogg" />
         <source src="<%= hyrax.download_path(file_set, file: 'mp3', mime_type: 'audio/mpeg') %>" type="audio/mpeg" />
         <%= t('hyrax.file_set.show.downloadable_content.audio_tag_not_supported') %>
+        <% file_set.transcriptions.each do |transcript| %>
+          <track kind="captions" src="<%= file_set.transcript_url(transcript.original_file_id) %>"
+                 srclang="<%= file_set.language_code(transcript.language) %>" label="<%= transcript.title_or_label %>" />
+        <% end %>
       </audio>
       <%= link_to t('hyrax.file_set.show.downloadable_content.audio_link'),
                   hyrax.download_path(file_set),
