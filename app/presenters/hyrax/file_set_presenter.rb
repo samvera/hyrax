@@ -123,6 +123,5 @@ module Hyrax
                                         presenter_class: WorkShowPresenter,
                                         presenter_args: current_ability).first
     end
-    
   end
 end

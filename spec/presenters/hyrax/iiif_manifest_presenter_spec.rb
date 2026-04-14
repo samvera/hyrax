@@ -105,7 +105,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
       context 'with non-image file_set' do
         let(:original_file_metadata) { }
 
-        it('returns nil') { expect(presenter.display_image).to eq("en") }
+        it('returns nil') { expect(presenter.display_image).to be_nil }
       end
 
       context 'when no original file is indexed' do
@@ -440,7 +440,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
 
           expect(annotations).to be_an(Array)
           expect(annotations.first).to be_a(IIIFManifest::V3::AnnotationContent)
-          expect(annotations.first.type).to eq('Annotation')
+          expect(annotations.first.type).to eq('Text')
           expect(annotations.first.motivation).to eq('supplementing')
           expect(annotations.first.format).to eq('text/vtt')
           expect(annotations.first.language).to eq('en')

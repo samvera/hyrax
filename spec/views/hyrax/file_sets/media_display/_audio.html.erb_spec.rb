@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/file_sets/media_display/_audio.html.erb', type: :view do
-  let(:ability)  { double(Ability) }
+  let(:ability) { double(Ability) }
   let(:request) { double('request', base_url: 'test.host') }
   let(:file_set) { Hyrax::FileSetPresenter.new(SolrDocument.new(id: 'foo'), ability, request) }
   let(:link) { true }

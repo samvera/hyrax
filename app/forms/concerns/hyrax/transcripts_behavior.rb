@@ -28,7 +28,8 @@ module Hyrax
 
       # According to IIIF, .srt and .ttml are also acceptable but may
       # not be supported by viewers. Clover and Ramp are confirmed to work
-      # with .vtt. (https://iiif.io/api/cookbook/recipe/0219-using-caption-file/)
+      # with .vtt. (https://iiif.io/api/cookbook/recipe/0219-using-caption-file/).
+      # When Hyrax supports Ramp, we may want to add "text/plain" (.srt) to this list.
       def valid_mime_types
         ["text/vtt"]
       end

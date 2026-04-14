@@ -770,6 +770,7 @@ en:
         header: Save Works
     bread_crumb:
       search_results: Back to search results
+    captions: Captions (%{language})
     citations:
       work:
         citation_formats: Citation Formats

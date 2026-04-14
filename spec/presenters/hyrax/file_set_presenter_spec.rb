@@ -512,40 +512,40 @@ RSpec.describe Hyrax::FileSetPresenter do
       end
     end
   end
-  
+
   describe '#transcriptions' do
     context 'without any transcript_ids' do
       it 'returns an empty array' do
         expect(presenter.transcriptions).to be_empty
       end
     end
-    
+
     context 'with transcript_ids' do
       let(:transcript) do
         FactoryBot.valkyrie_create(:hyrax_file_set)
       end
-      
+
       before do
         allow(file_set).to receive(:transcript_ids).and_return [transcript.id]
       end
-      
+
       it 'returns an array of solr documents' do
         expect(presenter.transcriptions).not_to be_empty
         expect(presenter.transcriptions.first).to be_a SolrDocument
       end
     end
   end
-  
+
   describe '#transcript_url' do
     subject(:presenter) { described_class.new(solr_document, ability, request) }
     let(:request) { double('request', base_url: 'http://test.host') }
     let(:transcript) { SolrDocument.new(original_file_id_ssi: 'bar') }
-    
+
     it 'returns the url to VTT file contents' do
       expect(presenter.transcript_url(transcript.original_file_id)).to eq "http://test.host/transcriptions/bar.vtt"
     end
   end
-  
+
   describe '#language_code' do
     let(:transcript) { SolrDocument.new(language_tesim: language) }
 

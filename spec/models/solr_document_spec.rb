@@ -231,4 +231,14 @@ RSpec.describe ::SolrDocument, type: :model do
       is_expected.to eq 'gid://internal/hyrax-collectiontype/5'
     end
   end
+
+  describe "#transcript_ids" do
+    let(:attributes) do
+      { 'transcript_ids_ssim' => ['foo'] }
+    end
+
+    its(:transcript_ids) do
+      is_expected.to eq ['foo']
+    end
+  end
 end
