@@ -12,7 +12,7 @@
     </legend>
     <div class="form-group">
       <span class="form-text"><%= sanitize(t("simple_form.hints.file_set.language")) %></span>
-      <%= text_field_tag 'file_set[language][]', curation_concern.language.first, class: 'form-control', required: true %>
+      <%= text_field_tag 'file_set[language][]', curation_concern.language.first, class: 'form-control' %>
     </div>
   </fieldset>
 
