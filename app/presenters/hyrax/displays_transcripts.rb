@@ -5,9 +5,9 @@ module Hyrax
 
     # @return [Array<SolrDocument>] the solr documents represented by
     # the audio/video file set's transcript_ids
-    def transcriptions
+    def transcripts
       return [] if transcript_ids.blank?
-      @transcriptions ||= begin
+      @transcripts ||= begin
                             results = Hyrax::SolrQueryService.new
                                                              .accessible_by(
                                                                ability: (try(:current_ability) || ability),
@@ -15,12 +15,12 @@ module Hyrax
                                                              )
                                                              .with_ids(ids: transcript_ids)
                                                              .solr_documents
-                            sort_transcriptions_by_language(results)
+                            sort_transcripts_by_language(results)
                           end
     end
 
     def transcript_url(file_id, host: request.base_url, file_ext: "vtt")
-      Hyrax::Engine.routes.url_helpers.transcription_url(file_id, host: host, file_ext: file_ext)
+      Hyrax::Engine.routes.url_helpers.transcript_url(file_id, host: host, file_ext: file_ext)
     end
 
     # Convert language field to a 2-letter code, if possible.
@@ -46,7 +46,7 @@ module Hyrax
 
     private
 
-    def sort_transcriptions_by_language(results)
+    def sort_transcripts_by_language(results)
       current_locale = I18n.locale.to_s
 
       # Sort alphabetically by language code

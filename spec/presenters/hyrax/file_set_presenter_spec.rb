@@ -513,10 +513,10 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
   end
 
-  describe '#transcriptions' do
+  describe '#transcripts' do
     context 'without any transcript_ids' do
       it 'returns an empty array' do
-        expect(presenter.transcriptions).to be_empty
+        expect(presenter.transcripts).to be_empty
       end
     end
 
@@ -530,8 +530,8 @@ RSpec.describe Hyrax::FileSetPresenter do
       end
 
       it 'returns an array of solr documents' do
-        expect(presenter.transcriptions).not_to be_empty
-        expect(presenter.transcriptions.first).to be_a SolrDocument
+        expect(presenter.transcripts).not_to be_empty
+        expect(presenter.transcripts.first).to be_a SolrDocument
       end
     end
   end
@@ -542,7 +542,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:transcript) { SolrDocument.new(original_file_id_ssi: 'bar') }
 
     it 'returns the url to VTT file contents' do
-      expect(presenter.transcript_url(transcript.original_file_id)).to eq "http://test.host/transcriptions/bar.vtt"
+      expect(presenter.transcript_url(transcript.original_file_id)).to eq "http://test.host/transcripts/bar.vtt"
     end
   end
 

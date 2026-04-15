@@ -13,7 +13,7 @@ module Hyrax
     private
 
     def transcription_content
-      transcriptions.map do |doc|
+      transcripts.map do |doc|
         IIIFManifest::V3::AnnotationContent.new(
           type: 'Text',
           motivation: 'supplementing',

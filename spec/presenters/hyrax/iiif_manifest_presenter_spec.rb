@@ -435,7 +435,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
           allow(solr_doc).to receive(:transcript_ids).and_return([vtt_file_set.id.to_s])
         end
         
-        it 'returns transcription annotations' do
+        it 'returns transcript annotations' do
           annotations = presenter.annotation_content
 
           expect(annotations).to be_an(Array)
@@ -445,7 +445,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
           expect(annotations.first.format).to eq('text/vtt')
           expect(annotations.first.language).to eq('en')
           expect(annotations.first.label).to eq('English Captions')
-          expect(annotations.first.body_id).to include('transcriptions')
+          expect(annotations.first.body_id).to include('transcripts')
           expect(annotations.first.body_id).to end_with('.vtt')
         end
 

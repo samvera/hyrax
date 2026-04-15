@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Hyrax
-  class TranscriptionsController < ApplicationController
+  class TranscriptsController < ApplicationController
     def show
       file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: params[:id])
       file_object = Hyrax.storage_adapter.find_by(id: file_metadata.file_identifier)

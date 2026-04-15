@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::TranscriptionsController do
+RSpec.describe Hyrax::TranscriptsController do
   routes { Hyrax::Engine.routes }
 
   describe '#show' do

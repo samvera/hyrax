@@ -18,7 +18,7 @@ RSpec.describe 'hyrax/file_sets/media_display/_video.html.erb', type: :view do
     assign(:presenter, parent_presenter)
   end
 
-  context 'with no transcription' do
+  context 'with no transcript' do
     before do
       render 'hyrax/file_sets/media_display/video', file_set: file_set
     end
@@ -38,18 +38,18 @@ RSpec.describe 'hyrax/file_sets/media_display/_video.html.erb', type: :view do
     end
   end
 
-  context 'with transcription(s)' do
+  context 'with transcript(s)' do
     let(:transcript) { SolrDocument.new(title_tesim: ['Title'], original_file_id_ssi: ["foobar"]) }
 
     before do
-      allow(file_set).to receive(:transcriptions).and_return [transcript]
+      allow(file_set).to receive(:transcripts).and_return [transcript]
       allow(file_set).to receive(:language_code).and_return "fr"
     end
 
     it "renders a valid <track> tag" do
       render 'hyrax/file_sets/media_display/video', file_set: file_set
       track = Capybara::Node::Simple.new(rendered).find('track')
-      expect(track[:src]).to eq "http://test.host/transcriptions/foobar.vtt"
+      expect(track[:src]).to eq "http://test.host/transcripts/foobar.vtt"
       expect(track[:srclang]).to eq "fr"
       expect(track[:label]).to eq "Title"
     end
