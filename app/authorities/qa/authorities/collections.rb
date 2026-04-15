@@ -30,11 +30,16 @@ module Qa::Authorities
     def search_response(controller)
       access = controller.params[:access] || 'read'
 
-      search_service(controller).search_results do |builder|
-        builder.with({ q: controller.params[:q] })
-               .with_access(access)
-               .rows(100)
+      response = Hyrax::UncappedSolrQuery.call do |rows|
+        resp, _docs = search_service(controller).search_results do |builder|
+          builder.with({ q: controller.params[:q] })
+                 .with_access(access)
+                 .rows(rows)
+        end
+        resp
       end
+
+      [response, response.documents]
     end
   end
 end

@@ -14,13 +14,14 @@ module Hyrax
 
     # @param [Symbol] access :read or :edit
     def search_results(access = nil)
-      response, _docs = super() do |builder|
-        builder.with_access(access) if access
-        builder.rows(100)
-
-        yield builder if block_given?
-
-        builder
+      response = Hyrax::UncappedSolrQuery.call do |rows|
+        resp, _docs = super() do |builder|
+          builder.with_access(access) if access
+          builder.rows(rows)
+          yield builder if block_given?
+          builder
+        end
+        resp
       end
 
       response.documents

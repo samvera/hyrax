@@ -74,7 +74,10 @@ module Hyrax
         )
 
         query_builder.where(id: limit_to_id.to_s) if limit_to_id
-        scope.blacklight_config.repository.search(query_builder.query)
+
+        Hyrax::UncappedSolrQuery.call do |rows|
+          scope.blacklight_config.repository.search(query_builder.query.merge(rows: rows))
+        end
       end
       private_class_method :query_solr
 
