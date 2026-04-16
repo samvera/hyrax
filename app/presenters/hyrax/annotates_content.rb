@@ -14,14 +14,15 @@ module Hyrax
 
     def transcription_content
       transcripts.map do |doc|
-        IIIFManifest::V3::AnnotationContent.new(
+        options = {
           type: 'Text',
           motivation: 'supplementing',
           body_id: transcript_url(doc.original_file_id, host: hostname, file_ext: file_ext(doc.mime_type)),
           format: doc.mime_type,
-          label: doc.title_or_label,
-          language: language_code(doc.language)
-        )
+          label: doc.title_or_label
+        }
+        options[:language] = language_code(doc.language) if language_code(doc.language)
+        IIIFManifest::V3::AnnotationContent.new(**options)
       end
     end
 

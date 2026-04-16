@@ -443,7 +443,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
           expect(annotations.first.type).to eq('Text')
           expect(annotations.first.motivation).to eq('supplementing')
           expect(annotations.first.format).to eq('text/vtt')
-          expect(annotations.first.language).to eq('none')
+          expect(annotations.first.language).not_to be_present
           expect(annotations.first.label).to eq('English Captions')
           expect(annotations.first.body_id).to include('transcripts')
           expect(annotations.first.body_id).to end_with('.vtt')

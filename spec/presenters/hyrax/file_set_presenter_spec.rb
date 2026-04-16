@@ -553,7 +553,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     context 'when transcript has no language' do
       let(:language) { [] }
 
-      it { is_expected.to eq "none" }
+      it { is_expected.to be_nil }
     end
 
     context 'when transcript has language' do
@@ -580,7 +580,7 @@ RSpec.describe Hyrax::FileSetPresenter do
           expect(subject).to eq('zh')
         end
       end
-      
+
       context 'with an ActiveTriples::Resource' do
         let(:language) { [ActiveTriples::Resource.new('http://id.loc.gov/vocabulary/iso639-3/zho')] }
 
@@ -600,7 +600,7 @@ RSpec.describe Hyrax::FileSetPresenter do
       context 'with no parseable language' do
         let(:language) { ['xyz'] }
 
-        it { is_expected.to eq "none" }
+        it { is_expected.to be_nil }
       end
     end
   end
