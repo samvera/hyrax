@@ -443,58 +443,13 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
           expect(annotations.first.type).to eq('Text')
           expect(annotations.first.motivation).to eq('supplementing')
           expect(annotations.first.format).to eq('text/vtt')
-          expect(annotations.first.language).to eq('en')
+          expect(annotations.first.language).to eq('none')
           expect(annotations.first.label).to eq('English Captions')
           expect(annotations.first.body_id).to include('transcripts')
           expect(annotations.first.body_id).to end_with('.vtt')
         end
 
-        context 'when transcript has language' do
-          context 'with a 3-letter language code' do
-            let(:language) { ['eng'] }
-
-            it 'returns the 2-letter language code' do
-              annotations = presenter.annotation_content
-              expect(annotations.first.language).to eq('en')
-            end
-          end
-
-          context 'with 2-letter language code' do
-            let(:language) { ['en'] }
-
-            it 'returns the 2-letter language code' do
-              annotations = presenter.annotation_content
-              expect(annotations.first.language).to eq('en')
-            end
-          end
-
-          context 'with a URI' do
-            let(:language) { ['http://id.loc.gov/vocabulary/iso639-3/zho'] }
-
-            it 'returns the 2-letter language code' do
-              annotations = presenter.annotation_content
-              expect(annotations.first.language).to eq('zh')
-            end
-          end
-
-          context 'with a language name' do
-            let(:language) { ['German'] }
-
-            it 'returns the 2-letter language code' do
-              annotations = presenter.annotation_content
-              expect(annotations.first.language).to eq('de')
-            end
-          end
-
-          context 'with no parseable language' do
-            let(:language) { ['xyz'] }
-
-            it 'falls back to en' do
-              annotations = presenter.annotation_content
-              expect(annotations.first.language).to eq('en')
-            end
-          end
-
+        context 'when transcript has a language' do
           context 'with a locale' do
             let(:vtt_file_set) do
               FactoryBot.valkyrie_create(:hyrax_file_set,

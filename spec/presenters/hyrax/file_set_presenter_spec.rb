@@ -548,13 +548,20 @@ RSpec.describe Hyrax::FileSetPresenter do
 
   describe '#language_code' do
     let(:transcript) { SolrDocument.new(language_tesim: language) }
+    subject { presenter.language_code(transcript.language) }
+
+    context 'when transcript has no language' do
+      let(:language) { [] }
+
+      it { is_expected.to eq "none" }
+    end
 
     context 'when transcript has language' do
       context 'with a 3-letter language code' do
         let(:language) { ['eng'] }
 
         it 'returns the 2-letter language code' do
-          expect(presenter.language_code(transcript.language)).to eq('en')
+          expect(subject).to eq('en')
         end
       end
 
@@ -562,7 +569,7 @@ RSpec.describe Hyrax::FileSetPresenter do
         let(:language) { ['en'] }
 
         it 'returns the 2-letter language code' do
-          expect(presenter.language_code(transcript.language)).to eq('en')
+          expect(subject).to eq('en')
         end
       end
 
@@ -570,7 +577,15 @@ RSpec.describe Hyrax::FileSetPresenter do
         let(:language) { ['http://id.loc.gov/vocabulary/iso639-3/zho'] }
 
         it 'returns the 2-letter language code' do
-          expect(presenter.language_code(transcript.language)).to eq('zh')
+          expect(subject).to eq('zh')
+        end
+      end
+      
+      context 'with an ActiveTriples::Resource' do
+        let(:language) { [ActiveTriples::Resource.new('http://id.loc.gov/vocabulary/iso639-3/zho')] }
+
+        it 'returns the 2-letter language code' do
+          expect(subject).to eq('zh')
         end
       end
 
@@ -578,16 +593,14 @@ RSpec.describe Hyrax::FileSetPresenter do
         let(:language) { ['German'] }
 
         it 'returns the 2-letter language code' do
-          expect(presenter.language_code(transcript.language)).to eq('de')
+          expect(subject).to eq('de')
         end
       end
 
       context 'with no parseable language' do
         let(:language) { ['xyz'] }
 
-        it 'falls back to en' do
-          expect(presenter.language_code(transcript.language)).to eq("en")
-        end
+        it { is_expected.to eq "none" }
       end
     end
   end

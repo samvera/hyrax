@@ -23,25 +23,26 @@ module Hyrax
       Hyrax::Engine.routes.url_helpers.transcript_url(file_id, host: host, file_ext: file_ext)
     end
 
-    # Convert language field to a 2-letter code, if possible.
-    # The code is used by IIIF for internationalization.
+    # Try our best to convert language field to an ISO 639-1 code, if possible,
+    # for use in the IIIF manifest.
     # @param [Array<String>] - a solr document's language field
-    # @return [String] - the 2-letter code, or "en" if no values or value is unparseable
+    # @return [String] - the 2-letter code, or "none" if no value or value is unparseable
     def language_code(language)
-      value = language.try(:first)
-      return "en" if value.nil?
-      code = if URI.parse(value).scheme
+      return "none" if language.empty?
+      value = language.first
+      code = if value.is_a?(ActiveTriples::Resource) || URI.parse(value).scheme
                # This is probably a Library of Congress languages URI
                # like http://id.loc.gov/vocabulary/iso639-3/eng, which can
                # be configured with the Questioning Authority gem.
-               # Extract the code from the URI.
+               # Try to extract the code from the URI.
+               value = value.id if value.is_a?(ActiveTriples::Resource)
                LanguageList::LanguageInfo.find(value.split("/").last).try(:iso_639_1)
              else
                # Otherwise, assume it is a language code or name and try
                # to convert it to a 2-letter code
                LanguageList::LanguageInfo.find(value).try(:iso_639_1)
              end
-      (code || "en")
+      code || "none"
     end
 
     private
