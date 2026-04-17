@@ -125,6 +125,40 @@ module Hyrax
       end
     end
 
+    # Pages through a caller-supplied Solr search, returning matching
+    # documents as a single Array. The block is yielded once with (0, 0) as
+    # a count probe, then once per page with (rows, start) where rows is
+    # bounded by Hyrax.config.solr_rows_per_request. Results are truncated
+    # to Hyrax.config.solr_max_results; when numFound exceeds the cap, a
+    # warning is logged and only the first solr_max_results docs are
+    # returned. The block must return a response object responding to
+    # +response['numFound']+ and +documents+.
+    #
+    # @return [Array] matching documents, truncated at solr_max_results
+    def self.fetch_all
+      rows_per_request = Hyrax.config.solr_rows_per_request
+      max_results = Hyrax.config.solr_max_results
+      count_response = yield(0, 0)
+      total = count_response.response['numFound'].to_i
+      return [] if total.zero?
+
+      target = [total, max_results].min
+      if total > max_results
+        Hyrax.logger.warn(
+          "Hyrax::SolrService.fetch_all truncated: numFound=#{total} exceeds " \
+          "Hyrax.config.solr_max_results=#{max_results}. Returning the first #{max_results} documents."
+        )
+      end
+
+      documents = []
+      (0...target).step(rows_per_request) do |start|
+        rows = [rows_per_request, target - start].min
+        page = yield(rows, start)
+        documents.concat(page.documents)
+      end
+      documents
+    end
+
     # Wraps rsolr :delete_by_query
     def delete_by_query(query, **args)
       connection.delete_by_query(query, params: args)

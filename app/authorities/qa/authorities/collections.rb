@@ -7,10 +7,7 @@ module Qa::Authorities
     def search(_q, controller)
       # The Hyrax::CollectionSearchBuilder expects a current_user
       return [] unless controller.current_user
-      response, = search_response(controller)
-      docs = response.documents
-
-      docs.map do |doc|
+      search_documents(controller).map do |doc|
         { id: doc.id, label: doc.title, value: doc.id }
       end
     end
@@ -27,19 +24,17 @@ module Qa::Authorities
       )
     end
 
-    def search_response(controller)
+    def search_documents(controller)
       access = controller.params[:access] || 'read'
+      builder = search_service(controller).search_builder
+                                          .with(q: controller.params[:q])
+                                          .with_access(access)
 
-      response = Hyrax::UncappedSolrQuery.call do |rows|
-        resp, _docs = search_service(controller).search_results do |builder|
-          builder.with({ q: controller.params[:q] })
-                 .with_access(access)
-                 .rows(rows)
-        end
-        resp
+      Hyrax::SolrService.fetch_all do |rows, start|
+        controller.blacklight_config.repository.search(
+          builder.query.merge(rows: rows, start: start, fl: 'id,title_tesim,has_model_ssim')
+        )
       end
-
-      [response, response.documents]
     end
   end
 end

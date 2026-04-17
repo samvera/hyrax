@@ -16,7 +16,7 @@ module Hyrax
       def self.available_child_collections(parent:, scope:, limit_to_id: nil)
         return [] unless nestable?(collection: parent)
         return [] unless scope.can?(:deposit, parent)
-        query_solr(collection: parent, access: :read, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_child).documents
+        query_solr(collection: parent, access: :read, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_child)
       end
 
       ##
@@ -34,7 +34,7 @@ module Hyrax
       def self.available_parent_collections(child:, scope:, limit_to_id: nil)
         return [] unless nestable?(collection: child)
         return [] unless scope.can?(:read, child)
-        query_solr(collection: child, access: :deposit, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_parent).documents
+        query_solr(collection: child, access: :deposit, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_parent)
       end
 
       ##
@@ -75,8 +75,10 @@ module Hyrax
 
         query_builder.where(id: limit_to_id.to_s) if limit_to_id
 
-        Hyrax::UncappedSolrQuery.call do |rows|
-          scope.blacklight_config.repository.search(query_builder.query.merge(rows: rows))
+        Hyrax::SolrService.fetch_all do |rows, start|
+          scope.blacklight_config.repository.search(
+            query_builder.query.merge(rows: rows, start: start, fl: 'id,title_tesim,has_model_ssim')
+          )
         end
       end
       private_class_method :query_solr

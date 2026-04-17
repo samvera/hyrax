@@ -14,17 +14,15 @@ module Hyrax
 
     # @param [Symbol] access :read or :edit
     def search_results(access = nil)
-      response = Hyrax::UncappedSolrQuery.call do |rows|
-        resp, _docs = super() do |builder|
-          builder.with_access(access) if access
-          builder.rows(rows)
-          yield builder if block_given?
-          builder
-        end
-        resp
-      end
+      builder = search_builder.with(user_params)
+      builder.with_access(access) if access
+      yield builder if block_given?
 
-      response.documents
+      Hyrax::SolrService.fetch_all do |rows, start|
+        blacklight_config.repository.search(
+          builder.query.merge(rows: rows, start: start, fl: 'id,title_tesim,has_model_ssim')
+        )
+      end
     end
   end
 end
