@@ -388,6 +388,16 @@ module Hyrax
     def max_days_between_fixity_checks
       @max_days_between_fixity_checks ||= 7
     end
+
+    attr_writer :solr_rows_per_request
+    def solr_rows_per_request
+      @solr_rows_per_request ||= 1_000
+    end
+
+    attr_writer :solr_max_results
+    def solr_max_results
+      @solr_max_results ||= 10_000
+    end
     # @!endgroup
     # @!group Groups
 

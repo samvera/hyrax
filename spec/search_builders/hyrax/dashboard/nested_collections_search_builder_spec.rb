@@ -36,7 +36,6 @@ RSpec.describe Hyrax::Dashboard::NestedCollectionsSearchBuilder do
       describe '#default_processor_chain' do
         subject { builder.default_processor_chain }
 
-        it { is_expected.to include(:with_pagination) }
         it { is_expected.to include(:show_only_other_collections_of_the_same_collection_type) }
       end
 

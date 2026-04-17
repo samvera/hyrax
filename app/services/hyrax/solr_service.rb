@@ -6,7 +6,7 @@ module Hyrax
   #
   # This class replaces `ActiveFedora::SolrService`, which is deprecated for
   # internal use.
-  class SolrService
+  class SolrService # rubocop:disable Metrics/ClassLength
     COMMIT_PARAMS = { softCommit: true }.freeze
 
     ##
@@ -124,6 +124,43 @@ module Hyrax
         args[:start] += args[:rows]
       end
     end
+
+    # Pages through a caller-supplied Solr search, returning matching
+    # documents as a single Array. The block is yielded once with (0, 0) as
+    # a count probe, then once per page with (rows, start) where rows is
+    # bounded by Hyrax.config.solr_rows_per_request. Results are truncated
+    # to Hyrax.config.solr_max_results; when numFound exceeds the cap, a
+    # warning is logged and only the first solr_max_results docs are
+    # returned. The block must return a response object responding to
+    # +response['numFound']+ and +documents+.
+    #
+    # @return [Array] matching documents, truncated at solr_max_results
+    def self.fetch_all
+      rows_per_request = Hyrax.config.solr_rows_per_request
+      target = fetch_all_target(yield(0, 0))
+      return [] if target.zero?
+
+      documents = []
+      (0...target).step(rows_per_request) do |start|
+        rows = [rows_per_request, target - start].min
+        documents.concat(yield(rows, start).documents)
+      end
+      documents
+    end
+
+    # @api private
+    # Returns the number of documents to fetch, capped at
+    # Hyrax.config.solr_max_results. Logs a warning when truncating.
+    def self.fetch_all_target(count_response)
+      total = count_response.response['numFound'].to_i
+      max = Hyrax.config.solr_max_results
+      return total if total <= max
+
+      Hyrax.logger.warn("Hyrax::SolrService.fetch_all truncated: numFound=#{total} exceeds " \
+                        "Hyrax.config.solr_max_results=#{max}. Returning the first #{max} documents.")
+      max
+    end
+    private_class_method :fetch_all_target
 
     # Wraps rsolr :delete_by_query
     def delete_by_query(query, **args)
