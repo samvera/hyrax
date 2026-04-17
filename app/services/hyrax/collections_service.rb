@@ -19,9 +19,7 @@ module Hyrax
       yield builder if block_given?
 
       Hyrax::SolrService.fetch_all do |rows, start|
-        blacklight_config.repository.search(
-          builder.query.merge(rows: rows, start: start, fl: 'id,title_tesim,has_model_ssim')
-        )
+        blacklight_config.repository.search(builder.query.merge(rows: rows, start: start))
       end
     end
   end
