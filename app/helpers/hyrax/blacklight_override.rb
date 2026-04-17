@@ -9,8 +9,8 @@ module Hyrax
     # rubocop:disable Metrics/MethodLength
     def index_field_label(document, field)
       field_config = index_fields(document)[field]
-      return field_config.label.call if field_config&.custom_label && field_config.label.respond_to?(:call)
-      return field_config.label if field_config&.custom_label
+      return resolve_label(field_config) if field_config&.custom_label || field_config&.label&.respond_to?(:call)
+
       translate = I18n.t(field_config.label, default: field_config.label) if field_config&.label&.match(/\./)
       if translate && translate != field_config.label
         field_label(translate, field_config.label, field.to_s.humanize)
@@ -25,5 +25,11 @@ module Hyrax
       end
     end
     # rubocop:enable Metrics/MethodLength
+
+    private
+
+    def resolve_label(field_config)
+      field_config.label.respond_to?(:call) ? field_config.label.call : field_config.label
+    end
   end
 end
