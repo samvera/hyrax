@@ -8,7 +8,7 @@ RSpec.describe Hyrax::FileSetFormHelper do
       it { is_expected.to be_falsey }
     end
 
-    context 'with an ActiveFedora file set' do
+    context 'with an ActiveFedora file set', :active_fedora do
       let(:file_set) { create(:work_with_one_file).file_sets.first }
 
       before do
@@ -34,8 +34,8 @@ RSpec.describe Hyrax::FileSetFormHelper do
       end
     end
 
-    context 'with a Valkyrie file set' do
-      let(:file_set) { valkyrie_create(:hyrax_file_set, :in_work) }
+    context 'with a Valkyrie file set', valkyrie_adapter: :test_adapter do
+      let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, :in_work) }
       subject { helper.render_transcript_ids_field?(file_set) }
 
       context 'with a video file' do
@@ -85,9 +85,9 @@ RSpec.describe Hyrax::FileSetFormHelper do
 
     context 'with a Valkyrie file set' do
       let(:work) { build(:hyrax_work) }
-      let(:file_set) { valkyrie_create(:hyrax_file_set) }
+      let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
       let(:vtt_file_set) do
-        valkyrie_create(:hyrax_file_set) do |file_set|
+        FactoryBot.valkyrie_create(:hyrax_file_set) do |file_set|
           Hyrax::ValkyrieUpload.file(filename: "sample.vtt",
                                      file_set: file_set,
                                      io: File.open(fixture_path + '/sample.vtt'))
