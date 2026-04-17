@@ -14,6 +14,26 @@ module Hyrax
 
     # @param [Symbol] access :read or :edit
     def search_results(access = nil)
+      response, _docs = super() do |builder|
+        builder.with_access(access) if access
+        builder.rows(100)
+
+        yield builder if block_given?
+
+        builder
+      end
+
+      response.documents
+    end
+
+    # Like {#search_results}, but pages through every matching collection
+    # (up to Hyrax.config.solr_max_results). Use this only for surfaces that
+    # need the full set, e.g. the "Add to Collection" dropdown where a user
+    # must see every collection they can deposit into.
+    #
+    # @param [Symbol] access :read or :edit
+    # @return [Array<SolrDocument>]
+    def all_search_results(access = nil)
       builder = search_builder.with(user_params)
       builder.with_access(access) if access
       yield builder if block_given?
