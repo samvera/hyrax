@@ -6,7 +6,7 @@ module Hyrax
   #
   # This class replaces `ActiveFedora::SolrService`, which is deprecated for
   # internal use.
-  class SolrService
+  class SolrService # rubocop:disable Metrics/ClassLength
     COMMIT_PARAMS = { softCommit: true }.freeze
 
     ##
@@ -137,27 +137,30 @@ module Hyrax
     # @return [Array] matching documents, truncated at solr_max_results
     def self.fetch_all
       rows_per_request = Hyrax.config.solr_rows_per_request
-      max_results = Hyrax.config.solr_max_results
-      count_response = yield(0, 0)
-      total = count_response.response['numFound'].to_i
-      return [] if total.zero?
-
-      target = [total, max_results].min
-      if total > max_results
-        Hyrax.logger.warn(
-          "Hyrax::SolrService.fetch_all truncated: numFound=#{total} exceeds " \
-          "Hyrax.config.solr_max_results=#{max_results}. Returning the first #{max_results} documents."
-        )
-      end
+      target = fetch_all_target(yield(0, 0))
+      return [] if target.zero?
 
       documents = []
       (0...target).step(rows_per_request) do |start|
         rows = [rows_per_request, target - start].min
-        page = yield(rows, start)
-        documents.concat(page.documents)
+        documents.concat(yield(rows, start).documents)
       end
       documents
     end
+
+    # @api private
+    # Returns the number of documents to fetch, capped at
+    # Hyrax.config.solr_max_results. Logs a warning when truncating.
+    def self.fetch_all_target(count_response)
+      total = count_response.response['numFound'].to_i
+      max = Hyrax.config.solr_max_results
+      return total if total <= max
+
+      Hyrax.logger.warn("Hyrax::SolrService.fetch_all truncated: numFound=#{total} exceeds " \
+                        "Hyrax.config.solr_max_results=#{max}. Returning the first #{max} documents.")
+      max
+    end
+    private_class_method :fetch_all_target
 
     # Wraps rsolr :delete_by_query
     def delete_by_query(query, **args)
