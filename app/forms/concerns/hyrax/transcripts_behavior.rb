@@ -8,7 +8,7 @@ module Hyrax
     end
 
     class_methods do
-      def valid_transcripts(parent:, current_ability:)
+      def available_transcripts(parent:, current_ability:)
         Hyrax::SolrQueryService.new
                                .with_model(model: Hyrax.config.file_set_class.to_s)
                                .with_ids(ids: parent.member_ids.map(&:to_s))

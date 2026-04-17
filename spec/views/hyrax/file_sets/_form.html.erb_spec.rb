@@ -13,7 +13,7 @@ RSpec.describe 'hyrax/file_sets/_form.html.erb', type: :view do
 
     # Transcript field
     allow(view).to receive(:render_transcript_ids_field?).and_return true
-    allow(Hyrax::Forms::FileSetForm).to receive(:valid_transcripts).and_return(
+    allow(Hyrax::Forms::FileSetForm).to receive(:available_transcripts).and_return(
       [SolrDocument.new(id: "baz", title_tesim: "foo")]
     )
 
