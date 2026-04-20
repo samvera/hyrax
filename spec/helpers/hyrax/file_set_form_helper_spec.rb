@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::FileSetFormHelper do
-  
   context 'with an ActiveFedora file set', :active_fedora do
     describe '#render_transcript_ids_field?' do
       subject { helper.render_transcript_ids_field?(file_set) }
-      
+
       context 'without a parent' do
         let(:file_set) { FactoryBot.create(:file_set) }
         it { is_expected.to be_falsey }
@@ -36,7 +35,7 @@ RSpec.describe Hyrax::FileSetFormHelper do
         end
       end
     end
-    
+
     describe '#form_transcript_ids_select_for' do
       let(:user) { create(:admin) }
       let(:ability) { Ability.new(user) }
@@ -59,11 +58,11 @@ RSpec.describe Hyrax::FileSetFormHelper do
       it { is_expected.to eq({ "sample.vtt" => vtt.id }) }
     end
   end
-  
+
   context 'with a Valkyrie file set' do
     describe '#render_transcript_ids_field?' do
       subject { helper.render_transcript_ids_field?(file_set) }
-      
+
       context 'without a parent' do
         let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
         it { is_expected.to be_falsey }
@@ -94,7 +93,7 @@ RSpec.describe Hyrax::FileSetFormHelper do
         end
       end
     end
-    
+
     describe '#form_transcript_ids_select_for' do
       let(:user) { create(:admin) }
       let(:ability) { Ability.new(user) }

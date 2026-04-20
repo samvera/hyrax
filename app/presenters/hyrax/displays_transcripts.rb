@@ -44,12 +44,14 @@ module Hyrax
     end
 
     private
-    
+
     def file_id(document)
       # Try our best to resolve the file id for:
       #   1. the Hyrax::FileMetadata id for a Valkyrie file set
       #   2. the Hyrax::FileMetadata id for an ActiveFedora file set
-      document.fetch("file_ids_ssim",[]).first || document.original_file_id
+
+      # Using extracted text is blocked by https://github.com/samvera/hyrax/issues/7410
+      document.fetch("file_ids_ssim", []).first || document.original_file_id
     end
 
     def sort_transcripts_by_language(results)

@@ -539,7 +539,7 @@ RSpec.describe Hyrax::FileSetPresenter do
   describe '#transcript_url' do
     subject(:presenter) { described_class.new(solr_document, ability, request) }
     let(:request) { double('request', base_url: 'http://test.host') }
-    
+
     context 'with a Valkyrie file set document' do
       let(:transcript) { SolrDocument.new(file_ids_ssim: ['baz']) }
 
@@ -547,10 +547,10 @@ RSpec.describe Hyrax::FileSetPresenter do
         expect(presenter.transcript_url(transcript)).to eq "http://test.host/transcripts/baz.vtt"
       end
     end
-    
+
     context 'with an ActiveFedora file set document' do
       let(:transcript) { SolrDocument.new(original_file_id_ssi: 'bar') }
-      
+
       it 'returns the url to VTT file contents' do
         expect(presenter.transcript_url(transcript)).to eq "http://test.host/transcripts/bar.vtt"
       end
