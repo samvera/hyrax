@@ -1,75 +1,51 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::FileSetFormHelper do
-  describe '#render_transcript_ids_field?' do
-    let(:file_set) { create(:file_set) }
-    subject { helper.render_transcript_ids_field?(file_set) }
+  
+  context 'with an ActiveFedora file set', :active_fedora do
+    describe '#render_transcript_ids_field?' do
+      subject { helper.render_transcript_ids_field?(file_set) }
+      
+      context 'without a parent' do
+        let(:file_set) { FactoryBot.create(:file_set) }
+        it { is_expected.to be_falsey }
+      end
 
-    context 'without a parent' do
-      it { is_expected.to be_falsey }
+      context 'with a parent' do
+        let(:file_set) { create(:work_with_one_file).file_sets.first }
+
+        before do
+          allow(file_set).to receive(:mime_type).and_return(mime_type)
+        end
+
+        context 'with a video file' do
+          let(:mime_type) { 'video/mp4' }
+
+          it { is_expected.to be_truthy }
+        end
+
+        context 'with an audio file' do
+          let(:mime_type) { 'audio/mpeg' }
+
+          it { is_expected.to be_truthy }
+        end
+
+        context 'with an image file' do
+          let(:mime_type) { 'image/jpeg' }
+
+          it { is_expected.to be_falsey }
+        end
+      end
     end
-
-    context 'with an ActiveFedora file set', :active_fedora do
-      let(:file_set) { create(:work_with_one_file).file_sets.first }
+    
+    describe '#form_transcript_ids_select_for' do
+      let(:user) { create(:admin) }
+      let(:ability) { Ability.new(user) }
+      subject { helper.form_transcript_ids_select_for(file_set) }
 
       before do
-        allow(file_set).to receive(:mime_type).and_return(mime_type)
+        allow(helper).to receive(:current_ability).and_return(ability)
       end
 
-      context 'with a video file' do
-        let(:mime_type) { 'video/mp4' }
-
-        it { is_expected.to be_truthy }
-      end
-
-      context 'with an audio file' do
-        let(:mime_type) { 'audio/mpeg' }
-
-        it { is_expected.to be_truthy }
-      end
-
-      context 'with an image file' do
-        let(:mime_type) { 'image/jpeg' }
-
-        it { is_expected.to be_falsey }
-      end
-    end
-
-    context 'with a Valkyrie file set', valkyrie_adapter: :test_adapter do
-      let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, :in_work) }
-      subject { helper.render_transcript_ids_field?(file_set) }
-
-      context 'with a video file' do
-        before do
-          allow_any_instance_of(Hyrax::FileSetTypeService).to receive(:video?).and_return true
-        end
-
-        it { is_expected.to be_truthy }
-      end
-
-      context 'with an audio file' do
-        before do
-          allow_any_instance_of(Hyrax::FileSetTypeService).to receive(:audio?).and_return true
-        end
-
-        it { is_expected.to be_truthy }
-      end
-
-      context 'with an image file' do
-        it { is_expected.to be_falsey }
-      end
-    end
-  end
-
-  describe '#form_transcript_ids_select_for' do
-    let(:user) { create(:admin) }
-    let(:ability) { Ability.new(user) }
-    subject { helper.form_transcript_ids_select_for(file_set) }
-
-    before do
-      allow(helper).to receive(:current_ability).and_return(ability)
-    end
-
-    context 'with an ActiveFedora file set' do
       let(:file_set) { create(:file_set) }
       let(:vtt) { create(:file_set, title: ["sample.vtt"], content: File.open(fixture_path + '/sample.vtt')) }
 
@@ -82,9 +58,53 @@ RSpec.describe Hyrax::FileSetFormHelper do
 
       it { is_expected.to eq({ "sample.vtt" => vtt.id }) }
     end
+  end
+  
+  context 'with a Valkyrie file set' do
+    describe '#render_transcript_ids_field?' do
+      subject { helper.render_transcript_ids_field?(file_set) }
+      
+      context 'without a parent' do
+        let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+        it { is_expected.to be_falsey }
+      end
 
-    context 'with a Valkyrie file set' do
-      let(:work) { build(:hyrax_work) }
+      context 'with a parent' do
+        let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, :in_work) }
+        subject { helper.render_transcript_ids_field?(file_set) }
+
+        context 'with a video file' do
+          before do
+            allow_any_instance_of(Hyrax::FileSetTypeService).to receive(:video?).and_return true
+          end
+
+          it { is_expected.to be_truthy }
+        end
+
+        context 'with an audio file' do
+          before do
+            allow_any_instance_of(Hyrax::FileSetTypeService).to receive(:audio?).and_return true
+          end
+
+          it { is_expected.to be_truthy }
+        end
+
+        context 'with an image file' do
+          it { is_expected.to be_falsey }
+        end
+      end
+    end
+    
+    describe '#form_transcript_ids_select_for' do
+      let(:user) { create(:admin) }
+      let(:ability) { Ability.new(user) }
+      subject { helper.form_transcript_ids_select_for(file_set) }
+
+      before do
+        allow(helper).to receive(:current_ability).and_return(ability)
+      end
+
+      let!(:work) { FactoryBot.valkyrie_create(:hyrax_work, members: [file_set, vtt_file_set]) }
       let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
       let(:vtt_file_set) do
         FactoryBot.valkyrie_create(:hyrax_file_set) do |file_set|
@@ -94,12 +114,7 @@ RSpec.describe Hyrax::FileSetFormHelper do
         end
       end
 
-      before do
-        work.member_ids += [file_set.id, vtt_file_set.id]
-        Hyrax.persister.save(resource: work)
-      end
-
-      it { is_expected.to eq({ "sample.vtt" => vtt_file_set.id }) }
+      it { is_expected.to eq({ "sample.vtt" => vtt_file_set.id.to_s }) }
     end
   end
 end
