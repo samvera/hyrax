@@ -12,7 +12,7 @@ module Hyrax
         member_ids = Hyrax.custom_queries.find_child_file_set_ids(resource: parent)
         Hyrax::SolrQueryService.new
                                .with_model(model: Hyrax.config.file_set_class.to_s)
-                               .with_ids(ids: member_ids.map(&:to_s))
+                               .with_ids(ids: member_ids.map(&:to_s).to_a)
                                .accessible_by(ability: current_ability, action: :edit)
                                .solr_documents(
                                  fq: mime_type_filter_query.to_s,
