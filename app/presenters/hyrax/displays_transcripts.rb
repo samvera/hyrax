@@ -19,8 +19,8 @@ module Hyrax
                           end
     end
 
-    def transcript_url(file_id, host: request.base_url, file_ext: "vtt")
-      Hyrax::Engine.routes.url_helpers.transcript_url(file_id, host: host, file_ext: file_ext)
+    def transcript_url(document, host: request.base_url, file_ext: "vtt")
+      Hyrax::Engine.routes.url_helpers.transcript_url(file_id(document), host: host, file_ext: file_ext)
     end
 
     # Try our best to convert language field to an ISO 639-1 code for use in the IIIF manifest.
@@ -44,6 +44,13 @@ module Hyrax
     end
 
     private
+    
+    def file_id(document)
+      # Try our best to resolve the file id for:
+      #   1. the Hyrax::FileMetadata id for a Valkyrie file set
+      #   2. the Hyrax::FileMetadata id for an ActiveFedora file set
+      document.fetch("file_ids_ssim",[]).first || document.original_file_id
+    end
 
     def sort_transcripts_by_language(results)
       current_locale = I18n.locale.to_s

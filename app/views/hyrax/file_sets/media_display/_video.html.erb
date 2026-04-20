@@ -6,7 +6,7 @@
         <source src="<%= hyrax.download_path(file_set, file: 'mp4', mime_type: 'video/mp4') %>" type="video/mp4" />
         <%= t('hyrax.file_set.show.downloadable_content.video_tag_not_supported') %>
         <% file_set.transcripts.each do |transcript| %>
-          <track kind="captions" src="<%= file_set.transcript_url(transcript.original_file_id) %>" 
+          <track kind="captions" src="<%= file_set.transcript_url(transcript, host: request.base_url) %>" 
                  srclang="<%= file_set.language_code(transcript.language) %>" label="<%= transcript.title_or_label %>" />
         <% end %>
       </video>

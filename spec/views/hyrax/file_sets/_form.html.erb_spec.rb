@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe 'hyrax/file_sets/_form.html.erb', type: :view do
+RSpec.describe 'hyrax/file_sets/_form.html.erb', :active_fedora, type: :view do
   let(:ability) { double }
   let(:file_set) { FileSet.new }
   let(:parent) { double('Work', human_readable_type: 'Work') }

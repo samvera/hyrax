@@ -17,7 +17,7 @@ module Hyrax
         options = {
           type: 'Text',
           motivation: 'supplementing',
-          body_id: transcript_url(doc.original_file_id, host: hostname, file_ext: file_ext(doc.mime_type)),
+          body_id: transcript_url(doc, host: hostname, file_ext: file_ext(doc.mime_type)),
           format: doc.mime_type,
           label: doc.title_or_label
         }

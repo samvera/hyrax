@@ -24,7 +24,7 @@ module Hyrax
                end
       options = Forms::FileSetForm.available_transcripts(parent: parent, current_ability: current_ability)
       options.each_with_object({}) do |doc, hash|
-        hash[doc.title_or_label] = doc.id
+        hash[doc.title_or_label] = doc.id.to_s
       end
     end
   end
