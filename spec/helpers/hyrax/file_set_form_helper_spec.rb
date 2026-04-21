@@ -2,17 +2,20 @@
 RSpec.describe Hyrax::FileSetFormHelper do
   context 'with an ActiveFedora file set', :active_fedora do
     describe '#render_transcript_ids_field?' do
+      let(:file_set) { FactoryBot.build(:file_set) }
       subject { helper.render_transcript_ids_field?(file_set) }
 
+      before do
+        allow(file_set).to receive(:persisted?).and_return true
+      end
+
       context 'without a parent' do
-        let(:file_set) { FactoryBot.create(:file_set) }
         it { is_expected.to be_falsey }
       end
 
       context 'with a parent' do
-        let(:file_set) { create(:work_with_one_file).file_sets.first }
-
         before do
+          assign(:parent, double)
           allow(file_set).to receive(:mime_type).and_return(mime_type)
         end
 
@@ -36,23 +39,21 @@ RSpec.describe Hyrax::FileSetFormHelper do
       end
     end
 
-    describe '#form_transcript_ids_select_for' do
+    describe '#transcript_ids_select_options' do
       let(:user) { create(:admin) }
       let(:ability) { Ability.new(user) }
-      subject { helper.form_transcript_ids_select_for(file_set) }
-
-      before do
-        allow(helper).to receive(:current_ability).and_return(ability)
-      end
-
-      let(:file_set) { create(:file_set) }
+      let(:file_set) { FactoryBot.create(:file_set) }
+      let(:work) { FactoryBot.build(:generic_work) }
       let(:vtt) { create(:file_set, title: ["sample.vtt"], content: File.open(fixture_path + '/sample.vtt')) }
 
+      subject { helper.transcript_ids_select_options }
+
       before do
-        work = create(:generic_work)
         work.ordered_members << file_set
         work.ordered_members << vtt
         work.save!
+        assign(:parent, work)
+        allow(helper).to receive(:current_ability).and_return(ability)
       end
 
       it { is_expected.to eq({ "sample.vtt" => vtt.id }) }
@@ -63,14 +64,23 @@ RSpec.describe Hyrax::FileSetFormHelper do
     describe '#render_transcript_ids_field?' do
       subject { helper.render_transcript_ids_field?(file_set) }
 
+      before do
+        allow(file_set).to receive(:persisted?).and_return true
+      end
+
       context 'without a parent' do
         let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
         it { is_expected.to be_falsey }
       end
 
       context 'with a parent' do
-        let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, :in_work) }
+        let(:file_set) { FactoryBot.build(:hyrax_file_set) }
+
         subject { helper.render_transcript_ids_field?(file_set) }
+
+        before do
+          assign(:parent, double)
+        end
 
         context 'with a video file' do
           before do
@@ -94,16 +104,10 @@ RSpec.describe Hyrax::FileSetFormHelper do
       end
     end
 
-    describe '#form_transcript_ids_select_for' do
+    describe '#transcript_ids_select_options' do
       let(:user) { create(:admin) }
       let(:ability) { Ability.new(user) }
-      subject { helper.form_transcript_ids_select_for(file_set) }
-
-      before do
-        allow(helper).to receive(:current_ability).and_return(ability)
-      end
-
-      let!(:work) { FactoryBot.valkyrie_create(:hyrax_work, members: [file_set, vtt_file_set]) }
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, members: [file_set, vtt_file_set]) }
       let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
       let(:vtt_file_set) do
         FactoryBot.valkyrie_create(:hyrax_file_set) do |file_set|
@@ -111,6 +115,13 @@ RSpec.describe Hyrax::FileSetFormHelper do
                                      file_set: file_set,
                                      io: File.open(fixture_path + '/sample.vtt'))
         end
+      end
+
+      subject { helper.transcript_ids_select_options }
+
+      before do
+        allow(helper).to receive(:current_ability).and_return(ability)
+        assign(:parent, work)
       end
 
       it { is_expected.to eq({ "sample.vtt" => vtt_file_set.id.to_s }) }

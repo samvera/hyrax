@@ -8,7 +8,7 @@
         <div class="form-group">
           <span class="form-text"><%= sanitize(t("simple_form.hints.file_set.transcript_ids")) %></span>
           <%= f.select :transcript_ids,
-                       form_transcript_ids_select_for(curation_concern),
+                       transcript_ids_select_options,
                        { include_blank: true },
                        { class: 'form-control', multiple: true } %>
         </div>
