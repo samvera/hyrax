@@ -109,12 +109,17 @@ RSpec.describe Hyrax::FileSetFormHelper do
       let(:ability) { Ability.new(user) }
       let(:work) { FactoryBot.valkyrie_create(:hyrax_work, members: [file_set, vtt_file_set]) }
       let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+
       let(:vtt_file_set) do
-        FactoryBot.valkyrie_create(:hyrax_file_set) do |file_set|
-          Hyrax::ValkyrieUpload.file(filename: "sample.vtt",
-                                     file_set: file_set,
-                                     io: File.open(fixture_path + '/sample.vtt'))
-        end
+        FactoryBot.valkyrie_create(:hyrax_file_set,
+                                   title: ['English Captions'])
+      end
+
+      let!(:vtt_file_metadata) do
+        FactoryBot.valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                        file_set: vtt_file_set,
+                        original_filename: 'sample.vtt',
+                        mime_type: 'text/vtt')
       end
 
       subject { helper.transcript_ids_select_options }
@@ -124,7 +129,7 @@ RSpec.describe Hyrax::FileSetFormHelper do
         assign(:parent, work)
       end
 
-      it { is_expected.to eq({ "sample.vtt" => vtt_file_set.id.to_s }) }
+      it { is_expected.to eq({ "English Captions" => vtt_file_set.id.to_s }) }
     end
   end
 end
