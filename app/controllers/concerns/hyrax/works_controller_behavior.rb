@@ -181,7 +181,7 @@ module Hyrax
     end
 
     def user_collections
-      collections_service.search_results(:deposit)
+      collections_service.all_search_results(:deposit)
     end
 
     def collections_service
