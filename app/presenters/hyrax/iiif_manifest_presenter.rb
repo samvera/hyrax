@@ -130,6 +130,10 @@ module Hyrax
     end
 
     ##
+    # Provides a link to the work page as the homepage for the object
+    # represented by the IIIF manifest (see
+    # https://iiif.io/api/cookbook/recipe/0047-homepage/).
+    # This can be helpful if the IIIF manifest is reused on an external site.
     # @return [Array<Hash{String => String}>]
     def homepage
       [{

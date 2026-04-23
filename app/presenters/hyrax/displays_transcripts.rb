@@ -16,7 +16,7 @@ module Hyrax
                                                              .with_ids(ids: transcript_ids)
                                                              .solr_documents
                             sort_transcripts_by_language(results)
-                          end
+                        end
     end
 
     def transcript_url(document, host: request.base_url, file_ext: "vtt")
@@ -24,7 +24,9 @@ module Hyrax
     end
 
     # Try our best to convert language field to an ISO 639-1 code for use in the IIIF manifest.
-    # @param [Array<String>] - a solr document's language field
+    # @param [Array<String>] - a solr document's language field. Parseable values include an ISO 639-1 code,
+    #                          an ISO 639-3 code, or the English name for a language
+    #                          Examples: https://github.com/scsmith/language_list#examples
     # @return [String or NilClass] - the 2-letter code, or nil if no value or value is unparseable
     def language_code(language)
       return if language.empty?
