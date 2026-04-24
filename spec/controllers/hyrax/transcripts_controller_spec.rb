@@ -4,47 +4,63 @@ RSpec.describe Hyrax::TranscriptsController do
   routes { Hyrax::Engine.routes }
 
   describe '#show' do
-    let(:vtt_path) { fixture_path + '/sample.vtt' }
-    let(:vtt_file) { File.open(vtt_path) }
-    let(:vtt_content) { IO.binread(vtt_path) }
-    let(:uploaded_file) { FactoryBot.create(:uploaded_file, file: vtt_file) }
+    let(:transcript) do
+      FactoryBot.valkyrie_create(:hyrax_file_set, title: ['English Captions'])
+    end
+    let(:user) { create(:user) }
+    before { sign_in user }
 
-    context 'with a vtt file' do
-      let(:vtt_file_metadata) do
-        FactoryBot.valkyrie_create(:hyrax_file_metadata, :with_file, :original_file,
-                                   original_filename: 'sample.vtt',
-                                   mime_type: 'text/vtt',
-                                   file: uploaded_file)
-      end
-
-      it 'sends the vtt file with CORS headers' do
-        get :show, params: { id: vtt_file_metadata.id, file_ext: "vtt" }
-        expect(response).to be_successful
-        expect(response.body).to eq vtt_content
-        expect(response.headers['Content-Type']).to eq 'text/vtt; charset=utf-8'
-        expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
-        expect(response.headers['Content-Disposition']).to include 'inline'
+    context "when user doesn't have access" do
+      it "returns :unauthorized status with image content" do
+        get :show, params: { id: transcript.id, file_ext: "vtt" }
+        expect(response).to have_http_status(:unauthorized)
+        expect(response.content_type).to eq 'image/png'
       end
     end
 
-    context 'with a different file type' do
-      let(:text_file) { File.open(fixture_path + '/small_file.txt') }
-      let(:uploaded_file) { FactoryBot.create(:uploaded_file, file: text_file) }
-      let(:srt_content) { IO.binread(fixture_path + '/small_file.txt') }
-      let(:srt_file_metadata) do
-        FactoryBot.valkyrie_create(:hyrax_file_metadata, :with_file, :original_file,
-                                   original_filename: 'sample.srt',
-                                   mime_type: 'text/plain',
-                                   file: uploaded_file)
+    context "when user has access" do
+      let(:user) { create(:admin) }
+      let(:file_contents) { IO.binread(transcript_file) }
+      let(:uploaded_file) { FactoryBot.create(:uploaded_file, file: transcript_file) }
+
+      context 'with a vtt file' do
+        let(:transcript_file) { File.open(fixture_path + '/sample.vtt') }
+        let!(:vtt_file_metadata) do
+          FactoryBot.valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                                     file_set: transcript,
+                                     original_filename: 'sample.vtt',
+                                     mime_type: 'text/vtt',
+                                     file: uploaded_file)
+        end
+
+        it 'sends the vtt file with the correct headers' do
+          get :show, params: { id: transcript.id, file_ext: "vtt" }
+          expect(response).to be_successful
+          expect(response.body).to eq file_contents
+          expect(response.headers['Content-Type']).to eq 'text/vtt; charset=utf-8'
+          expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
+          expect(response.headers['Content-Disposition']).to include 'inline'
+        end
       end
 
-      it 'sends the file with the correct headers and extension' do
-        get :show, params: { id: srt_file_metadata.id, file_ext: "srt" }
-        expect(response).to be_successful
-        expect(response.body).to eq srt_content
-        expect(response.headers['Content-Type']).to eq 'text/plain; charset=utf-8'
-        expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
-        expect(response.headers['Content-Disposition']).to include 'inline'
+      context 'with a different file type' do
+        let(:transcript_file) { File.open(fixture_path + '/small_file.txt') }
+        let!(:srt_file_metadata) do
+          FactoryBot.valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                                     original_filename: 'sample.srt',
+                                     mime_type: 'text/plain',
+                                     file_set: transcript,
+                                     file: uploaded_file)
+        end
+
+        it 'sends the file with the correct headers' do
+          get :show, params: { id: transcript.id, file_ext: "srt" }
+          expect(response).to be_successful
+          expect(response.body).to eq file_contents
+          expect(response.headers['Content-Type']).to eq 'text/plain; charset=utf-8'
+          expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
+          expect(response.headers['Content-Disposition']).to include 'inline'
+        end
       end
     end
   end

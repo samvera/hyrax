@@ -8,19 +8,19 @@ module Hyrax
     def transcripts
       return [] if transcript_ids.blank?
       @transcripts ||= begin
-                            results = Hyrax::SolrQueryService.new
-                                                             .accessible_by(
-                                                               ability: (try(:current_ability) || ability),
-                                                               action: :read
-                                                             )
-                                                             .with_ids(ids: transcript_ids)
-                                                             .solr_documents
-                            sort_transcripts_by_language(results)
+                          results = Hyrax::SolrQueryService.new
+                                                           .accessible_by(
+                                                             ability: (try(:current_ability) || ability),
+                                                             action: :read
+                                                           )
+                                                           .with_ids(ids: transcript_ids)
+                                                           .solr_documents
+                          sort_transcripts_by_language(results)
                         end
     end
 
     def transcript_url(document, host: request.base_url, file_ext: "vtt")
-      Hyrax::Engine.routes.url_helpers.transcript_url(file_id(document), host: host, file_ext: file_ext)
+      Hyrax::Engine.routes.url_helpers.transcript_url(document.id, host: host, file_ext: file_ext)
     end
 
     # Try our best to convert language field to an ISO 639-1 code for use in the IIIF manifest.
@@ -46,15 +46,6 @@ module Hyrax
     end
 
     private
-
-    def file_id(document)
-      # Try our best to resolve the file id for:
-      #   1. the Hyrax::FileMetadata id for a Valkyrie file set
-      #   2. the Hyrax::FileMetadata id for an ActiveFedora file set
-
-      # Using extracted text is blocked by https://github.com/samvera/hyrax/issues/7410
-      document.fetch("file_ids_ssim", []).first || document.original_file_id
-    end
 
     def sort_transcripts_by_language(results)
       current_locale = I18n.locale.to_s

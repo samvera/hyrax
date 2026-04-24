@@ -39,7 +39,9 @@ RSpec.describe 'hyrax/file_sets/media_display/_audio.html.erb', type: :view do
   end
 
   context 'with transcript(s)' do
-    let(:transcript) { SolrDocument.new(title_tesim: ['Title'], original_file_id_ssi: ["foobar"]) }
+    let(:transcript) do
+      SolrDocument.new(title_tesim: ['Title'], id: "foobar")
+    end
 
     before do
       allow(file_set).to receive(:transcripts).and_return [transcript]
