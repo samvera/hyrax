@@ -31,12 +31,11 @@ module Hyrax
     def language_code(language)
       return if language.empty?
       value = language.first
-      if value.is_a?(ActiveTriples::Resource) || URI.parse(value).scheme
+      if URI.parse(value).scheme
         # This is probably a Library of Congress languages URI
         # like http://id.loc.gov/vocabulary/iso639-3/eng, which can
         # be configured with the Questioning Authority gem.
         # Try to extract the code from the URI.
-        value = value.id if value.is_a?(ActiveTriples::Resource)
         LanguageList::LanguageInfo.find(value.split("/").last).try(:iso_639_1)
       else
         # Otherwise, assume it is a language code or name and try

@@ -592,14 +592,6 @@ RSpec.describe Hyrax::FileSetPresenter do
         end
       end
 
-      context 'with an ActiveTriples::Resource' do
-        let(:language) { [ActiveTriples::Resource.new('http://id.loc.gov/vocabulary/iso639-3/zho')] }
-
-        it 'returns the 2-letter language code' do
-          expect(subject).to eq('zh')
-        end
-      end
-
       context 'with a language name' do
         let(:language) { ['German'] }
 
