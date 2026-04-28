@@ -15,8 +15,9 @@
       <%= text_field_tag 'file_set[language][]', curation_concern.language.first, class: 'form-control' %>
     </div>
   </fieldset>
-
-  <%= render 'form_transcripts', f: f, curation_concern: curation_concern %>
+  <% if Hyrax.config.file_set_include_metadata? %>
+    <%= render 'records/edit_fields/transcript_ids', f: f, curation_concern: curation_concern %>
+  <% end %>
   
   <div class="row">
     <div class="col-md-12 form-actions">
