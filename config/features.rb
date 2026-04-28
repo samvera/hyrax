@@ -36,10 +36,6 @@ Flipflop.configure do
     feature :read_only,
             default: false,
             description: "Put the system into read-only mode. Deposits, edits, approvals and anything that makes a change to the data will be disabled."
-
-    feature :redirects,
-            default: false,
-            description: "Enable per-record URL redirects from legacy paths to the canonical Hyku URL."
   end
 
   group :repository_management do
@@ -68,6 +64,12 @@ Flipflop.configure do
     feature :transfer_works,
             default: true,
             description: "Depositors may transfer their works to another user"
+  end
+
+  group :experimental_features do
+    feature :redirects,
+            default: false,
+            description: "Enable per-record URL redirects from legacy paths to the canonical Hyku URL."
   end
 
 rescue Flipflop::StrategyError, Flipflop::FeatureError => err
