@@ -7,9 +7,8 @@ module Hyrax
     # resources that carry a `redirects` attribute. The redirect resolver
     # (`Hyrax::RedirectsController`) queries this field by path.
     #
-    # Safe to include unconditionally on resource indexers — when the resource
-    # has no `redirects` attribute (or an empty value), the Solr field is
-    # set to an empty array.
+    # Safe to include unconditionally on resource indexers — the Solr field
+    # is only written when the `:redirects` Flipflop feature is enabled.
     #
     # @example
     #   class WorkIndexer < Hyrax::Indexers::PcdmObjectIndexer
@@ -18,6 +17,7 @@ module Hyrax
     module RedirectsIndexer
       def to_solr(*args)
         super.tap do |document|
+          next document unless Flipflop.redirects?
           document['redirects_path_ssim'] = Array(resource.try(:redirects))
                                             .map { |entry| entry.try(:path) }
                                             .compact
