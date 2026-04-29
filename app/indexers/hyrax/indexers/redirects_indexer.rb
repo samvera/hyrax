@@ -7,12 +7,15 @@ module Hyrax
     # resources that carry a `redirects` attribute. The redirect resolver
     # (`Hyrax::RedirectsController`) queries this field by path.
     #
-    # Safe to include unconditionally on resource indexers — the Solr field
-    # is only written when the `:redirects` Flipflop feature is enabled.
+    # Include this mixin only in apps where `Hyrax.config.redirects_enabled?`
+    # is true (the inclusion site is the config gate). The mixin's body
+    # then needs only the Flipflop check — when the config is on, the
+    # `:redirects` feature is registered and `Flipflop.redirects?` is safe
+    # to call.
     #
     # @example
     #   class WorkIndexer < Hyrax::Indexers::PcdmObjectIndexer
-    #     include Hyrax::Indexers::RedirectsIndexer
+    #     include Hyrax::Indexers::RedirectsIndexer if Hyrax.config.redirects_enabled?
     #   end
     module RedirectsIndexer
       def to_solr(*args)

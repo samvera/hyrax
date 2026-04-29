@@ -36,6 +36,8 @@ module Hyrax
     # @param [#to_s] schema_name
     # @return [Hash]
     def schema_config(schema_name)
+      raise(UndefinedSchemaError, "No schema defined: #{schema_name}") if disabled_schemas.include?(schema_name.to_s)
+
       schema_config_path = config_paths(schema_name).find { |path| File.exist? path }
       raise(UndefinedSchemaError, "No schema defined: #{schema_name}") unless schema_config_path
 
@@ -49,7 +51,21 @@ module Hyrax
     def metadata_files
       file_name_arr = []
       config_search_paths.each { |root_path| file_name_arr += Dir.entries(root_path.to_s + "/config/metadata/") }
-      file_name_arr.reject { |fn| !fn.include?('.yaml') }.uniq.map { |y| y.gsub('.yaml', '') }
+      file_name_arr
+        .reject { |fn| !fn.include?('.yaml') }
+        .uniq
+        .map { |y| y.gsub('.yaml', '') }
+        .reject { |schema_name| disabled_schemas.include?(schema_name) }
+    end
+
+    # Names of schemas in `config/metadata/` that the host app has not
+    # opted in to. {#metadata_files} skips them and {#schema_config}
+    # raises `UndefinedSchemaError` for them, so they behave as if the
+    # YAML did not exist.
+    def disabled_schemas
+      disabled = []
+      disabled << 'redirects' unless Hyrax.config.redirects_enabled?
+      disabled
     end
 
     def predicate_pairs(ret_hsh, schema_name)

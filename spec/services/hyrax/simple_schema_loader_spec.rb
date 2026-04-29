@@ -145,5 +145,42 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
       expect(permissive_schema.values.all? { |v| v.value.present? }).to be_truthy
       expect(permissive_schema[:sample_attribute].value).to eq("http://hyrax-example.com/sample_attribute")
     end
+
+    context 'when Hyrax.config.redirects_enabled? is true' do
+      before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true) }
+
+      it 'includes the redirects predicate in the permissive schema' do
+        expect(permissive_schema.size).to eq(68)
+        expect(permissive_schema[:redirects].value).to eq('http://samvera.org/ns/hyku/redirects')
+      end
+    end
+
+    context 'when Hyrax.config.redirects_enabled? is false' do
+      before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(false) }
+
+      it 'does not include the redirects predicate' do
+        expect(permissive_schema.keys).not_to include(:redirects)
+      end
+    end
+  end
+
+  describe '#attributes_for with the :redirects schema' do
+    context 'when Hyrax.config.redirects_enabled? is true' do
+      before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true) }
+
+      it 'returns the redirects attribute definitions' do
+        attributes = schema_loader.attributes_for(schema: :redirects)
+        expect(attributes.keys).to include(:redirects)
+      end
+    end
+
+    context 'when Hyrax.config.redirects_enabled? is false' do
+      before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(false) }
+
+      it 'raises UndefinedSchemaError as if the YAML did not exist' do
+        expect { schema_loader.attributes_for(schema: :redirects) }
+          .to raise_error(Hyrax::SchemaLoader::UndefinedSchemaError, /No schema defined: redirects/)
+      end
+    end
   end
 end

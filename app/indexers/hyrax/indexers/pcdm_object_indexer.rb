@@ -10,7 +10,7 @@ module Hyrax
       include Hyrax::LocationIndexer
       include Hyrax::ThumbnailIndexer
       include Hyrax::WorkflowIndexer
-      include Hyrax::Indexers::RedirectsIndexer
+      include Hyrax::Indexers::RedirectsIndexer if Hyrax.config.redirects_enabled?
 
       def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
         super.tap do |solr_doc|

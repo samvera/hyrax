@@ -1,0 +1,130 @@
+# frozen_string_literal: true
+
+RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
+  subject(:validator) { described_class.new(profile: profile, errors: errors, warnings: warnings) }
+  let(:errors) { [] }
+  let(:warnings) { [] }
+
+  let(:profile_with_redirects) do
+    {
+      'properties' => {
+        'redirects' => {
+          'available_on' => { 'class' => %w[Hyrax::Work Hyrax::PcdmCollection] }
+        }
+      }
+    }
+  end
+
+  let(:profile_without_redirects) do
+    { 'properties' => { 'title' => {} } }
+  end
+
+  describe '#validate!' do
+    context 'when Hyrax.config.redirects_enabled? is false' do
+      before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(false) }
+
+      context 'and the m3 profile has a `redirects` property' do
+        let(:profile) { profile_with_redirects }
+
+        it 'warns that the property will be ignored' do
+          validator.validate!
+          expect(warnings).to include(/redirects.*Hyrax\.config\.redirects_enabled\? is false/)
+          expect(errors).to be_empty
+        end
+      end
+
+      context 'and the m3 profile has no `redirects` property' do
+        let(:profile) { profile_without_redirects }
+
+        it 'is silent (no errors, no warnings)' do
+          validator.validate!
+          expect(errors).to be_empty
+          expect(warnings).to be_empty
+        end
+      end
+    end
+
+    context 'when Hyrax.config.redirects_enabled? is true and Flipflop.redirects? is false' do
+      before do
+        allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+        allow(Flipflop).to receive(:redirects?).and_return(false)
+      end
+
+      context 'and the m3 profile has a `redirects` property' do
+        let(:profile) { profile_with_redirects }
+
+        it 'warns that the property will be ignored' do
+          validator.validate!
+          expect(warnings).to include(/redirects.*:redirects feature flag is off/)
+          expect(errors).to be_empty
+        end
+      end
+
+      context 'and the m3 profile has no `redirects` property' do
+        let(:profile) { profile_without_redirects }
+
+        it 'is silent (the tenant has not opted in)' do
+          validator.validate!
+          expect(errors).to be_empty
+          expect(warnings).to be_empty
+        end
+      end
+    end
+
+    context 'when both Hyrax.config.redirects_enabled? and Flipflop.redirects? are true' do
+      before do
+        allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+        allow(Flipflop).to receive(:redirects?).and_return(true)
+      end
+
+      context 'and the m3 profile has no `redirects` property' do
+        let(:profile) { profile_without_redirects }
+
+        it 'errors that the property is required' do
+          validator.validate!
+          expect(errors).to include(/m3 profile must declare a `redirects` property/)
+        end
+      end
+
+      context 'and the m3 profile has `redirects` available on the required classes' do
+        let(:profile) { profile_with_redirects }
+
+        it 'is silent' do
+          validator.validate!
+          expect(errors).to be_empty
+          expect(warnings).to be_empty
+        end
+      end
+
+      context 'and the m3 profile has `redirects` but is missing Hyrax::PcdmCollection' do
+        let(:profile) do
+          {
+            'properties' => {
+              'redirects' => { 'available_on' => { 'class' => ['Hyrax::Work'] } }
+            }
+          }
+        end
+
+        it 'errors that the missing class must be in available_on.class' do
+          validator.validate!
+          expect(errors).to include(/`redirects`.*available on.*Hyrax::PcdmCollection/)
+        end
+      end
+
+      context 'and the m3 profile has `redirects` but is missing Hyrax::Work' do
+        let(:profile) do
+          {
+            'properties' => {
+              'redirects' => { 'available_on' => { 'class' => ['Hyrax::PcdmCollection'] } }
+            }
+          }
+        end
+
+        it 'errors that the missing class must be in available_on.class' do
+          validator.validate!
+          expect(errors).to include(/`redirects`.*available on.*Hyrax::Work/)
+        end
+      end
+    end
+  end
+end

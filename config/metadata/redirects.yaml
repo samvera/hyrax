@@ -1,0 +1,10 @@
+---
+attributes:
+  redirects:
+    type: redirect
+    multiple: true
+    form:
+      primary: false
+    predicate: http://samvera.org/ns/hyku/redirects
+    mappings:
+      simple_dc_pmh: ~

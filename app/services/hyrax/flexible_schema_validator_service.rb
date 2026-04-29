@@ -38,6 +38,7 @@ module Hyrax
       validate_label_prop
       validate_core_metadata
       validate_sort_properties
+      validate_redirects
     end
 
     # The default JSON schema used when no custom schema is provided.
@@ -117,6 +118,18 @@ module Hyrax
     # @return [void]
     def validate_sort_properties
       FlexibleSchemaValidators::SortPropertiesValidator.new(profile, @warnings).validate!
+    end
+
+    # Validates that the `redirects` property is declared on every work and
+    # collection class when both `Hyrax.config.redirects_enabled?` and
+    # `Flipflop.redirects?` are true. When either gate is closed, this
+    # validator is a no-op.
+    #
+    # @return [void]
+    def validate_redirects
+      FlexibleSchemaValidators::RedirectsValidator.new(
+        profile: profile, errors: @errors, warnings: @warnings
+      ).validate!
     end
 
     # Validates that a `label` property exists and that it is available on

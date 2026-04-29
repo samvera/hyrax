@@ -41,22 +41,8 @@ module Hyrax
   #
   class PcdmCollection < Hyrax::Resource
     include Hyrax::Schema(:core_metadata) if Hyrax.config.collection_include_metadata?
-    # The `redirects` attribute is registered directly on the resource class
-    # (not via a schema YAML) so it is uniformly available across both
-    # metadata modes (`flexible: false` and `flexible: true`). The attribute
-    # is always defined; the `:redirects` Flipflop gates the user-facing
-    # surfaces — the catch-all route, the controller, the form tab, the
-    # validators — at request time, where the per-tenant Flipflop strategy
-    # has the context it needs to answer correctly. Class-load-time gating
-    # is not used here because (a) the Flipflop facade isn't initialized
-    # when this class loads under Bulkrax's initializer, and (b) class
-    # definitions can't vary per tenant in any case.
-    #
-    # Set (rather than Array) so instance round-trips through assignment
-    # don't re-invoke the Dry::Struct constructor on existing entries
-    # (Array.of(Resource) raises "can't convert Object into Hash" on
-    # collection.redirects = collection.redirects).
-    attribute :redirects, Valkyrie::Types::Set.of(Hyrax::Redirect)
+    # See documentation/redirects.md for the redirects feature.
+    include Hyrax::Schema(:redirects) if Hyrax.config.collection_include_metadata? && Hyrax.config.redirects_enabled?
 
     attribute :collection_type_gid, Valkyrie::Types::String
     attribute :member_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
