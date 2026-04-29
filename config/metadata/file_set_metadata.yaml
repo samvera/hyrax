@@ -160,3 +160,11 @@ attributes:
       - "subject_sim"
       - "subject_tesim"
     predicate: http://purl.org/dc/elements/1.1/subject
+  transcript_ids:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "transcript_ids_ssim"
+    predicate: http://vocabulary.samvera.org/ns#transcriptIds

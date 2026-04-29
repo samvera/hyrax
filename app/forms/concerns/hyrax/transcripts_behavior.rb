@@ -3,12 +3,6 @@ module Hyrax
   module TranscriptsBehavior
     extend ActiveSupport::Concern
 
-    def self.included(descendant)
-      if Hyrax.config.file_set_include_metadata?
-        descendant.property :transcript_ids, type: Valkyrie::Types::Array.of(Valkyrie::Types::ID)
-      end
-    end
-
     class_methods do
       def available_transcripts(parent:, current_ability:)
          member_ids = Hyrax.custom_queries.find_child_file_set_ids(resource: parent)
