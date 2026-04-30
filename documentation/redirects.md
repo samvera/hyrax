@@ -81,7 +81,7 @@ properties:
     predicate: http://samvera.org/ns/hyku/redirects
 ```
 
-The `type: redirect` token resolves to `Hyrax::Redirect`, a `Valkyrie::Resource` with `path`, `canonical`, and `sequence` sub-attributes.
+The `type: redirect` token resolves to `Hyrax::Redirect`, a `Valkyrie::Resource` with `path`, `canonical`, and `sequence` sub-attributes. `multiple: true` is required for nested-resource members; the schema loader raises `ArgumentError` if a nested-resource property is declared with `multiple: false`.
 
 Validation matrix on profile save (with the config on):
 

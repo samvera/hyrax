@@ -114,6 +114,19 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
       end
     end
 
+    context 'when a nested Hyrax resource type is declared with multiple: false' do
+      # Single-value nested resources are not supported because the schema
+      # loader's #type would return the bare class rather than a Dry::Types::Type,
+      # producing a downstream shape inconsistency. The loader rejects this
+      # configuration explicitly.
+      let(:config) { { 'type' => 'redirect', 'multiple' => false } }
+
+      it 'raises ArgumentError' do
+        expect { attribute_definition.type }
+          .to raise_error(ArgumentError, /nested resource members require `multiple: true`/)
+      end
+    end
+
     context 'when the type name has multiple words' do
       # The lookup uses String#classify (not capitalize), so multi-word
       # types like `access_control` resolve to `Hyrax::AccessControl`.

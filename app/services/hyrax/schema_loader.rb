@@ -106,12 +106,16 @@ module Hyrax
       # @return [Dry::Types::Type]
       def type
         member_type = type_for(config['type'])
+        nested_resource = member_type.is_a?(Class) && member_type < Valkyrie::Resource
+
+        raise ArgumentError, "nested resource members require `multiple: true` (got #{member_type})" if nested_resource && !multiple?
+
         collection_type = if multiple?
                             # When the entries are nested Hyrax resources (e.g. Hyrax::Redirect),
                             # use Set so reading-and-writing the same value back works.
                             # Array of resources would crash on `record.foo = record.foo`
                             # because it tries to rebuild each entry from a hash.
-                            if member_type.is_a?(Class) && member_type < Valkyrie::Resource
+                            if nested_resource
                               Valkyrie::Types::Set.constructor(&Coerce)
                             else
                               Valkyrie::Types::Array.constructor(&Coerce)

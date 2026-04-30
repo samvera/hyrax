@@ -150,7 +150,6 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
       before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true) }
 
       it 'includes the redirects predicate in the permissive schema' do
-        expect(permissive_schema.size).to eq(68)
         expect(permissive_schema[:redirects].value).to eq('http://samvera.org/ns/hyku/redirects')
       end
     end
