@@ -21,9 +21,8 @@ module Hyrax
       def to_solr(*args)
         super.tap do |document|
           next document unless Flipflop.redirects?
-          document['redirects_path_ssim'] = Array(resource.try(:redirects))
-                                            .map { |entry| entry.try(:path) }
-                                            .compact
+          next document unless resource.respond_to?(:redirects)
+          document['redirects_path_ssim'] = Array(resource.redirects).map(&:path).compact
         end
       end
     end

@@ -57,8 +57,8 @@ RSpec.describe Hyrax::Indexers::RedirectsIndexer do
       end
       let(:resource) { bare_resource_class.new }
 
-      it 'emits redirects_path_ssim as an empty array' do
-        expect(indexer.to_solr['redirects_path_ssim']).to eq([])
+      it 'does not emit the redirects_path_ssim field' do
+        expect(indexer.to_solr).not_to have_key('redirects_path_ssim')
       end
     end
 
