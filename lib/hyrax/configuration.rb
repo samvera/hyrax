@@ -342,6 +342,14 @@ module Hyrax
     end
     alias flexible? flexible
 
+    # See documentation/redirects.md for the redirects feature.
+    attr_writer :redirects_enabled
+    def redirects_enabled?
+      return @redirects_enabled if defined?(@redirects_enabled) && !@redirects_enabled.nil?
+      @redirects_enabled = ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_REDIRECTS_ENABLED', false))
+    end
+    alias redirects_enabled redirects_enabled?
+
     # This value determines whether to use m3 flexible metadata for core classes or not
     attr_writer :flexible_classes
     def flexible_classes

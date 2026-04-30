@@ -95,6 +95,8 @@ module Hyrax
   #   for a historical perspective.
   class Work < Hyrax::Resource
     include Hyrax::Schema(:core_metadata) if Hyrax.config.work_default_metadata
+    # See documentation/redirects.md for the redirects feature.
+    include Hyrax::Schema(:redirects) if Hyrax.config.work_default_metadata && Hyrax.config.redirects_enabled?
 
     attribute :admin_set_id,             Valkyrie::Types::ID
     attribute :member_ids,               Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)

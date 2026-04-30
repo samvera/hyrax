@@ -41,6 +41,8 @@ module Hyrax
   #
   class PcdmCollection < Hyrax::Resource
     include Hyrax::Schema(:core_metadata) if Hyrax.config.collection_include_metadata?
+    # See documentation/redirects.md for the redirects feature.
+    include Hyrax::Schema(:redirects) if Hyrax.config.collection_include_metadata? && Hyrax.config.redirects_enabled?
 
     attribute :collection_type_gid, Valkyrie::Types::String
     attribute :member_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
