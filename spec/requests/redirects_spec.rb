@@ -30,9 +30,8 @@ RSpec.describe 'URL redirects', type: :request do
           .and_return('response' => { 'docs' => [] })
       end
 
-      it 'returns 404' do
-        get '/no-such-path'
-        expect(response.code).to eq('404')
+      it 'does not redirect (Rails serves a 404 in production)' do
+        expect { get '/no-such-path' }.to raise_error(ActionController::RoutingError)
       end
     end
   end
@@ -45,8 +44,7 @@ RSpec.describe 'URL redirects', type: :request do
 
     it 'does not consult Solr for unmatched paths' do
       expect(Hyrax::SolrService).not_to receive(:get)
-      get '/handle/12345/678'
-      expect(response.code).to eq('404')
+      expect { get '/handle/12345/678' }.to raise_error(ActionController::RoutingError)
     end
   end
 
@@ -58,8 +56,7 @@ RSpec.describe 'URL redirects', type: :request do
     it 'does not consult Flipflop or Solr (config short-circuits)' do
       expect(Flipflop).not_to receive(:redirects?)
       expect(Hyrax::SolrService).not_to receive(:get)
-      get '/handle/12345/678'
-      expect(response.code).to eq('404')
+      expect { get '/handle/12345/678' }.to raise_error(ActionController::RoutingError)
     end
   end
 end

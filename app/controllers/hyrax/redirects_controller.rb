@@ -19,8 +19,15 @@ module Hyrax
     # the host app's curation-concern resources. `polymorphic_path`
     # consults a routes proxy, so we pick the right one per type.
     def permanent_url_for(document)
-      proxy = document.collection? ? hyrax : main_app
+      proxy = collection_document?(document) ? hyrax : main_app
       polymorphic_path([proxy, document])
+    end
+
+    def collection_document?(document)
+      model = document.hydra_model
+      Hyrax::ModelRegistry.collection_classes.any? { |klass| model <= klass }
+    rescue StandardError
+      false
     end
 
     # TODO: bust the cache key on redirect save/destroy (Phase 1 follow-up).
