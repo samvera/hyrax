@@ -29,6 +29,8 @@ module Hyrax
   end
 
   class ChangeSet < Valkyrie::ChangeSet
+    validates_with Hyrax::ControlledVocabularyValidator
+
     ##
     # @api public
     #
