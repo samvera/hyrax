@@ -13,8 +13,10 @@ class CreateHyraxRedirectPaths < ActiveRecord::Migration<%= migration_version %>
     # RFC 3986, no LIKE patterns.
     add_index :hyrax_redirect_paths, :path, unique: true
 
-    # Non-unique index supports the listener's per-resource sync, which deletes
-    # all rows for a resource_id before reinserting on save.
+    # Non-unique index supports the per-resource sync performed by
+    # Hyrax::Transactions::Steps::SyncRedirectPaths and
+    # Hyrax::Transactions::Steps::RemoveRedirectPaths, which delete all rows for
+    # a resource_id before reinserting (or on resource destroy).
     add_index :hyrax_redirect_paths, :resource_id
   end
 end

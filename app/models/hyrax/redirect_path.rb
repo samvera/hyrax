@@ -3,7 +3,8 @@
 module Hyrax
   # ActiveRecord-backed uniqueness ledger for redirect paths.
   #
-  # Maintained by Hyrax::Listeners::RedirectPathsListener; queried by
+  # Maintained by Hyrax::Transactions::Steps::SyncRedirectPaths and
+  # Hyrax::Transactions::Steps::RemoveRedirectPaths; queried by
   # Hyrax::RedirectsLookup. The unique index on `path` is the source of truth
   # for "no two records share a redirect path"; this class just exposes it.
   class RedirectPath < ActiveRecord::Base
