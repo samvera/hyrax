@@ -1,4 +1,5 @@
 <%# Aliases tab — see documentation/redirects.md %>
+<% return unless redirects_tab?(f.object) %>
 <h2 class="h3 mt-4"><%= t('hyrax.works.form.redirects.heading') %></h2>
 
 <p><%= t('hyrax.works.form.redirects.help_html').html_safe %></p>

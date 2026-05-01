@@ -246,13 +246,16 @@ RSpec.describe Hyrax::CollectionsHelper, :clean_repo do
   end
 
   describe '#collection_redirectable?' do
-    context 'when both gates are open' do
+    let(:resource) { Struct.new(:redirects).new([]) }
+    let(:form) { Struct.new(:model).new(resource) }
+
+    context 'when both gates are open and the form wraps a resource with :redirects' do
       before do
         allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
         allow(Flipflop).to receive(:redirects?).and_return(true)
       end
 
-      it { expect(helper.collection_redirectable?).to be true }
+      it { expect(helper.collection_redirectable?(form)).to be true }
     end
 
     context 'when the config is on but the Flipflop is off' do
@@ -261,7 +264,7 @@ RSpec.describe Hyrax::CollectionsHelper, :clean_repo do
         allow(Flipflop).to receive(:redirects?).and_return(false)
       end
 
-      it { expect(helper.collection_redirectable?).to be false }
+      it { expect(helper.collection_redirectable?(form)).to be false }
     end
 
     context 'when the config is off' do
@@ -269,8 +272,20 @@ RSpec.describe Hyrax::CollectionsHelper, :clean_repo do
 
       it 'is false without consulting Flipflop' do
         expect(Flipflop).not_to receive(:redirects?)
-        expect(helper.collection_redirectable?).to be false
+        expect(helper.collection_redirectable?(form)).to be false
       end
+    end
+
+    context 'when the gates are open but the form wraps a resource without :redirects' do
+      let(:resource) { Struct.new(:id).new('c-1') }
+      let(:form) { Struct.new(:model).new(resource) }
+
+      before do
+        allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+        allow(Flipflop).to receive(:redirects?).and_return(true)
+      end
+
+      it { expect(helper.collection_redirectable?(form)).to be false }
     end
   end
 end

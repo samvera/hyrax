@@ -33,13 +33,18 @@ RSpec.describe Hyrax::WorkFormHelper do
       end
     end
 
-    context 'when the redirects feature is fully enabled' do
+    context 'when the redirects feature is fully enabled and the resource carries the attribute' do
       let(:work) { build(:hyrax_work) }
       let(:form) { Hyrax::Forms::ResourceForm.for(resource: work) }
 
       before do
         allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
         allow(Flipflop).to receive(:redirects?).and_return(true)
+        # The schema include only runs at class load when HYRAX_REDIRECTS_ENABLED
+        # is set in the env; in the test process it isn't, so simulate the
+        # attribute being present on the underlying resource.
+        allow(work).to receive(:respond_to?).and_call_original
+        allow(work).to receive(:respond_to?).with(:redirects).and_return(true)
       end
 
       it 'appends the redirects tab' do
@@ -69,6 +74,31 @@ RSpec.describe Hyrax::WorkFormHelper do
 
       it 'omits the redirects tab without consulting Flipflop' do
         expect(Flipflop).not_to receive(:redirects?)
+        expect(form_tabs_for(form: form)).to eq %w[metadata files relationships]
+      end
+    end
+
+    context 'when the feature is fully enabled but the form wraps a resource without :redirects' do
+      let(:resource_without_redirects) { Struct.new(:id, :persisted?).new('w-1', true) }
+      let(:form) do
+        klass = Class.new do
+          def initialize(target)
+            @target = target
+          end
+
+          def model
+            @target
+          end
+        end
+        klass.new(resource_without_redirects)
+      end
+
+      before do
+        allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+        allow(Flipflop).to receive(:redirects?).and_return(true)
+      end
+
+      it 'omits the redirects tab so the partial does not render and crash on f.object.redirects' do
         expect(form_tabs_for(form: form)).to eq %w[metadata files relationships]
       end
     end

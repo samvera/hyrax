@@ -91,7 +91,7 @@ RSpec.describe Hyrax::RedirectValidator do
             @target = target
           end
 
-          def __getobj__
+          def model
             @target
           end
 

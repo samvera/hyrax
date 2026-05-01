@@ -82,11 +82,11 @@ module Hyrax
 
     # Reform forms wrap the underlying resource and use method_missing to
     # forward attribute reads. We can't just call `record.respond_to?(:redirects)`
-    # because Reform's method_missing returns truthy for missing methods.
-    # Probe the actual underlying resource through the form's `__getobj__`
-    # (Reform's accessor for the wrapped object) when present.
+    # because Reform's method_missing/respond_to_missing? returns truthy for
+    # missing methods. Probe the wrapped resource through `form.model`
+    # (Disposable::Twin's accessor for the underlying object) when present.
     def record_supports_redirects?(record)
-      target = record.respond_to?(:__getobj__) ? record.__getobj__ : record
+      target = record.respond_to?(:model) ? record.model : record
       target.respond_to?(:redirects)
     end
   end

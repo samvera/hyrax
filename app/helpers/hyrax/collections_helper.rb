@@ -151,10 +151,17 @@ module Hyrax
     end
 
     ##
+    # @param form [Hyrax::Forms::PcdmCollectionForm, Object] the collection form
     # @return [Boolean] true when the redirects feature is fully enabled
-    #   (config + Flipflop). Drives the Aliases tab on the collection edit form.
-    def collection_redirectable?
-      Hyrax.config.redirects_active?
+    #   (config + Flipflop) *and* the collection's resource carries the
+    #   `redirects` attribute. The structural check guards against adopter
+    #   collection classes that don't include the schema; without it the tab
+    #   would render and crash on `f.object.redirects`. Drives the Aliases tab
+    #   on the collection edit form.
+    def collection_redirectable?(form)
+      return false unless Hyrax.config.redirects_active?
+      target = form.respond_to?(:model) ? form.model : form
+      target.respond_to?(:redirects)
     end
 
     ##

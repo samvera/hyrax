@@ -28,7 +28,7 @@
         </a>
       </li>
       <% end %>
-      <% if collection_redirectable? %>
+      <% if collection_redirectable?(@form) %>
       <li class="nav-item" role="presentation">
         <a href="#redirects" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
           <%= t('.tabs.redirects') %>
@@ -117,7 +117,7 @@
           </div>
         <% end %>
 
-        <% if collection_redirectable? %>
+        <% if collection_redirectable?(f.object) %>
           <div id="redirects" class="tab-pane">
             <div class="card labels">
               <div class="card-body">

@@ -103,10 +103,17 @@ module Hyrax
     ##
     # @api private
     #
-    # @param _form [Hyrax::Forms::ResourceForm, Hyrax::Forms::WorkForm]
-    # @return [Boolean] true when the redirects tab should appear on this form
-    def redirects_tab?(_form)
-      Hyrax.config.redirects_active?
+    # @param form [Hyrax::Forms::ResourceForm, Hyrax::Forms::WorkForm]
+    # @return [Boolean] true when the redirects tab should appear on this form.
+    #   Both the runtime feature gates *and* the form's underlying resource
+    #   must carry the `redirects` attribute. The structural check guards
+    #   against adopter work classes that don't include the schema (e.g. Hyku's
+    #   `GenericWorkResource`); without it the tab would render and crash on
+    #   `f.object.redirects`.
+    def redirects_tab?(form)
+      return false unless Hyrax.config.redirects_active?
+      target = form.respond_to?(:model) ? form.model : form
+      target.respond_to?(:redirects)
     end
   end
 end
