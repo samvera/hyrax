@@ -12,6 +12,8 @@ module Hyrax
   #   end
   #
   # @see https://github.com/projectblacklight/blacklight/wiki/Understanding-Rails-and-Blacklight#models
+
+  # rubocop:disable Metrics/ModuleLength
   module SolrDocumentBehavior
     ModelWrapper = ActiveFedoraDummyModel # alias for backward compatibility
 
@@ -164,10 +166,15 @@ module Hyrax
       schema_version.present?
     end
 
+    def transcript_ids
+      self['transcript_ids_ssim']
+    end
+
     private
 
     def model_classifier(classifier)
       classifier || ActiveFedora.model_mapper
     end
   end
+  # rubocop:enable Metrics/ModuleLength
 end

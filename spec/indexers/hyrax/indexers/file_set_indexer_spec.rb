@@ -25,7 +25,8 @@ RSpec.describe Hyrax::Indexers::FileSetIndexer, :frozen_time, if: Hyrax.config.u
       resource_type: ['Book'],
       identifier: ['urn:isbn:1234567890'],
       based_near: ['Oakland, California'],
-      related_url: ['https://id.loc.gov/resources/works/17452360.html']
+      related_url: ['https://id.loc.gov/resources/works/17452360.html'],
+      transcript_ids: ['foo678910']
     )
   end
 
@@ -156,6 +157,7 @@ RSpec.describe Hyrax::Indexers::FileSetIndexer, :frozen_time, if: Hyrax.config.u
       expect(subject['extracted_text_id_ssi']).to eq mock_text.id.to_s
       expect(subject['hasRelatedMediaFragment_ssim']).to eq fileset_id
       expect(subject['hasRelatedImage_ssim']).to eq mock_thumbnail.id.to_s
+      expect(subject['transcript_ids_ssim']).to eq ["foo678910"]
 
       # from ThumbnailIndexer
       expect(subject['thumbnail_path_ss']).to eq "/downloads/#{file_set.id}?file=thumbnail"

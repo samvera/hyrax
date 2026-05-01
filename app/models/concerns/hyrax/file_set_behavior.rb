@@ -14,6 +14,7 @@ module Hyrax
     include Hyrax::FileSet::Indexing
     include Hyrax::FileSet::BelongsToWorks
     include Hyrax::FileSet::Querying
+    include Hyrax::FileSet::Transcripts
     include HumanReadableType
     include CoreMetadata
     include Hyrax::BasicMetadata

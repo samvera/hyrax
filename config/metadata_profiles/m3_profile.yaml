@@ -10,7 +10,7 @@ classes:
   Hyrax::Work:
     display_label: Work
   AdministrativeSetResource:
-    diplay_label: AdministrativeSet
+    display_label: AdministrativeSet
   CollectionResource:
     display_label: PcdmCollection
   Hyrax::FileSet:
@@ -938,3 +938,17 @@ properties:
     view:
       render_as: faceted
       html_dl: true
+  transcript_ids:
+    available_on:
+      class:
+        - Hyrax::FileSet
+    indexing:
+      - transcript_ids_ssim
+    data_type: array
+    display_label:
+      default: Transcripts
+    form:
+      display: true
+      primary: false
+    range: http://www.w3.org/2001/XMLSchema#string
+    property_uri: http://vocabulary.samvera.org/ns#transcriptIds

@@ -7,6 +7,7 @@ module Hyrax
     include WithEvents
     include DisplaysImage
     include MissingMethodBehavior
+    include DisplaysTranscripts
 
     attr_accessor :solr_document, :current_ability, :request
 

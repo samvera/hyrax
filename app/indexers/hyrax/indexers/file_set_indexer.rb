@@ -24,6 +24,7 @@ module Hyrax
           solr_doc['extracted_text_id_ssi']        = resource.extracted_text_id.to_s
           solr_doc['hasRelatedMediaFragment_ssim'] = resource.representative_id.to_s
           solr_doc['hasRelatedImage_ssim']         = resource.thumbnail_id.to_s
+          solr_doc['transcript_ids_ssim']          = resource.transcript_ids&.map(&:to_s)
 
           index_lease(solr_doc)
           index_embargo(solr_doc)
