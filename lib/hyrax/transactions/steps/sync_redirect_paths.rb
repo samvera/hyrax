@@ -22,21 +22,7 @@ module Hyrax
         # @return [Dry::Monads::Result]
         def call(object)
           return Success(object) unless syncable?(object)
-
-          paths = Array(object.redirects)
-                  .map { |entry| Hyrax::RedirectPathNormalizer.call(entry.try(:path)) }
-                  .reject(&:blank?)
-                  .uniq
-          now = Time.current
-          rows = paths.map do |path|
-            { path: path, resource_id: object.id.to_s, created_at: now, updated_at: now }
-          end
-
-          Hyrax::RedirectPath.transaction do
-            Hyrax::RedirectPath.where(resource_id: object.id.to_s).delete_all
-            Hyrax::RedirectPath.insert_all!(rows) if rows.any?
-          end
-
+          replace_rows(object, build_rows(object))
           Success(object)
         rescue ActiveRecord::RecordNotUnique => e
           Failure([:redirect_path_collision, e.message])
@@ -47,6 +33,24 @@ module Hyrax
         def syncable?(object)
           return false unless Hyrax.config.redirects_enabled? && Flipflop.redirects?
           object.respond_to?(:redirects) && object.respond_to?(:id) && object.id.present?
+        end
+
+        def build_rows(object)
+          paths = Array(object.redirects)
+                  .map { |entry| Hyrax::RedirectPathNormalizer.call(entry.try(:path)) }
+                  .reject(&:blank?)
+                  .uniq
+          now = Time.current
+          paths.map { |path| { path: path, resource_id: object.id.to_s, created_at: now, updated_at: now } }
+        end
+
+        def replace_rows(object, rows)
+          Hyrax::RedirectPath.transaction do
+            Hyrax::RedirectPath.where(resource_id: object.id.to_s).delete_all
+            # rubocop:disable Rails/SkipsModelValidations -- the DB unique index on `path` is the validation we rely on; bulk insert is intentional
+            Hyrax::RedirectPath.insert_all!(rows) if rows.any?
+            # rubocop:enable Rails/SkipsModelValidations
+          end
         end
       end
     end

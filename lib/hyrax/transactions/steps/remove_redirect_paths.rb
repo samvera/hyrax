@@ -16,10 +16,14 @@ module Hyrax
         # @param [Valkyrie::Resource] resource
         # @return [Dry::Monads::Result]
         def call(resource)
-          if Hyrax.config.redirects_enabled? && resource.respond_to?(:id) && resource.id.present?
-            Hyrax::RedirectPath.where(resource_id: resource.id.to_s).delete_all
-          end
+          Hyrax::RedirectPath.where(resource_id: resource.id.to_s).delete_all if removable?(resource)
           Success(resource)
+        end
+
+        private
+
+        def removable?(resource)
+          Hyrax.config.redirects_enabled? && resource.respond_to?(:id) && resource.id.present?
         end
       end
     end
