@@ -1,0 +1,20 @@
+class CreateHyraxRedirectPaths < ActiveRecord::Migration<%= migration_version %>
+  def change
+    create_table :hyrax_redirect_paths do |t|
+      t.string :path, null: false
+      t.string :resource_id, null: false
+
+      t.timestamps
+    end
+
+    # Unique index on path enforces global uniqueness at the DB level (the hard
+    # guarantee under concurrent writes) and is the primary lookup index for
+    # validation. Whole-string equality only — paths are case-sensitive per
+    # RFC 3986, no LIKE patterns.
+    add_index :hyrax_redirect_paths, :path, unique: true
+
+    # Non-unique index supports the listener's per-resource sync, which deletes
+    # all rows for a resource_id before reinserting on save.
+    add_index :hyrax_redirect_paths, :resource_id
+  end
+end
