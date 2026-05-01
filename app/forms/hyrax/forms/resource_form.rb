@@ -44,6 +44,7 @@ module Hyrax
       property :version, virtual: true, prepopulator: LockKeyPrepopulator
 
       validates_with Hyrax::RedirectValidator, attributes: [:redirects] if Hyrax.config.redirects_enabled?
+      property :redirects_attributes, virtual: true, populator: :redirects_populator if Hyrax.config.redirects_enabled?
 
       ##
       # @api public
@@ -195,6 +196,24 @@ module Hyrax
       def redirects=(values)
         return super unless Hyrax.config.redirects_enabled?
         super(Array(values).map { |entry| normalize_redirect_entry(entry) })
+      end
+
+      # Populator for the nested-attributes payload posted by the Aliases
+      # tab. Each form submission rebuilds the `redirects` list from the
+      # visible rows; rows marked `_destroy` are dropped, blank rows are
+      # ignored. The `redirects=` setter then normalizes paths and the
+      # validator runs against the result.
+      #
+      # No-ops when the Flipflop is off so a stale or out-of-band post of
+      # redirects_attributes can't mutate (or clear) existing redirects on
+      # a resource while the runtime feature is disabled. Existing entries
+      # on the resource are preserved untouched.
+      def redirects_populator(fragment:, **_options)
+        return unless Flipflop.redirects?
+        entries = Array(fragment&.values)
+                  .reject { |row| row['_destroy'].to_s == 'true' || row['path'].to_s.strip.empty? }
+                  .map { |row| { path: row['path'], canonical: row['canonical'].to_s == 'true' } }
+        self.redirects = entries
       end
 
       ##

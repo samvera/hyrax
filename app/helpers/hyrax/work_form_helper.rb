@@ -30,11 +30,13 @@ module Hyrax
     # @param form [Hyrax::Forms::WorkForm, Hyrax::Forms::ResourceForm]
     # @return [Array<String>] the list of names of tabs to be rendered in the form
     def form_tabs_for(form:)
-      if form.instance_of? Hyrax::Forms::BatchUploadForm
-        %w[files metadata relationships]
-      else
-        %w[metadata files relationships]
-      end
+      tabs = if form.instance_of? Hyrax::Forms::BatchUploadForm
+               %w[files metadata relationships]
+             else
+               %w[metadata files relationships]
+             end
+      tabs << 'redirects' if redirects_tab?(form)
+      tabs
     end
 
     ##
@@ -96,6 +98,15 @@ module Hyrax
       file_sets.each_with_object({}) do |presenter, hash|
         hash[presenter.title_or_label] = presenter.id
       end
+    end
+
+    ##
+    # @api private
+    #
+    # @param _form [Hyrax::Forms::ResourceForm, Hyrax::Forms::WorkForm]
+    # @return [Boolean] true when the redirects tab should appear on this form
+    def redirects_tab?(_form)
+      Hyrax.config.redirects_enabled? && Flipflop.redirects?
     end
   end
 end

@@ -1809,9 +1809,24 @@ en:
         in_collections: Collections
         in_other_works: This Work in Other Works
         in_this_work: Other Works in this Work
+        redirects:
+          caption: List of URL aliases for this resource
+          errors_heading: Please correct the following alias errors
+          header:
+            actions: Actions
+            path: Path
+          heading: URL Aliases
+          help_html: 'Register legacy URL paths that should redirect to this work. Each path will resolve from this site''s root. Reserved Hyrax routes (e.g. <code>/concern</code>, <code>/dashboard</code>) cannot be used.'
+          new_path_label: New alias path
+          path_label: Alias path
+          placeholder:
+            path: Enter a legacy path...
+          remove_label: Remove
+          remove_with_path_label: 'Remove %{path}'
         tab:
           files: Files
           metadata: Descriptions
+          redirects: Aliases
           relationships: Relationships
           share: Sharing
         visibility_until: until

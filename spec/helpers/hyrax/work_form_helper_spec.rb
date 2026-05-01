@@ -32,6 +32,46 @@ RSpec.describe Hyrax::WorkFormHelper do
         expect(form_tabs_for(form: form)).to eq ["files", "metadata", "relationships"]
       end
     end
+
+    context 'when the redirects feature is fully enabled' do
+      let(:work) { build(:hyrax_work) }
+      let(:form) { Hyrax::Forms::ResourceForm.for(resource: work) }
+
+      before do
+        allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+        allow(Flipflop).to receive(:redirects?).and_return(true)
+      end
+
+      it 'appends the redirects tab' do
+        expect(form_tabs_for(form: form)).to eq %w[metadata files relationships redirects]
+      end
+    end
+
+    context 'when the redirects config is on but the Flipflop is off' do
+      let(:work) { build(:hyrax_work) }
+      let(:form) { Hyrax::Forms::ResourceForm.for(resource: work) }
+
+      before do
+        allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+        allow(Flipflop).to receive(:redirects?).and_return(false)
+      end
+
+      it 'omits the redirects tab' do
+        expect(form_tabs_for(form: form)).to eq %w[metadata files relationships]
+      end
+    end
+
+    context 'when the redirects config is off' do
+      let(:work) { build(:hyrax_work) }
+      let(:form) { Hyrax::Forms::ResourceForm.for(resource: work) }
+
+      before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(false) }
+
+      it 'omits the redirects tab without consulting Flipflop' do
+        expect(Flipflop).not_to receive(:redirects?)
+        expect(form_tabs_for(form: form)).to eq %w[metadata files relationships]
+      end
+    end
   end
 
   describe '.form_tab_label_for' do
