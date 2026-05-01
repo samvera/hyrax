@@ -282,6 +282,6 @@ Hyrax::Engine.routes.draw do
 
   # Catch-all redirect resolver — must be last. See documentation/redirects.md.
   get '*alias_path', to: 'redirects#show',
-                     constraints: ->(_req) { Hyrax.config.redirects_enabled? && Flipflop.redirects? },
+                     constraints: ->(_req) { Hyrax.config.redirects_active? },
                      format: false
 end

@@ -102,6 +102,7 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:persistent_hostpath) }
   it { is_expected.to respond_to(:realtime_notifications?) }
   it { is_expected.to respond_to(:realtime_notifications=) }
+  it { is_expected.to respond_to(:redirects_active?) }
   it { is_expected.to respond_to(:redirects_enabled) }
   it { is_expected.to respond_to(:redirects_enabled=) }
   it { is_expected.to respond_to(:redirects_enabled?) }
@@ -151,6 +152,35 @@ RSpec.describe Hyrax::Configuration do
       before { stub_const("ENV", "HYRAX_REDIRECTS_ENABLED" => "true") }
       it "is true" do
         expect(described_class.new.redirects_enabled?).to be true
+      end
+    end
+  end
+
+  describe "#redirects_active?" do
+    context "when both gates are open" do
+      before do
+        allow(configuration).to receive(:redirects_enabled?).and_return(true)
+        allow(Flipflop).to receive(:redirects?).and_return(true)
+      end
+
+      it { expect(configuration.redirects_active?).to be true }
+    end
+
+    context "when the config is on but the Flipflop is off" do
+      before do
+        allow(configuration).to receive(:redirects_enabled?).and_return(true)
+        allow(Flipflop).to receive(:redirects?).and_return(false)
+      end
+
+      it { expect(configuration.redirects_active?).to be false }
+    end
+
+    context "when the config is off" do
+      before { allow(configuration).to receive(:redirects_enabled?).and_return(false) }
+
+      it "is false without consulting Flipflop (so callers don't need to know about the registration order)" do
+        expect(Flipflop).not_to receive(:redirects?)
+        expect(configuration.redirects_active?).to be false
       end
     end
   end

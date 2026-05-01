@@ -106,7 +106,7 @@ module Hyrax
     # @param _form [Hyrax::Forms::ResourceForm, Hyrax::Forms::WorkForm]
     # @return [Boolean] true when the redirects tab should appear on this form
     def redirects_tab?(_form)
-      Hyrax.config.redirects_enabled? && Flipflop.redirects?
+      Hyrax.config.redirects_active?
     end
   end
 end

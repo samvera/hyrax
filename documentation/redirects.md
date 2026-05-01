@@ -249,11 +249,13 @@ The schema include on `Hyrax::Work` and `Hyrax::PcdmCollection` runs at class-lo
 
 ### Calling `Flipflop.redirects?`
 
-The `:redirects` Flipflop feature is only registered when `Hyrax.config.redirects_enabled?` is true. When the config is off, calling `Flipflop.redirects?` raises `NoMethodError`. Any new code that consults the feature flag must short-circuit on the config first:
+The `:redirects` Flipflop feature is only registered when `Hyrax.config.redirects_enabled?` is true. When the config is off, calling `Flipflop.redirects?` raises `NoMethodError`. New code that needs the combined gate should call:
 
 ```ruby
-Hyrax.config.redirects_enabled? && Flipflop.redirects?
+Hyrax.config.redirects_active?
 ```
+
+`redirects_active?` returns `redirects_enabled? && Flipflop.redirects?` and short-circuits on the config so the Flipflop call is safe.
 
 Alternatively, gate the inclusion of the calling code itself on `Hyrax.config.redirects_enabled?` (as the indexer mixin does in `Hyrax::Indexers::PcdmObjectIndexer` and `Hyrax::Indexers::PcdmCollectionIndexer`); then the body can check `Flipflop.redirects?` alone because it only runs when the feature is registered.
 

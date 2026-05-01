@@ -23,7 +23,7 @@ module Hyrax
     # 2. record_supports_redirects? — the structural gate. Catches the case
     #    where both feature gates are on but the property wasn't added
     def validate(record)
-      return unless Hyrax.config.redirects_enabled? && Flipflop.redirects?
+      return unless Hyrax.config.redirects_active?
       return unless record_supports_redirects?(record)
       super
     end

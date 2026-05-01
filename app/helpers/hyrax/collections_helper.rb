@@ -154,7 +154,7 @@ module Hyrax
     # @return [Boolean] true when the redirects feature is fully enabled
     #   (config + Flipflop). Drives the Aliases tab on the collection edit form.
     def collection_redirectable?
-      Hyrax.config.redirects_enabled? && Flipflop.redirects?
+      Hyrax.config.redirects_active?
     end
 
     ##
