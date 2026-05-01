@@ -38,6 +38,13 @@ en:
       carrierwave_processing_error: Cannot resize image.
       extension_blacklist_error: "You are not allowed to upload %{extension} files, prohibited types: %{prohibited_types}"
       extension_whitelist_error: "You are not allowed to upload %{extension} files, allowed types: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" is already used by another work or collection.'
+        blank: A redirect path can't be blank.
+        intra_record_duplicate: '"%{path}" is listed more than once on this record.'
+        invalid_format: '"%{path}" is not a valid path. Paths must start with "/" and contain no spaces, "?", or "#".'
+        multiple_canonical: At most one redirect entry may be marked canonical.
+        reserved_prefix: '"%{path}" can''t be used. The path is reserved by the application and may not be used as an alias.'
   helpers:
     action:
       accept: Accept

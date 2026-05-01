@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_26_142481) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_30_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -297,6 +297,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_26_142481) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "contexts"
+  end
+
+  create_table "hyrax_redirect_paths", force: :cascade do |t|
+    t.string "path", null: false
+    t.string "resource_id", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["path"], name: "index_hyrax_redirect_paths_on_path", unique: true
+    t.index ["resource_id"], name: "index_hyrax_redirect_paths_on_resource_id"
   end
 
   create_table "job_io_wrappers", force: :cascade do |t|
