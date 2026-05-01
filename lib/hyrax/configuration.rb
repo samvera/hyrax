@@ -350,6 +350,15 @@ module Hyrax
     end
     alias redirects_enabled redirects_enabled?
 
+    # @return [Boolean] true when both the structural config and the runtime
+    #   Flipflop are on. Single source of truth for "is the redirects feature
+    #   actively in use right now?". Short-circuits on the config so the
+    #   Flipflop call is safe (the :redirects feature is only registered when
+    #   the config is on; calling Flipflop.redirects? otherwise raises).
+    def redirects_active?
+      redirects_enabled? && Flipflop.redirects?
+    end
+
     # Path prefixes that may not be claimed as redirect aliases (Hyrax::RedirectValidator
     # rejects any redirect path equal to or starting with one of these). Defaults to the
     # routes Hyrax itself reserves; adopters can extend the list to cover host-app routes:
