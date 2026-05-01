@@ -925,6 +925,7 @@ en:
             branding: Branding
             description: Description
             discovery: Discovery
+            redirects: Aliases
             relationships: Relationships
             sharing: Sharing
         form_branding:
@@ -1816,7 +1817,7 @@ en:
             actions: Actions
             path: Path
           heading: URL Aliases
-          help_html: 'Register legacy URL paths that should redirect to this work. Each path will resolve from this site''s root. Reserved Hyrax routes (e.g. <code>/concern</code>, <code>/dashboard</code>) cannot be used.'
+          help_html: 'Register legacy URL paths that should redirect to this record. Each path will resolve from this site''s root. Reserved Hyrax routes (e.g. <code>/concern</code>, <code>/dashboard</code>) cannot be used.'
           new_path_label: New alias path
           path_label: Alias path
           placeholder:

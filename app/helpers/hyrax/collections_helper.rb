@@ -151,6 +151,13 @@ module Hyrax
     end
 
     ##
+    # @return [Boolean] true when the redirects feature is fully enabled
+    #   (config + Flipflop). Drives the Aliases tab on the collection edit form.
+    def collection_redirectable?
+      Hyrax.config.redirects_enabled? && Flipflop.redirects?
+    end
+
+    ##
     # @note this helper is primarily intended for use with blacklight facet
     #   fields. it assumes we index a `collection_type_gid` and the helper
     #   can be passed as as a `helper_method:` to `add_facet_field`.

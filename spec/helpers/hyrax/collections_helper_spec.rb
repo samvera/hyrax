@@ -244,4 +244,33 @@ RSpec.describe Hyrax::CollectionsHelper, :clean_repo do
       end
     end
   end
+
+  describe '#collection_redirectable?' do
+    context 'when both gates are open' do
+      before do
+        allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+        allow(Flipflop).to receive(:redirects?).and_return(true)
+      end
+
+      it { expect(helper.collection_redirectable?).to be true }
+    end
+
+    context 'when the config is on but the Flipflop is off' do
+      before do
+        allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+        allow(Flipflop).to receive(:redirects?).and_return(false)
+      end
+
+      it { expect(helper.collection_redirectable?).to be false }
+    end
+
+    context 'when the config is off' do
+      before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(false) }
+
+      it 'is false without consulting Flipflop' do
+        expect(Flipflop).not_to receive(:redirects?)
+        expect(helper.collection_redirectable?).to be false
+      end
+    end
+  end
 end

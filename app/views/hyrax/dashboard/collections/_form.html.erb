@@ -28,6 +28,13 @@
         </a>
       </li>
       <% end %>
+      <% if collection_redirectable? %>
+      <li class="nav-item" role="presentation">
+        <a href="#redirects" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm">
+          <%= t('.tabs.redirects') %>
+        </a>
+      </li>
+      <% end %>
     <% end %>
   </ul>
 
@@ -105,6 +112,16 @@
             <div class="card labels" id="collection_permissions" data-param-key="<%= f.object.model_name.param_key %>">
               <div class="card-body">
                 <%= render 'form_share', f: f %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <% if collection_redirectable? %>
+          <div id="redirects" class="tab-pane">
+            <div class="card labels">
+              <div class="card-body">
+                <%= render 'hyrax/base/form_redirects', f: f %>
               </div>
             </div>
           </div>
