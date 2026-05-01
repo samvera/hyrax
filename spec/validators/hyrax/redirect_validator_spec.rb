@@ -64,6 +64,53 @@ RSpec.describe Hyrax::RedirectValidator do
       end
     end
 
+    context 'when the record does not support a redirects attribute' do
+      let(:record_class) do
+        Class.new do
+          include ActiveModel::Validations
+          attr_accessor :id
+          validates_with Hyrax::RedirectValidator, attributes: [:redirects]
+        end
+      end
+      let(:record) { record_class.new.tap { |r| r.id = 'self-id' } }
+
+      it 'short-circuits without raising NoMethodError' do
+        expect { record.valid? }.not_to raise_error
+        expect(record.errors[:redirects]).to be_empty
+      end
+    end
+
+    context 'when the record is a form wrapping a resource without :redirects' do
+      let(:wrapped) { Struct.new(:id).new('wrapped-id') }
+      let(:record) do
+        klass = Class.new do
+          include ActiveModel::Validations
+          attr_accessor :id
+          validates_with Hyrax::RedirectValidator, attributes: [:redirects]
+          def initialize(target)
+            @target = target
+          end
+
+          def __getobj__
+            @target
+          end
+
+          def respond_to_missing?(_name, _priv = false)
+            true
+          end
+
+          def method_missing(_name, *_args)
+            nil
+          end
+        end
+        klass.new(wrapped)
+      end
+
+      it 'unwraps the form and short-circuits when the underlying resource lacks :redirects' do
+        expect { record.valid? }.not_to raise_error
+      end
+    end
+
     def t(key, **interp)
       I18n.t(key, scope: 'errors.messages.redirect', **interp)
     end

@@ -13,8 +13,22 @@ module Hyrax
   class RedirectValidator < ActiveModel::EachValidator
     PATH_FORMAT = %r{\A/[^?\s#]+\z}.freeze
 
-    def validate_each(record, attribute, entries)
+    # Override `validate` so we can short-circuit before ActiveModel calls
+    # `record.read_attribute_for_validation`, which would crash on records
+    # that don't have the `redirects` attribute.
+    #
+    # Two guards, each catching a distinct case:
+    # 1. config + Flipflop — the runtime feature gate. Skips validation when
+    #    the feature isn't actively in use.
+    # 2. record_supports_redirects? — the structural gate. Catches the case
+    #    where both feature gates are on but the property wasn't added
+    def validate(record)
       return unless Hyrax.config.redirects_enabled? && Flipflop.redirects?
+      return unless record_supports_redirects?(record)
+      super
+    end
+
+    def validate_each(record, attribute, entries)
       return if entries.blank?
 
       validate_each_entry(record, attribute, entries)
@@ -64,6 +78,16 @@ module Hyrax
 
     def message_for(key, **interpolations)
       I18n.t(key, scope: 'errors.messages.redirect', **interpolations)
+    end
+
+    # Reform forms wrap the underlying resource and use method_missing to
+    # forward attribute reads. We can't just call `record.respond_to?(:redirects)`
+    # because Reform's method_missing returns truthy for missing methods.
+    # Probe the actual underlying resource through the form's `__getobj__`
+    # (Reform's accessor for the wrapped object) when present.
+    def record_supports_redirects?(record)
+      target = record.respond_to?(:__getobj__) ? record.__getobj__ : record
+      target.respond_to?(:redirects)
     end
   end
 end
