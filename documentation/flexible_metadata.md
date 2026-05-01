@@ -44,6 +44,10 @@ For comprehensive information about flexible metadata, including:
 
 See the official [Flexible Metadata Documentation](https://samvera.atlassian.net/wiki/spaces/hyraxdocs/pages/3382542341/Flexible+Metadata) on the Samvera Confluence.
 
+## Related features
+
+- **URL Redirects** (`HYRAX_REDIRECTS_ENABLED`): when enabled, the redirects feature requires a `redirects` property in the m3 profile (when also Flipflop-enabled per tenant). See [`documentation/redirects.md`](redirects.md) for the full schema and gating model.
+
 ## Flexible TODOs
 * add the schema loader
 * add the flexible schema model

@@ -342,6 +342,54 @@ module Hyrax
     end
     alias flexible? flexible
 
+    # See documentation/redirects.md for the redirects feature.
+    attr_writer :redirects_enabled
+    def redirects_enabled?
+      return @redirects_enabled if defined?(@redirects_enabled) && !@redirects_enabled.nil?
+      @redirects_enabled = ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_REDIRECTS_ENABLED', false))
+    end
+    alias redirects_enabled redirects_enabled?
+
+    # Path prefixes that may not be claimed as redirect aliases (Hyrax::RedirectValidator
+    # rejects any redirect path equal to or starting with one of these). Defaults to the
+    # routes Hyrax itself reserves; adopters can extend the list to cover host-app routes:
+    #
+    #   Hyrax.config do |config|
+    #     config.reserved_redirect_prefixes += ['/single_signon', '/some_host_route']
+    #   end
+    #
+    # See documentation/redirects.md for the redirects feature.
+    attr_writer :reserved_redirect_prefixes
+    def reserved_redirect_prefixes # rubocop:disable Metrics/MethodLength
+      @reserved_redirect_prefixes ||= %w[
+        /.well-known
+        /admin
+        /api
+        /assets
+        /batch_edits
+        /batch_uploads
+        /capabilitylist
+        /catalog
+        /changelist
+        /collections
+        /concern
+        /content_blocks
+        /dashboard
+        /downloads
+        /embargoes
+        /featured_works
+        /files
+        /leases
+        /notifications
+        /pages
+        /proxies
+        /rails
+        /resourcelist
+        /uploads
+        /users
+      ]
+    end
+
     # This value determines whether to use m3 flexible metadata for core classes or not
     attr_writer :flexible_classes
     def flexible_classes

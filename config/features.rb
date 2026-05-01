@@ -66,10 +66,13 @@ Flipflop.configure do
             description: "Depositors may transfer their works to another user"
   end
 
-  group :experimental_features do
-    feature :redirects,
-            default: false,
-            description: "Enable per-record URL redirects from legacy paths to the canonical Hyku URL."
+  # See documentation/redirects.md for the redirects feature.
+  if Hyrax.config.redirects_enabled?
+    group :experimental_features do
+      feature :redirects,
+              default: false,
+              description: "Enable per-record URL redirects from legacy paths to the canonical Hyku URL."
+    end
   end
 
 rescue Flipflop::StrategyError, Flipflop::FeatureError => err

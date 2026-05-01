@@ -11,7 +11,8 @@ module Hyrax
       DEFAULT_STEPS = ['change_set.apply',
                        'collection_resource.save_collection_banner',
                        'collection_resource.save_collection_logo',
-                       'collection_resource.save_acl'].freeze
+                       'collection_resource.save_acl',
+                       'collection_resource.sync_redirect_paths'].freeze
 
       ##
       # @see Hyrax::Transactions::Transaction

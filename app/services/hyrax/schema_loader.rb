@@ -105,13 +105,35 @@ module Hyrax
       ##
       # @return [Dry::Types::Type]
       def type
+        member_type = type_for(config['type'])
+        nested_resource = member_type.is_a?(Class) && member_type < Valkyrie::Resource
+
+        raise ArgumentError, "nested resource members require `multiple: true` (got #{member_type})" if nested_resource && !multiple?
+
         collection_type = if multiple?
-                            Valkyrie::Types::Array.constructor { |v| Array(v).select(&:present?) }
+                            # When the entries are nested Hyrax resources (e.g. Hyrax::Redirect),
+                            # use Set so reading-and-writing the same value back works.
+                            # Array of resources would crash on `record.foo = record.foo`
+                            # because it tries to rebuild each entry from a hash.
+                            if nested_resource
+                              Valkyrie::Types::Set.constructor(&Coerce)
+                            else
+                              Valkyrie::Types::Array.constructor(&Coerce)
+                            end
                           else
                             Identity
                           end
 
-        collection_type.of(type_for(config['type']))
+        collection_type.of(member_type)
+      end
+
+      # Cleans up the input before the type system sees it: drops the
+      # "no value provided" placeholder dry-types uses internally, then
+      # removes blanks. Without dropping the placeholder, it leaks into
+      # member coercion and breaks nested-resource attributes.
+      Coerce = lambda do |value|
+        return [] if value.equal?(Dry::Types::Undefined)
+        Array(value).reject { |v| v.equal?(Dry::Types::Undefined) }.select(&:present?)
       end
 
       # Determine whether this attribute allows multiple values.
@@ -146,10 +168,19 @@ module Hyrax
       private
 
       ##
-      # Maps a configuration string value to a `Valkyrie::Type`.
+      # Resolves a `type:` value from a schema YAML to the actual class to use.
+      #
+      # Looks for the type in this order:
+      #   1. The shortcuts `id`, `uri`, and `date_time`.
+      #   2. A primitive type under `Valkyrie::Types::*` (e.g. `string` → `Valkyrie::Types::String`).
+      #   3. A `Valkyrie::Resource` class. Short names are looked up under `Hyrax::*`
+      #      (so `type: redirect` finds `Hyrax::Redirect`); fully-qualified names like
+      #      `MyApp::Citation` are looked up as-is.
+      #
+      # Raises `ArgumentError` if nothing matches.
       #
       # @param [String]
-      # @return [Dry::Types::Type]
+      # @return [Dry::Types::Type, Class]
       def type_for(type)
         case type
         when 'id'
@@ -159,12 +190,32 @@ module Hyrax
         when 'date_time'
           Valkyrie::Types::DateTime
         else
-          begin
-            "Valkyrie::Types::#{type.capitalize}".constantize
-          rescue NameError
-            raise ArgumentError, "Unrecognized type: #{type}"
-          end
+          "Valkyrie::Types::#{type.classify}".safe_constantize ||
+            nested_resource_type(type) ||
+            raise(ArgumentError, "Unrecognized type: #{type}")
         end
+      end
+
+      ##
+      # Looks up a `Valkyrie::Resource` class by name. Returns nil if the
+      # name doesn't resolve to one.
+      #
+      # A short name like `redirect` is checked under `Hyrax::*` first
+      # (`Hyrax::Redirect`), then at the top level (`Redirect`). A name
+      # with `::` in it is taken as-is (`MyApp::Citation`). Anything that
+      # resolves to something other than a `Valkyrie::Resource` class is
+      # rejected, so non-resource classes don't accidentally get used as
+      # nested-attribute types.
+      #
+      # @param [String] type
+      # @return [Class, nil] a Valkyrie::Resource subclass, or nil if no match
+      def nested_resource_type(type)
+        candidates = type.include?('::') ? [type] : ["Hyrax::#{type.classify}", type.classify]
+        candidates.each do |name|
+          klass = name.safe_constantize
+          return klass if klass.is_a?(Class) && klass < Valkyrie::Resource
+        end
+        nil
       end
     end
 

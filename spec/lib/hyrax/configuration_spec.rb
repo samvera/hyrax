@@ -102,9 +102,14 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:persistent_hostpath) }
   it { is_expected.to respond_to(:realtime_notifications?) }
   it { is_expected.to respond_to(:realtime_notifications=) }
+  it { is_expected.to respond_to(:redirects_enabled) }
+  it { is_expected.to respond_to(:redirects_enabled=) }
+  it { is_expected.to respond_to(:redirects_enabled?) }
   it { is_expected.to respond_to(:redis_namespace) }
   it { is_expected.to respond_to(:rendering_predicate) }
   it { is_expected.to respond_to(:rendering_predicate=) }
+  it { is_expected.to respond_to(:reserved_redirect_prefixes) }
+  it { is_expected.to respond_to(:reserved_redirect_prefixes=) }
   it { is_expected.to respond_to(:rights_statement_service_class) }
   it { is_expected.to respond_to(:rights_statement_service_class=) }
   it { is_expected.to respond_to(:show_work_item_rows) }
@@ -131,6 +136,43 @@ RSpec.describe Hyrax::Configuration do
     before { stub_const("ENV", "HYRAX_SKIP_WINGS" => "true") }
     it "returns true if wings is disabled" do
       expect(Hyrax.config.use_valkyrie?).to eq true
+    end
+  end
+
+  describe "#redirects_enabled?" do
+    context "with the env var unset" do
+      before { stub_const("ENV", {}) }
+      it "defaults to false" do
+        expect(described_class.new.redirects_enabled?).to be false
+      end
+    end
+
+    context "with HYRAX_REDIRECTS_ENABLED=true" do
+      before { stub_const("ENV", "HYRAX_REDIRECTS_ENABLED" => "true") }
+      it "is true" do
+        expect(described_class.new.redirects_enabled?).to be true
+      end
+    end
+  end
+
+  describe "#reserved_redirect_prefixes" do
+    it "defaults to a list of paths Hyrax itself reserves" do
+      expect(configuration.reserved_redirect_prefixes)
+        .to include('/admin', '/concern', '/dashboard', '/collections', '/users')
+    end
+
+    it "always includes a leading slash on each entry" do
+      expect(configuration.reserved_redirect_prefixes).to all(start_with('/'))
+    end
+
+    it "is extendable by adopters" do
+      configuration.reserved_redirect_prefixes += ['/single_signon']
+      expect(configuration.reserved_redirect_prefixes).to include('/single_signon')
+    end
+
+    it "is replaceable by adopters" do
+      configuration.reserved_redirect_prefixes = ['/only_this']
+      expect(configuration.reserved_redirect_prefixes).to eq ['/only_this']
     end
   end
 end

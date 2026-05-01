@@ -101,5 +101,68 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
         expect { attribute_definition.type }.to raise_error(ArgumentError, 'Unrecognized type: custom')
       end
     end
+
+    context 'when the type names a nested Hyrax resource class (short form)' do
+      # In a YAML schema, `type: redirect` resolves to `Hyrax::Redirect`,
+      # so adopters can declare nested-resource attributes without
+      # registering anything in the Valkyrie::Types namespace.
+      let(:config) { { 'type' => 'redirect', 'multiple' => true } }
+
+      it 'wraps the nested resource class in a typed array constructor' do
+        expect(attribute_definition.type).to be_a(Dry::Types::Constructor)
+        expect(attribute_definition.type.member).to eq(Hyrax::Redirect)
+      end
+    end
+
+    context 'when a nested Hyrax resource type is declared with multiple: false' do
+      # Single-value nested resources are not supported because the schema
+      # loader's #type would return the bare class rather than a Dry::Types::Type,
+      # producing a downstream shape inconsistency. The loader rejects this
+      # configuration explicitly.
+      let(:config) { { 'type' => 'redirect', 'multiple' => false } }
+
+      it 'raises ArgumentError' do
+        expect { attribute_definition.type }
+          .to raise_error(ArgumentError, /nested resource members require `multiple: true`/)
+      end
+    end
+
+    context 'when the type name has multiple words' do
+      # The lookup uses String#classify (not capitalize), so multi-word
+      # types like `access_control` resolve to `Hyrax::AccessControl`.
+      it 'resolves a multi-word type via #classify' do
+        expect(attribute_definition.send(:type_for, 'access_control')).to eq(Hyrax::AccessControl)
+      end
+    end
+
+    context 'when the type is a fully-qualified class name' do
+      # Adopters with their own namespace can write `type: MyApp::Citation`
+      # in YAML and the loader will resolve it directly.
+      it 'returns the named class' do
+        expect(attribute_definition.send(:type_for, 'Hyrax::Redirect')).to eq(Hyrax::Redirect)
+      end
+    end
+
+    context 'when the type name matches a class that is not a Valkyrie::Resource' do
+      # ::StringIO is a real class but not a resource. Resolution must reject
+      # it rather than silently use it as a nested-attribute type.
+      let(:config) { { 'type' => 'string_io' } }
+
+      it 'raises ArgumentError' do
+        expect { attribute_definition.type }.to raise_error(ArgumentError, 'Unrecognized type: string_io')
+      end
+    end
+
+    context 'when the type name singularizes via #classify (e.g. "data" -> "Datum")' do
+      # String#classify singularizes, which can surprise. Confirm that an
+      # unrecognized type still raises ArgumentError regardless of inflection
+      # quirks — neither Hyrax::Datum, ::Datum, Valkyrie::Types::Datum, nor
+      # any other resolution short-circuits the safety check.
+      let(:config) { { 'type' => 'data' } }
+
+      it 'raises ArgumentError' do
+        expect { attribute_definition.type }.to raise_error(ArgumentError, 'Unrecognized type: data')
+      end
+    end
   end
 end
