@@ -31,7 +31,7 @@
           <%= label_tag input_id, label_text, class: 'sr-only' %>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text"><%= main_app.root_url.chomp('/') %></span>
+              <span class="input-group-text"><%= "#{request.protocol}#{request.host_with_port}" %></span>
             </div>
             <%= text_field_tag "#{f.object_name}[redirects_attributes][#{index}][path]",
                                entry.path,
