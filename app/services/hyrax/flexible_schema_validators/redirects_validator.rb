@@ -15,11 +15,10 @@ module Hyrax
     # | on     | off      | present  | warn (property is loaded but unused)|
     # | on     | off      | absent   | silent                              |
     # | on     | on       | absent   | error (property is required)        |
-    # | on     | on       | present  | check available_on.class and pass   |
-    # |        |          |          | or error if work/collection missing |
+    # | on     | on       | present  | check available_on.class lists at   |
+    # |        |          |          | least one work or collection class  |
+    # |        |          |          | declared in this profile's classes  |
     class RedirectsValidator
-      REQUIRED_CLASSES = %w[Hyrax::Work Hyrax::PcdmCollection].freeze
-
       ##
       # @param profile [Hash] the flexible metadata profile
       # @param errors [Array<String>] an array to append errors to
@@ -64,11 +63,43 @@ module Hyrax
           return
         end
 
-        available_on = Array(redirects_property.dig('available_on', 'class'))
-        missing = REQUIRED_CLASSES - available_on
-        return if missing.empty?
+        available_on = clean(Array(redirects_property.dig('available_on', 'class')))
+        return if (available_on & profile_work_or_collection_classes).any?
 
-        @errors << "m3 profile `redirects` property must be available on: #{missing.join(', ')}"
+        @errors << 'm3 profile `redirects` property must be available on at least one work or collection class declared in this profile'
+      end
+
+      # Class names declared in this m3 profile's top-level `classes:` block,
+      # filtered to keep only those that represent works or collections.
+      # FileSets, AdminSets, and any non-work/non-collection class are
+      # excluded — redirects only apply to works and collections.
+      def profile_work_or_collection_classes
+        @profile_work_or_collection_classes ||= begin
+          declared = clean(Array(@profile&.dig('classes')&.keys))
+          declared.select { |name| work_or_collection?(name) }
+        end
+      end
+
+      def work_or_collection?(class_name)
+        registered_collection_names.include?(class_name) ||
+          registered_work_names.include?(class_name)
+      end
+
+      def registered_collection_names
+        @registered_collection_names ||= clean(Hyrax::ModelRegistry.collection_class_names)
+      end
+
+      # Adopter-registered work types, plus their `Resource`-suffixed Valkyrie
+      # equivalents. Mirrors how upstream `class_validator` accepts both forms.
+      def registered_work_names
+        @registered_work_names ||= begin
+          works = Array(Hyrax.config.registered_curation_concern_types)
+          clean(works.flat_map { |name| [name, "#{name}Resource"] })
+        end
+      end
+
+      def clean(names)
+        names.map { |name| name.to_s.delete_prefix('::') }
       end
 
       def warn_dead_property(reason)

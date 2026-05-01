@@ -7,12 +7,17 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
 
   let(:profile_with_redirects) do
     {
+      'classes' => { 'GenericWork' => {}, 'CollectionResource' => {} },
       'properties' => {
         'redirects' => {
-          'available_on' => { 'class' => %w[Hyrax::Work Hyrax::PcdmCollection] }
+          'available_on' => { 'class' => %w[GenericWork CollectionResource] }
         }
       }
     }
+  end
+
+  before do
+    allow(Hyrax.config).to receive(:registered_curation_concern_types).and_return(['GenericWork'])
   end
 
   let(:profile_without_redirects) do
@@ -96,33 +101,83 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
         end
       end
 
-      context 'and the m3 profile has `redirects` but is missing Hyrax::PcdmCollection' do
+      context 'and the m3 profile has `redirects` with an adopter-registered work class (Resource-suffixed)' do
         let(:profile) do
           {
+            'classes' => { 'GenericWorkResource' => {} },
             'properties' => {
-              'redirects' => { 'available_on' => { 'class' => ['Hyrax::Work'] } }
+              'redirects' => { 'available_on' => { 'class' => ['GenericWorkResource'] } }
             }
           }
         end
 
-        it 'errors that the missing class must be in available_on.class' do
+        it 'is silent (Resource suffix is accepted alongside the abstract name)' do
           validator.validate!
-          expect(errors).to include(/`redirects`.*available on.*Hyrax::PcdmCollection/)
+          expect(errors).to be_empty
         end
       end
 
-      context 'and the m3 profile has `redirects` but is missing Hyrax::Work' do
+      context 'and the m3 profile lists a class in available_on.class that is not declared in this profile' do
         let(:profile) do
           {
+            'classes' => { 'GenericWork' => {} },
             'properties' => {
-              'redirects' => { 'available_on' => { 'class' => ['Hyrax::PcdmCollection'] } }
+              'redirects' => { 'available_on' => { 'class' => ['SomeOtherWork'] } }
             }
           }
         end
 
-        it 'errors that the missing class must be in available_on.class' do
+        it 'errors (the class is not declared in this profile)' do
           validator.validate!
-          expect(errors).to include(/`redirects`.*available on.*Hyrax::Work/)
+          expect(errors).to include(/declared in this profile/)
+        end
+      end
+
+      context 'and the m3 profile has `redirects` available only on a non-work, non-collection class declared in the profile' do
+        let(:profile) do
+          {
+            'classes' => { 'Hyrax::FileSet' => {} },
+            'properties' => {
+              'redirects' => { 'available_on' => { 'class' => ['Hyrax::FileSet'] } }
+            }
+          }
+        end
+
+        it 'errors that the property must be available on at least one work or collection class' do
+          validator.validate!
+          expect(errors).to include(/work or collection class/)
+        end
+      end
+
+      context 'and the m3 profile has `redirects` with an empty available_on.class' do
+        let(:profile) do
+          {
+            'classes' => { 'GenericWork' => {} },
+            'properties' => {
+              'redirects' => { 'available_on' => { 'class' => [] } }
+            }
+          }
+        end
+
+        it 'errors that the property must be available on at least one work or collection class' do
+          validator.validate!
+          expect(errors).to include(/work or collection class/)
+        end
+      end
+
+      context 'and the m3 profile has `redirects` with available_on entirely missing' do
+        let(:profile) do
+          {
+            'classes' => { 'GenericWork' => {} },
+            'properties' => {
+              'redirects' => { 'cardinality' => { 'minimum' => 0 } }
+            }
+          }
+        end
+
+        it 'errors that the property must be available on at least one work or collection class' do
+          validator.validate!
+          expect(errors).to include(/work or collection class/)
         end
       end
     end

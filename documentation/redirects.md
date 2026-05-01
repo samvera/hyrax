@@ -65,21 +65,41 @@ If the Flipflop is on but the m3 profile is missing the `redirects` property, th
 
 ## m3 profile requirements (`flexible: true` mode)
 
-Adopters running `HYRAX_FLEXIBLE=true` and choosing to use redirects must declare a `redirects` property in their m3 profile. The minimal declaration:
+Adopters running `HYRAX_FLEXIBLE=true` and choosing to use redirects must declare a `redirects` property in their m3 profile. The classes listed in `available_on.class` must also appear in the profile's top-level `classes:` block. A minimal declaration:
 
 ```yaml
+classes:
+  GenericWork:
+    display_label: Work
+  CollectionResource:
+    display_label: Collection
+  # ... and any other classes the deployment uses
+
 properties:
   redirects:
+    display_label:
+      default: URL Aliases
     available_on:
       class:
-        - Hyrax::Work
-        - Hyrax::PcdmCollection
+        - GenericWork          # or any registered curation concern
+        - CollectionResource   # or any registered collection class
     cardinality:
       minimum: 0
     type: redirect
     multiple: true
     predicate: http://samvera.org/ns/hyku/redirects
+    range: http://www.w3.org/2000/01/rdf-schema#Resource
+    form:
+      display: false           # keeps redirects out of the basic metadata form;
+      primary: false           # the dedicated Aliases tab handles editing
 ```
+
+The `available_on.class` list should name the resource classes the adopter uses for works and collections. The validator requires at least one work or collection class be listed, and that class must:
+
+1. Be **declared in this profile's top-level `classes:` block**, and
+2. Be a **registered work or collection class** — either a registered curation concern type (per `Hyrax.config.registered_curation_concern_types`, including its `Resource`-suffixed Valkyrie equivalent) or a registered collection class (per `Hyrax::ModelRegistry.collection_class_names`).
+
+`FileSet`, `AdminSet`, and any class not declared in this profile do not satisfy the check.
 
 The `type: redirect` token resolves to `Hyrax::Redirect`, a `Valkyrie::Resource` with `path`, `canonical`, and `sequence` sub-attributes. `multiple: true` is required for nested-resource members; the schema loader raises `ArgumentError` if a nested-resource property is declared with `multiple: false`.
 
@@ -90,8 +110,8 @@ Validation matrix on profile save (with the config on):
 | off | absent | silent (the feature is not in active use) |
 | off | present | warning (property is loaded but unused) |
 | on | absent | error (property is required) |
-| on | present, missing `Hyrax::Work` or `Hyrax::PcdmCollection` in `available_on.class` | error |
-| on | present, complete | silent (valid) |
+| on | present with no profile-declared work or collection class in `available_on.class` | error |
+| on | present with at least one profile-declared work or collection class | silent (valid) |
 
 When the config is **off**, an m3 profile that declares `redirects` produces a warning rather than an error. The property is dead — it won't be loaded — but Hyrax doesn't refuse to save the profile.
 
