@@ -25,6 +25,7 @@ RSpec.describe Hyrax::ControlledVocabularyValidator do
   let(:resource_type_authority) { FakeAuthority.new(resource_type_terms) }
 
   before do
+    allow(Flipflop).to receive(:validate_local_controlled_vocabulary?).and_return(true)
     allow(Qa::Authorities::Local).to receive(:subauthorities).and_return(['licenses', 'resource_types'])
     allow(Qa::Authorities::Local).to receive(:subauthority_for).with('licenses').and_return(license_authority)
     allow(Qa::Authorities::Local).to receive(:subauthority_for).with('resource_types').and_return(resource_type_authority)
@@ -157,6 +158,19 @@ RSpec.describe Hyrax::ControlledVocabularyValidator do
         expect(change_set.errors.full_messages).to include(match(/license.*unrecognized.*bogus/i))
         expect(change_set.errors.full_messages).not_to include(match(/by\/4.0/i))
       end
+    end
+  end
+
+  context 'when the feature is disabled' do
+    before { allow(Flipflop).to receive(:validate_local_controlled_vocabulary?).and_return(false) }
+
+    it 'skips validation' do
+      allow(change_set).to receive(:fields).and_return('license' => [])
+      allow(change_set).to receive(:license).and_return(['http://bogus.example.com/fake'])
+
+      validator.validate(change_set)
+
+      expect(change_set.errors).to be_empty
     end
   end
 

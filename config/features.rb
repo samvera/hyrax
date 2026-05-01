@@ -36,6 +36,10 @@ Flipflop.configure do
     feature :read_only,
             default: false,
             description: "Put the system into read-only mode. Deposits, edits, approvals and anything that makes a change to the data will be disabled."
+
+    feature :validate_local_controlled_vocabulary,
+            default: false,
+            description: "Validate local controlled vocabulary."
   end
 
   group :repository_management do

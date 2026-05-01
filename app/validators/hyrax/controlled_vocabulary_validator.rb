@@ -12,6 +12,8 @@ module Hyrax
   # Remote authorities (e.g. Geonames) are out of scope.
   class ControlledVocabularyValidator < ActiveModel::Validator
     def validate(record)
+      return unless Flipflop.validate_local_controlled_vocabulary?
+
       active_terms_by_property(record).each do |property, terms|
         values = Array.wrap(record.public_send(property)).reject(&:blank?)
         next if values.empty?
