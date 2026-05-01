@@ -13,7 +13,7 @@ module Hyrax
     end
 
     def initialize(path, except_id: nil)
-      @path = path
+      @path = Hyrax::RedirectPathNormalizer.call(path)
       @except_id = except_id
     end
 

@@ -6,7 +6,7 @@ module Hyrax
     CACHE_TTL = 60.seconds
 
     def show
-      path = "/#{params[:alias_path]}"
+      path = Hyrax::RedirectPathNormalizer.call(params[:alias_path])
       doc = lookup(path)
       raise ActionController::RoutingError, 'Not Found' if doc.blank?
 

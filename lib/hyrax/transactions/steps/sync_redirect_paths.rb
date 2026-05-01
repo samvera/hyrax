@@ -23,7 +23,10 @@ module Hyrax
         def call(object)
           return Success(object) unless syncable?(object)
 
-          paths = Array(object.redirects).map { |entry| entry.try(:path) }.compact.uniq
+          paths = Array(object.redirects)
+                  .map { |entry| Hyrax::RedirectPathNormalizer.call(entry.try(:path)) }
+                  .reject(&:blank?)
+                  .uniq
           now = Time.current
           rows = paths.map do |path|
             { path: path, resource_id: object.id.to_s, created_at: now, updated_at: now }
