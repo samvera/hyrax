@@ -194,6 +194,23 @@ Neither step does anything when the config is off, so adopters who don't enable 
 
 ## Resolver behavior
 
+### Route placement
+
+The redirect resolver is wired up as a **catch-all route in the host application's `config/routes.rb`**, not in the Hyrax engine. It must be the **last route in the host application** so every other route — engine mounts, host-specific routes, and `curation_concerns_basic_routes` — gets first crack at matching the request. The install generator appends the route at the end of `config/routes.rb`:
+
+```ruby
+# config/routes.rb (host app, end of file)
+get '*alias_path', to: 'hyrax/redirects#show',
+                   constraints: ->(_req) { Hyrax.config.redirects_active? },
+                   format: false
+```
+
+The constraint lambda is evaluated on every request: when `redirects_active?` is false (config off, or Flipflop off, or both), the catch-all is transparent and Rails returns its default 404 for any path that didn't match an earlier route. When `redirects_active?` is true, the request reaches `Hyrax::RedirectsController#show`.
+
+Adopters with existing installs (predating this feature) need to add the catch-all line manually. Adopters who run a custom catch-all (e.g. a 404 page handler) should put the redirect line *before* their handler, so registered redirects take precedence and unregistered paths fall through to the custom 404.
+
+### What happens at request time
+
 When both gates are open, `Hyrax::RedirectsController#show` serves any path not claimed by an earlier route:
 
 - The incoming path is normalized via `Hyrax::RedirectPathNormalizer` so the lookup matches the canonical form stored in Solr (a request for `/foo/` resolves the same record as `/foo`).
