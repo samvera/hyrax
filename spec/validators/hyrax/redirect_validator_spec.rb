@@ -64,12 +64,16 @@ RSpec.describe Hyrax::RedirectValidator do
       end
     end
 
+    def t(key, **interp)
+      I18n.t(key, scope: 'errors.messages.redirect', **interp)
+    end
+
     context 'with a blank path' do
       let(:entries) { [entry_class.new(path: '', canonical: false)] }
 
       it 'records a blank-path error' do
         record.valid?
-        expect(record.errors[:redirects]).to include(/can't be blank/)
+        expect(record.errors[:redirects]).to include(t(:blank))
       end
     end
 
@@ -78,7 +82,7 @@ RSpec.describe Hyrax::RedirectValidator do
 
       it 'records a format error' do
         record.valid?
-        expect(record.errors[:redirects]).to include(/not a valid redirect path/)
+        expect(record.errors[:redirects]).to include(t(:invalid_format, path: 'handle/12345/678'))
       end
     end
 
@@ -87,7 +91,7 @@ RSpec.describe Hyrax::RedirectValidator do
 
       it 'records a format error' do
         record.valid?
-        expect(record.errors[:redirects]).to include(/not a valid redirect path/)
+        expect(record.errors[:redirects]).to include(t(:invalid_format, path: '/has space'))
       end
     end
 
@@ -96,7 +100,7 @@ RSpec.describe Hyrax::RedirectValidator do
 
       it 'records a format error' do
         record.valid?
-        expect(record.errors[:redirects]).to include(/not a valid redirect path/)
+        expect(record.errors[:redirects]).to include(t(:invalid_format, path: '/foo?bar=baz'))
       end
     end
 
@@ -105,7 +109,7 @@ RSpec.describe Hyrax::RedirectValidator do
 
       it 'records a reserved-prefix error' do
         record.valid?
-        expect(record.errors[:redirects]).to include(/reserved prefix/)
+        expect(record.errors[:redirects]).to include(t(:reserved_prefix, path: '/concern/generic_works/abc'))
       end
     end
 
@@ -114,7 +118,7 @@ RSpec.describe Hyrax::RedirectValidator do
 
       it 'records a reserved-prefix error' do
         record.valid?
-        expect(record.errors[:redirects]).to include(/reserved prefix/)
+        expect(record.errors[:redirects]).to include(t(:reserved_prefix, path: '/dashboard'))
       end
     end
 
@@ -128,7 +132,7 @@ RSpec.describe Hyrax::RedirectValidator do
 
       it 'records an intra-record duplicate error' do
         record.valid?
-        expect(record.errors[:redirects]).to include(/listed more than once/)
+        expect(record.errors[:redirects]).to include(t(:intra_record_duplicate, path: '/handle/1'))
       end
     end
 
@@ -144,7 +148,7 @@ RSpec.describe Hyrax::RedirectValidator do
 
       it 'records a global-uniqueness error' do
         record.valid?
-        expect(record.errors[:redirects]).to include(/already in use/)
+        expect(record.errors[:redirects]).to include(t(:already_taken, path: '/handle/12345/678'))
       end
     end
 
@@ -158,7 +162,7 @@ RSpec.describe Hyrax::RedirectValidator do
 
       it 'records an at-most-one-canonical error' do
         record.valid?
-        expect(record.errors[:redirects]).to include(/at most one redirect entry may be marked canonical/)
+        expect(record.errors[:redirects]).to include(t(:multiple_canonical))
       end
     end
 

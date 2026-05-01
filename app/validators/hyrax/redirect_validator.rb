@@ -12,10 +12,6 @@ module Hyrax
   # See documentation/redirects.md for the validation rules.
   class RedirectValidator < ActiveModel::EachValidator
     PATH_FORMAT = %r{\A/[^?\s#]+\z}.freeze
-    RESERVED_PREFIXES = %w[
-      /admin /assets /catalog /collections /concern /dashboard
-      /id/eprint /rails /single_signon /users
-    ].freeze
 
     def validate_each(record, attribute, entries)
       return unless Hyrax.config.redirects_enabled? && Flipflop.redirects?
@@ -33,11 +29,11 @@ module Hyrax
       entries.each do |entry|
         path = entry.try(:path)
         if path.blank?
-          record.errors.add(attribute, "redirect path can't be blank")
+          record.errors.add(attribute, message_for(:blank))
         elsif !PATH_FORMAT.match?(path)
-          record.errors.add(attribute, "#{path.inspect} is not a valid redirect path (must start with '/' and contain no whitespace, '?', or '#')")
-        elsif RESERVED_PREFIXES.any? { |prefix| path == prefix || path.start_with?("#{prefix}/") }
-          record.errors.add(attribute, "#{path.inspect} starts with a reserved prefix and would shadow a Hyrax route")
+          record.errors.add(attribute, message_for(:invalid_format, path: path))
+        elsif Hyrax.config.reserved_redirect_prefixes.any? { |prefix| path == prefix || path.start_with?("#{prefix}/") }
+          record.errors.add(attribute, message_for(:reserved_prefix, path: path))
         end
       end
     end
@@ -46,7 +42,7 @@ module Hyrax
       paths = entries.map { |entry| entry.try(:path) }.compact
       duplicates = paths.tally.select { |_, count| count > 1 }.keys
       duplicates.each do |path|
-        record.errors.add(attribute, "#{path.inspect} is listed more than once on this record")
+        record.errors.add(attribute, message_for(:intra_record_duplicate, path: path))
       end
     end
 
@@ -56,14 +52,18 @@ module Hyrax
         path = entry.try(:path)
         next if path.blank?
         next unless Hyrax::RedirectsLookup.taken?(path, except_id: except_id)
-        record.errors.add(attribute, "#{path.inspect} is already in use by another record")
+        record.errors.add(attribute, message_for(:already_taken, path: path))
       end
     end
 
     def validate_at_most_one_canonical(record, attribute, entries)
       canonical_count = entries.count { |entry| entry.try(:canonical) }
       return if canonical_count <= 1
-      record.errors.add(attribute, "at most one redirect entry may be marked canonical")
+      record.errors.add(attribute, message_for(:multiple_canonical))
+    end
+
+    def message_for(key, **interpolations)
+      I18n.t(key, scope: 'errors.messages.redirect', **interpolations)
     end
   end
 end

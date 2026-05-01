@@ -151,10 +151,25 @@ The validator enforces six rules on the `redirects` attribute:
 |---|---|---|
 | Path is present | `entry.path` is blank | `redirect path can't be blank` |
 | Path format | path doesn't start with `/`, contains whitespace, `?`, or `#` | `is not a valid redirect path` |
-| Reserved prefix | path equals or starts with `/admin`, `/assets`, `/catalog`, `/collections`, `/concern`, `/dashboard`, `/id/eprint`, `/rails`, `/single_signon`, or `/users` | `starts with a reserved prefix and would shadow a Hyrax route` |
+| Reserved prefix | path equals or starts with one of `Hyrax.config.reserved_redirect_prefixes` (defaults to the routes Hyrax itself reserves) | the path is reserved by the application and may not be used as an alias |
 | Intra-record uniqueness | the same path appears more than once on a single record | `is listed more than once on this record` |
 | Global uniqueness | the path is already in use on a different record (excluding the current record's own id) | `is already in use by another record` |
 | At most one canonical | more than one entry has `canonical: true` | `at most one redirect entry may be marked canonical` |
+
+### Reserved-prefix list
+
+The reserved-prefix list lives in `Hyrax.config.reserved_redirect_prefixes`. The default covers the routes Hyrax itself reserves: `/admin`, `/api`, `/assets`, `/batch_edits`, `/batch_uploads`, `/capabilitylist`, `/catalog`, `/changelist`, `/collections`, `/concern`, `/content_blocks`, `/dashboard`, `/downloads`, `/embargoes`, `/featured_works`, `/files`, `/leases`, `/notifications`, `/pages`, `/proxies`, `/rails`, `/resourcelist`, `/uploads`, `/users`, and `/.well-known`.
+
+Host applications with their own reserved routes (Hyku's `/single_signon`, for example) should extend the list in their initializer:
+
+```ruby
+# config/initializers/hyrax.rb
+Hyrax.config do |config|
+  config.reserved_redirect_prefixes += ['/single_signon']
+end
+```
+
+The validator rejects any redirect path that equals one of these prefixes, or starts with one followed by `/` (so `/admin` is reserved, and `/admin/anything` is reserved, but `/administrator` would *not* be reserved by the `/admin` entry).
 
 ### Uniqueness lookup and the `hyrax_redirect_paths` ledger
 
