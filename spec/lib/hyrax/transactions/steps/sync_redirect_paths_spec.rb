@@ -64,5 +64,43 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
         expect(step.call(resource)).to be_success
       end
     end
+
+    context "when the resource's redirects haven't changed since the last sync" do
+      let(:original_created_at) { 1.day.ago.change(usec: 0) }
+
+      before do
+        Hyrax::RedirectPath.create!(path: '/handle/1', resource_id: resource_id, created_at: original_created_at, updated_at: original_created_at)
+        Hyrax::RedirectPath.create!(path: '/handle/2', resource_id: resource_id, created_at: original_created_at, updated_at: original_created_at)
+      end
+
+      it 'leaves existing rows untouched (preserves created_at)' do
+        result = step.call(resource)
+        expect(result).to be_success
+
+        rows = Hyrax::RedirectPath.where(resource_id: resource_id).order(:path)
+        expect(rows.pluck(:path)).to eq %w[/handle/1 /handle/2]
+        expect(rows.pluck(:created_at)).to all(eq(original_created_at))
+      end
+    end
+
+    context "when the resource's redirects differ in order only" do
+      let(:original_created_at) { 1.day.ago.change(usec: 0) }
+      let(:redirects) do
+        # Same paths as the existing rows, just listed in reverse order on the resource.
+        [entry_class.new(path: '/handle/2'), entry_class.new(path: '/handle/1')]
+      end
+
+      before do
+        Hyrax::RedirectPath.create!(path: '/handle/1', resource_id: resource_id, created_at: original_created_at, updated_at: original_created_at)
+        Hyrax::RedirectPath.create!(path: '/handle/2', resource_id: resource_id, created_at: original_created_at, updated_at: original_created_at)
+      end
+
+      it 'recognizes the set is unchanged and leaves rows untouched' do
+        result = step.call(resource)
+        expect(result).to be_success
+        expect(Hyrax::RedirectPath.where(resource_id: resource_id).pluck(:created_at))
+          .to all(eq(original_created_at))
+      end
+    end
   end
 end

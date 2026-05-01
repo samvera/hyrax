@@ -45,6 +45,10 @@ module Hyrax
         end
 
         def replace_rows(object, rows)
+          desired_paths = rows.map { |r| r[:path] }.sort
+          existing_paths = Hyrax::RedirectPath.where(resource_id: object.id.to_s).pluck(:path).sort
+          return if desired_paths == existing_paths
+
           Hyrax::RedirectPath.transaction do
             Hyrax::RedirectPath.where(resource_id: object.id.to_s).delete_all
             # rubocop:disable Rails/SkipsModelValidations -- the DB unique index on `path` is the validation we rely on; bulk insert is intentional
