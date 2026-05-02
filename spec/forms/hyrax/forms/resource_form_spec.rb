@@ -260,6 +260,80 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '#redirects' do
+    subject(:form) { form_class.new(resource: work) }
+
+    let(:work) { resource_class.new }
+
+    let(:resource_class) do
+      Class.new(Valkyrie::Resource) do
+        attribute :redirects, Valkyrie::Types::Array.of(Hyrax::Redirect).optional
+
+        def self.name
+          'TestRedirectsResource'
+        end
+
+        def flexible?
+          false
+        end
+      end
+    end
+
+    let(:form_class) do
+      rc = resource_class
+      Class.new(Hyrax::Forms::ResourceForm) do
+        self.model_class = rc
+        property :redirects, default: []
+        prepend Hyrax::RedirectsFieldBehavior
+      end
+    end
+
+    before do
+      allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+      allow(Flipflop).to receive(:redirects?).and_return(true)
+      # Ensure the behavior's `self.included` declares the virtual property
+      # under the test's gating, since the module was loaded with the gate off.
+      form_class.property :redirects_attributes, virtual: true, populator: :redirects_populator unless form_class.definitions.key?('redirects_attributes')
+    end
+
+    it 'runs the redirects populator on submitted nested-attributes payload' do
+      form.validate(redirects_attributes: { "0" => { "path" => "/old/url", "canonical" => "false" } })
+      expect(form.redirects).to contain_exactly(hash_including(path: '/old/url', canonical: false))
+    end
+
+    it 'normalizes paths in the populator before assigning to redirects' do
+      form.validate(redirects_attributes: { "0" => { "path" => "/foo/" } })
+      expect(form.redirects.first[:path]).to eq('/foo')
+    end
+
+    it 'strips the duplicate `redirects` key so `_attributes` wins' do
+      form.validate(
+        redirects: { "0" => { "path" => "/raw" } },
+        redirects_attributes: { "0" => { "path" => "/from-attributes" } }
+      )
+      expect(form.redirects).to contain_exactly(hash_including(path: '/from-attributes'))
+    end
+
+    it 'rejects rows marked _destroy or with blank path' do
+      form.validate(redirects_attributes: {
+                      "0" => { "path" => "/keep" },
+                      "1" => { "path" => "/gone", "_destroy" => "true" },
+                      "2" => { "path" => "  " }
+                    })
+      expect(form.redirects).to contain_exactly(hash_including(path: '/keep'))
+    end
+
+    context 'when the Flipflop is off' do
+      before { allow(Flipflop).to receive(:redirects?).and_return(false) }
+
+      it 'does not mutate redirects from a submitted payload' do
+        work.redirects = []
+        form.validate(redirects_attributes: { "0" => { "path" => "/blocked" } })
+        expect(form.redirects).to eq([])
+      end
+    end
+  end
+
   describe '#embargo_release_date' do
     context 'without an embargo' do
       it 'is nil' do

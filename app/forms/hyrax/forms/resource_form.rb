@@ -27,6 +27,7 @@ module Hyrax
       end
 
       include BasedNearFieldBehavior
+      include RedirectsFieldBehavior
       class_attribute :model_class
 
       property :human_readable_type, writable: false
@@ -43,8 +44,19 @@ module Hyrax
       # @see https://github.com/samvera/valkyrie/wiki/Optimistic-Locking
       property :version, virtual: true, prepopulator: LockKeyPrepopulator
 
-      validates_with Hyrax::RedirectValidator, attributes: [:redirects] if Hyrax.config.redirects_enabled?
-      property :redirects_attributes, virtual: true, populator: :redirects_populator if Hyrax.config.redirects_enabled?
+      # Wired through `validation { ... }` rather than Reform's `validates_with`
+      # shim. The shim closes over the args array, so the options hash is
+      # shared across heritage replays — AM mutates that hash on each call
+      # (`options[:class] = self`, then `options.delete(:attributes)` inside
+      # EachValidator#initialize), and the second replay raises
+      # `:attributes cannot be blank`. Using `validation { ... }` re-evaluates
+      # the literal options hash on every replay, so each subclass gets its
+      # own clean copy.
+      if Hyrax.config.redirects_enabled?
+        validation(name: :default, inherit: true) do
+          validates_with Hyrax::RedirectValidator, attributes: [:redirects]
+        end
+      end
 
       ##
       # @api public
@@ -97,9 +109,13 @@ module Hyrax
 
       class << self
         def inherited(subclass)
-          # this is a noop if based near is not defined on a given model
-          # we need these to be before and included properties
+          # Field Behaviors must be prepended onto every subclass so their
+          # `deserialize` overrides land above Reform's base method on the
+          # ancestor chain. Each behavior is a no-op when the property it
+          # owns isn't on the subclass's model. See
+          # documentation/forms/field_behaviors.md.
           subclass.prepend(BasedNearFieldBehavior)
+          subclass.prepend(RedirectsFieldBehavior) if Hyrax.config.redirects_enabled?
           super
         end
 
@@ -196,24 +212,6 @@ module Hyrax
       def redirects=(values)
         return super unless Hyrax.config.redirects_enabled?
         super(Array(values).map { |entry| normalize_redirect_entry(entry) })
-      end
-
-      # Populator for the nested-attributes payload posted by the Aliases
-      # tab. Each form submission rebuilds the `redirects` list from the
-      # visible rows; rows marked `_destroy` are dropped, blank rows are
-      # ignored. The `redirects=` setter then normalizes paths and the
-      # validator runs against the result.
-      #
-      # No-ops when the Flipflop is off so a stale or out-of-band post of
-      # redirects_attributes can't mutate (or clear) existing redirects on
-      # a resource while the runtime feature is disabled. Existing entries
-      # on the resource are preserved untouched.
-      def redirects_populator(fragment:, **_options)
-        return unless Flipflop.redirects?
-        entries = Array(fragment&.values)
-                  .reject { |row| row['_destroy'].to_s == 'true' || row['path'].to_s.strip.empty? }
-                  .map { |row| { path: row['path'], canonical: row['canonical'].to_s == 'true' } }
-        self.redirects = entries
       end
 
       ##

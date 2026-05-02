@@ -1,18 +1,27 @@
 # frozen_string_literal: true
 module Hyrax
+  # Field Behavior for the `based_near` (location) controlled vocabulary form
+  # field. The form expects a ControlledVocabularies::Location object as input
+  # and produces a hash like those used with accepts_nested_attributes_for.
+  #
+  # See documentation/forms/field_behaviors.md for the pattern this module
+  # follows (why `deserialize` strips and calls `super`, why it's prepended
+  # in `inherited`, etc).
   module BasedNearFieldBehavior
-    # Provides compatibility with the behavior of the based_near (location) controlled vocabulary form field.
-    # The form expects a ControlledVocabularies::Location object as input and produces a hash like those
-    # used with accepts_nested_attributes_for.
     def self.included(descendant)
       descendant.property :based_near_attributes, virtual: true, populator: :based_near_attributes_populator, prepopulator: :based_near_attributes_prepopulator
     end
 
-    # there is a race condition during validation that leaves the based_near field in an inconsistent state.
-    # we skip the unedited based_near for validation and only handle it during attribute population
+    # Skipping based_near in deserialize avoids a race condition where it
+    # would otherwise end up in an inconsistent state during validation; the
+    # field is handled exclusively by the populator on
+    # `based_near_attributes`.
     def deserialize(params)
-      params = deserialize!(params)
-      deserializer.new(self).from_hash(params.except('based_near'))
+      if params.respond_to?(:delete)
+        params.delete('based_near')
+        params.delete(:based_near)
+      end
+      super
     end
 
     private
