@@ -42,9 +42,12 @@ RSpec.describe Hyrax::WorkFormHelper do
         allow(Flipflop).to receive(:redirects?).and_return(true)
         # The schema include only runs at class load when HYRAX_REDIRECTS_ENABLED
         # is set in the env; in the test process it isn't, so simulate the
-        # attribute being present on the underlying resource.
-        allow(work).to receive(:respond_to?).and_call_original
-        allow(work).to receive(:respond_to?).with(:redirects).and_return(true)
+        # attribute being present on the resource the form wraps. In flexible
+        # mode (e.g. allinson) ResourceForm.for deep-copies the resource via
+        # `resource.class.new(hash)`, so stubbing the original `work` doesn't
+        # affect the form's internal model — stub `form.model` directly.
+        allow(form.model).to receive(:respond_to?).and_call_original
+        allow(form.model).to receive(:respond_to?).with(:redirects).and_return(true)
       end
 
       it 'appends the redirects tab' do
