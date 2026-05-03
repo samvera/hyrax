@@ -43,7 +43,23 @@ module Hyrax
       # @see https://github.com/samvera/valkyrie/wiki/Optimistic-Locking
       property :version, virtual: true, prepopulator: LockKeyPrepopulator
 
-      validates_with Hyrax::RedirectValidator, attributes: [:redirects] if Hyrax.config.redirects_enabled?
+      # Wire validators with `attributes:` through `validation { ... }` rather
+      # than the bare `validates_with`. Reform's `validates_with` shim closes
+      # over the args array, so the options hash (`{attributes: [:foo]}`) is
+      # shared across heritage replays. ActiveModel mutates that hash on each
+      # call (`options[:class] = self`, then `options.delete(:attributes)`
+      # inside `EachValidator#initialize`). The first replay leaves the hash
+      # without `:attributes`; the second replay raises
+      # `:attributes cannot be blank` and the subclass crashes at load time.
+      # Wrapping in `validation(name: :default, inherit: true) { ... }` rebuilds
+      # the literal options hash on every replay so each subclass gets its own
+      # clean copy. This pattern applies to *any* `validates_with` that takes
+      # an `attributes:` keyword.
+      if Hyrax.config.redirects_enabled?
+        validation(name: :default, inherit: true) do
+          validates_with Hyrax::RedirectValidator, attributes: [:redirects]
+        end
+      end
 
       ##
       # @api public
