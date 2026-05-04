@@ -205,14 +205,6 @@ module Hyrax
         public_send("#{attr}=".to_sym, value)
       end
 
-      # Normalize redirect paths on assignment so the form, the persisted
-      # resource, the uniqueness ledger, and the resolver all agree on the
-      # canonical shape. See Hyrax::RedirectPathNormalizer.
-      def redirects=(values)
-        return super unless Hyrax.config.redirects_enabled?
-        super(Array(values).map { |entry| normalize_redirect_entry(entry) })
-      end
-
       ##
       # @deprecated use model.class instead
       #
@@ -256,18 +248,6 @@ module Hyrax
           singleton_class.schema_definitions
         else
           self.class.definitions
-        end
-      end
-
-      def normalize_redirect_entry(entry)
-        case entry
-        when Hash
-          entry = entry.transform_keys(&:to_sym)
-          entry.merge(path: Hyrax::RedirectPathNormalizer.call(entry[:path]))
-        when Hyrax::Redirect
-          Hyrax::Redirect.new(entry.attributes.merge(path: Hyrax::RedirectPathNormalizer.call(entry.path)))
-        else
-          entry
         end
       end
     end

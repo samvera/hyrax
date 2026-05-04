@@ -31,13 +31,14 @@ module Hyrax
         private
 
         def syncable?(object)
-          return false unless Hyrax.config.redirects_enabled? && Flipflop.redirects?
+          return false unless Hyrax.config.redirects_active?
           object.respond_to?(:redirects) && object.respond_to?(:id) && object.id.present?
         end
 
         def build_rows(object)
+          # Valkyrie's JSONValueMapper symbolizes hash keys on read; accept either.
           paths = Array(object.redirects)
-                  .map { |entry| Hyrax::RedirectPathNormalizer.call(entry.try(:path)) }
+                  .map { |entry| Hyrax::RedirectPathNormalizer.call(entry['path'] || entry[:path]) }
                   .reject(&:blank?)
                   .uniq
           now = Time.current
