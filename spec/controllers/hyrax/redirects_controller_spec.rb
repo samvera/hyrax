@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::RedirectsController, type: :controller do
-  routes { Hyrax::Engine.routes }
+  routes { Rails.application.routes }
 
   describe '#show' do
     let(:work_id)        { 'abc-123-xyz' }

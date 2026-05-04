@@ -2,23 +2,66 @@
 
 module Hyrax
   ##
-  # The Valkyrie model for a single URL redirect entry on a work or collection.
+  # Wraps a single redirect entry for use in form views, providing
+  # `.path`, `.canonical`, and `.sequence` readers over the underlying
+  # persisted hash.
   #
-  # A work or collection has zero or more `redirects`. Each entry holds a path
-  # (the lookup key for the redirect resolver), a `canonical` flag (at most one
-  # entry per record may be true), and an optional `sequence` for display
-  # ordering in the admin UI.
+  # Redirects are persisted as plain hashes on the parent work or
+  # collection. Form-render code calls `Hyrax::Redirect.wrap(entry)` to
+  # get a value object the view can call methods on. Other code (the
+  # validator, indexer, sync step) reads the persisted hash directly.
   #
   # @example
-  #   work.redirects = [
-  #     Hyrax::Redirect.new(path: '/handle/12345/678', canonical: false),
-  #     Hyrax::Redirect.new(path: '/robs-cat-study', canonical: true, sequence: 0)
-  #   ]
-  #
-  # @see Hyrax::RedirectsController for the resolution path
-  class Redirect < Valkyrie::Resource
-    attribute :path,      Valkyrie::Types::String
-    attribute :canonical, Valkyrie::Types::Bool.default(false)
-    attribute :sequence,  Valkyrie::Types::Integer.optional
+  #   Hyrax::Redirect.new(path: '/handle/12345/678', canonical: false)
+  #   Hyrax::Redirect.wrap('path' => '/foo', 'canonical' => true)
+  class Redirect
+    attr_reader :path, :canonical, :sequence
+
+    ##
+    # Accept nil values so the view can build an empty trailing row.
+    def initialize(path: nil, canonical: false, sequence: nil)
+      @path = path
+      @canonical = canonical
+      @sequence = sequence
+    end
+
+    ##
+    # Build a presenter from a hash. If passed a presenter, returns it
+    # unchanged. Returns nil for nil input. Accepts string or symbol keys.
+    #
+    # @param input [Hyrax::Redirect, Hash, nil]
+    # @return [Hyrax::Redirect, nil]
+    def self.wrap(input)
+      return nil if input.nil?
+      return input if input.is_a?(Hyrax::Redirect)
+      raise ArgumentError, "cannot wrap #{input.class} as Hyrax::Redirect" unless input.respond_to?(:to_h)
+
+      h = input.to_h.transform_keys(&:to_s)
+      new(path: h['path'], canonical: h.fetch('canonical', false), sequence: h['sequence'])
+    end
+
+    ##
+    # @return [Hash{String => Object}] string-keyed hash matching the persisted shape.
+    def to_h
+      { 'path' => path, 'canonical' => canonical, 'sequence' => sequence }
+    end
+
+    def as_json(*)
+      to_h
+    end
+
+    ##
+    # Equality on attribute values, so `Array#uniq` works as expected.
+    def ==(other)
+      other.is_a?(Hyrax::Redirect) &&
+        other.path == path &&
+        other.canonical == canonical &&
+        other.sequence == sequence
+    end
+    alias eql? ==
+
+    def hash
+      [path, canonical, sequence].hash
+    end
   end
 end

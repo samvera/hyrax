@@ -16,7 +16,7 @@ The redirects feature is gated by **two** independent switches:
 |---|---|---|
 | off | n/a (unregistered) | The schema is not loaded. The Flipflop feature is not registered. No `redirects` attribute on any resource. No indexer. No route. No controller. m3 profile does not require a `redirects` property. The feature is wholly absent. |
 | on | registered, off (default) | The schema is loaded. The `redirects` attribute exists on `Hyrax::Work` and `Hyrax::PcdmCollection`. The indexer is included on resource indexers but emits no Solr field. Routes/controllers/UI gates check Flipflop and stay silent. m3 profile may declare `redirects` (loaded but unused — a warning is emitted on profile validation). |
-| on | on | All of the above, plus: the indexer emits `redirects_path_ssim`. The route/controller/UI engage. m3 profile validation **requires** the `redirects` property to be declared and available on `Hyrax::Work` and `Hyrax::PcdmCollection`. |
+| on | on | All of the above, plus: the indexer emits `redirects_path_ssim`. The route/controller/UI engage. m3 profile validation **requires** the `redirects` property to be declared with `type: hash` and available on at least one work or collection class declared in the profile. |
 
 The two-layer split is deliberate: the application-level config controls *availability* (the schema is structural — toggling it after data is written would orphan persisted entries), and the Flipflop controls *use* at request time.
 
@@ -72,16 +72,16 @@ properties:
   redirects:
     available_on:
       class:
-        - Hyrax::Work
-        - Hyrax::PcdmCollection
+        - GenericWork
+        - CollectionResource
     cardinality:
       minimum: 0
-    type: redirect
+    type: hash
     multiple: true
     predicate: http://samvera.org/ns/hyku/redirects
 ```
 
-The `type: redirect` token resolves to `Hyrax::Redirect`, a `Valkyrie::Resource` with `path`, `canonical`, and `sequence` sub-attributes. `multiple: true` is required for nested-resource members; the schema loader raises `ArgumentError` if a nested-resource property is declared with `multiple: false`.
+Each redirect entry is a plain hash with `path`, `canonical`, and `sequence` keys, persisted as JSONB on the parent resource. The `type: hash` token resolves to `Dry::Types['hash']`, which round-trips entries through Postgres without the sub-field stripping a nested `Valkyrie::Resource` would suffer. `available_on.class` must include at least one work or collection class declared in this profile's top-level `classes:` block; substitute the class names your profile declares (`Image`, `Etd`, `Oer`, etc.) as appropriate.
 
 Validation matrix on profile save (with the config on):
 
@@ -90,7 +90,8 @@ Validation matrix on profile save (with the config on):
 | off | absent | silent (the feature is not in active use) |
 | off | present | warning (property is loaded but unused) |
 | on | absent | error (property is required) |
-| on | present, missing `Hyrax::Work` or `Hyrax::PcdmCollection` in `available_on.class` | error |
+| on | declared without `type: hash` | error |
+| on | `available_on.class` lists no work or collection class declared in this profile | error |
 | on | present, complete | silent (valid) |
 
 When the config is **off**, an m3 profile that declares `redirects` produces a warning rather than an error. The property is dead — it won't be loaded — but Hyrax doesn't refuse to save the profile.
@@ -102,7 +103,7 @@ In default (non-flexible) mode the schema lives in `config/metadata/redirects.ya
 ```yaml
 attributes:
   redirects:
-    type: redirect
+    type: hash
     multiple: true
     form:
       primary: false
@@ -114,10 +115,10 @@ attributes:
 When the config is on, this schema is loaded and `Hyrax::Work` / `Hyrax::PcdmCollection` include it via `Hyrax::Schema(:redirects)`. The schema loader produces:
 
 ```ruby
-attribute :redirects, Valkyrie::Types::Set.of(Hyrax::Redirect)
+attribute :redirects, Valkyrie::Types::Array.of(Dry::Types['hash'])
 ```
 
-`Set` (rather than `Array`) is used so instance round-trips through assignment don't re-invoke the Dry::Struct constructor on existing entries — `Array.of(Resource)` raises `can't convert Object into Hash` on `work.redirects = work.redirects`.
+Each entry is a plain hash with `path`, `canonical`, and `sequence` keys. Entries persist as JSONB on the parent resource, so sub-fields round-trip cleanly without an intermediate nested-resource schema mangling them. `Hyrax::Redirect` is retained as a thin Ruby presenter the form view consumes; non-form code (validator, indexer, sync step) reads the persisted hash directly.
 
 When the config is off, the loader filters `redirects.yaml` out of the schema set entirely. The file is on disk but invisible to `permissive_schema_for_valkrie_adapter`, `Hyrax::Schema(:redirects)`, and any other consumer of the simple schema loader.
 
@@ -132,7 +133,7 @@ Every redirect path in Hyrax — whether typed into a form, looked up by the res
 
 The normalizer is idempotent — `normalize(normalize(x)) == normalize(x)` — and is wired in at four call sites so they all agree on the canonical form:
 
-- `Hyrax::Forms::ResourceForm#redirects=` normalizes each entry's path on form assignment, before validation. The normalized form is what the validator sees and what the resource persists.
+- `Hyrax::RedirectsFieldBehavior#redirects_attributes_populator` normalizes each entry's path on form submission, before validation. The normalized form is what the validator sees and what the resource persists.
 - `Hyrax::RedirectsController#show` (the resolver) normalizes the incoming request path before the Solr lookup, so `/foo/` and `/foo` both resolve.
 - `Hyrax::RedirectsLookup` normalizes its input on construction, so callers can pass any reasonable form.
 - `Hyrax::Transactions::Steps::SyncRedirectPaths` normalizes paths before writing to the ledger, as defense in depth.
@@ -194,6 +195,23 @@ Neither step does anything when the config is off, so adopters who don't enable 
 
 ## Resolver behavior
 
+### Route placement
+
+The redirect resolver is wired up as a **catch-all route in the host application's `config/routes.rb`**, not in the Hyrax engine. It must be the **last route in the host application** so every other route — engine mounts, host-specific routes, and `curation_concerns_basic_routes` — gets first crack at matching the request. The install generator appends the route at the end of `config/routes.rb`:
+
+```ruby
+# config/routes.rb (host app, end of file)
+get '*alias_path', to: 'hyrax/redirects#show',
+                   constraints: ->(_req) { Hyrax.config.redirects_active? },
+                   format: false
+```
+
+The constraint lambda is evaluated on every request: when `redirects_active?` is false (config off, or Flipflop off, or both), the catch-all is transparent and Rails returns its default 404 for any path that didn't match an earlier route. When `redirects_active?` is true, the request reaches `Hyrax::RedirectsController#show`.
+
+Adopters with existing installs (predating this feature) need to add the catch-all line manually. Adopters who run a custom catch-all (e.g. a 404 page handler) should put the redirect line *before* their handler, so registered redirects take precedence and unregistered paths fall through to the custom 404.
+
+### What happens at request time
+
 When both gates are open, `Hyrax::RedirectsController#show` serves any path not claimed by an earlier route:
 
 - The incoming path is normalized via `Hyrax::RedirectPathNormalizer` so the lookup matches the canonical form stored in Solr (a request for `/foo/` resolves the same record as `/foo`).
@@ -238,7 +256,7 @@ To disable the feature at runtime without changing the config, toggle the `:redi
 
 ### Caveats
 
-- **`Hyrax::Redirect` (the resource class) is always defined.** The class file is loaded by Rails autoloading as soon as anything references the constant. It costs effectively nothing when unused. The "wholly absent" effect of disabling the config applies to the schema, the attribute on `Hyrax::Work` / `Hyrax::PcdmCollection`, the Flipflop, the indexer, and the m3 profile validator's enforcement — but not to the constant itself.
+- **`Hyrax::Redirect` (the presenter) is always defined.** The class file is loaded by Rails autoloading as soon as anything references the constant. It costs effectively nothing when unused. The "wholly absent" effect of disabling the config applies to the schema, the attribute on `Hyrax::Work` / `Hyrax::PcdmCollection`, the Flipflop, the indexer, and the m3 profile validator's enforcement — but not to the constant itself.
 - **The `disabled_schemas` filter only affects `Hyrax::SimpleSchemaLoader`.** Adopters running `flexible: true` whose m3 profile contains a stale `redirects` property will still see the attribute defined on records loaded via `M3SchemaLoader` even if `Hyrax.config.redirects_enabled?` is false. The m3 profile validator emits a warning in that situation ("the property will be ignored"); follow the warning by removing the `redirects` property from the m3 profile or setting the config back on.
 
 ## For contributors

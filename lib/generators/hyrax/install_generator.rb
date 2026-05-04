@@ -61,7 +61,7 @@ module Hyrax
     end
 
     # The engine routes have to come after the devise routes so that /users/sign_in will work
-    def inject_routes
+    def inject_routes # rubocop:disable Metrics/MethodLength
       # Remove root route that was added by blacklight generator
       gsub_file 'config/routes.rb', /root (:to =>|to:) "catalog#index"/, ''
 
@@ -72,6 +72,19 @@ module Hyrax
         "  resources :welcome, only: 'index'\n"\
         "  root 'hyrax/homepage#index'\n"\
         "  curation_concerns_basic_routes\n"\
+      end
+
+      # Catch-all redirect resolver. Must be the last route in the host
+      # application so that every other route — engine mounts, host-specific
+      # routes, curation concerns — gets first crack at matching the request.
+      # Gated by Hyrax.config.redirects_active? at request time so the route is
+      # transparent when the redirects feature is off.
+      # See documentation/redirects.md.
+      inject_into_file 'config/routes.rb', before: /^end\s*\Z/ do
+        "\n  # Catch-all redirect resolver — must be last. See documentation/redirects.md.\n"\
+        "  get '*alias_path', to: 'hyrax/redirects#show',\n"\
+        "                     constraints: ->(_req) { Hyrax.config.redirects_active? },\n"\
+        "                     format: false\n"
       end
     end
 
