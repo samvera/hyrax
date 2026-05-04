@@ -27,6 +27,7 @@ module Hyrax
       end
 
       include BasedNearFieldBehavior
+      include RedirectsFieldBehavior
       class_attribute :model_class
 
       property :human_readable_type, writable: false
@@ -112,9 +113,13 @@ module Hyrax
 
       class << self
         def inherited(subclass)
-          # this is a noop if based near is not defined on a given model
-          # we need these to be before and included properties
+          # Field Behaviors must be prepended onto every subclass so their
+          # `deserialize!` overrides land above Reform's base method on the
+          # ancestor chain. Each behavior gates itself internally and is a
+          # no-op when its feature is off or its property isn't on the
+          # subclass's model.
           subclass.prepend(BasedNearFieldBehavior)
+          subclass.prepend(RedirectsFieldBehavior)
           super
         end
 
