@@ -124,21 +124,22 @@ When the config is off, the loader filters `redirects.yaml` out of the schema se
 
 ## Path normalization
 
-Every redirect path in Hyrax — whether typed into a form, looked up by the resolver, written to the redirects table, or queried by the validator — passes through `Hyrax::RedirectPathNormalizer.call`. This is the single source of truth for "what does this path look like on disk?". Normalization rules:
+Every redirect path in Hyrax passes through `Hyrax::RedirectPathNormalizer.call`. This is the single source of truth for "what does this path look like on disk?". Normalization rules:
 
 1. If the input parses as a URL with a scheme and host (e.g. `https://old.example.edu/handle/12345/678`), keep only the path component.
 2. Strip query strings (`?utm_source=foo`) and fragments (`#section`).
 3. Ensure a leading slash (`handle/123` → `/handle/123`).
 4. Strip trailing slashes (`/handle/123/` → `/handle/123`), with the exception that the bare path `/` is preserved.
 
-The normalizer is idempotent — `normalize(normalize(x)) == normalize(x)` — and is wired in at four call sites so they all agree on the canonical form:
+The normalizer is idempotent — `normalize(normalize(x)) == normalize(x)`. Normalization happens in two distinct contexts:
 
-- `Hyrax::RedirectsFieldBehavior#redirects_attributes_populator` normalizes each entry's path on form submission, before validation. The normalized form is what the validator sees and what the resource persists.
+**On write (resource layer).** `Hyrax::RedirectsNormalization` is included on `Hyrax::Work` and `Hyrax::PcdmCollection` and overrides `set_value` so any assignment to the `redirects` attribute — form save, console write, importer, change-set apply — normalizes each entry's path before persistence. Read-side consumers (`Hyrax::Indexers::RedirectsIndexer`, `Hyrax::Transactions::Steps::SyncRedirectPaths`) trust the persisted shape and do not re-normalize.
+
+**On input (boundary layer).** Three boundary points canonicalize input from outside the resource before consulting the persisted state:
+
+- `Hyrax::RedirectsFieldBehavior#redirects_attributes_populator` normalizes form entries before the form-level validator runs, so a user pasting a full URL (`https://old.example.edu/handle/123?utm=email`) is forgivingly accepted and the validator sees the canonical form.
 - `Hyrax::RedirectsController#show` (the resolver) normalizes the incoming request path before the Solr lookup, so `/foo/` and `/foo` both resolve.
 - `Hyrax::RedirectsLookup` normalizes its input on construction, so callers can pass any reasonable form.
-- `Hyrax::Transactions::Steps::SyncRedirectPaths` normalizes paths before writing to the redirects table, as defense in depth.
-
-A user pasting a full URL from an old DSpace page (`https://old.example.edu/handle/123?utm=email`) sees the form quietly accept and persist `/handle/123`.
 
 ## Validation
 

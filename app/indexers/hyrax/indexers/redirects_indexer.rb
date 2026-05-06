@@ -17,8 +17,9 @@ module Hyrax
           next document unless Hyrax.config.redirects_active?
           next document unless resource.respond_to?(:redirects)
           # Valkyrie's JSONValueMapper symbolizes hash keys on read; accept either.
+          # Paths are normalized at write time by Hyrax::RedirectsNormalization.
           document['redirects_path_ssim'] = Array(resource.redirects)
-                                            .map { |entry| Hyrax::RedirectPathNormalizer.call(entry['path'] || entry[:path]) }
+                                            .map { |entry| entry['path'] || entry[:path] }
                                             .reject(&:blank?)
         end
       end

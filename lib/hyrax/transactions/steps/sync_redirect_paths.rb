@@ -40,8 +40,9 @@ module Hyrax
 
         def build_rows(object)
           # Valkyrie's JSONValueMapper symbolizes hash keys on read; accept either.
+          # Paths are normalized at write time by Hyrax::RedirectsNormalization.
           paths = Array(object.redirects)
-                  .map { |entry| Hyrax::RedirectPathNormalizer.call(entry['path'] || entry[:path]) }
+                  .map { |entry| entry['path'] || entry[:path] }
                   .reject(&:blank?)
                   .uniq
           now = Time.current
