@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   module WorkFormHelper
+    include Hyrax::RedirectsTabHelper
+
     ##
     # @todo this implementation hits database backends (solr) and is invoked
     #   from views. refactor to avoid
@@ -30,11 +32,13 @@ module Hyrax
     # @param form [Hyrax::Forms::WorkForm, Hyrax::Forms::ResourceForm]
     # @return [Array<String>] the list of names of tabs to be rendered in the form
     def form_tabs_for(form:)
-      if form.instance_of? Hyrax::Forms::BatchUploadForm
-        %w[files metadata relationships]
-      else
-        %w[metadata files relationships]
-      end
+      tabs = if form.instance_of? Hyrax::Forms::BatchUploadForm
+               %w[files metadata relationships]
+             else
+               %w[metadata files relationships]
+             end
+      tabs << 'redirects' if redirects_tab?(form)
+      tabs
     end
 
     ##
