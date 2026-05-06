@@ -27,6 +27,7 @@ module Hyrax
       end
 
       include BasedNearFieldBehavior
+      include RedirectsFieldBehavior
       class_attribute :model_class
 
       property :human_readable_type, writable: false
@@ -43,7 +44,23 @@ module Hyrax
       # @see https://github.com/samvera/valkyrie/wiki/Optimistic-Locking
       property :version, virtual: true, prepopulator: LockKeyPrepopulator
 
-      validates_with Hyrax::RedirectValidator, attributes: [:redirects] if Hyrax.config.redirects_enabled?
+      # Wire validators with `attributes:` through `validation { ... }` rather
+      # than the bare `validates_with`. Reform's `validates_with` shim closes
+      # over the args array, so the options hash (`{attributes: [:foo]}`) is
+      # shared across heritage replays. ActiveModel mutates that hash on each
+      # call (`options[:class] = self`, then `options.delete(:attributes)`
+      # inside `EachValidator#initialize`). The first replay leaves the hash
+      # without `:attributes`; the second replay raises
+      # `:attributes cannot be blank` and the subclass crashes at load time.
+      # Wrapping in `validation(name: :default, inherit: true) { ... }` rebuilds
+      # the literal options hash on every replay so each subclass gets its own
+      # clean copy. This pattern applies to *any* `validates_with` that takes
+      # an `attributes:` keyword.
+      if Hyrax.config.redirects_enabled?
+        validation(name: :default, inherit: true) do
+          validates_with Hyrax::RedirectValidator, attributes: [:redirects]
+        end
+      end
 
       ##
       # @api public
@@ -96,9 +113,13 @@ module Hyrax
 
       class << self
         def inherited(subclass)
-          # this is a noop if based near is not defined on a given model
-          # we need these to be before and included properties
+          # Field Behaviors must be prepended onto every subclass so their
+          # `deserialize!` overrides land above Reform's base method on the
+          # ancestor chain. Each behavior gates itself internally and is a
+          # no-op when its feature is off or its property isn't on the
+          # subclass's model.
           subclass.prepend(BasedNearFieldBehavior)
+          subclass.prepend(RedirectsFieldBehavior)
           super
         end
 
@@ -189,14 +210,6 @@ module Hyrax
         public_send("#{attr}=".to_sym, value)
       end
 
-      # Normalize redirect paths on assignment so the form, the persisted
-      # resource, the uniqueness ledger, and the resolver all agree on the
-      # canonical shape. See Hyrax::RedirectPathNormalizer.
-      def redirects=(values)
-        return super unless Hyrax.config.redirects_enabled?
-        super(Array(values).map { |entry| normalize_redirect_entry(entry) })
-      end
-
       ##
       # @deprecated use model.class instead
       #
@@ -240,18 +253,6 @@ module Hyrax
           singleton_class.schema_definitions
         else
           self.class.definitions
-        end
-      end
-
-      def normalize_redirect_entry(entry)
-        case entry
-        when Hash
-          entry = entry.transform_keys(&:to_sym)
-          entry.merge(path: Hyrax::RedirectPathNormalizer.call(entry[:path]))
-        when Hyrax::Redirect
-          Hyrax::Redirect.new(entry.attributes.merge(path: Hyrax::RedirectPathNormalizer.call(entry.path)))
-        else
-          entry
         end
       end
     end

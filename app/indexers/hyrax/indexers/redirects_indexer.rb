@@ -7,22 +7,19 @@ module Hyrax
     # resources that carry a `redirects` attribute. The redirect resolver
     # (`Hyrax::RedirectsController`) queries this field by path.
     #
-    # Include this mixin only in apps where `Hyrax.config.redirects_enabled?`
-    # is true (the inclusion site is the config gate). The mixin's body
-    # then needs only the Flipflop check — when the config is on, the
-    # `:redirects` feature is registered and `Flipflop.redirects?` is safe
-    # to call.
-    #
     # @example
     #   class WorkIndexer < Hyrax::Indexers::PcdmObjectIndexer
-    #     include Hyrax::Indexers::RedirectsIndexer if Hyrax.config.redirects_enabled?
+    #     include Hyrax::Indexers::RedirectsIndexer
     #   end
     module RedirectsIndexer
       def to_solr(*args)
         super.tap do |document|
-          next document unless Flipflop.redirects?
+          next document unless Hyrax.config.redirects_active?
           next document unless resource.respond_to?(:redirects)
-          document['redirects_path_ssim'] = Array(resource.redirects).map(&:path).compact
+          # Valkyrie's JSONValueMapper symbolizes hash keys on read; accept either.
+          document['redirects_path_ssim'] = Array(resource.redirects)
+                                            .map { |entry| Hyrax::RedirectPathNormalizer.call(entry['path'] || entry[:path]) }
+                                            .reject(&:blank?)
         end
       end
     end
