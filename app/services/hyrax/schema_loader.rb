@@ -106,34 +106,20 @@ module Hyrax
       # @return [Dry::Types::Type]
       def type
         member_type = type_for(config['type'])
-        nested_resource = member_type.is_a?(Class) && member_type < Valkyrie::Resource
-
-        raise ArgumentError, "nested resource members require `multiple: true` (got #{member_type})" if nested_resource && !multiple?
-
-        collection_type = if multiple?
-                            # When the entries are nested Hyrax resources (e.g. Hyrax::Redirect),
-                            # use Set so reading-and-writing the same value back works.
-                            # Array of resources would crash on `record.foo = record.foo`
-                            # because it tries to rebuild each entry from a hash.
-                            if nested_resource
-                              Valkyrie::Types::Set.constructor(&Coerce)
-                            else
-                              Valkyrie::Types::Array.constructor(&Coerce)
-                            end
-                          else
-                            Identity
-                          end
-
-        collection_type.of(member_type)
+        wrapper_type = multiple? ? Valkyrie::Types::Array.constructor(&Coerce) : Identity
+        wrapper_type.of(member_type)
       end
 
       # Cleans up the input before the type system sees it: drops the
       # "no value provided" placeholder dry-types uses internally, then
-      # removes blanks. Without dropping the placeholder, it leaks into
-      # member coercion and breaks nested-resource attributes.
+      # removes blanks. Wraps a bare Hash in a one-element array; using
+      # `Array(hash)` would surprise-flatten it into [[:k, v], ...] pairs.
+      # Valkyrie's JSONValueMapper unwraps single-element arrays on read,
+      # so the type sees a hash here when there was originally one entry.
       Coerce = lambda do |value|
         return [] if value.equal?(Dry::Types::Undefined)
-        Array(value).reject { |v| v.equal?(Dry::Types::Undefined) }.select(&:present?)
+        wrapped = value.is_a?(::Hash) ? [value] : Array(value)
+        wrapped.reject { |v| v.equal?(Dry::Types::Undefined) }.select(&:present?)
       end
 
       # Determine whether this attribute allows multiple values.
@@ -149,13 +135,13 @@ module Hyrax
       ##
       # @api private
       #
-      # This class acts as a Valkyrie/Dry::Types collection with typed members,
-      # but instead of wrapping the given type with itself as the collection type
-      # (as in `Valkyrie::Types::Array.of(MyType)`), it returns the given type.
+      # No-op wrapper for single-value attributes. Lets `#type` build its
+      # output the same way regardless of whether the attribute holds one
+      # value or many: `wrapper.of(member_type)` either wraps it (Array)
+      # or hands it back unchanged (Identity).
       #
       # @example
       #   Identity.of(Valkyrie::Types::String) # => Valkyrie::Types::String
-      #
       class Identity
         ##
         # @param [Dry::Types::Type]
@@ -168,19 +154,21 @@ module Hyrax
       private
 
       ##
-      # Resolves a `type:` value from a schema YAML to the actual class to use.
+      # Resolves a `type:` value from a schema YAML to a Dry::Types::Type.
       #
-      # Looks for the type in this order:
-      #   1. The shortcuts `id`, `uri`, and `date_time`.
-      #   2. A primitive type under `Valkyrie::Types::*` (e.g. `string` → `Valkyrie::Types::String`).
-      #   3. A `Valkyrie::Resource` class. Short names are looked up under `Hyrax::*`
-      #      (so `type: redirect` finds `Hyrax::Redirect`); fully-qualified names like
-      #      `MyApp::Citation` are looked up as-is.
+      # Recognized values:
+      #   - `id`, `uri`, `date_time` — Valkyrie type shortcuts.
+      #   - `hash` — for attributes whose entries carry multiple sub-fields
+      #     (e.g. redirects, with path / canonical / sequence). Use this
+      #     instead of nesting a Valkyrie::Resource. See
+      #     `documentation/redirects.md` for a worked example.
+      #   - Any primitive Valkyrie type, looked up under `Valkyrie::Types::*`
+      #     by classified name (e.g. `string` → `Valkyrie::Types::String`).
       #
       # Raises `ArgumentError` if nothing matches.
       #
       # @param [String]
-      # @return [Dry::Types::Type, Class]
+      # @return [Dry::Types::Type]
       def type_for(type)
         case type
         when 'id'
@@ -189,33 +177,12 @@ module Hyrax
           Valkyrie::Types::URI
         when 'date_time'
           Valkyrie::Types::DateTime
+        when 'hash'
+          Dry::Types['hash']
         else
           "Valkyrie::Types::#{type.classify}".safe_constantize ||
-            nested_resource_type(type) ||
             raise(ArgumentError, "Unrecognized type: #{type}")
         end
-      end
-
-      ##
-      # Looks up a `Valkyrie::Resource` class by name. Returns nil if the
-      # name doesn't resolve to one.
-      #
-      # A short name like `redirect` is checked under `Hyrax::*` first
-      # (`Hyrax::Redirect`), then at the top level (`Redirect`). A name
-      # with `::` in it is taken as-is (`MyApp::Citation`). Anything that
-      # resolves to something other than a `Valkyrie::Resource` class is
-      # rejected, so non-resource classes don't accidentally get used as
-      # nested-attribute types.
-      #
-      # @param [String] type
-      # @return [Class, nil] a Valkyrie::Resource subclass, or nil if no match
-      def nested_resource_type(type)
-        candidates = type.include?('::') ? [type] : ["Hyrax::#{type.classify}", type.classify]
-        candidates.each do |name|
-          klass = name.safe_constantize
-          return klass if klass.is_a?(Class) && klass < Valkyrie::Resource
-        end
-        nil
       end
     end
 

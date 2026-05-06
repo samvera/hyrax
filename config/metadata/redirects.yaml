@@ -1,7 +1,7 @@
 ---
 attributes:
   redirects:
-    type: redirect
+    type: hash
     multiple: true
     form:
       primary: false

@@ -4,16 +4,14 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
   subject(:step) { described_class.new }
 
   let(:resource_id) { 'res-1' }
-  let(:entry_class) { Struct.new(:path, keyword_init: true) }
   let(:resource_class) do
     Struct.new(:id, :redirects)
   end
   let(:resource) { resource_class.new(resource_id, redirects) }
-  let(:redirects) { [entry_class.new(path: '/handle/1'), entry_class.new(path: '/handle/2')] }
+  let(:redirects) { [{ 'path' => '/handle/1' }, { 'path' => '/handle/2' }] }
 
   before do
-    allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
-    allow(Flipflop).to receive(:redirects?).and_return(true)
+    allow(Hyrax.config).to receive(:redirects_active?).and_return(true)
     Hyrax::RedirectPath.delete_all
   end
 
@@ -38,17 +36,8 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
       end
     end
 
-    context 'when the config is off' do
-      before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(false) }
-
-      it 'is a no-op (returns Success without touching the table)' do
-        expect(Hyrax::RedirectPath).not_to receive(:transaction)
-        expect(step.call(resource)).to be_success
-      end
-    end
-
-    context 'when the Flipflop is off' do
-      before { allow(Flipflop).to receive(:redirects?).and_return(false) }
+    context 'when the redirects feature is inactive' do
+      before { allow(Hyrax.config).to receive(:redirects_active?).and_return(false) }
 
       it 'is a no-op (returns Success without touching the table)' do
         expect(Hyrax::RedirectPath).not_to receive(:transaction)
@@ -87,7 +76,7 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
       let(:original_created_at) { 1.day.ago.change(usec: 0) }
       let(:redirects) do
         # Same paths as the existing rows, just listed in reverse order on the resource.
-        [entry_class.new(path: '/handle/2'), entry_class.new(path: '/handle/1')]
+        [{ 'path' => '/handle/2' }, { 'path' => '/handle/1' }]
       end
 
       before do

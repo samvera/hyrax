@@ -7,9 +7,14 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
 
   let(:profile_with_redirects) do
     {
+      'classes' => {
+        'GenericWork' => {},
+        'CollectionResource' => {}
+      },
       'properties' => {
         'redirects' => {
-          'available_on' => { 'class' => %w[Hyrax::Work Hyrax::PcdmCollection] }
+          'type' => 'hash',
+          'available_on' => { 'class' => %w[GenericWork CollectionResource] }
         }
       }
     }
@@ -17,6 +22,18 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
 
   let(:profile_without_redirects) do
     { 'properties' => { 'title' => {} } }
+  end
+
+  before do
+    # In the engine spec environment, hyrax/file_set is registered as a
+    # curation concern (see spec/support/flexible_metadata_setup.rb), which
+    # propagates into work_class_names. Stub that scenario explicitly so
+    # the validator is forced to actively exclude file_set rather than
+    # relying on it being absent.
+    allow(Hyrax::ModelRegistry).to receive(:work_class_names).and_return(['GenericWork', 'Hyrax::FileSet'])
+    allow(Hyrax::ModelRegistry).to receive(:collection_class_names).and_return(['CollectionResource'])
+    allow(Hyrax::ModelRegistry).to receive(:file_set_class_names).and_return(['Hyrax::FileSet'])
+    allow(Hyrax::ModelRegistry).to receive(:admin_set_class_names).and_return(['Hyrax::AdministrativeSet'])
   end
 
   describe '#validate!' do
@@ -80,7 +97,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
       context 'and the m3 profile has no `redirects` property' do
         let(:profile) { profile_without_redirects }
 
-        it 'errors that the property is required' do
+        it 'records an error that the property is required' do
           validator.validate!
           expect(errors).to include(/m3 profile must declare a `redirects` property/)
         end
@@ -96,33 +113,59 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
         end
       end
 
-      context 'and the m3 profile has `redirects` but is missing Hyrax::PcdmCollection' do
+      context 'and the m3 profile has `redirects` available_on no work or collection class declared in the profile' do
         let(:profile) do
           {
+            'classes' => { 'GenericWork' => {}, 'CollectionResource' => {} },
             'properties' => {
-              'redirects' => { 'available_on' => { 'class' => ['Hyrax::Work'] } }
+              'redirects' => {
+                'type' => 'hash',
+                'available_on' => { 'class' => ['SomeOtherClass'] }
+              }
             }
           }
         end
 
-        it 'errors that the missing class must be in available_on.class' do
+        it 'records an error that the property must be available on a declared work or collection class' do
           validator.validate!
-          expect(errors).to include(/`redirects`.*available on.*Hyrax::PcdmCollection/)
+          expect(errors).to include(/`redirects`.*available on.*work or collection class/)
         end
       end
 
-      context 'and the m3 profile has `redirects` but is missing Hyrax::Work' do
+      context 'and the m3 profile has `redirects` available_on a FileSet (registered as a curation concern)' do
         let(:profile) do
           {
+            'classes' => { 'Hyrax::FileSet' => {} },
             'properties' => {
-              'redirects' => { 'available_on' => { 'class' => ['Hyrax::PcdmCollection'] } }
+              'redirects' => {
+                'type' => 'hash',
+                'available_on' => { 'class' => ['Hyrax::FileSet'] }
+              }
             }
           }
         end
 
-        it 'errors that the missing class must be in available_on.class' do
+        it 'records an error that the property must be available on a declared work or collection class' do
           validator.validate!
-          expect(errors).to include(/`redirects`.*available on.*Hyrax::Work/)
+          expect(errors).to include(/`redirects`.*available on.*work or collection class/)
+        end
+      end
+
+      context 'and the m3 profile has `redirects` declared without `type: hash`' do
+        let(:profile) do
+          {
+            'classes' => { 'GenericWork' => {}, 'CollectionResource' => {} },
+            'properties' => {
+              'redirects' => {
+                'available_on' => { 'class' => %w[GenericWork CollectionResource] }
+              }
+            }
+          }
+        end
+
+        it 'records an error that the property must declare type: hash' do
+          validator.validate!
+          expect(errors).to include(/`redirects`.*declare `type: hash`/)
         end
       end
     end
