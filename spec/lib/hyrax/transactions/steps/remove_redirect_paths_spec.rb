@@ -25,6 +25,11 @@ RSpec.describe Hyrax::Transactions::Steps::RemoveRedirectPaths do
         expect(Hyrax::RedirectPath.where(resource_id: resource_id)).to be_empty
         expect(Hyrax::RedirectPath.where(resource_id: 'other-record').count).to eq(1)
       end
+
+      it 'busts the cache for the removed paths' do
+        expect(Hyrax::RedirectCacheBuster).to receive(:call).with(['/handle/1'])
+        step.call(resource)
+      end
     end
 
     context 'when the config is off' do
