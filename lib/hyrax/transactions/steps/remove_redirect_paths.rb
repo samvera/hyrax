@@ -5,7 +5,7 @@ module Hyrax
   module Transactions
     module Steps
       # A `dry-transaction` step that removes a resource's rows from the
-      # `hyrax_redirect_paths` uniqueness ledger. Runs as part of the destroy
+      # `hyrax_redirect_paths` redirects table. Runs as part of the destroy
       # transactions so deleted resources don't leave dangling claims on
       # redirect paths.
       #
@@ -16,8 +16,12 @@ module Hyrax
         # @param [Valkyrie::Resource] resource
         # @return [Dry::Monads::Result]
         def call(resource)
-          Hyrax::RedirectPath.where(resource_id: resource.id.to_s).delete_all if removable?(resource)
+          return Success(resource) unless removable?(resource)
+          Hyrax::RedirectPath.where(resource_id: resource.id.to_s).delete_all
           Success(resource)
+        rescue ActiveRecord::StatementInvalid => e
+          Hyrax.logger.error("[redirects] remove_redirect_paths failed: #{e.message}")
+          Failure([:redirect_path_remove_error, e.message])
         end
 
         private

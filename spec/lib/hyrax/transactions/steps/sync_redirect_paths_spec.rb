@@ -36,6 +36,21 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
       end
     end
 
+    context 'when the underlying redirects table query raises StatementInvalid' do
+      before do
+        allow(Hyrax::RedirectPath).to receive(:where)
+          .and_raise(ActiveRecord::StatementInvalid, 'PG::UndefinedTable: relation "hyrax_redirect_paths" does not exist')
+        allow(Hyrax.logger).to receive(:error)
+      end
+
+      it 'returns Failure with a redirect_path_sync_error tag and logs the error' do
+        result = step.call(resource)
+        expect(result).to be_failure
+        expect(result.failure.first).to eq(:redirect_path_sync_error)
+        expect(Hyrax.logger).to have_received(:error).with(/sync_redirect_paths failed/)
+      end
+    end
+
     context 'when the redirects feature is inactive' do
       before { allow(Hyrax.config).to receive(:redirects_active?).and_return(false) }
 

@@ -124,7 +124,7 @@ When the config is off, the loader filters `redirects.yaml` out of the schema se
 
 ## Path normalization
 
-Every redirect path in Hyrax — whether typed into a form, looked up by the resolver, written to the uniqueness ledger, or queried by the validator — passes through `Hyrax::RedirectPathNormalizer.call`. This is the single source of truth for "what does this path look like on disk?". Normalization rules:
+Every redirect path in Hyrax — whether typed into a form, looked up by the resolver, written to the redirects table, or queried by the validator — passes through `Hyrax::RedirectPathNormalizer.call`. This is the single source of truth for "what does this path look like on disk?". Normalization rules:
 
 1. If the input parses as a URL with a scheme and host (e.g. `https://old.example.edu/handle/12345/678`), keep only the path component.
 2. Strip query strings (`?utm_source=foo`) and fragments (`#section`).
@@ -136,7 +136,7 @@ The normalizer is idempotent — `normalize(normalize(x)) == normalize(x)` — a
 - `Hyrax::RedirectsFieldBehavior#redirects_attributes_populator` normalizes each entry's path on form submission, before validation. The normalized form is what the validator sees and what the resource persists.
 - `Hyrax::RedirectsController#show` (the resolver) normalizes the incoming request path before the Solr lookup, so `/foo/` and `/foo` both resolve.
 - `Hyrax::RedirectsLookup` normalizes its input on construction, so callers can pass any reasonable form.
-- `Hyrax::Transactions::Steps::SyncRedirectPaths` normalizes paths before writing to the ledger, as defense in depth.
+- `Hyrax::Transactions::Steps::SyncRedirectPaths` normalizes paths before writing to the redirects table, as defense in depth.
 
 A user pasting a full URL from an old DSpace page (`https://old.example.edu/handle/123?utm=email`) sees the form quietly accept and persist `/handle/123`.
 
@@ -172,9 +172,9 @@ end
 
 The validator rejects any redirect path that equals one of these prefixes, or starts with one followed by `/` (so `/admin` is reserved, and `/admin/anything` is reserved, but `/administrator` would *not* be reserved by the `/admin` entry).
 
-### Uniqueness lookup and the `hyrax_redirect_paths` ledger
+### Uniqueness lookup and the `hyrax_redirect_paths` table
 
-Global uniqueness is enforced by a Postgres table, `hyrax_redirect_paths`, which has a unique B-tree index on `path`. The table is a derived ledger of every redirect path currently in use, and the unique index gives the hard guarantee that no two records can share a path even under concurrent saves. A second non-unique index on `resource_id` supports the per-resource sync described below.
+Global uniqueness is enforced by a Postgres table, `hyrax_redirect_paths`, which has a unique B-tree index on `path`. The table is a derived record of every redirect path currently in use, and the unique index gives the hard guarantee that no two records can share a path even under concurrent saves. A second non-unique index on `resource_id` supports the per-resource sync described below.
 
 `Hyrax::RedirectsLookup` is the single point of truth for "is this path taken?". It queries the table:
 
@@ -184,12 +184,12 @@ SELECT 1 FROM hyrax_redirect_paths WHERE path = ? AND resource_id <> ? LIMIT 1;
 
 The validator calls `Hyrax::RedirectsLookup.taken?(path, except_id: record.id)` to give the user friendly feedback at form-submit time. If two simultaneous requests both pass validation (because both checked the table before either committed), the unique index rejects the second one at insert time and the enclosing transaction returns `Failure`.
 
-### Sync between `redirects` attribute and the ledger
+### Sync between `redirects` attribute and the redirects table
 
-The ledger is kept in sync by two `dry-transaction` steps composed into the create/update/destroy transactions:
+The redirects table is kept in sync by two `dry-transaction` steps composed into the create/update/destroy transactions:
 
-- `Hyrax::Transactions::Steps::SyncRedirectPaths` — runs after the resource is saved (in `WorkCreate`, `WorkUpdate`, `CollectionCreate`, `CollectionUpdate`). Deletes the resource's existing rows and reinserts the current redirect set in a single DB transaction. On `ActiveRecord::RecordNotUnique` (race lost), returns `Failure([:redirect_path_collision, ...])`, which short-circuits the enclosing transaction and surfaces back to the controller. No-op when either the config or the Flipflop is off — there's no point writing ledger rows when the feature isn't actively in use.
-- `Hyrax::Transactions::Steps::RemoveRedirectPaths` — runs before `delete_resource` in `WorkDestroy` and `CollectionDestroy`. Clears the resource's rows so deleted resources don't leave dangling claims on redirect paths. Gated only on the config (not the Flipflop): cleanup must happen regardless of whether the feature is currently in active use, so that an admin toggling the Flipflop off mid-deployment doesn't leave orphaned rows that could later collide with new resources after a re-enable.
+- `Hyrax::Transactions::Steps::SyncRedirectPaths` — runs after the resource is saved (in `WorkCreate`, `WorkUpdate`, `CollectionCreate`, `CollectionUpdate`). Deletes the resource's existing rows and reinserts the current redirect set in a single DB transaction. On `ActiveRecord::RecordNotUnique` (race lost), returns `Failure([:redirect_path_collision, ...])`, which short-circuits the enclosing transaction and surfaces back to the controller. On any other `ActiveRecord::StatementInvalid` (missing table, schema drift, connection drop), logs the error and returns `Failure([:redirect_path_sync_error, ...])` rather than raising — the resource is already persisted by the time this step runs, so a soft-fail is preferable to a 500 with partial state. No-op when either the config or the Flipflop is off.
+- `Hyrax::Transactions::Steps::RemoveRedirectPaths` — runs before `delete_resource` in `WorkDestroy` and `CollectionDestroy`. Clears the resource's rows so deleted resources don't leave dangling claims on redirect paths. Same `StatementInvalid` treatment as the sync step: returns `Failure([:redirect_path_remove_error, ...])` instead of raising. Gated only on the config (not the Flipflop): cleanup must happen regardless of whether the feature is currently in active use, so that an admin toggling the Flipflop off mid-deployment doesn't leave orphaned rows that could later collide with new resources after a re-enable.
 
 Neither step does anything when the config is off, so adopters who don't enable the redirects feature pay no cost for them.
 
@@ -287,5 +287,5 @@ Alternatively, gate the inclusion of the calling code itself on `Hyrax.config.re
 - `Hyrax::RedirectValidator` (`app/validators/hyrax/redirect_validator.rb`) — the form-level entry validator.
 - `Hyrax::RedirectPathNormalizer` (`app/services/hyrax/redirect_path_normalizer.rb`) — canonical-form normalization for redirect paths.
 - `Hyrax::RedirectsLookup` (`app/services/hyrax/redirects_lookup.rb`) — the uniqueness lookup against `hyrax_redirect_paths`.
-- `Hyrax::RedirectPath` (`app/models/hyrax/redirect_path.rb`) — ActiveRecord model for the `hyrax_redirect_paths` ledger.
-- `Hyrax::Transactions::Steps::SyncRedirectPaths` and `Hyrax::Transactions::Steps::RemoveRedirectPaths` (`lib/hyrax/transactions/steps/`) — the transaction steps that keep the ledger in sync with each resource's `redirects` attribute.
+- `Hyrax::RedirectPath` (`app/models/hyrax/redirect_path.rb`) — ActiveRecord model for the `hyrax_redirect_paths` table.
+- `Hyrax::Transactions::Steps::SyncRedirectPaths` and `Hyrax::Transactions::Steps::RemoveRedirectPaths` (`lib/hyrax/transactions/steps/`) — the transaction steps that keep the redirects table in sync with each resource's `redirects` attribute.
