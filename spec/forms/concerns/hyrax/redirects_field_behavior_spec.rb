@@ -41,12 +41,19 @@ RSpec.describe Hyrax::RedirectsFieldBehavior do
     end
 
     it 'registers the redirects_attributes virtual property when enabled' do
+      expect(property_target).to receive(:property).with(:redirects, hash_including(default: []))
       expect(property_target).to receive(:property).with(
         :redirects_attributes,
         virtual: true,
         populator: :redirects_attributes_populator,
         prepopulator: :redirects_attributes_prepopulator
       )
+      property_target.include(described_class)
+    end
+
+    it 'registers the redirects property loaded from redirects.yaml' do
+      expect(property_target).to receive(:property).with(:redirects, hash_including(default: []))
+      expect(property_target).to receive(:property).with(:redirects_attributes, anything)
       property_target.include(described_class)
     end
   end
