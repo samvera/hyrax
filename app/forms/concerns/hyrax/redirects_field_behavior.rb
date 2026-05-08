@@ -53,8 +53,9 @@ module Hyrax
 
     # Builds plain hashes (the persisted shape) from the submitted
     # `redirects_attributes` payload. Drops rows marked for destruction
-    # or with a blank path. Normalizes paths to the canonical form
-    # stored in the redirects table.
+    # or with a blank path. Normalizes paths up-front so the validator
+    # sees canonical form (so DSpace-style pasted URLs validate cleanly).
+    # or with a blank path.
     def redirects_attributes_populator(fragment:, **_options)
       return unless respond_to?(:redirects)
       return unless Hyrax.config.redirects_active?
