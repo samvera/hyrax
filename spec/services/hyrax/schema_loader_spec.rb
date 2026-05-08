@@ -94,6 +94,31 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
       end
     end
 
+    context 'when type is hash' do
+      # The `hash` shortcut lets a YAML schema declare a nested-attribute
+      # property whose entries are plain hashes (e.g. `redirects` with
+      # `path`, `canonical`, `sequence` sub-fields). Persisted as JSONB
+      # without a nested Valkyrie::Resource schema in between, so round-trips
+      # don't strip sub-fields. See documentation/redirects.md.
+      let(:config) { { 'type' => 'hash', 'multiple' => true } }
+
+      it 'returns an array-of-hash typed constructor that round-trips hash entries' do
+        expect(attribute_definition.type).to be_a(Dry::Types::Constructor)
+        expect(attribute_definition.type.to_s).to include('Array')
+        # End-to-end: an array of hashes coerces to itself, preserving sub-keys.
+        input = [{ 'path' => '/foo', 'canonical' => true, 'sequence' => 0 }]
+        expect(attribute_definition.type.call(input)).to eq(input)
+      end
+    end
+
+    context 'when type is hash with multiple: false' do
+      let(:config) { { 'type' => 'hash', 'multiple' => false } }
+
+      it 'returns a bare Dry::Types["hash"]' do
+        expect(attribute_definition.type).to eq(Dry::Types['hash'])
+      end
+    end
+
     context 'when type is not recognized' do
       let(:config) { { 'type' => 'custom' } }
 
@@ -102,50 +127,9 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
       end
     end
 
-    context 'when the type names a nested Hyrax resource class (short form)' do
-      # In a YAML schema, `type: redirect` resolves to `Hyrax::Redirect`,
-      # so adopters can declare nested-resource attributes without
-      # registering anything in the Valkyrie::Types namespace.
-      let(:config) { { 'type' => 'redirect', 'multiple' => true } }
-
-      it 'wraps the nested resource class in a typed array constructor' do
-        expect(attribute_definition.type).to be_a(Dry::Types::Constructor)
-        expect(attribute_definition.type.member).to eq(Hyrax::Redirect)
-      end
-    end
-
-    context 'when a nested Hyrax resource type is declared with multiple: false' do
-      # Single-value nested resources are not supported because the schema
-      # loader's #type would return the bare class rather than a Dry::Types::Type,
-      # producing a downstream shape inconsistency. The loader rejects this
-      # configuration explicitly.
-      let(:config) { { 'type' => 'redirect', 'multiple' => false } }
-
-      it 'raises ArgumentError' do
-        expect { attribute_definition.type }
-          .to raise_error(ArgumentError, /nested resource members require `multiple: true`/)
-      end
-    end
-
-    context 'when the type name has multiple words' do
-      # The lookup uses String#classify (not capitalize), so multi-word
-      # types like `access_control` resolve to `Hyrax::AccessControl`.
-      it 'resolves a multi-word type via #classify' do
-        expect(attribute_definition.send(:type_for, 'access_control')).to eq(Hyrax::AccessControl)
-      end
-    end
-
-    context 'when the type is a fully-qualified class name' do
-      # Adopters with their own namespace can write `type: MyApp::Citation`
-      # in YAML and the loader will resolve it directly.
-      it 'returns the named class' do
-        expect(attribute_definition.send(:type_for, 'Hyrax::Redirect')).to eq(Hyrax::Redirect)
-      end
-    end
-
-    context 'when the type name matches a class that is not a Valkyrie::Resource' do
-      # ::StringIO is a real class but not a resource. Resolution must reject
-      # it rather than silently use it as a nested-attribute type.
+    context 'when the type name matches an unrelated Ruby class' do
+      # ::StringIO is a real class but not a Valkyrie::Types::*. Resolution
+      # must reject it rather than silently match it via #classify.
       let(:config) { { 'type' => 'string_io' } }
 
       it 'raises ArgumentError' do
@@ -156,8 +140,7 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
     context 'when the type name singularizes via #classify (e.g. "data" -> "Datum")' do
       # String#classify singularizes, which can surprise. Confirm that an
       # unrecognized type still raises ArgumentError regardless of inflection
-      # quirks — neither Hyrax::Datum, ::Datum, Valkyrie::Types::Datum, nor
-      # any other resolution short-circuits the safety check.
+      # quirks.
       let(:config) { { 'type' => 'data' } }
 
       it 'raises ArgumentError' do

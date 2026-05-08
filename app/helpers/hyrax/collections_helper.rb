@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   module CollectionsHelper # rubocop:disable Metrics/ModuleLength
+    include Hyrax::RedirectsTabHelper
+
     ##
     # @since 3.1.0
     # @return [Array<SolrDocument>]

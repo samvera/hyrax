@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::Indexers::RedirectsIndexer do
-  # Minimal Valkyrie::Resource that carries the same `redirects` attribute
-  # shape as Hyrax::Work / Hyrax::PcdmCollection do when the redirects
-  # schema is included. Defined here so the spec runs without depending on
-  # Hyrax.config.redirects_enabled? being toggled in the test env.
   let(:resource_class) do
     Class.new(Hyrax::Resource) do
       def self.name
         'TestResourceWithRedirects'
       end
-      attribute :redirects, Valkyrie::Types::Set.of(Hyrax::Redirect)
+      attribute :redirects, Valkyrie::Types::Array.of(Dry::Types['hash'])
     end
   end
 
@@ -22,14 +18,14 @@ RSpec.describe Hyrax::Indexers::RedirectsIndexer do
 
   let(:indexer) { host_indexer_class.new(resource: resource) }
 
-  context 'with the :redirects feature flag on' do
-    before { allow(Flipflop).to receive(:redirects?).and_return(true) }
+  context 'with the redirects feature active' do
+    before { allow(Hyrax.config).to receive(:redirects_active?).and_return(true) }
 
     context 'for a resource with redirects entries' do
       let(:resource) do
         resource_class.new(redirects: [
-                             Hyrax::Redirect.new(path: '/handle/12345/678'),
-                             Hyrax::Redirect.new(path: '/islandora/object/ir:1138')
+                             { 'path' => '/handle/12345/678' },
+                             { 'path' => '/islandora/object/ir:1138' }
                            ])
       end
 
@@ -65,8 +61,8 @@ RSpec.describe Hyrax::Indexers::RedirectsIndexer do
     context 'when an entry is missing a path' do
       let(:resource) do
         resource_class.new(redirects: [
-                             Hyrax::Redirect.new(path: '/handle/12345/678'),
-                             Hyrax::Redirect.new(path: nil)
+                             { 'path' => '/handle/12345/678' },
+                             { 'path' => nil }
                            ])
       end
 
@@ -77,11 +73,11 @@ RSpec.describe Hyrax::Indexers::RedirectsIndexer do
     end
   end
 
-  context 'with the :redirects feature flag off' do
-    before { allow(Flipflop).to receive(:redirects?).and_return(false) }
+  context 'with the redirects feature inactive' do
+    before { allow(Hyrax.config).to receive(:redirects_active?).and_return(false) }
 
     let(:resource) do
-      resource_class.new(redirects: [Hyrax::Redirect.new(path: '/handle/12345/678')])
+      resource_class.new(redirects: [{ 'path' => '/handle/12345/678' }])
     end
 
     it 'does not emit redirects_path_ssim' do
