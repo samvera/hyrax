@@ -262,6 +262,33 @@ end
 
 Both behaviors compose. A subclass's ancestor chain ends up with both behaviors' `deserialize!` methods above Reform's base method; each runs its `super` then strips its own renamed key.
 
+## Wiring up Bulkrax imports
+
+Field Behaviors that strip their bare attribute key need a corresponding declaration on the Bulkrax import side. Bulkrax's CSV importer would otherwise emit data under the bare attribute name (`redirects`) — which the form's `deserialize!` would strip — and the data would silently never reach the resource.
+
+Bulkrax v9.5 and later supports a `nested_attributes: true` field-mapping flag for this case. When set alongside an `object:` value, Bulkrax routes the imported data to `parsed_metadata['<object>_attributes']` as a numbered-key hash with `_destroy: 'false'` per row — the same shape Reform's nested-attributes machinery expects, and the same shape this Field Behavior's populator consumes.
+
+Example for `RedirectsFieldBehavior`:
+
+```ruby
+# In the host app's Bulkrax field-mapping configuration
+'path'      => { from: ['redirect_path'],      object: 'redirects', nested_attributes: true },
+'canonical' => { from: ['redirect_canonical'], object: 'redirects', nested_attributes: true },
+'sequence'  => { from: ['redirect_sequence'],  object: 'redirects', nested_attributes: true },
+```
+
+CSV columns are `redirect_path_1`, `redirect_canonical_1`, `redirect_sequence_1`, `redirect_path_2`, …
+
+Conventions:
+
+- Declare `nested_attributes: true` on **every** sibling mapping that shares an `object:` value. Mixed-flag siblings produce undefined behavior.
+- The mapping key (the hash key on the left of the `=>`) becomes the inner key on each entry. Keep it equal to the form populator's expected key (`'path'`, not `'redirect_path'`).
+- Export side: Bulkrax reads the persisted attribute through its bare accessor (`record.redirects`). The flag has no effect on export — a single mapping declaration drives both directions.
+
+Older `object:` mappings without the flag continue to land on `parsed_metadata['<object>']` as an array of plain hashes. The flag is opt-in.
+
+`BasedNearFieldBehavior` predates the flag and is bridged via a hardcoded translator in `Bulkrax::ValkyrieObjectFactory#convert_based_near_to_attributes`. New Field Behaviors should declare the flag instead; samvera/bulkrax#1194 tracks deprecating that translator.
+
 ## Common pitfalls
 
 - **Calling `from_hash` from inside `deserialize!`** — terminal. Breaks composition for any other behavior on the same form. Always call `super` and let Reform's base method do the rename + `from_hash`.
