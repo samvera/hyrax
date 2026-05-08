@@ -54,17 +54,18 @@ module Hyrax
         #   cache invalidation, or nil when nothing changed.
         def replace_rows(object, rows)
           desired_paths = rows.map { |r| r[:path] }.sort
-          existing_paths = Hyrax::RedirectPath.where(resource_id: object.id.to_s).pluck(:path).sort
-          return nil if desired_paths == existing_paths
 
           Hyrax::RedirectPath.transaction do
+            existing_paths = Hyrax::RedirectPath.where(resource_id: object.id.to_s).pluck(:path).sort
+            return nil if desired_paths == existing_paths
+
             Hyrax::RedirectPath.where(resource_id: object.id.to_s).delete_all
             # rubocop:disable Rails/SkipsModelValidations -- the DB unique index on `path` is the validation we rely on; bulk insert is intentional
             Hyrax::RedirectPath.insert_all!(rows) if rows.any?
             # rubocop:enable Rails/SkipsModelValidations
-          end
 
-          (existing_paths | desired_paths)
+            (existing_paths | desired_paths)
+          end
         end
       end
     end

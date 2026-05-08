@@ -13,6 +13,7 @@ module Hyrax
     def self.call(paths)
       Array(paths).each do |path|
         normalized = Hyrax::RedirectPathNormalizer.call(path)
+        next if normalized.blank?
         Rails.cache.delete(cache_key_for(normalized))
       end
     end
