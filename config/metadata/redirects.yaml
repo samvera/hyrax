@@ -4,7 +4,7 @@ attributes:
     type: hash
     multiple: true
     form:
-      primary: false
+      display: false
     predicate: http://samvera.org/ns/hyku/redirects
     mappings:
       simple_dc_pmh: ~
