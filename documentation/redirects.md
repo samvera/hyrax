@@ -249,6 +249,51 @@ Toggling the config or the Flipflop changes what the indexer emits. Existing rec
 bundle exec rails hyrax:solr:reindex_everything
 ```
 
+## Migration playbook (Bulkrax)
+
+Institutions migrating from another repository typically have hundreds to thousands of legacy URLs to preserve. Bulkrax (v9.5+) supports redirects via its `nested_attributes: true` field-mapping flag.
+
+### CSV column format
+
+Each redirect entry maps to three numbered columns: `redirect_path_<n>`, `redirect_canonical_<n>`, `redirect_sequence_<n>`. A row with two redirects, one canonical:
+
+```csv
+source_identifier,title,redirect_path_1,redirect_canonical_1,redirect_sequence_1,redirect_path_2,redirect_canonical_2,redirect_sequence_2
+work-001,My Work,/handle/12345/678,true,0,/old/path/678,false,1
+```
+
+`canonical` accepts the literal string `true` or `false` (boolean strings, not `1`/`0`). At most one entry per record may be canonical. `sequence` is an integer that orders the entries; if omitted, Bulkrax uses the column position.
+
+### Field-mapping configuration
+
+Add to the host app's Bulkrax field-mapping configuration (usually `config/initializers/default_bulkrax_mappings.rb` or a per-tenant override):
+
+```ruby
+'path'      => { from: ['redirect_path'],      object: 'redirects', nested_attributes: true },
+'canonical' => { from: ['redirect_canonical'], object: 'redirects', nested_attributes: true },
+'sequence'  => { from: ['redirect_sequence'],  object: 'redirects', nested_attributes: true },
+```
+
+See [field_behaviors.md](forms/field_behaviors.md#wiring-up-bulkrax-imports) for the conventions around the `nested_attributes: true` flag.
+
+### Reserved-prefix list
+
+The validator rejects redirect paths that match any prefix in `Hyrax.config.reserved_redirect_prefixes`. Hyrax ships a default list covering its own routes (`/admin`, `/dashboard`, `/catalog`, `/concern`, etc.); host applications extend it for their own routes (see "Validation" above). A row whose redirect path matches a reserved prefix fails validation per-row and is reported in the import errors; the rest of the import continues.
+
+### Reindex after import
+
+The redirects index field (`redirects_path_ssim`) is populated when records are saved through the form-driven path that Bulkrax uses. New records created via Bulkrax import are indexed normally and do not require a separate reindex pass.
+
+If the redirects feature was just enabled (config + Flipflop turned on) and existing records need their redirects to become resolvable, run the reindex command from the section above.
+
+### Common errors
+
+- **"is reserved by the application and may not be used as an alias"** — the path matches a reserved prefix. Choose a different path or extend `Hyrax.config.reserved_redirect_prefixes` if the conflict is intentional.
+- **"is already in use by another record"** — the path is registered as a redirect on a different work or collection. Paths are globally unique.
+- **"at most one redirect entry may be marked canonical"** — multiple rows in the same CSV record have `redirect_canonical_<n>=true`. Only one entry per record may be canonical.
+- **m3 profile validation: "redirects property is required"** (flexible mode) — the Flipflop is on but the m3 profile doesn't declare the `redirects` property. Add it per the section above.
+- **m3 profile validation: "the property will be ignored"** (flexible mode, config off) — a stale `redirects` property is declared but the config is off. Either remove the property from the profile or re-enable the config.
+
 ## Disabling
 
 To fully disable: unset `HYRAX_REDIRECTS_ENABLED` (or set `Hyrax.config.redirects_enabled = false`) and reboot. The schema is no longer loaded, the attribute is no longer included on `Hyrax::Work` / `Hyrax::PcdmCollection`, the Flipflop feature is no longer registered, and the indexer mixin is no longer included. Persisted `redirects` entries on records remain in storage (Postgres / Fedora) but are inaccessible because the attribute no longer exists on the model. Re-enabling restores access.
