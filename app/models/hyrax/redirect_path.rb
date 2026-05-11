@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Hyrax
-  # ActiveRecord-backed uniqueness ledger for redirect paths.
+  # ActiveRecord-backed redirects table for global path uniqueness.
   #
   # Maintained by Hyrax::Transactions::Steps::SyncRedirectPaths and
   # Hyrax::Transactions::Steps::RemoveRedirectPaths; queried by
