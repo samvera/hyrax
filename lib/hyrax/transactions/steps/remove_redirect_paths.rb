@@ -17,7 +17,10 @@ module Hyrax
         # @return [Dry::Monads::Result]
         def call(resource)
           return Success(resource) unless removable?(resource)
-          Hyrax::RedirectPath.where(resource_id: resource.id.to_s).delete_all
+          scope = Hyrax::RedirectPath.where(resource_id: resource.id.to_s)
+          paths = scope.pluck(:path)
+          scope.delete_all
+          Hyrax::RedirectCacheBuster.call(paths) if paths.any?
           Success(resource)
         rescue ActiveRecord::StatementInvalid => e
           Hyrax.logger.error("[redirects] remove_redirect_paths failed: #{e.message}")
