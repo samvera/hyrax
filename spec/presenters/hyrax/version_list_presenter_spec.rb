@@ -114,6 +114,10 @@ RSpec.describe Hyrax::VersionListPresenter do
       let(:another_file) { fixture_file_upload('/hyrax_generic_stub.txt') }
       let(:new_version) { storage_adapter.upload_version(id: uploaded.id, file: another_file) }
       before do
+        # Fedora 6 auto-versions on PUT using a UTC-second timestamp, so an
+        # initial upload and a follow-up upload_version landing within the
+        # same second produce an extra version. Sleep across the boundary.
+        sleep 1
         new_version
       end
 
