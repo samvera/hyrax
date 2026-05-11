@@ -5,7 +5,7 @@ module Hyrax
   module Transactions
     module Steps
       # A `dry-transaction` step that mirrors a saved resource's `redirects`
-      # entries into the `hyrax_redirect_paths` uniqueness ledger. The unique
+      # entries into the `hyrax_redirect_paths` redirects table. The unique
       # index on `path` enforces global uniqueness at the DB level — if a
       # concurrent save already claimed a path, the insert raises
       # ActiveRecord::RecordNotUnique and this step returns Failure, which
@@ -26,6 +26,9 @@ module Hyrax
           Success(object)
         rescue ActiveRecord::RecordNotUnique => e
           Failure([:redirect_path_collision, e.message])
+        rescue ActiveRecord::StatementInvalid => e
+          Hyrax.logger.error("[redirects] sync_redirect_paths failed: #{e.message}")
+          Failure([:redirect_path_sync_error, e.message])
         end
 
         private
@@ -37,8 +40,9 @@ module Hyrax
 
         def build_rows(object)
           # Valkyrie's JSONValueMapper symbolizes hash keys on read; accept either.
+          # Paths are normalized at write time by Hyrax::RedirectsNormalization.
           paths = Array(object.redirects)
-                  .map { |entry| Hyrax::RedirectPathNormalizer.call(entry['path'] || entry[:path]) }
+                  .map { |entry| entry['path'] || entry[:path] }
                   .reject(&:blank?)
                   .uniq
           now = Time.current

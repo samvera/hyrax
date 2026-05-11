@@ -35,5 +35,20 @@ RSpec.describe Hyrax::Transactions::Steps::RemoveRedirectPaths do
         expect(step.call(resource)).to be_success
       end
     end
+
+    context 'when the underlying redirects table query raises StatementInvalid' do
+      before do
+        allow(Hyrax::RedirectPath).to receive(:where)
+          .and_raise(ActiveRecord::StatementInvalid, 'PG::UndefinedTable: relation "hyrax_redirect_paths" does not exist')
+        allow(Hyrax.logger).to receive(:error)
+      end
+
+      it 'returns Failure with a redirect_path_remove_error tag and logs the error' do
+        result = step.call(resource)
+        expect(result).to be_failure
+        expect(result.failure.first).to eq(:redirect_path_remove_error)
+        expect(Hyrax.logger).to have_received(:error).with(/remove_redirect_paths failed/)
+      end
+    end
   end
 end

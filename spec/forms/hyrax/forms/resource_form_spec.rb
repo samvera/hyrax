@@ -260,6 +260,43 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '#redirects' do
+    # When `redirects_enabled?` is true at class load,
+    # `RedirectsFieldBehavior.included` must put both `redirects` and
+    # `redirects_attributes` on the form. The view partial
+    # `_form_redirects.html.erb` calls `f.object.redirects` directly,
+    # so a missing `redirects` property crashes the Aliases tab.
+    #
+    # The engine test suite boots with `redirects_enabled?` off, so the
+    # app's models and forms don't carry the redirects properties. Build
+    # synthetic ones here with the gate stubbed open and the schema
+    # included from `config/metadata/redirects.yaml`, mirroring an
+    # installation that has the feature on.
+    subject(:form) { form_class.new(resource_class.new) }
+
+    before do
+      allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+      stub_const('RedirectsTestResource', Class.new(Hyrax::Resource) { include Hyrax::Schema(:redirects) })
+    end
+
+    let(:resource_class) { RedirectsTestResource }
+
+    let(:form_class) do
+      resource = resource_class
+      Class.new(Hyrax::Forms::ResourceForm(resource)) do
+        include Hyrax::RedirectsFieldBehavior
+      end
+    end
+
+    it 'exposes the redirects property so the form partial can render' do
+      expect(form).to respond_to(:redirects)
+    end
+
+    it 'exposes the redirects_attributes virtual property for nested form params' do
+      expect(form).to respond_to(:redirects_attributes)
+    end
+  end
+
   describe '#embargo_release_date' do
     context 'without an embargo' do
       it 'is nil' do
