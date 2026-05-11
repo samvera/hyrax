@@ -14,6 +14,8 @@ Hyrax::Engine.routes.draw do
 
   resources :downloads, only: :show
 
+  get 'transcriptions/:id.vtt', to: 'transcriptions#show', as: :transcription
+
   # ResourceSync routes
   get '/.well-known/resourcesync' => 'resource_sync#source_description', as: :source_description
   get '/capabilitylist' => 'resource_sync#capability_list', as: :capability_list

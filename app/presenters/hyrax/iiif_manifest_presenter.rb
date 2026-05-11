@@ -130,6 +130,17 @@ module Hyrax
     end
 
     ##
+    # @return [Array<Hash{String => String}>]
+    def homepage
+      [{
+        'id' => Rails.application.routes.url_helpers.polymorphic_url(model, host: hostname),
+        'type' => 'Text',
+        'format' => 'text/html',
+        'label' => { 'none' => [Array(title).first || ''] }
+      }]
+    end
+
+    ##
     # @return [Boolean]
     def work?
       object.try(:work?) || !file_set?
@@ -189,6 +200,7 @@ module Hyrax
 
       include Hyrax::DisplaysImage
       include Hyrax::DisplaysContent
+      include Hyrax::AnnotatesContent
 
       ##
       # @!attribute [w] ability
