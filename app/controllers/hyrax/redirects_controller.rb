@@ -30,7 +30,6 @@ module Hyrax
       false
     end
 
-    # TODO: bust the cache key on redirect save/destroy (Phase 1 follow-up).
     def lookup(path)
       Rails.cache.fetch(cache_key_for(path), expires_in: CACHE_TTL) do
         response = Hyrax::SolrService.get(%(redirects_path_ssim:"#{path}"), rows: 1)
@@ -41,9 +40,11 @@ module Hyrax
       nil
     end
 
-    # Override in a downstream app to encode tenancy.
+    # Delegate to RedirectCacheBuster so the key format lives in one place.
+    # Override RedirectCacheBuster.cache_key_for in a downstream app to
+    # encode tenancy.
     def cache_key_for(path)
-      ['hyrax', 'redirects', Digest::SHA1.hexdigest(path)].join('/')
+      Hyrax::RedirectCacheBuster.cache_key_for(path)
     end
   end
 end

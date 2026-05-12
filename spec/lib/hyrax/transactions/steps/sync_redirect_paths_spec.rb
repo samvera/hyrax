@@ -24,6 +24,13 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
         paths = Hyrax::RedirectPath.where(resource_id: resource_id).pluck(:path)
         expect(paths).to contain_exactly('/handle/1', '/handle/2')
       end
+
+      it 'busts the cache for both old and new paths' do
+        Hyrax::RedirectPath.create!(path: '/old', resource_id: resource_id)
+        expect(Hyrax::RedirectCacheBuster).to receive(:call)
+          .with(array_including('/old', '/handle/1', '/handle/2'))
+        step.call(resource)
+      end
     end
 
     context 'when a path is already claimed by another resource' do
@@ -84,6 +91,11 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
         rows = Hyrax::RedirectPath.where(resource_id: resource_id).order(:path)
         expect(rows.pluck(:path)).to eq %w[/handle/1 /handle/2]
         expect(rows.pluck(:created_at)).to all(eq(original_created_at))
+      end
+
+      it 'does not bust the cache' do
+        expect(Hyrax::RedirectCacheBuster).not_to receive(:call)
+        step.call(resource)
       end
     end
 
