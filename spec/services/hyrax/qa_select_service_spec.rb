@@ -49,9 +49,9 @@ RSpec.describe Hyrax::QaSelectService do
       it { is_expected.to be_a(String) }
     end
     context 'for item without a "term" property' do
-      it 'will raise KeyError' do
-        expect { qa_select_service.label('active-no-term-id') }
-          .to raise_error(KeyError)
+      it 'returns the id as the fallback label' do
+        expect(qa_select_service.label('active-no-term-id'))
+          .to eq 'active-no-term-id'
       end
 
       it 'accepts a block for a backup value' do
