@@ -78,8 +78,16 @@ properties:
       minimum: 0
     type: hash
     multiple: true
+    indexing:
+      - admin_only
     predicate: http://samvera.org/ns/hyku/redirects
+    view:
+      render_term: redirects_path
+      render_as: redirects_label
+      html_dl: true
 ```
+
+The `indexing: [admin_only]` entry and the `view:` block together opt the redirects field into the show-page display described below in [Displaying redirect aliases on show pages](#displaying-redirect-aliases-on-show-pages). Both are required for that display to appear with admin-only visibility. Note the placement: `admin_only` is an entry in the `indexing:` array (read by `Hyrax::SchemaLoader::AttributeDefinition#admin_only?`); `render_term`, `render_as`, and `html_dl` are inside the `view:` block. Non-flexible mode structures `admin_only` differently — see [Schema details](#schema-details-flexible-false-mode) below.
 
 Each redirect entry is a plain hash with `path`, `canonical`, and `sequence` keys, persisted as JSONB on the parent resource. The `type: hash` token resolves to `Dry::Types['hash']`, which round-trips entries through Postgres without the sub-field stripping a nested `Valkyrie::Resource` would suffer. `available_on.class` must include at least one work or collection class declared in this profile's top-level `classes:` block; substitute the class names your profile declares (`Image`, `Etd`, `Oer`, etc.) as appropriate.
 
@@ -107,10 +115,17 @@ attributes:
     multiple: true
     form:
       display: false
+    view:
+      admin_only: true
+      render_term: redirects_path
+      render_as: redirects_label
+      html_dl: true
     predicate: http://samvera.org/ns/hyku/redirects
     mappings:
       simple_dc_pmh: ~
 ```
+
+The `view:` block opts the redirects field into the show-page display described below in [Displaying redirect aliases on show pages](#displaying-redirect-aliases-on-show-pages). In non-flexible mode, all view options live inside the `view:` block — that's where `Hyrax::SimpleSchemaLoader#view_definitions_for` reads them from. (Flex-true uses a different structure for `admin_only`; see the [m3 profile requirements](#m3-profile-requirements-flexible-true-mode) section.)
 
 When the config is on, this schema is loaded and `Hyrax::Work` / `Hyrax::PcdmCollection` include it via `Hyrax::Schema(:redirects)`. The schema loader produces:
 
@@ -249,6 +264,55 @@ Toggling the config or the Flipflop changes what the indexer emits. Existing rec
 bundle exec rails hyrax:solr:reindex_everything
 ```
 
+## Displaying redirect aliases on show pages
+
+When the redirects feature is enabled, the registered aliases for a work or collection appear on its show page as a list of clickable links. The display is gated by `admin_only: true` — only signed-in admins see it. Public visitors and non-admin users see no trace of the redirects on the show page.
+
+The display is driven by two pieces on the redirects schema: an `admin_only` flag that gates visibility, and a `render_as: redirects_label` instruction that selects the renderer. **The two flex modes structure these differently** because their schema loaders read view options from different places.
+
+**Non-flexible mode (`HYRAX_FLEXIBLE=false`)** — all view options live inside the `view:` block in `config/metadata/redirects.yaml`:
+
+```yaml
+view:
+  admin_only: true
+  render_term: redirects_path
+  render_as: redirects_label
+  html_dl: true
+```
+
+`Hyrax::SimpleSchemaLoader#view_definitions_for` reads `property.meta['view']` and passes the block through verbatim to the show-page rendering.
+
+**Flexible mode (`HYRAX_FLEXIBLE=true`)** — `admin_only` is an entry in the property's `indexing:` array; the rest live inside the `view:` block:
+
+```yaml
+indexing:
+  - admin_only
+view:
+  render_term: redirects_path
+  render_as: redirects_label
+  html_dl: true
+```
+
+`Hyrax::M3SchemaLoader#view_definitions_for` calls `definition.view_options`, which reads `admin_only?` (via `Hyrax::SchemaLoader::AttributeDefinition#admin_only?`, which honors both top-level `admin_only: true` and `indexing: [admin_only]`) and injects it into the view options hash. The `view:` block contents are passed through alongside.
+
+Full snippets for each mode are shown in the [m3 profile requirements](#m3-profile-requirements-flexible-true-mode) and [Schema details](#schema-details-flexible-false-mode) sections above.
+
+### How it works
+
+- The redirects indexer emits two Solr fields: `redirects_path_ssim` (used by the resolver to look up records by path) and `redirects_path_tesim` (used by the show-page display).
+- `Hyrax::SolrDocument::Metadata` declares `redirects_path` as a SolrDocument attribute bound to the `redirects_path_tesim` field. This is what makes `solr_document.redirects_path` available; the per-attribute declaration is required (Hyrax does not coerce arbitrary Solr fields into methods automatically).
+- The presenter's `MissingMethodBehavior` delegates `presenter.redirects_path` to `solr_document.redirects_path`.
+- The `render_term: redirects_path` view option tells the show-page partial to call `presenter.redirects_path` instead of `presenter.redirects`. The bare `redirects` attribute returns the persisted array of hashes and isn't useful for direct rendering.
+- The `render_as: redirects_label` view option tells Hyrax to use the `Hyrax::Renderers::RedirectsLabelAttributeRenderer` class to render the field. Each path becomes a clickable link whose text is the full absolute URL (host + path) and whose `href` is the path alone (the browser resolves it against the current host).
+- The `html_dl: true` view option matches the show page's description-list layout — the renderer emits `<dt>/<dd>` rather than the table-row `<tr>/<td>` it would default to.
+- The `admin_only: true` view option makes the existing attribute-rows partial skip rendering the field entirely when the current user is not an admin. No section heading, no empty list — just nothing.
+
+### Adopter customization
+
+Adopters can override the renderer to change link styling or the displayed URL format. Subclass `Hyrax::Renderers::RedirectsLabelAttributeRenderer` and register the subclass under the same `render_as` key.
+
+Adopters can also turn the display off without removing the redirects feature: remove the `view:` block from the schema (or the m3 profile property declaration). The redirects functionality continues to work — only the show-page display goes away.
+
 ## Migration playbook (Bulkrax)
 
 Institutions migrating from another repository typically have hundreds to thousands of legacy URLs to preserve. Bulkrax (v9.5+) supports redirects via its `nested_attributes: true` field-mapping flag.
@@ -327,7 +391,9 @@ Alternatively, gate the inclusion of the calling code itself on `Hyrax.config.re
 - `documentation/forms/field_behaviors.md` — the Field Behavior pattern used by `Hyrax::RedirectsFieldBehavior` to wire the form's nested-attribute property.
 - `Hyrax::Redirect` (`app/models/hyrax/redirect.rb`) — thin Ruby presenter for a single redirect entry; used on the form's render path.
 - `Hyrax::RedirectsFieldBehavior` (`app/forms/concerns/hyrax/redirects_field_behavior.rb`) — form-side wiring for the `redirects` and `redirects_attributes` properties: loads the persisted property from `config/metadata/redirects.yaml` via `Hyrax::FormFields(:redirects)`, and owns the populator/prepopulator and the `deserialize!` strip for the nested-attributes payload.
-- `Hyrax::Indexers::RedirectsIndexer` (`app/indexers/hyrax/indexers/redirects_indexer.rb`) — the indexer mixin.
+- `Hyrax::Indexers::RedirectsIndexer` (`app/indexers/hyrax/indexers/redirects_indexer.rb`) — the indexer mixin. Emits `redirects_path_ssim` (resolver lookup) and `redirects_path_tesim` (show-page display).
+- `Hyrax::SolrDocument::Metadata` (`app/models/concerns/hyrax/solr_document/metadata.rb`) — declares the `redirects_path` attribute on `SolrDocument`, bound to the `redirects_path_tesim` Solr field. This is what makes `solr_document.redirects_path` (and therefore `presenter.redirects_path` via `MissingMethodBehavior`) available to the show-page renderer.
+- `Hyrax::Renderers::RedirectsLabelAttributeRenderer` (`app/renderers/hyrax/renderers/redirects_label_attribute_renderer.rb`) — show-page renderer that turns each redirect path into a clickable link.
 - `Hyrax::RedirectsController` (`app/controllers/hyrax/redirects_controller.rb`) — the redirect resolver.
 - `Hyrax::FlexibleSchemaValidators::RedirectsValidator` (`app/services/hyrax/flexible_schema_validators/redirects_validator.rb`) — the m3 profile validator.
 - `Hyrax::RedirectValidator` (`app/validators/hyrax/redirect_validator.rb`) — the form-level entry validator.
