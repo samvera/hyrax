@@ -53,6 +53,7 @@ module Hyrax
         attribute :identifier, Solr::Array, "identifier_tesim"
         attribute :based_near, Solr::Array, "based_near_tesim"
         attribute :based_near_label, Solr::Array, "based_near_label_tesim"
+        attribute :redirects_path, Solr::Array, "redirects_path_tesim"
         attribute :related_url, Solr::Array, "related_url_tesim"
         attribute :resource_type, Solr::Array, "resource_type_tesim"
         attribute :edit_groups, Solr::Array, ::Ability.edit_group_field
