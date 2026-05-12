@@ -87,6 +87,7 @@ module Hyrax
           field.to_s.humanize
         )
       end
+      view_options[:base_url] = request.base_url if respond_to?(:request) && request.respond_to?(:base_url)
       view_options
     end
   end

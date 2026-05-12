@@ -3,9 +3,10 @@
 module Hyrax
   module Indexers
     ##
-    # Indexer mixin that emits the `redirects_path_ssim` Solr field for
-    # resources that carry a `redirects` attribute. The redirect resolver
-    # (`Hyrax::RedirectsController`) queries this field by path.
+    # Indexer mixin that emits the `redirects_path_ssim` and
+    # `redirects_path_tesim` Solr fields for resources that carry a
+    # `redirects` attribute. The redirect resolver
+    # (`Hyrax::RedirectsController`) queries `_ssim` by path.
     #
     # @example
     #   class WorkIndexer < Hyrax::Indexers::PcdmObjectIndexer
@@ -18,9 +19,11 @@ module Hyrax
           next document unless resource.respond_to?(:redirects)
           # Valkyrie's JSONValueMapper symbolizes hash keys on read; accept either.
           # Paths are normalized at write time by Hyrax::RedirectsNormalization.
-          document['redirects_path_ssim'] = Array(resource.redirects)
-                                            .map { |entry| entry['path'] || entry[:path] }
-                                            .reject(&:blank?)
+          paths = Array(resource.redirects)
+                  .map { |entry| entry['path'] || entry[:path] }
+                  .reject(&:blank?)
+          document['redirects_path_ssim'] = paths
+          document['redirects_path_tesim'] = paths
         end
       end
     end
