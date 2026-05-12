@@ -19,12 +19,16 @@ module Hyrax
           indexing = prop['indexing']
           next if indexing.nil?
 
+          # prevents all restricted fields from being added to blacklight config
+          # to prevent them from being exposed in catalog search results.
+          # They remain available on show pages, based on visibility.
+          if restricted_field?(indexing)
+            blacklight_config.facet_fields.delete("#{itemprop}_sim")
+            next
+          end
+
           if stored_searchable?(indexing, itemprop)
             index_args = { itemprop:, label: }
-
-            if admin_only?(indexing)
-              index_args[:if] = lambda { |context, _field_config, _document| context.try(:current_user)&.admin? }
-            end
 
             if facetable?(indexing, itemprop)
               index_args[:link_to_facet] = "#{itemprop}_sim"
@@ -75,11 +79,7 @@ module Hyrax
           if facetable?(indexing, itemprop)
             name = "#{itemprop}_sim"
             unless blacklight_config.facet_fields[name].present?
-              facet_args = { label: }
-              if indexing.include?("admin_only")
-                facet_args[:if] = lambda { |context, _field_config, _document| context.try(:current_user)&.admin? }
-              end
-              blacklight_config.add_facet_field(name, **facet_args)
+              blacklight_config.add_facet_field(name, label: label)
             end
           else
             # if the property does not have facetable in the indexing section of the metadata profile, remove the facet field from the blacklight config
@@ -124,8 +124,13 @@ module Hyrax
         indexing.include?('stored_searchable') || indexing.include?("#{itemprop}_tesim")
       end
 
-      def admin_only?(indexing)
-        indexing.include?("admin_only")
+      # True when the property declares `admin_only` or `editor_only` in its
+      # indexing array. Restricted fields are never exposed through the
+      # Blacklight catalog (no index column, no facet, no free-text match);
+      # visibility is enforced on show pages by the `field_visible?` view
+      # helper.
+      def restricted_field?(indexing)
+        indexing.include?("admin_only") || indexing.include?("editor_only")
       end
 
       def facetable?(indexing, itemprop)

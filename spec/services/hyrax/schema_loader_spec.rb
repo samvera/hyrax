@@ -53,6 +53,58 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
     end
   end
 
+  describe '#admin_only?' do
+    context 'when set as a top-level key' do
+      let(:config) { { 'type' => 'string', 'admin_only' => true } }
+      it { expect(attribute_definition.admin_only?).to be true }
+    end
+
+    context 'when set in the indexing array' do
+      let(:config) { { 'type' => 'string', 'indexing' => ['stored_searchable', 'admin_only'] } }
+      it { expect(attribute_definition.admin_only?).to be true }
+    end
+
+    context 'when neither is set' do
+      it { expect(attribute_definition.admin_only?).to be_falsey }
+    end
+  end
+
+  describe '#editor_only?' do
+    context 'when set as a top-level key' do
+      let(:config) { { 'type' => 'string', 'editor_only' => true } }
+      it { expect(attribute_definition.editor_only?).to be true }
+    end
+
+    context 'when set in the indexing array' do
+      let(:config) { { 'type' => 'string', 'indexing' => ['stored_searchable', 'editor_only'] } }
+      it { expect(attribute_definition.editor_only?).to be true }
+    end
+
+    context 'when neither is set' do
+      it { expect(attribute_definition.editor_only?).to be_falsey }
+    end
+  end
+
+  describe '#index_keys' do
+    context 'when indexing array contains visibility flags' do
+      let(:config) { { 'type' => 'string', 'indexing' => ['title_tesim', 'stored_searchable', 'facetable', 'admin_only', 'editor_only'] } }
+
+      it 'filters out facetable, stored_searchable, admin_only, and editor_only' do
+        expect(attribute_definition.index_keys).to eq([:title_tesim])
+      end
+    end
+  end
+
+  describe '#view_options' do
+    let(:config) { { 'type' => 'string', 'admin_only' => true, 'editor_only' => true, 'view' => { 'html_dl' => true } } }
+
+    it 'includes admin_only and editor_only flags' do
+      expect(attribute_definition.view_options[:admin_only]).to be true
+      expect(attribute_definition.view_options[:editor_only]).to be true
+      expect(attribute_definition.view_options[:html_dl]).to be true
+    end
+  end
+
   describe '#type' do
     context 'when multiple is true' do
       it 'returns a Valkyrie array type' do

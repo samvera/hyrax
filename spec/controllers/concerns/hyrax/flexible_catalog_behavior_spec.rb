@@ -285,18 +285,6 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
     end
   end
 
-  describe '.admin_only?' do
-    it 'returns true when indexing includes admin_only' do
-      result = controller.class.send(:admin_only?, ['admin_only', 'stored_searchable'])
-      expect(result).to be true
-    end
-
-    it 'returns false when indexing does not include admin_only' do
-      result = controller.class.send(:admin_only?, ['stored_searchable'])
-      expect(result).to be false
-    end
-  end
-
   describe '.require_view_helper_method?' do
     it 'returns true for external_link render_as' do
       result = controller.class.send(:require_view_helper_method?, { 'render_as' => 'external_link' })
@@ -338,6 +326,73 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
     it 'returns :rights_statement_links for rights_statement' do
       result = controller.class.send(:view_option_for_helper_method, { 'render_as' => 'rights_statement' })
       expect(result).to eq(:rights_statement_links)
+    end
+  end
+
+  describe '.restricted_field?' do
+    it 'is true when admin_only is in the indexing array' do
+      expect(controller.class.send(:restricted_field?, ['title_tesim', 'stored_searchable', 'admin_only'])).to be true
+    end
+
+    it 'is true when editor_only is in the indexing array' do
+      expect(controller.class.send(:restricted_field?, ['title_tesim', 'stored_searchable', 'editor_only'])).to be true
+    end
+
+    it 'is false when neither flag is present' do
+      expect(controller.class.send(:restricted_field?, ['title_tesim', 'stored_searchable'])).to be false
+    end
+  end
+
+  describe 'catalog registration of restricted fields' do
+    let(:restricted_properties) do
+      YAML.safe_load(<<-YAML)
+        properties:
+          secret_note:
+            available_on:
+              class:
+                - GenericWork
+                - Monograph
+            display_label:
+              default: Secret Note
+            indexing:
+              - secret_note_tesim
+              - secret_note_sim
+              - stored_searchable
+              - facetable
+              - editor_only
+            property_uri: http://example.org/secret_note
+            range: http://www.w3.org/2001/XMLSchema#string
+      YAML
+    end
+
+    before do
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
+      routes.draw { get 'index' => 'anonymous#index' }
+
+      mock_schema = double('FlexibleSchema',
+        profile: base_profile.deep_merge(restricted_properties))
+
+      allow(Hyrax::FlexibleSchema)
+        .to receive_message_chain(:order, :last)
+        .with("created_at asc")
+        .with(2)
+        .and_return([mock_schema])
+
+      controller.class.load_flexible_schema
+      get :index
+    end
+
+    it 'does not add the field as an index column' do
+      expect(controller.blacklight_config.index_fields).not_to have_key('secret_note_tesim')
+    end
+
+    it 'does not add the field as a facet' do
+      expect(controller.blacklight_config.facet_fields).not_to have_key('secret_note_sim')
+    end
+
+    it 'does not add the field to the all_fields qf' do
+      qf = controller.blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
+      expect(qf).not_to include('secret_note_tesim')
     end
   end
 end
