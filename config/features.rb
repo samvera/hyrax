@@ -66,13 +66,17 @@ Flipflop.configure do
             description: "Depositors may transfer their works to another user"
   end
 
-  # See documentation/redirects.md for the redirects feature.
-  if Hyrax.config.redirects_enabled?
-    group :experimental_features do
+  group :experimental_features do
+    # See documentation/redirects.md for the redirects feature.
+    if Hyrax.config.redirects_enabled?
       feature :redirects,
               default: false,
               description: "Enable per-record URL redirects from legacy paths to the canonical Hyku URL."
     end
+
+    feature :copy_permalink_button,
+            default: false,
+            description: "Show a 'Copy permalink' button on work and collection show pages that copies the record's canonical UUID-based URL to the clipboard."
   end
 
 rescue Flipflop::StrategyError, Flipflop::FeatureError => err

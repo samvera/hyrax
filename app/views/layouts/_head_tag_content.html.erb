@@ -15,6 +15,9 @@ signed in %>
 <%= yield :twitter_meta %>
 <!-- Google Scholar metadata -->
 <%= yield :gscholar_meta %>
+<!-- Canonical URL (set by show pages so search engines treat the
+     UUID-based URL as the authoritative one when redirect aliases exist) -->
+<%= yield :canonical_url %>
 
 <title><%= content_for?(:page_title) ? yield(:page_title) : default_page_title %></title>
 

@@ -1,4 +1,7 @@
 <% provide :page_title, construct_page_title(@presenter.title) %>
+<% content_for :canonical_url do %>
+  <link rel="canonical" href="<%= permalink_for(@presenter) %>" />
+<% end %>
 <div class="hyc-container" itemscope itemtype="http://schema.org/CollectionPage">
   <div class="row hyc-header">
     <div class="col-md-12">
@@ -13,6 +16,7 @@
         <h1><%= @presenter.title.first %></h1>
         <%= @presenter.collection_type_badge %>
         <%= @presenter.permission_badge %>
+        <%= render 'hyrax/shared/copy_permalink', presenter: @presenter %>
       </div>
 
       <% unless @presenter.logo_record.blank? %>

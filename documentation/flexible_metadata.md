@@ -47,6 +47,7 @@ See the official [Flexible Metadata Documentation](https://samvera.atlassian.net
 ## Related features
 
 - **URL Redirects** (`HYRAX_REDIRECTS_ENABLED`): when enabled, the redirects feature requires a `redirects` property in the m3 profile (when also Flipflop-enabled per tenant). See [`documentation/redirects.md`](redirects.md) for the full schema and gating model.
+- **Copy permalink button** (Flipflop `copy_permalink_button`): a show-page button that copies the record's canonical UUID-based URL. See [`documentation/copy_permalink.md`](copy_permalink.md).
 
 ## Flexible TODOs
 * add the schema loader
