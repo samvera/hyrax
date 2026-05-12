@@ -1095,3 +1095,18 @@ properties:
       default: Date of Issuance
     property_uri: http://hyrax-example.com/date_of_issuance
     range: http://www.w3.org/2001/XMLSchema#string
+  transcript_ids:
+    available_on:
+      class:
+        - FileSet
+        - Hyrax::FileSet
+    indexing:
+      - transcript_ids_ssim
+    data_type: array
+    display_label:
+      default: Transcripts
+    form:
+      display: true
+      primary: false
+    range: http://www.w3.org/2001/XMLSchema#string
+    property_uri: http://vocabulary.samvera.org/ns#transcriptIds

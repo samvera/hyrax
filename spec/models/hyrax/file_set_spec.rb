@@ -39,4 +39,10 @@ RSpec.describe Hyrax::FileSet do
       expect(file_set.extensions_and_mime_types).to match_array results_array
     end
   end
+
+  describe '#transcript_ids' do
+    it 'has transcript_ids attribute' do
+      expect(file_set.transcript_ids).to eq []
+    end
+  end
 end
