@@ -27,7 +27,12 @@ module Hyrax
             next
           end
 
-          if stored_searchable?(indexing, itemprop)
+          # `view.search_results: false` in the m3 profile hides this property from catalog
+          # search-result columns. Only gates the dynamic add_index_field path below;
+          # properties already declared in CatalogController are left untouched, and
+          # the `qf` (query-field relevance) list is unaffected. Facet registration below
+          # is intentionally not gated — a hidden property can still be facetable.
+          if catalog_indexable?(view_options) && stored_searchable?(indexing, itemprop)
             index_args = { itemprop:, label: }
 
             if facetable?(indexing, itemprop)
@@ -131,6 +136,13 @@ module Hyrax
       # helper.
       def restricted_field?(indexing)
         indexing.include?("admin_only") || indexing.include?("editor_only")
+      end
+
+      # Returns false only when the m3 profile sets `view.search_results: false`
+      # for the property; absent or `true` keeps existing catalog-display behavior.
+      def catalog_indexable?(view_options)
+        return true unless view_options.is_a?(Hash)
+        view_options['search_results'] != false
       end
 
       def facetable?(indexing, itemprop)
