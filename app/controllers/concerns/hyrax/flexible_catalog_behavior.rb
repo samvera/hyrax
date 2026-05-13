@@ -145,7 +145,7 @@ module Hyrax
           # remove from facet field
           blacklight_config.facet_fields.delete("#{prop}_sim")
           # remove from index field
-          blacklight_config.facet_fields.delete("#{prop}_tesim")
+          blacklight_config.index_fields.delete("#{prop}_tesim")
           # remove from qf
           blacklight_config.search_fields['all_fields'].solr_parameters[:qf].slice!("#{prop}_tesim")
         end
