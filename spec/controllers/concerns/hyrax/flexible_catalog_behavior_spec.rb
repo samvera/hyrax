@@ -443,5 +443,68 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
         end
       end
     end
+
+    describe 'multi-name cleanup driven by the indexing: array' do
+      # When a property declares additional Solr field variants in its
+      # indexing: array (e.g. a `_label_tesim` variant alongside the
+      # canonical `_tesim`), the helper removes all of them — not just the
+      # canonical pair synthesized from the itemprop. Directive flags like
+      # `stored_searchable`/`facetable`/`admin_only`/`editor_only` are
+      # filtered out and not treated as Solr field names.
+      # Uses an itemprop unlikely to collide with the host app's default
+      # CatalogController registrations; blacklight_config is a class-level
+      # singleton shared across examples in this file.
+      before do
+        blacklight_config.add_index_field('memo_tesim', label: 'Memo') unless blacklight_config.index_fields.key?('memo_tesim')
+        blacklight_config.add_index_field('memo_label_tesim', label: 'Memo Label') unless blacklight_config.index_fields.key?('memo_label_tesim')
+        blacklight_config.add_facet_field('memo_sim', label: 'Memo') unless blacklight_config.facet_fields.key?('memo_sim')
+        blacklight_config.add_facet_field('memo_label_sim', label: 'Memo Label') unless blacklight_config.facet_fields.key?('memo_label_sim')
+        blacklight_config.search_fields['all_fields'].solr_parameters[:qf] =
+          String.new('title_tesim memo_tesim memo_label_tesim')
+      end
+
+      let(:indexing) do
+        ['memo_tesim', 'memo_sim', 'memo_label_tesim', 'memo_label_sim',
+         'stored_searchable', 'facetable', 'editor_only']
+      end
+
+      it 'removes the canonical pair and all variants declared in indexing:' do
+        controller.class.send(:remove_from_blacklight_config!, 'memo', indexing)
+
+        expect(blacklight_config.index_fields).not_to have_key('memo_tesim')
+        expect(blacklight_config.index_fields).not_to have_key('memo_label_tesim')
+        expect(blacklight_config.facet_fields).not_to have_key('memo_sim')
+        expect(blacklight_config.facet_fields).not_to have_key('memo_label_sim')
+
+        qf = blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
+        expect(qf).to eq('title_tesim')
+      end
+    end
+
+    describe 'prefix collision safety' do
+      # A potential failure mode of prefix-based matching: `notes` cleanup
+      # accidentally evicting unrelated `notes_internal_*` registrations.
+      # The helper matches on *exact* Solr field names (canonical pair plus
+      # explicit indexing: entries), so unrelated properties whose names
+      # happen to start with the itemprop are untouched.
+      #
+      # Uses field names that are unlikely to collide with the host app's
+      # CatalogController defaults; `blacklight_config` is a class-level
+      # singleton shared across examples in this file, and re-registering a
+      # field that already exists raises.
+      before do
+        blacklight_config.add_index_field('notes_tesim', label: 'Notes') unless blacklight_config.index_fields.key?('notes_tesim')
+        blacklight_config.add_index_field('notes_internal_tesim', label: 'Internal Notes') unless blacklight_config.index_fields.key?('notes_internal_tesim')
+        blacklight_config.add_facet_field('notes_internal_sim', label: 'Internal Notes') unless blacklight_config.facet_fields.key?('notes_internal_sim')
+      end
+
+      it 'does not remove a different property whose name starts with the same prefix' do
+        controller.class.send(:remove_from_blacklight_config!, 'notes')
+
+        expect(blacklight_config.index_fields).not_to have_key('notes_tesim')
+        expect(blacklight_config.index_fields).to have_key('notes_internal_tesim')
+        expect(blacklight_config.facet_fields).to have_key('notes_internal_sim')
+      end
+    end
   end
 end

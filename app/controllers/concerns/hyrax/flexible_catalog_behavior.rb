@@ -10,7 +10,7 @@ module Hyrax
         return if previous_profile.blank? && current_profile.blank?
 
         current_profile = previous_profile if current_profile.nil?
-        remove_old_properties!(previous_profile['properties'].keys, current_profile['properties'].keys) if current_profile != previous_profile
+        remove_old_properties!(previous_profile['properties'], current_profile['properties'].keys) if current_profile != previous_profile
         properties_hash = current_profile['properties']
         properties_hash.each do |itemprop, prop|
           label = display_label_for(itemprop, prop)
@@ -23,7 +23,7 @@ module Hyrax
           # to prevent them from being exposed in catalog search results.
           # They remain available on show pages, based on visibility.
           if restricted_field?(indexing)
-            remove_from_blacklight_config!(itemprop)
+            remove_from_blacklight_config!(itemprop, indexing)
             next
           end
 
@@ -137,27 +137,47 @@ module Hyrax
         indexing.include?('facetable')
       end
 
-      def remove_old_properties!(previous_properties, current_properties)
-        props = previous_properties - current_properties
-        props.each { |prop| remove_from_blacklight_config!(prop) }
+      def remove_old_properties!(previous_profile_properties, current_property_keys)
+        props = previous_profile_properties.keys - current_property_keys
+        props.each do |prop|
+          indexing = previous_profile_properties.dig(prop, 'indexing')
+          remove_from_blacklight_config!(prop, indexing)
+        end
       end
 
-      # Evict every Blacklight registration for `itemprop`.
-      def remove_from_blacklight_config!(itemprop)
-        blacklight_config.facet_fields.each do |field|
-          blacklight_config.facet_fields.delete(field) if field.start_with?(item prop)  
+      # Evict every Blacklight registration for `itemprop`. Collects the set of
+      # Solr field names to remove from three sources:
+      # - "<itemprop>_tesim" — the default Solr field name used as the
+      #   index field for this property,
+      # - "<itemprop>_sim"   — the default Solr field name used as the
+      #   facet field for this property,
+      # - any additional Solr-field names explicitly declared in `indexing:`
+      #   (filtering out the directive flags `stored_searchable`, `facetable`,
+      #   `admin_only`, and `editor_only`).
+      # Then removes those exact names from `facet_fields`, `index_fields`, and
+      # the all_fields qf. Exact-name matching avoids prefix collisions where
+      # e.g. `title` would otherwise match `title_alternative_*`.
+      INDEXING_DIRECTIVES = %w[stored_searchable facetable admin_only editor_only].freeze
+
+      def remove_from_blacklight_config!(itemprop, indexing = nil)
+        names = solr_field_names_for(itemprop, indexing)
+        names.each do |name|
+          blacklight_config.facet_fields.delete(name)
+          blacklight_config.index_fields.delete(name)
         end
 
-        names = blacklight_config.index_fields.keys.select do |field|
-          blacklight_config.index_fields.delete(field) if field.start_with?(item_prop)
-        end
-        
         qf = blacklight_config.search_fields['all_fields']&.solr_parameters&.dig(:qf)
         return if qf.nil?
         names.each do |name|
           qf.slice!(" #{name}")
           qf.slice!(name)
         end
+      end
+
+      def solr_field_names_for(itemprop, indexing)
+        default_fields = ["#{itemprop}_tesim", "#{itemprop}_sim"]
+        declared_fields = (indexing || []) - INDEXING_DIRECTIVES
+        (default_fields + declared_fields).uniq
       end
     end
 
