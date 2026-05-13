@@ -395,4 +395,53 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
       expect(qf).not_to include('secret_note_tesim')
     end
   end
+
+  describe '.remove_from_blacklight_config!' do
+    let(:blacklight_config) { controller.class.blacklight_config }
+
+    before { routes.draw { get 'index' => 'anonymous#index' } }
+
+    describe 'all_fields qf cleanup' do
+      # Registration appends fields as " #{name}", so by the time
+      # remove_from_blacklight_config! runs, the field may be anywhere in the
+      # qf string. The two slice! calls in the helper exist to cover all three
+      # positions: middle (covered by the leading-space slice), first (no
+      # leading space — covered by the bare slice), and only term (also no
+      # leading space).
+      before do
+        controller.class.blacklight_config.search_fields['all_fields']
+                  .solr_parameters[:qf] = qf_initial
+      end
+
+      let(:qf) { controller.class.blacklight_config.search_fields['all_fields'].solr_parameters[:qf] }
+
+      context 'when the field is a middle term in qf' do
+        let(:qf_initial) { String.new('title_tesim creator_tesim subject_tesim') }
+
+        it 'removes the field and its preceding space' do
+          controller.class.send(:remove_from_blacklight_config!, 'creator')
+          expect(qf).to eq('title_tesim subject_tesim')
+        end
+      end
+
+      context 'when the field is the first term in qf with no leading space' do
+        let(:qf_initial) { String.new('creator_tesim title_tesim') }
+
+        it 'removes the field even though there is no leading space to match' do
+          controller.class.send(:remove_from_blacklight_config!, 'creator')
+          expect(qf).not_to include('creator_tesim')
+          expect(qf).to include('title_tesim')
+        end
+      end
+
+      context 'when the field is the only term in qf' do
+        let(:qf_initial) { String.new('creator_tesim') }
+
+        it 'removes the field, leaving an empty qf' do
+          controller.class.send(:remove_from_blacklight_config!, 'creator')
+          expect(qf).to eq('')
+        end
+      end
+    end
+  end
 end

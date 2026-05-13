@@ -23,7 +23,7 @@ module Hyrax
           # to prevent them from being exposed in catalog search results.
           # They remain available on show pages, based on visibility.
           if restricted_field?(indexing)
-            blacklight_config.facet_fields.delete("#{itemprop}_sim")
+            remove_from_blacklight_config!(itemprop)
             next
           end
 
@@ -139,16 +139,22 @@ module Hyrax
 
       def remove_old_properties!(previous_properties, current_properties)
         props = previous_properties - current_properties
-        return if props.empty?
+        props.each { |prop| remove_from_blacklight_config!(prop) }
+      end
 
-        props.each do |prop|
-          # remove from facet field
-          blacklight_config.facet_fields.delete("#{prop}_sim")
-          # remove from index field
-          blacklight_config.index_fields.delete("#{prop}_tesim")
-          # remove from qf
-          blacklight_config.search_fields['all_fields'].solr_parameters[:qf].slice!("#{prop}_tesim")
-        end
+      # Evict every Blacklight registration for `itemprop`.
+      def remove_from_blacklight_config!(itemprop)
+        blacklight_config.facet_fields.delete("#{itemprop}_sim")
+
+        name = blacklight_config.index_fields.keys.detect { |key| key.start_with?(itemprop) }
+        name ||= "#{itemprop}_tesim"
+        blacklight_config.index_fields.delete(name)
+
+        qf = blacklight_config.search_fields['all_fields']&.solr_parameters&.dig(:qf)
+        return if qf.nil?
+
+        qf.slice!(" #{name}")
+        qf.slice!(name)
       end
     end
 
