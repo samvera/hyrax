@@ -144,17 +144,20 @@ module Hyrax
 
       # Evict every Blacklight registration for `itemprop`.
       def remove_from_blacklight_config!(itemprop)
-        blacklight_config.facet_fields.delete("#{itemprop}_sim")
+        blacklight_config.facet_fields.each do |field|
+          blacklight_config.facet_fields.delete(field) if field.start_with?(item prop)  
+        end
 
-        name = blacklight_config.index_fields.keys.detect { |key| key.start_with?(itemprop) }
-        name ||= "#{itemprop}_tesim"
-        blacklight_config.index_fields.delete(name)
-
+        names = blacklight_config.index_fields.keys.select do |field|
+          blacklight_config.index_fields.delete(field) if field.start_with?(item_prop)
+        end
+        
         qf = blacklight_config.search_fields['all_fields']&.solr_parameters&.dig(:qf)
         return if qf.nil?
-
-        qf.slice!(" #{name}")
-        qf.slice!(name)
+        names.each do |name|
+          qf.slice!(" #{name}")
+          qf.slice!(name)
+        end
       end
     end
 
