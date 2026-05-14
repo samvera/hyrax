@@ -11,7 +11,7 @@ module Hyrax
     # curation-concern resources.
     def permalink_for(presenter)
       proxy = collection_presenter?(presenter) ? hyrax : main_app
-      polymorphic_url([proxy, presenter])
+      strip_query_string(polymorphic_url([proxy, presenter]))
     end
 
     def copy_permalink_enabled?
@@ -22,6 +22,17 @@ module Hyrax
 
     def collection_presenter?(presenter)
       presenter.respond_to?(:collection?) && presenter.collection?
+    end
+
+    # Removes the `?…` query string from a URL so the permalink is a clean
+    # canonical reference. Rails URL helpers append `?locale=...` (and any
+    # other registered `default_url_options`) by default; for a stable
+    # citable URL we want the bare host + path.
+    def strip_query_string(url)
+      parsed = URI.parse(url)
+      parsed.query = nil
+      parsed.fragment = nil
+      parsed.to_s
     end
   end
 end
