@@ -886,6 +886,9 @@ de:
       contact: Kontakt
       help: Hilfe
       home: Startseite
+    copy_permalink:
+      button: Permalink kopieren
+      success: Kopiert!
     dashboard:
       additional_notifications: Alle Benachrichtigungen
       admin_sets:

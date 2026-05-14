@@ -27,8 +27,9 @@ RSpec.describe 'hyrax/collections/show.html.erb', type: :view do
     allow(ability).to receive(:current_user).and_return(build(:user, id: nil, email: ""))
     assign(:presenter, presenter)
 
-    # Stub route because view specs don't handle engine routes
+    # Stub routes because view specs don't handle engine routes
     allow(view).to receive(:collection_path).and_return("/collection/123")
+    allow(view).to receive(:permalink_for).with(presenter).and_return("http://example.test/collection/123")
 
     stub_template '_search_form.html.erb' => 'search form'
     stub_template 'hyrax/collections/_sort_and_per_page.html.erb' => 'sort and per page'
