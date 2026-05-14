@@ -140,19 +140,18 @@ module Hyrax
       ##
       # @api private
       #
-      # No-op wrapper for single-value attributes. Lets `#type` build its
-      # output the same way regardless of whether the attribute holds one
-      # value or many: `wrapper.of(member_type)` either wraps it (Array)
-      # or hands it back unchanged (Identity).
+      # Single-value wrapper that matches the multi-value branch's cleanup:
+      # strips the dry-types Undefined placeholder and coerces blank strings to nil.
+      # Booleans, numbers, and other types pass through unchanged.
       #
       # @example
-      #   Identity.of(Valkyrie::Types::String) # => Valkyrie::Types::String
+      #   Identity.of(Valkyrie::Types::String) # => Valkyrie::Types::String with blank-string → nil coercion
       class Identity
-        ##
-        # @param [Dry::Types::Type]
-        # @return [Dry::Types::Type] the type passed in
         def self.of(type)
-          type
+          type.constructor do |value|
+            next nil if value.equal?(Dry::Types::Undefined)
+            value.is_a?(String) ? value.presence : value
+          end
         end
       end
 
