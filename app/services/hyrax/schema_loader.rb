@@ -147,13 +147,11 @@ module Hyrax
       # @example
       #   Identity.of(Valkyrie::Types::String) # => Valkyrie::Types::String with blank-string → nil coercion
       class Identity
-        CoerceSingular = lambda do |value|
-          return nil if value.equal?(Dry::Types::Undefined)
-          value.is_a?(String) ? value.presence : value
-        end
-
         def self.of(type)
-          type.constructor(&CoerceSingular)
+          type.constructor do |value|
+            next nil if value.equal?(Dry::Types::Undefined)
+            value.is_a?(String) ? value.presence : value
+          end
         end
       end
 

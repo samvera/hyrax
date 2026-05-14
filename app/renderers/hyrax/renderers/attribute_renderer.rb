@@ -109,7 +109,6 @@ module Hyrax
       end
 
       def blank_values?
-        return true if values.blank?
         Array(values).all?(&:blank?)
       end
     end
