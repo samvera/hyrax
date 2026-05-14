@@ -7,19 +7,18 @@ module Hyrax
       private
 
       ##
-      # Special treatment for license/rights.  A URL from the Hyrax gem's config/hyrax.rb is stored in the descMetadata of the
-      # curation_concern.  If that URL is valid in form, then it is used as a link.  If it is not valid, it is used as plain text.
+      # Special treatment for license/rights. A URL from the Hyrax gem's
+      # `config/hyrax.rb` is stored in the descMetadata of the
+      # curation_concern. If the stored value is an absolute http/https URI,
+      # render it as a link with the authority's label; otherwise render the
+      # value as plain text to avoid emitting unsafe href values (e.g.
+      # `javascript:`) or broken links for free-text values.
       def attribute_value_to_html(value)
-        begin
-          parsed_uri = URI.parse(value)
-        rescue URI::InvalidURIError
-          nil
-        end
-        if parsed_uri.nil?
-          ERB::Util.h(value)
-        else
+        if Hyrax::AuthorityRenderingHelper.linkable_uri?(value)
           label = Hyrax.config.rights_statement_service_class.new.label(value) { value }
-          %(<a href=#{ERB::Util.h(value)} target="_blank">#{label}</a>)
+          %(<a href="#{ERB::Util.h(value)}" target="_blank" rel="noopener noreferrer">#{ERB::Util.h(label)}</a>)
+        else
+          ERB::Util.h(value)
         end
       end
     end

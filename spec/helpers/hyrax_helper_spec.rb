@@ -339,6 +339,33 @@ RSpec.describe HyraxHelper, type: :helper do
                "<a href=\"http://creativecommons.org/publicdomain/mark/1.0/\">Creative Commons Public Domain Mark 1.0</a>, " \
                "and <a href=\"http://www.europeana.eu/portal/rights/rr-r.html\">All rights reserved</a>")
     end
+
+    it "renders an off-authority free-text value as plain text" do
+      expect(helper.license_links(value: ["All rights reserved"]))
+        .to eq("All rights reserved")
+    end
+
+    it "renders a non-URI single token as plain text rather than a relative link" do
+      # `URI.parse("moomin")` does not raise — it returns a URI::Generic with
+      # no scheme. We must not turn that into `<a href="moomin">`.
+      expect(helper.license_links(value: ["moomin"])).to eq("moomin")
+    end
+
+    it "renders a value with an unsafe scheme as plain text rather than a link" do
+      expect(helper.license_links(value: ["javascript:alert(1)"]))
+        .not_to include("href=")
+    end
+
+    it "renders an off-authority URI value as a link with the value as its own label" do
+      expect(helper.license_links(value: ["http://example.com/unknown"]))
+        .to eq("<a href=\"http://example.com/unknown\">http://example.com/unknown</a>")
+    end
+
+    it "escapes HTML in an off-authority free-text value" do
+      output = helper.license_links(value: ["<script>alert(1)</script>"])
+      expect(output).not_to include("<script>")
+      expect(output).to include("&lt;script&gt;")
+    end
   end
 
   describe "#rights_statment_links" do
@@ -346,6 +373,31 @@ RSpec.describe HyraxHelper, type: :helper do
       expect(helper.rights_statement_links(
                value: ["http://rightsstatements.org/vocab/InC/1.0/"]
              )).to eq("<a href=\"http://rightsstatements.org/vocab/InC/1.0/\">In Copyright</a>")
+    end
+
+    it "renders an off-authority free-text value as plain text" do
+      expect(helper.rights_statement_links(value: ["All rights reserved"]))
+        .to eq("All rights reserved")
+    end
+
+    it "renders a non-URI single token as plain text rather than a relative link" do
+      expect(helper.rights_statement_links(value: ["moomin"])).to eq("moomin")
+    end
+
+    it "renders a value with an unsafe scheme as plain text rather than a link" do
+      expect(helper.rights_statement_links(value: ["javascript:alert(1)"]))
+        .not_to include("href=")
+    end
+
+    it "renders an off-authority URI value as a link with the value as its own label" do
+      expect(helper.rights_statement_links(value: ["http://example.com/unknown"]))
+        .to eq("<a href=\"http://example.com/unknown\">http://example.com/unknown</a>")
+    end
+
+    it "escapes HTML in an off-authority free-text value" do
+      output = helper.rights_statement_links(value: ["<script>alert(1)</script>"])
+      expect(output).not_to include("<script>")
+      expect(output).to include("&lt;script&gt;")
     end
   end
 
