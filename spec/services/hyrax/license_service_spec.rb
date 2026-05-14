@@ -31,5 +31,19 @@ RSpec.describe Hyrax::LicenseService do
     it "resolves for ids of inactive terms" do
       expect(service.label('demo_id_03')).to eq("Third is an Inactive Term")
     end
+
+    it "returns the id itself when no term matches" do
+      expect(service.label('not-a-known-license')).to eq('not-a-known-license')
+    end
+  end
+
+  describe "#active?" do
+    it "does not raise for an id not in the authority" do
+      expect { service.active?('not-a-known-license') }.not_to raise_error
+    end
+
+    it "returns false for an id not in the authority" do
+      expect(service.active?('not-a-known-license')).to be false
+    end
   end
 end
