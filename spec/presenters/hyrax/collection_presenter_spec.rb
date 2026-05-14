@@ -159,6 +159,18 @@ RSpec.describe Hyrax::CollectionPresenter do
     it { is_expected.to eq "/dashboard/collections/#{solr_doc.id}?locale=en" }
   end
 
+  describe '#editor?' do
+    it 'returns true when current_ability can edit the presenter' do
+      allow(ability).to receive(:can?).with(:edit, presenter).and_return(true)
+      expect(presenter.editor?).to be true
+    end
+
+    it 'returns false when current_ability cannot edit the presenter' do
+      allow(ability).to receive(:can?).with(:edit, presenter).and_return(false)
+      expect(presenter.editor?).to be false
+    end
+  end
+
   describe "banner_file" do
     let(:solr_doc) { SolrDocument.new(id: '123') }
 

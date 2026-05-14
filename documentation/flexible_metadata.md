@@ -44,6 +44,54 @@ For comprehensive information about flexible metadata, including:
 
 See the official [Flexible Metadata Documentation](https://samvera.atlassian.net/wiki/spaces/hyraxdocs/pages/3382542341/Flexible+Metadata) on the Samvera Confluence.
 
+## Property visibility flags
+
+A property declaration can mark a field as restricted so it is hidden from public visitors. Two flags are supported, each enforcing an independent restriction:
+
+- **`admin_only`** — the field renders on show pages only when the current user has the admin role.
+- **`editor_only`** — the field renders on show pages only when the current user has CanCan `:edit` ability on the record being viewed. Admins satisfy this by virtue of edit permission on everything, so an `editor_only` field is visible to admins as well as to per-record editors.
+
+Each flag is an independent restrictor. When both are set on the same field, both must pass: the field renders only for users who are admin *and* an editor of the record.
+
+### Catalog behavior
+
+Restricted fields (declared with either `admin_only` or `editor_only`) are **not exposed through the Blacklight catalog at all** — no search-results column, no facet, and not added to free-text search. Hiding occurs at field registration time, not at render time, so a restricted field's data does not appear in catalog responses for any user.
+
+Visibility for restricted fields is enforced on show pages by the `field_visible?` view helper.
+
+### Declaring the flags
+
+In a YAML schema (HYRAX_FLEXIBLE=false), declare the flag at the top level of the property:
+
+```yaml
+admin_note:
+  type: string
+  multiple: false
+  predicate: http://schema.org/positiveNotes
+  editor_only: true
+  view:
+    html_dl: true
+```
+
+In an m3 profile (HYRAX_FLEXIBLE=true), declare the flag as a string entry in the property's `indexing:` array, alongside index keys and the standard `stored_searchable` / `facetable` flags:
+
+```yaml
+admin_note:
+  available_on:
+    class:
+      - GenericWork
+  display_label:
+    default: Admin Note
+  indexing:
+    - admin_note_tesim
+    - stored_searchable
+    - editor_only
+  property_uri: http://schema.org/positiveNotes
+  range: http://www.w3.org/2001/XMLSchema#string
+```
+
+Use `admin_only` in place of `editor_only` to restrict visibility to admins only.
+
 ## Related features
 
 - **URL Redirects** (`HYRAX_REDIRECTS_ENABLED`): when enabled, the redirects feature requires a `redirects` property in the m3 profile (when also Flipflop-enabled per tenant). See [`documentation/redirects.md`](redirects.md) for the full schema and gating model.

@@ -6,7 +6,7 @@ attributes:
     form:
       display: false
     view:
-      admin_only: true
+      editor_only: true
       render_term: redirects_path
       render_as: redirects_label
       html_dl: true
