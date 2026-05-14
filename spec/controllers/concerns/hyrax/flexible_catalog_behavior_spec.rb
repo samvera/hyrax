@@ -67,6 +67,20 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
           view:
             render_as: linked
             html_dl: true
+        internal_note:
+          available_on:
+            class:
+              - GenericWork
+          display_label:
+            default: Internal Note
+          indexing:
+            - stored_searchable
+            - facetable
+          property_uri: http://example.org/internal_note
+          range: http://www.w3.org/2001/XMLSchema#string
+          view:
+            html_dl: true
+            search_results: false
     YAML
   end
 
@@ -178,6 +192,21 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
       end
     end
 
+    context 'properties hidden from catalog search results' do
+      it 'does not register an index field when view.search_results is false' do
+        expect(blacklight_config.index_fields).not_to have_key('internal_note_tesim')
+      end
+
+      it 'does not add the property to the all_fields qf list' do
+        qf = blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
+        expect(qf).not_to include('internal_note_tesim')
+      end
+
+      it 'still registers the facet field when indexing includes facetable' do
+        expect(blacklight_config.facet_fields).to have_key('internal_note_sim')
+      end
+    end
+
     context 'properties with sidebar faceting' do
       it 'have a facet field added to the blacklight config' do
         # if the  property has facetable in the indexing section of the metadata profile, ensure the _sim field is added to the blacklight config
@@ -270,6 +299,28 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
     it 'returns false when neither condition is met' do
       result = controller.class.send(:stored_searchable?, ['facetable'], 'test_field')
       expect(result).to be false
+    end
+  end
+
+  describe '.catalog_indexable?' do
+    it 'returns false when view.search_results is false' do
+      result = controller.class.send(:catalog_indexable?, { 'search_results' => false })
+      expect(result).to be false
+    end
+
+    it 'returns true when view.search_results is true' do
+      result = controller.class.send(:catalog_indexable?, { 'search_results' => true })
+      expect(result).to be true
+    end
+
+    it 'returns true when view options do not include search_results' do
+      result = controller.class.send(:catalog_indexable?, { 'html_dl' => true })
+      expect(result).to be true
+    end
+
+    it 'returns true when view options are nil' do
+      result = controller.class.send(:catalog_indexable?, nil)
+      expect(result).to be true
     end
   end
 
