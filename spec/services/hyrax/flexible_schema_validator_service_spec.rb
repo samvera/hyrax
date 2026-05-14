@@ -128,6 +128,17 @@ RSpec.describe Hyrax::FlexibleSchemaValidatorService, :clean_repo do
         )
       end
     end
+    context 'when a property declares editor_only in its indexing array' do
+      before do
+        profile['properties']['title']['indexing'] = ['title_sim', 'title_tesim', 'editor_only']
+        service.validate!
+      end
+
+      it 'is valid' do
+        expect(service.errors).to be_empty
+      end
+    end
+
     context 'when the repository already contains records of a class the profile removes' do
       before do
         allow(Hyrax.query_service).to receive(:count_all_of_model).and_return(0)
