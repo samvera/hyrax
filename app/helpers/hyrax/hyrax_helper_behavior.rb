@@ -20,6 +20,7 @@ module Hyrax
     include Hyrax::WorkflowsHelper
     include Hyrax::FacetsHelper
     include Hyrax::AttributesHelper
+    include Hyrax::PermalinkHelper
     include Hyrax::WorksHelper
     include Hyrax::FileSetFormHelper
 

@@ -175,11 +175,11 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
       it "exposes the redirects schema's view options for use under flex-false" do
         # Under flex-false, all view options live inside the view: block;
         # SimpleSchemaLoader#view_definitions_for passes the block through
-        # verbatim. Flex-true structures admin_only differently (via the
-        # indexing: array or top-level admin_only: true), handled by
+        # verbatim. Flex-true structures editor_only differently (via the
+        # indexing: array or top-level editor_only: true), handled by
         # M3SchemaLoader.
         view = {
-          'admin_only' => true,
+          'editor_only' => true,
           'render_term' => 'redirects_path',
           'render_as' => 'redirects_label',
           'html_dl' => true
@@ -187,7 +187,7 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
         mock_property = double('Property', name: :redirects, meta: { 'view' => view })
         result = schema_loader.view_definitions_for(schema: [mock_property])
         expect(result['redirects']).to include(
-          'admin_only' => true,
+          'editor_only' => true,
           'render_term' => 'redirects_path',
           'render_as' => 'redirects_label',
           'html_dl' => true

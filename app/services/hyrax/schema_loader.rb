@@ -76,7 +76,7 @@ module Hyrax
       ##
       # @return [Enumerable<Symbol>]
       def index_keys
-        (config.fetch('indexing', nil) || config.fetch('index_keys', []))&.reject { |k| ['facetable', 'stored_searchable', 'admin_only'].include?(k) }&.map(&:to_sym) || []
+        (config.fetch('indexing', nil) || config.fetch('index_keys', []))&.reject { |k| ['facetable', 'stored_searchable', 'admin_only', 'editor_only'].include?(k) }&.map(&:to_sym) || []
       end
 
       ##
@@ -88,6 +88,7 @@ module Hyrax
         @view_options.delete(:label)
         @view_options[:display_label] = display_label
         @view_options[:admin_only] = admin_only?
+        @view_options[:editor_only] = editor_only?
         @view_options
       end
 
@@ -100,6 +101,10 @@ module Hyrax
 
       def admin_only?
         @admin_only ||= config.fetch('admin_only', false) || config['indexing']&.include?('admin_only')
+      end
+
+      def editor_only?
+        @editor_only ||= config.fetch('editor_only', false) || config['indexing']&.include?('editor_only')
       end
 
       ##

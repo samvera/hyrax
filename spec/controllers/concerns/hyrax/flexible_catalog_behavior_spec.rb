@@ -67,6 +67,20 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
           view:
             render_as: linked
             html_dl: true
+        internal_note:
+          available_on:
+            class:
+              - GenericWork
+          display_label:
+            default: Internal Note
+          indexing:
+            - stored_searchable
+            - facetable
+          property_uri: http://example.org/internal_note
+          range: http://www.w3.org/2001/XMLSchema#string
+          view:
+            html_dl: true
+            search_results: false
     YAML
   end
 
@@ -178,6 +192,21 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
       end
     end
 
+    context 'properties hidden from catalog search results' do
+      it 'does not register an index field when view.search_results is false' do
+        expect(blacklight_config.index_fields).not_to have_key('internal_note_tesim')
+      end
+
+      it 'does not add the property to the all_fields qf list' do
+        qf = blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
+        expect(qf).not_to include('internal_note_tesim')
+      end
+
+      it 'still registers the facet field when indexing includes facetable' do
+        expect(blacklight_config.facet_fields).to have_key('internal_note_sim')
+      end
+    end
+
     context 'properties with sidebar faceting' do
       it 'have a facet field added to the blacklight config' do
         # if the  property has facetable in the indexing section of the metadata profile, ensure the _sim field is added to the blacklight config
@@ -273,6 +302,28 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
     end
   end
 
+  describe '.catalog_indexable?' do
+    it 'returns false when view.search_results is false' do
+      result = controller.class.send(:catalog_indexable?, { 'search_results' => false })
+      expect(result).to be false
+    end
+
+    it 'returns true when view.search_results is true' do
+      result = controller.class.send(:catalog_indexable?, { 'search_results' => true })
+      expect(result).to be true
+    end
+
+    it 'returns true when view options do not include search_results' do
+      result = controller.class.send(:catalog_indexable?, { 'html_dl' => true })
+      expect(result).to be true
+    end
+
+    it 'returns true when view options are nil' do
+      result = controller.class.send(:catalog_indexable?, nil)
+      expect(result).to be true
+    end
+  end
+
   describe '.facetable?' do
     it 'returns true when indexing includes facetable' do
       result = controller.class.send(:facetable?, ['facetable'], 'test_field')
@@ -281,18 +332,6 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
 
     it 'returns false when indexing does not include facetable' do
       result = controller.class.send(:facetable?, ['stored_searchable'], 'test_field')
-      expect(result).to be false
-    end
-  end
-
-  describe '.admin_only?' do
-    it 'returns true when indexing includes admin_only' do
-      result = controller.class.send(:admin_only?, ['admin_only', 'stored_searchable'])
-      expect(result).to be true
-    end
-
-    it 'returns false when indexing does not include admin_only' do
-      result = controller.class.send(:admin_only?, ['stored_searchable'])
       expect(result).to be false
     end
   end
@@ -338,6 +377,185 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
     it 'returns :rights_statement_links for rights_statement' do
       result = controller.class.send(:view_option_for_helper_method, { 'render_as' => 'rights_statement' })
       expect(result).to eq(:rights_statement_links)
+    end
+  end
+
+  describe '.restricted_field?' do
+    it 'is true when admin_only is in the indexing array' do
+      expect(controller.class.send(:restricted_field?, ['title_tesim', 'stored_searchable', 'admin_only'])).to be true
+    end
+
+    it 'is true when editor_only is in the indexing array' do
+      expect(controller.class.send(:restricted_field?, ['title_tesim', 'stored_searchable', 'editor_only'])).to be true
+    end
+
+    it 'is false when neither flag is present' do
+      expect(controller.class.send(:restricted_field?, ['title_tesim', 'stored_searchable'])).to be false
+    end
+  end
+
+  describe 'catalog registration of restricted fields' do
+    let(:restricted_properties) do
+      YAML.safe_load(<<-YAML)
+        properties:
+          secret_note:
+            available_on:
+              class:
+                - GenericWork
+                - Monograph
+            display_label:
+              default: Secret Note
+            indexing:
+              - secret_note_tesim
+              - secret_note_sim
+              - stored_searchable
+              - facetable
+              - editor_only
+            property_uri: http://example.org/secret_note
+            range: http://www.w3.org/2001/XMLSchema#string
+      YAML
+    end
+
+    before do
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
+      routes.draw { get 'index' => 'anonymous#index' }
+
+      mock_schema = double('FlexibleSchema',
+        profile: base_profile.deep_merge(restricted_properties))
+
+      allow(Hyrax::FlexibleSchema)
+        .to receive_message_chain(:order, :last)
+        .with("created_at asc")
+        .with(2)
+        .and_return([mock_schema])
+
+      controller.class.load_flexible_schema
+      get :index
+    end
+
+    it 'does not add the field as an index column' do
+      expect(controller.blacklight_config.index_fields).not_to have_key('secret_note_tesim')
+    end
+
+    it 'does not add the field as a facet' do
+      expect(controller.blacklight_config.facet_fields).not_to have_key('secret_note_sim')
+    end
+
+    it 'does not add the field to the all_fields qf' do
+      qf = controller.blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
+      expect(qf).not_to include('secret_note_tesim')
+    end
+  end
+
+  describe '.remove_from_blacklight_config!' do
+    let(:blacklight_config) { controller.class.blacklight_config }
+
+    before { routes.draw { get 'index' => 'anonymous#index' } }
+
+    describe 'all_fields qf cleanup' do
+      # Registration appends fields as " #{name}", so by the time
+      # remove_from_blacklight_config! runs, the field may be anywhere in the
+      # qf string. The two slice! calls in the helper exist to cover all three
+      # positions: middle (covered by the leading-space slice), first (no
+      # leading space — covered by the bare slice), and only term (also no
+      # leading space).
+      before do
+        controller.class.blacklight_config.search_fields['all_fields']
+                  .solr_parameters[:qf] = qf_initial
+      end
+
+      let(:qf) { controller.class.blacklight_config.search_fields['all_fields'].solr_parameters[:qf] }
+
+      context 'when the field is a middle term in qf' do
+        let(:qf_initial) { String.new('title_tesim creator_tesim subject_tesim') }
+
+        it 'removes the field and its preceding space' do
+          controller.class.send(:remove_from_blacklight_config!, 'creator')
+          expect(qf).to eq('title_tesim subject_tesim')
+        end
+      end
+
+      context 'when the field is the first term in qf with no leading space' do
+        let(:qf_initial) { String.new('creator_tesim title_tesim') }
+
+        it 'removes the field even though there is no leading space to match' do
+          controller.class.send(:remove_from_blacklight_config!, 'creator')
+          expect(qf).not_to include('creator_tesim')
+          expect(qf).to include('title_tesim')
+        end
+      end
+
+      context 'when the field is the only term in qf' do
+        let(:qf_initial) { String.new('creator_tesim') }
+
+        it 'removes the field, leaving an empty qf' do
+          controller.class.send(:remove_from_blacklight_config!, 'creator')
+          expect(qf).to eq('')
+        end
+      end
+    end
+
+    describe 'multi-name cleanup driven by the indexing: array' do
+      # When a property declares additional Solr field variants in its
+      # indexing: array (e.g. a `_label_tesim` variant alongside the
+      # canonical `_tesim`), the helper removes all of them — not just the
+      # canonical pair synthesized from the itemprop. Directive flags like
+      # `stored_searchable`/`facetable`/`admin_only`/`editor_only` are
+      # filtered out and not treated as Solr field names.
+      # Uses an itemprop unlikely to collide with the host app's default
+      # CatalogController registrations; blacklight_config is a class-level
+      # singleton shared across examples in this file.
+      before do
+        blacklight_config.add_index_field('memo_tesim', label: 'Memo') unless blacklight_config.index_fields.key?('memo_tesim')
+        blacklight_config.add_index_field('memo_label_tesim', label: 'Memo Label') unless blacklight_config.index_fields.key?('memo_label_tesim')
+        blacklight_config.add_facet_field('memo_sim', label: 'Memo') unless blacklight_config.facet_fields.key?('memo_sim')
+        blacklight_config.add_facet_field('memo_label_sim', label: 'Memo Label') unless blacklight_config.facet_fields.key?('memo_label_sim')
+        blacklight_config.search_fields['all_fields'].solr_parameters[:qf] =
+          String.new('title_tesim memo_tesim memo_label_tesim')
+      end
+
+      let(:indexing) do
+        ['memo_tesim', 'memo_sim', 'memo_label_tesim', 'memo_label_sim',
+         'stored_searchable', 'facetable', 'editor_only']
+      end
+
+      it 'removes the canonical pair and all variants declared in indexing:' do
+        controller.class.send(:remove_from_blacklight_config!, 'memo', indexing)
+
+        expect(blacklight_config.index_fields).not_to have_key('memo_tesim')
+        expect(blacklight_config.index_fields).not_to have_key('memo_label_tesim')
+        expect(blacklight_config.facet_fields).not_to have_key('memo_sim')
+        expect(blacklight_config.facet_fields).not_to have_key('memo_label_sim')
+
+        qf = blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
+        expect(qf).to eq('title_tesim')
+      end
+    end
+
+    describe 'prefix collision safety' do
+      # A potential failure mode of prefix-based matching: `notes` cleanup
+      # accidentally evicting unrelated `notes_internal_*` registrations.
+      # The helper matches on *exact* Solr field names (canonical pair plus
+      # explicit indexing: entries), so unrelated properties whose names
+      # happen to start with the itemprop are untouched.
+      #
+      # Uses field names that are unlikely to collide with the host app's
+      # CatalogController defaults; `blacklight_config` is a class-level
+      # singleton shared across examples in this file, and re-registering a
+      # field that already exists raises.
+      before do
+        blacklight_config.add_index_field('notes_tesim', label: 'Notes') unless blacklight_config.index_fields.key?('notes_tesim')
+        blacklight_config.add_index_field('notes_internal_tesim', label: 'Internal Notes') unless blacklight_config.index_fields.key?('notes_internal_tesim')
+        blacklight_config.add_facet_field('notes_internal_sim', label: 'Internal Notes') unless blacklight_config.facet_fields.key?('notes_internal_sim')
+      end
+
+      it 'does not remove a different property whose name starts with the same prefix' do
+        controller.class.send(:remove_from_blacklight_config!, 'notes')
+
+        expect(blacklight_config.index_fields).not_to have_key('notes_tesim')
+        expect(blacklight_config.index_fields).to have_key('notes_internal_tesim')
+        expect(blacklight_config.facet_fields).to have_key('notes_internal_sim')
+      end
     end
   end
 end
