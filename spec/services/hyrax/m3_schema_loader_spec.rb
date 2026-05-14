@@ -140,6 +140,25 @@ RSpec.describe Hyrax::M3SchemaLoader do
       end
     end
 
+    context 'when a property declares editor_only via the indexing array' do
+      let(:profile_with_editor_only) do
+        modified_profile = profile.dup
+        modified_profile['properties']['abstract']['available_on']['class'] << 'Monograph'
+        modified_profile['properties']['abstract']['indexing'] = ['abstract_tesim', 'stored_searchable', 'editor_only']
+        modified_profile
+      end
+      let(:schema_with_editor_only) do
+        Hyrax::FlexibleSchema.create(profile: profile_with_editor_only)
+      end
+
+      before { allow(Hyrax::FlexibleSchema).to receive(:find_by).and_return(schema_with_editor_only) }
+
+      it 'includes the field with editor_only true in view options' do
+        result = schema_loader.view_definitions_for(schema: Monograph.to_s)
+        expect(result[:abstract]).to include("editor_only" => true)
+      end
+    end
+
     context 'when work type properties have display_label, admin_only, and additional view options' do
       let(:profile_with_view) do
         modified_profile = profile.dup
@@ -178,16 +197,16 @@ RSpec.describe Hyrax::M3SchemaLoader do
       it 'returns only properties with additional view options' do
         expect(schema_loader.view_definitions_for(schema: GenericWork.to_s))
           .to eq({
-                   creator: { "html_dl" => true, "display_label" => { "default" => "Creator" }, "admin_only" => false },
-                   keyword: { "render_as" => "linked", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
-                   abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
+                   creator: { "html_dl" => true, "display_label" => { "default" => "Creator" }, "admin_only" => false, "editor_only" => false },
+                   keyword: { "render_as" => "linked", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false, "editor_only" => false },
+                   abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false, "editor_only" => false }
                  })
       end
 
       it 'excludes deprecated view.label from properties' do
         expect(schema_loader.view_definitions_for(schema: Monograph.to_s)[:creator])
           .to eq({
-                   "display_label" => { "default" => "Creator" }, "admin_only" => false, "html_dl" => true
+                   "display_label" => { "default" => "Creator" }, "admin_only" => false, "editor_only" => false, "html_dl" => true
                  })
       end
     end
@@ -219,7 +238,7 @@ RSpec.describe Hyrax::M3SchemaLoader do
           result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: nil)
           expect(result)
             .to eq(
-              abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
+              abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false, "editor_only" => false }
             )
           expect(result).not_to have_key(:context)
         end
@@ -229,8 +248,8 @@ RSpec.describe Hyrax::M3SchemaLoader do
         it 'includes fields matching the context' do
           expect(schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'flexible_context'))
             .to eq(
-              keyword: { "render_as" => "linked", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false },
-              abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
+              keyword: { "render_as" => "linked", "html_dl" => true, "display_label" => { "default" => "Keyword" }, "admin_only" => false, "editor_only" => false },
+              abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false, "editor_only" => false }
             )
         end
       end
@@ -240,7 +259,7 @@ RSpec.describe Hyrax::M3SchemaLoader do
           result = schema_loader.view_definitions_for(schema: Monograph.to_s, contexts: 'other_context')
           expect(result)
             .to eq(
-              abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false }
+              abstract: { "html_dl" => true, "display_label" => { "default" => "Abstract" }, "admin_only" => false, "editor_only" => false }
             )
           expect(result).not_to have_key(:context)
         end

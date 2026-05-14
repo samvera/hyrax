@@ -892,6 +892,9 @@ es:
       contact: Contacto
       help: Ayuda
       home: Inicio
+    copy_permalink:
+      button: Copiar enlace permanente
+      success: ¡Copiado!
     dashboard:
       additional_notifications: ver todas las notificaciones
       admin_sets:

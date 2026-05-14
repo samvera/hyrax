@@ -79,7 +79,7 @@ properties:
     type: hash
     multiple: true
     indexing:
-      - admin_only
+      - editor_only
     predicate: http://samvera.org/ns/hyku/redirects
     view:
       render_term: redirects_path
@@ -87,7 +87,7 @@ properties:
       html_dl: true
 ```
 
-The `indexing: [admin_only]` entry and the `view:` block together opt the redirects field into the show-page display described below in [Displaying redirect aliases on show pages](#displaying-redirect-aliases-on-show-pages). Both are required for that display to appear with admin-only visibility. Note the placement: `admin_only` is an entry in the `indexing:` array (read by `Hyrax::SchemaLoader::AttributeDefinition#admin_only?`); `render_term`, `render_as`, and `html_dl` are inside the `view:` block. Non-flexible mode structures `admin_only` differently — see [Schema details](#schema-details-flexible-false-mode) below.
+The `indexing: [editor_only]` entry and the `view:` block together opt the redirects field into the show-page display described below in [Displaying redirect aliases on show pages](#displaying-redirect-aliases-on-show-pages). Both are required for that display to appear with editor-or-admin visibility. Note the placement: `editor_only` is an entry in the `indexing:` array (read by `Hyrax::SchemaLoader::AttributeDefinition#editor_only?`); `render_term`, `render_as`, and `html_dl` are inside the `view:` block. Non-flexible mode structures `editor_only` differently — see [Schema details](#schema-details-flexible-false-mode) below.
 
 Each redirect entry is a plain hash with `path`, `canonical`, and `sequence` keys, persisted as JSONB on the parent resource. The `type: hash` token resolves to `Dry::Types['hash']`, which round-trips entries through Postgres without the sub-field stripping a nested `Valkyrie::Resource` would suffer. `available_on.class` must include at least one work or collection class declared in this profile's top-level `classes:` block; substitute the class names your profile declares (`Image`, `Etd`, `Oer`, etc.) as appropriate.
 
@@ -116,7 +116,7 @@ attributes:
     form:
       display: false
     view:
-      admin_only: true
+      editor_only: true
       render_term: redirects_path
       render_as: redirects_label
       html_dl: true
@@ -125,7 +125,7 @@ attributes:
       simple_dc_pmh: ~
 ```
 
-The `view:` block opts the redirects field into the show-page display described below in [Displaying redirect aliases on show pages](#displaying-redirect-aliases-on-show-pages). In non-flexible mode, all view options live inside the `view:` block — that's where `Hyrax::SimpleSchemaLoader#view_definitions_for` reads them from. (Flex-true uses a different structure for `admin_only`; see the [m3 profile requirements](#m3-profile-requirements-flexible-true-mode) section.)
+The `view:` block opts the redirects field into the show-page display described below in [Displaying redirect aliases on show pages](#displaying-redirect-aliases-on-show-pages). In non-flexible mode, all view options live inside the `view:` block — that's where `Hyrax::SimpleSchemaLoader#view_definitions_for` reads them from. (Flex-true uses a different structure for `editor_only`; see the [m3 profile requirements](#m3-profile-requirements-flexible-true-mode) section.)
 
 When the config is on, this schema is loaded and `Hyrax::Work` / `Hyrax::PcdmCollection` include it via `Hyrax::Schema(:redirects)`. The schema loader produces:
 
@@ -266,15 +266,17 @@ bundle exec rails hyrax:solr:reindex_everything
 
 ## Displaying redirect aliases on show pages
 
-When the redirects feature is enabled, the registered aliases for a work or collection appear on its show page as a list of clickable links. The display is gated by `admin_only: true` — only signed-in admins see it. Public visitors and non-admin users see no trace of the redirects on the show page.
+When the redirects feature is enabled, the registered aliases for a work or collection appear on its show page as a list of clickable links. The display is gated by `editor_only: true` — visible to signed-in users with edit ability for the record (which includes site admins, who can edit everything). Public visitors and signed-in users without edit ability see no trace of the redirects on the show page.
 
-The display is driven by two pieces on the redirects schema: an `admin_only` flag that gates visibility, and a `render_as: redirects_label` instruction that selects the renderer. **The two flex modes structure these differently** because their schema loaders read view options from different places.
+The `editor_only` flag (and its sibling `admin_only`) are general flexible-metadata property visibility flags. For the full reference — including the combination rule when both flags are set and the catalog-exclusion behavior — see [Property visibility flags](flexible_metadata.md#property-visibility-flags) in the flexible metadata documentation.
+
+The display is driven by two pieces on the redirects schema: an `editor_only` flag that gates visibility, and a `render_as: redirects_label` instruction that selects the renderer. **The two flex modes structure these differently** because their schema loaders read view options from different places.
 
 **Non-flexible mode (`HYRAX_FLEXIBLE=false`)** — all view options live inside the `view:` block in `config/metadata/redirects.yaml`:
 
 ```yaml
 view:
-  admin_only: true
+  editor_only: true
   render_term: redirects_path
   render_as: redirects_label
   html_dl: true
@@ -282,18 +284,18 @@ view:
 
 `Hyrax::SimpleSchemaLoader#view_definitions_for` reads `property.meta['view']` and passes the block through verbatim to the show-page rendering.
 
-**Flexible mode (`HYRAX_FLEXIBLE=true`)** — `admin_only` is an entry in the property's `indexing:` array; the rest live inside the `view:` block:
+**Flexible mode (`HYRAX_FLEXIBLE=true`)** — `editor_only` is an entry in the property's `indexing:` array; the rest live inside the `view:` block:
 
 ```yaml
 indexing:
-  - admin_only
+  - editor_only
 view:
   render_term: redirects_path
   render_as: redirects_label
   html_dl: true
 ```
 
-`Hyrax::M3SchemaLoader#view_definitions_for` calls `definition.view_options`, which reads `admin_only?` (via `Hyrax::SchemaLoader::AttributeDefinition#admin_only?`, which honors both top-level `admin_only: true` and `indexing: [admin_only]`) and injects it into the view options hash. The `view:` block contents are passed through alongside.
+`Hyrax::M3SchemaLoader#view_definitions_for` calls `definition.view_options`, which reads `editor_only?` (via `Hyrax::SchemaLoader::AttributeDefinition#editor_only?`, which honors both top-level `editor_only: true` and `indexing: [editor_only]`) and injects it into the view options hash. The `view:` block contents are passed through alongside.
 
 Full snippets for each mode are shown in the [m3 profile requirements](#m3-profile-requirements-flexible-true-mode) and [Schema details](#schema-details-flexible-false-mode) sections above.
 
@@ -305,7 +307,7 @@ Full snippets for each mode are shown in the [m3 profile requirements](#m3-profi
 - The `render_term: redirects_path` view option tells the show-page partial to call `presenter.redirects_path` instead of `presenter.redirects`. The bare `redirects` attribute returns the persisted array of hashes and isn't useful for direct rendering.
 - The `render_as: redirects_label` view option tells Hyrax to use the `Hyrax::Renderers::RedirectsLabelAttributeRenderer` class to render the field. Each path becomes a clickable link whose text is the full absolute URL (host + path) and whose `href` is the path alone (the browser resolves it against the current host).
 - The `html_dl: true` view option matches the show page's description-list layout — the renderer emits `<dt>/<dd>` rather than the table-row `<tr>/<td>` it would default to.
-- The `admin_only: true` view option makes the existing attribute-rows partial skip rendering the field entirely when the current user is not an admin. No section heading, no empty list — just nothing.
+- The `editor_only: true` view option makes the existing attribute-rows partial skip rendering the field entirely when the current user cannot edit the record. No section heading, no empty list — just nothing.
 
 ### Adopter customization
 

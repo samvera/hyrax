@@ -1,4 +1,5 @@
 <div class="citations">
+    <%= render 'hyrax/shared/copy_permalink', presenter: presenter %>
     <% if Hyrax.config.citations? %>
       <%= link_to t(".citations"), hyrax.citations_work_path(presenter), id: 'citations', class: 'btn btn-secondary btn-sm mr-2' %>
     <% end %>

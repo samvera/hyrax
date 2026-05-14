@@ -885,6 +885,9 @@ pt-BR:
       contact: Contato
       help: Ajuda
       home: Página Principal
+    copy_permalink:
+      button: Copiar link permanente
+      success: Copiado!
     dashboard:
       additional_notifications: Ver todas as notificações
       admin_sets:
