@@ -890,6 +890,9 @@ zh:
       contact: 联系
       help: 帮助
       home: 首页
+    copy_permalink:
+      button: 复制永久链接
+      success: 已复制!
     dashboard:
       additional_notifications: 见所有通知
       admin_sets:

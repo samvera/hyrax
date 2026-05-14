@@ -59,6 +59,8 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
     allow(view).to receive(:blacklight_config).and_return(Blacklight::Configuration.new)
     allow(view).to receive(:signed_in?)
     allow(view).to receive(:on_the_dashboard?).and_return(false)
+    # Stub route because view specs don't handle engine/main_app polymorphic routes
+    allow(view).to receive(:permalink_for).with(presenter).and_return("http://example.test/concern/generic_works/#{presenter.id}")
     stub_template 'hyrax/base/_metadata.html.erb' => ''
     stub_template 'hyrax/base/_relationships.html.erb' => ''
     stub_template 'hyrax/base/_show_actions.html.erb' => ''

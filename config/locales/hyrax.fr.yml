@@ -893,6 +893,9 @@ fr:
       contact: Contact
       help: Aidez-moi
       home: Accueil
+    copy_permalink:
+      button: Copier le lien permanent
+      success: Copié !
     dashboard:
       additional_notifications: Voir toutes les notifications
       admin_sets:
