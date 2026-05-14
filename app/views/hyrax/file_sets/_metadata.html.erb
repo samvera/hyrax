@@ -2,11 +2,10 @@
 <dl class="file-show-term file-show-details">
   <% if @presenter.try(:flexible?) %>
     <% view_options_for(@presenter).each do |field, options| %>
-      <% next if options["admin_only"] && !current_user&.admin? %>
-      <% next if field == :admin_note && !@presenter.editor? %>
+      <% view_options = conform_options(field, options) %>
+      <% next unless field_visible?(view_options, @presenter) %>
       <% values = Array(@presenter.try(field)).reject(&:blank?) %>
       <% next if values.empty? %>
-      <% view_options = conform_options(field, options) %>
       <% label = view_options["label"] %>
       <div class="row">
         <dt class="col-5"><%= label %></dt>
