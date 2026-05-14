@@ -65,32 +65,53 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
     context 'when multiple is false' do
       let(:config) { { 'type' => 'string', 'multiple' => false } }
 
-      it 'returns a Valkyrie string type' do
-        expect(attribute_definition.type).to eq(Valkyrie::Types::String)
+      it 'returns a string-typed constructor that coerces blanks to nil' do
+        expect(attribute_definition.type).to be_a(Dry::Types::Constructor)
+        # Real strings pass through.
+        expect(attribute_definition.type.call('hello')).to eq('hello')
+        # Blank strings become nil, matching the multi-value branch's blank cleanup.
+        expect(attribute_definition.type.call('')).to be_nil
+        expect(attribute_definition.type.call('   ')).to be_nil
+        # The dry-types Undefined placeholder is dropped.
+        expect(attribute_definition.type.call(Dry::Types::Undefined)).to be_nil
+      end
+    end
+
+    context 'when multiple is false and the underlying type is non-string' do
+      let(:config) { { 'type' => 'date_time', 'multiple' => false } }
+
+      it 'wraps the type but lets non-string values pass through unchanged' do
+        expect(attribute_definition.type).to be_a(Dry::Types::Constructor)
+        time = DateTime.new(2026, 1, 1)
+        expect(attribute_definition.type.call(time)).to eq(time)
       end
     end
 
     context 'when type is id' do
       let(:config) { { 'type' => 'id' } }
 
-      it 'returns a Valkyrie ID type' do
-        expect(attribute_definition.type).to eq(Valkyrie::Types::ID)
+      it 'returns a constructor that coerces input to a Valkyrie::ID' do
+        expect(attribute_definition.type).to be_a(Dry::Types::Constructor)
+        expect(attribute_definition.type.call('abc')).to eq(Valkyrie::ID.new('abc'))
       end
     end
 
     context 'when type is uri' do
       let(:config) { { 'type' => 'uri' } }
 
-      it 'returns a Valkyrie URI type' do
-        expect(attribute_definition.type).to eq(Valkyrie::Types::URI)
+      it 'returns a constructor that coerces input to an RDF::URI' do
+        expect(attribute_definition.type).to be_a(Dry::Types::Constructor)
+        expect(attribute_definition.type.call('http://example.com')).to eq(RDF::URI('http://example.com'))
       end
     end
 
     context 'when type is date_time' do
       let(:config) { { 'type' => 'date_time' } }
 
-      it 'returns a Valkyrie DateTime type' do
-        expect(attribute_definition.type).to eq(Valkyrie::Types::DateTime)
+      it 'returns a constructor wrapping the Valkyrie DateTime type' do
+        expect(attribute_definition.type).to be_a(Dry::Types::Constructor)
+        time = DateTime.new(2026, 1, 1)
+        expect(attribute_definition.type.call(time)).to eq(time)
       end
     end
 
@@ -114,8 +135,11 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
     context 'when type is hash with multiple: false' do
       let(:config) { { 'type' => 'hash', 'multiple' => false } }
 
-      it 'returns a bare Dry::Types["hash"]' do
-        expect(attribute_definition.type).to eq(Dry::Types['hash'])
+      it 'returns a constructor wrapping Dry::Types["hash"] that passes hashes through' do
+        expect(attribute_definition.type).to be_a(Dry::Types::Constructor)
+        expect(attribute_definition.type.type).to eq(Dry::Types['hash'])
+        input = { 'path' => '/foo', 'canonical' => true }
+        expect(attribute_definition.type.call(input)).to eq(input)
       end
     end
 

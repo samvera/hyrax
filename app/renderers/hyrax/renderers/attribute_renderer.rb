@@ -27,7 +27,7 @@ module Hyrax
 
       # Draw the table row for the attribute
       def render
-        return '' if values.blank? && !options[:include_empty]
+        return '' if blank_values? && !options[:include_empty]
 
         markup = %(<tr><th>#{label}</th>\n<td><ul class='tabular'>)
 
@@ -47,7 +47,7 @@ module Hyrax
 
       # Draw the dl row for the attribute
       def render_dl_row
-        return '' if values.blank? && !options[:include_empty]
+        return '' if blank_values? && !options[:include_empty]
 
         markup = %(<dt>#{label}</dt>\n<dd><ul class='tabular'>)
 
@@ -106,6 +106,11 @@ module Hyrax
 
       def work_type_label_key
         options[:work_type] ? options[:work_type].underscore : nil
+      end
+
+      def blank_values?
+        return true if values.blank?
+        Array(values).all?(&:blank?)
       end
     end
   end
