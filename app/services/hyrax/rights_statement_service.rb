@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Hyrax
   # Provide select options for the copyright status (edm:rights) field
-  class RightsStatementService < QaSelectService
+  class RightsStatementService < TolerantSelectService
     def initialize(_authority_name = nil)
       super('rights_statements')
     end
