@@ -34,5 +34,29 @@ RSpec.describe Hyrax::PermalinkHelper, type: :helper do
       expect(helper).to receive(:polymorphic_url).with([helper.main_app, bare_presenter]).and_return('http://example.test/x/1')
       expect(helper.permalink_for(bare_presenter)).to eq('http://example.test/x/1')
     end
+
+    it 'strips a locale query string appended by Rails default_url_options' do
+      expect(helper).to receive(:polymorphic_url)
+        .with([helper.main_app, work_presenter])
+        .and_return('http://example.test/concern/generic_works/abc-123?locale=en')
+      expect(helper.permalink_for(work_presenter))
+        .to eq('http://example.test/concern/generic_works/abc-123')
+    end
+
+    it 'strips any query string, not just locale' do
+      expect(helper).to receive(:polymorphic_url)
+        .with([helper.main_app, work_presenter])
+        .and_return('http://example.test/concern/generic_works/abc-123?foo=bar&baz=qux')
+      expect(helper.permalink_for(work_presenter))
+        .to eq('http://example.test/concern/generic_works/abc-123')
+    end
+
+    it 'strips a URL fragment as well' do
+      expect(helper).to receive(:polymorphic_url)
+        .with([helper.main_app, work_presenter])
+        .and_return('http://example.test/concern/generic_works/abc-123?locale=en#section')
+      expect(helper.permalink_for(work_presenter))
+        .to eq('http://example.test/concern/generic_works/abc-123')
+    end
   end
 end
