@@ -76,16 +76,21 @@ properties:
         - CollectionResource
     cardinality:
       minimum: 0
+    display_label:
+      default: Redirects
     type: hash
     multiple: true
     indexing:
       - editor_only
     predicate: http://samvera.org/ns/hyku/redirects
+    range: http://www.w3.org/2001/XMLSchema#string
     view:
       render_term: redirects_path
       render_as: redirects_label
       html_dl: true
 ```
+
+The `display_label` and `range` entries are required for profile validation. `display_label.default` controls the label that appears next to the redirects field on show pages.
 
 The `indexing: [editor_only]` entry and the `view:` block together opt the redirects field into the show-page display described below in [Displaying redirect aliases on show pages](#displaying-redirect-aliases-on-show-pages). Both are required for that display to appear with editor-or-admin visibility. Note the placement: `editor_only` is an entry in the `indexing:` array (read by `Hyrax::SchemaLoader::AttributeDefinition#editor_only?`); `render_term`, `render_as`, and `html_dl` are inside the `view:` block. Non-flexible mode structures `editor_only` differently — see [Schema details](#schema-details-flexible-false-mode) below.
 

@@ -277,11 +277,11 @@
                   "pattern": "^[a-z_]+_(tesi|tesim|teim|ssi|sim|ssm|bsi|isi|dts|dtsi|ti|si|ss|is|bs|dt|ssim)$"
                 },
                 {
-                  "enum": ["facetable", "admin_only", "stored_searchable"]
+                  "enum": ["facetable", "admin_only", "editor_only", "stored_searchable"]
                 }
               ]
             },
-            "description": "Solr index key to map to, or behavioral flag (facetable, admin_only)."
+            "description": "Solr index key to map to, or behavioral flag (facetable, admin_only, editor_only)."
           },
           "definition": {
             "type": "object",
