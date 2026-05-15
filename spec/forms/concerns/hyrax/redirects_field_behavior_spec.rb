@@ -41,7 +41,6 @@ RSpec.describe Hyrax::RedirectsFieldBehavior do
     end
 
     it 'registers the redirects_attributes virtual property when enabled' do
-      expect(property_target).to receive(:property).with(:redirects, hash_including(default: []))
       expect(property_target).to receive(:property).with(
         :redirects_attributes,
         virtual: true,
@@ -51,9 +50,8 @@ RSpec.describe Hyrax::RedirectsFieldBehavior do
       property_target.include(described_class)
     end
 
-    it 'registers the redirects property loaded from redirects.yaml' do
-      expect(property_target).to receive(:property).with(:redirects, hash_including(default: []))
-      expect(property_target).to receive(:property).with(:redirects_attributes, anything)
+    it 'does not include FormFields(:redirects) itself' do
+      expect(property_target).not_to receive(:include).with(Hyrax::FormFields(:redirects))
       property_target.include(described_class)
     end
   end

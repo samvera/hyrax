@@ -30,13 +30,6 @@ module Hyrax
   module RedirectsFieldBehavior
     def self.included(descendant)
       return unless Hyrax.config.redirects_enabled?
-      # Load `redirects` (the persisted property the form partial reads
-      # via `f.object.redirects`) from `config/metadata/redirects.yaml`.
-      # In non-flexible mode this is the only thing that puts the
-      # property on the form. In flexible mode the m3 loader adds an
-      # equivalent definition on initialize; redefining via `property`
-      # is idempotent so this is a safe no-op there.
-      descendant.include Hyrax::FormFields(:redirects)
       descendant.property :redirects_attributes,
                           virtual: true,
                           populator: :redirects_attributes_populator,
