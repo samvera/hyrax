@@ -1,0 +1,24 @@
+class BackfillRedirectTargetPaths < ActiveRecord::Migration<%= migration_version %>
+  def up
+    # Backfill target_path on rows created before the source/target split.
+    # Re-runs the sync step against every distinct resource that has rows,
+    # so target_path is computed from the resource's current redirects array
+    # via the same code path production writes use.
+    return unless Hyrax::RedirectPath.where(target_path: nil).exists?
+
+    resource_ids = Hyrax::RedirectPath.where(target_path: nil).distinct.pluck(:resource_id)
+    sync = Hyrax::Transactions::Steps::SyncRedirectPaths.new
+
+    resource_ids.each do |id|
+      resource = Hyrax.query_service.find_by(id: id)
+      sync.call(resource)
+    rescue Valkyrie::Persistence::ObjectNotFoundError
+      # Orphaned row — the resource has been deleted. Remove its rows.
+      Hyrax::RedirectPath.where(resource_id: id).delete_all
+    end
+  end
+
+  def down
+    # No-op: the structural migration handles column removal.
+  end
+end

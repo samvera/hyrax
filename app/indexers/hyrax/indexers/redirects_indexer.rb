@@ -3,10 +3,11 @@
 module Hyrax
   module Indexers
     ##
-    # Indexer mixin that emits the `redirects_path_ssim` and
-    # `redirects_path_tesim` Solr fields for resources that carry a
-    # `redirects` attribute. The redirect resolver
-    # (`Hyrax::RedirectsController`) queries `_ssim` by path.
+    # Indexer mixin that emits the `redirects_path_tesim` Solr field for
+    # resources that carry a `redirects` attribute. The field powers the
+    # show-page display of registered aliases. The redirect resolver does
+    # not consult Solr; it queries the `hyrax_redirect_paths` table
+    # directly via `Hyrax::RedirectsLookup`.
     #
     # @example
     #   class WorkIndexer < Hyrax::Indexers::PcdmObjectIndexer
@@ -22,7 +23,6 @@ module Hyrax
           paths = Array(resource.redirects)
                   .map { |entry| entry['path'] || entry[:path] }
                   .reject(&:blank?)
-          document['redirects_path_ssim'] = paths
           document['redirects_path_tesim'] = paths
         end
       end

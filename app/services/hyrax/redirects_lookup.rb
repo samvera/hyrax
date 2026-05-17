@@ -1,15 +1,20 @@
 # frozen_string_literal: true
 
 module Hyrax
-  # Single point of truth for "is this redirect path already taken?".
-  # Backed by the `hyrax_redirect_paths` table, which has a unique index on
-  # `path` for both correctness (rejects duplicates at insert time) and
-  # lookup speed (B-tree equality on a small derived table).
+  # Single point of truth for "is this redirect path already taken?" and for
+  # looking up the row matching a given source path. Backed by the
+  # `hyrax_redirect_paths` table, which has a unique index on `source_path`
+  # for both correctness (rejects duplicates at insert time) and lookup
+  # speed (B-tree equality on a small derived table).
   #
   # See documentation/redirects.md.
   class RedirectsLookup
     def self.taken?(path, except_id: nil)
       new(path, except_id: except_id).taken?
+    end
+
+    def self.find_by_source_path(path)
+      new(path).find_by_source_path
     end
 
     def initialize(path, except_id: nil)
@@ -19,9 +24,14 @@ module Hyrax
 
     def taken?
       return false if @path.blank?
-      scope = Hyrax::RedirectPath.where(path: @path)
+      scope = Hyrax::RedirectPath.where(source_path: @path)
       scope = scope.where.not(resource_id: @except_id) if @except_id.present?
       scope.exists?
+    end
+
+    def find_by_source_path
+      return nil if @path.blank?
+      Hyrax::RedirectPath.find_by(source_path: @path)
     end
   end
 end
