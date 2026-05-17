@@ -11,7 +11,7 @@ Use a Field Behavior when you have a property that:
 Two reference exemplars ship with Hyrax:
 
 - `Hyrax::BasedNearFieldBehavior` — single-string-per-entry (URI), hydrated to a `ControlledVocabularies::Location` for the view.
-- `Hyrax::RedirectsFieldBehavior` — multi-field-per-entry (path / canonical / sequence), hydrated to a `Hyrax::Redirect` presenter for the view.
+- `Hyrax::RedirectsFieldBehavior` — multi-field-per-entry (path / display), hydrated to a `Hyrax::Redirect` presenter for the view.
 
 This document covers the contract a Field Behavior must satisfy, the decision points for a new behavior, and the worked examples.
 
@@ -126,7 +126,7 @@ When adding a Field Behavior, work through these:
 ### 1. What does each entry look like?
 
 - **Single value per entry** (URI string, scalar): see `BasedNearFieldBehavior`.
-- **Multiple sub-fields per entry** (path + canonical + sequence; or label + value + lang): see `RedirectsFieldBehavior`.
+- **Multiple sub-fields per entry** (path + display; or label + value + lang): see `RedirectsFieldBehavior`.
 
 ### 2. Persisted as what?
 
@@ -200,7 +200,6 @@ module Hyrax
   module RedirectsFieldBehavior
     def self.included(descendant)
       return unless Hyrax.config.redirects_enabled?
-      descendant.include Hyrax::FormFields(:redirects)
       descendant.property :redirects_attributes,
                           virtual: true,
                           populator: :redirects_attributes_populator,
@@ -209,10 +208,10 @@ module Hyrax
 
     def deserialize!(params)
       result = super
-      if Hyrax.config.redirects_active? && result.respond_to?(:delete)
-        result.delete('redirects')
-        result.delete(:redirects)
-      end
+      return result unless Hyrax.config.redirects_active? && result.respond_to?(:delete)
+
+      result.delete('redirects')
+      result.delete(:redirects)
       result
     end
 
@@ -223,10 +222,9 @@ module Hyrax
       return unless Hyrax.config.redirects_active?
       entries = Array(fragment&.values)
                 .reject { |row| row['_destroy'].to_s == 'true' || row['path'].to_s.strip.empty? }
-                .each_with_index.map do |row, i|
+                .map do |row|
         { 'path' => Hyrax::RedirectPathNormalizer.call(row['path']),
-          'canonical' => row['canonical'].to_s == 'true',
-          'sequence' => row['sequence'].presence&.to_i || i }
+          'display' => row['display'].to_s == 'true' }
       end
       self.redirects = entries
     end
@@ -240,9 +238,10 @@ module Hyrax
 end
 ```
 
-- **Persisted shape:** array of plain hashes (`'path'`, `'canonical'`, `'sequence'`). Declared with `type: hash, multiple: true` in `config/metadata/redirects.yaml` and loaded onto the form via `Hyrax::FormFields(:redirects)` in `self.included`.
-- **View-side shape:** array of `Hyrax::Redirect` presenters, exposing `.path` / `.canonical` / `.sequence`.
-- **Diff from BasedNear:** entries carry multiple sub-fields, so the persisted shape is a hash rather than a string. The populator normalizes paths up front (canonical form lives in storage). The behavior is feature-gated — every callback consults `Hyrax.config.redirects_active?`. The behavior also loads the persisted `redirects` property from YAML in `self.included`, since `Hyrax::Schema(:redirects)` puts the attribute on the model but the form needs the property registered separately for the partial's `f.object.redirects` call to work.
+- **Persisted shape:** array of plain hashes (`'path'`, `'display'`). Declared with `type: hash, multiple: true` in `config/metadata/redirects.yaml`.
+- **View-side shape:** array of `Hyrax::Redirect` presenters, exposing `.path` / `.display`.
+- **Diff from BasedNear:** entries carry multiple sub-fields, so the persisted shape is a hash rather than a string. The populator normalizes paths up front (canonical form lives in storage). The behavior is feature-gated — every callback consults `Hyrax.config.redirects_active?`.
+- **Form-level radio group:** the real `RedirectsFieldBehavior` source also has a `fold_redirects_display_index!` step inside `deserialize!` that translates a single radio-group field (`redirects_display_index`) into per-row `display: 'true' | 'false'` flags before the populator runs. That detail is elided here to keep the exemplar focused on the populator/prepopulator pattern; consult `app/forms/concerns/hyrax/redirects_field_behavior.rb` for the full implementation.
 
 ## Wiring on `ResourceForm`
 
@@ -277,12 +276,11 @@ Example for `RedirectsFieldBehavior`:
 
 ```ruby
 # In the host app's Bulkrax field-mapping configuration
-'path'      => { from: ['redirect_path'],      object: 'redirects', nested_attributes: true },
-'canonical' => { from: ['redirect_canonical'], object: 'redirects', nested_attributes: true },
-'sequence'  => { from: ['redirect_sequence'],  object: 'redirects', nested_attributes: true },
+'path'    => { from: ['redirect_path'],    object: 'redirects', nested_attributes: true },
+'display' => { from: ['redirect_display'], object: 'redirects', nested_attributes: true },
 ```
 
-CSV columns are `redirect_path_1`, `redirect_canonical_1`, `redirect_sequence_1`, `redirect_path_2`, …
+CSV columns are `redirect_path_1`, `redirect_display_1`, `redirect_path_2`, `redirect_display_2`, …
 
 Conventions:
 
