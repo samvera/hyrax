@@ -170,8 +170,8 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
     context 'when type is hash' do
       # The `hash` shortcut lets a YAML schema declare a nested-attribute
       # property whose entries are plain hashes (e.g. `redirects` with
-      # `path`, `canonical`, `sequence` sub-fields). Persisted as JSONB
-      # without a nested Valkyrie::Resource schema in between, so round-trips
+      # `path` and `display` sub-fields). Persisted as JSONB without a
+      # nested Valkyrie::Resource schema in between, so round-trips
       # don't strip sub-fields. See documentation/redirects.md.
       let(:config) { { 'type' => 'hash', 'multiple' => true } }
 
@@ -179,7 +179,7 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
         expect(attribute_definition.type).to be_a(Dry::Types::Constructor)
         expect(attribute_definition.type.to_s).to include('Array')
         # End-to-end: an array of hashes coerces to itself, preserving sub-keys.
-        input = [{ 'path' => '/foo', 'canonical' => true, 'sequence' => 0 }]
+        input = [{ 'path' => '/foo', 'display' => true }]
         expect(attribute_definition.type.call(input)).to eq(input)
       end
     end
@@ -190,7 +190,7 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
       it 'returns a constructor wrapping Dry::Types["hash"] that passes hashes through' do
         expect(attribute_definition.type).to be_a(Dry::Types::Constructor)
         expect(attribute_definition.type.type).to eq(Dry::Types['hash'])
-        input = { 'path' => '/foo', 'canonical' => true }
+        input = { 'path' => '/foo', 'display' => true }
         expect(attribute_definition.type.call(input)).to eq(input)
       end
     end

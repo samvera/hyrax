@@ -72,21 +72,21 @@ RSpec.describe Hyrax::RedirectsFieldBehavior do
   describe '#redirects_attributes_populator' do
     it 'normalizes paths and produces the persisted hash shape' do
       fragment = {
-        '0' => { 'path' => '  /foo/  ', 'canonical' => 'true' },
-        '1' => { 'path' => '/bar', 'canonical' => 'false', 'sequence' => '5' }
+        '0' => { 'path' => '  /foo/  ', 'display' => 'true' },
+        '1' => { 'path' => '/bar', 'display' => 'false' }
       }
       form.send(:redirects_attributes_populator, fragment: fragment)
 
       expect(form.redirects).to eq([
-                                     { 'path' => '/foo', 'canonical' => true, 'sequence' => 0 },
-                                     { 'path' => '/bar', 'canonical' => false, 'sequence' => 5 }
+                                     { 'path' => '/foo', 'display' => true },
+                                     { 'path' => '/bar', 'display' => false }
                                    ])
     end
 
     it 'drops rows marked for destruction' do
       fragment = {
-        '0' => { 'path' => '/keep', 'canonical' => 'false' },
-        '1' => { 'path' => '/drop', 'canonical' => 'false', '_destroy' => 'true' }
+        '0' => { 'path' => '/keep', 'display' => 'false' },
+        '1' => { 'path' => '/drop', 'display' => 'false', '_destroy' => 'true' }
       }
       form.send(:redirects_attributes_populator, fragment: fragment)
 
@@ -95,8 +95,8 @@ RSpec.describe Hyrax::RedirectsFieldBehavior do
 
     it 'drops rows with a blank path' do
       fragment = {
-        '0' => { 'path' => '/keep', 'canonical' => 'false' },
-        '1' => { 'path' => '   ', 'canonical' => 'false' }
+        '0' => { 'path' => '/keep', 'display' => 'false' },
+        '1' => { 'path' => '   ', 'display' => 'false' }
       }
       form.send(:redirects_attributes_populator, fragment: fragment)
 
@@ -114,12 +114,12 @@ RSpec.describe Hyrax::RedirectsFieldBehavior do
 
   describe '#redirects_attributes_prepopulator' do
     it 'wraps each persisted hash entry in a Hyrax::Redirect presenter' do
-      form.redirects = [{ 'path' => '/foo', 'canonical' => true, 'sequence' => 0 }]
+      form.redirects = [{ 'path' => '/foo', 'display' => true }]
       form.send(:redirects_attributes_prepopulator)
 
       expect(form.redirects.first).to be_a(Hyrax::Redirect)
       expect(form.redirects.first.path).to eq('/foo')
-      expect(form.redirects.first.canonical).to be(true)
+      expect(form.redirects.first.display).to be(true)
     end
 
     it 'is a no-op when the feature is inactive' do

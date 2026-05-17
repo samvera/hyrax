@@ -2,22 +2,20 @@
 
 RSpec.describe Hyrax::Redirect do
   describe '#initialize' do
-    it 'accepts a path, canonical flag, and sequence' do
-      r = described_class.new(path: '/handle/12345/678', canonical: true, sequence: 0)
+    it 'accepts a path and display flag' do
+      r = described_class.new(path: '/handle/12345/678', display: true)
       expect(r.path).to eq('/handle/12345/678')
-      expect(r.canonical).to be true
-      expect(r.sequence).to eq(0)
+      expect(r.display).to be true
     end
 
-    it 'defaults canonical to false' do
+    it 'defaults display to false' do
       r = described_class.new(path: '/foo')
-      expect(r.canonical).to be false
+      expect(r.display).to be false
     end
 
-    it 'allows path and sequence to be nil (e.g. for the trailing blank row in the form view)' do
+    it 'allows path to be nil (e.g. for the trailing blank row in the form view)' do
       r = described_class.new(path: nil)
       expect(r.path).to be_nil
-      expect(r.sequence).to be_nil
     end
   end
 
@@ -32,18 +30,18 @@ RSpec.describe Hyrax::Redirect do
     end
 
     it 'builds a presenter from a string-keyed hash (JSONB shape)' do
-      r = described_class.wrap('path' => '/foo', 'canonical' => true, 'sequence' => 2)
-      expect(r).to have_attributes(path: '/foo', canonical: true, sequence: 2)
+      r = described_class.wrap('path' => '/foo', 'display' => true)
+      expect(r).to have_attributes(path: '/foo', display: true)
     end
 
     it 'builds a presenter from a symbol-keyed hash' do
-      r = described_class.wrap(path: '/foo', canonical: true, sequence: 2)
-      expect(r).to have_attributes(path: '/foo', canonical: true, sequence: 2)
+      r = described_class.wrap(path: '/foo', display: true)
+      expect(r).to have_attributes(path: '/foo', display: true)
     end
 
-    it 'defaults canonical to false when omitted' do
+    it 'defaults display to false when omitted' do
       r = described_class.wrap('path' => '/foo')
-      expect(r.canonical).to be false
+      expect(r.display).to be false
     end
 
     it 'raises ArgumentError when input cannot be coerced to a hash' do
@@ -53,8 +51,8 @@ RSpec.describe Hyrax::Redirect do
 
   describe '#to_h and #as_json' do
     it 'returns a string-keyed hash matching the persisted shape' do
-      r = described_class.new(path: '/foo', canonical: true, sequence: 1)
-      expected = { 'path' => '/foo', 'canonical' => true, 'sequence' => 1 }
+      r = described_class.new(path: '/foo', display: true)
+      expected = { 'path' => '/foo', 'display' => true }
       expect(r.to_h).to eq(expected)
       expect(r.as_json).to eq(expected)
     end
@@ -62,8 +60,8 @@ RSpec.describe Hyrax::Redirect do
 
   describe '#==' do
     it 'compares equal on attribute values' do
-      a = described_class.new(path: '/x', canonical: true, sequence: 0)
-      b = described_class.new(path: '/x', canonical: true, sequence: 0)
+      a = described_class.new(path: '/x', display: true)
+      b = described_class.new(path: '/x', display: true)
       expect(a).to eq(b)
     end
 
@@ -74,8 +72,8 @@ RSpec.describe Hyrax::Redirect do
     end
 
     it 'is not equal to a Hash with the same shape (presenters and hashes are distinct types)' do
-      r = described_class.new(path: '/x', canonical: false, sequence: nil)
-      expect(r).not_to eq('path' => '/x', 'canonical' => false, 'sequence' => nil)
+      r = described_class.new(path: '/x', display: false)
+      expect(r).not_to eq('path' => '/x', 'display' => false)
     end
   end
 end

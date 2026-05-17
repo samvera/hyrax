@@ -7,8 +7,8 @@ module Hyrax
   # turned into plain hashes (the persisted shape — see
   # `config/metadata/redirects.yaml`, `type: hash`) by the populator.
   # On render, the prepopulator wraps each persisted hash in a
-  # `Hyrax::Redirect` value object so the view can call `.path` /
-  # `.canonical` / `.sequence`.
+  # `Hyrax::Redirect` value object so the view can call `.path`
+  # and `.display`.
   #
   # The `deserialize!` override removes the renamed `redirects` key
   # before Reform's `from_hash` runs, so the form's `redirects`
@@ -54,17 +54,15 @@ module Hyrax
     # Builds plain hashes (the persisted shape) from the submitted
     # `redirects_attributes` payload. Drops rows marked for destruction
     # or with a blank path. Normalizes paths up-front so the validator
-    # sees canonical form (so DSpace-style pasted URLs validate cleanly).
-    # or with a blank path.
+    # sees normalized form (so DSpace-style pasted URLs validate cleanly).
     def redirects_attributes_populator(fragment:, **_options)
       return unless respond_to?(:redirects)
       return unless Hyrax.config.redirects_active?
       entries = Array(fragment&.values)
                 .reject { |row| row['_destroy'].to_s == 'true' || row['path'].to_s.strip.empty? }
-                .each_with_index.map do |row, i|
+                .map do |row|
         { 'path' => Hyrax::RedirectPathNormalizer.call(row['path']),
-          'canonical' => row['canonical'].to_s == 'true',
-          'sequence' => row['sequence'].presence&.to_i || i }
+          'display' => row['display'].to_s == 'true' }
       end
       self.redirects = entries
     end

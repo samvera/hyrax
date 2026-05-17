@@ -32,11 +32,10 @@ RSpec.describe Hyrax::RedirectsNormalization do
     end
 
     it 'preserves non-path keys on the entry' do
-      resource.redirects = [{ 'path' => '/foo/', 'canonical' => true, 'sequence' => 0 }]
+      resource.redirects = [{ 'path' => '/foo/', 'display' => true }]
       entry = resource.redirects.first
       expect(entry['path']).to eq('/foo')
-      expect(entry['canonical']).to be true
-      expect(entry['sequence']).to eq(0)
+      expect(entry['display']).to be true
     end
 
     it 'normalizes every entry in a multi-entry array' do

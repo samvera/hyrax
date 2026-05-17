@@ -3,7 +3,7 @@
 module Hyrax
   # Normalizes redirect path entries on assignment so every write path —
   # form submissions, console writes, importers, change-set saves —
-  # produces canonical data. Read-side consumers can trust the persisted
+  # produces normalized data. Read-side consumers can trust the persisted
   # shape and skip their own normalization.
   #
   # Included next to Hyrax::Schema(:redirects) on Hyrax::Work and

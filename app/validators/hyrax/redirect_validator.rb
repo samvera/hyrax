@@ -29,7 +29,7 @@ module Hyrax
       validate_each_entry(record, attribute, entries)
       validate_intra_record_uniqueness(record, attribute, entries)
       validate_global_uniqueness(record, attribute, entries)
-      validate_at_most_one_canonical(record, attribute, entries)
+      validate_at_most_one_display(record, attribute, entries)
     end
 
     private
@@ -42,9 +42,14 @@ module Hyrax
       nil
     end
 
-    def canonical_for(entry)
-      return entry.canonical if entry.respond_to?(:canonical)
-      return entry.key?('canonical') ? entry['canonical'] : entry[:canonical] if entry.respond_to?(:[])
+    def display_for(entry)
+      # Order matters: `Hash#display` is a Kernel method that prints to
+      # stdout and returns nil, so we must check hash access before the
+      # presenter accessor.
+      if entry.is_a?(Hash) || (entry.respond_to?(:[]) && !entry.is_a?(Hyrax::Redirect))
+        return entry.key?('display') ? entry['display'] : entry[:display]
+      end
+      return entry.display if entry.is_a?(Hyrax::Redirect)
       nil
     end
 
@@ -72,9 +77,9 @@ module Hyrax
       grouped = entries.each_with_object({}) do |entry, acc|
         path = path_for(entry)
         next if path.blank?
-        canonical = normalized_path(path)
-        next if canonical.blank?
-        (acc[canonical] ||= []) << path
+        normalized = normalized_path(path)
+        next if normalized.blank?
+        (acc[normalized] ||= []) << path
       end
       grouped.each_value do |paths|
         next unless paths.size > 1
@@ -96,10 +101,10 @@ module Hyrax
       Hyrax::RedirectPathNormalizer.call(path)
     end
 
-    def validate_at_most_one_canonical(record, attribute, entries)
-      canonical_count = entries.count { |entry| canonical_for(entry) }
-      return if canonical_count <= 1
-      record.errors.add(attribute, message_for(:multiple_canonical))
+    def validate_at_most_one_display(record, attribute, entries)
+      display_count = entries.count { |entry| display_for(entry) }
+      return if display_count <= 1
+      record.errors.add(attribute, message_for(:multiple_display))
     end
 
     def message_for(key, **interpolations)
