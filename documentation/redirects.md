@@ -195,12 +195,12 @@ The validator rejects any redirect path that equals one of these prefixes, or st
 
 ### Uniqueness lookup and the `hyrax_redirect_paths` table
 
-Global uniqueness is enforced by a Postgres table, `hyrax_redirect_paths`, which has a unique B-tree index on `path`. The table is a derived record of every redirect path currently in use, and the unique index gives the hard guarantee that no two records can share a path even under concurrent saves. A second non-unique index on `resource_id` supports the per-resource sync described below.
+Global uniqueness is enforced by a Postgres table, `hyrax_redirect_paths`, which has a unique B-tree index on `source_path`. The table is a derived record of every redirect path currently in use, and the unique index gives the hard guarantee that no two records can share a path even under concurrent saves. A second non-unique index on `resource_id` supports the per-resource sync described below. A third non-unique index on `target_path` is reserved for future reverse-lookup queries.
 
 `Hyrax::RedirectsLookup` is the single point of truth for "is this path taken?". It queries the table:
 
 ```sql
-SELECT 1 FROM hyrax_redirect_paths WHERE path = ? AND resource_id <> ? LIMIT 1;
+SELECT 1 FROM hyrax_redirect_paths WHERE source_path = ? AND resource_id <> ? LIMIT 1;
 ```
 
 The validator calls `Hyrax::RedirectsLookup.taken?(path, except_id: record.id)` to give the user friendly feedback at form-submit time. If two simultaneous requests both pass validation (because both checked the table before either committed), the unique index rejects the second one at insert time and the enclosing transaction returns `Failure`.
