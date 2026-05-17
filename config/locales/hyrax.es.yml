@@ -41,6 +41,13 @@ es:
       carrierwave_processing_error: No se puede cambiar el tamaño de la imagen.
       extension_blacklist_error: "La subida de archivos %{extension} no está permitida, tipos prohibidos: %{prohibited_types}"
       extension_whitelist_error: "La subida de archivos %{extension} no está permitida, tipos permitidos: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" ya está siendo utilizado por otro trabajo o colección.'
+        blank: La ruta de redirección no puede estar en blanco.
+        intra_record_duplicate: '"%{path}" está listado más de una vez en este registro.'
+        invalid_format: '"%{path}" no es una ruta válida. Las rutas deben comenzar con "/" y no pueden contener espacios, "?" ni "#".'
+        multiple_display: A lo sumo un alias puede marcarse como URL de visualización.
+        reserved_prefix: '"%{path}" no se puede utilizar. La ruta está reservada por la aplicación y no puede usarse como alias.'
   helpers:
     action:
       accept: Aceptar
@@ -1825,9 +1832,26 @@ es:
         in_collections: Colecciones
         in_other_works: Este Trabajo en otros Trabajos
         in_this_work: Otros Trabaos en este Trabajo
+        redirects:
+          caption: Lista de alias de URL para este recurso
+          display_label: URL de visualización
+          errors_heading: Por favor corrija los siguientes errores de alias
+          header:
+            actions: Acciones
+            display: URL de visualización
+            path: Ruta
+          heading: Alias de URL
+          help_html: 'Registre rutas URL heredadas que deban redirigir a este registro. Cada ruta se resolverá desde la raíz de este sitio. Las rutas reservadas de Hyrax (por ejemplo, <code>/concern</code>, <code>/dashboard</code>) no se pueden usar. Marque un alias como URL de visualización para que todos los alias redirijan allí; déjelo sin marcar para que los alias redirijan a la URL permanente del registro.'
+          new_path_label: Nueva ruta de alias
+          path_label: Ruta de alias
+          placeholder:
+            path: Introduzca una ruta heredada...
+          remove_label: Quitar
+          remove_with_path_label: 'Quitar %{path}'
         tab:
           files: Archivos
           metadata: Descripciones
+          redirects: Alias
           relationships: Relaciones
           share: Compartir
         visibility_until: hasta

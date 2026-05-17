@@ -41,6 +41,13 @@ pt-BR:
       carrierwave_processing_error: Não é possível redimensionar a imagem.
       extension_blacklist_error: "Você não tem permissão para carregar arquivos %{extension}; tipos proibidos: %{prohibited_types}"
       extension_whitelist_error: "Você não tem permissão para carregar arquivos %{extension}; tipos permitidos: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" já está em uso por outra obra ou coleção.'
+        blank: Um caminho de redirecionamento não pode estar em branco.
+        intra_record_duplicate: '"%{path}" está listado mais de uma vez neste registro.'
+        invalid_format: '"%{path}" não é um caminho válido. Os caminhos devem começar com "/" e não podem conter espaços, "?" ou "#".'
+        multiple_display: No máximo um alias pode ser marcado como URL de exibição.
+        reserved_prefix: '"%{path}" não pode ser usado. O caminho é reservado pela aplicação e não pode ser usado como alias.'
   helpers:
     action:
       accept: Aceitar
@@ -1815,9 +1822,26 @@ pt-BR:
         in_collections: Coleções
         in_other_works: Esta obra em outras obras
         in_this_work: Outras obras nesta obra
+        redirects:
+          caption: Lista de aliases de URL para este recurso
+          display_label: URL de exibição
+          errors_heading: Por favor, corrija os seguintes erros de alias
+          header:
+            actions: Ações
+            display: URL de exibição
+            path: Caminho
+          heading: Aliases de URL
+          help_html: 'Registre caminhos de URL antigos que devem redirecionar para este registro. Cada caminho será resolvido a partir da raiz deste site. As rotas reservadas do Hyrax (por exemplo, <code>/concern</code>, <code>/dashboard</code>) não podem ser usadas. Marque um alias como URL de exibição para que todos os aliases redirecionem para ele; deixe-o sem marcação para que os aliases redirecionem para a URL permanente do registro.'
+          new_path_label: Novo caminho de alias
+          path_label: Caminho de alias
+          placeholder:
+            path: Insira um caminho antigo...
+          remove_label: Remover
+          remove_with_path_label: 'Remover %{path}'
         tab:
           files: Arquivos
           metadata: Descrições
+          redirects: Aliases
           relationships: Relações
           share: Compartilhamento
         visibility_until: até

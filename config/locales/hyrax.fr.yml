@@ -41,6 +41,13 @@ fr:
       carrierwave_processing_error: Impossible de redimensionner l'image.
       extension_blacklist_error: "Vous n'êtes pas autorisé à télécharger des fichiers %{extension}, types interdits: %{prohibited_types}"
       extension_whitelist_error: "Vous n'êtes pas autorisé à télécharger des fichiers %{extension}, types autorisés: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" est déjà utilisé par un autre travail ou une autre collection.'
+        blank: Un chemin de redirection ne peut pas être vide.
+        intra_record_duplicate: '"%{path}" apparaît plusieurs fois sur cet enregistrement.'
+        invalid_format: '"%{path}" n''est pas un chemin valide. Les chemins doivent commencer par "/" et ne peuvent contenir ni espaces, ni "?", ni "#".'
+        multiple_display: Au plus un alias peut être marqué comme URL d''affichage.
+        reserved_prefix: '"%{path}" ne peut pas être utilisé. Ce chemin est réservé par l''application et ne peut pas servir d''alias.'
   helpers:
     action:
       accept: Acceptez
@@ -1823,9 +1830,26 @@ fr:
         in_collections: Collections
         in_other_works: Ce travail dans d'autres ouvrages
         in_this_work: Autres travaux dans ce travail
+        redirects:
+          caption: Liste des alias d'URL pour cette ressource
+          display_label: URL d'affichage
+          errors_heading: Veuillez corriger les erreurs d'alias suivantes
+          header:
+            actions: Actions
+            display: URL d'affichage
+            path: Chemin
+          heading: Alias d'URL
+          help_html: 'Enregistrez les anciens chemins d''URL qui doivent rediriger vers cet enregistrement. Chaque chemin sera résolu depuis la racine de ce site. Les routes réservées de Hyrax (par exemple <code>/concern</code>, <code>/dashboard</code>) ne peuvent pas être utilisées. Marquez un alias comme URL d''affichage pour que tous les alias y soient redirigés ; laissez-le non marqué pour que les alias redirigent vers l''URL permanente de l''enregistrement.'
+          new_path_label: Nouveau chemin d'alias
+          path_label: Chemin d'alias
+          placeholder:
+            path: Saisissez un ancien chemin...
+          remove_label: Supprimer
+          remove_with_path_label: 'Supprimer %{path}'
         tab:
           files: Des dossiers
           metadata: Descriptions
+          redirects: Alias
           relationships: Des relations
           share: Partager
         visibility_until: jusqu'à

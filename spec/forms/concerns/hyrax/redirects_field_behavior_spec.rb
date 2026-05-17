@@ -67,6 +67,32 @@ RSpec.describe Hyrax::RedirectsFieldBehavior do
       result = form.deserialize!('redirects' => 'kept', 'title' => 'kept')
       expect(result).to eq('redirects' => 'kept', 'title' => 'kept')
     end
+
+    it 'folds redirects_display_index into per-row display flags on redirects_attributes' do
+      params = {
+        'redirects_attributes' => {
+          '0' => { 'path' => '/foo' },
+          '1' => { 'path' => '/bar' }
+        },
+        'redirects_display_index' => '1'
+      }
+      result = form.deserialize!(params)
+      expect(result['redirects_attributes']['0']['display']).to eq('false')
+      expect(result['redirects_attributes']['1']['display']).to eq('true')
+      expect(result).not_to have_key('redirects_display_index')
+    end
+
+    it 'sets all rows display=false when no redirects_display_index is submitted' do
+      params = {
+        'redirects_attributes' => {
+          '0' => { 'path' => '/foo' },
+          '1' => { 'path' => '/bar' }
+        }
+      }
+      result = form.deserialize!(params)
+      expect(result['redirects_attributes']['0']['display']).to eq('false')
+      expect(result['redirects_attributes']['1']['display']).to eq('false')
+    end
   end
 
   describe '#redirects_attributes_populator' do

@@ -40,16 +40,43 @@ module Hyrax
     # `redirects` before `from_hash` runs. Strip the renamed key so
     # the populator on `redirects_attributes` is the single entry
     # point for form-driven writes.
+    #
+    # Also folds the form-level `redirects_display_index` field into the
+    # nested-attribute payload: the form's display selector is a single
+    # radio group across all rows (browser enforces "only one selected"),
+    # whose value is the row index of the display alias. We translate
+    # that into a per-row `display: true` flag the populator already
+    # understands.
     def deserialize!(params)
       result = super
-      if Hyrax.config.redirects_active? && result.respond_to?(:delete)
-        result.delete('redirects')
-        result.delete(:redirects)
-      end
+      return result unless Hyrax.config.redirects_active? && result.respond_to?(:delete)
+
+      result.delete('redirects')
+      result.delete(:redirects)
+      fold_redirects_display_index!(result)
       result
     end
 
     private
+
+    # Reads `redirects_display_index` from the params and rewrites the
+    # corresponding row in `redirects_attributes` to set `display: 'true'`.
+    # All other rows get `display: 'false'`. The populator then reads
+    # `row['display']` per row as it always has.
+    def fold_redirects_display_index!(params)
+      attrs_key = params.key?('redirects_attributes') ? 'redirects_attributes' : :redirects_attributes
+      attrs = params[attrs_key]
+      return unless attrs.is_a?(Hash)
+
+      index_key = params.key?('redirects_display_index') ? 'redirects_display_index' : :redirects_display_index
+      display_index = params.delete(index_key)
+      display_index = display_index.to_s if display_index
+
+      attrs.each do |row_key, row|
+        next unless row.is_a?(Hash)
+        row['display'] = row_key.to_s == display_index ? 'true' : 'false'
+      end
+    end
 
     # Builds plain hashes (the persisted shape) from the submitted
     # `redirects_attributes` payload. Drops rows marked for destruction

@@ -1818,12 +1818,14 @@ en:
         in_this_work: Other Works in this Work
         redirects:
           caption: List of URL aliases for this resource
+          display_label: Display URL
           errors_heading: Please correct the following alias errors
           header:
             actions: Actions
+            display: Display URL
             path: Path
           heading: URL Aliases
-          help_html: 'Register legacy URL paths that should redirect to this record. Each path will resolve from this site''s root. Reserved Hyrax routes (e.g. <code>/concern</code>, <code>/dashboard</code>) cannot be used.'
+          help_html: 'Register legacy URL paths that should redirect to this record. Each path will resolve from this site''s root. Reserved Hyrax routes (e.g. <code>/concern</code>, <code>/dashboard</code>) cannot be used. Mark one alias as the display URL to have all aliases redirect there; leave unmarked to have aliases redirect to the record''s permanent URL.'
           new_path_label: New alias path
           path_label: Alias path
           placeholder:

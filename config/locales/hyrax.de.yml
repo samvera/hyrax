@@ -41,6 +41,13 @@ de:
       carrierwave_processing_error: Bild kann nicht verkleinernt werden.
       extension_blacklist_error: "Sie dürfen keine %{extension}-Dateien hochladen, nicht erlaubt sind: %{prohibited_types}"
       extension_whitelist_error: "Sie dürfen keine %{extension}-Dateien hochladen, erlaubt sind: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" wird bereits von einer anderen Arbeit oder Sammlung verwendet.'
+        blank: Ein Weiterleitungspfad darf nicht leer sein.
+        intra_record_duplicate: '"%{path}" ist mehr als einmal in diesem Datensatz aufgeführt.'
+        invalid_format: '"%{path}" ist kein gültiger Pfad. Pfade müssen mit "/" beginnen und dürfen keine Leerzeichen, "?" oder "#" enthalten.'
+        multiple_display: Höchstens ein Alias darf als Anzeige-URL markiert sein.
+        reserved_prefix: '"%{path}" kann nicht verwendet werden. Der Pfad ist von der Anwendung reserviert und darf nicht als Alias verwendet werden.'
   helpers:
     action:
       accept: Akzeptieren
@@ -1816,9 +1823,26 @@ de:
         in_collections: Sammlungen
         in_other_works: Diese Arbeit in anderen Arbeiten
         in_this_work: Andere Arbeiten in dieser Arbeit
+        redirects:
+          caption: Liste der URL-Aliase für diese Ressource
+          display_label: Anzeige-URL
+          errors_heading: Bitte korrigieren Sie die folgenden Alias-Fehler
+          header:
+            actions: Aktionen
+            display: Anzeige-URL
+            path: Pfad
+          heading: URL-Aliase
+          help_html: 'Registrieren Sie Legacy-URL-Pfade, die auf diesen Datensatz umgeleitet werden sollen. Jeder Pfad wird ab dem Root dieser Website aufgelöst. Reservierte Hyrax-Routen (z. B. <code>/concern</code>, <code>/dashboard</code>) können nicht verwendet werden. Markieren Sie einen Alias als Anzeige-URL, damit alle Aliase dorthin umgeleitet werden; lassen Sie ihn unmarkiert, damit Aliase auf die permanente URL des Datensatzes umgeleitet werden.'
+          new_path_label: Neuer Alias-Pfad
+          path_label: Alias-Pfad
+          placeholder:
+            path: Geben Sie einen Legacy-Pfad ein...
+          remove_label: Entfernen
+          remove_with_path_label: '%{path} entfernen'
         tab:
           files: Dateien
           metadata: Metadaten
+          redirects: Aliase
           relationships: Beziehungen
           share: Freigaben
         visibility_until: bis
