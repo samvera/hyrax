@@ -16,7 +16,7 @@ The redirects feature is gated by **two** independent switches:
 |---|---|---|
 | off | n/a (unregistered) | The schema is not loaded. The Flipflop feature is not registered. No `redirects` attribute on any resource. No indexer. No route. No controller. m3 profile does not require a `redirects` property. The feature is wholly absent. |
 | on | registered, off (default) | The schema is loaded. The `redirects` attribute exists on `Hyrax::Work` and `Hyrax::PcdmCollection`. The indexer is included on resource indexers but emits no Solr field. Routes/controllers/UI gates check Flipflop and stay silent. m3 profile may declare `redirects` (loaded but unused — a warning is emitted on profile validation). |
-| on | on | All of the above, plus: the indexer emits `redirects_path_ssim`. The route/controller/UI engage. m3 profile validation **requires** the `redirects` property to be declared with `type: hash` and available on at least one work or collection class declared in the profile. |
+| on | on | All of the above, plus: the indexer emits `redirects_path_tesim`. The route/controller/UI engage. The resolver consults the `hyrax_redirect_paths` table directly for incoming requests. m3 profile validation **requires** the `redirects` property to be declared with `type: hash` and available on at least one work or collection class declared in the profile. |
 
 The two-layer split is deliberate: the application-level config controls *availability* (the schema is structural — toggling it after data is written would orphan persisted entries), and the Flipflop controls *use* at request time.
 
@@ -57,7 +57,7 @@ This is appropriate when an adopter wants the feature unconditionally without de
 
 Once the config is on, the `:redirects` feature appears in the experimental_features group of the Hyrax Flipflop admin UI. Toggling it on:
 
-- Causes `Hyrax::Indexers::RedirectsIndexer` to emit the `redirects_path_ssim` field for resources with `redirects` entries.
+- Causes `Hyrax::Indexers::RedirectsIndexer` to emit the `redirects_path_tesim` field for resources with `redirects` entries (used for show-page display only).
 - Activates the catch-all redirect route and `Hyrax::RedirectsController`.
 - Causes the m3 profile validator to **require** a `redirects` property in the flexible metadata profile (when `flexible: true` mode is also active).
 
@@ -235,35 +235,16 @@ Adopters with existing installs (predating this feature) need to add the catch-a
 
 When both gates are open, `Hyrax::RedirectsController#show` serves any path not claimed by an earlier route:
 
-- The incoming path is normalized via `Hyrax::RedirectPathNormalizer` so the lookup matches the normalized form stored in Solr (a request for `/foo/` resolves the same record as `/foo`).
-- The path is looked up by Solr query against `redirects_path_ssim`.
-- If a record matches, the controller responds `301 Moved Permanently` with `Location:` set to the permanent URL produced by Rails' `polymorphic_path` for the work or collection — typically `/concern/<plural_name>/<id>` for works (where `plural_name` is the model's registered route name) and `/collections/<id>` for collections.
-- If no record matches, the controller raises `ActionController::RoutingError` so Rails serves its standard 404.
-- If Solr raises an `RSolr::Error::Http`, the controller logs at `warn` level and resolves to nil (404). A Solr outage produces 404s rather than 5xx errors.
+- The incoming path is normalized via `Hyrax::RedirectPathNormalizer` so the lookup matches the normalized form stored in the table (a request for `/foo/` resolves the same record as `/foo`).
+- The path is looked up against the `hyrax_redirect_paths` table by `source_path` (B-tree equality on a unique index).
+- If a row matches, the controller responds `301 Moved Permanently` with `Location:` set to the row's `target_path`. When the record has a display alias, that's the display alias's path; otherwise it's the record's permanent UUID path.
+- If no row matches, the controller raises `ActionController::RoutingError` so Rails serves its standard 404.
 
-### Caching
-
-Lookups are wrapped in `Rails.cache.fetch` with a 60-second TTL. The cache key is tenant-agnostic in upstream Hyrax. Multi-tenant host apps should override `Hyrax::RedirectsController#cache_key_for` in a controller decorator to fold their tenant identifier into the key:
-
-```ruby
-# In a downstream app's controller decorator
-module Hyrax
-  module RedirectsControllerDecorator
-    private
-
-    def cache_key_for(path)
-      ['hyrax', 'redirects', current_tenant_id, Digest::SHA1.hexdigest(path)].join('/')
-    end
-  end
-end
-Hyrax::RedirectsController.prepend(Hyrax::RedirectsControllerDecorator)
-```
-
-The TTL is a short-term safety net for stale lookups. Explicit cache-bust on redirect save/destroy is a Phase 1 follow-up.
+The resolver does not consult Solr. Lookup latency is a B-tree probe on a small table.
 
 ## Reindexing after enabling
 
-Toggling the config or the Flipflop changes what the indexer emits. Existing records need a reindex to have the new field populated (when both gates open) or removed (when either closes):
+Toggling the config or the Flipflop changes what the indexer emits. Existing records need a reindex to have the show-page display field (`redirects_path_tesim`) populated (when both gates open) or removed (when either closes):
 
 ```sh
 bundle exec rails hyrax:solr:reindex_everything
@@ -306,7 +287,7 @@ Full snippets for each mode are shown in the [m3 profile requirements](#m3-profi
 
 ### How it works
 
-- The redirects indexer emits two Solr fields: `redirects_path_ssim` (used by the resolver to look up records by path) and `redirects_path_tesim` (used by the show-page display).
+- The redirects indexer emits one Solr field: `redirects_path_tesim`, used solely for show-page display of registered aliases. The request-time resolver does not consult Solr; it queries the `hyrax_redirect_paths` table by `source_path`.
 - `Hyrax::SolrDocument::Metadata` declares `redirects_path` as a SolrDocument attribute bound to the `redirects_path_tesim` field. This is what makes `solr_document.redirects_path` available; the per-attribute declaration is required (Hyrax does not coerce arbitrary Solr fields into methods automatically).
 - The presenter's `MissingMethodBehavior` delegates `presenter.redirects_path` to `solr_document.redirects_path`.
 - The `render_term: redirects_path` view option tells the show-page partial to call `presenter.redirects_path` instead of `presenter.redirects`. The bare `redirects` attribute returns the persisted array of hashes and isn't useful for direct rendering.
@@ -352,7 +333,7 @@ The validator rejects redirect paths that match any prefix in `Hyrax.config.rese
 
 ### Reindex after import
 
-The redirects index field (`redirects_path_ssim`) is populated when records are saved through the form-driven path that Bulkrax uses. New records created via Bulkrax import are indexed normally and do not require a separate reindex pass.
+The `hyrax_redirect_paths` table is populated when records are saved through the form-driven path that Bulkrax uses. The `redirects_path_tesim` Solr field is also populated by the standard indexer. New records created via Bulkrax import don't require a separate reindex pass.
 
 If the redirects feature was just enabled (config + Flipflop turned on) and existing records need their redirects to become resolvable, run the reindex command from the section above.
 
@@ -397,7 +378,7 @@ Alternatively, gate the inclusion of the calling code itself on `Hyrax.config.re
 - `documentation/forms/field_behaviors.md` — the Field Behavior pattern used by `Hyrax::RedirectsFieldBehavior` to wire the form's nested-attribute property.
 - `Hyrax::Redirect` (`app/models/hyrax/redirect.rb`) — thin Ruby presenter for a single redirect entry; used on the form's render path.
 - `Hyrax::RedirectsFieldBehavior` (`app/forms/concerns/hyrax/redirects_field_behavior.rb`) — form-side wiring for the `redirects` and `redirects_attributes` properties: loads the persisted property from `config/metadata/redirects.yaml` via `Hyrax::FormFields(:redirects)`, and owns the populator/prepopulator and the `deserialize!` strip for the nested-attributes payload.
-- `Hyrax::Indexers::RedirectsIndexer` (`app/indexers/hyrax/indexers/redirects_indexer.rb`) — the indexer mixin. Emits `redirects_path_ssim` (resolver lookup) and `redirects_path_tesim` (show-page display).
+- `Hyrax::Indexers::RedirectsIndexer` (`app/indexers/hyrax/indexers/redirects_indexer.rb`) — the indexer mixin. Emits `redirects_path_tesim` for show-page display.
 - `Hyrax::SolrDocument::Metadata` (`app/models/concerns/hyrax/solr_document/metadata.rb`) — declares the `redirects_path` attribute on `SolrDocument`, bound to the `redirects_path_tesim` Solr field. This is what makes `solr_document.redirects_path` (and therefore `presenter.redirects_path` via `MissingMethodBehavior`) available to the show-page renderer.
 - `Hyrax::Renderers::RedirectsLabelAttributeRenderer` (`app/renderers/hyrax/renderers/redirects_label_attribute_renderer.rb`) — show-page renderer that turns each redirect path into a clickable link.
 - `Hyrax::RedirectsController` (`app/controllers/hyrax/redirects_controller.rb`) — the redirect resolver.

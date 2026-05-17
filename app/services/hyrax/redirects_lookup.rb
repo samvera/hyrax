@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
 module Hyrax
-  # Single point of truth for "is this redirect path already taken?" and for
-  # looking up the row matching a given source path. Backed by the
-  # `hyrax_redirect_paths` table, which has a unique index on `source_path`
-  # for both correctness (rejects duplicates at insert time) and lookup
-  # speed (B-tree equality on a small derived table).
+  # Lookups against the `hyrax_redirect_paths` table.
   #
   # See documentation/redirects.md.
   class RedirectsLookup

@@ -2,12 +2,8 @@
 
 module Hyrax
   module Indexers
-    ##
-    # Indexer mixin that emits the `redirects_path_tesim` Solr field for
-    # resources that carry a `redirects` attribute. The field powers the
-    # show-page display of registered aliases. The redirect resolver does
-    # not consult Solr; it queries the `hyrax_redirect_paths` table
-    # directly via `Hyrax::RedirectsLookup`.
+    # Emits `redirects_path_tesim` for show-page display of registered
+    # aliases. See documentation/redirects.md.
     #
     # @example
     #   class WorkIndexer < Hyrax::Indexers::PcdmObjectIndexer
@@ -18,8 +14,7 @@ module Hyrax
         super.tap do |document|
           next document unless Hyrax.config.redirects_active?
           next document unless resource.respond_to?(:redirects)
-          # Valkyrie's JSONValueMapper symbolizes hash keys on read; accept either.
-          # Paths are normalized at write time by Hyrax::RedirectsNormalization.
+          # Accepts string or symbol keys; Valkyrie's JSONValueMapper symbolizes on read.
           paths = Array(resource.redirects)
                   .map { |entry| entry['path'] || entry[:path] }
                   .reject(&:blank?)

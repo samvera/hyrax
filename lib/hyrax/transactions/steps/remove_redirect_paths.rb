@@ -4,10 +4,8 @@ require 'dry/monads'
 module Hyrax
   module Transactions
     module Steps
-      # A `dry-transaction` step that removes a resource's rows from the
-      # `hyrax_redirect_paths` redirects table. Runs as part of the destroy
-      # transactions so deleted resources don't leave dangling claims on
-      # redirect paths.
+      # Removes a resource's rows from the `hyrax_redirect_paths` table on
+      # destroy.
       #
       # See documentation/redirects.md.
       class RemoveRedirectPaths
@@ -17,10 +15,7 @@ module Hyrax
         # @return [Dry::Monads::Result]
         def call(resource)
           return Success(resource) unless removable?(resource)
-          scope = Hyrax::RedirectPath.where(resource_id: resource.id.to_s)
-          paths = scope.pluck(:source_path)
-          scope.delete_all
-          Hyrax::RedirectCacheBuster.call(paths) if paths.any?
+          Hyrax::RedirectPath.where(resource_id: resource.id.to_s).delete_all
           Success(resource)
         rescue ActiveRecord::StatementInvalid => e
           Hyrax.logger.error("[redirects] remove_redirect_paths failed: #{e.message}")

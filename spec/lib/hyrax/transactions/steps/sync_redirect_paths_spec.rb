@@ -28,13 +28,6 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
         expect(paths).to contain_exactly('/handle/1', '/handle/2')
       end
 
-      it 'busts the cache for both old and new paths' do
-        Hyrax::RedirectPath.create!(source_path: '/old', target_path: uuid_url, resource_id: resource_id)
-        expect(Hyrax::RedirectCacheBuster).to receive(:call)
-          .with(array_including('/old', '/handle/1', '/handle/2'))
-        step.call(resource)
-      end
-
       it 'sets target_path to the UUID URL when no display flag is set' do
         step.call(resource)
         targets = Hyrax::RedirectPath.where(resource_id: resource_id).pluck(:target_path).uniq
@@ -186,11 +179,6 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
         rows = Hyrax::RedirectPath.where(resource_id: resource_id).order(:source_path)
         expect(rows.pluck(:source_path)).to eq %w[/handle/1 /handle/2]
         expect(rows.pluck(:created_at)).to all(eq(original_created_at))
-      end
-
-      it 'does not bust the cache' do
-        expect(Hyrax::RedirectCacheBuster).not_to receive(:call)
-        step.call(resource)
       end
     end
 
