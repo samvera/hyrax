@@ -42,29 +42,34 @@ module Hyrax
         def build_rows(object)
           # Valkyrie's JSONValueMapper symbolizes hash keys on read; accept either.
           # Paths are normalized at write time by Hyrax::RedirectsNormalization.
-          paths = Array(object.redirects)
-                  .map { |entry| entry['path'] || entry[:path] }
-                  .reject(&:blank?)
-                  .uniq
+          seen = Set.new
           now = Time.current
-          paths.map { |path| { path: path, resource_id: object.id.to_s, created_at: now, updated_at: now } }
+          Array(object.redirects).each_with_object([]) do |entry, rows|
+            path = entry['path'] || entry[:path]
+            next if path.blank? || seen.include?(path)
+            seen << path
+
+            display_url = entry['display_url'] || entry[:display_url]
+            rows << { path: path, resource_id: object.id.to_s, display_url: display_url ? true : false,
+                      created_at: now, updated_at: now }
+          end
         end
 
         # @return [Array<String>, nil] the union of old + new paths that need
         #   cache invalidation, or nil when nothing changed.
         def replace_rows(object, rows)
-          desired_paths = rows.map { |r| r[:path] }.sort
+          desired = rows.map { |r| [r[:path], r[:display_url]] }.sort
 
           Hyrax::RedirectPath.transaction do
-            existing_paths = Hyrax::RedirectPath.where(resource_id: object.id.to_s).pluck(:path).sort
-            return nil if desired_paths == existing_paths
+            existing_rows = Hyrax::RedirectPath.where(resource_id: object.id.to_s).pluck(:path, :display_url)
+            return nil if desired == existing_rows.sort
 
             Hyrax::RedirectPath.where(resource_id: object.id.to_s).delete_all
             # rubocop:disable Rails/SkipsModelValidations -- the DB unique index on `path` is the validation we rely on; bulk insert is intentional
             Hyrax::RedirectPath.insert_all!(rows) if rows.any?
             # rubocop:enable Rails/SkipsModelValidations
 
-            (existing_paths | desired_paths)
+            (existing_rows.map(&:first) | rows.map { |r| r[:path] })
           end
         end
       end
