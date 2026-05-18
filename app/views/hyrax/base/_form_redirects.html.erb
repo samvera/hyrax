@@ -1,0 +1,52 @@
+<%# Aliases tab — see documentation/redirects.md %>
+<% return unless redirects_tab?(f.object) %>
+<h2 class="h3 mt-4"><%= t('hyrax.works.form.redirects.heading') %></h2>
+
+<p><%= sanitize t('hyrax.works.form.redirects.help_html'), tags: %w[code] %></p>
+
+<table class="table table-striped">
+  <caption class="sr-only"><%= t('hyrax.works.form.redirects.caption') %></caption>
+  <thead>
+    <tr>
+      <th scope="col"><%= t('hyrax.works.form.redirects.header.path') %></th>
+      <th scope="col" class="sr-only"><%= t('hyrax.works.form.redirects.header.actions') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%# Wrap each row through Hyrax::Redirect.wrap so the view can rely on
+        the presenter API (.path, .canonical, .sequence). On initial render
+        the prepopulator already wrapped them; on a re-render after a
+        failed save, f.object.redirects holds the populator's plain hashes,
+        and we wrap them here. %>
+    <% rows = Array(f.object.redirects).map { |e| Hyrax::Redirect.wrap(e) } + [Hyrax::Redirect.new(path: nil)] %>
+    <% rows.each_with_index do |entry, index| %>
+      <% input_id = "#{f.object_name}_redirects_attributes_#{index}_path" %>
+      <% label_text = entry.path.present? ? t('hyrax.works.form.redirects.path_label') : t('hyrax.works.form.redirects.new_path_label') %>
+      <tr>
+        <td>
+          <%= label_tag input_id, label_text, class: 'sr-only' %>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><%= request.base_url %></span>
+            </div>
+            <%= text_field_tag "#{f.object_name}[redirects_attributes][#{index}][path]",
+                               entry.path,
+                               id: input_id,
+                               class: 'form-control',
+                               placeholder: t('hyrax.works.form.redirects.placeholder.path') %>
+          </div>
+        </td>
+        <td class="text-right" style="width: 1%;">
+          <% if entry.path.present? %>
+            <button type="button"
+                    class="btn close"
+                    aria-label="<%= t('hyrax.works.form.redirects.remove_with_path_label', path: entry.path) %>"
+                    onclick="this.closest('tr').remove()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

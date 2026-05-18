@@ -67,7 +67,7 @@ module Hyrax
           load(attributes, safe)
         end
       rescue Dry::Types::CoercionError => e
-        raise Dry::Error, "[#{self}.new] #{e}", e.backtrace
+        raise RuntimeError, "[#{self}.new] #{e.class}: #{e.message}", e.backtrace
       end
 
       ## Read the schema from the database and load the correct schemas for the instance in to the class

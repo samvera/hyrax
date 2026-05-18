@@ -15,6 +15,9 @@ services:
       - .dassie/.env
     environment:
       - RAILS_ROOT=/app/samvera/hyrax-webapp
+      - HYRAX_FLEXIBLE=false
+      - HYRAX_FLEXIBLE_CLASSES=
+      - HYRAX_DISABLE_INCLUDE_METADATA=false
     depends_on:
       - worker
       - chrome

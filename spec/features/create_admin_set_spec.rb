@@ -51,6 +51,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         choose "collection_type", option: "AdminSet"
         click_button 'Create collection'
         fill_in('Title', with: 'An Admin Set')
+        fill_in('Creator', with: creator.user_key) if Hyrax.config.flexible?
         click_on('Save')
         expect(page).to have_content("The administrative set 'An Admin Set' has been created. Use the additional tabs to define other aspects of the administrative set.")
 
@@ -151,6 +152,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         choose "collection_type", option: "AdminSet"
         click_button 'Create collection'
         fill_in('Title', with: 'An Admin Set')
+        fill_in('Creator', with: manager.user_key) if Hyrax.config.flexible?
         click_on('Save')
         expect(page).to have_content("The administrative set 'An Admin Set' has been created. Use the additional tabs to define other aspects of the administrative set.")
 
@@ -207,6 +209,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
       choose "collection_type", option: "AdminSet"
       click_button 'Create collection'
       fill_in('Title', with: 'An Admin Set')
+      fill_in('Creator', with: admin.user_key) if Hyrax.config.flexible?
       click_on('Save')
       expect(page).to have_content("The administrative set 'An Admin Set' has been created. Use the additional tabs to define other aspects of the administrative set.")
 

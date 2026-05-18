@@ -143,7 +143,8 @@ RSpec.describe Hyrax::LeaseHelper do
 
         it 'returns true' do
           # This allow call is a tweak to preserve spec for pre #4845 patch
-          allow(model).to receive(:persisted?).and_return(true)
+          # Use resource.model (not model) because flexible metadata creates a resource copy
+          allow(resource.model).to receive(:persisted?).and_return(true)
           expect(lease_enforced?(resource)).to be true
         end
       end

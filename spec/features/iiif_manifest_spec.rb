@@ -19,7 +19,7 @@ RSpec.describe 'building a IIIF Manifest', :aggregate_failures do
     manifest_json = JSON.parse(page.body)
 
     expect(manifest_json['label']).to eq 'Comet in Moominland'
-    expect(manifest_json['description']).to contain_exactly('a novel about moomins')
+    expect(manifest_json['description']).to eq 'a novel about moomins'
 
     expect(manifest_json['sequences'].size).to eq 1
 

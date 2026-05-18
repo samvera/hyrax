@@ -91,3 +91,8 @@ spec/reports
 /spec/examples.txt
 node_modules
 .env.*
+.zed
+.claude
+CLAUDE.md
+docker-compose.override.yml
+plans/*

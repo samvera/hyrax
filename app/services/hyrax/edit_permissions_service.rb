@@ -171,7 +171,7 @@ module Hyrax
       unauthorized_managers = []
       unauthorized_collection_managers = []
       object_unauthorized_collection_ids.each do |id|
-        Hyrax::PermissionTemplate.find_by(source_id: id).access_grants.each do |grant|
+        Hyrax::PermissionTemplate.find_by(source_id: id)&.access_grants&.each do |grant|
           if grant.access == "manage"
             unauthorized_managers << grant.agent_id
             unauthorized_collection_managers += Array.wrap({ name: grant.agent_id }.merge(id: id))

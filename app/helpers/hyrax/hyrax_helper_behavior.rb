@@ -20,7 +20,9 @@ module Hyrax
     include Hyrax::WorkflowsHelper
     include Hyrax::FacetsHelper
     include Hyrax::AttributesHelper
+    include Hyrax::PermalinkHelper
     include Hyrax::WorksHelper
+    include Hyrax::FileSetFormHelper
 
     ##
     # @return [Array<String>] the list of admin sets available for creating works for this user
@@ -259,7 +261,10 @@ module Hyrax
     # @return [ActiveSupport::SafeBuffer] license links, html_safe
     def license_links(options)
       service = Hyrax.config.license_service_class.new
-      to_sentence(options[:value].map { |right| link_to service.label(right), right })
+      to_sentence(options[:value].map do |right|
+        label = service.label(right) { right }
+        Hyrax::AuthorityRenderingHelper.linkable_uri?(right) ? link_to(label, right) : ERB::Util.h(label)
+      end)
     end
 
     # A Blacklight index field helper_method
@@ -267,7 +272,10 @@ module Hyrax
     # @return [ActiveSupport::SafeBuffer] rights statement links, html_safe
     def rights_statement_links(options)
       service = Hyrax.config.rights_statement_service_class.new
-      to_sentence(options[:value].map { |right| link_to service.label(right), right })
+      to_sentence(options[:value].map do |right|
+        label = service.label(right) { right }
+        Hyrax::AuthorityRenderingHelper.linkable_uri?(right) ? link_to(label, right) : ERB::Util.h(label)
+      end)
     end
 
     # A Blacklight facet field helper_method
@@ -312,6 +320,21 @@ module Hyrax
     # Used by the gallery view
     def collection_thumbnail(_document, _image_options = {}, _url_options = {})
       tag.span("", class: [Hyrax::ModelIcon.css_class_for(::Collection), "collection-icon-search"])
+    end
+
+    # Returns alt text for a thumbnail image.
+    # When the document has a custom thumbnail (thumbnail_alt_text indexed), delegates to
+    # alt_text_for_view to get the specific alt text. Otherwise returns a generic fallback
+    # (hyrax.sr.thumbnail) indicating a default representative image is shown.
+    # Apps can override this method to inject content-block lookups or other custom logic.
+    #
+    # @param document [SolrDocument]
+    # @param block_name [String] unused here; provided for API compatibility with overrides
+    # @return [String]
+    def thumbnail_alt_text_for(document, block_name: nil) # rubocop:disable Lint/UnusedMethodArgument
+      return document.alt_text_for_view if document.respond_to?(:thumbnail_alt_text) && document.thumbnail_alt_text.present?
+
+      t('hyrax.sr.thumbnail')
     end
 
     def collection_title_by_id(id)

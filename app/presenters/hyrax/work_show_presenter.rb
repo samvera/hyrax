@@ -3,6 +3,7 @@ module Hyrax
   class WorkShowPresenter
     include ModelProxy
     include PresentsAttributes
+    include MissingMethodBehavior
 
     ##
     # @!attribute [w] member_presenter_factory
@@ -27,7 +28,7 @@ module Hyrax
       define_dynamic_methods if @solr_document.flexible?
     end
 
-    def define_dynamic_methods # rubocop:disable Metrics/MethodLength
+    def define_dynamic_methods # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
       Hyrax::FlexibleSchema.default_properties.each do |prop|
         method_name = prop.to_s
         property_details = Hyrax::FlexibleSchema.current_version["properties"][method_name]
@@ -40,17 +41,17 @@ module Hyrax
 
         next if self.class.method_defined?(method_name) && solr_document.respond_to?(method_name)
         # Define the method on the SolrDocument class
-        Hyrax::SolrDocument::OrderedMembers.send(:define_method, method_name) do
+        Hyrax::SolrDocument::OrderedMembers.send(:define_method, method_name) do |*_args|
           index_keys.each do |index_key|
             value = self[index_key]
-            return value if value.present?
+            return (multi_value ? Array.wrap(value) : value) if value.present?
           end
           multi_value ? [] : ""
         end
 
         # Define the method on the Presenter class
-        self.class.send(:define_method, method_name) do
-          @solr_document.send(method_name)
+        self.class.send(:define_method, method_name) do |*args|
+          @solr_document.send(method_name, *args)
         end
       end
     end # rubocop:enable Metrics/MethodLength
@@ -83,11 +84,9 @@ module Hyrax
 
     # @return [Boolean] render a IIIF viewer
     def iiif_viewer?
-      Hyrax.config.iiif_image_server? &&
-        representative_id.present? &&
+      representative_id.present? &&
         representative_presenter.present? &&
-        representative_presenter.image? &&
-        members_include_viewable_image?
+        (av_viewable? || image_viewable? || pdf_viewable?)
     end
 
     alias universal_viewer? iiif_viewer?
@@ -107,7 +106,11 @@ module Hyrax
     #   <h3>My IIIF Viewer!</h3>
     #   <a href=<%= main_app.polymorphic_url([main_app, :manifest, presenter], { locale: nil }) %>>Manifest</a>
     def iiif_viewer
-      :universal_viewer
+      if representative_presenter.present? && av_viewable?
+        Hyrax.config.iiif_av_viewer
+      else
+        :universal_viewer
+      end
     end
 
     # @return FileSetPresenter presenter for the representative FileSets
@@ -279,15 +282,6 @@ module Hyrax
 
     private
 
-    def method_missing(method_name, *args, &block)
-      return solr_document.public_send(method_name, *args, &block) if solr_document.respond_to?(method_name)
-      super
-    end
-
-    def respond_to_missing?(method_name, include_private = false)
-      solr_document.respond_to?(method_name, include_private) || super
-    end
-
     # list of item ids to display is based on ordered_ids
     def authorized_item_ids(filter_unreadable: Flipflop.hide_private_items?)
       @member_item_list_ids ||=
@@ -352,6 +346,21 @@ module Hyrax
 
     def members_include_viewable_image?
       file_set_presenters.any? { |presenter| presenter.image? && current_ability.can?(:read, presenter.id) }
+    end
+
+    def av_viewable?
+      return false unless Flipflop.iiif_av?
+      representative_presenter.video? || representative_presenter.audio?
+    end
+
+    def image_viewable?
+      return false unless Hyrax.config.iiif_image_server?
+      representative_presenter.image? && members_include_viewable_image?
+    end
+
+    def pdf_viewable?
+      return false unless Flipflop.iiif_pdf?
+      representative_presenter.pdf?
     end
   end
 end

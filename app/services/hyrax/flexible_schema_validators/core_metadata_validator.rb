@@ -158,15 +158,31 @@ module Hyrax
       end
 
       # Checks that the property is available on all classes defined in the profile.
+      # A property entry with `name: <property>` is treated as an alias and counts
+      # toward coverage for the resolved name.
       #
       # @param property [String, Symbol]
       # @return [void]
       def validate_property_available_on(property)
-        available_on_classes = profile.dig('properties', property, 'available_on', 'class') || []
+        available_on_classes = classes_covered_by_resolved_name(property.to_s)
         missing_classes = defined_classes - available_on_classes
 
         return if missing_classes.empty?
         errors << "Property '#{property}' must be available on all classes, but is missing from: #{missing_classes.join(', ')}."
+      end
+
+      # Returns all classes covered by any profile property whose resolved name
+      # matches +property_name+ (either directly or via the `name` override key).
+      #
+      # @param property_name [String]
+      # @return [Array<String>]
+      def classes_covered_by_resolved_name(property_name)
+        profile['properties'].each_with_object([]) do |(key, config), covered|
+          resolved = (config['name'] || key).to_s
+          next unless resolved == property_name
+
+          covered.concat(Array(config.dig('available_on', 'class')))
+        end
       end
 
       # Validates the property's cardinality, ensuring that `title` is required

@@ -4,11 +4,18 @@ set -e
 mkdir -p $RAILS_ROOT/tmp/pids
 rm -f $RAILS_ROOT/tmp/pids/*
 
-RUBY_MAJOR=$(ruby -e "puts /^(?'major'\d+)\.(?'minor'\d+)\.(?'patch'\d+)/.match(RUBY_VERSION)[:major]")
+if [ -n "${BUNDLE_PATH}" ]; then
+  # Copy gems installed in the image to /app/bundle so they are retained over stack down/ups.
+  FULL_BUNDLE_PATH=$(ruby -e "require 'bundler'; puts Bundler.bundle_path")
+  echo "Copying gems to $FULL_BUNDLE_PATH"
+  mkdir -p $FULL_BUNDLE_PATH
+  cp -Ru /usr/local/bundle/* $FULL_BUNDLE_PATH
+elif [ "$(id -u)" -eq 0 ]; then
+  # Gems coming from git need to be owned by the user, which is root for dev environment
+  echo "Ensuring root owns /usr/local/bundle"
+  chown -R 0 /usr/local/bundle
+fi
 
-# Copy gems installed in the image to the dev bundle
-mkdir -p /app/bundle/ruby/$RUBY_MAJOR.0
-cp -Rn /usr/local/bundle/* /app/bundle/ruby/$RUBY_MAJOR.0
 bundle install
 yarn install
 

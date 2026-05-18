@@ -14,7 +14,7 @@ RSpec.describe 'collection_type', type: :feature do
 
   shared_context('sign in as admin and go to collection types index') do
     before do
-      sign_in admin_user
+      login_as admin_user, scope: :user
       visit '/admin/collection_types'
     end
   end
@@ -92,7 +92,7 @@ RSpec.describe 'collection_type', type: :feature do
     context 'when there are no collections of this type', :clean_repo do
       before do
         exhibit_collection_type
-        sign_in admin_user
+        login_as admin_user, scope: :user
         visit "/admin/collection_types/#{exhibit_collection_type.id}/edit"
       end
 
@@ -168,7 +168,7 @@ RSpec.describe 'collection_type', type: :feature do
 
         before do
           user_collection_type
-          sign_in admin_user
+          login_as admin_user, scope: :user
           visit "/admin/collection_types/#{user_collection_type.id}/edit"
         end
 
@@ -212,7 +212,7 @@ RSpec.describe 'collection_type', type: :feature do
 
         before do
           admin_set_type
-          sign_in admin_user
+          login_as admin_user, scope: :user
           visit "/admin/collection_types/#{admin_set_type.id}/edit"
         end
 
@@ -257,7 +257,7 @@ RSpec.describe 'collection_type', type: :feature do
 
       before do
         exhibit_collection_type
-        sign_in admin_user
+        login_as admin_user, scope: :user
         visit "/admin/collection_types/#{exhibit_collection_type.id}/edit"
       end
 

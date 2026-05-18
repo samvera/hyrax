@@ -342,6 +342,63 @@ module Hyrax
     end
     alias flexible? flexible
 
+    # See documentation/redirects.md for the redirects feature.
+    attr_writer :redirects_enabled
+    def redirects_enabled?
+      return @redirects_enabled if defined?(@redirects_enabled) && !@redirects_enabled.nil?
+      @redirects_enabled = ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_REDIRECTS_ENABLED', false))
+    end
+    alias redirects_enabled redirects_enabled?
+
+    # @return [Boolean] true when both feature gates are open. Single
+    #   source of truth for "is the redirects feature actively in use
+    #   right now?". Short-circuits on the config so the Flipflop call
+    #   is safe (the :redirects feature is only registered when the
+    #   config is on; calling Flipflop.redirects? otherwise raises).
+    def redirects_active?
+      redirects_enabled? && Flipflop.redirects?
+    end
+
+    # Path prefixes that may not be claimed as redirect aliases (Hyrax::RedirectValidator
+    # rejects any redirect path equal to or starting with one of these). Defaults to the
+    # routes Hyrax itself reserves; adopters can extend the list to cover host-app routes:
+    #
+    #   Hyrax.config do |config|
+    #     config.reserved_redirect_prefixes += ['/single_signon', '/some_host_route']
+    #   end
+    #
+    # See documentation/redirects.md for the redirects feature.
+    attr_writer :reserved_redirect_prefixes
+    def reserved_redirect_prefixes # rubocop:disable Metrics/MethodLength
+      @reserved_redirect_prefixes ||= %w[
+        /.well-known
+        /admin
+        /api
+        /assets
+        /batch_edits
+        /batch_uploads
+        /capabilitylist
+        /catalog
+        /changelist
+        /collections
+        /concern
+        /content_blocks
+        /dashboard
+        /downloads
+        /embargoes
+        /featured_works
+        /files
+        /leases
+        /notifications
+        /pages
+        /proxies
+        /rails
+        /resourcelist
+        /uploads
+        /users
+      ]
+    end
+
     # This value determines whether to use m3 flexible metadata for core classes or not
     attr_writer :flexible_classes
     def flexible_classes
@@ -387,6 +444,16 @@ module Hyrax
     attr_writer :max_days_between_fixity_checks
     def max_days_between_fixity_checks
       @max_days_between_fixity_checks ||= 7
+    end
+
+    attr_writer :solr_rows_per_request
+    def solr_rows_per_request
+      @solr_rows_per_request ||= 1_000
+    end
+
+    attr_writer :solr_max_results
+    def solr_max_results
+      @solr_max_results ||= 10_000
     end
     # @!endgroup
     # @!group Groups
@@ -457,6 +524,8 @@ module Hyrax
     attr_writer :iiif_info_url_builder
     attr_writer :iiif_metadata_fields
     attr_writer :iiif_manifest_cache_duration
+    attr_writer :iiif_manifest_factory
+    attr_writer :iiif_av_viewer
     attr_writer :rendering_predicate
 
     # Enable IIIF image service. This is required to use the
@@ -522,6 +591,25 @@ module Hyrax
     # @see https://api.rubyonrails.org/classes/ActiveSupport/Cache/Store.html#method-i-fetch
     def iiif_manifest_cache_duration
       @iiif_manifest_cache_duration ||= 30.days.to_i
+    end
+
+    ##
+    # Factory class for generating IIIF manifests
+    #
+    # @see Hyrax::ManifestBuilderService
+    #
+    # @return [Class]
+    def iiif_manifest_factory
+      @iiif_manifest_factory ||= ::IIIFManifest::ManifestFactory
+    end
+
+    ##
+    # A symbol that represents the viewer to render for AV items.
+    # Defaults to :universal_viewer but hopefully we can develop more options
+    #
+    # @return [:symbol] viewer partial name
+    def iiif_av_viewer
+      @iiif_av_viewer ||= :universal_viewer
     end
 
     ##

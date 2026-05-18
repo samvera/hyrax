@@ -129,6 +129,10 @@ module Hyrax
       current_ability.can?(:deposit, solr_document)
     end
 
+    def editor?
+      current_ability.can?(:edit, self)
+    end
+
     def user_can_create_new_nest_collection?
       current_ability.can?(:create_collection_of_type, collection_type)
     end

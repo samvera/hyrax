@@ -32,7 +32,7 @@
                 <td class="status">
                   <span class="badge badge-<%= @feature_set.status(feature) -%>"><%= @feature_set.status(feature) -%></span>
                 </td>
-                <td class="name"><%= feature.name.humanize -%></td>
+                <td class="name"><%= feature.title || feature.name.humanize -%></td>
                 <td class="description"><%= feature.description -%></td>
 
                 <% @feature_set.strategies.each do |strategy| -%>

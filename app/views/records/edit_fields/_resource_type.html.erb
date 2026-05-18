@@ -1,2 +1,16 @@
-<%= f.input :resource_type, as: :select, collection: Hyrax::ResourceTypesService.select_options,
-    input_html: { class: 'form-control', multiple: true } %>
+<% base_options = Hyrax::ResourceTypesService.select_options %>
+<% current_values = Array.wrap(f.object[:resource_type]).select(&:present?) %>
+<% augmented_options = current_values.reduce(base_options) do |opts, value|
+     Hyrax::ResourceTypesService.include_current_value(value, nil, opts, { class: [] }).first
+   end %>
+<% if f.object.multiple? :resource_type %>
+  <%= f.input :resource_type, as: :select,
+      collection: augmented_options,
+      include_blank: !f.object.required?(:resource_type),
+      input_html: { class: 'form-control', multiple: true, name: "#{f.object_name}[resource_type][]" } %>
+<% else %>
+  <%= f.input :resource_type, as: :select,
+      collection: augmented_options,
+      include_blank: true,
+      input_html: { class: 'form-control' } %>
+<% end %>

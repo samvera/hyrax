@@ -159,6 +159,114 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CoreMetadataValidator do
         end
       end
 
+      context 'when creator coverage is provided via a name alias' do
+        let(:profile) do
+          {
+            'classes' => {
+              'TestClass' => { 'display_label' => 'Test' },
+              'OtherClass' => { 'display_label' => 'Other' }
+            },
+            'properties' => {
+              'title' => {
+                'data_type' => 'array',
+                'cardinality' => { 'minimum' => 1 },
+                'property_uri' => 'http://purl.org/dc/terms/title',
+                'indexing' => ['title_sim', 'title_tesim'],
+                'available_on' => { 'class' => ['TestClass', 'OtherClass'] }
+              },
+              'date_modified' => {
+                'property_uri' => 'http://purl.org/dc/terms/modified',
+                'available_on' => { 'class' => ['TestClass', 'OtherClass'] }
+              },
+              'date_uploaded' => {
+                'property_uri' => 'http://purl.org/dc/terms/dateSubmitted',
+                'available_on' => { 'class' => ['TestClass', 'OtherClass'] }
+              },
+              'depositor' => {
+                'property_uri' => 'http://id.loc.gov/vocabulary/relators/dpt',
+                'indexing' => ['depositor_ssim', 'depositor_tesim'],
+                'available_on' => { 'class' => ['TestClass', 'OtherClass'] }
+              },
+              # creator on TestClass only
+              'creator' => {
+                'data_type' => 'array',
+                'property_uri' => 'http://purl.org/dc/elements/1.1/creator',
+                'indexing' => ['creator_sim', 'creator_tesim'],
+                'available_on' => { 'class' => ['TestClass'] }
+              },
+              # alias covering OtherClass via name: creator
+              'creator_hidden' => {
+                'name' => 'creator',
+                'data_type' => 'array',
+                'property_uri' => 'http://purl.org/dc/elements/1.1/creator',
+                'indexing' => ['creator_sim', 'creator_tesim'],
+                'available_on' => { 'class' => ['OtherClass'] }
+              }
+            }
+          }
+        end
+
+        before { service.validate! }
+
+        it 'does not report creator as missing from any class' do
+          expect(errors).not_to include(a_string_matching(/creator.*missing from/))
+        end
+      end
+
+      context 'when creator alias does not cover all classes' do
+        let(:profile) do
+          {
+            'classes' => {
+              'TestClass' => { 'display_label' => 'Test' },
+              'OtherClass' => { 'display_label' => 'Other' },
+              'ThirdClass' => { 'display_label' => 'Third' }
+            },
+            'properties' => {
+              'title' => {
+                'data_type' => 'array',
+                'cardinality' => { 'minimum' => 1 },
+                'property_uri' => 'http://purl.org/dc/terms/title',
+                'indexing' => ['title_sim', 'title_tesim'],
+                'available_on' => { 'class' => ['TestClass', 'OtherClass', 'ThirdClass'] }
+              },
+              'date_modified' => {
+                'property_uri' => 'http://purl.org/dc/terms/modified',
+                'available_on' => { 'class' => ['TestClass', 'OtherClass', 'ThirdClass'] }
+              },
+              'date_uploaded' => {
+                'property_uri' => 'http://purl.org/dc/terms/dateSubmitted',
+                'available_on' => { 'class' => ['TestClass', 'OtherClass', 'ThirdClass'] }
+              },
+              'depositor' => {
+                'property_uri' => 'http://id.loc.gov/vocabulary/relators/dpt',
+                'indexing' => ['depositor_ssim', 'depositor_tesim'],
+                'available_on' => { 'class' => ['TestClass', 'OtherClass', 'ThirdClass'] }
+              },
+              'creator' => {
+                'data_type' => 'array',
+                'property_uri' => 'http://purl.org/dc/elements/1.1/creator',
+                'indexing' => ['creator_sim', 'creator_tesim'],
+                'available_on' => { 'class' => ['TestClass'] }
+              },
+              'creator_hidden' => {
+                'name' => 'creator',
+                'data_type' => 'array',
+                'property_uri' => 'http://purl.org/dc/elements/1.1/creator',
+                'indexing' => ['creator_sim', 'creator_tesim'],
+                'available_on' => { 'class' => ['OtherClass'] }
+              }
+              # ThirdClass is not covered by either entry
+            }
+          }
+        end
+
+        before { service.validate! }
+
+        it 'reports creator as missing from the uncovered class' do
+          expect(errors).to include("Property 'creator' must be available on all classes, but is missing from: ThirdClass.")
+        end
+      end
+
       context 'when title is not required' do
         context 'because `cardinality.minimum` is 0' do
           before do

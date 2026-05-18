@@ -893,6 +893,9 @@ fr:
       contact: Contact
       help: Aidez-moi
       home: Accueil
+    copy_permalink:
+      button: Copier le lien permanent
+      success: Copié !
     dashboard:
       additional_notifications: Voir toutes les notifications
       admin_sets:
@@ -1377,6 +1380,8 @@ fr:
         file_details: Description du fichier
         fixity_check: Vérification de la fixité
         not_yet_characterized: Pas encore caractérisé
+      metadata:
+        metadata: Métadonnées
       versioning:
         choose_file: Choisissez un nouveau fichier de version
         current: Version actuelle
@@ -1390,6 +1395,10 @@ fr:
         save: Enregistrer la révision
         save_your_note: Vous devez cliquer sur "Enregistrer la révision". pour revenir à une version précédente de ce fichier
         upload: Télécharger une nouvelle version
+    flexible_schema_validators:
+      sort_properties_validator:
+        warnings:
+          message: "%{property} doit être défini sur %{classes} pour permettre le tri sur cette propriété, à moins que vous n'ayez indexé %{property}_ssi sur un autre champ."
     help:
       header: Support utilisateur
       override_text: Utilisez application / views / static / help.html.erb pour remplacer ce fichier.
@@ -1427,8 +1436,8 @@ fr:
         tab_label: Chargé récemment
         title: Chargé récemment
     icons:
-      collection: Fa fa-cubes
-      default: Fa fa-cube
+      collection: fa fa-cubes
+      default: fa fa-cube
     leases:
       edit:
         header:
@@ -1629,6 +1638,8 @@ fr:
       modified:
         desc: "date de modification (le plus récent d'abord)"
         asc: "date de modification (le plus ancien d'abord)"
+    sr:
+      thumbnail: image représentative par défaut
     static:
       mendeley:
         contact_form: Formulaire de contact

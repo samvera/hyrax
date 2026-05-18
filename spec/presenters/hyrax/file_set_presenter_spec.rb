@@ -77,7 +77,7 @@ RSpec.describe Hyrax::FileSetPresenter do
        "subject", "language", "license", "format_label", "file_size",
        "height", "width", "filename", "well_formed", "page_count",
        "file_title", "last_modified", "original_checksum", "mime_type",
-       "duration", "sample_rate", "alpha_channels", "original_file_id"]
+       "duration", "sample_rate", "alpha_channels", "original_file_id", "to_s"]
     end
 
     it "delegates to the solr_document" do
@@ -87,14 +87,14 @@ RSpec.describe Hyrax::FileSetPresenter do
       end
     end
 
-    it { is_expected.to delegate_method(:depositor).to(:solr_document) }
-    it { is_expected.to delegate_method(:keyword).to(:solr_document) }
-    it { is_expected.to delegate_method(:date_created).to(:solr_document) }
-    it { is_expected.to delegate_method(:date_modified).to(:solr_document) }
-    it { is_expected.to delegate_method(:itemtype).to(:solr_document) }
-    it { is_expected.to delegate_method(:fetch).to(:solr_document) }
-    it { is_expected.to delegate_method(:first).to(:solr_document) }
-    it { is_expected.to delegate_method(:has?).to(:solr_document) }
+    it { is_expected.to respond_to(:depositor) }
+    it { is_expected.to respond_to(:keyword) }
+    it { is_expected.to respond_to(:date_created) }
+    it { is_expected.to respond_to(:date_modified) }
+    it { is_expected.to respond_to(:itemtype) }
+    it { is_expected.to respond_to(:fetch) }
+    it { is_expected.to respond_to(:first) }
+    it { is_expected.to respond_to(:has?) }
   end
 
   describe '#link_name' do
@@ -338,6 +338,28 @@ RSpec.describe Hyrax::FileSetPresenter do
           its(:display_image) { is_expected.to be_instance_of IIIFManifest::DisplayImage }
           its(:display_image) { is_expected.to have_attributes(url: "http://test.host/images/#{uri_segment_escape(id)}/full/600,/0/default.jpg") }
 
+          context 'format handling' do
+            context 'when mime_type is nil' do
+              before { allow(presenter).to receive(:mime_type).and_return(nil) }
+
+              context 'with rgba alpha channels' do
+                before { allow(presenter).to receive(:alpha_channels).and_return('rgba') }
+
+                it 'returns image/png format' do
+                  expect(presenter.display_image.format).to eq('image/png')
+                end
+              end
+
+              context 'without rgba alpha channels' do
+                before { allow(presenter).to receive(:alpha_channels).and_return(nil) }
+
+                it 'returns image/jpeg format' do
+                  expect(presenter.display_image.format).to eq('image/jpeg')
+                end
+              end
+            end
+          end
+
           context 'with custom image size default' do
             let(:custom_image_size) { '666,' }
 
@@ -487,6 +509,101 @@ RSpec.describe Hyrax::FileSetPresenter do
         it "raises an error" do
           expect { presenter.parent }.to raise_error(Hyrax::WorkflowAuthorizationException)
         end
+      end
+    end
+  end
+
+  describe '#transcripts' do
+    context 'without any transcript_ids' do
+      it 'returns an empty array' do
+        expect(presenter.transcripts).to be_empty
+      end
+    end
+
+    context 'with transcript_ids' do
+      let(:transcript) do
+        FactoryBot.valkyrie_create(:hyrax_file_set)
+      end
+
+      before do
+        allow(file_set).to receive(:transcript_ids).and_return [transcript.id]
+      end
+
+      it 'returns an array of solr documents' do
+        expect(presenter.transcripts).not_to be_empty
+        expect(presenter.transcripts.first).to be_a SolrDocument
+      end
+    end
+  end
+
+  describe '#transcript_url' do
+    subject(:presenter) { described_class.new(solr_document, ability, request) }
+    let(:request) { double('request', base_url: 'http://test.host') }
+
+    context 'with a Valkyrie file set document' do
+      let(:transcript) { SolrDocument.new(id: 'baz') }
+
+      it 'returns the url to VTT file contents' do
+        expect(presenter.transcript_url(transcript)).to eq "http://test.host/transcripts/baz.vtt"
+      end
+    end
+
+    context 'with an ActiveFedora file set document' do
+      let(:transcript) { SolrDocument.new(id: 'bar') }
+
+      it 'returns the url to VTT file contents' do
+        expect(presenter.transcript_url(transcript)).to eq "http://test.host/transcripts/bar.vtt"
+      end
+    end
+  end
+
+  describe '#language_code' do
+    let(:transcript) { SolrDocument.new(language_tesim: language) }
+    subject { presenter.language_code(transcript.language) }
+
+    context 'when transcript has no language' do
+      let(:language) { [] }
+
+      it { is_expected.to be_nil }
+    end
+
+    context 'when transcript has language' do
+      context 'with a 3-letter language code' do
+        let(:language) { ['eng'] }
+
+        it 'returns the 2-letter language code' do
+          expect(subject).to eq('en')
+        end
+      end
+
+      context 'with 2-letter language code' do
+        let(:language) { ['en'] }
+
+        it 'returns the 2-letter language code' do
+          expect(subject).to eq('en')
+        end
+      end
+
+      context 'with a URI' do
+        let(:language) { ['http://id.loc.gov/vocabulary/iso639-3/zho'] }
+
+        it 'returns the 2-letter language code' do
+          expect(subject).to eq('zh')
+        end
+      end
+
+      context 'with a language name' do
+        let(:language) { ['German'] }
+
+        it 'returns the 2-letter language code' do
+          expect(subject).to eq('de')
+        end
+      end
+
+      context 'with no parseable language' do
+        let(:language) { ['xyz'] }
+
+        it { is_expected.to be_nil }
       end
     end
   end

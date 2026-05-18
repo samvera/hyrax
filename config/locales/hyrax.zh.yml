@@ -890,6 +890,9 @@ zh:
       contact: 联系
       help: 帮助
       home: 首页
+    copy_permalink:
+      button: 复制永久链接
+      success: 已复制!
     dashboard:
       additional_notifications: 见所有通知
       admin_sets:
@@ -1374,6 +1377,8 @@ zh:
         file_details: 文件的详细信息
         fixity_check: 固定性检查
         not_yet_characterized: 没有特征
+      metadata:
+        metadata: 元数据
       versioning:
         choose_file: 选择新版本文件
         current: 当前版本
@@ -1387,6 +1392,10 @@ zh:
         save: 保存修订
         save_your_note: 您必须点击“保存修订版”还原此文件的先前版本
         upload: 上传新版本
+    flexible_schema_validators:
+      sort_properties_validator:
+        warnings:
+          message: "%{property} 必须在 %{classes} 上定义才能支持该属性的排序，除非您已在其他字段上索引了 %{property}_ssi。"
     help:
       header: 用户支持
       override_text: 用 app/views/static/help.html.erb 取代此文件。
@@ -1626,6 +1635,8 @@ zh:
       modified:
         desc: "修改日期（最新优先）"
         asc: "修改日期（最旧优先）"
+    sr:
+      thumbnail: 默认代表性图片
     static:
       mendeley:
         contact_form: 联系表

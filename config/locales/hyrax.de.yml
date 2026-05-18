@@ -886,6 +886,9 @@ de:
       contact: Kontakt
       help: Hilfe
       home: Startseite
+    copy_permalink:
+      button: Permalink kopieren
+      success: Kopiert!
     dashboard:
       additional_notifications: Alle Benachrichtigungen
       admin_sets:
@@ -1370,6 +1373,8 @@ de:
         file_details: Dateidetails
         fixity_check: Beständigkeit überprüfen
         not_yet_characterized: Noch nicht charakterisiert
+      metadata:
+        metadata: Metadaten
       versioning:
         choose_file: Neue Dateiversion wählen
         current: Aktuelle Version
@@ -1383,6 +1388,10 @@ de:
         save: Überarbeitete Version speichern
         save_your_note: Sie müssen auf "Revision speichern" klicken. um eine frühere Version dieser Datei wiederherzustellen
         upload: Neue Version hochladen
+    flexible_schema_validators:
+      sort_properties_validator:
+        warnings:
+          message: "%{property} muss auf %{classes} definiert sein, um die Sortierung nach dieser Eigenschaft zu unterstützen, es sei denn, Sie haben %{property}_ssi auf einem anderen Feld indiziert."
     help:
       header: Benutzer-Support
       override_text: Verwenden Sie app/views/static/help.html.erb, um diese Datei zu überschreiben.
@@ -1420,8 +1429,8 @@ de:
         tab_label: Zuletzt hochgeladen
         title: Zuletzt hochgeladen
     icons:
-      collection: Fa-würfel
-      default: Fa fa-würfel
+      collection: fa fa-cube
+      default: fa fa-cube
     leases:
       edit:
         header:
@@ -1622,6 +1631,8 @@ de:
       modified:
         desc: "Datum geändert (neueste zuerst)"
         asc: "Datum geändert (älteste zuerst)"
+    sr:
+      thumbnail: Standardrepräsentationsbild
     static:
       mendeley:
         contact_form: Kontakt Formular

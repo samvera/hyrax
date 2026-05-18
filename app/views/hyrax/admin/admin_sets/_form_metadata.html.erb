@@ -5,7 +5,8 @@
   <% end %>
 </div>
 <% if Hyrax.config.flexible? && Hyrax.config.admin_set_class.new.respond_to?(:contexts) %>
-  <%= f.input :contexts, collection: Hyrax::FlexibleSchema.last.context_select, input_html: { multiple: true } %>
+  <% blank_option = f.object.model.new_record ? false : t('hyrax.admin.admin_sets.form.contexts.none') %>
+  <%= f.input :contexts, collection: Hyrax::FlexibleSchema.last.context_select, include_blank: blank_option, input_html: { multiple: true } %>
 <% end %>
 <% if f.object.display_additional_fields? %>
   <%= link_to t('hyrax.collection.form.additional_fields'),

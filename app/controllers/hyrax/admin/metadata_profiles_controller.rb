@@ -26,7 +26,10 @@ module Hyrax
           @flexible_schema = Hyrax::FlexibleSchema.create(profile: YAML.safe_load_file(uploaded_io.path))
 
           if @flexible_schema.persisted?
-            redirect_to admin_metadata_profiles_path, notice: 'Flexible Metadata Profile was successfully created.'
+            warning_messages = @flexible_schema.warnings.full_messages.join(', ')
+            flash_options = { notice: 'Flexible Metadata Profile was successfully created.' }
+            flash_options[:alert] = warning_messages if @flexible_schema.warnings.any?
+            redirect_to admin_metadata_profiles_path, flash: flash_options
           else
             error_message = @flexible_schema.errors.messages.values.flatten.join(', ')
             redirect_to admin_metadata_profiles_path, flash: { error: error_message }

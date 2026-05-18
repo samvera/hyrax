@@ -59,6 +59,9 @@ services:
       - RAILS_ROOT=/app/samvera/hyrax-webapp
       - VALKYRIE_METADATA_ADAPTER=fedora_metadata
       - VALKYRIE_STORAGE_ADAPTER=fedora_storage
+      - HYRAX_FLEXIBLE=false
+      - HYRAX_FLEXIBLE_CLASSES=
+      - HYRAX_DISABLE_INCLUDE_METADATA=false
     depends_on:
       - fcrepo
       - fits

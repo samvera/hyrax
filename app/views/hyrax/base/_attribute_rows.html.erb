@@ -1,4 +1,4 @@
 <% view_options_for(presenter).each do |field, options| %>
   <% view_options = conform_options(field, options) %>
-  <%= presenter.attribute_to_html(conform_field(field, options), view_options) unless view_options[:admin_only] && !current_user.admin?  %>
+  <%= presenter.attribute_to_html(conform_field(field, options), view_options) if field_visible?(view_options, presenter) %>
 <% end %>

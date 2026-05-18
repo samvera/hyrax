@@ -92,6 +92,7 @@ SUMMARY
   spec.add_dependency 'sprockets', '3.7.2' # 3.7.3 fails feature specs
   spec.add_dependency 'sass-rails', '~> 6.0'
   spec.add_dependency 'select2-rails', '~> 3.5'
+  spec.add_dependency 'language_list'
 
   spec.add_development_dependency "capybara", '~> 3.29'
   spec.add_development_dependency 'capybara-screenshot', '~> 1.0'
@@ -111,6 +112,7 @@ SUMMARY
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
   # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
   spec.add_development_dependency 'bixby', '~> 5.0', '>= 5.0.2' # bixby 5 briefly dropped Ruby 2.5
+  spec.add_development_dependency 'rubocop-ast', '>= 1.17.0', '< 1.30' # pin to range compatible with rubocop 1.28.2
   spec.add_development_dependency 'shoulda-callback-matchers'
   spec.add_development_dependency 'shoulda-matchers'
   spec.add_development_dependency 'webmock'

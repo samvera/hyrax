@@ -3,7 +3,7 @@
 module Hyrax
   module AttributesHelper
     def view_options_for(presenter)
-      model_name = presenter.model.model_name.name
+      model_name = presenter.model.model_name.klass.to_s
       if presenter.respond_to?(:flexible?) && presenter.flexible?
         Hyrax::Schema.m3_schema_loader.view_definitions_for(schema: model_name, version: presenter.solr_document.schema_version, contexts: presenter.solr_document.contexts)
       else
@@ -87,7 +87,17 @@ module Hyrax
           field.to_s.humanize
         )
       end
+      view_options[:base_url] = request.base_url if respond_to?(:request) && request.respond_to?(:base_url)
       view_options
+    end
+
+    # Returns true when the field should render for the current user.
+    # Honors `admin_only` and `editor_only` view options with OR semantics:
+    # when both are set, the field is visible to admins *or* editors.
+    def field_visible?(view_options, presenter)
+      return false if view_options[:admin_only] && !current_user&.admin?
+      return false if view_options[:editor_only] && !presenter.try(:editor?)
+      true
     end
   end
 end

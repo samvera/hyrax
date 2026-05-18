@@ -16,11 +16,7 @@ module Hyrax
 
       # Override for Hydra::AccessControlsEnforcement
       attr_reader :discovery_permissions
-      self.default_processor_chain += [:with_pagination, :show_only_other_collections_of_the_same_collection_type]
-
-      def with_pagination(solr_parameters)
-        solr_parameters[:rows] = 1000
-      end
+      self.default_processor_chain += [:show_only_other_collections_of_the_same_collection_type]
 
       # Solr can do graph traversal without the need of special indexing with the Graph query parser so
       # use this to compute both the parents and children of the current collection then exclude them

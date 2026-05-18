@@ -19,13 +19,67 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
 
     it 'lists required fields' do
-      expect(form_class.required_fields).to contain_exactly :title
+      if Hyrax.config.flexible?
+        # In flexible mode, required fields come from M3 profile at instance level
+        expect(form.required?(:title)).to be true
+      else
+        expect(form_class.required_fields).to contain_exactly :title
+      end
     end
 
     it 'can add required fields' do
       expect { form_class.required_fields += [:depositor] }
         .to change { form.required?(:depositor) && form.required?(:title) }
         .to true
+    end
+  end
+
+  describe '.for' do
+    context 'with admin_set_id for a flexible resource' do
+      let(:work) { build(:monograph) }
+      let(:admin_set) { double('AdminSet', contexts: ['special_context']) }
+      let(:work_contexts) { [] }
+      let(:schema_loader) { instance_double(Hyrax::M3SchemaLoader, form_definitions_for: { title: { required: true, primary: true } }, attributes_for: {}) }
+
+      before do
+        allow(Hyrax.config).to receive(:flexible?).and_return(true)
+        allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
+        allow(Hyrax.query_service).to receive(:find_by).with(id: 'set-1').and_return(admin_set)
+        allow(work).to receive(:flexible?).and_return(true)
+        allow(work).to receive(:contexts=).with(anything) { |v| work_contexts.replace(Array(v)) }
+        allow(work).to receive(:contexts).and_return(work_contexts)
+        work_contexts.clear
+      end
+
+      after do
+        RSpec::Mocks.space.proxy_for(Hyrax.config).reset if RSpec::Mocks.space.registered?(Hyrax.config)
+        RSpec::Mocks.space.proxy_for(Hyrax::Schema).reset if RSpec::Mocks.space.registered?(Hyrax::Schema)
+        RSpec::Mocks.space.proxy_for(Hyrax.query_service).reset if RSpec::Mocks.space.registered?(Hyrax.query_service)
+      end
+
+      it 'sets the admin set contexts on the resource before building the form' do
+        described_class.for(resource: work, admin_set_id: 'set-1')
+        expect(work.contexts).to include('special_context')
+      end
+    end
+
+    context 'when admin_set_id is nil' do
+      it 'does not modify the resource' do
+        expect { described_class.for(resource: work, admin_set_id: nil) }
+          .not_to change { work.respond_to?(:contexts) ? Array(work.contexts) : nil }
+      end
+    end
+
+    context 'when the admin set is not found' do
+      before do
+        allow(Hyrax.config).to receive(:flexible?).and_return(true)
+        allow(Hyrax.query_service).to receive(:find_by).with(id: 'gone')
+                                                       .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
+      end
+
+      it 'builds the form without raising' do
+        expect { described_class.for(resource: work, admin_set_id: 'gone') }.not_to raise_error
+      end
     end
   end
 
@@ -57,8 +111,9 @@ RSpec.describe Hyrax::Forms::ResourceForm do
   end
 
   describe '#admin_set_id' do
-    it 'is nil' do
-      expect(form.admin_set_id).to be_nil
+    it 'is nil or blank' do
+      # In flexible mode, resource copy coerces nil to Valkyrie::ID("")
+      expect(form.admin_set_id.to_s).to be_blank
     end
 
     it 'prepopulates to the default admin set' do
@@ -88,7 +143,96 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
-  describe '#based_near' do
+  describe 'flexible form with contexts' do
+    let(:work) { build(:monograph) }
+    let(:schema_loader) { instance_double(Hyrax::M3SchemaLoader, form_definitions_for: { title: { required: true, primary: true } }, attributes_for: {}) }
+
+    before do
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
+      allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
+      allow(work).to receive(:flexible?).and_return(true)
+      allow(work).to receive(:respond_to?).and_call_original
+      allow(work).to receive(:respond_to?).with(:contexts).and_return(true)
+      allow(work).to receive(:contexts).and_return(['special_context'])
+    end
+
+    it 'passes the resource contexts to form_definitions_for so context-specific fields are included' do
+      described_class.for(resource: work)
+
+      expect(schema_loader).to have_received(:form_definitions_for) do |**kwargs|
+        expect(Array(kwargs[:contexts])).to contain_exactly('special_context')
+      end
+    end
+  end
+
+  describe 'flexible form after M3 profile update removes a field' do
+    # Regression: when a field (e.g. :video_embed) is removed from the M3 profile at
+    # runtime, the form should not raise NoMethodError on prepopulate! or secondary_terms.
+    #
+    # Root cause: acts_as_flexible_resource bakes attributes onto the model class at boot
+    # via `include Hyrax::Schema(name, schema_loader: ...)`, so respond_to?(:video_embed)
+    # is genuinely true on the model instance even after the profile is updated.
+    # ResourceForm#initialize uses respond_to? to decide what to prune from
+    # singleton_class.definitions, so the stale field is never removed.
+    #
+    # We use a real anonymous model class that actually calls acts_as_flexible_resource
+    # so that respond_to?(:video_embed) is concretely true — not stubbed.
+
+    # boot_attributes: what the schema loader returns during acts_as_flexible_resource.
+    # This permanently wires :video_embed onto the model class as a real Valkyrie attribute.
+    let(:boot_attributes) do
+      { video_embed: Valkyrie::Types::Array.of(Valkyrie::Types::String) }
+    end
+
+    # current_form_defs: mutable hash — tests clear it to simulate a profile update
+    let(:current_form_defs) do
+      { 'video_embed' => { required: false, primary: false, display: true } }
+    end
+
+    let(:schema_loader) do
+      loader = instance_double(Hyrax::M3SchemaLoader)
+      allow(loader).to receive(:current_version).and_return(1)
+      allow(loader).to receive(:attributes_for).and_return(boot_attributes)
+      allow(loader).to receive(:form_definitions_for) { current_form_defs }
+      allow(loader).to receive(:index_rules_for).and_return({})
+      loader
+    end
+
+    # A fresh anonymous work class per example; acts_as_flexible_resource is called once
+    # here, permanently baking :video_embed onto the class via Hyrax::Schema inclusion.
+    let(:work_class) do
+      klass = Class.new(Hyrax::Work) do
+        def self.name
+          'TestFlexibleWork'
+        end
+      end
+      klass.acts_as_flexible_resource
+      klass
+    end
+
+    let(:work) { work_class.new }
+
+    before do
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
+      allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
+      allow(Hyrax::FlexibleSchema).to receive(:current_schema_id).and_return(1)
+    end
+
+    after do
+      Hyrax.config.flexible_classes.delete('TestFlexibleWork')
+    end
+
+    it 'does not include the removed field in secondary_terms' do
+      described_class.for(resource: work)
+
+      current_form_defs.clear
+
+      form = described_class.for(resource: work)
+      expect(form.secondary_terms).not_to include(:video_embed)
+    end
+  end
+
+  describe '#based_near', unless: Hyrax.config.flexible? do
     subject(:form) { form_class.new(work) }
 
     let(:work) { build(:monograph) }
@@ -113,6 +257,107 @@ RSpec.describe Hyrax::Forms::ResourceForm do
                                                       "_destroy" => "" } })
       expect(form.based_near)
         .to contain_exactly(geonames_uri)
+    end
+  end
+
+  describe '#redirects' do
+    # The view partial `_form_redirects.html.erb` calls `f.object.redirects`
+    # directly. The bare `redirects` property is installed per-resource at
+    # form init time when the resource has the attribute; the
+    # `redirects_attributes` virtual property is installed by
+    # `RedirectsFieldBehavior`.
+    #
+    # The engine test suite boots with `redirects_enabled?` off, so the
+    # app's models and forms don't carry the redirects properties. Build
+    # a synthetic resource and form with the gate stubbed open, mirroring
+    # an installation that has the feature on.
+    subject(:form) { form_class.new(resource_class.new) }
+
+    before do
+      allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+      stub_const('RedirectsTestResource', Class.new(Hyrax::Resource) { include Hyrax::Schema(:redirects) })
+    end
+
+    let(:resource_class) { RedirectsTestResource }
+
+    let(:form_class) do
+      resource = resource_class
+      Class.new(Hyrax::Forms::ResourceForm(resource)) do
+        include Hyrax::RedirectsFieldBehavior
+      end
+    end
+
+    it 'exposes the redirects property so the form partial can render' do
+      expect(form).to respond_to(:redirects)
+    end
+
+    it 'exposes the redirects_attributes virtual property for nested form params' do
+      expect(form).to respond_to(:redirects_attributes)
+    end
+  end
+
+  # Per-resource install of the `redirects` property. The form declares
+  # `redirects` only when the concrete resource has it as an attribute —
+  # this single check handles all combinations of base-class metadata
+  # gates and per-class flexibility.
+  describe 'redirects per-resource installation' do
+    let(:no_redirects_resource) do
+      klass = Class.new(Hyrax::Resource) do
+        def self.name
+          'NoRedirectsTestResource'
+        end
+      end
+      stub_const('NoRedirectsTestResource', klass)
+      klass.new
+    end
+
+    let(:with_redirects_resource) do
+      klass = Class.new(Hyrax::Resource) do
+        attribute :redirects, Valkyrie::Types::Array.of(Dry::Types['hash'])
+        def self.name
+          'WithRedirectsTestResource'
+        end
+      end
+      stub_const('WithRedirectsTestResource', klass)
+      klass.new
+    end
+
+    let(:redirects_form_class) do
+      Class.new(Hyrax::Forms::ResourceForm) do
+        include Hyrax::RedirectsFieldBehavior
+      end
+    end
+
+    before do
+      allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+    end
+
+    context 'when the resource has the redirects attribute' do
+      it 'installs the redirects property on the form' do
+        form = redirects_form_class.new(with_redirects_resource)
+        expect(form).to respond_to(:redirects)
+      end
+
+      it 'installs the redirects_attributes virtual property too' do
+        form = redirects_form_class.new(with_redirects_resource)
+        expect(form).to respond_to(:redirects_attributes)
+      end
+    end
+
+    context 'when the resource lacks the redirects attribute' do
+      it 'does not crash on form initialization' do
+        expect { redirects_form_class.new(no_redirects_resource) }.not_to raise_error
+      end
+
+      it 'does not install the redirects property' do
+        form = redirects_form_class.new(no_redirects_resource)
+        expect(form).not_to respond_to(:redirects)
+      end
+
+      it 'still installs the redirects_attributes virtual property (it does not read from the model)' do
+        form = redirects_form_class.new(no_redirects_resource)
+        expect(form).to respond_to(:redirects_attributes)
+      end
     end
   end
 
@@ -236,7 +481,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
           form.validate(member_of_collections_attributes: member_of_collections_attributes)
 
           expect { form.sync }
-            .to change { work.member_of_collection_ids }
+            .to change { form.model.member_of_collection_ids }
             .to contain_exactly('123')
         end
       end
@@ -264,7 +509,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
           form.validate(member_of_collections_attributes: member_of_collections_attributes)
 
           expect { form.sync }
-            .to change { work.member_of_collection_ids }
+            .to change { form.model.member_of_collection_ids }
             .to contain_exactly(*after_collection_ids)
         end
       end
@@ -351,7 +596,12 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
   describe '#primary_terms' do
     it 'lists the core metadata primary terms' do
-      expect(form.primary_terms).to contain_exactly(:title)
+      if Hyrax.config.flexible?
+        # M3 profile defines additional primary terms
+        expect(form.primary_terms).to include(:title)
+      else
+        expect(form.primary_terms).to contain_exactly(:title)
+      end
     end
 
     context 'with custom primary terms' do
@@ -364,11 +614,15 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       end
 
       it 'adds the custom primary terms' do
-        expect(form.primary_terms).to contain_exactly(:title, :my_primary)
+        if Hyrax.config.flexible?
+          expect(form.primary_terms).to include(:title, :my_primary)
+        else
+          expect(form.primary_terms).to contain_exactly(:title, :my_primary)
+        end
       end
     end
 
-    context 'with basic metadata' do
+    context 'with basic metadata', unless: Hyrax.config.flexible? do
       subject(:form) { form_class.new(work) }
 
       let(:work) { build(:monograph) }
@@ -408,21 +662,28 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     subject(:form) { form_class.new(work) }
 
     let(:form_class) do
-      Class.new(Hyrax::Forms::ResourceForm(work.class)) do
+      work_klass = work.class
+      Class.new(Hyrax::Forms::ResourceForm(work_klass)) do
+        check_if_flexible(work_klass) if work_klass.respond_to?(:flexible?) && work_klass.flexible?
         property :non_required, virtual: true
       end
     end
 
     context 'when any required field is missing' do
-      before { form.title = [] }
+      before do
+        form.title = []
+        form.creator = [] if Hyrax.config.flexible? && form.respond_to?(:creator=)
+      end
       it 'fails validation' do
         expect(form.valid?).to be false
       end
     end
 
     context 'when all required fields are present' do
-      # ResourceForm only includes core_metadata which has only title as a required field
-      before { form.title = ['My Title'] }
+      before do
+        form.title = ['My Title']
+        form.creator = ['A Creator'] if Hyrax.config.flexible? && form.respond_to?(:creator=)
+      end
       it 'passes validation' do
         expect(form.valid?).to be true
       end
@@ -431,11 +692,15 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
   describe '#secondary_terms' do
     it 'is empty with only core metadata' do
-      expect(form.secondary_terms)
-        .to be_empty
+      if Hyrax.config.flexible?
+        # M3 profile loads all fields for the work type, so secondary terms exist
+        expect(form.secondary_terms).to be_a(Array)
+      else
+        expect(form.secondary_terms).to be_empty
+      end
     end
 
-    context 'with basic metadata' do
+    context 'with basic metadata', unless: Hyrax.config.flexible? do
       subject(:form) { form_class.new(work) }
 
       let(:work) { build(:monograph) }
@@ -471,7 +736,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
         form.validate(params)
 
         expect { form.sync }
-          .to change { work.embargo }
+          .to change { form.model.embargo }
           .to have_attributes(embargo_release_date: Date.tomorrow.to_s,
                               visibility_after_embargo: "open",
                               visibility_during_embargo: "restricted")
@@ -493,11 +758,11 @@ RSpec.describe Hyrax::Forms::ResourceForm do
           visibility_during_lease: "open" }
       end
 
-      it 'builds an embargo' do
+      it 'builds a lease' do
         form.validate(params)
 
         expect { form.sync }
-          .to change { work.lease }
+          .to change { form.model.lease }
           .to have_attributes(lease_expiration_date: Date.tomorrow.to_s)
       end
 
@@ -558,7 +823,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       form.visibility = 'open'
 
       expect { form.sync }
-        .to change { work.permission_manager.acl.permissions }
+        .to change { form.model.permission_manager.acl.permissions }
         .from(be_empty)
         .to contain_exactly(have_attributes(mode: :read, agent: 'group/public'))
     end

@@ -27,6 +27,18 @@ RSpec.describe Hyrax::TolerantSelectService do
       expect(select_service.active?('fake_id')).to be_falsey
     end
 
+    context 'when the authority returns an empty hash for a missing id' do
+      # Real-world `Qa::Authorities::Local` returns `{}` (not `nil`) for an
+      # unknown id; this exercises that branch.
+      before do
+        allow(select_service.authority).to receive(:find).with('fake_id').and_return({})
+      end
+
+      it 'is false' do
+        expect(select_service.active?('fake_id')).to be false
+      end
+    end
+
     context 'with terms' do
       include_context 'with terms'
 

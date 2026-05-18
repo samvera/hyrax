@@ -35,7 +35,7 @@ module Hyrax
       private
 
       def admin_set_prepopulator
-        self.admin_set_id ||= Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s
+        self.admin_set_id = Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s if admin_set_id.to_s.blank?
       end
 
       def in_collections_populator(fragment:, **_options)

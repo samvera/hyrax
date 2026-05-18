@@ -6,14 +6,25 @@ RSpec.describe Hyrax::Forms::PcdmCollectionForm do
 
   describe '.required_fields' do
     it 'lists required fields' do
-      expect(described_class.required_fields)
-        .to contain_exactly(:title, :collection_type_gid)
+      if Hyrax.config.flexible?
+        # In flexible mode, title required-ness is enforced at instance level
+        # by FlexibleFormBehavior; class-level may only show collection_type_gid
+        expect(described_class.required_fields).to include(:collection_type_gid)
+      else
+        expect(described_class.required_fields)
+          .to contain_exactly(:title, :collection_type_gid)
+      end
     end
   end
 
   describe '#primary_terms' do
     it 'gives "title" as a primary term' do
-      expect(form.primary_terms).to contain_exactly(:title)
+      if Hyrax.config.flexible?
+        # M3 profile defines additional primary terms
+        expect(form.primary_terms).to include(:title)
+      else
+        expect(form.primary_terms).to contain_exactly(:title)
+      end
     end
   end
 
@@ -57,7 +68,9 @@ RSpec.describe Hyrax::Forms::PcdmCollectionForm do
 
     context 'when all required fields are present' do
       let(:valid_params) do
-        { title: 'My title', collection_type_gid: collection_type_gid }
+        params = { title: 'My title', collection_type_gid: collection_type_gid }
+        params[:creator] = ['A creator'] if Hyrax.config.flexible?
+        params
       end
       it 'returns true' do
         expect(form.validate(valid_params)).to eq true
@@ -66,23 +79,27 @@ RSpec.describe Hyrax::Forms::PcdmCollectionForm do
 
     context 'when title is missing' do
       let(:params_missing_title) do
-        { collection_type_gid: collection_type_gid }
+        params = { collection_type_gid: collection_type_gid }
+        params[:creator] = ['A creator'] if Hyrax.config.flexible?
+        params
       end
       it 'returns error messages for missing field' do
         expect(form.validate(params_missing_title)).to eq false
-        expect(form.errors.messages).to include(title: ["can't be blank"])
+        expect(form.errors.messages).to include(title: include("can't be blank"))
         expect(form.errors.messages).not_to include(collection_type_gid: ["can't be blank"])
       end
     end
 
     context 'when collection_type_gid is missing' do
       let(:params_missing_collection_type_gid) do
-        { title: 'My title' }
+        params = { title: 'My title' }
+        params[:creator] = ['A creator'] if Hyrax.config.flexible?
+        params
       end
       it 'returns error message for field' do
         expect(form.validate(params_missing_collection_type_gid)).to eq false
-        expect(form.errors.messages).to include(collection_type_gid: ["can't be blank"])
-        expect(form.errors.messages).not_to include(title: ["can't be blank"])
+        expect(form.errors.messages).to include(collection_type_gid: include("can't be blank"))
+        expect(form.errors.messages).not_to include(title: include("can't be blank"))
       end
     end
 
@@ -92,8 +109,8 @@ RSpec.describe Hyrax::Forms::PcdmCollectionForm do
       end
       it 'returns error messages for all missing required fields' do
         expect(form.validate(params_missing_all_required)).to eq false
-        expect(form.errors.messages).to include(title: ["can't be blank"])
-        expect(form.errors.messages).to include(collection_type_gid: ["can't be blank"])
+        expect(form.errors.messages).to include(title: include("can't be blank"))
+        expect(form.errors.messages).to include(collection_type_gid: include("can't be blank"))
       end
     end
   end

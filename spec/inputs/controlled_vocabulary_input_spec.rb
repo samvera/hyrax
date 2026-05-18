@@ -44,6 +44,18 @@ RSpec.describe 'ControlledVocabularyInput', type: :input do
         expect(subject).to have_selector('input[name="generic_work[based_near_attributes][0][_destroy]"][value=""][data-destroy]', visible: false)
       end
     end
+
+    context 'for a bare URI string (form re-render after a validation failure)' do
+      let(:value) { 'http://sws.geonames.org/5391959/' }
+
+      it 'renders without raising and uses the string as the hidden id value' do
+        expect { subject }.not_to raise_error
+        expect(subject).to have_selector(
+          'input[name="generic_work[based_near_attributes][0][id]"][value="http://sws.geonames.org/5391959/"]',
+          visible: false
+        )
+      end
+    end
   end
 
   describe "#build_options" do
