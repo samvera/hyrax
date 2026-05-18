@@ -270,9 +270,12 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
     let(:resource_class) { RedirectsTestResource }
 
+    # Re-include redirects here so the property is
+    # registered regardless of boot-time env.
     let(:form_class) do
       resource = resource_class
       Class.new(Hyrax::Forms::ResourceForm(resource)) do
+        include Hyrax::FormFields(:redirects)
         include Hyrax::RedirectsFieldBehavior
       end
     end
@@ -293,6 +296,8 @@ RSpec.describe Hyrax::Forms::ResourceForm do
   # that including FormFields(:redirects) on a form actually registers
   # the property in Reform's `definitions` registry.
   describe 'FormFields(:redirects) registers a Reform property' do
+    before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true) }
+
     let(:synthetic_form_class) do
       Class.new(Hyrax::Forms::ResourceForm) do
         include Hyrax::FormFields(:redirects)
