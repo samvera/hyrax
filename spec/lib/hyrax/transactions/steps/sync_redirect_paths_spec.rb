@@ -25,11 +25,32 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
         expect(paths).to contain_exactly('/handle/1', '/handle/2')
       end
 
+      it 'defaults every row display_url to false when no entry is flagged' do
+        step.call(resource)
+        flags = Hyrax::RedirectPath.where(resource_id: resource_id).pluck(:display_url)
+        expect(flags).to all(be false)
+      end
+
       it 'busts the cache for both old and new paths' do
         Hyrax::RedirectPath.create!(path: '/old', resource_id: resource_id)
         expect(Hyrax::RedirectCacheBuster).to receive(:call)
           .with(array_including('/old', '/handle/1', '/handle/2'))
         step.call(resource)
+      end
+    end
+
+    context 'when one entry is marked as the display URL' do
+      let(:redirects) do
+        [
+          { 'path' => '/handle/1', 'display_url' => true },
+          { 'path' => '/handle/2' }
+        ]
+      end
+
+      it 'marks only the display entry display_url=true' do
+        step.call(resource)
+        rows = Hyrax::RedirectPath.where(resource_id: resource_id).order(:path).pluck(:path, :display_url)
+        expect(rows).to eq([['/handle/1', true], ['/handle/2', false]])
       end
     end
 
