@@ -243,6 +243,23 @@ RSpec.describe Hyrax::Indexers::FileSetIndexer, :frozen_time, if: Hyrax.config.u
       end
     end
 
+    context "when the FileSet does not carry the file_set_metadata schema" do
+      # Adopters running flexible mode with HYRAX_DISABLE_INCLUDE_METADATA=true
+      # don't include Hyrax::Schema(:file_set_metadata) on Hyrax::FileSet, so
+      # transcript_ids (and other schema attributes) aren't defined. Simulate
+      # this by making transcript_ids raise NoMethodError when the indexer
+      # tries to read it.
+      before do
+        allow(file_set).to receive(:respond_to?).and_call_original
+        allow(file_set).to receive(:respond_to?).with(:transcript_ids).and_return(false)
+        allow(file_set).to receive(:transcript_ids).and_raise(NoMethodError)
+      end
+
+      it "skips the transcript_ids field instead of raising" do
+        expect { subject }.not_to raise_error
+      end
+    end
+
     context 'with a valid embargo' do
       let!(:embargo) { FactoryBot.create(:hyrax_embargo) }
 
