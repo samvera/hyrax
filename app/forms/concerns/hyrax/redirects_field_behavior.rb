@@ -30,6 +30,10 @@ module Hyrax
   module RedirectsFieldBehavior
     def self.included(descendant)
       return unless Hyrax.config.redirects_enabled?
+      # Declare the radio-group scalar before redirects_attributes so Reform
+      # deserializes it first; the populator reads its value while building
+      # per-row entries.
+      descendant.property :redirects_display_url_index, virtual: true
       descendant.property :redirects_attributes,
                           virtual: true,
                           populator: :redirects_attributes_populator,
@@ -55,16 +59,38 @@ module Hyrax
     # `redirects_attributes` payload. Drops rows marked for destruction
     # or with a blank path. Normalizes paths up-front so the validator
     # sees normalized form (so DSpace-style pasted URLs validate cleanly).
+    #
+    # When `redirects_display_url_index` is set (form-driven radio
+    # group), the matching original-index row gets `display_url: true`
+    # and all other rows get false. When absent (Bulkrax import path),
+    # the row's own `display_url` value is honored.
     def redirects_attributes_populator(fragment:, **_options)
       return unless respond_to?(:redirects)
       return unless Hyrax.config.redirects_active?
-      entries = Array(fragment&.values)
-                .reject { |row| row['_destroy'].to_s == 'true' || row['path'].to_s.strip.empty? }
-                .map do |row|
-        { 'path' => Hyrax::RedirectPathNormalizer.call(row['path']),
-          'display_url' => row['display_url'].to_s == 'true' }
+      pairs = redirects_fragment_pairs(fragment)
+      self.redirects = pairs.sort_by { |k, _row| k.to_i }
+                            .map { |k, row| redirects_entry_from(k, row) }
+                            .compact
+    end
+
+    def redirects_fragment_pairs(fragment)
+      return {} if fragment.nil?
+      fragment.respond_to?(:to_unsafe_h) ? fragment.to_unsafe_h : fragment.to_h
+    end
+
+    def redirects_entry_from(key, row)
+      row = row.respond_to?(:to_unsafe_h) ? row.to_unsafe_h : row
+      return nil if row['_destroy'].to_s == 'true' || row['path'].to_s.strip.empty?
+      { 'path' => Hyrax::RedirectPathNormalizer.call(row['path']),
+        'display_url' => redirects_display_url_flag_for(key, row) }
+    end
+
+    def redirects_display_url_flag_for(key, row)
+      if redirects_display_url_index.nil?
+        row['display_url'].to_s == 'true'
+      else
+        key.to_s == redirects_display_url_index.to_s
       end
-      self.redirects = entries
     end
 
     # Wraps each persisted hash in a `Hyrax::Redirect` value object for

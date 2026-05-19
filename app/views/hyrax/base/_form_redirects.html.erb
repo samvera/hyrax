@@ -4,25 +4,39 @@
 
 <p><%= sanitize t('hyrax.works.form.redirects.help_html'), tags: %w[code] %></p>
 
-<table class="table table-striped">
+<p><%= sanitize t('hyrax.works.form.redirects.display_url.help_html'), tags: %w[em] %></p>
+
+<% rows = Array(f.object.redirects).map { |e| Hyrax::Redirect.wrap(e) } %>
+<% selected_idx = rows.index(&:display_url) %>
+<%# All radios share one name so HTML treats them as one group; value is
+    the row's index. The populator folds the selected index onto per-row
+    display_url flags. %>
+<% radio_name = "#{f.object_name}[redirects_display_url_index]" %>
+
+<table class="table table-striped" data-redirects-table>
   <caption class="sr-only"><%= t('hyrax.works.form.redirects.caption') %></caption>
   <thead>
     <tr>
       <th scope="col"><%= t('hyrax.works.form.redirects.header.path') %></th>
+      <th scope="col"><%= t('hyrax.works.form.redirects.header.display_url') %></th>
       <th scope="col" class="sr-only"><%= t('hyrax.works.form.redirects.header.actions') %></th>
     </tr>
   </thead>
   <tbody>
-    <%# Wrap each row through Hyrax::Redirect.wrap so the view can rely on
-        the presenter API (.path, .display_url). On initial render the
-        prepopulator already wrapped them; on a re-render after a failed
-        save, f.object.redirects holds the populator's plain hashes, and
-        we wrap them here. %>
-    <% rows = Array(f.object.redirects).map { |e| Hyrax::Redirect.wrap(e) } + [Hyrax::Redirect.new(path: nil)] %>
+    <tr>
+      <td colspan="2">
+        <label>
+          <%= radio_button_tag radio_name, '', selected_idx.nil? %>
+          <%= t('hyrax.works.form.redirects.display_url.none_label') %>
+        </label>
+      </td>
+      <td></td>
+    </tr>
     <% rows.each_with_index do |entry, index| %>
       <% input_id = "#{f.object_name}_redirects_attributes_#{index}_path" %>
       <% label_text = entry.path.present? ? t('hyrax.works.form.redirects.path_label') : t('hyrax.works.form.redirects.new_path_label') %>
-      <tr>
+      <% radio_id = "#{f.object_name}_redirects_display_url_index_#{index}" %>
+      <tr data-redirects-row>
         <td>
           <%= label_tag input_id, label_text, class: 'sr-only' %>
           <div class="input-group">
@@ -33,15 +47,24 @@
                                entry.path,
                                id: input_id,
                                class: 'form-control',
-                               placeholder: t('hyrax.works.form.redirects.placeholder.path') %>
+                               placeholder: t('hyrax.works.form.redirects.placeholder.path'),
+                               data: { 'redirects-path-input': true, 'redirects-display-radio': radio_id } %>
           </div>
+        </td>
+        <td>
+          <%= radio_button_tag radio_name,
+                               index.to_s,
+                               index == selected_idx,
+                               id: radio_id,
+                               disabled: entry.path.blank?,
+                               'aria-label': t('hyrax.works.form.redirects.display_url.row_label', path: entry.path.presence || (index + 1)) %>
         </td>
         <td class="text-right" style="width: 1%;">
           <% if entry.path.present? %>
             <button type="button"
                     class="btn close"
                     aria-label="<%= t('hyrax.works.form.redirects.remove_with_path_label', path: entry.path) %>"
-                    onclick="this.closest('tr').remove()">
+                    data-redirects-remove-row="true">
               <span aria-hidden="true">&times;</span>
             </button>
           <% end %>
@@ -50,3 +73,40 @@
     <% end %>
   </tbody>
 </table>
+
+<p>
+  <button type="button" class="btn btn-secondary" data-redirects-add-row>
+    <%= t('hyrax.works.form.redirects.add_label') %>
+  </button>
+</p>
+
+<%# Template used by the Add button. JS clones this. %>
+<template data-redirects-row-template>
+  <% template_input_id = "#{f.object_name}_redirects_attributes___INDEX___path" %>
+  <% template_radio_id = "#{f.object_name}_redirects_display_url_index___INDEX__" %>
+  <tr data-redirects-row>
+    <td>
+      <%= label_tag template_input_id, t('hyrax.works.form.redirects.new_path_label'), class: 'sr-only' %>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><%= request.base_url %></span>
+        </div>
+        <%= text_field_tag "#{f.object_name}[redirects_attributes][__INDEX__][path]",
+                           nil,
+                           id: template_input_id,
+                           class: 'form-control',
+                           placeholder: t('hyrax.works.form.redirects.placeholder.path'),
+                           data: { 'redirects-path-input': true, 'redirects-display-radio': template_radio_id } %>
+      </div>
+    </td>
+    <td>
+      <%= radio_button_tag radio_name,
+                           '__INDEX__',
+                           false,
+                           id: template_radio_id,
+                           disabled: true,
+                           'aria-label': t('hyrax.works.form.redirects.display_url.row_label', path: t('hyrax.works.form.redirects.new_path_label')) %>
+    </td>
+    <td class="text-right" style="width: 1%;"></td>
+  </tr>
+</template>
