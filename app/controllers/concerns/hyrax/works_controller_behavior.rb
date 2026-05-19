@@ -9,6 +9,7 @@ module Hyrax
     include Blacklight::AccessControls::Catalog
     include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
     include Hyrax::EnsureMigratedBehavior
+    include Hyrax::RedirectToDisplayUrl
 
     included do
       with_themed_layout :decide_layout

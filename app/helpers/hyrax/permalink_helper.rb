@@ -14,6 +14,12 @@ module Hyrax
       strip_query_string(polymorphic_url([proxy, presenter]))
     end
 
+    def canonical_url_for(presenter)
+      display_path = Hyrax.config.redirects_active? && Hyrax::RedirectsLookup.display_path_for(presenter.id.to_s)
+      return permalink_for(presenter) if display_path.blank?
+      strip_query_string(request.base_url + display_path)
+    end
+
     def copy_permalink_enabled?
       Flipflop.enabled?(:copy_permalink_button)
     end
