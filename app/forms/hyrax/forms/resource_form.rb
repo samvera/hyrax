@@ -28,7 +28,7 @@ module Hyrax
 
       include BasedNearFieldBehavior
       include RedirectsFieldBehavior
-      include Hyrax::FormFields(:redirects) if Hyrax.config.redirects_enabled? && !Hyrax.config.flexible?
+      include Hyrax::FormFields(:redirects) if Hyrax.config.redirects_enabled? && Hyrax.config.work_include_metadata?
       class_attribute :model_class
 
       property :human_readable_type, writable: false
