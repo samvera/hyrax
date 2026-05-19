@@ -13,7 +13,7 @@
     display_url flags. %>
 <% radio_name = "#{f.object_name}[redirects_display_url_index]" %>
 
-<table class="table table-striped" data-redirects-table>
+<table class="table table-striped" data-redirects-table data-next-index="<%= rows.length %>">
   <caption class="sr-only"><%= t('hyrax.works.form.redirects.caption') %></caption>
   <thead>
     <tr>
@@ -107,6 +107,13 @@
                            disabled: true,
                            'aria-label': t('hyrax.works.form.redirects.display_url.row_label', path: t('hyrax.works.form.redirects.new_path_label')) %>
     </td>
-    <td class="text-right" style="width: 1%;"></td>
+    <td class="text-right" style="width: 1%;">
+      <button type="button"
+              class="btn close"
+              aria-label="<%= t('hyrax.works.form.redirects.remove_label') %>"
+              data-redirects-remove-row="true">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </td>
   </tr>
 </template>

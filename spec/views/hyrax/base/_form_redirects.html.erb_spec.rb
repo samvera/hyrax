@@ -37,6 +37,10 @@ RSpec.describe 'hyrax/base/_form_redirects.html.erb', type: :view do
     it 'renders a row template element' do
       expect(page).to have_css('template[data-redirects-row-template]', visible: :all)
     end
+
+    it 'sets data-next-index to 0 so JS-added rows start at index 0' do
+      expect(page).to have_css('table[data-redirects-table][data-next-index="0"]')
+    end
   end
 
   context 'when the resource has one redirect with display_url false' do
@@ -66,6 +70,10 @@ RSpec.describe 'hyrax/base/_form_redirects.html.erb', type: :view do
       group_radios = page.all("input[type=radio][name='#{form_object_name}[redirects_display_url_index]']")
       # None radio + 2 row radios (template content isn't in the live DOM)
       expect(group_radios.size).to eq(3)
+    end
+
+    it 'sets data-next-index past the highest existing row index' do
+      expect(page).to have_css('table[data-redirects-table][data-next-index="2"]')
     end
   end
 
