@@ -5,6 +5,7 @@ module Hyrax
     include Blacklight::AccessControls::Catalog
     include Blacklight::Configurable
     include Blacklight::SearchContext
+    include Hyrax::RedirectToDisplayUrl
 
     included do
       # include the display_trophy_link view helper method

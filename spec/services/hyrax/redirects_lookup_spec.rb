@@ -43,4 +43,42 @@ RSpec.describe Hyrax::RedirectsLookup do
       end
     end
   end
+
+  describe '.find_row' do
+    let(:path) { '/handle/12345/678' }
+
+    it 'returns the row when one matches' do
+      row = Hyrax::RedirectPath.create!(source_path: path, resource_id: 'res-1')
+      expect(described_class.find_row(path)).to eq(row)
+    end
+
+    it 'returns nil when no row matches' do
+      expect(described_class.find_row(path)).to be_nil
+    end
+
+    it 'returns nil for a blank path' do
+      expect(Hyrax::RedirectPath).not_to receive(:find_by)
+      expect(described_class.find_row('')).to be_nil
+    end
+  end
+
+  describe '.display_path_for' do
+    let(:resource_id) { 'res-1' }
+
+    it 'returns the display row source_path when one is flagged' do
+      Hyrax::RedirectPath.create!(source_path: '/a', resource_id: resource_id, display_url: false)
+      Hyrax::RedirectPath.create!(source_path: '/b', resource_id: resource_id, display_url: true)
+      expect(described_class.display_path_for(resource_id)).to eq('/b')
+    end
+
+    it 'returns nil when no row is flagged display_url for the resource' do
+      Hyrax::RedirectPath.create!(source_path: '/a', resource_id: resource_id, display_url: false)
+      expect(described_class.display_path_for(resource_id)).to be_nil
+    end
+
+    it 'returns nil for a blank resource_id' do
+      expect(Hyrax::RedirectPath).not_to receive(:where)
+      expect(described_class.display_path_for('')).to be_nil
+    end
+  end
 end

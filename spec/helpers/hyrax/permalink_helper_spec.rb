@@ -59,4 +59,45 @@ RSpec.describe Hyrax::PermalinkHelper, type: :helper do
         .to eq('http://example.test/concern/generic_works/abc-123')
     end
   end
+
+  describe '#canonical_url_for' do
+    let(:presenter) { double('Presenter', id: 'res-1', collection?: false) }
+
+    context 'when redirects are inactive' do
+      before { allow(Hyrax.config).to receive(:redirects_active?).and_return(false) }
+
+      it 'falls back to the permalink' do
+        expect(helper).to receive(:polymorphic_url)
+          .with([helper.main_app, presenter])
+          .and_return('http://example.test/concern/generic_works/res-1')
+        expect(helper.canonical_url_for(presenter)).to eq('http://example.test/concern/generic_works/res-1')
+      end
+    end
+
+    context 'when redirects are active and a display path exists' do
+      before do
+        allow(Hyrax.config).to receive(:redirects_active?).and_return(true)
+        allow(Hyrax::RedirectsLookup).to receive(:display_path_for).with('res-1').and_return('/robs-cat-study')
+        allow(helper).to receive(:request).and_return(double('request', base_url: 'http://example.test'))
+      end
+
+      it 'returns the display URL as the canonical URL' do
+        expect(helper.canonical_url_for(presenter)).to eq('http://example.test/robs-cat-study')
+      end
+    end
+
+    context 'when redirects are active but no display path exists' do
+      before do
+        allow(Hyrax.config).to receive(:redirects_active?).and_return(true)
+        allow(Hyrax::RedirectsLookup).to receive(:display_path_for).with('res-1').and_return(nil)
+      end
+
+      it 'falls back to the permalink' do
+        expect(helper).to receive(:polymorphic_url)
+          .with([helper.main_app, presenter])
+          .and_return('http://example.test/concern/generic_works/res-1')
+        expect(helper.canonical_url_for(presenter)).to eq('http://example.test/concern/generic_works/res-1')
+      end
+    end
+  end
 end

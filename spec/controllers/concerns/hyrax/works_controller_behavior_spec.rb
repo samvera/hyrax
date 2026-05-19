@@ -539,6 +539,62 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     end
   end
 
+  describe '#redirect_to_display_url' do
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :public, alternate_ids: [id], title: title) }
+
+    before do
+      allow(Hyrax.config).to receive(:redirects_active?).and_return(true)
+      Hyrax::RedirectPath.delete_all
+    end
+
+    context 'when the record has a display URL' do
+      before { Hyrax::RedirectPath.create!(source_path: '/robs-cat-study', resource_id: work.id.to_s, display_url: true) }
+
+      it '301-redirects to the display URL with Cache-Control: no-cache' do
+        get :show, params: { id: work.id }
+        expect(response).to have_http_status(:moved_permanently)
+        expect(response.headers['Location']).to include('/robs-cat-study')
+        expect(response.headers['Cache-Control']).to include('no-cache')
+      end
+
+      it 'sets Turbolinks-Location so the address bar updates under Turbolinks' do
+        get :show, params: { id: work.id }
+        expect(response.headers['Turbolinks-Location']).to eq('/robs-cat-study')
+      end
+
+      it 'does not redirect when the middleware already rewrote the path' do
+        request.env['hyrax.redirects.rewrote'] = true
+        get :show, params: { id: work.id }
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'does not redirect non-HTML formats' do
+        get :show, params: { id: work.id }, format: :json
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when the record has no display URL' do
+      it 'renders normally' do
+        get :show, params: { id: work.id }
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when the redirects feature is inactive' do
+      before do
+        allow(Hyrax.config).to receive(:redirects_active?).and_return(false)
+        Hyrax::RedirectPath.create!(source_path: '/robs-cat-study', resource_id: work.id.to_s, display_url: true)
+      end
+
+      it 'does not consult the redirects lookup' do
+        expect(Hyrax::RedirectsLookup).not_to receive(:display_path_for)
+        get :show, params: { id: work.id }
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
+
   describe '#manifest' do
     include_context 'with a logged in user'
 

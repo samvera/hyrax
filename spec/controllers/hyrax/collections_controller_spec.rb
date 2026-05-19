@@ -135,4 +135,53 @@ RSpec.describe Hyrax::CollectionsController, clean_repo: true do
       end
     end
   end
+
+  describe '#redirect_to_display_url' do
+    before do
+      allow(Hyrax.config).to receive(:redirects_active?).and_return(true)
+      Hyrax::RedirectPath.delete_all
+    end
+
+    context 'when the collection has a display URL' do
+      before { Hyrax::RedirectPath.create!(source_path: '/awesome-collection', resource_id: collection.id.to_s, display_url: true) }
+
+      it '301-redirects to the display URL with Cache-Control: no-cache' do
+        get :show, params: { id: collection }
+        expect(response).to have_http_status(:moved_permanently)
+        expect(response.headers['Location']).to include('/awesome-collection')
+        expect(response.headers['Cache-Control']).to include('no-cache')
+      end
+
+      it 'sets Turbolinks-Location so the address bar updates under Turbolinks' do
+        get :show, params: { id: collection }
+        expect(response.headers['Turbolinks-Location']).to eq('/awesome-collection')
+      end
+
+      it 'does not redirect when the middleware already rewrote the path' do
+        request.env['hyrax.redirects.rewrote'] = true
+        get :show, params: { id: collection }
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when the collection has no display URL' do
+      it 'renders normally' do
+        get :show, params: { id: collection }
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when the redirects feature is inactive' do
+      before do
+        allow(Hyrax.config).to receive(:redirects_active?).and_return(false)
+        Hyrax::RedirectPath.create!(source_path: '/awesome-collection', resource_id: collection.id.to_s, display_url: true)
+      end
+
+      it 'does not consult the redirects lookup' do
+        expect(Hyrax::RedirectsLookup).not_to receive(:display_path_for)
+        get :show, params: { id: collection }
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
 end

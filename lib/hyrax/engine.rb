@@ -104,6 +104,11 @@ module Hyrax
       require 'hyrax/rails/routes'
     end
 
+    initializer 'hyrax.redirects.middleware' do |app|
+      require 'hyrax/redirects/middleware'
+      app.middleware.use Hyrax::Redirects::Middleware
+    end
+
     initializer 'configure' do
       # Allow flipflop to load config/features.rb from the Hyrax gem:
       Flipflop::FeatureLoader.current.append(self)
