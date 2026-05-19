@@ -6,8 +6,8 @@ module Hyrax
   # Submitted form payloads arrive under `redirects_attributes` and are
   # turned into plain hashes (the persisted shape — see
   # `config/metadata/redirects.yaml`, `type: hash`) by the populator.
-  # On render, the prepopulator wraps each persisted hash in a
-  # `Hyrax::Redirect` value object so the view can call `.path` and
+  # The form partial wraps each persisted hash in a `Hyrax::Redirect`
+  # value object at render time so the view can call `.path` and
   # `.display_url`.
   #
   # The `deserialize!` override removes the renamed `redirects` key
@@ -36,8 +36,7 @@ module Hyrax
       descendant.property :redirects_display_url_index, virtual: true
       descendant.property :redirects_attributes,
                           virtual: true,
-                          populator: :redirects_attributes_populator,
-                          prepopulator: :redirects_attributes_prepopulator
+                          populator: :redirects_attributes_populator
     end
 
     # Reform's FormBuilderMethods rewrites `redirects_attributes` →
@@ -91,15 +90,6 @@ module Hyrax
       else
         key.to_s == redirects_display_url_index.to_s
       end
-    end
-
-    # Wraps each persisted hash in a `Hyrax::Redirect` value object for
-    # the form view. Mirrors how `BasedNearFieldBehavior` hydrates URI
-    # strings into `ControlledVocabularies::Location` instances.
-    def redirects_attributes_prepopulator
-      return unless respond_to?(:redirects)
-      return unless Hyrax.config.redirects_active?
-      self.redirects = Array(redirects).map { |entry| Hyrax::Redirect.wrap(entry) }
     end
   end
 end

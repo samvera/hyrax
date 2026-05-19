@@ -13,6 +13,12 @@
     display_url flags. %>
 <% radio_name = "#{f.object_name}[redirects_display_url_index]" %>
 
+<%# Always-submitted hidden marker so the populator runs even when the
+    user has removed every row from the DOM. The populator drops rows
+    with blank paths, so the marker contributes nothing to the saved
+    set. %>
+<%= hidden_field_tag "#{f.object_name}[redirects_attributes][_marker][path]", '' %>
+
 <table class="table table-striped" data-redirects-table data-next-index="<%= rows.length %>">
   <caption class="sr-only"><%= t('hyrax.works.form.redirects.caption') %></caption>
   <thead>

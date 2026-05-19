@@ -44,8 +44,7 @@ RSpec.describe Hyrax::RedirectsFieldBehavior do
       expect(property_target).to receive(:property).with(
         :redirects_attributes,
         virtual: true,
-        populator: :redirects_attributes_populator,
-        prepopulator: :redirects_attributes_prepopulator
+        populator: :redirects_attributes_populator
       )
       expect(property_target).to receive(:property).with(:redirects_display_url_index, virtual: true)
       property_target.include(described_class)
@@ -182,26 +181,6 @@ RSpec.describe Hyrax::RedirectsFieldBehavior do
                                        { 'path' => '/bar', 'display_url' => true }
                                      ])
       end
-    end
-  end
-
-  describe '#redirects_attributes_prepopulator' do
-    it 'wraps each persisted hash entry in a Hyrax::Redirect presenter' do
-      form.redirects = [{ 'path' => '/foo', 'display_url' => true }]
-      form.send(:redirects_attributes_prepopulator)
-
-      expect(form.redirects.first).to be_a(Hyrax::Redirect)
-      expect(form.redirects.first.path).to eq('/foo')
-      expect(form.redirects.first.display_url).to be(true)
-    end
-
-    it 'is a no-op when the feature is inactive' do
-      allow(Hyrax.config).to receive(:redirects_active?).and_return(false)
-      original = [{ 'path' => '/foo' }]
-      form.redirects = original
-      form.send(:redirects_attributes_prepopulator)
-
-      expect(form.redirects).to be(original)
     end
   end
 end

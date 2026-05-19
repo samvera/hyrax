@@ -201,11 +201,10 @@ module Hyrax
     def self.included(descendant)
       return unless Hyrax.config.redirects_enabled?
       descendant.include Hyrax::FormFields(:redirects)
+      descendant.property :redirects_display_url_index, virtual: true
       descendant.property :redirects_attributes,
                           virtual: true,
-                          populator: :redirects_attributes_populator,
-                          prepopulator: :redirects_attributes_prepopulator
-      descendant.property :redirects_display_url_index, virtual: true
+                          populator: :redirects_attributes_populator
     end
 
     def deserialize!(params)
@@ -232,18 +231,12 @@ module Hyrax
       end.compact
       self.redirects = entries
     end
-
-    def redirects_attributes_prepopulator
-      return unless respond_to?(:redirects)
-      return unless Hyrax.config.redirects_active?
-      self.redirects = Array(redirects).map { |entry| Hyrax::Redirect.wrap(entry) }
-    end
   end
 end
 ```
 
 - **Persisted shape:** array of plain hashes (`'path'`, `'display_url'`). Declared with `type: hash, multiple: true` in `config/metadata/redirects.yaml` and loaded onto the form via `Hyrax::FormFields(:redirects)`.
-- **View-side shape:** array of `Hyrax::Redirect` presenters, exposing `.path` and `.display_url`.
+- **View-side shape:** the form partial calls `Hyrax::Redirect.wrap(entry)` inline at render time, so the view can rely on the `.path` and `.display_url` presenter API without the form having to maintain a wrapped copy. No prepopulator is needed.
 - **Diff from BasedNear:** entries carry multiple sub-fields, so the persisted shape is a hash rather than a string. The populator normalizes paths up front (canonical form lives in storage). The behavior is feature-gated — every callback consults `Hyrax.config.redirects_active?`.
 - **Form-side radio fold:** the second virtual property `redirects_display_url_index` carries the form's radio-group selection (the row index, or `''` for "none"). The populator reads it and folds it onto per-row `display_url` flags. When absent (Bulkrax-style imports send per-row flags directly), the row's own `display_url` value is honored instead.
 
