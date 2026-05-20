@@ -87,7 +87,17 @@ module Hyrax
           field.to_s.humanize
         )
       end
+      view_options[:base_url] = request.base_url if respond_to?(:request) && request.respond_to?(:base_url)
       view_options
+    end
+
+    # Returns true when the field should render for the current user.
+    # Honors `admin_only` and `editor_only` view options with OR semantics:
+    # when both are set, the field is visible to admins *or* editors.
+    def field_visible?(view_options, presenter)
+      return false if view_options[:admin_only] && !current_user&.admin?
+      return false if view_options[:editor_only] && !presenter.try(:editor?)
+      true
     end
   end
 end

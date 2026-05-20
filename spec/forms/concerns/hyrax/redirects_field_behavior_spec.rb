@@ -49,6 +49,11 @@ RSpec.describe Hyrax::RedirectsFieldBehavior do
       )
       property_target.include(described_class)
     end
+
+    it 'does not include FormFields(:redirects) itself' do
+      expect(property_target).not_to receive(:include).with(Hyrax::FormFields(:redirects))
+      property_target.include(described_class)
+    end
   end
 
   describe '#deserialize!' do

@@ -25,16 +25,19 @@ Reform's `FormBuilderMethods#deserialize!` rewrites the submitted `<name>_attrib
 
 A Field Behavior is a module that:
 
-1. **Registers a virtual `<name>_attributes` property** in `self.included`, with a populator and prepopulator.
+1. **Registers a virtual `<name>_attributes` property** in `self.included`, with a populator and prepopulator. If the persisted `<name>` property is not already on the form via some other include path, also load it from the corresponding YAML schema in `self.included` so the form partial can read `f.object.<name>` directly.
 
    ```ruby
    def self.included(descendant)
+     descendant.include Hyrax::FormFields(:<name>)
      descendant.property :<name>_attributes,
                          virtual: true,
                          populator: :<name>_attributes_populator,
                          prepopulator: :<name>_attributes_prepopulator
    end
    ```
+
+   Whether to load the persisted property depends on where the schema is included on application forms. `BasedNearFieldBehavior` skips this step because adopter forms include `Hyrax::FormFields(:basic_metadata)` directly, which already registers `based_near`. `RedirectsFieldBehavior` includes it because the redirects schema is engine-level and not part of any per-form include — without the include here, non-flexible forms would not have the property registered, and the partial's `f.object.redirects` call would crash. A flexible install's m3 loader redefines the property on each instance harmlessly when this include is present.
 
 2. **Composes via `super` in `deserialize!`**, then deletes its own renamed key.
 
@@ -94,6 +97,7 @@ If your behavior is tied to a feature flag (Flipflop, env config, etc.), gate **
 ```ruby
 def self.included(descendant)
   return unless Hyrax.config.my_feature_enabled?
+  descendant.include Hyrax::FormFields(:<name>)
   descendant.property ...
 end
 
@@ -196,6 +200,7 @@ module Hyrax
   module RedirectsFieldBehavior
     def self.included(descendant)
       return unless Hyrax.config.redirects_enabled?
+      descendant.include Hyrax::FormFields(:redirects)
       descendant.property :redirects_attributes,
                           virtual: true,
                           populator: :redirects_attributes_populator,
@@ -235,9 +240,9 @@ module Hyrax
 end
 ```
 
-- **Persisted shape:** array of plain hashes (`'path'`, `'canonical'`, `'sequence'`). Declared with `type: hash, multiple: true` in the YAML schema.
+- **Persisted shape:** array of plain hashes (`'path'`, `'canonical'`, `'sequence'`). Declared with `type: hash, multiple: true` in `config/metadata/redirects.yaml` and loaded onto the form via `Hyrax::FormFields(:redirects)` in `self.included`.
 - **View-side shape:** array of `Hyrax::Redirect` presenters, exposing `.path` / `.canonical` / `.sequence`.
-- **Diff from BasedNear:** entries carry multiple sub-fields, so the persisted shape is a hash rather than a string. The populator normalizes paths up front (canonical form lives in storage). The behavior is feature-gated — every callback consults `Hyrax.config.redirects_active?`.
+- **Diff from BasedNear:** entries carry multiple sub-fields, so the persisted shape is a hash rather than a string. The populator normalizes paths up front (canonical form lives in storage). The behavior is feature-gated — every callback consults `Hyrax.config.redirects_active?`. The behavior also loads the persisted `redirects` property from YAML in `self.included`, since `Hyrax::Schema(:redirects)` puts the attribute on the model but the form needs the property registered separately for the partial's `f.object.redirects` call to work.
 
 ## Wiring on `ResourceForm`
 
@@ -261,6 +266,33 @@ end
 ```
 
 Both behaviors compose. A subclass's ancestor chain ends up with both behaviors' `deserialize!` methods above Reform's base method; each runs its `super` then strips its own renamed key.
+
+## Wiring up Bulkrax imports
+
+Field Behaviors that strip their bare attribute key need a corresponding declaration on the Bulkrax import side. Bulkrax's CSV importer would otherwise emit data under the bare attribute name (`redirects`) — which the form's `deserialize!` would strip — and the data would silently never reach the resource.
+
+Bulkrax v9.5 and later supports a `nested_attributes: true` field-mapping flag for this case. When set alongside an `object:` value, Bulkrax routes the imported data to `parsed_metadata['<object>_attributes']` as a numbered-key hash with `_destroy: 'false'` per row — the same shape Reform's nested-attributes machinery expects, and the same shape this Field Behavior's populator consumes.
+
+Example for `RedirectsFieldBehavior`:
+
+```ruby
+# In the host app's Bulkrax field-mapping configuration
+'path'      => { from: ['redirect_path'],      object: 'redirects', nested_attributes: true },
+'canonical' => { from: ['redirect_canonical'], object: 'redirects', nested_attributes: true },
+'sequence'  => { from: ['redirect_sequence'],  object: 'redirects', nested_attributes: true },
+```
+
+CSV columns are `redirect_path_1`, `redirect_canonical_1`, `redirect_sequence_1`, `redirect_path_2`, …
+
+Conventions:
+
+- Declare `nested_attributes: true` on **every** sibling mapping that shares an `object:` value. Mixed-flag siblings produce undefined behavior.
+- The mapping key (the hash key on the left of the `=>`) becomes the inner key on each entry. Keep it equal to the form populator's expected key (`'path'`, not `'redirect_path'`).
+- Export side: Bulkrax reads the persisted attribute through its bare accessor (`record.redirects`). The flag has no effect on export — a single mapping declaration drives both directions.
+
+Older `object:` mappings without the flag continue to land on `parsed_metadata['<object>']` as an array of plain hashes. The flag is opt-in.
+
+`BasedNearFieldBehavior` predates the flag and is bridged via a hardcoded translator in `Bulkrax::ValkyrieObjectFactory#convert_based_near_to_attributes`. New Field Behaviors should declare the flag instead; samvera/bulkrax#1194 tracks deprecating that translator.
 
 ## Common pitfalls
 

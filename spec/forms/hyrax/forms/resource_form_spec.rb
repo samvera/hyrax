@@ -260,6 +260,107 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '#redirects' do
+    # The view partial `_form_redirects.html.erb` calls `f.object.redirects`
+    # directly. The bare `redirects` property is installed per-resource at
+    # form init time when the resource has the attribute; the
+    # `redirects_attributes` virtual property is installed by
+    # `RedirectsFieldBehavior`.
+    #
+    # The engine test suite boots with `redirects_enabled?` off, so the
+    # app's models and forms don't carry the redirects properties. Build
+    # a synthetic resource and form with the gate stubbed open, mirroring
+    # an installation that has the feature on.
+    subject(:form) { form_class.new(resource_class.new) }
+
+    before do
+      allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+      stub_const('RedirectsTestResource', Class.new(Hyrax::Resource) { include Hyrax::Schema(:redirects) })
+    end
+
+    let(:resource_class) { RedirectsTestResource }
+
+    let(:form_class) do
+      resource = resource_class
+      Class.new(Hyrax::Forms::ResourceForm(resource)) do
+        include Hyrax::RedirectsFieldBehavior
+      end
+    end
+
+    it 'exposes the redirects property so the form partial can render' do
+      expect(form).to respond_to(:redirects)
+    end
+
+    it 'exposes the redirects_attributes virtual property for nested form params' do
+      expect(form).to respond_to(:redirects_attributes)
+    end
+  end
+
+  # Per-resource install of the `redirects` property. The form declares
+  # `redirects` only when the concrete resource has it as an attribute —
+  # this single check handles all combinations of base-class metadata
+  # gates and per-class flexibility.
+  describe 'redirects per-resource installation' do
+    let(:no_redirects_resource) do
+      klass = Class.new(Hyrax::Resource) do
+        def self.name
+          'NoRedirectsTestResource'
+        end
+      end
+      stub_const('NoRedirectsTestResource', klass)
+      klass.new
+    end
+
+    let(:with_redirects_resource) do
+      klass = Class.new(Hyrax::Resource) do
+        attribute :redirects, Valkyrie::Types::Array.of(Dry::Types['hash'])
+        def self.name
+          'WithRedirectsTestResource'
+        end
+      end
+      stub_const('WithRedirectsTestResource', klass)
+      klass.new
+    end
+
+    let(:redirects_form_class) do
+      Class.new(Hyrax::Forms::ResourceForm) do
+        include Hyrax::RedirectsFieldBehavior
+      end
+    end
+
+    before do
+      allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
+    end
+
+    context 'when the resource has the redirects attribute' do
+      it 'installs the redirects property on the form' do
+        form = redirects_form_class.new(with_redirects_resource)
+        expect(form).to respond_to(:redirects)
+      end
+
+      it 'installs the redirects_attributes virtual property too' do
+        form = redirects_form_class.new(with_redirects_resource)
+        expect(form).to respond_to(:redirects_attributes)
+      end
+    end
+
+    context 'when the resource lacks the redirects attribute' do
+      it 'does not crash on form initialization' do
+        expect { redirects_form_class.new(no_redirects_resource) }.not_to raise_error
+      end
+
+      it 'does not install the redirects property' do
+        form = redirects_form_class.new(no_redirects_resource)
+        expect(form).not_to respond_to(:redirects)
+      end
+
+      it 'still installs the redirects_attributes virtual property (it does not read from the model)' do
+        form = redirects_form_class.new(no_redirects_resource)
+        expect(form).to respond_to(:redirects_attributes)
+      end
+    end
+  end
+
   describe '#embargo_release_date' do
     context 'without an embargo' do
       it 'is nil' do

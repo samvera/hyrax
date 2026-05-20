@@ -44,7 +44,7 @@ This is appropriate when an adopter wants the feature unconditionally without de
 ### What changes when the config is on
 
 - `config/metadata/redirects.yaml` becomes part of the schema set (visible to `Hyrax::SimpleSchemaLoader#permissive_schema_for_valkrie_adapter` and `Hyrax::Schema(:redirects)`).
-- `Hyrax::Work` and `Hyrax::PcdmCollection` include `Hyrax::Schema(:redirects)` (subject to the existing `work_default_metadata` / `collection_include_metadata?` gates so adopters who manage their own work/collection metadata schemas aren't overridden).
+- `Hyrax::Work` includes `Hyrax::Schema(:redirects)` when `work_default_metadata` is true; `Hyrax::PcdmCollection` includes it when `collection_include_metadata?` is true. The form-side `redirects` property is installed per-resource at form initialization: `Hyrax::Forms::ResourceForm#initialize` checks whether the resource responds to `redirects` and, if so, installs `Hyrax::FormFields(:redirects)` on the form's singleton class. This single check handles all four combinations of base-class metadata gates and per-class flexibility (flex-false models that include the schema, flex-true models whose m3 profile declares `redirects`, and the two cases where neither applies). The check runs *after* any flexible-mode resource reconstruction so it sees the resource Reform will use, not a pre-reconstruction copy whose singleton class may still carry attributes from an older m3 schema version.
 - The `:redirects` Flipflop feature is registered and appears in the admin Flipflop UI.
 - `Hyrax::Indexers::PcdmObjectIndexer` and `Hyrax::Indexers::PcdmCollectionIndexer` include `Hyrax::Indexers::RedirectsIndexer` (the include itself is conditional on this config; when off, the mixin is not added at all).
 - The m3 profile validator runs the redirects-specific check (no error or warning unless the Flipflop is also on, or the profile contains a stale `redirects` property).
@@ -76,10 +76,23 @@ properties:
         - CollectionResource
     cardinality:
       minimum: 0
+    display_label:
+      default: Redirects
     type: hash
     multiple: true
+    indexing:
+      - editor_only
     predicate: http://samvera.org/ns/hyku/redirects
+    range: http://www.w3.org/2001/XMLSchema#string
+    view:
+      render_term: redirects_path
+      render_as: redirects_label
+      html_dl: true
 ```
+
+The `display_label` and `range` entries are required for profile validation. `display_label.default` controls the label that appears next to the redirects field on show pages.
+
+The `indexing: [editor_only]` entry and the `view:` block together opt the redirects field into the show-page display described below in [Displaying redirect aliases on show pages](#displaying-redirect-aliases-on-show-pages). Both are required for that display to appear with editor-or-admin visibility. Note the placement: `editor_only` is an entry in the `indexing:` array (read by `Hyrax::SchemaLoader::AttributeDefinition#editor_only?`); `render_term`, `render_as`, and `html_dl` are inside the `view:` block. Non-flexible mode structures `editor_only` differently — see [Schema details](#schema-details-flexible-false-mode) below.
 
 Each redirect entry is a plain hash with `path`, `canonical`, and `sequence` keys, persisted as JSONB on the parent resource. The `type: hash` token resolves to `Dry::Types['hash']`, which round-trips entries through Postgres without the sub-field stripping a nested `Valkyrie::Resource` would suffer. `available_on.class` must include at least one work or collection class declared in this profile's top-level `classes:` block; substitute the class names your profile declares (`Image`, `Etd`, `Oer`, etc.) as appropriate.
 
@@ -106,11 +119,18 @@ attributes:
     type: hash
     multiple: true
     form:
-      primary: false
+      display: false
+    view:
+      editor_only: true
+      render_term: redirects_path
+      render_as: redirects_label
+      html_dl: true
     predicate: http://samvera.org/ns/hyku/redirects
     mappings:
       simple_dc_pmh: ~
 ```
+
+The `view:` block opts the redirects field into the show-page display described below in [Displaying redirect aliases on show pages](#displaying-redirect-aliases-on-show-pages). In non-flexible mode, all view options live inside the `view:` block — that's where `Hyrax::SimpleSchemaLoader#view_definitions_for` reads them from. (Flex-true uses a different structure for `editor_only`; see the [m3 profile requirements](#m3-profile-requirements-flexible-true-mode) section.)
 
 When the config is on, this schema is loaded and `Hyrax::Work` / `Hyrax::PcdmCollection` include it via `Hyrax::Schema(:redirects)`. The schema loader produces:
 
@@ -124,21 +144,22 @@ When the config is off, the loader filters `redirects.yaml` out of the schema se
 
 ## Path normalization
 
-Every redirect path in Hyrax — whether typed into a form, looked up by the resolver, written to the redirects table, or queried by the validator — passes through `Hyrax::RedirectPathNormalizer.call`. This is the single source of truth for "what does this path look like on disk?". Normalization rules:
+Every redirect path in Hyrax passes through `Hyrax::RedirectPathNormalizer.call`. This is the single source of truth for "what does this path look like on disk?". Normalization rules:
 
 1. If the input parses as a URL with a scheme and host (e.g. `https://old.example.edu/handle/12345/678`), keep only the path component.
 2. Strip query strings (`?utm_source=foo`) and fragments (`#section`).
 3. Ensure a leading slash (`handle/123` → `/handle/123`).
 4. Strip trailing slashes (`/handle/123/` → `/handle/123`), with the exception that the bare path `/` is preserved.
 
-The normalizer is idempotent — `normalize(normalize(x)) == normalize(x)` — and is wired in at four call sites so they all agree on the canonical form:
+The normalizer is idempotent — `normalize(normalize(x)) == normalize(x)`. Normalization happens in two distinct contexts:
 
-- `Hyrax::RedirectsFieldBehavior#redirects_attributes_populator` normalizes each entry's path on form submission, before validation. The normalized form is what the validator sees and what the resource persists.
+**On write (resource layer).** `Hyrax::RedirectsNormalization` is included on `Hyrax::Work` and `Hyrax::PcdmCollection` and overrides `set_value` so any assignment to the `redirects` attribute — form save, console write, importer, change-set apply — normalizes each entry's path before persistence. Read-side consumers (`Hyrax::Indexers::RedirectsIndexer`, `Hyrax::Transactions::Steps::SyncRedirectPaths`) trust the persisted shape and do not re-normalize.
+
+**On input (boundary layer).** Three boundary points canonicalize input from outside the resource before consulting the persisted state:
+
+- `Hyrax::RedirectsFieldBehavior#redirects_attributes_populator` normalizes form entries before the form-level validator runs, so a user pasting a full URL (`https://old.example.edu/handle/123?utm=email`) is forgivingly accepted and the validator sees the canonical form.
 - `Hyrax::RedirectsController#show` (the resolver) normalizes the incoming request path before the Solr lookup, so `/foo/` and `/foo` both resolve.
 - `Hyrax::RedirectsLookup` normalizes its input on construction, so callers can pass any reasonable form.
-- `Hyrax::Transactions::Steps::SyncRedirectPaths` normalizes paths before writing to the redirects table, as defense in depth.
-
-A user pasting a full URL from an old DSpace page (`https://old.example.edu/handle/123?utm=email`) sees the form quietly accept and persist `/handle/123`.
 
 ## Validation
 
@@ -248,6 +269,102 @@ Toggling the config or the Flipflop changes what the indexer emits. Existing rec
 bundle exec rails hyrax:solr:reindex_everything
 ```
 
+## Displaying redirect aliases on show pages
+
+When the redirects feature is enabled, the registered aliases for a work or collection appear on its show page as a list of clickable links. The display is gated by `editor_only: true` — visible to signed-in users with edit ability for the record (which includes site admins, who can edit everything). Public visitors and signed-in users without edit ability see no trace of the redirects on the show page.
+
+The `editor_only` flag (and its sibling `admin_only`) are general flexible-metadata property visibility flags. For the full reference — including the combination rule when both flags are set and the catalog-exclusion behavior — see [Property visibility flags](flexible_metadata.md#property-visibility-flags) in the flexible metadata documentation.
+
+The display is driven by two pieces on the redirects schema: an `editor_only` flag that gates visibility, and a `render_as: redirects_label` instruction that selects the renderer. **The two flex modes structure these differently** because their schema loaders read view options from different places.
+
+**Non-flexible mode (`HYRAX_FLEXIBLE=false`)** — all view options live inside the `view:` block in `config/metadata/redirects.yaml`:
+
+```yaml
+view:
+  editor_only: true
+  render_term: redirects_path
+  render_as: redirects_label
+  html_dl: true
+```
+
+`Hyrax::SimpleSchemaLoader#view_definitions_for` reads `property.meta['view']` and passes the block through verbatim to the show-page rendering.
+
+**Flexible mode (`HYRAX_FLEXIBLE=true`)** — `editor_only` is an entry in the property's `indexing:` array; the rest live inside the `view:` block:
+
+```yaml
+indexing:
+  - editor_only
+view:
+  render_term: redirects_path
+  render_as: redirects_label
+  html_dl: true
+```
+
+`Hyrax::M3SchemaLoader#view_definitions_for` calls `definition.view_options`, which reads `editor_only?` (via `Hyrax::SchemaLoader::AttributeDefinition#editor_only?`, which honors both top-level `editor_only: true` and `indexing: [editor_only]`) and injects it into the view options hash. The `view:` block contents are passed through alongside.
+
+Full snippets for each mode are shown in the [m3 profile requirements](#m3-profile-requirements-flexible-true-mode) and [Schema details](#schema-details-flexible-false-mode) sections above.
+
+### How it works
+
+- The redirects indexer emits two Solr fields: `redirects_path_ssim` (used by the resolver to look up records by path) and `redirects_path_tesim` (used by the show-page display).
+- `Hyrax::SolrDocument::Metadata` declares `redirects_path` as a SolrDocument attribute bound to the `redirects_path_tesim` field. This is what makes `solr_document.redirects_path` available; the per-attribute declaration is required (Hyrax does not coerce arbitrary Solr fields into methods automatically).
+- The presenter's `MissingMethodBehavior` delegates `presenter.redirects_path` to `solr_document.redirects_path`.
+- The `render_term: redirects_path` view option tells the show-page partial to call `presenter.redirects_path` instead of `presenter.redirects`. The bare `redirects` attribute returns the persisted array of hashes and isn't useful for direct rendering.
+- The `render_as: redirects_label` view option tells Hyrax to use the `Hyrax::Renderers::RedirectsLabelAttributeRenderer` class to render the field. Each path becomes a clickable link whose text is the full absolute URL (host + path) and whose `href` is the path alone (the browser resolves it against the current host).
+- The `html_dl: true` view option matches the show page's description-list layout — the renderer emits `<dt>/<dd>` rather than the table-row `<tr>/<td>` it would default to.
+- The `editor_only: true` view option makes the existing attribute-rows partial skip rendering the field entirely when the current user cannot edit the record. No section heading, no empty list — just nothing.
+
+### Adopter customization
+
+Adopters can override the renderer to change link styling or the displayed URL format. Subclass `Hyrax::Renderers::RedirectsLabelAttributeRenderer` and register the subclass under the same `render_as` key.
+
+Adopters can also turn the display off without removing the redirects feature: remove the `view:` block from the schema (or the m3 profile property declaration). The redirects functionality continues to work — only the show-page display goes away.
+
+## Migration playbook (Bulkrax)
+
+Institutions migrating from another repository typically have hundreds to thousands of legacy URLs to preserve. Bulkrax (v9.5+) supports redirects via its `nested_attributes: true` field-mapping flag.
+
+### CSV column format
+
+Each redirect entry maps to three numbered columns: `redirect_path_<n>`, `redirect_canonical_<n>`, `redirect_sequence_<n>`. A row with two redirects, one canonical:
+
+```csv
+source_identifier,title,redirect_path_1,redirect_canonical_1,redirect_sequence_1,redirect_path_2,redirect_canonical_2,redirect_sequence_2
+work-001,My Work,/handle/12345/678,true,0,/old/path/678,false,1
+```
+
+`canonical` accepts the literal string `true` or `false` (boolean strings, not `1`/`0`). At most one entry per record may be canonical. `sequence` is an integer that orders the entries; if omitted, Bulkrax uses the column position.
+
+### Field-mapping configuration
+
+Add to the host app's Bulkrax field-mapping configuration (usually `config/initializers/default_bulkrax_mappings.rb` or a per-tenant override):
+
+```ruby
+'path'      => { from: ['redirect_path'],      object: 'redirects', nested_attributes: true },
+'canonical' => { from: ['redirect_canonical'], object: 'redirects', nested_attributes: true },
+'sequence'  => { from: ['redirect_sequence'],  object: 'redirects', nested_attributes: true },
+```
+
+See [field_behaviors.md](forms/field_behaviors.md#wiring-up-bulkrax-imports) for the conventions around the `nested_attributes: true` flag.
+
+### Reserved-prefix list
+
+The validator rejects redirect paths that match any prefix in `Hyrax.config.reserved_redirect_prefixes`. Hyrax ships a default list covering its own routes (`/admin`, `/dashboard`, `/catalog`, `/concern`, etc.); host applications extend it for their own routes (see "Validation" above). A row whose redirect path matches a reserved prefix fails validation per-row and is reported in the import errors; the rest of the import continues.
+
+### Reindex after import
+
+The redirects index field (`redirects_path_ssim`) is populated when records are saved through the form-driven path that Bulkrax uses. New records created via Bulkrax import are indexed normally and do not require a separate reindex pass.
+
+If the redirects feature was just enabled (config + Flipflop turned on) and existing records need their redirects to become resolvable, run the reindex command from the section above.
+
+### Common errors
+
+- **"is reserved by the application and may not be used as an alias"** — the path matches a reserved prefix. Choose a different path or extend `Hyrax.config.reserved_redirect_prefixes` if the conflict is intentional.
+- **"is already in use by another record"** — the path is registered as a redirect on a different work or collection. Paths are globally unique.
+- **"at most one redirect entry may be marked canonical"** — multiple rows in the same CSV record have `redirect_canonical_<n>=true`. Only one entry per record may be canonical.
+- **m3 profile validation: "redirects property is required"** (flexible mode) — the Flipflop is on but the m3 profile doesn't declare the `redirects` property. Add it per the section above.
+- **m3 profile validation: "the property will be ignored"** (flexible mode, config off) — a stale `redirects` property is declared but the config is off. Either remove the property from the profile or re-enable the config.
+
 ## Disabling
 
 To fully disable: unset `HYRAX_REDIRECTS_ENABLED` (or set `Hyrax.config.redirects_enabled = false`) and reboot. The schema is no longer loaded, the attribute is no longer included on `Hyrax::Work` / `Hyrax::PcdmCollection`, the Flipflop feature is no longer registered, and the indexer mixin is no longer included. Persisted `redirects` entries on records remain in storage (Postgres / Fedora) but are inaccessible because the attribute no longer exists on the model. Re-enabling restores access.
@@ -280,8 +397,10 @@ Alternatively, gate the inclusion of the calling code itself on `Hyrax.config.re
 - `documentation/flexible_metadata.md` — m3 profile fundamentals and how the redirects feature interacts with flexible metadata.
 - `documentation/forms/field_behaviors.md` — the Field Behavior pattern used by `Hyrax::RedirectsFieldBehavior` to wire the form's nested-attribute property.
 - `Hyrax::Redirect` (`app/models/hyrax/redirect.rb`) — thin Ruby presenter for a single redirect entry; used on the form's render path.
-- `Hyrax::RedirectsFieldBehavior` (`app/forms/concerns/hyrax/redirects_field_behavior.rb`) — form-side populator/prepopulator and the `deserialize!` strip for the `redirects` property.
-- `Hyrax::Indexers::RedirectsIndexer` (`app/indexers/hyrax/indexers/redirects_indexer.rb`) — the indexer mixin.
+- `Hyrax::RedirectsFieldBehavior` (`app/forms/concerns/hyrax/redirects_field_behavior.rb`) — form-side wiring for the `redirects` and `redirects_attributes` properties: loads the persisted property from `config/metadata/redirects.yaml` via `Hyrax::FormFields(:redirects)`, and owns the populator/prepopulator and the `deserialize!` strip for the nested-attributes payload.
+- `Hyrax::Indexers::RedirectsIndexer` (`app/indexers/hyrax/indexers/redirects_indexer.rb`) — the indexer mixin. Emits `redirects_path_ssim` (resolver lookup) and `redirects_path_tesim` (show-page display).
+- `Hyrax::SolrDocument::Metadata` (`app/models/concerns/hyrax/solr_document/metadata.rb`) — declares the `redirects_path` attribute on `SolrDocument`, bound to the `redirects_path_tesim` Solr field. This is what makes `solr_document.redirects_path` (and therefore `presenter.redirects_path` via `MissingMethodBehavior`) available to the show-page renderer.
+- `Hyrax::Renderers::RedirectsLabelAttributeRenderer` (`app/renderers/hyrax/renderers/redirects_label_attribute_renderer.rb`) — show-page renderer that turns each redirect path into a clickable link.
 - `Hyrax::RedirectsController` (`app/controllers/hyrax/redirects_controller.rb`) — the redirect resolver.
 - `Hyrax::FlexibleSchemaValidators::RedirectsValidator` (`app/services/hyrax/flexible_schema_validators/redirects_validator.rb`) — the m3 profile validator.
 - `Hyrax::RedirectValidator` (`app/validators/hyrax/redirect_validator.rb`) — the form-level entry validator.

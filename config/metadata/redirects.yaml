@@ -4,7 +4,12 @@ attributes:
     type: hash
     multiple: true
     form:
-      primary: false
+      display: false
+    view:
+      editor_only: true
+      render_term: redirects_path
+      render_as: redirects_label
+      html_dl: true
     predicate: http://samvera.org/ns/hyku/redirects
     mappings:
       simple_dc_pmh: ~

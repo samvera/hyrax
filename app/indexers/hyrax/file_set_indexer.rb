@@ -9,6 +9,7 @@ module Hyrax
       super.tap do |solr_doc|
         solr_doc['hasRelatedMediaFragment_ssim'] = object.representative_id
         solr_doc['hasRelatedImage_ssim'] = object.thumbnail_id
+        solr_doc['transcript_ids_ssim'] = object.transcript_ids
         # Label is the actual file name. It's not editable by the user.
         solr_doc['label_tesim'] = object.label
         solr_doc['label_ssi']   = object.label

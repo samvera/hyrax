@@ -6,10 +6,12 @@ module Hyrax
   class TolerantSelectService < QaSelectService
     ##
     # @return [Boolean] indicates whether the term is active;
-    #   false if the term is inactive or does not exist; defaults to true when
-    #   no key is given
+    #   false if the term is inactive or is not present in the authority;
+    #   defaults to true when the term is present but no `active:` key is given.
     def active?(id)
-      authority.find(id)&.fetch('active', true)
+      result = authority.find(id)
+      return false if result.blank?
+      result.fetch('active', true)
     end
 
     ##

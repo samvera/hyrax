@@ -20,7 +20,9 @@ module Hyrax
     include Hyrax::WorkflowsHelper
     include Hyrax::FacetsHelper
     include Hyrax::AttributesHelper
+    include Hyrax::PermalinkHelper
     include Hyrax::WorksHelper
+    include Hyrax::FileSetFormHelper
 
     ##
     # @return [Array<String>] the list of admin sets available for creating works for this user
@@ -259,7 +261,10 @@ module Hyrax
     # @return [ActiveSupport::SafeBuffer] license links, html_safe
     def license_links(options)
       service = Hyrax.config.license_service_class.new
-      to_sentence(options[:value].map { |right| link_to service.label(right), right })
+      to_sentence(options[:value].map do |right|
+        label = service.label(right) { right }
+        Hyrax::AuthorityRenderingHelper.linkable_uri?(right) ? link_to(label, right) : ERB::Util.h(label)
+      end)
     end
 
     # A Blacklight index field helper_method
@@ -267,7 +272,10 @@ module Hyrax
     # @return [ActiveSupport::SafeBuffer] rights statement links, html_safe
     def rights_statement_links(options)
       service = Hyrax.config.rights_statement_service_class.new
-      to_sentence(options[:value].map { |right| link_to service.label(right), right })
+      to_sentence(options[:value].map do |right|
+        label = service.label(right) { right }
+        Hyrax::AuthorityRenderingHelper.linkable_uri?(right) ? link_to(label, right) : ERB::Util.h(label)
+      end)
     end
 
     # A Blacklight facet field helper_method

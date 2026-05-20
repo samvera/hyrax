@@ -140,7 +140,7 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
     let(:permissive_schema) { schema_loader.permissive_schema_for_valkrie_adapter }
 
     it 'provides the expected hash' do
-      expect(permissive_schema.size).to eq(67)
+      expect(permissive_schema.size).to eq(68)
       expect(permissive_schema.values.all? { |v| v.is_a? RDF::URI }).to be_truthy
       expect(permissive_schema.values.all? { |v| v.value.present? }).to be_truthy
       expect(permissive_schema[:sample_attribute].value).to eq("http://hyrax-example.com/sample_attribute")
@@ -170,6 +170,28 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
       it 'returns the redirects attribute definitions' do
         attributes = schema_loader.attributes_for(schema: :redirects)
         expect(attributes.keys).to include(:redirects)
+      end
+
+      it "exposes the redirects schema's view options for use under flex-false" do
+        # Under flex-false, all view options live inside the view: block;
+        # SimpleSchemaLoader#view_definitions_for passes the block through
+        # verbatim. Flex-true structures editor_only differently (via the
+        # indexing: array or top-level editor_only: true), handled by
+        # M3SchemaLoader.
+        view = {
+          'editor_only' => true,
+          'render_term' => 'redirects_path',
+          'render_as' => 'redirects_label',
+          'html_dl' => true
+        }
+        mock_property = double('Property', name: :redirects, meta: { 'view' => view })
+        result = schema_loader.view_definitions_for(schema: [mock_property])
+        expect(result['redirects']).to include(
+          'editor_only' => true,
+          'render_term' => 'redirects_path',
+          'render_as' => 'redirects_label',
+          'html_dl' => true
+        )
       end
     end
 

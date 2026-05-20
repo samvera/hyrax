@@ -35,13 +35,14 @@ module Hyrax
     ##
     # @param id [String]
     #
-    # @return [String] the label for the authority
+    # @return [String] the label for the authority, falling back to the id itself
+    #   when no matching term exists. Callers may pass a block to override the
+    #   fallback value.
     #
     # @yield when no 'term' value is present for the id
     # @yieldreturn [String] an alternate label to return
-    #
-    # @raise [KeyError] when no 'term' value is present for the id
     def label(id, &block)
+      block ||= ->(_key) { id }
       authority.find(id).fetch('term', &block)
     end
 

@@ -139,12 +139,15 @@ module Hyrax
     end
 
     def manifest
-      headers['Access-Control-Allow-Origin'] = '*'
+      locale = params[:locale] || current_user&.preferred_locale || I18n.default_locale
+      I18n.with_locale(locale) do
+        headers['Access-Control-Allow-Origin'] = '*'
 
-      json = iiif_manifest_builder.manifest_for(presenter: iiif_manifest_presenter)
+        json = iiif_manifest_builder.manifest_for(presenter: iiif_manifest_presenter)
 
-      respond_to do |wants|
-        wants.any { render json: json }
+        respond_to do |wants|
+          wants.any { render json: json }
+        end
       end
     end
 
