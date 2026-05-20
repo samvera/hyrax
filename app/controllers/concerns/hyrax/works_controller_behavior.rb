@@ -81,6 +81,12 @@ module Hyrax
     # @raise CanCan::AccessDenied if the document is not found or the user doesn't have access to it.
     # rubocop:disable Metrics/AbcSize
     def show
+      unless params[:is_redirect]
+        normal_path = Hyrax::RedirectPathNormalizer.call(request.path)
+        redirect_path = Hyrax::RedirectPath.find_by(from_path: normal_path)
+        redirect_to redirect_path&.to_path if redirect_path.present? && redirect_path.to_path != normal_path
+      end
+
       @user_collections = user_collections
 
       respond_to do |wants|
