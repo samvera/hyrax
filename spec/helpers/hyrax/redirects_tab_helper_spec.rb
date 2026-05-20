@@ -69,7 +69,10 @@ RSpec.describe Hyrax::RedirectsTabHelper, type: :helper do
 
   describe '#redirects_supported_form?' do
     it 'returns true for a Hyrax::Forms::ResourceForm instance' do
-      form = Hyrax::Forms::ResourceForm.new(Hyrax::Resource.new)
+      # Use allocate to skip ResourceForm#initialize
+      # The helper under test is a plain is_a? check, so we don't need an
+      # initialized form instance.
+      form = Hyrax::Forms::ResourceForm.allocate
       expect(helper.redirects_supported_form?(form)).to be(true)
     end
 

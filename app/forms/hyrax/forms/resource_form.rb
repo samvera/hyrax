@@ -28,6 +28,7 @@ module Hyrax
 
       include BasedNearFieldBehavior
       include RedirectsFieldBehavior
+      include Hyrax::FormFields(:redirects) if Hyrax.config.redirects_enabled? && Hyrax.config.work_include_metadata?
       class_attribute :model_class
 
       property :human_readable_type, writable: false
@@ -89,7 +90,6 @@ module Hyrax
               to_remove = singleton_class.definitions.select { |k, v| !deprecated_resource.respond_to?(k) && v.instance_variable_get("@options")[:display] }
               to_remove.keys.each { |removed_field| singleton_class.definitions.delete(removed_field) }
             end
-            install_redirects_property_if_supported(deprecated_resource)
             super(deprecated_resource)
           else
             super()
@@ -108,21 +108,10 @@ module Hyrax
             end
           end
 
-          install_redirects_property_if_supported(resource)
           super(resource)
         end
       end
-
-      # Install the `redirects` form property on the singleton class when
-      # the resource actually has it. Runs after any flexible-mode resource
-      # reconstruction so we check the resource Reform will see — not the
-      # pre-reconstruction copy whose schema version may be stale.
-      def install_redirects_property_if_supported(resource_for_form)
-        return unless Hyrax.config.redirects_enabled?
-        return unless resource_for_form&.respond_to?(:redirects)
-        return if singleton_class.definitions.key?(:redirects)
-        singleton_class.include Hyrax::FormFields(:redirects)
-      end # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
       class << self
         def inherited(subclass)
