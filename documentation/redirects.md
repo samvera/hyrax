@@ -98,7 +98,7 @@ The `display_label` and `range` entries are required for profile validation. `di
 
 The `indexing: [editor_only]` entry and the `view:` block together opt the redirects field into the show-page display described below in [Displaying redirect aliases on show pages](#displaying-redirect-aliases-on-show-pages). Both are required for that display to appear with editor-or-admin visibility. Note the placement: `editor_only` is an entry in the `indexing:` array (read by `Hyrax::SchemaLoader::AttributeDefinition#editor_only?`); `render_term`, `render_as`, and `html_dl` are inside the `view:` block. Non-flexible mode structures `editor_only` differently — see [Schema details](#schema-details-flexible-false-mode) below.
 
-Each redirect entry is a plain hash with `path`, `canonical`, and `sequence` keys, persisted as JSONB on the parent resource. The `type: hash` token resolves to `Dry::Types['hash']`, which round-trips entries through Postgres without the sub-field stripping a nested `Valkyrie::Resource` would suffer. `available_on.class` must include at least one work or collection class declared in this profile's top-level `classes:` block; substitute the class names your profile declares (`Image`, `Etd`, `Oer`, etc.) as appropriate.
+Each redirect entry is a plain hash with `path` and `display_url` keys, persisted as JSONB on the parent resource. The `type: hash` token resolves to `Dry::Types['hash']`, which round-trips entries through Postgres without the sub-field stripping a nested `Valkyrie::Resource` would suffer. `available_on.class` must include at least one work or collection class declared in this profile's top-level `classes:` block; substitute the class names your profile declares (`Image`, `Etd`, `Oer`, etc.) as appropriate.
 
 Validation matrix on profile save (with the config on):
 
@@ -142,7 +142,7 @@ When the config is on, this schema is loaded and `Hyrax::Work` / `Hyrax::PcdmCol
 attribute :redirects, Valkyrie::Types::Array.of(Dry::Types['hash'])
 ```
 
-Each entry is a plain hash with `path`, `canonical`, and `sequence` keys. Entries persist as JSONB on the parent resource, so sub-fields round-trip cleanly without an intermediate nested-resource schema mangling them. `Hyrax::Redirect` is retained as a thin Ruby presenter the form view consumes; non-form code (validator, indexer, sync step) reads the persisted hash directly.
+Each entry is a plain hash with `path` and `display_url` keys. Entries persist as JSONB on the parent resource, so sub-fields round-trip cleanly without an intermediate nested-resource schema mangling them. `Hyrax::Redirect` is retained as a thin Ruby presenter the form view consumes; non-form code (validator, indexer, sync step) reads the persisted hash directly.
 
 When the config is off, the loader filters `redirects.yaml` out of the schema set entirely. The file is on disk but invisible to `permissive_schema_for_valkrie_adapter`, `Hyrax::Schema(:redirects)`, and any other consumer of the simple schema loader.
 
@@ -180,7 +180,7 @@ The validator enforces six rules on the `redirects` attribute:
 | Reserved prefix | path equals or starts with one of `Hyrax.config.reserved_redirect_prefixes` (defaults to the routes Hyrax itself reserves) | the path is reserved by the application and may not be used as an alias |
 | Intra-record uniqueness | the same path appears more than once on a single record | `is listed more than once on this record` |
 | Global uniqueness | the path is already in use on a different record (excluding the current record's own id) | `is already in use by another record` |
-| At most one canonical | more than one entry has `canonical: true` | `at most one redirect entry may be marked canonical` |
+| At most one display URL | more than one entry has `display_url: true` | `at most one redirect entry may be marked as the display URL` |
 
 ### Reserved-prefix list
 
@@ -199,12 +199,18 @@ The validator rejects any redirect path that equals one of these prefixes, or st
 
 ### Uniqueness lookup and the `hyrax_redirect_paths` table
 
-Global uniqueness is enforced by a Postgres table, `hyrax_redirect_paths`, which has a unique B-tree index on `path`. The table is a derived record of every redirect path currently in use, and the unique index gives the hard guarantee that no two records can share a path even under concurrent saves. A second non-unique index on `resource_id` supports the per-resource sync described below.
+Global uniqueness is enforced by a Postgres table, `hyrax_redirect_paths`, which has a unique B-tree index on `source_path`. The table is a derived record of every redirect path currently in use, and the unique index gives the hard guarantee that no two records can share an alias even under concurrent saves. A second non-unique index on `resource_id` supports the per-resource sync described below.
 
-`Hyrax::RedirectsLookup` is the single point of truth for "is this path taken?". It queries the table:
+Each row carries three columns the resolver and sync step care about:
+
+- `source_path` — the alias path. Unique.
+- `target_path` — where the visitor should be sent. `NULL` means "render in place at `source_path`"; otherwise the resolver issues a 301 to the stored target.
+- `display_url` — form/validator state. The row marked as the record's display URL has `display_url: true`. The sync step uses this to compute each row's `target_path`: the display row gets `target_path = NULL`, every other row on the same record gets `target_path = <display row's source_path>`. The request-time resolver does not read this column.
+
+`Hyrax::RedirectsLookup` is the single point of truth for "is this alias taken?". It queries the table:
 
 ```sql
-SELECT 1 FROM hyrax_redirect_paths WHERE path = ? AND resource_id <> ? LIMIT 1;
+SELECT 1 FROM hyrax_redirect_paths WHERE source_path = ? AND resource_id <> ? LIMIT 1;
 ```
 
 The validator calls `Hyrax::RedirectsLookup.taken?(path, except_id: record.id)` to give the user friendly feedback at form-submit time. If two simultaneous requests both pass validation (because both checked the table before either committed), the unique index rejects the second one at insert time and the enclosing transaction returns `Failure`.
@@ -330,23 +336,22 @@ Institutions migrating from another repository typically have hundreds to thousa
 
 ### CSV column format
 
-Each redirect entry maps to three numbered columns: `redirect_path_<n>`, `redirect_canonical_<n>`, `redirect_sequence_<n>`. A row with two redirects, one canonical:
+Each redirect entry maps to two numbered columns: `redirect_path_<n>` and `redirect_display_url_<n>`. A row with two redirects, one marked as the display URL:
 
 ```csv
-source_identifier,title,redirect_path_1,redirect_canonical_1,redirect_sequence_1,redirect_path_2,redirect_canonical_2,redirect_sequence_2
-work-001,My Work,/handle/12345/678,true,0,/old/path/678,false,1
+source_identifier,title,redirect_path_1,redirect_display_url_1,redirect_path_2,redirect_display_url_2
+work-001,My Work,/handle/12345/678,true,/old/path/678,false
 ```
 
-`canonical` accepts the literal string `true` or `false` (boolean strings, not `1`/`0`). At most one entry per record may be canonical. `sequence` is an integer that orders the entries; if omitted, Bulkrax uses the column position.
+`display_url` accepts the literal string `true` or `false` (boolean strings, not `1`/`0`). At most one entry per record may be marked as the display URL.
 
 ### Field-mapping configuration
 
 Add to the host app's Bulkrax field-mapping configuration (usually `config/initializers/default_bulkrax_mappings.rb` or a per-tenant override):
 
 ```ruby
-'path'      => { from: ['redirect_path'],      object: 'redirects', nested_attributes: true },
-'canonical' => { from: ['redirect_canonical'], object: 'redirects', nested_attributes: true },
-'sequence'  => { from: ['redirect_sequence'],  object: 'redirects', nested_attributes: true },
+'path'        => { from: ['redirect_path'],        object: 'redirects', nested_attributes: true },
+'display_url' => { from: ['redirect_display_url'], object: 'redirects', nested_attributes: true }
 ```
 
 See [field_behaviors.md](forms/field_behaviors.md#wiring-up-bulkrax-imports) for the conventions around the `nested_attributes: true` flag.
@@ -365,7 +370,7 @@ If the redirects feature was just enabled (config + Flipflop turned on) and exis
 
 - **"is reserved by the application and may not be used as an alias"** — the path matches a reserved prefix. Choose a different path or extend `Hyrax.config.reserved_redirect_prefixes` if the conflict is intentional.
 - **"is already in use by another record"** — the path is registered as a redirect on a different work or collection. Paths are globally unique.
-- **"at most one redirect entry may be marked canonical"** — multiple rows in the same CSV record have `redirect_canonical_<n>=true`. Only one entry per record may be canonical.
+- **"at most one redirect entry may be marked as the display URL"** — multiple rows in the same CSV record have `redirect_display_url_<n>=true`. Only one entry per record may be marked as the display URL.
 - **m3 profile validation: "redirects property is required"** (flexible mode) — the Flipflop is on but the m3 profile doesn't declare the `redirects` property. Add it per the section above.
 - **m3 profile validation: "the property will be ignored"** (flexible mode, config off) — a stale `redirects` property is declared but the config is off. Either remove the property from the profile or re-enable the config.
 

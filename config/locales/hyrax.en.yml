@@ -43,7 +43,7 @@ en:
         blank: A redirect path can't be blank.
         intra_record_duplicate: '"%{path}" is listed more than once on this record.'
         invalid_format: '"%{path}" is not a valid path. Paths must start with "/" and contain no spaces, "?", or "#".'
-        multiple_canonical: At most one redirect entry may be marked canonical.
+        multiple_display_url: At most one redirect entry may be marked as the display URL.
         reserved_prefix: '"%{path}" can''t be used. The path is reserved by the application and may not be used as an alias.'
   helpers:
     action:

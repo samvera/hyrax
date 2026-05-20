@@ -2,9 +2,8 @@
 
 module Hyrax
   ##
-  # Wraps a single redirect entry for use in form views, providing
-  # `.path`, `.canonical`, and `.sequence` readers over the underlying
-  # persisted hash.
+  # Wraps a single redirect entry for use in form views, providing `.path`
+  # and `.display_url` readers over the underlying persisted hash.
   #
   # Redirects are persisted as plain hashes on the parent work or
   # collection. Form-render code calls `Hyrax::Redirect.wrap(entry)` to
@@ -12,17 +11,16 @@ module Hyrax
   # validator, indexer, sync step) reads the persisted hash directly.
   #
   # @example
-  #   Hyrax::Redirect.new(path: '/handle/12345/678', canonical: false)
-  #   Hyrax::Redirect.wrap('path' => '/foo', 'canonical' => true)
+  #   Hyrax::Redirect.new(path: '/handle/12345/678', display_url: false)
+  #   Hyrax::Redirect.wrap('path' => '/foo', 'display_url' => true)
   class Redirect
-    attr_reader :path, :canonical, :sequence
+    attr_reader :path, :display_url
 
     ##
     # Accept nil values so the view can build an empty trailing row.
-    def initialize(path: nil, canonical: false, sequence: nil)
+    def initialize(path: nil, display_url: false)
       @path = path
-      @canonical = canonical
-      @sequence = sequence
+      @display_url = display_url
     end
 
     ##
@@ -37,13 +35,13 @@ module Hyrax
       raise ArgumentError, "cannot wrap #{input.class} as Hyrax::Redirect" unless input.respond_to?(:to_h)
 
       h = input.to_h.transform_keys(&:to_s)
-      new(path: h['path'], canonical: h.fetch('canonical', false), sequence: h['sequence'])
+      new(path: h['path'], display_url: h.fetch('display_url', false))
     end
 
     ##
     # @return [Hash{String => Object}] string-keyed hash matching the persisted shape.
     def to_h
-      { 'path' => path, 'canonical' => canonical, 'sequence' => sequence }
+      { 'path' => path, 'display_url' => display_url }
     end
 
     def as_json(*)
@@ -55,13 +53,12 @@ module Hyrax
     def ==(other)
       other.is_a?(Hyrax::Redirect) &&
         other.path == path &&
-        other.canonical == canonical &&
-        other.sequence == sequence
+        other.display_url == display_url
     end
     alias eql? ==
 
     def hash
-      [path, canonical, sequence].hash
+      [path, display_url].hash
     end
   end
 end

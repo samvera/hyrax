@@ -16,17 +16,84 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
   end
 
   describe '#call' do
-    context 'when feature is fully enabled and resource has redirects' do
-      it 'replaces existing rows for the resource with the current redirect set' do
-        Hyrax::RedirectPath.create!(path: '/old', resource_id: resource_id)
+    context 'when no entry is marked display_url' do
+      it 'writes one row per redirect with target_path = nil on every row' do
         result = step.call(resource)
         expect(result).to be_success
-        paths = Hyrax::RedirectPath.where(resource_id: resource_id).pluck(:path)
+        rows = Hyrax::RedirectPath.where(resource_id: resource_id).order(:source_path)
+        expect(rows.pluck(:source_path, :target_path, :display_url))
+          .to contain_exactly(['/handle/1', nil, false], ['/handle/2', nil, false])
+      end
+    end
+
+    context 'when one entry is marked display_url' do
+      let(:redirects) do
+        [{ 'path' => '/handle/1', 'display_url' => true },
+         { 'path' => '/handle/2', 'display_url' => false },
+         { 'path' => '/handle/3', 'display_url' => false }]
+      end
+
+      it 'writes the display row with target_path = nil and points every other row at the display path' do
+        result = step.call(resource)
+        expect(result).to be_success
+        rows = Hyrax::RedirectPath.where(resource_id: resource_id).order(:source_path)
+        expect(rows.pluck(:source_path, :target_path, :display_url))
+          .to contain_exactly(
+            ['/handle/1', nil, true],
+            ['/handle/2', '/handle/1', false],
+            ['/handle/3', '/handle/1', false]
+          )
+      end
+    end
+
+    context 'when the display flag moves to a different entry' do
+      before do
+        Hyrax::RedirectPath.create!(source_path: '/handle/1', target_path: nil, display_url: true, resource_id: resource_id)
+        Hyrax::RedirectPath.create!(source_path: '/handle/2', target_path: '/handle/1', display_url: false, resource_id: resource_id)
+      end
+
+      let(:redirects) do
+        [{ 'path' => '/handle/1', 'display_url' => false },
+         { 'path' => '/handle/2', 'display_url' => true }]
+      end
+
+      it 'updates both rows to reflect the new display row' do
+        result = step.call(resource)
+        expect(result).to be_success
+        rows = Hyrax::RedirectPath.where(resource_id: resource_id).order(:source_path)
+        expect(rows.pluck(:source_path, :target_path, :display_url))
+          .to contain_exactly(['/handle/1', '/handle/2', false], ['/handle/2', nil, true])
+      end
+    end
+
+    context 'when an entry is removed from the resource' do
+      before do
+        Hyrax::RedirectPath.create!(source_path: '/handle/1', target_path: nil, display_url: false, resource_id: resource_id)
+        Hyrax::RedirectPath.create!(source_path: '/handle/2', target_path: nil, display_url: false, resource_id: resource_id)
+        Hyrax::RedirectPath.create!(source_path: '/handle/3', target_path: nil, display_url: false, resource_id: resource_id)
+      end
+
+      let(:redirects) { [{ 'path' => '/handle/1' }, { 'path' => '/handle/2' }] }
+
+      it 'deletes the removed row and keeps the rest' do
+        result = step.call(resource)
+        expect(result).to be_success
+        paths = Hyrax::RedirectPath.where(resource_id: resource_id).pluck(:source_path)
+        expect(paths).to contain_exactly('/handle/1', '/handle/2')
+      end
+    end
+
+    context 'when existing rows have stale entries' do
+      it 'replaces existing rows for the resource with the current redirect set' do
+        Hyrax::RedirectPath.create!(source_path: '/old', resource_id: resource_id)
+        result = step.call(resource)
+        expect(result).to be_success
+        paths = Hyrax::RedirectPath.where(resource_id: resource_id).pluck(:source_path)
         expect(paths).to contain_exactly('/handle/1', '/handle/2')
       end
 
       it 'busts the cache for both old and new paths' do
-        Hyrax::RedirectPath.create!(path: '/old', resource_id: resource_id)
+        Hyrax::RedirectPath.create!(source_path: '/old', resource_id: resource_id)
         expect(Hyrax::RedirectCacheBuster).to receive(:call)
           .with(array_including('/old', '/handle/1', '/handle/2'))
         step.call(resource)
@@ -34,7 +101,7 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
     end
 
     context 'when a path is already claimed by another resource' do
-      before { Hyrax::RedirectPath.create!(path: '/handle/1', resource_id: 'other-record') }
+      before { Hyrax::RedirectPath.create!(source_path: '/handle/1', resource_id: 'other-record') }
 
       it 'returns Failure with a redirect_path_collision tag' do
         result = step.call(resource)
@@ -80,16 +147,16 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
       let(:original_created_at) { 1.day.ago.change(usec: 0) }
 
       before do
-        Hyrax::RedirectPath.create!(path: '/handle/1', resource_id: resource_id, created_at: original_created_at, updated_at: original_created_at)
-        Hyrax::RedirectPath.create!(path: '/handle/2', resource_id: resource_id, created_at: original_created_at, updated_at: original_created_at)
+        Hyrax::RedirectPath.create!(source_path: '/handle/1', resource_id: resource_id, created_at: original_created_at, updated_at: original_created_at)
+        Hyrax::RedirectPath.create!(source_path: '/handle/2', resource_id: resource_id, created_at: original_created_at, updated_at: original_created_at)
       end
 
       it 'leaves existing rows untouched (preserves created_at)' do
         result = step.call(resource)
         expect(result).to be_success
 
-        rows = Hyrax::RedirectPath.where(resource_id: resource_id).order(:path)
-        expect(rows.pluck(:path)).to eq %w[/handle/1 /handle/2]
+        rows = Hyrax::RedirectPath.where(resource_id: resource_id).order(:source_path)
+        expect(rows.pluck(:source_path)).to eq %w[/handle/1 /handle/2]
         expect(rows.pluck(:created_at)).to all(eq(original_created_at))
       end
 
@@ -107,8 +174,8 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
       end
 
       before do
-        Hyrax::RedirectPath.create!(path: '/handle/1', resource_id: resource_id, created_at: original_created_at, updated_at: original_created_at)
-        Hyrax::RedirectPath.create!(path: '/handle/2', resource_id: resource_id, created_at: original_created_at, updated_at: original_created_at)
+        Hyrax::RedirectPath.create!(source_path: '/handle/1', resource_id: resource_id, created_at: original_created_at, updated_at: original_created_at)
+        Hyrax::RedirectPath.create!(source_path: '/handle/2', resource_id: resource_id, created_at: original_created_at, updated_at: original_created_at)
       end
 
       it 'recognizes the set is unchanged and leaves rows untouched' do

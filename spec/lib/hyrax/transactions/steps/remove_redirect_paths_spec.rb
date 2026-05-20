@@ -15,8 +15,8 @@ RSpec.describe Hyrax::Transactions::Steps::RemoveRedirectPaths do
   describe '#call' do
     context 'when the resource has rows in the table' do
       before do
-        Hyrax::RedirectPath.create!(path: '/handle/1', resource_id: resource_id)
-        Hyrax::RedirectPath.create!(path: '/handle/2', resource_id: 'other-record')
+        Hyrax::RedirectPath.create!(source_path: '/handle/1', resource_id: resource_id)
+        Hyrax::RedirectPath.create!(source_path: '/handle/2', resource_id: 'other-record')
       end
 
       it 'deletes only the resource\'s rows and returns Success' do

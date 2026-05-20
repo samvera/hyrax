@@ -1,0 +1,15 @@
+class RestructureHyraxRedirectPaths < ActiveRecord::Migration<%= migration_version %>
+  def change
+    rename_column :hyrax_redirect_paths, :path, :source_path
+
+    # NULL target_path means "render in place at source_path". Otherwise the
+    # resolver issues a 301 to the stored target. The sync step keeps this
+    # column consistent with the display_url flag: the row marked as the
+    # record's display URL always has target_path = NULL.
+    add_column :hyrax_redirect_paths, :target_path, :string
+
+    # display_url is form/validator state used by the sync step to compute
+    # each row's target_path. The request-time resolver does not read it.
+    add_column :hyrax_redirect_paths, :display_url, :boolean, default: false, null: false
+  end
+end

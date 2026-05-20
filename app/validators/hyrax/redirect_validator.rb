@@ -29,7 +29,7 @@ module Hyrax
       validate_each_entry(record, attribute, entries)
       validate_intra_record_uniqueness(record, attribute, entries)
       validate_global_uniqueness(record, attribute, entries)
-      validate_at_most_one_canonical(record, attribute, entries)
+      validate_at_most_one_display_url(record, attribute, entries)
     end
 
     private
@@ -42,9 +42,9 @@ module Hyrax
       nil
     end
 
-    def canonical_for(entry)
-      return entry.canonical if entry.respond_to?(:canonical)
-      return entry.key?('canonical') ? entry['canonical'] : entry[:canonical] if entry.respond_to?(:[])
+    def display_url_for(entry)
+      return entry.display_url if entry.respond_to?(:display_url)
+      return entry.key?('display_url') ? entry['display_url'] : entry[:display_url] if entry.respond_to?(:[])
       nil
     end
 
@@ -96,10 +96,10 @@ module Hyrax
       Hyrax::RedirectPathNormalizer.call(path)
     end
 
-    def validate_at_most_one_canonical(record, attribute, entries)
-      canonical_count = entries.count { |entry| canonical_for(entry) }
-      return if canonical_count <= 1
-      record.errors.add(attribute, message_for(:multiple_canonical))
+    def validate_at_most_one_display_url(record, attribute, entries)
+      display_url_count = entries.count { |entry| display_url_for(entry) }
+      return if display_url_count <= 1
+      record.errors.add(attribute, message_for(:multiple_display_url))
     end
 
     def message_for(key, **interpolations)
