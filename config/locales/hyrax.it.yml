@@ -41,6 +41,13 @@ it:
       carrierwave_processing_error: Impossibile ridimensionare l'immagine.
       extension_blacklist_error: "Non è consentito caricare file %{extension}, tipi proibiti: %{prohibited_types}"
       extension_whitelist_error: "Non è consentito caricare i file %{extension}, i tipi consentiti: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" è già utilizzato da un''altra opera o collezione.'
+        blank: Un percorso di reindirizzamento non può essere vuoto.
+        intra_record_duplicate: '"%{path}" è elencato più di una volta in questo record.'
+        invalid_format: '"%{path}" non è un percorso valido. I percorsi devono iniziare con "/" e non contenere spazi, "?" o "#".'
+        multiple_display_url: Al massimo una voce di reindirizzamento può essere contrassegnata come URL di visualizzazione.
+        reserved_prefix: '"%{path}" non può essere utilizzato. Il percorso è riservato dall''applicazione e non può essere usato come alias.'
   helpers:
     action:
       accept: Accettare
@@ -931,6 +938,7 @@ it:
             branding: Branding
             description: Descrizione
             discovery: Scoperta
+            redirects: Alias
             relationships: Le relazioni
             sharing: compartecipazione
         form_branding:
@@ -1822,9 +1830,30 @@ it:
         in_collections: Collezioni
         in_other_works: Questo lavoro in altre opere
         in_this_work: Altri lavori in questo lavoro
+        redirects:
+          add_label: Aggiungi un altro alias
+          caption: Elenco degli alias URL per questa risorsa
+          display_url:
+            help_html: Facoltativamente, contrassegna un alias come <em>URL di visualizzazione</em>. Quando impostato, l'URL UUID permanente del record reindirizza all'alias scelto. Lascia "Nessuno" per mantenere l'URL UUID come destinazione.
+            none_label: Nessuno (usa l'URL UUID del record)
+            row_label: 'Usa "%{path}" come URL di visualizzazione'
+          errors_heading: Si prega di correggere i seguenti errori di alias
+          header:
+            actions: Azioni
+            display_url: URL di visualizzazione
+            path: Percorso
+          heading: Alias URL
+          help_html: 'Registra i vecchi percorsi URL che dovrebbero reindirizzare a questo record. Ogni percorso sarà risolto dalla radice di questo sito. I percorsi riservati di Hyrax (ad esempio <code>/concern</code>, <code>/dashboard</code>) non possono essere usati.'
+          new_path_label: Nuovo percorso alias
+          path_label: Percorso alias
+          placeholder:
+            path: Inserisci un percorso legacy...
+          remove_label: Rimuovi
+          remove_with_path_label: 'Rimuovi %{path}'
         tab:
           files: File
           metadata: descrizioni
+          redirects: Alias
           relationships: Le relazioni
           share: Condividere
         visibility_until: fino a
