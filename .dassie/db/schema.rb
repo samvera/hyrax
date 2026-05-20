@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_30_000001) do
+ActiveRecord::Schema.define(version: 2026_05_18_000001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -313,6 +313,7 @@ ActiveRecord::Schema.define(version: 2026_04_30_000001) do
     t.string "resource_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "display_url", default: false, null: false
     t.index ["path"], name: "index_hyrax_redirect_paths_on_path", unique: true
     t.index ["resource_id"], name: "index_hyrax_redirect_paths_on_resource_id"
   end

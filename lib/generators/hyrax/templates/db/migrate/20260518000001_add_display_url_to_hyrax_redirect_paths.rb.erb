@@ -1,0 +1,5 @@
+class AddDisplayUrlToHyraxRedirectPaths < ActiveRecord::Migration<%= migration_version %>
+  def change
+    add_column :hyrax_redirect_paths, :display_url, :boolean, default: false, null: false
+  end
+end

@@ -14,10 +14,10 @@
   </thead>
   <tbody>
     <%# Wrap each row through Hyrax::Redirect.wrap so the view can rely on
-        the presenter API (.path, .canonical, .sequence). On initial render
-        the prepopulator already wrapped them; on a re-render after a
-        failed save, f.object.redirects holds the populator's plain hashes,
-        and we wrap them here. %>
+        the presenter API (.path, .display_url). On initial render the
+        prepopulator already wrapped them; on a re-render after a failed
+        save, f.object.redirects holds the populator's plain hashes, and
+        we wrap them here. %>
     <% rows = Array(f.object.redirects).map { |e| Hyrax::Redirect.wrap(e) } + [Hyrax::Redirect.new(path: nil)] %>
     <% rows.each_with_index do |entry, index| %>
       <% input_id = "#{f.object_name}_redirects_attributes_#{index}_path" %>
