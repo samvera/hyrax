@@ -89,6 +89,7 @@
 //= require hyrax/turbolinks_events
 //= require hyrax/i18n_helper
 //= require hyrax/collapse
+//= require hyrax/redirects
 //= require hyrax/skip_to_content
 //= require hyrax/reports-buttons
 //= require hydra-editor/field_manager

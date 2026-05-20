@@ -215,6 +215,14 @@ SELECT 1 FROM hyrax_redirect_paths WHERE source_path = ? AND resource_id <> ? LI
 
 The validator calls `Hyrax::RedirectsLookup.taken?(path, except_id: record.id)` to give the user friendly feedback at form-submit time. If two simultaneous requests both pass validation (because both checked the table before either committed), the unique index rejects the second one at insert time and the enclosing transaction returns `Failure`.
 
+## Selecting the display URL
+
+The Aliases form column "Display URL" lets a user mark one alias per record as the display URL — the path the resolver treats as the institution's preferred public URL for that record. The form persists the flag onto the `display_url` column of `hyrax_redirect_paths` via the sync transaction step.
+
+Implementation note: the form renders the column as a single radio group whose `name` is `<form>[redirects_display_url_index]` and whose values are the row indices. `Hyrax::RedirectsFieldBehavior#redirects_attributes_populator` reads that scalar and folds it onto per-row entries — the selected row gets `display_url: true`, every other row gets `display_url: false`. When the scalar is absent (the Bulkrax CSV import path), the per-row `display_url` value on each entry is honored instead, so CSV imports with explicit per-row `redirect_display_url_<n>` columns work unchanged.
+
+The "None" radio option is the default selection and persists every row as `display_url: false`. The validator continues to enforce at-most-one display URL per record.
+
 ### Sync between `redirects` attribute and the redirects table
 
 The redirects table is kept in sync by two `dry-transaction` steps composed into the create/update/destroy transactions:

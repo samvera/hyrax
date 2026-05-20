@@ -1817,10 +1817,16 @@ en:
         in_other_works: This Work in Other Works
         in_this_work: Other Works in this Work
         redirects:
+          add_label: Add another alias
           caption: List of URL aliases for this resource
+          display_url:
+            help_html: Optionally mark one alias as the <em>display URL</em>. When set, the record's permanent UUID URL redirects to the chosen alias. Leave as "None" to keep the UUID URL as the destination.
+            none_label: None (use the record's UUID URL)
+            row_label: 'Use "%{path}" as the display URL'
           errors_heading: Please correct the following alias errors
           header:
             actions: Actions
+            display_url: Display URL
             path: Path
           heading: URL Aliases
           help_html: 'Register legacy URL paths that should redirect to this record. Each path will resolve from this site''s root. Reserved Hyrax routes (e.g. <code>/concern</code>, <code>/dashboard</code>) cannot be used.'
