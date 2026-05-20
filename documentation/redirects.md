@@ -80,6 +80,8 @@ properties:
       default: Redirects
     type: hash
     multiple: true
+    form:
+      display: false
     indexing:
       - editor_only
     predicate: http://samvera.org/ns/hyku/redirects
@@ -89,6 +91,8 @@ properties:
       render_as: redirects_label
       html_dl: true
 ```
+
+The `form:` block is required in m3. Without it, the m3 form-definition loader skips the property (its filter drops attributes with empty `form_options`), and the Aliases tab errors when the partial reads `f.object.redirects`. The Aliases UI is rendered by `_form_redirects.html.erb`, not by the auto-generated form, so `display: false` is the right value here.
 
 The `display_label` and `range` entries are required for profile validation. `display_label.default` controls the label that appears next to the redirects field on show pages.
 
