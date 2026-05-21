@@ -88,4 +88,51 @@ RSpec.describe Hyrax::RedirectsLookup do
       end
     end
   end
+
+  describe '.display_path_for' do
+    let(:resource_id) { 'res-1' }
+
+    def display_row(from_path:, resource_id:)
+      Hyrax::RedirectPath.create!(
+        from_path: from_path,
+        to_path: "/concern/generic_works/#{resource_id}",
+        permalink_path: "/concern/generic_works/#{resource_id}",
+        resource_id: resource_id,
+        is_display_url: true
+      )
+    end
+
+    context 'when a row for the resource is marked as the display URL' do
+      before do
+        existing_row(from_path: '/handle/aliased', resource_id: resource_id)
+        display_row(from_path: '/preferred', resource_id: resource_id)
+      end
+
+      it 'returns the from_path of the display row' do
+        expect(described_class.display_path_for(resource_id)).to eq('/preferred')
+      end
+    end
+
+    context 'when the resource has rows but none is marked as display URL' do
+      before { existing_row(from_path: '/handle/aliased', resource_id: resource_id) }
+
+      it 'returns nil' do
+        expect(described_class.display_path_for(resource_id)).to be_nil
+      end
+    end
+
+    context 'when the resource has no rows' do
+      it 'returns nil' do
+        expect(described_class.display_path_for(resource_id)).to be_nil
+      end
+    end
+
+    context 'with a blank resource_id' do
+      it 'returns nil without consulting the table' do
+        expect(Hyrax::RedirectPath).not_to receive(:where)
+        expect(described_class.display_path_for('')).to be_nil
+        expect(described_class.display_path_for(nil)).to be_nil
+      end
+    end
+  end
 end

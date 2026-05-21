@@ -1,6 +1,6 @@
 <% provide :page_title, construct_page_title(@presenter.title) %>
 <% content_for :canonical_url do %>
-  <link rel="canonical" href="<%= permalink_for(@presenter) %>" />
+  <link rel="canonical" href="<%= canonical_url_for(@presenter) %>" />
 <% end %>
 <div class="hyc-container" itemscope itemtype="http://schema.org/CollectionPage">
   <div class="row hyc-header">
