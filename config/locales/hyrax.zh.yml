@@ -41,6 +41,13 @@ zh:
       carrierwave_processing_error: 图片大小不能调整。
       extension_blacklist_error: "%{extension} 的文件不能上传, 限制上传的扩展类型: %{prohibited_types}"
       extension_whitelist_error: "%{extension} 的文件不能上传, 可上传的扩展类型: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" 已被另一个作品或集合使用。'
+        blank: 重定向路径不能为空。
+        intra_record_duplicate: '"%{path}" 在此记录中列出多次。'
+        invalid_format: '"%{path}" 不是有效路径。路径必须以 "/" 开头，且不能包含空格、"?" 或 "#"。'
+        multiple_display_url: 每条记录最多只能将一个重定向条目标记为显示 URL。
+        reserved_prefix: '"%{path}" 不能使用。该路径已被应用程序保留，不能用作别名。'
   helpers:
     action:
       accept: 接受
@@ -1820,6 +1827,26 @@ zh:
         in_collections: 集合
         in_other_works: 在其它作品中包括的这件作品
         in_this_work: 这件作品包括的其它作品
+        redirects:
+          add_label: 添加另一个别名
+          caption: 此资源的 URL 别名列表
+          display_url:
+            help_html: 可以选择将一个别名标记为<em>显示 URL</em>。设置后，记录的永久 UUID URL 将重定向到所选别名。保留为"无"以将 UUID URL 作为目标。
+            none_label: 无（使用记录的 UUID URL）
+            row_label: '使用 "%{path}" 作为显示 URL'
+          errors_heading: 请更正以下别名错误
+          header:
+            actions: 操作
+            display_url: 显示 URL
+            path: 路径
+          heading: URL 别名
+          help_html: '注册应重定向到此记录的旧 URL 路径。每个路径将从本站点的根目录解析。保留的 Hyrax 路由（例如 <code>/concern</code>、<code>/dashboard</code>）不能使用。'
+          new_path_label: 新别名路径
+          path_label: 别名路径
+          placeholder:
+            path: 输入旧路径...
+          remove_label: 删除
+          remove_with_path_label: '删除 %{path}'
         tab:
           files: 文件
           metadata: 描述

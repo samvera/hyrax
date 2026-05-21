@@ -41,6 +41,13 @@ es:
       carrierwave_processing_error: No se puede cambiar el tamaño de la imagen.
       extension_blacklist_error: "La subida de archivos %{extension} no está permitida, tipos prohibidos: %{prohibited_types}"
       extension_whitelist_error: "La subida de archivos %{extension} no está permitida, tipos permitidos: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" ya está siendo usado por otro trabajo o colección.'
+        blank: Una ruta de redirección no puede estar en blanco.
+        intra_record_duplicate: '"%{path}" aparece más de una vez en este registro.'
+        invalid_format: '"%{path}" no es una ruta válida. Las rutas deben comenzar con "/" y no contener espacios, "?" ni "#".'
+        multiple_display_url: A lo sumo una entrada de redirección puede marcarse como la URL de visualización.
+        reserved_prefix: '"%{path}" no se puede usar. La ruta está reservada por la aplicación y no puede usarse como alias.'
   helpers:
     action:
       accept: Aceptar
@@ -1825,6 +1832,26 @@ es:
         in_collections: Colecciones
         in_other_works: Este Trabajo en otros Trabajos
         in_this_work: Otros Trabaos en este Trabajo
+        redirects:
+          add_label: Agregar otro alias
+          caption: Lista de alias de URL para este recurso
+          display_url:
+            help_html: Opcionalmente, marque un alias como la <em>URL de visualización</em>. Cuando se establece, la URL UUID permanente del registro redirige al alias elegido. Deje en "Ninguno" para mantener la URL UUID como destino.
+            none_label: Ninguno (usar la URL UUID del registro)
+            row_label: 'Usar "%{path}" como URL de visualización'
+          errors_heading: Por favor corrija los siguientes errores de alias
+          header:
+            actions: Acciones
+            display_url: URL de visualización
+            path: Ruta
+          heading: Alias de URL
+          help_html: 'Registre rutas de URL antiguas que deberían redirigir a este registro. Cada ruta se resolverá desde la raíz de este sitio. Las rutas reservadas de Hyrax (por ejemplo, <code>/concern</code>, <code>/dashboard</code>) no pueden utilizarse.'
+          new_path_label: Nueva ruta de alias
+          path_label: Ruta de alias
+          placeholder:
+            path: Ingrese una ruta antigua...
+          remove_label: Eliminar
+          remove_with_path_label: 'Eliminar %{path}'
         tab:
           files: Archivos
           metadata: Descripciones

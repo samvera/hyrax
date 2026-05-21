@@ -203,11 +203,13 @@ Global uniqueness is enforced by a Postgres table, `hyrax_redirect_paths`, with 
 
 | Column           | Purpose                                                                                                              |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `from_path`      | The alias path the visitor types. Unique B-tree indexed — the primary request-time lookup key.                       |
-| `to_path`        | Where the visitor should be sent. For now, the resource's canonical UUID path on every row.                          |
-| `permalink_path` | The resource's canonical UUID path (e.g. `/concern/generic_works/<uuid>` or `/collections/<uuid>`).                  |
+| `from_path`      | The URL the visitor entered (an alias or the UUID URL itself). Unique B-tree indexed — the primary request-time lookup key. |
+| `to_path`        | The URL the address bar should display after the resolver routes the request. Equals the display alias's `from_path` on rows for resources with a display URL; equals `permalink_path` otherwise. |
+| `permalink_path` | The resource's canonical UUID path (e.g. `/concern/generic_works/<uuid>` or `/collections/<uuid>`). Constant per resource. |
 | `resource_id`    | The UUID of the work or collection. Indexed (non-unique) for the per-resource sync described below.                  |
-| `is_display_url` | Boolean. Defaults to `false`. Reserved for the display-URL feature.                                                  |
+| `is_display_url` | Boolean. `true` on the row whose `from_path` is the record's chosen display URL; `false` everywhere else.            |
+
+When a resource has a display URL set, the sync step writes one row per alias plus an extra row whose `from_path` is the UUID URL, so visitors hitting the bare UUID URL are also routed to the display alias.
 
 The unique index on `from_path` gives the hard guarantee that no two records can share an alias even under concurrent saves.
 
@@ -410,7 +412,7 @@ Alternatively, gate the inclusion of the calling code itself on `Hyrax.config.re
 - `documentation/flexible_metadata.md` — m3 profile fundamentals and how the redirects feature interacts with flexible metadata.
 - `documentation/forms/field_behaviors.md` — the Field Behavior pattern used by `Hyrax::RedirectsFieldBehavior` to wire the form's nested-attribute property.
 - `Hyrax::Redirect` (`app/models/hyrax/redirect.rb`) — thin Ruby presenter for a single redirect entry; used on the form's render path.
-- `Hyrax::RedirectsFieldBehavior` (`app/forms/concerns/hyrax/redirects_field_behavior.rb`) — form-side wiring for the `redirects` and `redirects_attributes` properties: loads the persisted property from `config/metadata/redirects.yaml` via `Hyrax::FormFields(:redirects)`, and owns the populator/prepopulator and the `deserialize!` strip for the nested-attributes payload.
+- `Hyrax::RedirectsFieldBehavior` (`app/forms/concerns/hyrax/redirects_field_behavior.rb`) — form-side wiring for the `redirects_attributes` virtual property and the `redirects_display_url_index` radio-group scalar. Owns the populator (which folds the radio-group index into per-row `is_display_url` flags) and the `deserialize!` strip for the nested-attributes payload. The form partial wraps each persisted hash in a `Hyrax::Redirect` presenter inline at render time.
 - `Hyrax::Indexers::RedirectsIndexer` (`app/indexers/hyrax/indexers/redirects_indexer.rb`) — the indexer mixin. Emits `redirects_path_ssim` (resolver lookup) and `redirects_path_tesim` (show-page display).
 - `Hyrax::SolrDocument::Metadata` (`app/models/concerns/hyrax/solr_document/metadata.rb`) — declares the `redirects_path` attribute on `SolrDocument`, bound to the `redirects_path_tesim` Solr field. This is what makes `solr_document.redirects_path` (and therefore `presenter.redirects_path` via `MissingMethodBehavior`) available to the show-page renderer.
 - `Hyrax::Renderers::RedirectsLabelAttributeRenderer` (`app/renderers/hyrax/renderers/redirects_label_attribute_renderer.rb`) — show-page renderer that turns each redirect path into a clickable link.

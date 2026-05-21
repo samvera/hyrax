@@ -41,6 +41,13 @@ de:
       carrierwave_processing_error: Bild kann nicht verkleinernt werden.
       extension_blacklist_error: "Sie dürfen keine %{extension}-Dateien hochladen, nicht erlaubt sind: %{prohibited_types}"
       extension_whitelist_error: "Sie dürfen keine %{extension}-Dateien hochladen, erlaubt sind: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" wird bereits von einer anderen Arbeit oder Sammlung verwendet.'
+        blank: Ein Weiterleitungspfad darf nicht leer sein.
+        intra_record_duplicate: '"%{path}" ist in diesem Datensatz mehrfach aufgeführt.'
+        invalid_format: '"%{path}" ist kein gültiger Pfad. Pfade müssen mit "/" beginnen und dürfen keine Leerzeichen, "?" oder "#" enthalten.'
+        multiple_display_url: Höchstens ein Weiterleitungseintrag darf als Anzeige-URL markiert sein.
+        reserved_prefix: '"%{path}" kann nicht verwendet werden. Der Pfad ist von der Anwendung reserviert und darf nicht als Alias verwendet werden.'
   helpers:
     action:
       accept: Akzeptieren
@@ -1816,6 +1823,26 @@ de:
         in_collections: Sammlungen
         in_other_works: Diese Arbeit in anderen Arbeiten
         in_this_work: Andere Arbeiten in dieser Arbeit
+        redirects:
+          add_label: Weiteren Alias hinzufügen
+          caption: Liste der URL-Aliase für diese Ressource
+          display_url:
+            help_html: Optional einen Alias als <em>Anzeige-URL</em> markieren. Wenn gesetzt, leitet die permanente UUID-URL des Datensatzes auf den gewählten Alias um. Auf "Keiner" lassen, um die UUID-URL als Ziel zu behalten.
+            none_label: Keiner (UUID-URL des Datensatzes verwenden)
+            row_label: '"%{path}" als Anzeige-URL verwenden'
+          errors_heading: Bitte korrigieren Sie die folgenden Alias-Fehler
+          header:
+            actions: Aktionen
+            display_url: Anzeige-URL
+            path: Pfad
+          heading: URL-Aliase
+          help_html: 'Registrieren Sie ältere URL-Pfade, die auf diesen Datensatz weiterleiten sollen. Jeder Pfad wird vom Stammverzeichnis dieser Website aus aufgelöst. Reservierte Hyrax-Routen (z. B. <code>/concern</code>, <code>/dashboard</code>) können nicht verwendet werden.'
+          new_path_label: Neuer Alias-Pfad
+          path_label: Alias-Pfad
+          placeholder:
+            path: Geben Sie einen alten Pfad ein...
+          remove_label: Entfernen
+          remove_with_path_label: '%{path} entfernen'
         tab:
           files: Dateien
           metadata: Metadaten
