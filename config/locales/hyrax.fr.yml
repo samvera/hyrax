@@ -41,6 +41,13 @@ fr:
       carrierwave_processing_error: Impossible de redimensionner l'image.
       extension_blacklist_error: "Vous n'êtes pas autorisé à télécharger des fichiers %{extension}, types interdits: %{prohibited_types}"
       extension_whitelist_error: "Vous n'êtes pas autorisé à télécharger des fichiers %{extension}, types autorisés: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" est déjà utilisé par un autre travail ou une autre collection.'
+        blank: Un chemin de redirection ne peut pas être vide.
+        intra_record_duplicate: '"%{path}" est listé plusieurs fois dans cet enregistrement.'
+        invalid_format: '"%{path}" n''est pas un chemin valide. Les chemins doivent commencer par "/" et ne pas contenir d''espaces, "?" ou "#".'
+        multiple_display_url: Au plus une entrée de redirection peut être marquée comme URL d'affichage.
+        reserved_prefix: '"%{path}" ne peut pas être utilisé. Le chemin est réservé par l''application et ne peut pas être utilisé comme alias.'
   helpers:
     action:
       accept: Acceptez
@@ -1396,6 +1403,14 @@ fr:
         save_your_note: Vous devez cliquer sur "Enregistrer la révision". pour revenir à une version précédente de ce fichier
         upload: Télécharger une nouvelle version
     flexible_schema_validators:
+      redirects_validator:
+        errors:
+          invalid_available_on: "la propriété `redirects` du profil m3 doit être disponible sur au moins une classe d'œuvre ou de collection déclarée dans ce profil"
+          invalid_type: "la propriété `redirects` du profil m3 doit déclarer `type: hash` (reçu `%{actual_type}`)"
+          property_required: "le profil m3 doit déclarer une propriété `redirects` lorsque la fonctionnalité de redirections est activée"
+        warnings:
+          config_disabled: "le profil m3 déclare une propriété `redirects` mais Hyrax.config.redirects_enabled? est false ; la propriété sera ignorée"
+          flipflop_disabled: "le profil m3 déclare une propriété `redirects` mais l'indicateur de fonctionnalité :redirects est désactivé ; la propriété sera ignorée"
       sort_properties_validator:
         warnings:
           message: "%{property} doit être défini sur %{classes} pour permettre le tri sur cette propriété, à moins que vous n'ayez indexé %{property}_ssi sur un autre champ."
@@ -1823,6 +1838,26 @@ fr:
         in_collections: Collections
         in_other_works: Ce travail dans d'autres ouvrages
         in_this_work: Autres travaux dans ce travail
+        redirects:
+          add_label: Ajouter un autre alias
+          caption: Liste des alias d'URL pour cette ressource
+          display_url:
+            help_html: Marquer éventuellement un alias comme <em>URL d'affichage</em>. Lorsqu'il est défini, l'URL UUID permanente de l'enregistrement redirige vers l'alias choisi. Laisser "Aucun" pour conserver l'URL UUID comme destination.
+            none_label: Aucun (utiliser l'URL UUID de l'enregistrement)
+            row_label: 'Utiliser "%{path}" comme URL d''affichage'
+          errors_heading: Veuillez corriger les erreurs d'alias suivantes
+          header:
+            actions: Actions
+            display_url: URL d'affichage
+            path: Chemin
+          heading: Alias d'URL
+          help_html: 'Enregistrez les anciens chemins d''URL qui devraient rediriger vers cet enregistrement. Chaque chemin sera résolu depuis la racine de ce site. Les routes Hyrax réservées (par exemple, <code>/concern</code>, <code>/dashboard</code>) ne peuvent pas être utilisées.'
+          new_path_label: Nouveau chemin d'alias
+          path_label: Chemin d'alias
+          placeholder:
+            path: Entrez un ancien chemin...
+          remove_label: Supprimer
+          remove_with_path_label: 'Supprimer %{path}'
         tab:
           files: Des dossiers
           metadata: Descriptions

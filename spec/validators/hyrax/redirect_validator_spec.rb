@@ -16,8 +16,8 @@ RSpec.describe Hyrax::RedirectValidator do
       r.redirects = entries
     end
   end
-  def entry(path:, canonical: false)
-    { 'path' => path, 'canonical' => canonical }
+  def entry(path:, is_display_url: false)
+    { 'path' => path, 'is_display_url' => is_display_url }
   end
   let(:entries) { [] }
 
@@ -28,7 +28,7 @@ RSpec.describe Hyrax::RedirectValidator do
 
   describe '#validate_each' do
     context 'when the redirects feature is active' do
-      let(:entries) { [entry(path: '/handle/12345/678', canonical: true)] }
+      let(:entries) { [entry(path: '/handle/12345/678', is_display_url: true)] }
 
       it 'is valid' do
         record.valid?
@@ -38,7 +38,7 @@ RSpec.describe Hyrax::RedirectValidator do
 
     context 'when the redirects feature is inactive' do
       before { allow(Hyrax.config).to receive(:redirects_active?).and_return(false) }
-      let(:entries) { [entry(path: 'no-leading-slash', canonical: false)] }
+      let(:entries) { [entry(path: 'no-leading-slash', is_display_url: false)] }
 
       it 'short-circuits without recording errors' do
         record.valid?
@@ -107,7 +107,7 @@ RSpec.describe Hyrax::RedirectValidator do
     end
 
     context 'with a blank path' do
-      let(:entries) { [entry(path: '', canonical: false)] }
+      let(:entries) { [entry(path: '', is_display_url: false)] }
 
       it 'records a blank-path error' do
         record.valid?
@@ -116,7 +116,7 @@ RSpec.describe Hyrax::RedirectValidator do
     end
 
     context 'with a path missing a leading slash' do
-      let(:entries) { [entry(path: 'handle/12345/678', canonical: false)] }
+      let(:entries) { [entry(path: 'handle/12345/678', is_display_url: false)] }
 
       it 'records a format error' do
         record.valid?
@@ -125,7 +125,7 @@ RSpec.describe Hyrax::RedirectValidator do
     end
 
     context 'with whitespace in the path' do
-      let(:entries) { [entry(path: '/has space', canonical: false)] }
+      let(:entries) { [entry(path: '/has space', is_display_url: false)] }
 
       it 'records a format error' do
         record.valid?
@@ -134,7 +134,7 @@ RSpec.describe Hyrax::RedirectValidator do
     end
 
     context 'with a query string in the path' do
-      let(:entries) { [entry(path: '/foo?bar=baz', canonical: false)] }
+      let(:entries) { [entry(path: '/foo?bar=baz', is_display_url: false)] }
 
       it 'records a format error' do
         record.valid?
@@ -142,8 +142,49 @@ RSpec.describe Hyrax::RedirectValidator do
       end
     end
 
+    context 'with an unsafe character in the path' do
+      # Cover characters outside RFC 3986's allowed path chars. These would
+      # otherwise round-trip into Rails routing and lead to error pages.
+      [
+        '/bad"link"',
+        '/bad<script>',
+        '/bad>here',
+        '/bad{here}',
+        '/bad|pipe',
+        '/bad\\backslash',
+        '/bad`tick',
+        "/bad\nnewline"
+      ].each do |bad_path|
+        it "rejects #{bad_path.inspect} with a format error" do
+          record.redirects = [entry(path: bad_path, is_display_url: false)]
+          record.valid?
+          expect(record.errors[:redirects]).to include(t(:invalid_format, path: bad_path))
+        end
+      end
+    end
+
+    context 'with characters that RFC 3986 allows' do
+      # Make sure tightening the regex didn't reject legitimate alias chars.
+      # These pop up in legacy URLs (DSpace handles, bepress paths, etc).
+      [
+        '/handle/12345/678',
+        '/path-with-dashes_and.dots',
+        '/has(parens)and+plus',
+        "/with'apostrophe",
+        '/colon:and@at',
+        '/pct-encoded/%20space',
+        '/extension.html'
+      ].each do |good_path|
+        it "accepts #{good_path.inspect}" do
+          record.redirects = [entry(path: good_path, is_display_url: false)]
+          record.valid?
+          expect(record.errors[:redirects]).not_to include(t(:invalid_format, path: good_path))
+        end
+      end
+    end
+
     context 'with a path under a reserved Hyrax prefix' do
-      let(:entries) { [entry(path: '/concern/generic_works/abc', canonical: false)] }
+      let(:entries) { [entry(path: '/concern/generic_works/abc', is_display_url: false)] }
 
       it 'records a reserved-prefix error' do
         record.valid?
@@ -152,7 +193,7 @@ RSpec.describe Hyrax::RedirectValidator do
     end
 
     context 'with a path that exactly matches a reserved prefix' do
-      let(:entries) { [entry(path: '/dashboard', canonical: false)] }
+      let(:entries) { [entry(path: '/dashboard', is_display_url: false)] }
 
       it 'records a reserved-prefix error' do
         record.valid?
@@ -163,8 +204,8 @@ RSpec.describe Hyrax::RedirectValidator do
     context 'with two entries sharing the same path on the same record' do
       let(:entries) do
         [
-          entry(path: '/handle/1', canonical: false),
-          entry(path: '/handle/1', canonical: false)
+          entry(path: '/handle/1', is_display_url: false),
+          entry(path: '/handle/1', is_display_url: false)
         ]
       end
 
@@ -177,8 +218,8 @@ RSpec.describe Hyrax::RedirectValidator do
     context 'with two entries that normalize to the same canonical path' do
       let(:entries) do
         [
-          entry(path: '/handle/1', canonical: false),
-          entry(path: '/handle/1/', canonical: false)
+          entry(path: '/handle/1', is_display_url: false),
+          entry(path: '/handle/1/', is_display_url: false)
         ]
       end
 
@@ -189,7 +230,7 @@ RSpec.describe Hyrax::RedirectValidator do
     end
 
     context 'with a reserved prefix typed with a trailing slash' do
-      let(:entries) { [entry(path: '/dashboard/', canonical: false)] }
+      let(:entries) { [entry(path: '/dashboard/', is_display_url: false)] }
 
       it 'records a reserved-prefix error' do
         record.valid?
@@ -198,7 +239,7 @@ RSpec.describe Hyrax::RedirectValidator do
     end
 
     context 'when the path is taken on another record' do
-      let(:entries) { [entry(path: '/handle/12345/678', canonical: false)] }
+      let(:entries) { [entry(path: '/handle/12345/678', is_display_url: false)] }
 
       before do
         allow(Hyrax::RedirectsLookup)
@@ -214,7 +255,7 @@ RSpec.describe Hyrax::RedirectValidator do
     end
 
     context 'when a non-canonical form of the path is taken on another record' do
-      let(:entries) { [entry(path: '/handle/12345/678/', canonical: false)] }
+      let(:entries) { [entry(path: '/handle/12345/678/', is_display_url: false)] }
 
       before do
         allow(Hyrax::RedirectsLookup)
@@ -229,47 +270,70 @@ RSpec.describe Hyrax::RedirectValidator do
       end
     end
 
-    context 'when more than one entry is marked canonical' do
+    context 'when more than one entry is marked as the display URL' do
       let(:entries) do
         [
-          entry(path: '/a', canonical: true),
-          entry(path: '/b', canonical: true)
+          entry(path: '/a', is_display_url: true),
+          entry(path: '/b', is_display_url: true)
         ]
       end
 
-      it 'records an at-most-one-canonical error' do
+      it 'records an at-most-one-display-url error' do
         record.valid?
-        expect(record.errors[:redirects]).to include(t(:multiple_canonical))
+        expect(record.errors[:redirects]).to include(t(:multiple_display_url))
       end
     end
 
-    context 'when zero entries are marked canonical' do
+    context 'when zero entries are marked as the display URL' do
       let(:entries) do
         [
-          entry(path: '/a', canonical: false),
-          entry(path: '/b', canonical: false)
+          entry(path: '/a', is_display_url: false),
+          entry(path: '/b', is_display_url: false)
         ]
       end
 
-      it 'is valid (canonical is optional)' do
+      it 'is valid (display URL is optional)' do
         record.valid?
         expect(record.errors[:redirects]).to be_empty
       end
     end
+
+    context 'when entries contain string is_display_url values (importer/console write)' do
+      let(:entries) do
+        [
+          entry(path: '/a', is_display_url: 'true'),
+          entry(path: '/b', is_display_url: 'false')
+        ]
+      end
+
+      it 'does not flag at-most-one when only one entry is truthy after casting' do
+        record.redirects = entries
+        record.valid?
+        expect(record.errors[:redirects]).not_to include(t(:multiple_display_url))
+      end
+    end
   end
 
-  describe '#canonical_for' do
+  describe '#display_url_for' do
     it 'returns the stored false flag rather than nil' do
-      expect(validator.send(:canonical_for, 'canonical' => false)).to be(false)
-      expect(validator.send(:canonical_for, canonical: false)).to be(false)
+      expect(validator.send(:display_url_for, 'is_display_url' => false)).to be(false)
+      expect(validator.send(:display_url_for, is_display_url: false)).to be(false)
     end
 
     it 'returns true when the flag is set' do
-      expect(validator.send(:canonical_for, 'canonical' => true)).to be(true)
+      expect(validator.send(:display_url_for, 'is_display_url' => true)).to be(true)
     end
 
     it 'returns nil when the flag is absent' do
-      expect(validator.send(:canonical_for, 'path' => '/x')).to be_nil
+      expect(validator.send(:display_url_for, 'path' => '/x')).to be_nil
+    end
+
+    it 'casts string values written by importers/console to booleans' do
+      expect(validator.send(:display_url_for, 'is_display_url' => 'true')).to be(true)
+      expect(validator.send(:display_url_for, 'is_display_url' => 'false')).to be(false)
+      expect(validator.send(:display_url_for, 'is_display_url' => '1')).to be(true)
+      expect(validator.send(:display_url_for, 'is_display_url' => '0')).to be(false)
+      expect(validator.send(:display_url_for, 'is_display_url' => '')).to be_nil
     end
   end
 end

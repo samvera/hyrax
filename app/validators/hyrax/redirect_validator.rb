@@ -6,7 +6,12 @@ module Hyrax
   #
   # See documentation/redirects.md for the validation rules.
   class RedirectValidator < ActiveModel::EachValidator
-    PATH_FORMAT = %r{\A/[^?\s#]+\z}.freeze
+    # Allow-list per RFC 3986 path chars: unreserved + sub-delims + ":" + "@" + "/"
+    # plus pct-encoded "%XX". Rejects quotes, backslashes, angle brackets, pipes,
+    # braces, control chars, whitespace, "?", and "#" — anything Rails routing
+    # would refuse or that would be unsafe to round-trip through a URL.
+    PATH_CHAR = %r{[A-Za-z0-9\-._~!$&'()*+,;=:@/]|%[0-9A-Fa-f]{2}}.freeze
+    PATH_FORMAT = %r{\A/(?:#{PATH_CHAR})+\z}.freeze
 
     # Override `validate` so we can short-circuit before ActiveModel calls
     # `record.read_attribute_for_validation`, which would crash on records
@@ -29,7 +34,7 @@ module Hyrax
       validate_each_entry(record, attribute, entries)
       validate_intra_record_uniqueness(record, attribute, entries)
       validate_global_uniqueness(record, attribute, entries)
-      validate_at_most_one_canonical(record, attribute, entries)
+      validate_at_most_one_display_url(record, attribute, entries)
     end
 
     private
@@ -42,9 +47,13 @@ module Hyrax
       nil
     end
 
-    def canonical_for(entry)
-      return entry.canonical if entry.respond_to?(:canonical)
-      return entry.key?('canonical') ? entry['canonical'] : entry[:canonical] if entry.respond_to?(:[])
+    # Returns nil when the flag is absent, otherwise a real boolean.
+    def display_url_for(entry)
+      return ActiveModel::Type::Boolean.new.cast(entry.is_display_url) if entry.respond_to?(:is_display_url)
+      if entry.respond_to?(:[])
+        return ActiveModel::Type::Boolean.new.cast(entry['is_display_url']) if entry.key?('is_display_url')
+        return ActiveModel::Type::Boolean.new.cast(entry[:is_display_url]) if entry.key?(:is_display_url)
+      end
       nil
     end
 
@@ -96,10 +105,10 @@ module Hyrax
       Hyrax::RedirectPathNormalizer.call(path)
     end
 
-    def validate_at_most_one_canonical(record, attribute, entries)
-      canonical_count = entries.count { |entry| canonical_for(entry) }
-      return if canonical_count <= 1
-      record.errors.add(attribute, message_for(:multiple_canonical))
+    def validate_at_most_one_display_url(record, attribute, entries)
+      display_url_count = entries.count { |entry| display_url_for(entry) }
+      return if display_url_count <= 1
+      record.errors.add(attribute, message_for(:multiple_display_url))
     end
 
     def message_for(key, **interpolations)
