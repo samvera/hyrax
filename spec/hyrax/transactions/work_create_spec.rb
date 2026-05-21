@@ -48,8 +48,11 @@ RSpec.describe Hyrax::Transactions::WorkCreate, :clean_repo do
                  .call(change_set)
                  .value!
 
-        expect(Hyrax::AccessControlList.new(resource: work).permissions.map(&:agent))
-          .to include(user.user_key)
+        edit_agents = Hyrax::AccessControlList.new(resource: work)
+                                              .permissions
+                                              .select { |p| p.mode == :edit }
+                                              .map(&:agent)
+        expect(edit_agents).to include(user.user_key)
       end
     end
 
