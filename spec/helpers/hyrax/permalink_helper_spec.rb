@@ -16,47 +16,30 @@ RSpec.describe Hyrax::PermalinkHelper, type: :helper do
   end
 
   describe '#permalink_for' do
-    let(:work_presenter) { double('WorkPresenter', collection?: false) }
-    let(:collection_presenter) { double('CollectionPresenter', collection?: true) }
-    let(:bare_presenter) { double('BarePresenter') }
+    let(:presenter) { double('Presenter') }
 
-    it 'routes works through main_app' do
-      expect(helper).to receive(:polymorphic_url).with([helper.main_app, work_presenter]).and_return('http://example.test/works/1')
-      expect(helper.permalink_for(work_presenter)).to eq('http://example.test/works/1')
+    before do
+      allow(helper.request).to receive(:base_url).and_return('http://example.test')
     end
 
-    it 'routes collections through the Hyrax engine' do
-      expect(helper).to receive(:polymorphic_url).with([helper.hyrax, collection_presenter]).and_return('http://example.test/collections/1')
-      expect(helper.permalink_for(collection_presenter)).to eq('http://example.test/collections/1')
-    end
-
-    it 'treats presenters without a collection? method as non-collections' do
-      expect(helper).to receive(:polymorphic_url).with([helper.main_app, bare_presenter]).and_return('http://example.test/x/1')
-      expect(helper.permalink_for(bare_presenter)).to eq('http://example.test/x/1')
+    it 'concatenates request.base_url with the canonical path from Hyrax::PermalinkPath' do
+      allow(Hyrax::PermalinkPath).to receive(:call).with(presenter).and_return('/concern/generic_works/abc-123')
+      expect(helper.permalink_for(presenter)).to eq('http://example.test/concern/generic_works/abc-123')
     end
 
     it 'strips a locale query string appended by Rails default_url_options' do
-      expect(helper).to receive(:polymorphic_url)
-        .with([helper.main_app, work_presenter])
-        .and_return('http://example.test/concern/generic_works/abc-123?locale=en')
-      expect(helper.permalink_for(work_presenter))
-        .to eq('http://example.test/concern/generic_works/abc-123')
+      allow(Hyrax::PermalinkPath).to receive(:call).with(presenter).and_return('/concern/generic_works/abc-123?locale=en')
+      expect(helper.permalink_for(presenter)).to eq('http://example.test/concern/generic_works/abc-123')
     end
 
     it 'strips any query string, not just locale' do
-      expect(helper).to receive(:polymorphic_url)
-        .with([helper.main_app, work_presenter])
-        .and_return('http://example.test/concern/generic_works/abc-123?foo=bar&baz=qux')
-      expect(helper.permalink_for(work_presenter))
-        .to eq('http://example.test/concern/generic_works/abc-123')
+      allow(Hyrax::PermalinkPath).to receive(:call).with(presenter).and_return('/concern/generic_works/abc-123?foo=bar&baz=qux')
+      expect(helper.permalink_for(presenter)).to eq('http://example.test/concern/generic_works/abc-123')
     end
 
     it 'strips a URL fragment as well' do
-      expect(helper).to receive(:polymorphic_url)
-        .with([helper.main_app, work_presenter])
-        .and_return('http://example.test/concern/generic_works/abc-123?locale=en#section')
-      expect(helper.permalink_for(work_presenter))
-        .to eq('http://example.test/concern/generic_works/abc-123')
+      allow(Hyrax::PermalinkPath).to receive(:call).with(presenter).and_return('/concern/generic_works/abc-123#section')
+      expect(helper.permalink_for(presenter)).to eq('http://example.test/concern/generic_works/abc-123')
     end
   end
 end

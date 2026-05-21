@@ -6,8 +6,8 @@ module Hyrax
     module Steps
       # A `dry-transaction` step that mirrors a saved resource's `redirects`
       # entries into the `hyrax_redirect_paths` redirects table. The unique
-      # index on `path` enforces global uniqueness at the DB level — if a
-      # concurrent save already claimed a path, the insert raises
+      # index on `from_path` enforces global uniqueness at the DB level — if
+      # a concurrent save already claimed a path, the insert raises
       # ActiveRecord::RecordNotUnique and this step returns Failure, which
       # short-circuits the enclosing transaction.
       #
@@ -40,27 +40,36 @@ module Hyrax
         end
 
         def build_rows(object)
-          # Valkyrie's JSONValueMapper symbolizes hash keys on read; accept either.
-          # Paths are normalized at write time by Hyrax::RedirectsNormalization.
-          paths = Array(object.redirects)
-                  .map { |entry| entry['path'] || entry[:path] }
-                  .reject(&:blank?)
-                  .uniq
+          permalink = Hyrax::PermalinkPath.call(object)
+          resource_id = object.id.to_s
           now = Time.current
-          paths.map { |path| { path: path, resource_id: object.id.to_s, created_at: now, updated_at: now } }
+          alias_paths_for(object).map do |alias_path|
+            { from_path: alias_path,
+              to_path: permalink,
+              permalink_path: permalink,
+              resource_id: resource_id,
+              is_display_url: false,
+              created_at: now, updated_at: now }
+          end
         end
 
-        # @return [Array<String>, nil] the union of old + new paths that need
-        #   cache invalidation, or nil when nothing changed.
+        # Valkyrie's JSONValueMapper symbolizes hash keys on read; accept either.
+        # Paths are normalized at write time by Hyrax::RedirectsNormalization.
+        def alias_paths_for(object)
+          Array(object.redirects).map { |entry| entry['path'] || entry[:path] }.reject(&:blank?).uniq
+        end
+
+        # @return [Array<String>, nil] the union of old + new from_paths that
+        #   need cache invalidation, or nil when nothing changed.
         def replace_rows(object, rows)
-          desired_paths = rows.map { |r| r[:path] }.sort
+          desired_paths = rows.map { |r| r[:from_path] }.sort
 
           Hyrax::RedirectPath.transaction do
-            existing_paths = Hyrax::RedirectPath.where(resource_id: object.id.to_s).pluck(:path).sort
+            existing_paths = Hyrax::RedirectPath.where(resource_id: object.id.to_s).pluck(:from_path).sort
             return nil if desired_paths == existing_paths
 
             Hyrax::RedirectPath.where(resource_id: object.id.to_s).delete_all
-            # rubocop:disable Rails/SkipsModelValidations -- the DB unique index on `path` is the validation we rely on; bulk insert is intentional
+            # rubocop:disable Rails/SkipsModelValidations -- the DB unique index on `from_path` is the validation we rely on; bulk insert is intentional
             Hyrax::RedirectPath.insert_all!(rows) if rows.any?
             # rubocop:enable Rails/SkipsModelValidations
 

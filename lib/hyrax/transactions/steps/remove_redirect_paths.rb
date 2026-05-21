@@ -18,7 +18,7 @@ module Hyrax
         def call(resource)
           return Success(resource) unless removable?(resource)
           scope = Hyrax::RedirectPath.where(resource_id: resource.id.to_s)
-          paths = scope.pluck(:path)
+          paths = scope.pluck(:from_path)
           scope.delete_all
           Hyrax::RedirectCacheBuster.call(paths) if paths.any?
           Success(resource)
