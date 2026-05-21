@@ -4,98 +4,63 @@ RSpec.describe Hyrax::RedirectsController, type: :controller do
   routes { Rails.application.routes }
 
   describe '#show' do
-    let(:work_id)        { 'abc-123-xyz' }
-    let(:collection_id)  { 'col-456-uvw' }
-    let(:work_doc) do
-      { 'id' => work_id, 'has_model_ssim' => ['GenericWork'] }
-    end
-    let(:collection_doc) do
-      { 'id' => collection_id, 'has_model_ssim' => ['CollectionResource'] }
-    end
+    let(:resource_id) { 'abc-123-xyz' }
+    let(:permalink)   { "/concern/generic_works/#{resource_id}" }
+    let(:display_alias) { '/handle/12345/678' }
 
     before do
       allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true)
       allow(Flipflop).to receive(:redirects?).and_return(true)
-      Rails.cache.clear
+      Hyrax::RedirectPath.delete_all
     end
 
-    context 'with a path that resolves to a work' do
-      before do
-        allow(Hyrax::SolrService)
-          .to receive(:get)
-          .with('redirects_path_ssim:"/handle/12345/678"', rows: 1)
-          .and_return('response' => { 'docs' => [work_doc] })
-      end
-
-      it '301-redirects to the work permanent URL' do
-        get :show, params: { alias_path: 'handle/12345/678' }
-        expect(response).to have_http_status(:moved_permanently)
-        expect(response.headers['Location']).to include("/concern/generic_works/#{work_id}")
-      end
+    def existing_row(from_path:, to_path:, is_display_url: false)
+      Hyrax::RedirectPath.create!(
+        from_path: from_path,
+        to_path: to_path,
+        permalink_path: permalink,
+        resource_id: resource_id,
+        is_display_url: is_display_url
+      )
     end
 
-    context 'with a path that resolves to a collection' do
-      before do
-        allow(Hyrax::SolrService)
-          .to receive(:get)
-          .with('redirects_path_ssim:"/special-collection-1"', rows: 1)
-          .and_return('response' => { 'docs' => [collection_doc] })
-      end
-
-      it '301-redirects to the collection permanent URL' do
-        get :show, params: { alias_path: 'special-collection-1' }
-        expect(response).to have_http_status(:moved_permanently)
-        expect(response.headers['Location']).to include("/collections/#{collection_id}")
-      end
-    end
-
-    context 'with a path that has no matching redirect' do
-      before do
-        allow(Hyrax::SolrService)
-          .to receive(:get)
-          .and_return('response' => { 'docs' => [] })
-      end
-
+    context 'when no row matches the visited path' do
       it 'raises ActionController::RoutingError so Rails serves a 404' do
         expect { get :show, params: { alias_path: 'no-such-path' } }
           .to raise_error(ActionController::RoutingError)
       end
     end
 
-    context 'when Solr raises an HTTP error' do
-      let(:request_hash)  { { uri: URI('http://example/solr'), method: 'GET' } }
-      let(:response_hash) { { status: 500, body: +'boom', headers: {} } }
+    context 'when the visited path is a non-display alias' do
+      before { existing_row(from_path: '/old-alias', to_path: display_alias) }
 
-      before do
-        allow(Hyrax::SolrService)
-          .to receive(:get)
-          .and_raise(RSolr::Error::Http.new(request_hash, response_hash))
-        allow(Hyrax.logger).to receive(:warn)
-      end
-
-      it 'logs and resolves to nil (404)' do
-        expect { get :show, params: { alias_path: 'oops' } }
-          .to raise_error(ActionController::RoutingError)
-        expect(Hyrax.logger).to have_received(:warn).with(/Redirect lookup failed/)
+      it '301-redirects to the row\'s to_path (the display alias)' do
+        get :show, params: { alias_path: 'old-alias' }
+        expect(response).to have_http_status(:moved_permanently)
+        expect(response.headers['Location']).to end_with(display_alias)
       end
     end
 
-    describe 'caching' do
+    context 'when the visited path is the display URL itself' do
       before do
-        allow(Hyrax::SolrService)
-          .to receive(:get)
-          .and_return('response' => { 'docs' => [work_doc] })
+        existing_row(from_path: display_alias, to_path: display_alias, is_display_url: true)
       end
 
-      it 'consults Solr at most once per cached path within the TTL' do
-        2.times { get :show, params: { alias_path: 'cached-path' } }
-        expect(Hyrax::SolrService).to have_received(:get).once
-      end
-
-      it 'consults Solr separately for distinct paths' do
-        get :show, params: { alias_path: 'first-path' }
-        get :show, params: { alias_path: 'second-path' }
-        expect(Hyrax::SolrService).to have_received(:get).twice
+      it 'dispatches in-process to the curation-concern controller and flags the env' do
+        info = { controller: 'hyrax/generic_works', action: 'show', id: resource_id }
+        allow(Rails.application.routes).to receive(:recognize_path).with(permalink).and_return(info)
+        target_controller = class_double('Hyrax::GenericWorksController').as_stubbed_const
+        # Rails calls action_encoding_template on the target controller class when
+        # assigning path_parameters; stub it so the class_double doesn't choke.
+        allow(target_controller).to receive(:action_encoding_template).and_return(nil)
+        expect(target_controller).to receive(:dispatch).with('show', kind_of(ActionDispatch::Request), kind_of(ActionDispatch::Response)) do |_action, request, response|
+          expect(request.env['hyrax.redirects.dispatched']).to be(true)
+          expect(request.path_parameters).to eq(info)
+          response.body = 'inner-controller-rendered-this'
+        end
+        get :show, params: { alias_path: display_alias.delete_prefix('/') }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq('inner-controller-rendered-this')
       end
     end
   end

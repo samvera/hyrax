@@ -53,4 +53,39 @@ RSpec.describe Hyrax::RedirectsLookup do
       end
     end
   end
+
+  describe '.find_row' do
+    let(:path) { '/handle/12345/678' }
+
+    context 'when a row exists with that from_path' do
+      let!(:row) { existing_row(from_path: path, resource_id: 'res-1') }
+
+      it 'returns the row' do
+        expect(described_class.find_row(path)).to eq(row)
+      end
+    end
+
+    context 'when no row matches' do
+      it 'returns nil' do
+        expect(described_class.find_row(path)).to be_nil
+      end
+    end
+
+    context 'when the input needs normalization' do
+      before { existing_row(from_path: '/foo', resource_id: 'res-1') }
+
+      it 'normalizes before looking up' do
+        expect(described_class.find_row('/foo/')).to be_present
+        expect(described_class.find_row('http://example.com/foo')).to be_present
+      end
+    end
+
+    context 'with a blank path' do
+      it 'returns nil without consulting the table' do
+        expect(Hyrax::RedirectPath).not_to receive(:find_by)
+        expect(described_class.find_row('')).to be_nil
+        expect(described_class.find_row(nil)).to be_nil
+      end
+    end
+  end
 end
