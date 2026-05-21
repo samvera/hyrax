@@ -76,9 +76,20 @@ module Hyrax
             path = entry['path'] || entry[:path]
             next if path.blank? || seen.include?(path)
             seen << path
-            flag = entry['is_display_url'] || entry[:is_display_url]
-            acc << { from_path: path, is_display_url: flag ? true : false }
+            acc << { from_path: path, is_display_url: display_url_flag(entry) }
           end
+        end
+
+        # Boolean-cast the stored value so importer/console writes that leave a
+        # string like "false" or "0" in the JSONB hash don't end up as truthy.
+        # Returns false when the key is absent.
+        def display_url_flag(entry)
+          raw = if entry.key?('is_display_url')
+                  entry['is_display_url']
+                elsif entry.key?(:is_display_url)
+                  entry[:is_display_url]
+                end
+          ActiveModel::Type::Boolean.new.cast(raw) || false
         end
 
         def build_alias_row(entry, resource_id, permalink, display_path, now)

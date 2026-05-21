@@ -42,9 +42,13 @@ module Hyrax
       nil
     end
 
+    # Returns nil when the flag is absent, otherwise a real boolean.
     def display_url_for(entry)
-      return entry.is_display_url if entry.respond_to?(:is_display_url)
-      return entry.key?('is_display_url') ? entry['is_display_url'] : entry[:is_display_url] if entry.respond_to?(:[])
+      return ActiveModel::Type::Boolean.new.cast(entry.is_display_url) if entry.respond_to?(:is_display_url)
+      if entry.respond_to?(:[])
+        return ActiveModel::Type::Boolean.new.cast(entry['is_display_url']) if entry.key?('is_display_url')
+        return ActiveModel::Type::Boolean.new.cast(entry[:is_display_url]) if entry.key?(:is_display_url)
+      end
       nil
     end
 

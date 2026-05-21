@@ -79,6 +79,23 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
       end
     end
 
+    context 'with string is_display_url values (importer/console write)' do
+      let(:redirects) do
+        [{ 'path' => '/handle/1', 'is_display_url' => 'true' },
+         { 'path' => '/handle/2', 'is_display_url' => 'false' }]
+      end
+
+      it 'boolean-casts the string values so only the truthy entry marks the display URL' do
+        step.call(resource)
+        rows = Hyrax::RedirectPath.where(resource_id: resource_id)
+        expect(rows.pluck(:from_path, :is_display_url)).to contain_exactly(
+          ['/handle/1', true],
+          ['/handle/2', false],
+          [permalink,   false]
+        )
+      end
+    end
+
     context 'when the display flag moves between saves' do
       before do
         existing_row(from_path: '/handle/1', resource_id: resource_id, is_display_url: true, to_path: '/handle/1')

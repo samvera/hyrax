@@ -256,6 +256,21 @@ RSpec.describe Hyrax::RedirectValidator do
         expect(record.errors[:redirects]).to be_empty
       end
     end
+
+    context 'when entries contain string is_display_url values (importer/console write)' do
+      let(:entries) do
+        [
+          entry(path: '/a', is_display_url: 'true'),
+          entry(path: '/b', is_display_url: 'false')
+        ]
+      end
+
+      it 'does not flag at-most-one when only one entry is truthy after casting' do
+        record.redirects = entries
+        record.valid?
+        expect(record.errors[:redirects]).not_to include(t(:multiple_display_url))
+      end
+    end
   end
 
   describe '#display_url_for' do
@@ -270,6 +285,14 @@ RSpec.describe Hyrax::RedirectValidator do
 
     it 'returns nil when the flag is absent' do
       expect(validator.send(:display_url_for, 'path' => '/x')).to be_nil
+    end
+
+    it 'casts string values written by importers/console to booleans' do
+      expect(validator.send(:display_url_for, 'is_display_url' => 'true')).to be(true)
+      expect(validator.send(:display_url_for, 'is_display_url' => 'false')).to be(false)
+      expect(validator.send(:display_url_for, 'is_display_url' => '1')).to be(true)
+      expect(validator.send(:display_url_for, 'is_display_url' => '0')).to be(false)
+      expect(validator.send(:display_url_for, 'is_display_url' => '')).to be_nil
     end
   end
 end
