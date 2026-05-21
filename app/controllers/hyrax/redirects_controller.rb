@@ -14,7 +14,7 @@ module Hyrax
       if row.is_display_url?
         dispatch_in_place(row)
       else
-        redirect_to row.to_path, status: :moved_permanently
+        redirect_to with_locale(row.to_path), status: :moved_permanently
       end
     end
 
@@ -31,6 +31,7 @@ module Hyrax
     # back to itself.
     def dispatch_in_place(row)
       info = Rails.application.routes.recognize_path(row.permalink_path)
+      info[:locale] = params[:locale] if params[:locale].present?
       controller_class = "#{info[:controller].camelize}Controller".constantize
       request.path_parameters = info
       request.env['hyrax.redirects.dispatched'] = true
@@ -38,6 +39,16 @@ module Hyrax
       # The inner controller wrote into the shared `response`; mark the outer
       # action as performed so Rails skips its own implicit_render lookup.
       self.response_body = response.body
+    end
+
+    # Carry the visitor's requested locale (set by Hyrax::Controller#set_locale
+    # from `params[:locale]`) across the 301 so the destination page renders in
+    # the same language. Appended as `?locale=<value>` so this works whether the
+    # host app uses path-prefix or query-string locales.
+    def with_locale(path)
+      return path if params[:locale].blank?
+      separator = path.include?('?') ? '&' : '?'
+      "#{path}#{separator}locale=#{params[:locale]}"
     end
   end
 end

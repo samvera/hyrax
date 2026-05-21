@@ -39,6 +39,12 @@ RSpec.describe Hyrax::RedirectsController, type: :controller do
         expect(response).to have_http_status(:moved_permanently)
         expect(response.headers['Location']).to end_with(display_alias)
       end
+
+      it 'appends ?locale=<value> to the 301 target when the visitor has a locale param' do
+        get :show, params: { alias_path: 'old-alias', locale: 'fr' }
+        expect(response).to have_http_status(:moved_permanently)
+        expect(response.headers['Location']).to end_with("#{display_alias}?locale=fr")
+      end
     end
 
     context 'when the visited path is the display URL itself' do
@@ -61,6 +67,19 @@ RSpec.describe Hyrax::RedirectsController, type: :controller do
         get :show, params: { alias_path: display_alias.delete_prefix('/') }
         expect(response).to have_http_status(:ok)
         expect(response.body).to eq('inner-controller-rendered-this')
+      end
+
+      it 'carries locale into the in-process dispatch when the visitor has a locale param' do
+        recognized = { controller: 'hyrax/generic_works', action: 'show', id: resource_id }
+        allow(Rails.application.routes).to receive(:recognize_path).with(permalink).and_return(recognized)
+        target_controller = class_double('Hyrax::GenericWorksController').as_stubbed_const
+        allow(target_controller).to receive(:action_encoding_template).and_return(nil)
+        expect(target_controller).to receive(:dispatch).with('show', kind_of(ActionDispatch::Request), kind_of(ActionDispatch::Response)) do |_action, request, response|
+          expect(request.path_parameters[:locale]).to eq('fr')
+          response.body = 'rendered'
+        end
+        get :show, params: { alias_path: display_alias.delete_prefix('/'), locale: 'fr' }
+        expect(response).to have_http_status(:ok)
       end
     end
   end

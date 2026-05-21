@@ -80,6 +80,12 @@ RSpec.describe Hyrax::RedirectToDisplayUrl, type: :controller do
         expect(response).to have_http_status(:moved_permanently)
         expect(response.headers['Location']).to end_with(display_alias)
       end
+
+      it 'appends ?locale=<value> to the 301 target when the visitor has a locale param' do
+        get :show, params: { id: resource_id, locale: 'fr' }
+        expect(response).to have_http_status(:moved_permanently)
+        expect(response.headers['Location']).to end_with("#{display_alias}?locale=fr")
+      end
     end
   end
 end

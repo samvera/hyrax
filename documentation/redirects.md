@@ -268,6 +268,14 @@ Visiting the bare UUID URL bypasses the catch-all (Rails routes natively to the 
 
 When a resource has a display URL, the sync step writes a row keyed on the UUID URL whose `to_path` is the display alias — that's the row this before_action finds, and the 301 sends the visitor to the display alias. The display-alias request then hits the catch-all and dispatches in-place via `RedirectsController`.
 
+### Locale preservation
+
+`RedirectsController` inherits the host app's `ApplicationController`, which includes `Hyrax::Controller`. `Hyrax::Controller#set_locale` reads `params[:locale]` (or falls back to `I18n.default_locale`) on every request. When the resolver issues a 301 to a string path (the row's `to_path`), it appends `?locale=<value>` to that path whenever the incoming request carried a `locale` param, so the destination page renders in the visitor's chosen language. When the resolver dispatches in place at the display URL, it merges `locale: params[:locale]` into the inner request's `path_parameters` before calling `controller_class.dispatch`, so the inner controller's `set_locale` before_action picks up the same locale.
+
+The same locale-preservation behavior is in `Hyrax::RedirectToDisplayUrl#redirect_to_display_url_if_needed` for the UUID-URL-to-display-alias 301.
+
+Aliases are stored without a locale prefix. A visitor whose browser arrives at `/<locale>/handle/12345/678` (which happens in host apps that mount routes inside `scope "(:locale)"`, such as Hyku) does **not** match a row stored as `/handle/12345/678` — that path is treated as not registered. Host apps that need locale-prefixed aliases to resolve must store each prefixed form as its own row or override `Hyrax::RedirectsLookup`.
+
 ### Performance
 
 The resolver does one indexed DB query per request. `hyrax_redirect_paths` is a small derived table (one row per registered alias plus one per resource with a display URL); the `from_path` unique index makes lookups sub-millisecond on any realistic load. No request-time Solr query, no application-level cache. If profiling later shows a hot path, the lookup is the obvious cache point.

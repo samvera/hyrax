@@ -36,7 +36,17 @@ module Hyrax
       row = Hyrax::RedirectsLookup.find_row(request.path)
       return if row.blank?
       return if row.to_path == request.path
-      redirect_to row.to_path, status: :moved_permanently
+      redirect_to with_locale(row.to_path), status: :moved_permanently
+    end
+
+    # Carry the visitor's requested locale (set by Hyrax::Controller#set_locale
+    # from `params[:locale]`) across the 301 so the destination page renders in
+    # the same language. Appended as `?locale=<value>` so this works whether the
+    # host app uses path-prefix or query-string locales.
+    def with_locale(path)
+      return path if params[:locale].blank?
+      separator = path.include?('?') ? '&' : '?'
+      "#{path}#{separator}locale=#{params[:locale]}"
     end
   end
 end
