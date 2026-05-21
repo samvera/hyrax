@@ -6,7 +6,12 @@ module Hyrax
   #
   # See documentation/redirects.md for the validation rules.
   class RedirectValidator < ActiveModel::EachValidator
-    PATH_FORMAT = %r{\A/[^?\s#]+\z}.freeze
+    # Allow-list per RFC 3986 path chars: unreserved + sub-delims + ":" + "@" + "/"
+    # plus pct-encoded "%XX". Rejects quotes, backslashes, angle brackets, pipes,
+    # braces, control chars, whitespace, "?", and "#" — anything Rails routing
+    # would refuse or that would be unsafe to round-trip through a URL.
+    PATH_CHAR = %r{[A-Za-z0-9\-._~!$&'()*+,;=:@/]|%[0-9A-Fa-f]{2}}.freeze
+    PATH_FORMAT = %r{\A/(?:#{PATH_CHAR})+\z}.freeze
 
     # Override `validate` so we can short-circuit before ActiveModel calls
     # `record.read_attribute_for_validation`, which would crash on records

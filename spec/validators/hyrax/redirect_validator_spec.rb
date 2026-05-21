@@ -142,6 +142,47 @@ RSpec.describe Hyrax::RedirectValidator do
       end
     end
 
+    context 'with an unsafe character in the path' do
+      # Cover characters outside RFC 3986's allowed path chars. These would
+      # otherwise round-trip into Rails routing and lead to error pages.
+      [
+        '/bad"link"',
+        '/bad<script>',
+        '/bad>here',
+        '/bad{here}',
+        '/bad|pipe',
+        '/bad\\backslash',
+        '/bad`tick',
+        "/bad\nnewline"
+      ].each do |bad_path|
+        it "rejects #{bad_path.inspect} with a format error" do
+          record.redirects = [entry(path: bad_path, is_display_url: false)]
+          record.valid?
+          expect(record.errors[:redirects]).to include(t(:invalid_format, path: bad_path))
+        end
+      end
+    end
+
+    context 'with characters that RFC 3986 allows' do
+      # Make sure tightening the regex didn't reject legitimate alias chars.
+      # These pop up in legacy URLs (DSpace handles, bepress paths, etc).
+      [
+        '/handle/12345/678',
+        '/path-with-dashes_and.dots',
+        '/has(parens)and+plus',
+        "/with'apostrophe",
+        '/colon:and@at',
+        '/pct-encoded/%20space',
+        '/extension.html'
+      ].each do |good_path|
+        it "accepts #{good_path.inspect}" do
+          record.redirects = [entry(path: good_path, is_display_url: false)]
+          record.valid?
+          expect(record.errors[:redirects]).not_to include(t(:invalid_format, path: good_path))
+        end
+      end
+    end
+
     context 'with a path under a reserved Hyrax prefix' do
       let(:entries) { [entry(path: '/concern/generic_works/abc', is_display_url: false)] }
 

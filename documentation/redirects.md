@@ -176,7 +176,7 @@ The validator enforces six rules on the `redirects` attribute:
 | Rule | Trigger | Error |
 |---|---|---|
 | Path is present | `entry.path` is blank | `redirect path can't be blank` |
-| Path format | path doesn't start with `/`, contains whitespace, `?`, or `#` | `is not a valid redirect path` |
+| Path format | path doesn't start with `/`, or contains any character outside the RFC 3986 path set (alphanumerics, `-._~`, sub-delims `!$&'()*+,;=`, `:`, `@`, `/`, and `%XX` percent-encoding) | `is not a valid redirect path` |
 | Reserved prefix | path equals or starts with one of `Hyrax.config.reserved_redirect_prefixes` (defaults to the routes Hyrax itself reserves) | the path is reserved by the application and may not be used as an alias |
 | Intra-record uniqueness | the same path appears more than once on a single record | `is listed more than once on this record` |
 | Global uniqueness | the path is already in use on a different record (excluding the current record's own id) | `is already in use by another record` |
