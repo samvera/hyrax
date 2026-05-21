@@ -3,6 +3,16 @@
 RSpec.describe Hyrax::RedirectsLookup do
   before { Hyrax::RedirectPath.delete_all }
 
+  def existing_row(from_path:, resource_id:)
+    Hyrax::RedirectPath.create!(
+      from_path: from_path,
+      to_path: "/concern/generic_works/#{resource_id}",
+      permalink_path: "/concern/generic_works/#{resource_id}",
+      resource_id: resource_id,
+      is_display_url: false
+    )
+  end
+
   describe '.taken?' do
     let(:path) { '/handle/12345/678' }
 
@@ -13,7 +23,7 @@ RSpec.describe Hyrax::RedirectsLookup do
     end
 
     context 'when a row exists for the path on a different resource' do
-      before { Hyrax::RedirectPath.create!(path: path, resource_id: 'other-record') }
+      before { existing_row(from_path: path, resource_id: 'other-record') }
 
       it 'is true' do
         expect(described_class.taken?(path)).to be true
@@ -21,7 +31,7 @@ RSpec.describe Hyrax::RedirectsLookup do
     end
 
     context 'with except_id matching the row that owns the path' do
-      before { Hyrax::RedirectPath.create!(path: path, resource_id: 'self-id') }
+      before { existing_row(from_path: path, resource_id: 'self-id') }
 
       it 'is false (the path is held by the record being edited)' do
         expect(described_class.taken?(path, except_id: 'self-id')).to be false
@@ -29,7 +39,7 @@ RSpec.describe Hyrax::RedirectsLookup do
     end
 
     context 'with except_id not matching the row that owns the path' do
-      before { Hyrax::RedirectPath.create!(path: path, resource_id: 'other-record') }
+      before { existing_row(from_path: path, resource_id: 'other-record') }
 
       it 'is true' do
         expect(described_class.taken?(path, except_id: 'self-id')).to be true

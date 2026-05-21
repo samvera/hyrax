@@ -1,0 +1,39 @@
+class AddAdditionalRedirectInfo < ActiveRecord::Migration<%= migration_version %>
+  def up
+    drop_table :hyrax_redirect_paths if table_exists?(:hyrax_redirect_paths)
+
+    create_table :hyrax_redirect_paths do |t|
+      t.string  :from_path,      null: false
+      t.string  :to_path,        null: false
+      t.string  :permalink_path, null: false
+      t.string  :resource_id,    null: false
+      t.boolean :is_display_url, null: false, default: false
+
+      t.timestamps
+    end
+
+    # Unique index on from_path enforces global uniqueness at the DB level
+    # (the hard guarantee under concurrent writes) and is the primary
+    # request-time lookup: the resolver finds rows by the visited alias.
+    add_index :hyrax_redirect_paths, :from_path, unique: true
+
+    # Non-unique index supports the per-resource sync performed by
+    # Hyrax::Transactions::Steps::SyncRedirectPaths and the per-resource
+    # cleanup performed by Hyrax::Transactions::Steps::RemoveRedirectPaths.
+    add_index :hyrax_redirect_paths, :resource_id
+  end
+
+  def down
+    drop_table :hyrax_redirect_paths
+
+    create_table :hyrax_redirect_paths do |t|
+      t.string :path,        null: false
+      t.string :resource_id, null: false
+
+      t.timestamps
+    end
+
+    add_index :hyrax_redirect_paths, :path, unique: true
+    add_index :hyrax_redirect_paths, :resource_id
+  end
+end

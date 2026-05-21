@@ -199,12 +199,22 @@ The validator rejects any redirect path that equals one of these prefixes, or st
 
 ### Uniqueness lookup and the `hyrax_redirect_paths` table
 
-Global uniqueness is enforced by a Postgres table, `hyrax_redirect_paths`, which has a unique B-tree index on `path`. The table is a derived record of every redirect path currently in use, and the unique index gives the hard guarantee that no two records can share a path even under concurrent saves. A second non-unique index on `resource_id` supports the per-resource sync described below.
+Global uniqueness is enforced by a Postgres table, `hyrax_redirect_paths`, with columns:
 
-`Hyrax::RedirectsLookup` is the single point of truth for "is this path taken?". It queries the table:
+| Column           | Purpose                                                                                                              |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `from_path`      | The alias path the visitor types. Unique B-tree indexed — the primary request-time lookup key.                       |
+| `to_path`        | Where the visitor should be sent. For now, the resource's canonical UUID path on every row.                          |
+| `permalink_path` | The resource's canonical UUID path (e.g. `/concern/generic_works/<uuid>` or `/collections/<uuid>`).                  |
+| `resource_id`    | The UUID of the work or collection. Indexed (non-unique) for the per-resource sync described below.                  |
+| `is_display_url` | Boolean. Defaults to `false`. Reserved for the display-URL feature.                                                  |
+
+The unique index on `from_path` gives the hard guarantee that no two records can share an alias even under concurrent saves.
+
+`Hyrax::RedirectsLookup` is the single point of truth for "is this alias taken?". It queries the table:
 
 ```sql
-SELECT 1 FROM hyrax_redirect_paths WHERE path = ? AND resource_id <> ? LIMIT 1;
+SELECT 1 FROM hyrax_redirect_paths WHERE from_path = ? AND resource_id <> ? LIMIT 1;
 ```
 
 The validator calls `Hyrax::RedirectsLookup.taken?(path, except_id: record.id)` to give the user friendly feedback at form-submit time. If two simultaneous requests both pass validation (because both checked the table before either committed), the unique index rejects the second one at insert time and the enclosing transaction returns `Failure`.
