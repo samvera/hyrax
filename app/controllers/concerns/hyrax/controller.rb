@@ -27,9 +27,15 @@ module Hyrax::Controller
     hyrax.dashboard_path
   end
 
-  # Ensure that the locale choice is persistent across requests
+  # Ensure that the locale choice is persistent across requests, but only
+  # when it differs from the default. Appending +?locale=+ for the default
+  # locale on every URL pollutes sitemaps, canonical tags, and outbound
+  # links, which causes search engines to index and rank duplicate
+  # locale-parameterized URLs as canonical.
   def default_url_options
-    super.merge(locale: I18n.locale)
+    opts = super
+    opts[:locale] = I18n.locale unless I18n.locale == I18n.default_locale
+    opts
   end
 
   # @note for Blacklight 6/7 compatibility
