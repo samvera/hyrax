@@ -162,7 +162,7 @@ The normalizer is idempotent — `normalize(normalize(x)) == normalize(x)`. Norm
 **On input (boundary layer).** Three boundary points canonicalize input from outside the resource before consulting the persisted state:
 
 - `Hyrax::RedirectsFieldBehavior#redirects_attributes_populator` normalizes form entries before the form-level validator runs, so a user pasting a full URL (`https://old.example.edu/handle/123?utm=email`) is forgivingly accepted and the validator sees the canonical form.
-- `Hyrax::RedirectsController#show` (the resolver) normalizes the incoming request path before the table lookup, so `/foo/` and `/foo` both resolve.
+- `Hyrax::RedirectsLookup.find_row` (called by `Hyrax::RedirectsController#show` and by `Hyrax::RedirectToDisplayUrl#redirect_to_display_url_if_needed`) normalizes the incoming request path before the table lookup, so `/foo/` and `/foo` both resolve.
 - `Hyrax::RedirectsLookup` normalizes its input on construction, so callers can pass any reasonable form.
 
 ## Validation
@@ -213,13 +213,12 @@ When a resource has a display URL set, the sync step writes one row per alias pl
 
 The unique index on `from_path` gives the hard guarantee that no two records can share an alias even under concurrent saves.
 
-`Hyrax::RedirectsLookup` is the single point of truth for "is this alias taken?". It queries the table:
+`Hyrax::RedirectsLookup` exposes two class methods against `hyrax_redirect_paths`:
 
-```sql
-SELECT 1 FROM hyrax_redirect_paths WHERE from_path = ? AND resource_id <> ? LIMIT 1;
-```
+- `.taken?(path, except_id: nil)` — the uniqueness check used by the validator at form-submit time. Returns a boolean. SQL: `SELECT 1 FROM hyrax_redirect_paths WHERE from_path = ? AND resource_id <> ? LIMIT 1;`.
+- `.find_row(path)` — the request-time lookup used by the resolver and the `RedirectToDisplayUrl` before_action. Returns the full `Hyrax::RedirectPath` row, or nil. SQL: `SELECT * FROM hyrax_redirect_paths WHERE from_path = ? LIMIT 1;`. Normalizes its input via `Hyrax::RedirectPathNormalizer` before querying, so `/foo/` and `/foo` resolve to the same row.
 
-The validator calls `Hyrax::RedirectsLookup.taken?(path, except_id: record.id)` to give the user friendly feedback at form-submit time. If two simultaneous requests both pass validation (because both checked the table before either committed), the unique index rejects the second one at insert time and the enclosing transaction returns `Failure`.
+The validator calls `.taken?(path, except_id: record.id)` to give the user friendly feedback at form-submit time. If two simultaneous requests both pass validation (because both checked the table before either committed), the unique index on `from_path` rejects the second one at insert time and the enclosing transaction returns `Failure`.
 
 ### Sync between `redirects` attribute and the redirects table
 
@@ -254,7 +253,7 @@ When both gates are open, `Hyrax::RedirectsController#show` serves any path not 
 - The incoming path is normalized via `Hyrax::RedirectPathNormalizer` so the lookup matches the canonical form stored in the table (a request for `/foo/` resolves the same record as `/foo`).
 - `Hyrax::RedirectsLookup.find_row(path)` does one indexed `find_by(from_path:)` against `hyrax_redirect_paths`. No Solr.
 - If no row matches, the controller raises `ActionController::RoutingError` so Rails serves its standard 404.
-- If the matched row has `is_display_url: true` (the visitor entered the resource's display URL), the controller looks up the curation-concern controller for the row's `permalink_path` via `Rails.application.routes.recognize_path`, sets `request.env['hyrax.redirects.dispatched'] = true` so the inner show controller's redirect-check before_action skips itself, and calls `controller_class.dispatch(:show, request, response)`. The show page renders in place at the visited path.
+- If the matched row has `is_display_url: true` (the visitor entered the resource's display URL), the controller looks up the curation-concern controller for the row's `permalink_path` via `Rails.application.routes.recognize_path`, sets `request.env['hyrax.redirects.dispatched'] = true` so the inner show controller's redirect-check before_action skips itself, and calls `controller_class.dispatch(info[:action], request, response)`. The inner controller writes into the shared `response`, and the outer action sets `self.response_body = response.body` so Rails skips its own template lookup for `RedirectsController#show`. The show page renders in place at the visited path.
 - Otherwise (the visitor entered a non-display alias), the controller responds `301 Moved Permanently` with `Location:` set to the row's `to_path`. That target is either the display alias (when the resource has one) or the resource's UUID URL.
 
 ### Show-action redirect on UUID URL visits
@@ -266,7 +265,7 @@ Visiting the bare UUID URL bypasses the catch-all (Rails routes natively to the 
 - If a row exists and its `to_path` differs from the visited path, 301 to the row's `to_path`.
 - Otherwise, render normally.
 
-When a resource has a display URL, the sync step writes a row keyed on the UUID URL whose `to_path` is the display alias — that's the row this before_action finds, and the 301 sends the visitor to the display alias. The display-alias request then hits the catch-all and dispatches in-place via `RedirectsController`.
+When a resource has a display URL, the sync step writes a row keyed on the UUID URL whose `to_path` is the display alias — that's the row this before_action finds, and the 301 sends the visitor to the display alias. The browser then makes a fresh request to the display alias; that request matches the catch-all (display aliases are not native Rails routes — they exist only in `hyrax_redirect_paths`), reaches `RedirectsController#show`, and dispatches in place.
 
 ### Locale preservation
 
