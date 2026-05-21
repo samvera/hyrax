@@ -42,11 +42,13 @@ module Hyrax
     # Carry the visitor's requested locale (set by Hyrax::Controller#set_locale
     # from `params[:locale]`) across the 301 so the destination page renders in
     # the same language. Appended as `?locale=<value>` so this works whether the
-    # host app uses path-prefix or query-string locales.
+    # host app uses path-prefix or query-string locales. The locale value is
+    # URL-encoded via Rack::Utils.build_query so attacker-controlled chars in
+    # params[:locale] can't inject extra query params into the Location header.
     def with_locale(path)
       return path if params[:locale].blank?
       separator = path.include?('?') ? '&' : '?'
-      "#{path}#{separator}locale=#{params[:locale]}"
+      "#{path}#{separator}#{Rack::Utils.build_query(locale: params[:locale])}"
     end
   end
 end

@@ -86,6 +86,14 @@ RSpec.describe Hyrax::RedirectToDisplayUrl, type: :controller do
         expect(response).to have_http_status(:moved_permanently)
         expect(response.headers['Location']).to end_with("#{display_alias}?locale=fr")
       end
+
+      it 'URL-encodes the locale value so attacker-controlled chars cannot inject extra query params' do
+        get :show, params: { id: resource_id, locale: 'fr&evil=yes' }
+        expect(response).to have_http_status(:moved_permanently)
+        # The anonymous controller in this spec doesn't inherit Hyrax::Controller, so set_locale
+        # isn't in the before_action chain — the URL-encoding here is exercised directly.
+        expect(response.headers['Location']).to end_with("#{display_alias}?locale=fr%26evil%3Dyes")
+      end
     end
   end
 end

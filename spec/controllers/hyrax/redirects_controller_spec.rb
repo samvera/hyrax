@@ -45,6 +45,16 @@ RSpec.describe Hyrax::RedirectsController, type: :controller do
         expect(response).to have_http_status(:moved_permanently)
         expect(response.headers['Location']).to end_with("#{display_alias}?locale=fr")
       end
+
+      it 'URL-encodes the locale value so attacker-controlled chars cannot inject extra query params' do
+        # set_locale would raise I18n::InvalidLocale on this input; stub it so we test
+        # only the URL-encoding behavior of with_locale, not Hyrax::Controller's locale-enforcement.
+        allow(controller).to receive(:set_locale).and_return(true)
+        get :show, params: { alias_path: 'old-alias', locale: 'fr&evil=yes' }
+        expect(response).to have_http_status(:moved_permanently)
+        # Rack::Utils.build_query encodes & as %26, so no second query param is injected
+        expect(response.headers['Location']).to end_with("#{display_alias}?locale=fr%26evil%3Dyes")
+      end
     end
 
     context 'when the visited path is the display URL itself' do
