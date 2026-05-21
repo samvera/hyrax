@@ -264,7 +264,7 @@ Both behaviors compose. A subclass's ancestor chain ends up with both behaviors'
 
 ## Wiring up Bulkrax imports
 
-Field Behaviors that strip their bare attribute key need a corresponding declaration on the Bulkrax import side. Bulkrax's CSV importer would otherwise emit data under the bare attribute name (`redirects`) — which the form's `deserialize!` would strip — and the data would silently never reach the resource.
+Field Behaviors that strip their bare attribute key need a corresponding declaration on the Bulkrax import side. Bulkrax's CSV importer would otherwise write data under the bare attribute name (`redirects`) — which the form's `deserialize!` would strip — and the data would silently never reach the resource.
 
 Bulkrax v9.5 and later supports a `nested_attributes: true` field-mapping flag for this case. When set alongside an `object:` value, Bulkrax routes the imported data to `parsed_metadata['<object>_attributes']` as a numbered-key hash with `_destroy: 'false'` per row — the same shape Reform's nested-attributes machinery expects, and the same shape this Field Behavior's populator consumes.
 

@@ -40,8 +40,7 @@ module Hyrax
         # @return [Dry::Monads::Result]
         def call(object)
           return Success(object) unless syncable?(object)
-          changed_paths = replace_rows(object, build_rows(object))
-          Hyrax::RedirectCacheBuster.call(changed_paths) if changed_paths
+          replace_rows(object, build_rows(object))
           Success(object)
         rescue ActiveRecord::RecordNotUnique => e
           Failure([:redirect_path_collision, e.message])
@@ -117,22 +116,23 @@ module Hyrax
             created_at: now, updated_at: now }
         end
 
-        # @return [Array<String>, nil] the union of old + new from_paths that
-        #   need cache invalidation, or nil when nothing changed.
+        # Replaces the resource's rows when the set differs from what's
+        # persisted. Skips the rewrite when the desired and existing rows
+        # match (the common case on an update that didn't touch the
+        # redirects attribute), to preserve `created_at` and avoid an
+        # unnecessary DB transaction.
         def replace_rows(object, rows)
           desired = rows.map { |r| [r[:from_path], r[:to_path], r[:is_display_url]] }.sort
 
           Hyrax::RedirectPath.transaction do
             existing = Hyrax::RedirectPath.where(resource_id: object.id.to_s)
                                           .pluck(:from_path, :to_path, :is_display_url)
-            return nil if desired == existing.sort
+            return if desired == existing.sort
 
             Hyrax::RedirectPath.where(resource_id: object.id.to_s).delete_all
             # rubocop:disable Rails/SkipsModelValidations -- the DB unique index on `from_path` is the validation we rely on; bulk insert is intentional
             Hyrax::RedirectPath.insert_all!(rows) if rows.any?
             # rubocop:enable Rails/SkipsModelValidations
-
-            (existing.map(&:first) | rows.map { |r| r[:from_path] })
           end
         end
       end

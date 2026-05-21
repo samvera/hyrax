@@ -43,13 +43,6 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
         rows = Hyrax::RedirectPath.where(resource_id: resource_id)
         expect(rows.pluck(:permalink_path)).to all(eq(permalink))
       end
-
-      it 'busts the cache for both old and new paths' do
-        existing_row(from_path: '/old', resource_id: resource_id)
-        expect(Hyrax::RedirectCacheBuster).to receive(:call)
-          .with(array_including('/old', '/handle/1', '/handle/2'))
-        step.call(resource)
-      end
     end
 
     context 'with no entry marked as display URL' do
@@ -201,11 +194,6 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
         rows = Hyrax::RedirectPath.where(resource_id: resource_id).order(:from_path)
         expect(rows.pluck(:from_path)).to eq %w[/handle/1 /handle/2]
         expect(rows.pluck(:created_at)).to all(eq(original_created_at))
-      end
-
-      it 'does not bust the cache' do
-        expect(Hyrax::RedirectCacheBuster).not_to receive(:call)
-        step.call(resource)
       end
     end
 
