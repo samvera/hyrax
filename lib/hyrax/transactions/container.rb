@@ -47,6 +47,7 @@ module Hyrax
       require 'hyrax/transactions/steps/delete_resource'
       require 'hyrax/transactions/steps/ensure_admin_set'
       require 'hyrax/transactions/steps/file_metadata_delete'
+      require 'hyrax/transactions/steps/grant_depositor_access'
       require 'hyrax/transactions/steps/set_collection_type_gid'
       require 'hyrax/transactions/steps/remove_file_set_from_work'
       require 'hyrax/transactions/steps/remove_from_membership'
@@ -277,6 +278,10 @@ module Hyrax
 
         ops.register 'change_depositor' do
           Steps::ChangeDepositor.new
+        end
+
+        ops.register 'grant_depositor_access' do
+          Steps::GrantDepositorAccess.new
         end
 
         ops.register 'delete' do

@@ -42,6 +42,54 @@ RSpec.describe Hyrax::Transactions::WorkCreate, :clean_repo do
         expect(tx.call(change_set).value!)
           .to have_attributes depositor: user.user_key
       end
+
+      it 'grants the depositor edit access on the work ACL' do
+        work = tx.with_step_args('change_set.set_user_as_depositor' => { user: user })
+                 .call(change_set)
+                 .value!
+
+        expect(Hyrax::AccessControlList.new(resource: work).permissions.map(&:agent))
+          .to include(user.user_key)
+      end
+    end
+
+    # @see https://github.com/notch8/hykuup_knapsack/issues/608
+    #
+    # Regression introduced when Hyrax moved from the ActiveFedora actor stack
+    # (where Hyrax::Actors::BaseActor#apply_depositor_metadata unconditionally
+    # added the depositor to the work's edit_users) to the Valkyrie WorkCreate
+    # transaction (which does not). Under workflows whose deposit action does
+    # not include Hyrax::Workflow::GrantEditToDepositor -- notably
+    # one_step_mediated_deposit -- depositors lose edit access to their own
+    # works after creation.
+    context 'when depositing into an admin set whose active workflow does not grant edit to the depositor' do
+      let(:user) { FactoryBot.create(:user) }
+      let(:admin_set) do
+        allow(Hyrax.config).to receive(:default_active_workflow_name).and_return('one_step_mediated_deposit')
+        as = Hyrax.config.admin_set_class.new(title: ['Mediated Deposit Admin Set'])
+        Hyrax::AdminSetCreateService.call!(admin_set: as, creating_user: nil)
+      end
+      let(:resource) { build(:hyrax_work, admin_set_id: admin_set.id) }
+
+      before do
+        # The mediated workflow's deposit action triggers PendingReviewNotification,
+        # which requires registered curation_concern URL helpers that the test
+        # SimpleWork model does not have. Skip notification delivery; we only
+        # care about ACL state.
+        allow(Hyrax::Workflow::NotificationService).to receive(:deliver_on_action_taken)
+      end
+
+      it 'still grants the depositor edit access on the work ACL' do
+        work = tx.with_step_args('change_set.set_user_as_depositor' => { user: user })
+                 .call(change_set)
+                 .value!
+
+        edit_agents = Hyrax::AccessControlList.new(resource: work)
+                                              .permissions
+                                              .select { |p| p.mode == :edit }
+                                              .map(&:agent)
+        expect(edit_agents).to include(user.user_key)
+      end
     end
 
     context 'when attaching uploaded files' do
