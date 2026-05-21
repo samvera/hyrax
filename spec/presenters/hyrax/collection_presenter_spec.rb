@@ -156,7 +156,7 @@ RSpec.describe Hyrax::CollectionPresenter do
   describe '#show_path' do
     subject { presenter.show_path }
 
-    it { is_expected.to eq "/dashboard/collections/#{solr_doc.id}?locale=en" }
+    it { is_expected.to eq "/dashboard/collections/#{solr_doc.id}" }
   end
 
   describe '#editor?' do

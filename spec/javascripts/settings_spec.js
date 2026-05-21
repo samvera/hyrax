@@ -40,7 +40,7 @@ describe("Settings", function() {
 
 // Generate a form that collection type settings
 function settingsForm() {
-    return '<form class="simple_form edit_collection_type" id="edit_collection_type" action="/admin/collection_types/3?locale=en" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="patch" /><input type="hidden" name="authenticity_token" value="2Si+G8crN9SzhkKeVUl6gAZofiPFvm49ma998urlMgtW5fHbfzQlv71P9y8i8LybucAc3AkSrk9uwnF99jmz0A==" />' +
+    return '<form class="simple_form edit_collection_type" id="edit_collection_type" action="/admin/collection_types/3" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="patch" /><input type="hidden" name="authenticity_token" value="2Si+G8crN9SzhkKeVUl6gAZofiPFvm49ma998urlMgtW5fHbfzQlv71P9y8i8LybucAc3AkSrk9uwnF99jmz0A==" />' +
         '  <div class="tab-content">' +
         '    <div id="settings" class="tab-pane">' +
         '      <div class="panel panel-default labels">' +
@@ -67,7 +67,7 @@ function settingsForm() {
         '    </div>' +
         '    <div class="panel-footer">' +
         '      <input type="submit" name="update_collection_type" value="Save changes" class="btn btn-primary" onclick="confirmation_needed = false;" id="update_submit" data-disable-with="Save changes" />' +
-        '      <a class="btn btn-link" href="/admin/collection_types?locale=en">Cancel</a>' +
+        '      <a class="btn btn-link" href="/admin/collection_types">Cancel</a>' +
         '    </div>' +
         '  </div>' +
         '</form>';

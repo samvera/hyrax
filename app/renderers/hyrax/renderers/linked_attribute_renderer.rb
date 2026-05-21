@@ -10,7 +10,7 @@ module Hyrax
 
       def search_path(value)
         Rails.application.routes.url_helpers.search_catalog_path(
-          search_field: search_field, q: ERB::Util.h(value), locale: I18n.locale
+          search_field: search_field, q: ERB::Util.h(value), locale: (I18n.locale unless I18n.locale == I18n.default_locale)
         )
       end
 

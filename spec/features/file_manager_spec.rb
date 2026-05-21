@@ -24,7 +24,7 @@ RSpec.describe "file manager" do
     expect(page).to have_selector("a[href='/concern/parent/#{work.id}/file_sets/#{file_set.id}']")
 
     # has a link back to parent
-    expect(page).to have_link work.title.first, href: hyrax_monograph_path(id: work.id, locale: :en)
+    expect(page).to have_link work.title.first, href: hyrax_monograph_path(id: work.id)
 
     # renders a form for each member
     expect(page).to have_selector("#sortable form", count: work.member_ids.length)
