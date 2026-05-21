@@ -1400,6 +1400,14 @@ zh:
         save_your_note: 您必须点击“保存修订版”还原此文件的先前版本
         upload: 上传新版本
     flexible_schema_validators:
+      redirects_validator:
+        errors:
+          invalid_available_on: "m3 配置文件的 `redirects` 属性必须在此配置文件中声明的至少一个作品或收藏类上可用"
+          invalid_type: "m3 配置文件的 `redirects` 属性必须声明 `type: hash`（实际为 `%{actual_type}`）"
+          property_required: "启用重定向功能时，m3 配置文件必须声明 `redirects` 属性"
+        warnings:
+          config_disabled: "m3 配置文件声明了 `redirects` 属性，但 Hyrax.config.redirects_enabled? 为 false；该属性将被忽略"
+          flipflop_disabled: "m3 配置文件声明了 `redirects` 属性，但 :redirects 功能标志已关闭；该属性将被忽略"
       sort_properties_validator:
         warnings:
           message: "%{property} 必须在 %{classes} 上定义才能支持该属性的排序，除非您已在其他字段上索引了 %{property}_ssi。"

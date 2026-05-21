@@ -1395,6 +1395,14 @@ pt-BR:
         save_your_note: Você deve clicar em "Salvar revisão". reverter uma versão anterior deste arquivo
         upload: Carregar nova versão
     flexible_schema_validators:
+      redirects_validator:
+        errors:
+          invalid_available_on: "a propriedade `redirects` do perfil m3 deve estar disponível em pelo menos uma classe de obra ou coleção declarada neste perfil"
+          invalid_type: "a propriedade `redirects` do perfil m3 deve declarar `type: hash` (recebido `%{actual_type}`)"
+          property_required: "o perfil m3 deve declarar uma propriedade `redirects` quando o recurso de redirecionamentos está habilitado"
+        warnings:
+          config_disabled: "o perfil m3 declara uma propriedade `redirects`, mas Hyrax.config.redirects_enabled? é false; a propriedade será ignorada"
+          flipflop_disabled: "o perfil m3 declara uma propriedade `redirects`, mas o sinalizador de recurso :redirects está desativado; a propriedade será ignorada"
       sort_properties_validator:
         warnings:
           message: "%{property} deve ser definido em %{classes} para oferecer suporte à ordenação por essa propriedade, a menos que você tenha indexado %{property}_ssi em algum outro campo."

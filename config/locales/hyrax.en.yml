@@ -1390,6 +1390,14 @@ en:
         save_your_note: You must click "Save Revision" to revert a previous version of this file
         upload: Upload New Version
     flexible_schema_validators:
+      redirects_validator:
+        errors:
+          invalid_available_on: "m3 profile `redirects` property must be available on at least one work or collection class declared in this profile"
+          invalid_type: "m3 profile `redirects` property must declare `type: hash` (got `%{actual_type}`)"
+          property_required: "m3 profile must declare a `redirects` property when the redirects feature is enabled"
+        warnings:
+          config_disabled: "m3 profile declares a `redirects` property but Hyrax.config.redirects_enabled? is false; the property will be ignored"
+          flipflop_disabled: "m3 profile declares a `redirects` property but the :redirects feature flag is off; the property will be ignored"
       sort_properties_validator:
         warnings:
           message: "%{property} must be defined on %{classes} to support sorting on that property, unless you have indexed %{property}_ssi on some other field."

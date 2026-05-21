@@ -45,7 +45,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
 
         it 'warns that the property will be ignored' do
           validator.validate!
-          expect(warnings).to include(/redirects.*Hyrax\.config\.redirects_enabled\? is false/)
+          expect(warnings).to include(I18n.t('hyrax.flexible_schema_validators.redirects_validator.warnings.config_disabled'))
           expect(errors).to be_empty
         end
       end
@@ -72,7 +72,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
 
         it 'warns that the property will be ignored' do
           validator.validate!
-          expect(warnings).to include(/redirects.*:redirects feature flag is off/)
+          expect(warnings).to include(I18n.t('hyrax.flexible_schema_validators.redirects_validator.warnings.flipflop_disabled'))
           expect(errors).to be_empty
         end
       end
@@ -80,7 +80,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
       context 'and the m3 profile has no `redirects` property' do
         let(:profile) { profile_without_redirects }
 
-        it 'is silent (the tenant has not opted in)' do
+        it 'is silent (the redirects feature has not been opted in to)' do
           validator.validate!
           expect(errors).to be_empty
           expect(warnings).to be_empty
@@ -99,7 +99,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
 
         it 'records an error that the property is required' do
           validator.validate!
-          expect(errors).to include(/m3 profile must declare a `redirects` property/)
+          expect(errors).to include(I18n.t('hyrax.flexible_schema_validators.redirects_validator.errors.property_required'))
         end
       end
 
@@ -128,7 +128,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
 
         it 'records an error that the property must be available on a declared work or collection class' do
           validator.validate!
-          expect(errors).to include(/`redirects`.*available on.*work or collection class/)
+          expect(errors).to include(I18n.t('hyrax.flexible_schema_validators.redirects_validator.errors.invalid_available_on'))
         end
       end
 
@@ -147,7 +147,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
 
         it 'records an error that the property must be available on a declared work or collection class' do
           validator.validate!
-          expect(errors).to include(/`redirects`.*available on.*work or collection class/)
+          expect(errors).to include(I18n.t('hyrax.flexible_schema_validators.redirects_validator.errors.invalid_available_on'))
         end
       end
 
@@ -165,7 +165,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
 
         it 'records an error that the property must declare type: hash' do
           validator.validate!
-          expect(errors).to include(/`redirects`.*declare `type: hash`/)
+          expect(errors).to include(I18n.t('hyrax.flexible_schema_validators.redirects_validator.errors.invalid_type', actual_type: 'nil'))
         end
       end
     end
