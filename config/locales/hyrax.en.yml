@@ -43,7 +43,7 @@ en:
         blank: A redirect path can't be blank.
         intra_record_duplicate: '"%{path}" is listed more than once on this record.'
         invalid_format: '"%{path}" is not a valid path. Paths must start with "/" and contain no spaces, "?", or "#".'
-        multiple_canonical: At most one redirect entry may be marked canonical.
+        multiple_display_url: At most one redirect entry may be marked as the display URL.
         reserved_prefix: '"%{path}" can''t be used. The path is reserved by the application and may not be used as an alias.'
   helpers:
     action:
@@ -1390,6 +1390,14 @@ en:
         save_your_note: You must click "Save Revision" to revert a previous version of this file
         upload: Upload New Version
     flexible_schema_validators:
+      redirects_validator:
+        errors:
+          invalid_available_on: "m3 profile `redirects` property must be available on at least one work or collection class declared in this profile"
+          invalid_type: "m3 profile `redirects` property must declare `type: hash` (got `%{actual_type}`)"
+          property_required: "m3 profile must declare a `redirects` property when the redirects feature is enabled"
+        warnings:
+          config_disabled: "m3 profile declares a `redirects` property but Hyrax.config.redirects_enabled? is false; the property will be ignored"
+          flipflop_disabled: "m3 profile declares a `redirects` property but the :redirects feature flag is off; the property will be ignored"
       sort_properties_validator:
         warnings:
           message: "%{property} must be defined on %{classes} to support sorting on that property, unless you have indexed %{property}_ssi on some other field."
@@ -1817,17 +1825,23 @@ en:
         in_other_works: This Work in Other Works
         in_this_work: Other Works in this Work
         redirects:
+          add_label: Add another alias
           caption: List of URL aliases for this resource
+          display_url:
+            help_html: Optionally mark one alias as the <em>display URL</em>. When set, the record's permanent UUID URL redirects to the chosen alias. Leave as "None" to keep the UUID URL as the destination.
+            none_label: None (use the record's UUID URL)
+            row_label: 'Use "%{path}" as the display URL'
           errors_heading: Please correct the following alias errors
           header:
             actions: Actions
+            display_url: Display URL
             path: Path
           heading: URL Aliases
           help_html: 'Register legacy URL paths that should redirect to this record. Each path will resolve from this site''s root. Reserved Hyrax routes (e.g. <code>/concern</code>, <code>/dashboard</code>) cannot be used.'
           new_path_label: New alias path
           path_label: Alias path
           placeholder:
-            path: Enter a legacy path...
+            path: Enter a path...
           remove_label: Remove
           remove_with_path_label: 'Remove %{path}'
         tab:
