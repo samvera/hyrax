@@ -37,13 +37,11 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
         expect(paths).to contain_exactly('/handle/1', '/handle/2')
       end
 
-      it 'populates to_path and permalink_path with the canonical UUID URL on every row' do
+      it 'populates permalink_path with the canonical UUID URL on every row' do
         result = step.call(resource)
         expect(result).to be_success
         rows = Hyrax::RedirectPath.where(resource_id: resource_id)
-        expect(rows.pluck(:to_path)).to all(eq(permalink))
         expect(rows.pluck(:permalink_path)).to all(eq(permalink))
-        expect(rows.pluck(:is_display_url)).to all(be(false))
       end
 
       it 'busts the cache for both old and new paths' do
@@ -51,6 +49,80 @@ RSpec.describe Hyrax::Transactions::Steps::SyncRedirectPaths do
         expect(Hyrax::RedirectCacheBuster).to receive(:call)
           .with(array_including('/old', '/handle/1', '/handle/2'))
         step.call(resource)
+      end
+    end
+
+    context 'with no entry marked as display URL' do
+      it 'writes is_display_url=false and to_path=permalink_path on every row' do
+        result = step.call(resource)
+        expect(result).to be_success
+        rows = Hyrax::RedirectPath.where(resource_id: resource_id)
+        expect(rows.pluck(:is_display_url)).to all(be false)
+        expect(rows.pluck(:to_path)).to all(eq(permalink))
+      end
+    end
+
+    context 'with one entry marked as the display URL' do
+      let(:redirects) do
+        [{ 'path' => '/handle/1', 'is_display_url' => true },
+         { 'path' => '/handle/2', 'is_display_url' => false }]
+      end
+
+      it 'writes the display row pointing at itself, non-display rows at the display path, and adds a permalink row' do
+        step.call(resource)
+        rows = Hyrax::RedirectPath.where(resource_id: resource_id)
+        expect(rows.pluck(:from_path, :to_path, :is_display_url)).to contain_exactly(
+          ['/handle/1', '/handle/1', true],
+          ['/handle/2', '/handle/1', false],
+          [permalink,   '/handle/1', false]
+        )
+      end
+    end
+
+    context 'when the display flag moves between saves' do
+      before do
+        existing_row(from_path: '/handle/1', resource_id: resource_id, is_display_url: true, to_path: '/handle/1')
+        existing_row(from_path: '/handle/2', resource_id: resource_id, is_display_url: false, to_path: '/handle/1')
+        existing_row(from_path: permalink, resource_id: resource_id, is_display_url: false, to_path: '/handle/1')
+      end
+
+      let(:redirects) do
+        [{ 'path' => '/handle/1', 'is_display_url' => false },
+         { 'path' => '/handle/2', 'is_display_url' => true }]
+      end
+
+      it 'rewrites the alias rows and the permalink row to point at the new display path' do
+        result = step.call(resource)
+        expect(result).to be_success
+        rows = Hyrax::RedirectPath.where(resource_id: resource_id)
+        expect(rows.pluck(:from_path, :to_path, :is_display_url)).to contain_exactly(
+          ['/handle/1', '/handle/2', false],
+          ['/handle/2', '/handle/2', true],
+          [permalink,   '/handle/2', false]
+        )
+      end
+    end
+
+    context 'when the display flag is cleared on a save' do
+      before do
+        existing_row(from_path: '/handle/1', resource_id: resource_id, is_display_url: true, to_path: '/handle/1')
+        existing_row(from_path: '/handle/2', resource_id: resource_id, is_display_url: false, to_path: '/handle/1')
+        existing_row(from_path: permalink, resource_id: resource_id, is_display_url: false, to_path: '/handle/1')
+      end
+
+      let(:redirects) do
+        [{ 'path' => '/handle/1', 'is_display_url' => false },
+         { 'path' => '/handle/2', 'is_display_url' => false }]
+      end
+
+      it 'removes the permalink row and writes alias rows pointing at the permalink' do
+        result = step.call(resource)
+        expect(result).to be_success
+        rows = Hyrax::RedirectPath.where(resource_id: resource_id)
+        expect(rows.pluck(:from_path, :to_path, :is_display_url)).to contain_exactly(
+          ['/handle/1', permalink, false],
+          ['/handle/2', permalink, false]
+        )
       end
     end
 

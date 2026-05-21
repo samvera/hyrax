@@ -11,6 +11,24 @@ module Hyrax
       # ActiveRecord::RecordNotUnique and this step returns Failure, which
       # short-circuits the enclosing transaction.
       #
+      # Every row carries the resource's canonical UUID URL in
+      # `permalink_path`. Column semantics:
+      #
+      # - `from_path` — the URL the visitor entered (an alias or the UUID
+      #   URL itself).
+      # - `to_path` — the URL the address bar should display after the
+      #   resolver routes the request. For the display row, equals its own
+      #   `from_path` (the visitor stays at the display URL). For
+      #   non-display rows, points at the display row's `from_path` (the
+      #   visitor lands at the user-facing display URL). When no entry is
+      #   marked, every alias's `to_path` is the UUID URL.
+      # - `permalink_path` — the resource's canonical UUID URL. Constant
+      #   per resource across all rows.
+      #
+      # When a display URL is set, the sync step also writes an extra row
+      # with `from_path = permalink_path` so visitors hitting the bare
+      # UUID URL are routed to the display alias.
+      #
       # No-op when the redirects feature is off (config or Flipflop) or when
       # the resource doesn't carry the redirects attribute.
       #
@@ -41,39 +59,69 @@ module Hyrax
 
         def build_rows(object)
           permalink = Hyrax::PermalinkPath.call(object)
+          entries = entries_for(object)
+          display_path = entries.find { |e| e[:is_display_url] }&.dig(:from_path)
           resource_id = object.id.to_s
           now = Time.current
-          alias_paths_for(object).map do |alias_path|
-            { from_path: alias_path,
-              to_path: permalink,
-              permalink_path: permalink,
-              resource_id: resource_id,
-              is_display_url: false,
-              created_at: now, updated_at: now }
-          end
+          alias_rows = entries.map { |entry| build_alias_row(entry, resource_id, permalink, display_path, now) }
+          alias_rows << build_permalink_row(resource_id, permalink, display_path, now) if display_path
+          alias_rows
         end
 
         # Valkyrie's JSONValueMapper symbolizes hash keys on read; accept either.
         # Paths are normalized at write time by Hyrax::RedirectsNormalization.
-        def alias_paths_for(object)
-          Array(object.redirects).map { |entry| entry['path'] || entry[:path] }.reject(&:blank?).uniq
+        def entries_for(object)
+          seen = Set.new
+          Array(object.redirects).each_with_object([]) do |entry, acc|
+            path = entry['path'] || entry[:path]
+            next if path.blank? || seen.include?(path)
+            seen << path
+            flag = entry['is_display_url'] || entry[:is_display_url]
+            acc << { from_path: path, is_display_url: flag ? true : false }
+          end
+        end
+
+        def build_alias_row(entry, resource_id, permalink, display_path, now)
+          to_path = if entry[:is_display_url]
+                      entry[:from_path]
+                    elsif display_path
+                      display_path
+                    else
+                      permalink
+                    end
+          { from_path: entry[:from_path],
+            to_path: to_path,
+            permalink_path: permalink,
+            resource_id: resource_id,
+            is_display_url: entry[:is_display_url],
+            created_at: now, updated_at: now }
+        end
+
+        def build_permalink_row(resource_id, permalink, display_path, now)
+          { from_path: permalink,
+            to_path: display_path,
+            permalink_path: permalink,
+            resource_id: resource_id,
+            is_display_url: false,
+            created_at: now, updated_at: now }
         end
 
         # @return [Array<String>, nil] the union of old + new from_paths that
         #   need cache invalidation, or nil when nothing changed.
         def replace_rows(object, rows)
-          desired_paths = rows.map { |r| r[:from_path] }.sort
+          desired = rows.map { |r| [r[:from_path], r[:to_path], r[:is_display_url]] }.sort
 
           Hyrax::RedirectPath.transaction do
-            existing_paths = Hyrax::RedirectPath.where(resource_id: object.id.to_s).pluck(:from_path).sort
-            return nil if desired_paths == existing_paths
+            existing = Hyrax::RedirectPath.where(resource_id: object.id.to_s)
+                                          .pluck(:from_path, :to_path, :is_display_url)
+            return nil if desired == existing.sort
 
             Hyrax::RedirectPath.where(resource_id: object.id.to_s).delete_all
             # rubocop:disable Rails/SkipsModelValidations -- the DB unique index on `from_path` is the validation we rely on; bulk insert is intentional
             Hyrax::RedirectPath.insert_all!(rows) if rows.any?
             # rubocop:enable Rails/SkipsModelValidations
 
-            (existing_paths | desired_paths)
+            (existing.map(&:first) | rows.map { |r| r[:from_path] })
           end
         end
       end
