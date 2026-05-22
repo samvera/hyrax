@@ -49,26 +49,26 @@ module Hyrax
 
       def validate_when_config_off
         return if redirects_property.blank?
-        warn_dead_property('Hyrax.config.redirects_enabled? is false')
+        @warnings << I18n.t('hyrax.flexible_schema_validators.redirects_validator.warnings.config_disabled')
       end
 
       def validate_when_flipflop_off
         return if redirects_property.blank?
-        warn_dead_property('the :redirects feature flag is off for this tenant')
+        @warnings << I18n.t('hyrax.flexible_schema_validators.redirects_validator.warnings.flipflop_disabled')
       end
 
       def validate_when_enabled
         if redirects_property.blank?
-          @errors << 'm3 profile must declare a `redirects` property when the redirects feature is enabled'
+          @errors << I18n.t('hyrax.flexible_schema_validators.redirects_validator.errors.property_required')
           return
         end
 
-        @errors << "m3 profile `redirects` property must declare `type: hash` (got `#{redirects_property['type'].inspect}`)" unless redirects_property['type'].to_s == 'hash'
+        @errors << I18n.t('hyrax.flexible_schema_validators.redirects_validator.errors.invalid_type', actual_type: redirects_property['type'].inspect) unless redirects_property['type'].to_s == 'hash'
 
         available_on = clean(Array(redirects_property.dig('available_on', 'class')))
         return if (available_on & profile_work_or_collection_classes).any?
 
-        @errors << 'm3 profile `redirects` property must be available on at least one work or collection class declared in this profile'
+        @errors << I18n.t('hyrax.flexible_schema_validators.redirects_validator.errors.invalid_available_on')
       end
 
       # Class names declared in this m3 profile's top-level `classes:` block,
@@ -110,11 +110,6 @@ module Hyrax
 
       def clean(names)
         names.map { |name| name.to_s.delete_prefix('::') }
-      end
-
-      def warn_dead_property(reason)
-        @warnings << "m3 profile declares a `redirects` property but #{reason}; " \
-                     'the property will be ignored'
       end
     end
   end

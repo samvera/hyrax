@@ -72,6 +72,32 @@ RSpec.describe Hyrax::AttributesHelper, type: :helper do
       end
     end
 
+    context 'when show_page is false' do
+      let(:view_options) { { show_page: false } }
+
+      it 'is false for admins' do
+        allow(helper).to receive(:current_user).and_return(admin_user)
+        expect(helper.field_visible?(view_options, editor_presenter)).to be false
+      end
+
+      it 'is false for non-admins' do
+        allow(helper).to receive(:current_user).and_return(non_admin_user)
+        expect(helper.field_visible?(view_options, non_editor_presenter)).to be false
+      end
+
+      it 'is false when there is no current_user' do
+        allow(helper).to receive(:current_user).and_return(nil)
+        expect(helper.field_visible?(view_options, non_editor_presenter)).to be false
+      end
+    end
+
+    context 'when show_page is true' do
+      it 'is true (does not suppress the field)' do
+        allow(helper).to receive(:current_user).and_return(non_admin_user)
+        expect(helper.field_visible?({ show_page: true }, non_editor_presenter)).to be true
+      end
+    end
+
     context 'when admin_only is set' do
       let(:view_options) { { admin_only: true } }
 

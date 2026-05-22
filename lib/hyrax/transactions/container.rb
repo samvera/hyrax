@@ -37,6 +37,7 @@ module Hyrax
       require 'hyrax/transactions/steps/apply_collection_type_permissions'
       require 'hyrax/transactions/steps/apply_permission_template'
       require 'hyrax/transactions/steps/apply_permission_template_on_update'
+      require 'hyrax/transactions/steps/apply_workflow_on_admin_set_change'
       require 'hyrax/transactions/steps/change_depositor'
       require 'hyrax/transactions/steps/check_for_default_admin_set'
       require 'hyrax/transactions/steps/check_for_empty_admin_set'
@@ -274,6 +275,10 @@ module Hyrax
 
         ops.register 'apply_permission_template_on_update' do
           Steps::ApplyPermissionTemplateOnUpdate.new
+        end
+
+        ops.register 'apply_workflow_on_admin_set_change' do
+          Steps::ApplyWorkflowOnAdminSetChange.new
         end
 
         ops.register 'change_depositor' do
