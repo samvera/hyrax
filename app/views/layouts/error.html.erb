@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
 
-    <title><%= h(application_name) %>: System Error</title>
+    <title><%= h(application_name) %>: <%= I18n.t("layouts.error.system_error", :default => "System Error") %></title>
     <!-- application css -->
     <%= stylesheet_link_tag 'application' %>
 
