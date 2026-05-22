@@ -42,4 +42,49 @@ RSpec.describe Hyrax::PermalinkHelper, type: :helper do
       expect(helper.permalink_for(presenter)).to eq('http://example.test/concern/generic_works/abc-123')
     end
   end
+
+  describe '#canonical_url_for' do
+    let(:presenter) { double('Presenter', id: 'abc-123') }
+
+    before do
+      allow(helper.request).to receive(:base_url).and_return('http://example.test')
+      allow(Hyrax::PermalinkPath).to receive(:call).with(presenter).and_return('/concern/generic_works/abc-123')
+    end
+
+    context 'when redirects are inactive' do
+      before { allow(Hyrax.config).to receive(:redirects_active?).and_return(false) }
+
+      it 'returns the UUID permalink without querying the redirects table' do
+        expect(Hyrax::RedirectsLookup).not_to receive(:display_path_for)
+        expect(helper.canonical_url_for(presenter)).to eq('http://example.test/concern/generic_works/abc-123')
+      end
+    end
+
+    context 'when redirects are active but the record has no display URL row' do
+      before do
+        allow(Hyrax.config).to receive(:redirects_active?).and_return(true)
+        allow(Hyrax::RedirectsLookup).to receive(:display_path_for).with('abc-123').and_return(nil)
+      end
+
+      it 'falls back to the UUID permalink' do
+        expect(helper.canonical_url_for(presenter)).to eq('http://example.test/concern/generic_works/abc-123')
+      end
+    end
+
+    context 'when redirects are active and the record has a display URL row' do
+      before do
+        allow(Hyrax.config).to receive(:redirects_active?).and_return(true)
+        allow(Hyrax::RedirectsLookup).to receive(:display_path_for).with('abc-123').and_return('/preferred')
+      end
+
+      it 'returns the display alias as an absolute URL' do
+        expect(helper.canonical_url_for(presenter)).to eq('http://example.test/preferred')
+      end
+
+      it 'strips any query string from the resulting URL' do
+        allow(Hyrax::RedirectsLookup).to receive(:display_path_for).with('abc-123').and_return('/preferred?locale=en')
+        expect(helper.canonical_url_for(presenter)).to eq('http://example.test/preferred')
+      end
+    end
+  end
 end

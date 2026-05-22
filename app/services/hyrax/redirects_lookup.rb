@@ -34,6 +34,16 @@ module Hyrax
       Hyrax::RedirectPath.find_by(from_path: normalized)
     end
 
+    # Returns the `from_path` of the row marked as the resource's display
+    # URL, or nil when no row is marked.
+    #
+    # @param resource_id [String]
+    # @return [String, nil]
+    def self.display_path_for(resource_id)
+      return nil if resource_id.blank?
+      Hyrax::RedirectPath.where(resource_id: resource_id, is_display_url: true).limit(1).pick(:from_path)
+    end
+
     def initialize(path, except_id: nil)
       @path = Hyrax::RedirectPathNormalizer.call(path)
       @except_id = except_id
