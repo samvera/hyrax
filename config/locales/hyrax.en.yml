@@ -43,8 +43,20 @@ en:
       carrierwave_download_error: Couldn't download image.
       carrierwave_integrity_error: Not an image.
       carrierwave_processing_error: Cannot resize image.
+<<<<<<< i18n-hard-coded-fix
       extension_blacklist_error: 'You are not allowed to upload %{extension} files, prohibited types: %{prohibited_types}'
       extension_whitelist_error: 'You are not allowed to upload %{extension} files, allowed types: %{allowed_types}'
+=======
+      extension_blacklist_error: "You are not allowed to upload %{extension} files, prohibited types: %{prohibited_types}"
+      extension_whitelist_error: "You are not allowed to upload %{extension} files, allowed types: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" is already used by another work or collection.'
+        blank: A redirect path can't be blank.
+        intra_record_duplicate: '"%{path}" is listed more than once on this record.'
+        invalid_format: '"%{path}" is not a valid path. Paths must start with "/" and contain no spaces, "?", or "#".'
+        multiple_display_url: At most one redirect entry may be marked as the display URL.
+        reserved_prefix: '"%{path}" can''t be used. The path is reserved by the application and may not be used as an alias.'
+>>>>>>> main
   helpers:
     action:
       accept: Accept
@@ -100,6 +112,8 @@ en:
           header: 'Edit Administrative Set: %{title}'
         form:
           cancel: Cancel
+          contexts:
+            none: "-- No context (remove all contexts) --"
           note: Users granted a new role will only gain the role on works that are deposited after that role has been granted.
           permission_destroy_errors:
             admin_group: The repository administrators group cannot be removed
@@ -605,7 +619,8 @@ en:
       currently_shared:
         currently_sharing: Currently Shared With
         table_title_access: Access Level
-        table_title_user: Person/Group
+        table_title_user: User/Group
+        table_title_action: Action
       file_manager:
         back_to: Back to
         toolbar: Toolbar
@@ -941,6 +956,9 @@ en:
       contact: Contact
       help: Help
       home: Home
+    copy_permalink:
+      button: Copy permalink
+      success: Copied!
     dashboard:
       additional_notifications: See all notifications
       admin_sets:
@@ -977,6 +995,7 @@ en:
             branding: Branding
             description: Description
             discovery: Discovery
+            redirects: Aliases
             relationships: Relationships
             sharing: Sharing
         form_branding:
@@ -1374,10 +1393,18 @@ en:
         header: Edit %{file_set}
         permissions: Permissions
         versions: Versions
+        form:
+          language:
+            title: Language
       extra_fields_modal:
         additional: Additional
         label: Additional %{label}(s)
       form:
+        attach_to: Attach to %{parent}
+        cancel: Cancel
+        save: Save
+        title: Title
+      valkyrie_form:
         attach_to: Attach to %{parent}
         cancel: Cancel
         save: Save
@@ -1420,6 +1447,8 @@ en:
         file_details: File Details
         fixity_check: Fixity Check
         not_yet_characterized: Not Yet Characterized
+      metadata:
+        metadata: Metadata
       versioning:
         choose_file: Choose New Version File
         current: Current Version
@@ -1433,6 +1462,18 @@ en:
         save: Save Revision
         save_your_note: You must click "Save Revision" to revert a previous version of this file
         upload: Upload New Version
+    flexible_schema_validators:
+      redirects_validator:
+        errors:
+          invalid_available_on: "m3 profile `redirects` property must be available on at least one work or collection class declared in this profile"
+          invalid_type: "m3 profile `redirects` property must declare `type: hash` (got `%{actual_type}`)"
+          property_required: "m3 profile must declare a `redirects` property when the redirects feature is enabled"
+        warnings:
+          config_disabled: "m3 profile declares a `redirects` property but Hyrax.config.redirects_enabled? is false; the property will be ignored"
+          flipflop_disabled: "m3 profile declares a `redirects` property but the :redirects feature flag is off; the property will be ignored"
+      sort_properties_validator:
+        warnings:
+          message: "%{property} must be defined on %{classes} to support sorting on that property, unless you have indexed %{property}_ssi on some other field."
     help:
       header: User Support
       override_text: Use app/views/static/help.html.erb to override this file.
@@ -1685,6 +1726,20 @@ en:
         link_expired_not_found: Single Use Link Expired or Not Found
         link_not_found: Single use link Not Found
     sort_label: Sort the listing of items
+<<<<<<< i18n-hard-coded-fix
+=======
+    sr:
+      thumbnail: Default representative image
+    stats:
+      work:
+        header: Work Analytics
+        pageviews: Pageviews
+        downloads: Downloads
+      pageviews:
+        pageviews: Page Views
+      downloads:
+        downloads: Downloads
+>>>>>>> main
     static:
       mendeley:
         contact_form: Contact Form
@@ -1888,9 +1943,30 @@ en:
         in_collections: Collections
         in_other_works: This Work in Other Works
         in_this_work: Other Works in this Work
+        redirects:
+          add_label: Add another alias
+          caption: List of URL aliases for this resource
+          display_url:
+            help_html: Optionally mark one alias as the <em>display URL</em>. When set, the record's permanent UUID URL redirects to the chosen alias. Leave as "None" to keep the UUID URL as the destination.
+            none_label: None (use the record's UUID URL)
+            row_label: 'Use "%{path}" as the display URL'
+          errors_heading: Please correct the following alias errors
+          header:
+            actions: Actions
+            display_url: Display URL
+            path: Path
+          heading: URL Aliases
+          help_html: 'Register legacy URL paths that should redirect to this record. Each path will resolve from this site''s root. Reserved Hyrax routes (e.g. <code>/concern</code>, <code>/dashboard</code>) cannot be used.'
+          new_path_label: New alias path
+          path_label: Alias path
+          placeholder:
+            path: Enter a path...
+          remove_label: Remove
+          remove_with_path_label: 'Remove %{path}'
         tab:
           files: Files
           metadata: Descriptions
+          redirects: Aliases
           relationships: Relationships
           share: Sharing
         visibility_until: until
@@ -1961,6 +2037,9 @@ en:
         rights_notes: Contains information about rights held in and over the resource.
         subject: Headings or index terms describing what the work is about; these do need to conform to an existing vocabulary.
         title: A name to aid in identifying a work.
+      file_set:
+        language: The language of the file's content. For audio/video transcriptions, this can be the <a href="https://id.loc.gov/vocabulary/iso639-2.html" target="_blank">ISO 639-2</a> code, the <a href="https://id.loc.gov/vocabulary/iso639-3.html" target="_blank">ISO 639-3</a> code, or the English name of the language.
+        transcript_ids: Select file(s) for displaying as captions or subtitles of this file. File(s) must be children of the same parent work and be in <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API/Web_Video_Text_Tracks_Format" target="_blank">Web Video Text Tracks (VTT) format</a>.
     labels:
       collection:
         size: Size
@@ -2000,6 +2079,9 @@ en:
         visibility_after_lease: then restrict it to
         visibility_during_embargo: Restricted to
         visibility_during_lease: Is available to
+      file_set:
+        language: Language
+        transcript_ids: Transcript(s)
       proxy_deposit_request:
         sender_comment: Comments
         transfer_to: User
@@ -2012,3 +2094,9 @@ en:
   total_view:
     one: This work has 1 total view
     other: This work has %{count} total views
+<<<<<<< i18n-hard-coded-fix
+=======
+  download:
+    one: and 1 download
+    other: and %{count} downloads
+>>>>>>> main

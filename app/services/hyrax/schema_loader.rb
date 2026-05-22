@@ -64,7 +64,7 @@ module Hyrax
       # @param [Hash<String, Object>] config
       def initialize(name, config)
         @config = config
-        @name   = name.to_sym
+        @name   = (config['name'] || name).to_sym
       end
 
       ##
@@ -76,7 +76,7 @@ module Hyrax
       ##
       # @return [Enumerable<Symbol>]
       def index_keys
-        (config.fetch('indexing', nil) || config.fetch('index_keys', []))&.reject { |k| ['facetable', 'stored_searchable', 'admin_only'].include?(k) }&.map(&:to_sym) || []
+        (config.fetch('indexing', nil) || config.fetch('index_keys', []))&.reject { |k| ['facetable', 'stored_searchable', 'admin_only', 'editor_only'].include?(k) }&.map(&:to_sym) || []
       end
 
       ##
@@ -84,10 +84,11 @@ module Hyrax
       def view_options
         # prefer display_label over view:label for labels, make available in the view
         @view_options = config.fetch('view', {})&.with_indifferent_access || {}
-        Deprecation.warn(self, 'view: label is deprecated, use display_label instead') if @view_options[:label].present?
+        Deprecation.warn('view: label is deprecated, use display_label instead') if @view_options[:label].present?
         @view_options.delete(:label)
         @view_options[:display_label] = display_label
         @view_options[:admin_only] = admin_only?
+        @view_options[:editor_only] = editor_only?
         @view_options
       end
 
@@ -102,16 +103,28 @@ module Hyrax
         @admin_only ||= config.fetch('admin_only', false) || config['indexing']&.include?('admin_only')
       end
 
+      def editor_only?
+        @editor_only ||= config.fetch('editor_only', false) || config['indexing']&.include?('editor_only')
+      end
+
       ##
       # @return [Dry::Types::Type]
       def type
-        collection_type = if multiple?
-                            Valkyrie::Types::Array.constructor { |v| Array(v).select(&:present?) }
-                          else
-                            Identity
-                          end
+        member_type = type_for(config['type'])
+        wrapper_type = multiple? ? Valkyrie::Types::Array.constructor(&Coerce) : Identity
+        wrapper_type.of(member_type)
+      end
 
-        collection_type.of(type_for(config['type']))
+      # Cleans up the input before the type system sees it: drops the
+      # "no value provided" placeholder dry-types uses internally, then
+      # removes blanks. Wraps a bare Hash in a one-element array; using
+      # `Array(hash)` would surprise-flatten it into [[:k, v], ...] pairs.
+      # Valkyrie's JSONValueMapper unwraps single-element arrays on read,
+      # so the type sees a hash here when there was originally one entry.
+      Coerce = lambda do |value|
+        return [] if value.equal?(Dry::Types::Undefined)
+        wrapped = value.is_a?(::Hash) ? [value] : Array(value)
+        wrapped.reject { |v| v.equal?(Dry::Types::Undefined) }.select(&:present?)
       end
 
       # Determine whether this attribute allows multiple values.
@@ -127,26 +140,36 @@ module Hyrax
       ##
       # @api private
       #
-      # This class acts as a Valkyrie/Dry::Types collection with typed members,
-      # but instead of wrapping the given type with itself as the collection type
-      # (as in `Valkyrie::Types::Array.of(MyType)`), it returns the given type.
+      # Single-value wrapper that matches the multi-value branch's cleanup:
+      # strips the dry-types Undefined placeholder and coerces blank strings to nil.
+      # Booleans, numbers, and other types pass through unchanged.
       #
       # @example
-      #   Identity.of(Valkyrie::Types::String) # => Valkyrie::Types::String
-      #
+      #   Identity.of(Valkyrie::Types::String) # => Valkyrie::Types::String with blank-string → nil coercion
       class Identity
-        ##
-        # @param [Dry::Types::Type]
-        # @return [Dry::Types::Type] the type passed in
         def self.of(type)
-          type
+          type.constructor do |value|
+            next nil if value.equal?(Dry::Types::Undefined)
+            value.is_a?(String) ? value.presence : value
+          end
         end
       end
 
       private
 
       ##
-      # Maps a configuration string value to a `Valkyrie::Type`.
+      # Resolves a `type:` value from a schema YAML to a Dry::Types::Type.
+      #
+      # Recognized values:
+      #   - `id`, `uri`, `date_time` — Valkyrie type shortcuts.
+      #   - `hash` — for attributes whose entries carry multiple sub-fields
+      #     (e.g. redirects, with path / canonical / sequence). Use this
+      #     instead of nesting a Valkyrie::Resource. See
+      #     `documentation/redirects.md` for a worked example.
+      #   - Any primitive Valkyrie type, looked up under `Valkyrie::Types::*`
+      #     by classified name (e.g. `string` → `Valkyrie::Types::String`).
+      #
+      # Raises `ArgumentError` if nothing matches.
       #
       # @param [String]
       # @return [Dry::Types::Type]
@@ -158,12 +181,11 @@ module Hyrax
           Valkyrie::Types::URI
         when 'date_time'
           Valkyrie::Types::DateTime
+        when 'hash'
+          Dry::Types['hash']
         else
-          begin
-            "Valkyrie::Types::#{type.capitalize}".constantize
-          rescue NameError
-            raise ArgumentError, "Unrecognized type: #{type}"
-          end
+          "Valkyrie::Types::#{type.classify}".safe_constantize ||
+            raise(ArgumentError, "Unrecognized type: #{type}")
         end
       end
     end

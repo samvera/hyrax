@@ -4,10 +4,12 @@ require 'iiif_manifest'
 module Hyrax
   module WorksControllerBehavior
     extend ActiveSupport::Concern
-    include Blacklight::Base
+    include Blacklight::Configurable
+    include Blacklight::SearchContext
     include Blacklight::AccessControls::Catalog
     include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
     include Hyrax::EnsureMigratedBehavior
+    include Hyrax::RedirectToDisplayUrl
 
     included do
       with_themed_layout :decide_layout
@@ -138,12 +140,15 @@ module Hyrax
     end
 
     def manifest
-      headers['Access-Control-Allow-Origin'] = '*'
+      locale = params[:locale] || current_user&.preferred_locale || I18n.default_locale
+      I18n.with_locale(locale) do
+        headers['Access-Control-Allow-Origin'] = '*'
 
-      json = iiif_manifest_builder.manifest_for(presenter: iiif_manifest_presenter)
+        json = iiif_manifest_builder.manifest_for(presenter: iiif_manifest_presenter)
 
-      respond_to do |wants|
-        wants.any { render json: json }
+        respond_to do |wants|
+          wants.any { render json: json }
+        end
       end
     end
 
@@ -166,7 +171,7 @@ module Hyrax
 
     def iiif_manifest_builder
       self.class.iiif_manifest_builder ||
-        (Flipflop.cache_work_iiif_manifest? ? Hyrax::CachingIiifManifestBuilder.new : Hyrax::ManifestBuilderService.new)
+        (Flipflop.cache_work_iiif_manifest? ? Hyrax::CachingIiifManifestBuilder.new : Hyrax::ManifestBuilderService.new(iiif_manifest_factory: manifest_factory_for_work))
     end
 
     def iiif_manifest_presenter
@@ -177,7 +182,7 @@ module Hyrax
     end
 
     def user_collections
-      collections_service.search_results(:deposit)
+      collections_service.all_search_results(:deposit)
     end
 
     def collections_service
@@ -557,6 +562,26 @@ module Hyrax
       end
 
       AdminSetSelectionPresenter.new(admin_sets: admin_sets)
+    end
+
+    def manifest_factory_for_work
+      return ::IIIFManifest::V3::ManifestFactory if av_content? || pdf_content?
+
+      Hyrax.config.iiif_manifest_factory
+    end
+
+    def av_content?
+      return false unless Flipflop.iiif_av?
+
+      iiif_manifest_presenter.file_set_presenters.any? do |file_set|
+        file_set.video? || file_set.audio?
+      end
+    end
+
+    def pdf_content?
+      return false unless Flipflop.iiif_pdf?
+
+      iiif_manifest_presenter.file_set_presenters.any?(&:pdf?)
     end
   end
 end

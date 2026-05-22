@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::LeaseService, :clean_repo do
+RSpec.describe Hyrax::LeaseService, :clean_repo, :frozen_time do
   subject { described_class }
 
   context 'wings enabled', :active_fedora do

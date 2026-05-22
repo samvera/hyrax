@@ -729,7 +729,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
         # verify new work was added to collection1
         visit "/dashboard/collections/#{collection1.id}"
-        expect(page).to have_content("New Work for Collection")
+        expect(page).to have_link("New Work for Collection")
 
         # Verify work belongs to correct admin set
         click_link "New Work for Collection", match: :first

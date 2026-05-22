@@ -133,7 +133,7 @@ module Hyrax
       end
 
       def original_checksum
-        self["original_checksum_tesim"]
+        self["original_checksum_tesim"] || self["checksum_tesim"]
       end
 
       def alpha_channels

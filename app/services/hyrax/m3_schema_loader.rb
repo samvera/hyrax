@@ -11,7 +11,10 @@ module Hyrax
     def view_definitions_for(schema:, version: 1, contexts: nil)
       definitions(schema, version, contexts).each_with_object({}) do |definition, hash|
         view_options = definition.view_options
-        next if view_options.without(:display_label).empty?
+        # display_label, admin_only, and editor_only keys are always added to
+        # the view_options hash. If there are no other view options, skip this
+        # field.
+        next if view_options.without(:display_label, :admin_only, :editor_only).empty?
 
         hash[definition.name] = definition.view_options
       end
@@ -48,7 +51,7 @@ module Hyrax
         next if contexts.present? && config['context'].present? && !(Array(contexts) & Array(config['context'])).any?
 
         # Wew, we are in the clear to use this field
-        AttributeDefinition.new(name, config)
+        M3AttributeDefinition.new(name, config)
       end.compact
     rescue ActiveRecord::StatementInvalid
       Rails.logger.error "Skipping definition load for migrations to run"
@@ -85,5 +88,32 @@ module Hyrax
           "context" => nil } }
     end
     # rubocop:enable Metrics/MethodLength
+
+    ##
+    # @api private
+    #
+    # M3-specific AttributeDefinition that properly handles cardinality-based requirements
+    class M3AttributeDefinition < Hyrax::SchemaLoader::AttributeDefinition
+      ##
+      # @return [Hash{Symbol => Object}]
+      def form_options
+        options = super
+
+        # Check if minimum cardinality makes this field required
+        options = options.merge(required: true) if cardinality_required?
+
+        options
+      end
+
+      private
+
+      def cardinality_required?
+        cardinality = config['cardinality']
+        return false unless cardinality.is_a?(Hash)
+
+        minimum = cardinality['minimum']
+        minimum.present? && minimum.to_i >= 1
+      end
+    end
   end
 end

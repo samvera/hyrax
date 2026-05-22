@@ -27,6 +27,8 @@ module Hyrax
       end
 
       include BasedNearFieldBehavior
+      include RedirectsFieldBehavior
+      include Hyrax::FormFields(:redirects) if Hyrax.config.redirects_enabled? && Hyrax.config.work_include_metadata?
       class_attribute :model_class
 
       property :human_readable_type, writable: false
@@ -43,6 +45,24 @@ module Hyrax
       # @see https://github.com/samvera/valkyrie/wiki/Optimistic-Locking
       property :version, virtual: true, prepopulator: LockKeyPrepopulator
 
+      # Wire validators with `attributes:` through `validation { ... }` rather
+      # than the bare `validates_with`. Reform's `validates_with` shim closes
+      # over the args array, so the options hash (`{attributes: [:foo]}`) is
+      # shared across heritage replays. ActiveModel mutates that hash on each
+      # call (`options[:class] = self`, then `options.delete(:attributes)`
+      # inside `EachValidator#initialize`). The first replay leaves the hash
+      # without `:attributes`; the second replay raises
+      # `:attributes cannot be blank` and the subclass crashes at load time.
+      # Wrapping in `validation(name: :default, inherit: true) { ... }` rebuilds
+      # the literal options hash on every replay so each subclass gets its own
+      # clean copy. This pattern applies to *any* `validates_with` that takes
+      # an `attributes:` keyword.
+      if Hyrax.config.redirects_enabled?
+        validation(name: :default, inherit: true) do
+          validates_with Hyrax::RedirectValidator, attributes: [:redirects]
+        end
+      end
+
       ##
       # @api public
       #
@@ -54,8 +74,9 @@ module Hyrax
         if r.flexible?
           self.class.deserializer_class = nil # need to reload this on first use after schema is loaded
           singleton_class.schema_definitions = self.class.definitions
-          context = r.respond_to?(:context) ? r.context : nil
-          Hyrax::Schema.m3_schema_loader.form_definitions_for(schema: r.class.name, version: Hyrax::FlexibleSchema.current_schema_id, contexts: context).map do |field_name, options|
+          contexts = r.respond_to?(:contexts) ? r.contexts : nil
+          current_schema_fields = Hyrax::Schema.m3_schema_loader.form_definitions_for(schema: r.class.name, version: Hyrax::FlexibleSchema.current_schema_id, contexts: contexts)
+          current_schema_fields.each do |field_name, options|
             singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
           end
         end
@@ -63,6 +84,12 @@ module Hyrax
         if resource.nil?
           if !deprecated_resource.nil?
             Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. Pass the resource with `resource:` instead."
+            # Remove form definitions for attributes the model doesn't support,
+            # mirroring the cleanup in the resource: keyword path below.
+            if deprecated_resource.respond_to?(:flexible?) && deprecated_resource.flexible?
+              to_remove = singleton_class.definitions.select { |k, v| !deprecated_resource.respond_to?(k) && v.instance_variable_get("@options")[:display] }
+              to_remove.keys.each { |removed_field| singleton_class.definitions.delete(removed_field) }
+            end
             super(deprecated_resource)
           else
             super()
@@ -73,8 +100,9 @@ module Hyrax
             hash = resource.attributes.dup
             hash[:schema_version] = Hyrax::FlexibleSchema.current_schema_id
             resource = resource.class.new(hash)
-            # find any fields removed by the new schema
-            to_remove = singleton_class.definitions.select { |k, v| !resource.respond_to?(k) && v.instance_variable_get("@options")[:display] }
+            # find any fields removed by the current schema
+            current_field_keys = current_schema_fields.keys.map(&:to_s)
+            to_remove = singleton_class.definitions.select { |k, v| !current_field_keys.include?(k.to_s) && v.instance_variable_get("@options")[:display] }
             to_remove.keys.each do |removed_field|
               singleton_class.definitions.delete(removed_field)
             end
@@ -82,13 +110,18 @@ module Hyrax
 
           super(resource)
         end
-      end # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      end
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
       class << self
         def inherited(subclass)
-          # this is a noop if based near is not defined on a given model
-          # we need these to be before and included properties
+          # Field Behaviors must be prepended onto every subclass so their
+          # `deserialize!` overrides land above Reform's base method on the
+          # ancestor chain. Each behavior gates itself internally and is a
+          # no-op when its feature is off or its property isn't on the
+          # subclass's model.
           subclass.prepend(BasedNearFieldBehavior)
+          subclass.prepend(RedirectsFieldBehavior)
           super
         end
 
@@ -106,11 +139,12 @@ module Hyrax
         # @example
         #   monograph  = Monograph.new
         #   change_set = Hyrax::Forms::ResourceForm.for(resource: monograph)
-        def for(deprecated_resource = nil, resource: nil)
+        def for(deprecated_resource = nil, resource: nil, admin_set_id: nil)
           if resource.nil? && !deprecated_resource.nil?
             Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. Pass the resource with `resource:` instead."
-            return self.for(resource: deprecated_resource)
+            return self.for(resource: deprecated_resource, admin_set_id: admin_set_id)
           end
+          apply_admin_set_contexts(resource: resource, admin_set_id: admin_set_id)
           klass = "#{resource.class.name}Form".safe_constantize
           klass ||= Hyrax::Forms::ResourceForm(resource.class)
           begin
@@ -119,6 +153,19 @@ module Hyrax
             Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. #{klass} should be updated accordingly."
             klass.new(resource)
           end
+        end
+
+        private
+
+        def apply_admin_set_contexts(resource:, admin_set_id:)
+          return if admin_set_id.blank?
+          return unless resource.respond_to?(:flexible?) && resource.flexible?
+          admin_set = Hyrax.query_service.find_by(id: admin_set_id)
+          return unless admin_set&.respond_to?(:contexts)
+          contexts = Array(admin_set.contexts)
+          resource.contexts = contexts if contexts.present?
+        rescue Valkyrie::Persistence::ObjectNotFoundError
+          nil
         end
 
         ##
@@ -153,6 +200,8 @@ module Hyrax
         def expose_class
           @expose_class = Class.new(Disposable::Expose).from(schema_definitions.values)
         end
+
+        public :expose_class, :required_fields, :required_fields=, :schema_definitions, :schema_definitions=
       end
       ##
       # @param [#to_s] attr

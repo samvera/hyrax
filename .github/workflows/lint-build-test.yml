@@ -15,6 +15,10 @@ on:
         required: false
         default: false
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}-dev
@@ -99,7 +103,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ci_test_app: [dassie,koppie,sirenia]
+        ci_test_app: [dassie,koppie,sirenia,allinson]
         ci_node_total: [4]
         ci_node_index: [0,1,2,3]
     steps:

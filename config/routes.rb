@@ -6,11 +6,15 @@ Hyrax::Engine.routes.draw do
   # Route the home page as the root
   root to: 'homepage#index'
 
+  get '/robots', to: 'homepage#robots'
+
   # Handle routes that existed in Hyrax < 7
   #   e.g. https://scholarsphere.psu.edu/files/gm80hv36p
   get '/files/:id', to: redirect('/concern/generic_works/%{id}')
 
   resources :downloads, only: :show
+
+  get 'transcripts/:id.:file_ext', to: 'transcripts#show', as: :transcript
 
   # ResourceSync routes
   get '/.well-known/resourcesync' => 'resource_sync#source_description', as: :source_description

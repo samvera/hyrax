@@ -42,11 +42,11 @@ module Hyrax
         # (+Hyrax::Forms::FileSetForm+), +:in_works_ids+ is prepopulated onto
         # the form object itself. For +Hyrax::Forms::FileSetEditForm+, the
         # +:in_works+ method is present on the wrapped +:model+.
-        if obj.is_a?(Hyrax.config.file_set_form)
+        if obj.model.respond_to?(:in_works)
+          new(object: obj.model.in_works.first, ability: ability)
+        else
           object_id = obj.in_works_ids.first
           new(object: Hyrax.query_service.find_by(id: object_id), ability: ability)
-        else
-          new(object: obj.model.in_works.first, ability: ability)
         end
       elsif obj.file_set?
         # The provided form object is a FileSet.
@@ -171,7 +171,7 @@ module Hyrax
       unauthorized_managers = []
       unauthorized_collection_managers = []
       object_unauthorized_collection_ids.each do |id|
-        Hyrax::PermissionTemplate.find_by(source_id: id).access_grants.each do |grant|
+        Hyrax::PermissionTemplate.find_by(source_id: id)&.access_grants&.each do |grant|
           if grant.access == "manage"
             unauthorized_managers << grant.agent_id
             unauthorized_collection_managers += Array.wrap({ name: grant.agent_id }.merge(id: id))

@@ -20,7 +20,7 @@ module Hyrax
           logger.info("   #{as_ct.title} -- FOUND OR CREATED")
 
           user_ct = Hyrax::CollectionType.find_or_create_default_collection_type
-          set_badge_color(user_ct, '#0099cc')
+          set_badge_color(user_ct, '#007EA8')
           logger.info("   #{user_ct.title} -- FOUND OR CREATED")
         end
 

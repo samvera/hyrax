@@ -15,7 +15,7 @@ module Hyrax
         # @return [Dry::Monads::Result] `Failure` if there is no `AdminSet` for
         #   the input; `Success(input)`, otherwise.
         def call(obj)
-          obj.admin_set_id ? Success(obj) : Failure(:no_admin_set_id)
+          obj.admin_set_id.to_s.present? ? Success(obj) : Failure(:no_admin_set_id)
         end
       end
     end

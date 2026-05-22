@@ -6,8 +6,6 @@ ENV.delete('APP_NAME') # Prevent custom test app names in specs
 
 # Analytics is turned off by default
 ENV['HYRAX_ANALYTICS'] = 'false'
-ENV['HYRAX_FLEXIBLE'] = 'false'
-ENV['HYRAX_DISABLE_INCLUDE_METADATA'] = 'false'
 
 require "bundler/setup"
 
@@ -37,6 +35,23 @@ ActiveRecord::Base.descendants.each(&:reset_column_information)
 ActiveRecord::Migration.maintain_test_schema!
 
 require 'active_fedora/cleaner'
+
+# Track whether anything has been written to Fedora since the last clean.
+# This avoids expensive HTTP DELETE round-trips to Fedora when nothing changed.
+$fedora_dirty = true # rubocop:disable Style/GlobalVars -- test-only perf optimization
+
+module FedoraDirtyTracking
+  def save(*args, **kwargs)
+    $fedora_dirty = true # rubocop:disable Style/GlobalVars
+    super
+  end
+
+  def destroy(*args, **kwargs)
+    $fedora_dirty = true # rubocop:disable Style/GlobalVars
+    super
+  end
+end
+ActiveFedora::Base.prepend(FedoraDirtyTracking)
 require 'devise'
 require 'devise/version'
 require 'mida'
@@ -156,10 +171,12 @@ ActiveJob::Base.queue_adapter = :test
 
 def clean_active_fedora_repository
   return if Hyrax.config.disable_wings
+  return unless $fedora_dirty # rubocop:disable Style/GlobalVars
   ActiveFedora::Cleaner.clean!
   # The JS is executed in a different thread, so that other thread
   # may think the root path has already been created:
   ActiveFedora.fedora.connection.send(:init_base_path)
+  $fedora_dirty = false # rubocop:disable Style/GlobalVars
 end
 
 RSpec.configure do |config|
@@ -206,16 +223,28 @@ RSpec.configure do |config|
     Hyrax.config.geonames_username = 'hyrax-test'
     # Initialize query_service class attribute by calling to avoid it sometimes being set to test_adapter
     Hyrax::SolrQueryService.query_service
-    # disable analytics except for specs which will have proper api mocks
+
+    FlexibleMetadataSetup.setup_flexible_metadata
   end
 
+  # disable analytics except for specs which will have proper api mocks
   config.before :all do
     Hyrax.config.analytics = false
   end
 
   config.before do |example|
     if example.metadata[:type] == :feature && Capybara.current_driver != :rack_test
-      DatabaseCleaner.strategy = :truncation
+      # Preserve the flexible_schemas table across feature specs. The
+      # before(:suite) block creates a FlexibleSchema from the allinson
+      # test profile. Without this exclusion, truncation deletes it and
+      # create_default_schema falls back to the generic koppie profile,
+      # which is missing allinson-only properties (record_info, genre, etc.)
+      # and facetable flags (keyword), causing form and catalog failures.
+      DatabaseCleaner.strategy = if Hyrax.config.flexible?
+                                   [:truncation, { except: %w[hyrax_flexible_schemas] }]
+                                 else
+                                   :truncation
+                                 end
     else
       DatabaseCleaner.strategy = :transaction
       DatabaseCleaner.start

@@ -4,7 +4,6 @@ RSpec.describe 'hyrax/collections/_show_document_list_row.html.erb', type: :view
 
   let(:work) do
     build(:monograph,
-                    label: 'One Hundred Years of Solitude',
                     date_uploaded: '1999',
                     visibility_setting: 'open',
                     title: 'One Hundred Years of Solitude',

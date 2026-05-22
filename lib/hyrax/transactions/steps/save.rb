@@ -35,6 +35,7 @@ module Hyrax
             valid_future_date?(change_set.lease, 'lease_expiration_date') if change_set.respond_to?(:lease) && change_set.lease
             valid_future_date?(change_set.embargo, 'embargo_release_date') if change_set.respond_to?(:embargo) && change_set.embargo
             new_collections = changed_collection_membership(change_set)
+            old_admin_set_id = changed_admin_set_id(change_set)
 
             unsaved = change_set.sync
             save_lease_or_embargo(unsaved)
@@ -49,6 +50,8 @@ module Hyrax
             unsaved.respond_to?(:permission_manager)
 
           user ||= ::User.find_by_user_key(saved.depositor)
+
+          saved.define_singleton_method(:previous_admin_set_id) { old_admin_set_id } if old_admin_set_id
 
           publish_changes(resource: saved, user: user, new: unsaved.new_record, new_collections: new_collections)
           Success(saved)
@@ -81,6 +84,13 @@ module Hyrax
           return [] unless change_set.changed?(:member_of_collection_ids)
 
           change_set.member_of_collection_ids - change_set.model.member_of_collection_ids
+        end
+
+        def changed_admin_set_id(change_set)
+          return nil unless change_set.respond_to?(:admin_set_id) &&
+                            change_set.changed?(:admin_set_id)
+
+          change_set.model.admin_set_id
         end
 
         def publish_changes(resource:, user:, new: false, new_collections: [])

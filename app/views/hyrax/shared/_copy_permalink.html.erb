@@ -1,0 +1,10 @@
+<% if copy_permalink_enabled? %>
+  <% label = t('hyrax.copy_permalink.button') %>
+  <button type="button"
+          class="btn btn-secondary btn-sm copy-permalink-button"
+          data-clipboard-text="<%= permalink_for(presenter) %>"
+          data-success-text="<%= t('hyrax.copy_permalink.success') %>"
+          title="<%= label %>">
+    <%= label %>
+  </button>
+<% end %>

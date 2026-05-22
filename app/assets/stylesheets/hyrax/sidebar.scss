@@ -2,6 +2,28 @@ $drawer-small: 40px;
 $drawer-large: 260px;
 $gutter-width: $grid-gutter-width/2;
 
+// Backdrop overlay for mobile sidebar - automatically shows when sidebar is maximized
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  @media screen and (max-width: 991px) {
+    // Automatically show when sidebar is maximized preventing flash on page load
+    .sidebar.maximized.js-initialized ~ & {
+      display: block;
+      opacity: 1;
+    }
+  }
+}
+
 .main-content {
   padding-left: $drawer-small + $gutter-width;
   padding-right: $gutter-width;
@@ -9,9 +31,28 @@ $gutter-width: $grid-gutter-width/2;
   background-color: $admin-content-background-color;
   position: absolute;
   width: 100%;
+  transition: opacity 0.3s ease;
 
   &.maximized {
     padding-left: $drawer-large + $gutter-width;
+  }
+
+  // On mobile, sidebar overlays content instead of pushing it
+  @media screen and (max-width: 991px) {
+    padding-left: $drawer-small + $gutter-width;
+    // Keep padding the same even when sidebar is maximized
+    // Only grey out after JS has initialized preventing flash on page load
+    &.maximized:not(.js-initialized) {
+      padding-left: $drawer-small + $gutter-width;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    &.maximized.js-initialized {
+      padding-left: $drawer-small + $gutter-width;
+      // Grey out and disable content when sidebar is open
+      opacity: 0.5;
+      pointer-events: none;
+    }
   }
 }
 
@@ -24,6 +65,40 @@ $gutter-width: $grid-gutter-width/2;
   transition: width 0.1s;
   width: $drawer-small;
   z-index: 1000;
+
+  // On mobile sidebar overlays content when maximized
+  @media screen and (max-width: 991px) {
+    width: $drawer-small;
+    
+    // Force sidebar to start collapsed on mobile preventing flash of open sidebar on page load
+    &:not(.js-initialized).maximized {
+      width: $drawer-small !important;
+      
+      // Hide maximized content initially on mobile
+      .sidebar-action-text,
+      a span + span,
+      h5 {
+        display: none !important;
+      }
+      
+      .h5,
+      .profile,
+      .collapse-toggle::after {
+        opacity: 0 !important;
+      }
+      
+      .sidebar-toggle {
+        transform: none !important;
+      }
+    }
+    
+    &.maximized.js-initialized {
+      position: fixed;
+      z-index: 1001;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+      width: $drawer-large;
+    }
+  }
 
   &.maximized {
     width: $drawer-large;
@@ -83,12 +158,32 @@ $gutter-width: $grid-gutter-width/2;
     cursor: pointer;
     background-color: $body-background-color;
     border-radius: 50%;
-    line-height: 18px;
+    border: none;
+    padding: 0;
+    line-height: 24px;
     position: absolute;
-    right: -10px;
+    right: -12px;
     text-align: center;
-    width: 18px;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
     z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    // Focus styles for keyboard navigation
+    &:focus {
+      outline: 2px solid #005fcc;
+      outline-offset: 2px;
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #005fcc;
+    }
+
+    // Centered icon
+    .fa {
+      display: block;
+    }
   }
 
   a {

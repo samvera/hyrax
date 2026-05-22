@@ -5,6 +5,7 @@ module Hyrax
 
     require 'almond-rails'
     require 'awesome_nested_set'
+    require 'blacklight_dynamic_sitemap'
     require 'breadcrumbs_on_rails'
     require 'clipboard/rails'
     require 'draper'
@@ -21,6 +22,7 @@ module Hyrax
     require 'valkyrie'
     require 'cancancan'
     require 'blacklight'
+    require 'json_schemer'
 
     require 'hydra/derivatives'
     require 'hyrax/active_fedora_dummy_model'

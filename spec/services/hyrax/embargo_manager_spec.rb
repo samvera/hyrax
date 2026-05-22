@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::EmbargoManager do
+RSpec.describe Hyrax::EmbargoManager, :frozen_time do
   subject(:manager) { described_class.new(resource: resource) }
   let(:resource)    { Hyrax::Resource.new }
 
@@ -10,7 +10,11 @@ RSpec.describe Hyrax::EmbargoManager do
 
   shared_context 'with expired embargo' do
     let(:resource) { FactoryBot.build(:hyrax_resource, embargo: embargo) }
-    let(:embargo)  { FactoryBot.create(:hyrax_embargo, :expired) }
+    let!(:embargo) { FactoryBot.create(:hyrax_embargo, :expired) }
+
+    before do
+      travel_to Time.zone.now + 2.days
+    end
   end
 
   describe '#apply' do

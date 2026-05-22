@@ -4,9 +4,14 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   serialize :profile, coder: YAML
   serialize :contexts, coder: YAML
 
-  validate :validate_profile_classes
+  validate :validate_profile
+  validate :validate_property_name_conflicts
 
   before_save :update_contexts
+
+  def warnings
+    @warnings ||= ActiveModel::Errors.new(self)
+  end
 
   def self.current_version
     order("created_at asc").last&.profile
@@ -19,9 +24,11 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   def self.create_default_schema
     m3_profile_path = Hyrax::Schema.m3_schema_loader.config_paths&.first
     raise ArgumentError, "No M3 profile found, check the Hyrax.config.schema_loader_config_search_paths" unless m3_profile_path
-    Hyrax::FlexibleSchema.first_or_create do |f|
-      f.profile = YAML.safe_load_file(m3_profile_path)
-    end
+    schema = Hyrax::FlexibleSchema.first
+    return if schema
+    schema = Hyrax::FlexibleSchema.new(profile: YAML.safe_load_file(m3_profile_path))
+    schema.save(validate: false)
+    schema
   end
 
   # Retrieve the properties for the model / work type
@@ -35,6 +42,20 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     current_version['properties'].symbolize_keys!.keys
   rescue StandardError
     []
+  end
+
+  # Retrieve the required data to use for mappings
+  def self.mappings_data_for(mapping = 'simple_dc_pmh')
+    # for OAI-PMH we need the mappings and indexing info
+    # for properties with the specified mapping
+    return {} unless current_version
+    current_version['properties'].each_with_object({}) do |(key, values), obj|
+      next unless values['mappings'] && values['mappings'][mapping]
+      obj[key] = {
+        'indexing' => values['indexing'],
+        'mappings' => { mapping => values['mappings'][mapping] }
+      }
+    end
   end
 
   def update_contexts
@@ -71,17 +92,58 @@ class Hyrax::FlexibleSchema < ApplicationRecord
 
   private
 
-  def validate_profile_classes
-    required_classes = Hyrax.config.flexible_classes
-    if profile['classes'].blank?
-      errors.add(:profile, "Must specify classes")
-    else
-      missing_classes = required_classes - profile['classes'].keys
-      unless missing_classes.empty?
-        missing_classes_list = missing_classes.join(', ')
-        errors.add(:profile, "Must include #{missing_classes_list}")
+  def validate_profile
+    validation_service = Hyrax::FlexibleSchemaValidatorService.new(profile:)
+    validation_service.validate!
+
+    validation_service.errors.each do |e|
+      errors.add(:profile, e.to_s)
+    end
+
+    validation_service.warnings.each do |w|
+      warnings.add(:profile, "Warning: #{w.to_s}")
+    end
+  end
+
+  def validate_property_name_conflicts
+    return unless profile&.dig('properties')
+
+    # Group properties by their resolved name
+    properties_by_name = profile['properties'].each_with_object({}) do |(key, config), hash|
+      property_name = config['name'] || key
+      hash[property_name] ||= []
+      hash[property_name] << { key: key, config: config }
+    end
+
+    # Check for conflicts (same name with overlapping class/context)
+    properties_by_name.each do |property_name, properties|
+      next if properties.length == 1
+
+      # Check all pairs for conflicts
+      properties.combination(2).each do |prop1, prop2|
+        if properties_conflict?(prop1[:config], prop2[:config])
+          errors.add(:profile, "Property name '#{property_name}' conflicts between '#{prop1[:key]}' and '#{prop2[:key]}' - they have overlapping classes and contexts")
+        end
       end
     end
+  end
+
+  def properties_conflict?(config1, config2)
+    classes1 = Array(config1.dig('available_on', 'class'))
+    classes2 = Array(config2.dig('available_on', 'class'))
+
+    contexts1 = Array(config1.dig('available_on', 'context'))
+    contexts2 = Array(config2.dig('available_on', 'context'))
+
+    # If no contexts specified, consider as universal context
+    contexts1 = [nil] if contexts1.empty?
+    contexts2 = [nil] if contexts2.empty?
+
+    # Conflict if there's any overlap in both classes AND contexts
+    class_overlap = (classes1 & classes2).any?
+    context_overlap = !(contexts1 & contexts2).empty?
+
+    class_overlap && context_overlap
   end
 
   def class_names
@@ -91,10 +153,11 @@ class Hyrax::FlexibleSchema < ApplicationRecord
       @class_names[class_name] = {}
     end
     profile['properties'].each do |key, values|
+      property_name = values['name'] || key
       values['available_on']['class'].each do |property_class|
         # map some m3 items to what Hyrax expects
         values = values_map(values)
-        @class_names[property_class][key] = values unless @class_names[property_class].nil?
+        @class_names[property_class][property_name] = values
       end
     end
     @class_names
