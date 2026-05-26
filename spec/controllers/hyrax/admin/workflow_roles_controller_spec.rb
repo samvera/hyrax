@@ -7,9 +7,9 @@ RSpec.describe Hyrax::Admin::WorkflowRolesController do
       end
 
       it "is successful" do
-        expect(controller).to receive(:add_breadcrumb).with('Home', root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Workflow Roles', admin_workflow_roles_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path)
+        expect(controller).to receive(:add_breadcrumb).with('Workflow Roles', admin_workflow_roles_path)
         get :index
         expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of Hyrax::Admin::WorkflowRolesPresenter
@@ -20,7 +20,7 @@ RSpec.describe Hyrax::Admin::WorkflowRolesController do
     context "when they don't have permission" do
       it "throws a CanCan error" do
         get :index
-        expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
+        expect(response).to redirect_to main_app.new_user_session_path
       end
     end
   end
@@ -46,7 +46,7 @@ RSpec.describe Hyrax::Admin::WorkflowRolesController do
     context "when they don't have permission" do
       it 'throws a CanCan error' do
         post :create, params: { sipity_workflow_responsibility: {} }
-        expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
+        expect(response).to redirect_to main_app.new_user_session_path
       end
     end
   end
@@ -70,7 +70,7 @@ RSpec.describe Hyrax::Admin::WorkflowRolesController do
     context "when they don't have permission" do
       it "throws a CanCan error" do
         get :index
-        expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
+        expect(response).to redirect_to main_app.new_user_session_path
       end
     end
   end

@@ -58,10 +58,10 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
 
       context "without a referer" do
         it "sets breadcrumbs with complete path" do
-          expect(controller).to receive(:add_breadcrumb).with('Home', main_app.root_path(locale: 'en'))
-          expect(controller).not_to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path(locale: 'en'))
-          expect(controller).not_to receive(:add_breadcrumb).with('Your Works', hyrax.my_works_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('public thing', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Home', main_app.root_path)
+          expect(controller).not_to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path)
+          expect(controller).not_to receive(:add_breadcrumb).with('Your Works', hyrax.my_works_path)
+          expect(controller).to receive(:add_breadcrumb).with('public thing', main_app.hyrax_generic_work_path(work.id))
           get :show, params: { id: work }
           expect(response).to be_successful
           expect(response).to render_template("layouts/hyrax/1_column")
@@ -74,10 +74,10 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
         end
 
         it "sets breadcrumbs to authorized pages" do
-          expect(controller).to receive(:add_breadcrumb).with('Home', main_app.root_path(locale: 'en'))
-          expect(controller).not_to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path(locale: 'en'))
-          expect(controller).not_to receive(:add_breadcrumb).with('Your Works', hyrax.my_works_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('public thing', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Home', main_app.root_path)
+          expect(controller).not_to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path)
+          expect(controller).not_to receive(:add_breadcrumb).with('Your Works', hyrax.my_works_path)
+          expect(controller).to receive(:add_breadcrumb).with('public thing', main_app.hyrax_generic_work_path(work.id))
           get :show, params: { id: work }
           expect(response).to be_successful
           expect(response).to render_template("layouts/hyrax/1_column")
@@ -96,10 +96,10 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
 
       context "without a referer" do
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Works', hyrax.my_works_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
+          expect(controller).to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path)
+          expect(controller).to receive(:add_breadcrumb).with('Works', hyrax.my_works_path)
+          expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id))
           get :show, params: { id: work }
           expect(response).to be_successful
         end
@@ -111,10 +111,10 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
         end
 
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Works', hyrax.my_works_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
+          expect(controller).to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path)
+          expect(controller).to receive(:add_breadcrumb).with('Works', hyrax.my_works_path)
+          expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id))
           get :show, params: { id: work }
           expect(response).to be_successful
           expect(response).to render_template("layouts/hyrax/1_column")
@@ -284,7 +284,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
       it 'creates a work' do
         allow(controller).to receive(:curation_concern).and_return(work)
         post :create, params: { generic_work: { title: ['a title'] } }
-        expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
+        expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
       end
     end
 
@@ -337,7 +337,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
         expect(flash[:notice]).to eq "Your files are being processed by Hyrax in the background. " \
                                      "The metadata and access controls you specified are being applied. " \
                                      "You may need to refresh this page to see these updates."
-        expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
+        expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
       end
 
       context "from browse everything" do
@@ -391,7 +391,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
             expect(flash[:notice]).to eq "Your files are being processed by Hyrax in the background. " \
                                          "The metadata and access controls you specified are being applied. " \
                                          "You may need to refresh this page to see these updates."
-            expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
+            expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
           end
         end
       end
@@ -403,10 +403,10 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
       let(:work) { create(:private_generic_work, user: user) }
 
       it 'shows me the page and sets breadcrumbs' do
-        expect(controller).to receive(:add_breadcrumb).with("Home", root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with("Dashboard", hyrax.dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with("Works", hyrax.my_works_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with(work.title.first, main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with("Home", root_path)
+        expect(controller).to receive(:add_breadcrumb).with("Dashboard", hyrax.dashboard_path)
+        expect(controller).to receive(:add_breadcrumb).with("Works", hyrax.my_works_path)
+        expect(controller).to receive(:add_breadcrumb).with(work.title.first, main_app.hyrax_generic_work_path(work.id))
         expect(controller).to receive(:add_breadcrumb).with('Edit', main_app.edit_hyrax_generic_work_path(work.id))
 
         get :edit, params: { id: work }
@@ -459,7 +459,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
       context "when the work has no file sets" do
         it 'updates the work' do
           patch :update, params: { id: work, generic_work: {} }
-          expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
+          expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
         end
       end
 
@@ -469,7 +469,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
         end
         it 'updates the work' do
           patch :update, params: { id: work, generic_work: {} }
-          expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
+          expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
         end
       end
 
@@ -487,14 +487,14 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
 
           it 'prompts to change the files access' do
             patch :update, params: { id: work, generic_work: { visibility: 'restricted' } }
-            expect(response).to redirect_to hyrax.confirm_access_permission_path(controller.curation_concern, locale: 'en')
+            expect(response).to redirect_to hyrax.confirm_access_permission_path(controller.curation_concern)
           end
         end
 
         context 'when the work has no file sets' do
           it "doesn't prompt to change the files access" do
             patch :update, params: { id: work, generic_work: {} }
-            expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
+            expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
           end
         end
       end
@@ -528,7 +528,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
 
       it 'someone elses private work should update the work' do
         patch :update, params: { id: work, generic_work: {} }
-        expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
+        expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
       end
     end
   end
@@ -544,7 +544,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
 
     it 'deletes the work' do
       delete :destroy, params: { id: work_to_be_deleted }
-      expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
+      expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path
       expect(GenericWork).not_to exist(work_to_be_deleted.id)
     end
 
@@ -556,7 +556,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
       it 'deletes the work and updates the parent collection' do
         delete :destroy, params: { id: work_to_be_deleted }
         expect(GenericWork).not_to exist(work_to_be_deleted.id)
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path
         expect(parent_collection.reload.members).to eq []
       end
     end

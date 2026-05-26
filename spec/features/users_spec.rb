@@ -4,7 +4,7 @@ RSpec.describe "User Profile", type: :feature do
     sign_in user
   end
   let(:user) { create(:user) }
-  let(:profile_path) { Hyrax::Engine.routes.url_helpers.user_path(user, locale: 'en') }
+  let(:profile_path) { Hyrax::Engine.routes.url_helpers.user_path(user) }
 
   context 'when visiting user profile with highlighted works' do
     let(:work) { valkyrie_create(:monograph, title: 'Test Monograph 123', depositor: user.user_key) }
@@ -18,7 +18,7 @@ RSpec.describe "User Profile", type: :feature do
       expect(page).to have_content(user.email)
 
       within '.highlighted-works' do
-        expect(page).to have_link('Test Monograph 123', href: "/concern/monographs/#{work.id}?locale=en")
+        expect(page).to have_link('Test Monograph 123', href: "/concern/monographs/#{work.id}")
       end
 
       within '.panel-user' do
@@ -33,7 +33,7 @@ RSpec.describe "User Profile", type: :feature do
 
   context 'user profile' do
     let!(:dewey) { create(:user, display_name: 'Melvil Dewey') }
-    let(:dewey_path) { Hyrax::Engine.routes.url_helpers.user_path(dewey, locale: 'en') }
+    let(:dewey_path) { Hyrax::Engine.routes.url_helpers.user_path(dewey) }
 
     it 'is searchable' do
       visit profile_path

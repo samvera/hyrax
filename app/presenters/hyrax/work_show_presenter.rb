@@ -199,7 +199,7 @@ module Hyrax
     end
 
     def stats_path
-      Hyrax::Engine.routes.url_helpers.stats_work_path(self, locale: I18n.locale)
+      Hyrax::Engine.routes.url_helpers.stats_work_path(self, locale: (I18n.locale unless I18n.locale == I18n.default_locale))
     end
 
     def model

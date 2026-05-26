@@ -70,7 +70,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     it 'redirects to new user login' do
       get :create, params: {}
 
-      expect(response).to redirect_to paths.new_user_session_path(locale: :en)
+      expect(response).to redirect_to paths.new_user_session_path
     end
 
     context 'with a logged in user' do
@@ -82,7 +82,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         get :create, params: { test_simple_work: { title: 'comet in moominland' } }
 
         expect(response)
-          .to redirect_to paths.send(work_route_path, id: assigns(:curation_concern).id, locale: :en)
+          .to redirect_to paths.send(work_route_path, id: assigns(:curation_concern).id)
       end
 
       it 'sets current user as depositor' do
@@ -306,7 +306,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
   describe '#destroy' do
     it 'redirect to user login' do
       delete :destroy, params: { id: work.id }
-      expect(response).to redirect_to paths.new_user_session_path(locale: :en)
+      expect(response).to redirect_to paths.new_user_session_path
     end
 
     context 'with a logged in user' do
@@ -361,7 +361,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     it 'redirects to new user login' do
       get :edit, params: { id: work.id }
 
-      expect(response).to redirect_to paths.new_user_session_path(locale: :en)
+      expect(response).to redirect_to paths.new_user_session_path
     end
 
     context 'with a logged in user' do
@@ -433,7 +433,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
   describe '#new' do
     it 'redirect to user login' do
       get :new
-      expect(response).to redirect_to paths.new_user_session_path(locale: :en)
+      expect(response).to redirect_to paths.new_user_session_path
     end
 
     context 'with a logged in user' do
@@ -521,7 +521,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     it 'redirects to new user login' do
       get :show, params: { id: work.id }
 
-      expect(response).to redirect_to paths.new_user_session_path(locale: :en)
+      expect(response).to redirect_to paths.new_user_session_path
     end
 
     context 'when indexed as public' do
@@ -549,7 +549,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     it 'redirects to new user login' do
       patch :update, params: { id: work.id }
 
-      expect(response).to redirect_to paths.new_user_session_path(locale: :en)
+      expect(response).to redirect_to paths.new_user_session_path
     end
 
     context 'when the user has edit access' do
@@ -561,7 +561,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         patch :update, params: { id: work.id, test_simple_work: { title: 'new title' } }
 
         expect(response)
-          .to redirect_to paths.send(work_route_path, id: work.id, locale: :en)
+          .to redirect_to paths.send(work_route_path, id: work.id)
       end
 
       it 'updates the work metadata' do

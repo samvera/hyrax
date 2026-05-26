@@ -12,9 +12,9 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
   shared_examples('tests that edit page loads') do
     it "is successful" do
-      expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path)
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path)
       get :edit
       expect(response).to be_successful
       expect(response).to render_template('dashboard')
@@ -75,7 +75,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       it "is successful" do
         put :update, params: { update_type: "delete_all" }
-        expect(response).to redirect_to(dashboard_path(locale: 'en'))
+        expect(response).to redirect_to(dashboard_path)
         expect { GenericWork.find(one.id) }.to raise_error(Ldp::Gone)
         expect { GenericWork.find(two.id) }.to raise_error(Ldp::Gone)
         expect(GenericWork).to exist(three.id)
@@ -83,7 +83,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       it "redirects to the return controller" do
         put :update, params: { update_type: "delete_all", return_controller: mycontroller }
-        expect(response).to redirect_to(Hyrax::Engine.routes.url_for(controller: mycontroller, only_path: true, locale: 'en'))
+        expect(response).to redirect_to(Hyrax::Engine.routes.url_for(controller: mycontroller, only_path: true))
       end
 
       it "updates the records" do
@@ -190,7 +190,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       it "is successful" do
         put :update, params: { update_type: "delete_all" }
-        expect(response).to redirect_to(dashboard_path(locale: 'en'))
+        expect(response).to redirect_to(dashboard_path)
         expect { work1 }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
         expect { work2 }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
         expect { work3 }.not_to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
@@ -198,7 +198,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       it "redirects to the return controller" do
         put :update, params: { update_type: "delete_all", return_controller: mycontroller }
-        expect(response).to redirect_to(Hyrax::Engine.routes.url_for(controller: mycontroller, only_path: true, locale: 'en'))
+        expect(response).to redirect_to(Hyrax::Engine.routes.url_for(controller: mycontroller, only_path: true))
       end
 
       it "updates the records" do
