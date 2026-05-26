@@ -205,7 +205,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
     let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
 
-    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work) }
+    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work, locale: 'en') }
   end
 
   describe '#itemtype' do

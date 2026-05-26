@@ -29,7 +29,7 @@ RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
       sign_in(user)
 
       put :update, params: { id: work.to_param, workflow_action: { name: 'advance', comment: '' } }
-      expect(response).to redirect_to(main_app.hyrax_monograph_path(work))
+      expect(response).to redirect_to(main_app.hyrax_monograph_path(work, locale: 'en'))
     end
 
     context 'when responding to json' do

@@ -40,7 +40,7 @@ RSpec.describe 'Editing a work', :clean_repo, type: :feature do
       choose('monograph_visibility_open')
       check('agreement')
       click_on('Save changes')
-      expect(page).to have_current_path(hyrax_monograph_path(work))
+      expect(page).to have_current_path(hyrax_monograph_path(work, locale: 'en'))
       within(".work-title-wrapper") do
         expect(page).to have_content('Public')
       end

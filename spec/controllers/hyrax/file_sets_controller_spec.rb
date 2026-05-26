@@ -31,7 +31,7 @@ RSpec.describe Hyrax::FileSetsController do
               .from(true)
               .to(false)
 
-            expect(response).to redirect_to main_app.hyrax_generic_work_path(work)
+            expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
           end
         end
       end
@@ -58,16 +58,16 @@ RSpec.describe Hyrax::FileSetsController do
 
           expect(controller)
             .to receive(:add_breadcrumb)
-            .with('Home', Hyrax::Engine.routes.url_helpers.root_path)
+            .with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
           expect(controller)
             .to receive(:add_breadcrumb)
-            .with(I18n.t('hyrax.dashboard.title'), engine_helpers.dashboard_path)
+            .with(I18n.t('hyrax.dashboard.title'), engine_helpers.dashboard_path(locale: 'en'))
           expect(controller)
             .to receive(:add_breadcrumb)
-            .with(I18n.t('hyrax.dashboard.my.works'), engine_helpers.my_works_path)
+            .with(I18n.t('hyrax.dashboard.my.works'), engine_helpers.my_works_path(locale: 'en'))
           expect(controller)
             .to receive(:add_breadcrumb)
-            .with(I18n.t('hyrax.file_set.browse_view'), app_helpers.hyrax_file_set_path(file_set))
+            .with(I18n.t('hyrax.file_set.browse_view'), app_helpers.hyrax_file_set_path(file_set, locale: 'en'))
 
           get :edit, params: { id: file_set }
 
@@ -110,7 +110,7 @@ RSpec.describe Hyrax::FileSetsController do
             end.to have_enqueued_job(ContentUpdateEventJob).exactly(:once)
 
             expect(response)
-              .to redirect_to main_app.hyrax_file_set_path(file_set)
+              .to redirect_to main_app.hyrax_file_set_path(file_set, locale: 'en')
             expect(assigns[:file_set].modified_date)
               .not_to be file_set.modified_date
           end
@@ -330,11 +330,11 @@ RSpec.describe Hyrax::FileSetsController do
           end
 
           it "shows me the file and set breadcrumbs" do
-            expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
-            expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path)
-            expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path)
-            expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id))
-            expect(controller).to receive(:add_breadcrumb).with('test file', main_app.hyrax_file_set_path(file_set))
+            expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('test file', main_app.hyrax_file_set_path(file_set, locale: 'en'))
             get :show, params: { id: file_set }
             expect(response).to be_successful
             expect(flash).to be_empty
@@ -354,11 +354,11 @@ RSpec.describe Hyrax::FileSetsController do
           end
 
           it "shows me the breadcrumbs" do
-            expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
-            expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path)
-            expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path)
-            expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id))
-            expect(controller).to receive(:add_breadcrumb).with('test file', main_app.hyrax_file_set_path(file_set))
+            expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('test file', main_app.hyrax_file_set_path(file_set, locale: 'en'))
             get :show, params: { id: file_set }
             expect(response).to be_successful
           end
@@ -447,7 +447,7 @@ RSpec.describe Hyrax::FileSetsController do
           get :show, params: { id: private_file_set }
 
           expect(response)
-            .to fail_redirect_and_flash(main_app.new_user_session_path,
+            .to fail_redirect_and_flash(main_app.new_user_session_path(locale: 'en'),
                                         'You are not authorized to access this page.')
         end
 
@@ -586,16 +586,16 @@ RSpec.describe Hyrax::FileSetsController do
 
           expect(controller)
             .to receive(:add_breadcrumb)
-            .with('Home', Hyrax::Engine.routes.url_helpers.root_path)
+            .with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
           expect(controller)
             .to receive(:add_breadcrumb)
-            .with(I18n.t('hyrax.dashboard.title'), engine_helpers.dashboard_path)
+            .with(I18n.t('hyrax.dashboard.title'), engine_helpers.dashboard_path(locale: 'en'))
           expect(controller)
             .to receive(:add_breadcrumb)
-            .with(I18n.t('hyrax.dashboard.my.works'), engine_helpers.my_works_path)
+            .with(I18n.t('hyrax.dashboard.my.works'), engine_helpers.my_works_path(locale: 'en'))
           expect(controller)
             .to receive(:add_breadcrumb)
-            .with(I18n.t('hyrax.file_set.browse_view'), app_helpers.hyrax_file_set_path(file_set))
+            .with(I18n.t('hyrax.file_set.browse_view'), app_helpers.hyrax_file_set_path(file_set, locale: 'en'))
 
           get :edit, params: { id: file_set }
 
@@ -783,13 +783,13 @@ RSpec.describe Hyrax::FileSetsController do
       describe "#show" do
         context "without a referer" do
           it "shows me the file and set breadcrumbs" do
-            expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
-            expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path)
-            expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path)
-            expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id))
-            expect(controller).to receive(:add_breadcrumb).with('image.jp2', main_app.hyrax_file_set_path(file_set))
+            expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('image.jp2', main_app.hyrax_file_set_path(file_set, locale: 'en'))
             allow(controller.main_app).to receive(:polymorphic_path).and_call_original
-            allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{work.id}")
+            allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{work.id}?locale=en")
             get :show, params: { id: file_set }
             expect(response).to be_successful
             expect(flash).to be_empty
@@ -806,13 +806,13 @@ RSpec.describe Hyrax::FileSetsController do
           end
 
           it "shows me the breadcrumbs" do
-            expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
-            expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path)
-            expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path)
-            expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id))
-            expect(controller).to receive(:add_breadcrumb).with('image.jp2', main_app.hyrax_file_set_path(file_set))
+            expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('image.jp2', main_app.hyrax_file_set_path(file_set, locale: 'en'))
             allow(controller.main_app).to receive(:polymorphic_path).and_call_original
-            allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{work.id}")
+            allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{work.id}?locale=en")
             get :show, params: { id: file_set }
             expect(response).to be_successful
           end
@@ -847,7 +847,7 @@ RSpec.describe Hyrax::FileSetsController do
         describe '#show' do
           it 'allows access to the file' do
             allow(controller.main_app).to receive(:polymorphic_path).and_call_original
-            allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{work.id}")
+            allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{work.id}?locale=en")
 
             get :show, params: { id: file_set }
 
@@ -868,7 +868,7 @@ RSpec.describe Hyrax::FileSetsController do
       let(:query_service) { Hyrax.query_service }
       before do
         allow(controller.main_app).to receive(:polymorphic_path).and_call_original
-        allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{public_work.id}")
+        allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{public_work.id}?locale=en")
         allow(controller)
           .to receive(:additional_response_formats)
           .with(ActionController::MimeResponds::Collector)
@@ -889,7 +889,7 @@ RSpec.describe Hyrax::FileSetsController do
           get :show, params: { id: private_file_set }
 
           expect(response)
-            .to fail_redirect_and_flash(main_app.new_user_session_path,
+            .to fail_redirect_and_flash(main_app.new_user_session_path(locale: 'en'),
                                         'You are not authorized to access this page.')
         end
 
@@ -919,7 +919,7 @@ RSpec.describe Hyrax::FileSetsController do
             .to receive(:additional_response_formats)
             .with(ActionController::MimeResponds::Collector)
           allow(controller.main_app).to receive(:polymorphic_path).and_call_original
-          allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{active_work.id}")
+          allow(controller.main_app).to receive(:polymorphic_path).with(instance_of(Hyrax::WorkShowPresenter)).and_return("/concern/generic_works/#{active_work.id}?locale=en")
         end
         it "shows active parent" do
           get :show, params: { id: active_file_set }

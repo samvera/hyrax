@@ -33,9 +33,9 @@ RSpec.describe Hyrax::BatchUploadsController do
     let(:curation_concern) { double(human_readable_type: 'Works by Batch') }
 
     it "is successful" do
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.controls.home'), Hyrax::Engine.routes.url_helpers.root_path)
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path)
-      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path)
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.controls.home'), Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.batch_uploads.new.breadcrumb'), Hyrax::Engine.routes.url_helpers.new_batch_upload_path)
       get :new
       expect(response).to be_successful
@@ -51,7 +51,7 @@ RSpec.describe Hyrax::BatchUploadsController do
       end
       it 'redirects with an error message' do
         post :create, params: post_params.merge(format: :html)
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
         expect(flash[:alert]).to include('Feature disabled by administrator')
       end
       context 'when json is requested' do
@@ -73,7 +73,7 @@ RSpec.describe Hyrax::BatchUploadsController do
                 expected_shared_params,
                 Hyrax::BatchCreateOperation)
         post :create, params: post_params
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
         expect(flash[:notice]).to be_html_safe
         expect(flash[:notice]).to include("Your files are being processed")
       end
@@ -97,7 +97,7 @@ RSpec.describe Hyrax::BatchUploadsController do
                 expected_shared_params,
                 a_kind_of(Hyrax::BatchCreateOperation))
         post :create, params: post_params
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
         expect(flash[:notice]).to include("Your files are being processed")
       end
     end
@@ -116,7 +116,7 @@ RSpec.describe Hyrax::BatchUploadsController do
       it 'redirects to managed works page' do
         allow(BatchCreateJob).to receive(:perform_later)
         post :create, params: post_params
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en')
       end
     end
   end

@@ -28,7 +28,7 @@ RSpec.describe Hyrax::NotificationsController, type: :controller do
     it "deletes message" do
       expect(mock_box).to receive(:destroy).with("4")
       delete :destroy, params: { id: "4" }
-      expect(response).to redirect_to(routes.url_helpers.notifications_path)
+      expect(response).to redirect_to(routes.url_helpers.notifications_path(locale: 'en'))
     end
   end
 end

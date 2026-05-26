@@ -304,7 +304,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
               .to change { queries.find_members_of(collection: collection).map(&:id) }
               .to contain_exactly(asset1.id, asset2.id, asset3.id)
 
-            expect(response).to redirect_to routes.url_helpers.edit_dashboard_collection_path(collection)
+            expect(response).to redirect_to routes.url_helpers.edit_dashboard_collection_path(collection, locale: 'en')
           end
 
           it "adds members to the collection from other than the edit form" do
@@ -315,7 +315,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
               .to change { queries.find_members_of(collection: collection).map(&:id) }
               .to contain_exactly(asset1.id, asset2.id, asset3.id)
 
-            expect(response).to redirect_to routes.url_helpers.dashboard_collection_path(collection)
+            expect(response).to redirect_to routes.url_helpers.dashboard_collection_path(collection, locale: 'en')
           end
 
           it "removes members from the collection" do
@@ -616,16 +616,16 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
           it "returns the collection and its members" do
             expect(controller)
               .to receive(:add_breadcrumb)
-              .with('Home', Hyrax::Engine.routes.url_helpers.root_path)
+              .with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
             expect(controller)
               .to receive(:add_breadcrumb)
-              .with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path)
+              .with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
             expect(controller)
               .to receive(:add_breadcrumb)
-              .with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path)
+              .with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
             expect(controller)
               .to receive(:add_breadcrumb)
-              .with('My collection', collection_path(collection.id), { "aria-current" => "page" })
+              .with('My collection', collection_path(collection.id, locale: 'en'), { "aria-current" => "page" })
 
             get :show, params: { id: collection }
 
@@ -661,10 +661,10 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
           context "without a referer" do
             it "sets breadcrumbs" do
-              expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
-              expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path)
-              expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path)
-              expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id), { "aria-current" => "page" })
+              expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+              expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+              expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+              expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'), { "aria-current" => "page" })
               get :show, params: { id: collection }
               expect(response).to be_successful
             end
@@ -676,10 +676,10 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
             end
 
             it "sets breadcrumbs" do
-              expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
-              expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path)
-              expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path)
-              expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id), { "aria-current" => "page" })
+              expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+              expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+              expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+              expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'), { "aria-current" => "page" })
               get :show, params: { id: collection }
               expect(response).to be_successful
             end
@@ -727,7 +727,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
             delete :destroy, params: { id: collection }
 
             expect(response).to have_http_status(:found)
-            expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.my_collections_path)
+            expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
             expect(flash[:notice]).to eq "Collection was successfully deleted"
           end
 
@@ -776,10 +776,10 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
         context "without a referer" do
           it "sets breadcrumbs" do
-            expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
-            expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path)
-            expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path)
-            expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.collection.edit_view"), collection_path(collection.id), { "aria-current" => "page" })
+            expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.collection.edit_view"), collection_path(collection.id, locale: 'en'), { "aria-current" => "page" })
             get :edit, params: { id: collection }
             expect(response).to be_successful
           end
@@ -789,10 +789,10 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
           before { request.env['HTTP_REFERER'] = 'http://test.host/foo' }
 
           it "sets breadcrumbs" do
-            expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
-            expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path)
-            expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path)
-            expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.collection.edit_view"), collection_path(collection.id), { "aria-current" => "page" })
+            expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.collection.edit_view"), collection_path(collection.id, locale: 'en'), { "aria-current" => "page" })
 
             get :edit, params: { id: collection }
 
@@ -826,9 +826,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
           end
 
           it "sets breadcrumbs" do
-            expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
-            expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path)
-            expect(controller).to receive(:add_breadcrumb).with('Collections', my_collections_path)
+            expect(controller).to receive(:add_breadcrumb).with('Home', root_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path(locale: 'en'))
+            expect(controller).to receive(:add_breadcrumb).with('Collections', my_collections_path(locale: 'en'))
             get :index, params: { per_page: 1 }
           end
         end

@@ -17,7 +17,7 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe 'stats_path' do
-    its(:stats_path) { is_expected.to eq Hyrax::Engine.routes.url_helpers.stats_file_path(id: file_set) }
+    its(:stats_path) { is_expected.to eq Hyrax::Engine.routes.url_helpers.stats_file_path(id: file_set, locale: 'en') }
   end
 
   describe "#to_s" do

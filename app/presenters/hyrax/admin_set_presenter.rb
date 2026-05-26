@@ -51,7 +51,7 @@ module Hyrax
     end
 
     def show_path
-      Hyrax::Engine.routes.url_helpers.admin_admin_set_path(id, locale: (I18n.locale unless I18n.locale == I18n.default_locale))
+      Hyrax::Engine.routes.url_helpers.admin_admin_set_path(id, locale: I18n.locale)
     end
 
     def available_parent_collections(*)
