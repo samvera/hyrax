@@ -22,7 +22,7 @@ RSpec.describe Hyrax::PermissionsController do
           .to have_enqueued_job(VisibilityCopyJob)
           .with(work)
 
-        expect(response).to redirect_to main_app.hyrax_monograph_path(work)
+        expect(response).to redirect_to main_app.hyrax_monograph_path(work, locale: 'en')
         expect(flash[:notice]).to eq 'Updating file permissions. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file permissions.'
       end
     end
@@ -35,7 +35,7 @@ RSpec.describe Hyrax::PermissionsController do
           .to have_enqueued_job(VisibilityCopyJob)
           .with(work)
 
-        expect(response).to redirect_to main_app.hyrax_monograph_path(work)
+        expect(response).to redirect_to main_app.hyrax_monograph_path(work, locale: 'en')
         expect(flash[:notice]).to eq 'Updating file access levels. This may take a few minutes. ' \
                                      'You may want to refresh your browser or return to this record ' \
                                      'later to see the updated file access levels.'
