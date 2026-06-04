@@ -64,6 +64,17 @@ module Hyrax
         end
       end
 
+      # Required-compound / required-sub-field validation. Wired through a
+      # `validation { ... }` block (not a bare `validates_with`) because these
+      # are Reform/Disposable forms — a bare `validates_with` does not hook into
+      # Reform's `validate`, so it would never run. Record-level (no
+      # `attributes:`), so it is replay-safe.
+      if Hyrax.config.compound_metadata_enabled?
+        validation(name: :default, inherit: true) do
+          validates_with Hyrax::CompoundEntryValidator
+        end
+      end
+
       ##
       # @api public
       #

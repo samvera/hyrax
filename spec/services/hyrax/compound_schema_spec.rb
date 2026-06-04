@@ -42,6 +42,23 @@ RSpec.describe Hyrax::CompoundSchema do
                   },
                   view: { 'display' => 'card' }
                 )
+      # Required at the compound level (non-flexible `required: true`) with two
+      # required sub-fields and one optional.
+      attribute :required_compound,
+                Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
+                  required: true,
+                  subfields: {
+                    'item' => { 'type' => 'string', 'required' => true },
+                    'kind' => { 'type' => 'string', 'required' => true },
+                    'note' => { 'type' => 'string' }
+                  }
+                )
+      # Required at the compound level via m3 minimum cardinality (flexible).
+      attribute :cardinality_compound,
+                Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
+                  cardinality: { 'minimum' => 1 },
+                  subfields: { 'value' => { 'type' => 'string' } }
+                )
     end
   end
 
@@ -49,7 +66,8 @@ RSpec.describe Hyrax::CompoundSchema do
 
   describe '#compound_names' do
     it 'returns only the attributes that declare subfields' do
-      expect(schema.compound_names).to contain_exactly(:contributors, :identifiers, :agent, :relationships)
+      expect(schema.compound_names).to contain_exactly(:contributors, :identifiers, :agent, :relationships,
+                                                       :required_compound, :cardinality_compound)
     end
 
     it 'does not treat a plain scalar attribute as a compound' do
@@ -60,7 +78,8 @@ RSpec.describe Hyrax::CompoundSchema do
   describe 'display mode (view: { display: card })' do
     describe '#inline_compound_names' do
       it 'excludes compounds declared as cards' do
-        expect(schema.inline_compound_names).to contain_exactly(:contributors, :identifiers, :agent)
+        expect(schema.inline_compound_names).to contain_exactly(:contributors, :identifiers, :agent,
+                                                                :required_compound, :cardinality_compound)
       end
     end
 
@@ -91,6 +110,47 @@ RSpec.describe Hyrax::CompoundSchema do
     end
   end
 
+  describe 'required declarations' do
+    describe '#required?' do
+      it 'is true when the compound declares required: true' do
+        expect(schema.required?(:required_compound)).to be true
+      end
+
+      it 'is true when a minimum cardinality of 1 is declared (m3/flexible)' do
+        expect(schema.required?(:cardinality_compound)).to be true
+      end
+
+      it 'is false for an optional compound' do
+        expect(schema.required?(:relationships)).to be false
+      end
+
+      it 'is false for a non-compound attribute' do
+        expect(schema.required?(:title)).to be false
+      end
+    end
+
+    describe '#required_subfield_keys' do
+      it 'returns the sub-fields declared required: true' do
+        expect(schema.required_subfield_keys(:required_compound)).to eq(%w[item kind])
+      end
+
+      it 'is empty when no sub-field is required' do
+        expect(schema.required_subfield_keys(:relationships)).to eq([])
+      end
+
+      it 'is empty for a non-compound' do
+        expect(schema.required_subfield_keys(:title)).to eq([])
+      end
+    end
+
+    it 'records required on the definition (subfield + compound level)' do
+      definition = schema.definition_for(:required_compound)
+      expect(definition[:required]).to be true
+      expect(definition[:subfields]['item'][:required]).to be true
+      expect(definition[:subfields]['note'][:required]).to be false
+    end
+  end
+
   describe '#compound?' do
     it 'is true for a declared compound' do
       expect(schema.compound?(:contributors)).to be true
@@ -116,10 +176,10 @@ RSpec.describe Hyrax::CompoundSchema do
     it 'normalizes subfields with type, authority, index_keys and display' do
       definition = schema.definition_for(:contributors)
       expect(definition[:subfields]['role_label'])
-        .to eq(type: 'controlled', authority: 'contributor_role', values: nil, index_keys: [], display: false)
+        .to eq(type: 'controlled', authority: 'contributor_role', values: nil, index_keys: [], display: false, required: false)
       expect(definition[:subfields]['given_name'])
         .to eq(type: 'string', authority: nil, values: nil,
-               index_keys: %w[contributors_given_name_sim contributors_given_name_tesim], display: true)
+               index_keys: %w[contributors_given_name_sim contributors_given_name_tesim], display: true, required: false)
     end
 
     it 'reads per-sub-field index_keys (literal Solr field names)' do
@@ -158,7 +218,8 @@ RSpec.describe Hyrax::CompoundSchema do
   describe '.for' do
     it 'builds from a resource instance' do
       expect(described_class.for(resource_class.new).compound_names)
-        .to contain_exactly(:contributors, :identifiers, :agent, :relationships)
+        .to contain_exactly(:contributors, :identifiers, :agent, :relationships,
+                            :required_compound, :cardinality_compound)
     end
   end
 end

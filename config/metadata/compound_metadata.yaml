@@ -29,11 +29,13 @@ attributes:
       title: { type: string }
       agent_name:
         type: string
+        required: true
         index_keys: [agent_name_sim, agent_name_tesim]
       # A controlled sub-field can take its options from an inline list (below)
       # or from an existing QA local authority (`authority: <name>`).
       agent_role:
         type: controlled
+        required: true
         values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
         index_keys: [agent_role_sim, agent_role_tesim]
     groups:
@@ -53,9 +55,11 @@ attributes:
     subfields:
       identifier:
         type: string
+        required: true
         index_keys: [identifier_value_sim, identifier_value_tesim]
       identifier_type:
         type: controlled
+        required: true
         values: [DOI, Handle, ISBN, ISSN, URL, URN, ARK, Other]
         index_keys: [identifier_type_sim]
     view:
@@ -98,9 +102,11 @@ attributes:
     subfields:
       related_item:
         type: work_or_url
+        required: true
         index_keys: [relationships_item_ssim]
       relationship_type:
         type: controlled
+        required: true
         values: [References, Is Referenced By, Is Part Of, Has Part, Is Version Of, Replaces, Requires, Other]
         index_keys: [relationships_type_sim]
     view:

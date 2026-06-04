@@ -145,6 +145,12 @@ the show page renders from. Combined with indexing, each sub-field can be:
 - **searchable-only** — has `index_keys:` and `display: false` (indexed, hidden on show)
 - **neither** — no `index_keys:` and `display: false`
 
+### `required:` (optional, default false)
+
+Marks a sub-field as required within each populated row, or — when set on the
+compound itself — marks the whole compound as required. See
+[Required sub-fields](#required-sub-fields) below.
+
 ## Persisted shape
 
 A compound persists as an array of plain string-keyed hashes — exactly the
@@ -289,6 +295,43 @@ option source (`authority:` or `values:`); and the compound does **not** carry
 a top-level `indexing:` (indexing is declared per sub-field — a top-level
 `indexing:` would point the catalog at a `<compound>_tesim` field the indexer
 never writes).
+
+## Required sub-fields
+
+A compound declares requiredness at two levels:
+
+- **Sub-field level** — `required: true` on a sub-field means every populated
+  row must fill it. A row that fills some-but-not-all of its required
+  sub-fields blocks save (e.g. a relationship row with a related item but no
+  type).
+- **Compound level** — `required: true` on the compound (or, in flexible mode,
+  a minimum cardinality of 1) means at least one row must be present to save.
+  An optional compound with no rows is always valid; the sub-field rules only
+  apply to rows the user actually adds.
+
+```yaml
+relationships:
+  type: hash
+  multiple: true
+  required: true            # the work must have at least one relationship
+  subfields:
+    related_item:      { type: work_or_url, required: true }
+    relationship_type: { type: controlled, authority: relationship_type, required: true }
+    note:              { type: string }   # optional
+```
+
+Required sub-fields and required compounds render a `*` marker on the form
+label. On save, `Hyrax::CompoundEntryValidator` (wired on the resource form,
+gated by `compound_metadata_enabled?`) adds one error per compound, keyed on the
+compound's attribute name, so the failure is reported against that field. The
+rules are the same in both flex modes.
+
+The decision logic lives in `Hyrax::CompoundEntryValidation`, a plain object
+decoupled from ActiveModel and Reform — given a compound's definition and its
+rows it returns the violations. That seam keeps the rules reusable (e.g. a
+future Bulkrax-side check) and unit-testable without a form. Note: Bulkrax
+import does not currently run this validation, so a required sub-field can be
+left empty by an import.
 
 ## Validation
 

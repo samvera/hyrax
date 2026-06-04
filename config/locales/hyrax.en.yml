@@ -862,6 +862,9 @@ en:
       add_row: Add %{label}
       remove_row: Remove
       remove_row_with_label: Remove %{label}
+      errors:
+        required_but_empty: "%{compound} requires at least one entry"
+        missing_required_subfields: "Each %{compound} entry requires: %{fields}"
       agents:
         label: Agents
         title: Title

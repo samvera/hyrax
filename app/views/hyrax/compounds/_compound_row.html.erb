@@ -40,7 +40,10 @@
           <% input_name = "#{f.object_name}[#{compound_name}_attributes][#{index}][#{sub_field}]" %>
           <% value = row_value.call(sub_field) %>
           <div class="form-group col-md-<%= group.fetch(:cols, 6) %>">
-            <%= label_tag input_id, compound_subfield_label(compound_name, sub_field), class: 'form-label small text-muted' %>
+            <%= label_tag input_id, class: 'form-label small text-muted' do %>
+              <%= compound_subfield_label(compound_name, sub_field) %><%
+                if spec[:required] %><abbr title="<%= t('simple_form.required.text', default: 'required') %>" class="required text-danger">*</abbr><% end %>
+            <% end %>
             <% case spec[:type] %>
             <% when 'controlled' %>
               <% select_classes = ['form-control', 'form-control-sm'] %>

@@ -947,9 +947,11 @@ properties:
       title: { type: string }
       agent_name:
         type: string
+        required: true
         indexing: [agent_name_sim, agent_name_tesim]
       agent_role:
         type: controlled
+        required: true
         values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
         indexing: [agent_role_sim, agent_role_tesim]
     groups:
@@ -973,9 +975,11 @@ properties:
     subfields:
       identifier:
         type: string
+        required: true
         indexing: [identifier_value_sim, identifier_value_tesim]
       identifier_type:
         type: controlled
+        required: true
         values: [DOI, Handle, ISBN, ISSN, URL, URN, ARK, Other]
         indexing: [identifier_type_sim]
     view:
@@ -1025,9 +1029,11 @@ properties:
     subfields:
       related_item:
         type: work_or_url
+        required: true
         indexing: [relationships_item_ssim]
       relationship_type:
         type: controlled
+        required: true
         values: [References, Is Referenced By, Is Part Of, Has Part, Is Version Of, Replaces, Requires, Other]
         indexing: [relationships_type_sim]
     view:

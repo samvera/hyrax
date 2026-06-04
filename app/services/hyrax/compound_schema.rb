@@ -12,7 +12,7 @@ module Hyrax
   # Declarations are read from each attribute's Dry type `meta`, which both
   # schema loaders populate identically, so the result is the same in both flex
   # modes.
-  class CompoundSchema
+  class CompoundSchema # rubocop:disable Metrics/ClassLength
     ##
     # Build a CompoundSchema for a resource instance or class.
     #
@@ -103,6 +103,22 @@ module Hyrax
     end
 
     ##
+    # @return [Boolean] whether the compound itself is required (at least one
+    #   row must be present to save).
+    def required?(attribute_name)
+      definition_for(attribute_name)&.dig(:required) || false
+    end
+
+    ##
+    # @return [Array<String>] the sub-field keys declared `required: true` for
+    #   the compound (each must be filled in every populated row).
+    def required_subfield_keys(attribute_name)
+      definition = definition_for(attribute_name)
+      return [] unless definition
+      definition[:subfields].select { |_key, spec| spec[:required] }.keys
+    end
+
+    ##
     # @return [Hash{Symbol => Hash}] a map from compound attribute name to its
     #   normalized declaration. Memoized per instance.
     def definitions
@@ -135,19 +151,38 @@ module Hyrax
     # indexer, and renderer consume. See documentation/forms/compound_fields.md
     # for the meaning of each sub-field key.
     def normalize(config, subfields)
-      sub = subfields.each_with_object({}) do |(key, opts), memo|
-        opts = (opts.is_a?(Hash) ? opts : {}).with_indifferent_access
-        memo[key.to_s] = { type: (opts['type'] || 'string').to_s,
-                           authority: opts['authority']&.to_s,
-                           values: normalize_values(opts['values']),
-                           index_keys: normalize_index_keys(opts),
-                           display: opts.fetch('display', true) != false }
-      end
+      sub = subfields.each_with_object({}) { |(key, opts), memo| memo[key.to_s] = normalize_subfield(opts) }
 
       view = config['view']
       display_mode = view.is_a?(Hash) && view['display'].to_s == 'card' ? :card : :inline
 
-      { subfields: sub, groups: normalize_groups(config['groups'], sub.keys), display_mode: display_mode }
+      { subfields: sub,
+        groups: normalize_groups(config['groups'], sub.keys),
+        display_mode: display_mode,
+        required: compound_required?(config) }
+    end
+
+    def normalize_subfield(opts)
+      opts = (opts.is_a?(Hash) ? opts : {}).with_indifferent_access
+      { type: (opts['type'] || 'string').to_s,
+        authority: opts['authority']&.to_s,
+        values: normalize_values(opts['values']),
+        index_keys: normalize_index_keys(opts),
+        display: opts.fetch('display', true) != false,
+        required: truthy?(opts['required']) }
+    end
+
+    # Whether the compound itself is required (at least one row must exist).
+    # Reads `required: true` (non-flexible) or a minimum cardinality >= 1
+    # (flexible), mirroring how M3AttributeDefinition derives requirement.
+    def compound_required?(config)
+      return true if truthy?(config['required'])
+      cardinality = config['cardinality']
+      cardinality.is_a?(Hash) && cardinality['minimum'].present? && cardinality['minimum'].to_i >= 1
+    end
+
+    def truthy?(value)
+      ActiveModel::Type::Boolean.new.cast(value) == true
     end
 
     # Reads `index_keys:` (non-flexible) or `indexing:` (flexible), filtering the

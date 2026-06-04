@@ -102,6 +102,48 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
     end
   end
 
+  describe 'required-subfield validation blocks save' do
+    # Exercises the real form + Hyrax::CompoundEntryValidator end to end against
+    # the *shipped* compound schema (no stub). The shipped samples require
+    # sub-fields within a row (e.g. agents needs agent_name + agent_role,
+    # relationships needs related_item + relationship_type) but none is required
+    # at the compound level, so an empty compound is valid. Asserting through the
+    # real schema is what catches a validator that reads the form wrapper instead
+    # of `form.model`.
+    #
+    # Compound errors are attached to :base with the compound named in the
+    # message (so they render cleanly on both the work and collection forms).
+    def base_errors(form)
+      form.valid?
+      form.errors[:base]
+    end
+
+    it 'allows an empty compound (none is required at the compound level)' do
+      form.validate('agents_attributes' => { '_marker' => { '_destroy' => '1' } })
+      expect(base_errors(form)).to be_empty
+    end
+
+    it 'flags an agents row that omits a required sub-field' do
+      form.validate('agents_attributes' => { '0' => { 'agent_role' => 'Author' } })
+      expect(base_errors(form)).to include(a_string_including('Agents'))
+    end
+
+    it 'flags a relationships row that omits a required sub-field' do
+      form.validate('relationships_attributes' => { '0' => { 'relationship_type' => 'References' } })
+      expect(base_errors(form)).to include(a_string_including('Relationships'))
+    end
+
+    it 'does not flag agents when its required sub-fields are filled' do
+      form.validate('agents_attributes' => { '0' => { 'agent_name' => 'Ada', 'agent_role' => 'Author' } })
+      expect(base_errors(form)).not_to include(a_string_including('Agents'))
+    end
+
+    it 'never flags `compound_rights` (no required sub-fields)' do
+      form.validate('agents_attributes' => { '0' => { 'agent_name' => 'Ada', 'agent_role' => 'Author' } })
+      expect(base_errors(form)).not_to include(a_string_including('Rights'))
+    end
+  end
+
   describe 'persistence round-trip', :active_fedora do
     # Skips on the Fedora adapter, which cannot serialize plain-hash compounds
     # to RDF; the compound feature targets the Valkyrie/Postgres path.

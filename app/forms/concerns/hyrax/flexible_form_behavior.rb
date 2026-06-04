@@ -13,6 +13,10 @@ module Hyrax
       required_fields = singleton_class.schema_definitions.select { |_, opts| opts[:required] }.keys
 
       required_fields.each do |field|
+        # Compound fields carry their own requiredness rules (per-row sub-field
+        # checks); Hyrax::CompoundEntryValidator owns them, so skip the generic
+        # blank check to avoid a duplicate "can't be blank" error.
+        next if compound_field?(field)
         value = send(field)
         errors.add(field, :blank) if value.blank?
       end
@@ -24,6 +28,17 @@ module Hyrax
     end
 
     private
+
+    # Whether the field is a compound (declares `subfields:`), looked up from
+    # the resource's compound schema — the flex form definitions don't carry
+    # `subfields`. Memoized per form instance.
+    def compound_field?(field)
+      return false unless Hyrax.config.respond_to?(:compound_metadata_enabled?) && Hyrax.config.compound_metadata_enabled?
+      @compound_field_names ||= Hyrax::CompoundSchema.for(model).compound_names
+      @compound_field_names.include?(field.to_sym)
+    rescue StandardError
+      false
+    end
 
     # OVERRIDE valkyrie 3.0.1 to make schema dynamic
     def field(field_name)

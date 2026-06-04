@@ -19,7 +19,8 @@
 <section class="hyrax-compound mb-4" data-hyrax-compound data-next-index="<%= rows.length %>" id="<%= compound_id %>">
   <%# A label element, not a heading, so it matches the form's field labels
       rather than inheriting Bootstrap's h1–h6 sizing. role=heading for a11y. %>
-  <label class="control-label d-block mb-2" role="heading" aria-level="3"><%= display_label %></label>
+  <label class="control-label d-block mb-2" role="heading" aria-level="3"><%= display_label %><%
+    if definition[:required] %> <abbr title="<%= t('simple_form.required.text', default: 'required') %>" class="required text-danger">*</abbr><% end %></label>
 
   <%# Always-submitted marker so the populator runs even when every row is
       removed from the DOM. The populator drops the `_marker` row. %>

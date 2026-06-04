@@ -68,11 +68,16 @@ module Hyrax
       configs = attribute_configs
       form_field_definitions.each do |field_name, options|
         descendant.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
-        descendant.validates field_name.to_sym, presence: true if options.fetch(:required, false)
+        is_compound = compound_field?(configs, field_name)
+        # A compound's requiredness is enforced by Hyrax::CompoundEntryValidator
+        # (which understands per-row sub-field rules); a plain `presence` check
+        # on the array would both duplicate that and pass on a present-but-empty
+        # row. So only scalar fields get the generic presence validator.
+        descendant.validates field_name.to_sym, presence: true if options.fetch(:required, false) && !is_compound
         # A compound also needs a virtual `<field>_attributes` populator
         # property, registered here so it is part of Reform's schema before
         # `validate` runs (cf. Hyrax::RedirectsFieldBehavior).
-        next unless compound_field?(configs, field_name)
+        next unless is_compound
         descendant.property :"#{field_name}_attributes",
                             virtual: true,
                             populator: :compound_attributes_populator
