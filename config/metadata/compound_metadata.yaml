@@ -12,9 +12,10 @@
 # app-level schema, or the m3 profile under HYRAX_FLEXIBLE=true) and may remove
 # these samples by setting `Hyrax.config.compound_metadata_enabled = false`.
 attributes:
-  # An agent associated with the work: a person or organization with a display
-  # title, a name, and a controlled role.
-  agent:
+  # Agents associated with the work: a person or organization with a display
+  # title, a name, and a controlled role. (Named `agents` to avoid colliding
+  # with the internal ACL `agent` attribute in hyrax_internal_metadata.yaml.)
+  agents:
     type: hash
     multiple: true
     predicate: http://id.loc.gov/vocabulary/relators/asn

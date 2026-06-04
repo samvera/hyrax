@@ -41,35 +41,35 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
 
   describe 'property registration' do
     it 'exposes the compound readers so the form partial can render existing rows' do
-      expect(form).to respond_to(:agent)
+      expect(form).to respond_to(:agents)
       expect(form).to respond_to(:identifiers)
     end
 
     it 'exposes the virtual `<compound>_attributes` setters for nested form params' do
-      expect(form).to respond_to(:agent_attributes=)
+      expect(form).to respond_to(:agents_attributes=)
       expect(form).to respond_to(:identifiers_attributes=)
     end
 
     it 'lists the compounds as compound_terms (and keeps them out of primary/secondary terms)' do
-      expect(form.compound_terms).to include(:agent, :identifiers, :compound_rights)
-      expect(form.primary_terms).not_to include(:agent, :identifiers, :compound_rights)
-      expect(form.secondary_terms).not_to include(:agent, :identifiers, :compound_rights)
+      expect(form.compound_terms).to include(:agents, :identifiers, :compound_rights)
+      expect(form.primary_terms).not_to include(:agents, :identifiers, :compound_rights)
+      expect(form.secondary_terms).not_to include(:agents, :identifiers, :compound_rights)
     end
 
-    it 'registers `agent_attributes` as a real Reform property (not just method-missing)' do
+    it 'registers `agents_attributes` as a real Reform property (not just method-missing)' do
       # This is the property that has to exist in Reform's schema *before*
       # validate runs; if it is registered too late the populator never fires.
       # In non-flexible mode it is registered on the form class via FormFields;
       # check the class definitions registry (the same lens the redirects
       # coverage uses).
       definition_keys = form.class.definitions.keys.map(&:to_s)
-      expect(definition_keys).to include('agent_attributes')
+      expect(definition_keys).to include('agents_attributes')
     end
   end
 
   describe 'validate + sync writes the compound to the model' do
     let(:params) do
-      { 'agent_attributes' =>
+      { 'agents_attributes' =>
           { '0' => { 'title' => 'Dr', 'agent_name' => 'Ada Lovelace', 'agent_role' => 'Author' } },
         'identifiers_attributes' =>
           { '0' => { 'identifier' => '10.1234/x', 'identifier_type' => 'DOI' } } }
@@ -77,7 +77,7 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
 
     it 'populates the compound on the form during validate' do
       form.validate(params)
-      expect(form.agent)
+      expect(form.agents)
         .to eq([{ 'title' => 'Dr', 'agent_name' => 'Ada Lovelace', 'agent_role' => 'Author' }])
       expect(form.identifiers)
         .to eq([{ 'identifier' => '10.1234/x', 'identifier_type' => 'DOI' }])
@@ -86,19 +86,19 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
     it 'writes the compound through to the model on sync' do
       form.validate(params)
       form.sync
-      expect(form.model.agent)
+      expect(form.model.agents)
         .to eq([{ 'title' => 'Dr', 'agent_name' => 'Ada Lovelace', 'agent_role' => 'Author' }])
       expect(form.model.identifiers)
         .to eq([{ 'identifier' => '10.1234/x', 'identifier_type' => 'DOI' }])
     end
 
     it 'drops `_destroy` and all-blank rows' do
-      form.validate('agent_attributes' =>
+      form.validate('agents_attributes' =>
         { '0' => { 'agent_name' => 'Keep', 'agent_role' => 'Author' },
           '1' => { 'agent_name' => 'Remove', '_destroy' => 'true' },
           '2' => { 'title' => '', 'agent_name' => '', 'agent_role' => '' } })
       form.sync
-      expect(form.model.agent).to eq([{ 'title' => nil, 'agent_name' => 'Keep', 'agent_role' => 'Author' }])
+      expect(form.model.agents).to eq([{ 'title' => nil, 'agent_name' => 'Keep', 'agent_role' => 'Author' }])
     end
   end
 
@@ -109,13 +109,13 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
       skip 'requires a Valkyrie (non-Fedora) persister' if
         Hyrax.persister.is_a?(Wings::Valkyrie::Persister)
 
-      form.validate('agent_attributes' =>
+      form.validate('agents_attributes' =>
         { '0' => { 'agent_name' => 'Grace Hopper', 'agent_role' => 'Editor' } })
       form.sync
       saved = Hyrax.persister.save(resource: form.model)
       reloaded = Hyrax.query_service.find_by(id: saved.id)
 
-      expect(reloaded.agent.first['agent_name'] || reloaded.agent.first[:agent_name])
+      expect(reloaded.agents.first['agent_name'] || reloaded.agents.first[:agent_name])
         .to eq('Grace Hopper')
     end
   end

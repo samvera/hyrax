@@ -125,7 +125,7 @@ module Hyrax
         attribute :embargo_release_date, Solr::Date, Hydra.config.permissions.embargo.release_date
         attribute :lease_expiration_date, Solr::Date, Hydra.config.permissions.lease.expiration_date
         # Sample compound attributes shipped with Hyrax.
-        compound_attribute :agent
+        compound_attribute :agents
         compound_attribute :identifiers
         compound_attribute :compound_rights
         compound_attribute :relationships

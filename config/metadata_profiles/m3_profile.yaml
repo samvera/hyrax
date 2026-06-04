@@ -956,7 +956,7 @@ properties:
   # `type: hash, multiple: true` property whose entries are hashes of the
   # `subfields:` keys, rendered/populated/indexed generically by the compound
   # foundation. See documentation/forms/compound_fields.md.
-  agent:
+  agents:
     available_on:
       class:
         - Hyrax::Work
@@ -965,7 +965,7 @@ properties:
     type: hash
     range: http://www.w3.org/2001/XMLSchema#string
     display_label:
-      default: Agent
+      default: Agents
     form:
       primary: false
     property_uri: http://id.loc.gov/vocabulary/relators/asn

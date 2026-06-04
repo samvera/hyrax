@@ -862,7 +862,7 @@ en:
       add_row: Add %{label}
       remove_row: Remove
       remove_row_with_label: Remove %{label}
-      agent:
+      agents:
         label: Agents
         title: Title
         agent_name: Name

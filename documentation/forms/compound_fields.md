@@ -204,7 +204,7 @@ end
 Hyrax ships sample compounds on **works and collections** by default,
 demonstrating the supported sub-field types:
 
-- **`agent`** — `title`, `agent_name`, and a controlled `agent_role` (inline
+- **`agents`** — `title`, `agent_name`, and a controlled `agent_role` (inline
   `values:`). A person or organization associated with the work or collection.
 - **`identifiers`** — an open-entry `identifier` plus a controlled
   `identifier_type` (inline `values:`).
