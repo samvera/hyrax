@@ -952,3 +952,113 @@ properties:
       primary: false
     range: http://www.w3.org/2001/XMLSchema#string
     property_uri: http://vocabulary.samvera.org/ns#transcriptIds
+  # Sample compound (hierarchical) metadata shipped with Hyrax. Each is a
+  # `type: hash, multiple: true` property whose entries are hashes of the
+  # `subfields:` keys, rendered/populated/indexed generically by the compound
+  # foundation. See documentation/forms/compound_fields.md.
+  agent:
+    available_on:
+      class:
+        - Hyrax::Work
+        - CollectionResource
+    data_type: array
+    type: hash
+    range: http://www.w3.org/2001/XMLSchema#string
+    display_label:
+      default: Agent
+    form:
+      primary: false
+    property_uri: http://id.loc.gov/vocabulary/relators/asn
+    subfields:
+      # Indexing per sub-field via `indexing:` (literal Solr field names), the
+      # same mechanism scalar properties use. No `indexing:` => display-only.
+      title: { type: string }
+      agent_name:
+        type: string
+        indexing: [agent_name_sim, agent_name_tesim]
+      agent_role:
+        type: controlled
+        values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
+        indexing: [agent_role_sim, agent_role_tesim]
+    groups:
+      - { label: ~, cols: 4, fields: [title, agent_name, agent_role] }
+    view:
+      render_as: compound
+      html_dl: true
+  identifiers:
+    available_on:
+      class:
+        - Hyrax::Work
+        - CollectionResource
+    data_type: array
+    type: hash
+    range: http://www.w3.org/2001/XMLSchema#string
+    display_label:
+      default: Identifiers
+    form:
+      primary: false
+    property_uri: http://purl.org/dc/terms/identifier
+    subfields:
+      identifier:
+        type: string
+        indexing: [identifier_value_sim, identifier_value_tesim]
+      identifier_type:
+        type: controlled
+        values: [DOI, Handle, ISBN, ISSN, URL, URN, ARK, Other]
+        indexing: [identifier_type_sim]
+    view:
+      render_as: compound
+      html_dl: true
+  compound_rights:
+    available_on:
+      class:
+        - Hyrax::Work
+        - CollectionResource
+    data_type: array
+    type: hash
+    range: http://www.w3.org/2001/XMLSchema#string
+    display_label:
+      default: Rights
+    form:
+      primary: false
+    property_uri: http://purl.org/dc/terms/rights
+    subfields:
+      rights_statement:
+        type: controlled
+        authority: rights_statements
+        indexing: [compound_rights_statement_sim, compound_rights_statement_tesim]
+      license:
+        type: controlled
+        authority: licenses
+        indexing: [compound_rights_license_sim, compound_rights_license_tesim]
+      rights_notes:
+        type: string
+        indexing: [compound_rights_notes_tesim]
+    view:
+      render_as: compound
+      html_dl: true
+  relationships:
+    available_on:
+      class:
+        - Hyrax::Work
+        - CollectionResource
+    data_type: array
+    type: hash
+    range: http://www.w3.org/2001/XMLSchema#string
+    display_label:
+      default: Relationships
+    form:
+      primary: false
+    property_uri: http://purl.org/dc/terms/relation
+    subfields:
+      related_item:
+        type: work_or_url
+        indexing: [relationships_item_ssim]
+      relationship_type:
+        type: controlled
+        values: [References, Is Referenced By, Is Part Of, Has Part, Is Version Of, Replaces, Requires, Other]
+        indexing: [relationships_type_sim]
+    view:
+      render_as: compound
+      html_dl: true
+      display: card

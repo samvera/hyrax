@@ -20,11 +20,60 @@ RSpec.describe Hyrax::CollectionPresenter do
   describe ".terms" do
     subject { described_class.terms }
 
-    it do
-      is_expected.to eq [:total_items, :alternative_title, :size, :resource_type, :creator,
-                         :contributor, :keyword, :license, :publisher,
-                         :date_created, :subject, :language, :identifier,
-                         :based_near, :related_url]
+    context 'with compound metadata disabled' do
+      before { allow(Hyrax.config).to receive(:compound_metadata_enabled?).and_return(false) }
+
+      it do
+        is_expected.to eq [:total_items, :alternative_title, :size, :resource_type, :creator,
+                           :contributor, :keyword, :license, :publisher,
+                           :date_created, :subject, :language, :identifier,
+                           :based_near, :related_url]
+      end
+    end
+
+    it 'starts with the base scalar terms' do
+      expect(subject.first(15)).to eq [:total_items, :alternative_title, :size, :resource_type, :creator,
+                                       :contributor, :keyword, :license, :publisher,
+                                       :date_created, :subject, :language, :identifier,
+                                       :based_near, :related_url]
+    end
+
+    it 'appends compound terms declared on the collection model when enabled' do
+      compound_terms = described_class.compound_terms
+      # Under a flexible-mode stack the collection class composition is fixed at
+      # boot, so the shipped compounds are only present when the active flex
+      # schema declares them; guard rather than assert an empty splat.
+      skip 'no compound terms declared on the collection class in this configuration' if compound_terms.empty?
+      expect(subject).to include(*compound_terms)
+    end
+  end
+
+  describe "compound attribute delegation" do
+    context "when a compound is declared on the collection model" do
+      before do
+        allow(described_class).to receive(:all_compound_names).and_return([:relationships])
+        allow(solr_doc).to receive(:relationships).and_return([{ 'related_item' => 'https://example.org' }])
+      end
+
+      it "responds to the declared compound reader" do
+        expect(presenter).to respond_to(:relationships)
+      end
+
+      it "delegates the compound reader to the solr document" do
+        expect(presenter.relationships).to eq([{ 'related_item' => 'https://example.org' }])
+      end
+    end
+
+    context "for an undeclared method" do
+      before { allow(described_class).to receive(:all_compound_names).and_return([]) }
+
+      it "does not respond to it" do
+        expect(presenter).not_to respond_to(:not_a_compound)
+      end
+
+      it "raises NoMethodError" do
+        expect { presenter.not_a_compound }.to raise_error(NoMethodError)
+      end
     end
   end
 

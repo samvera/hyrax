@@ -1,0 +1,108 @@
+# Sample compound (hierarchical) metadata that ships with Hyrax.
+#
+# Each attribute here is a compound: a `type: hash, multiple: true` field whose
+# entries are plain hashes of named sub-fields. The sub-fields are declared in
+# `subfields:` and rendered, populated, and indexed generically by the compound
+# foundation — no per-field Ruby or ERB. See
+# `documentation/forms/compound_fields.md`.
+#
+# These are intentionally generic examples demonstrating the supported
+# sub-field input types (open-entry `string` and `controlled` vocabulary).
+# Applications can add their own compounds the same way (in this file, an
+# app-level schema, or the m3 profile under HYRAX_FLEXIBLE=true) and may remove
+# these samples by setting `Hyrax.config.compound_metadata_enabled = false`.
+attributes:
+  # An agent associated with the work: a person or organization with a display
+  # title, a name, and a controlled role.
+  agent:
+    type: hash
+    multiple: true
+    predicate: http://id.loc.gov/vocabulary/relators/asn
+    form:
+      primary: false
+    subfields:
+      # Indexing is declared per sub-field via `index_keys:` (the literal Solr
+      # field names + suffixes), exactly like scalar fields. A sub-field with
+      # no `index_keys:` is display-only (rendered from the json blob, not its
+      # own searchable field). `display: false` would omit it from the blob.
+      title: { type: string }
+      agent_name:
+        type: string
+        index_keys: [agent_name_sim, agent_name_tesim]
+      # A controlled sub-field can take its options from an inline list (below)
+      # or from an existing QA local authority (`authority: <name>`).
+      agent_role:
+        type: controlled
+        values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
+        index_keys: [agent_role_sim, agent_role_tesim]
+    groups:
+      - { label: ~, cols: 4, fields: [title, agent_name, agent_role] }
+    view:
+      render_as: compound
+      html_dl: true
+  # A typed identifier: an open-entry value plus a controlled identifier type.
+  # Named `identifiers` (plural) to avoid colliding with the scalar
+  # `identifier` defined in basic_metadata / the default m3 profile.
+  identifiers:
+    type: hash
+    multiple: true
+    predicate: http://purl.org/dc/terms/identifier
+    form:
+      primary: false
+    subfields:
+      identifier:
+        type: string
+        index_keys: [identifier_value_sim, identifier_value_tesim]
+      identifier_type:
+        type: controlled
+        values: [DOI, Handle, ISBN, ISSN, URL, URN, ARK, Other]
+        index_keys: [identifier_type_sim]
+    view:
+      render_as: compound
+      html_dl: true
+  # A rights grouping demonstrating controlled sub-fields backed by *existing*
+  # QA local authorities (rather than inline `values:`), alongside an
+  # open-ended note.
+  compound_rights:
+    type: hash
+    multiple: true
+    predicate: http://purl.org/dc/terms/rights
+    form:
+      primary: false
+    subfields:
+      rights_statement:
+        type: controlled
+        authority: rights_statements
+        index_keys: [compound_rights_statement_sim, compound_rights_statement_tesim]
+      license:
+        type: controlled
+        authority: licenses
+        index_keys: [compound_rights_license_sim, compound_rights_license_tesim]
+      rights_notes:
+        type: string
+        index_keys: [compound_rights_notes_tesim]
+    view:
+      render_as: compound
+      html_dl: true
+  # A related-item grouping demonstrating the `work_or_url` sub-field: the user
+  # searches for an internal work (typeahead) OR types an external URL. The
+  # stored value is a work id or a URL; show pages link to the internal work
+  # (by title) or auto-link the external URL.
+  relationships:
+    type: hash
+    multiple: true
+    predicate: http://purl.org/dc/terms/relation
+    form:
+      primary: false
+    subfields:
+      related_item:
+        type: work_or_url
+        index_keys: [relationships_item_ssim]
+      relationship_type:
+        type: controlled
+        values: [References, Is Referenced By, Is Part Of, Has Part, Is Version Of, Replaces, Requires, Other]
+        index_keys: [relationships_type_sim]
+    view:
+      render_as: compound
+      html_dl: true
+      display: card

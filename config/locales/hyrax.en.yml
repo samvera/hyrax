@@ -862,6 +862,24 @@ en:
       add_row: Add %{label}
       remove_row: Remove
       remove_row_with_label: Remove %{label}
+      agent:
+        label: Agents
+        title: Title
+        agent_name: Name
+        agent_role: Role
+      identifiers:
+        label: Identifiers
+        identifier: Identifier
+        identifier_type: Type
+      compound_rights:
+        label: Rights
+        rights_statement: Rights statement
+        license: License
+        rights_notes: Notes
+      relationships:
+        label: Relationships
+        related_item: Related item
+        relationship_type: Relationship type
     contact_form:
       button_label: Send
       email_label: Your Email
@@ -1394,6 +1412,12 @@ en:
         save_your_note: You must click "Save Revision" to revert a previous version of this file
         upload: Upload New Version
     flexible_schema_validators:
+      compound_validator:
+        errors:
+          subfields_not_hash: "m3 profile compound property `%{property}` must declare `subfields` as a mapping of sub-field name to its configuration"
+          subfield_not_hash: "m3 profile compound property `%{property}` sub-field `%{subfield}` must be a mapping (got `%{actual}`)"
+          controlled_without_source: "m3 profile compound property `%{property}` sub-field `%{subfield}` is `type: controlled` but declares neither `authority` nor `values`"
+          top_level_indexing: "m3 profile compound property `%{property}` must not declare top-level `indexing`; declare `indexing` (or `index_keys`) on each sub-field instead"
       redirects_validator:
         errors:
           invalid_available_on: "m3 profile `redirects` property must be available on at least one work or collection class declared in this profile"

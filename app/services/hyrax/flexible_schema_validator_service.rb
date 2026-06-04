@@ -39,6 +39,7 @@ module Hyrax
       validate_core_metadata
       validate_sort_properties
       validate_redirects
+      validate_compound
     end
 
     # The default JSON schema used when no custom schema is provided.
@@ -130,6 +131,15 @@ module Hyrax
       FlexibleSchemaValidators::RedirectsValidator.new(
         profile: profile, errors: @errors, warnings: @warnings
       ).validate!
+    end
+
+    # Validates compound (hierarchical) metadata properties — those declaring
+    # `subfields:` — for well-formed sub-fields and correct (per-sub-field)
+    # indexing declaration.
+    #
+    # @return [void]
+    def validate_compound
+      FlexibleSchemaValidators::CompoundValidator.new(profile: profile, errors: @errors).validate!
     end
 
     # Validates that a `label` property exists and that it is available on
