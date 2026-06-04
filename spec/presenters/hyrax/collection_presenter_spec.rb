@@ -18,40 +18,42 @@ RSpec.describe Hyrax::CollectionPresenter do
   it { is_expected.to delegate_method(:date_created).to(:solr_document) }
 
   describe ".terms" do
+    # The class method is the default terms only; compound terms are resolved
+    # per instance (see "#terms") because a flexible schema is per-resource.
     subject { described_class.terms }
+
+    it 'is the default terms' do
+      is_expected.to eq [:total_items, :alternative_title, :size, :resource_type, :creator,
+                         :contributor, :keyword, :license, :publisher,
+                         :date_created, :subject, :language, :identifier,
+                         :based_near, :related_url]
+    end
+  end
+
+  describe "#terms" do
+    it 'starts with the default terms' do
+      expect(presenter.terms.first(15)).to eq described_class::DEFAULT_TERMS
+    end
+
+    it 'appends this collection\'s inline compound terms' do
+      allow(presenter).to receive(:compound_terms).and_return([:agents, :identifiers])
+      expect(presenter.terms).to end_with(:agents, :identifiers)
+    end
 
     context 'with compound metadata disabled' do
       before { allow(Hyrax.config).to receive(:compound_metadata_enabled?).and_return(false) }
 
-      it do
-        is_expected.to eq [:total_items, :alternative_title, :size, :resource_type, :creator,
-                           :contributor, :keyword, :license, :publisher,
-                           :date_created, :subject, :language, :identifier,
-                           :based_near, :related_url]
+      it 'is the default terms only' do
+        expect(presenter.terms).to eq described_class::DEFAULT_TERMS
       end
-    end
-
-    it 'starts with the base scalar terms' do
-      expect(subject.first(15)).to eq [:total_items, :alternative_title, :size, :resource_type, :creator,
-                                       :contributor, :keyword, :license, :publisher,
-                                       :date_created, :subject, :language, :identifier,
-                                       :based_near, :related_url]
-    end
-
-    it 'appends compound terms declared on the collection model when enabled' do
-      compound_terms = described_class.compound_terms
-      # Under a flexible-mode stack the collection class composition is fixed at
-      # boot, so the shipped compounds are only present when the active flex
-      # schema declares them; guard rather than assert an empty splat.
-      skip 'no compound terms declared on the collection class in this configuration' if compound_terms.empty?
-      expect(subject).to include(*compound_terms)
     end
   end
 
   describe "compound attribute delegation" do
-    context "when a compound is declared on the collection model" do
+    # Resolution is per instance, from the backing document's compound schema.
+    context "when a compound is declared for the collection" do
       before do
-        allow(described_class).to receive(:all_compound_names).and_return([:relationships])
+        allow(presenter).to receive(:all_compound_names).and_return([:relationships])
         allow(solr_doc).to receive(:relationships).and_return([{ 'related_item' => 'https://example.org' }])
       end
 
@@ -65,7 +67,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     context "for an undeclared method" do
-      before { allow(described_class).to receive(:all_compound_names).and_return([]) }
+      before { allow(presenter).to receive(:all_compound_names).and_return([]) }
 
       it "does not respond to it" do
         expect(presenter).not_to respond_to(:not_a_compound)

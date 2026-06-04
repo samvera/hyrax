@@ -40,38 +40,51 @@ module Hyrax
              :title_or_label, :collection_type_gid, :create_date, :modified_date, :visibility, :edit_groups, :edit_people,
              to: :solr_document
 
-    # Terms is the list of fields displayed by
-    # app/views/collections/_show_descriptions.html.erb
+    # The standard metadata terms displayed by
+    # app/views/collections/_show_descriptions.html.erb. Compound terms are
+    # appended per instance (see {#terms}); they can't be resolved at the class
+    # level because a flexible schema is per-resource (keyed by the indexed
+    # schema_version) and mutable at runtime.
+    DEFAULT_TERMS = [:total_items, :alternative_title, :size, :resource_type, :creator, :contributor,
+                     :keyword, :license, :publisher, :date_created, :subject, :language, :identifier,
+                     :based_near, :related_url].freeze
+
+    # @deprecated kept for backward compatibility; the standard terms only. Use
+    #   the instance {#terms} to include this collection's compound terms.
     def self.terms
-      [:total_items, :alternative_title, :size, :resource_type, :creator, :contributor, :keyword, :license, :publisher, :date_created, :subject,
-       :language, :identifier, :based_near, :related_url] + compound_terms
+      DEFAULT_TERMS.dup
     end
 
-    # Compound terms that render inline in the collection metadata list. Card
-    # compounds are excluded (they render via `render_compound_cards`). See
-    # documentation/forms/compound_fields.md.
-    def self.compound_terms
-      return [] unless Hyrax.config.compound_metadata_enabled?
-      Hyrax::CompoundSchema.for(Hyrax.config.collection_class).inline_compound_names
-    rescue StandardError
-      []
+    # This collection's displayed terms: the standard terms plus its inline
+    # compound terms, resolved from the backing document so it is correct in
+    # flexible mode.
+    def terms
+      DEFAULT_TERMS + compound_terms
     end
 
     def terms_with_values
-      self.class.terms.select { |t| self[t].present? }
+      terms.select { |t| self[t].present? }
     end
 
+    # Inline compound terms for this collection (card compounds render
+    # separately via `render_compound_cards`). Resolved from the backing
+    # document. See documentation/forms/compound_fields.md.
     def compound_terms
-      self.class.compound_terms
+      return [] unless Hyrax.config.compound_metadata_enabled?
+      compound_schema.inline_compound_names
+    rescue StandardError
+      []
     end
 
     def compound_term?(term)
       compound_terms.include?(term.to_sym)
     end
 
-    def self.all_compound_names
+    # All compound names (inline + card) declared for this collection, used to
+    # delegate the readers to the solr document below.
+    def all_compound_names
       return [] unless Hyrax.config.compound_metadata_enabled?
-      Hyrax::CompoundSchema.for(Hyrax.config.collection_class).compound_names
+      compound_schema.compound_names
     rescue StandardError
       []
     end
@@ -80,12 +93,19 @@ module Hyrax
     # resolves on a collection as on a work. Via method_missing because the
     # compound set is schema-driven, not known at class-definition time.
     def respond_to_missing?(name, include_private = false)
-      self.class.all_compound_names.include?(name.to_sym) || super
+      all_compound_names.include?(name.to_sym) || super
     end
 
     def method_missing(name, *args, &block)
-      return solr_document.send(name, *args, &block) if self.class.all_compound_names.include?(name.to_sym)
+      return solr_document.send(name, *args, &block) if all_compound_names.include?(name.to_sym)
       super
+    end
+
+    # The compound schema for this collection, resolved from the backing Solr
+    # document (so it reflects the resource's own schema_version in flexible
+    # mode, rather than an empty or stale class-level schema). Memoized.
+    def compound_schema
+      @compound_schema ||= Hyrax::CompoundSchema.for_solr_document(solr_document)
     end
 
     ##
