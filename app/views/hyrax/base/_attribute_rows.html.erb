@@ -1,4 +1,5 @@
 <% view_options_for(presenter).each do |field, options| %>
+  <% next if compound_card_field?(presenter, field) # rendered as its own card, not inline %>
   <% view_options = conform_options(field, options) %>
   <%= presenter.attribute_to_html(conform_field(field, options), view_options) if field_visible?(view_options, presenter) %>
 <% end %>

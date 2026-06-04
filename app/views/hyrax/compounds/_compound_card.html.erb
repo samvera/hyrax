@@ -1,0 +1,20 @@
+<%# Renders one compound attribute as its own titled card on a show page,
+    matching the relationships/items cards. Opted in via the schema's
+    `view: { display: card }`. The card body reuses the standard compound
+    rendering (CompoundAttributeRenderer) via attribute_to_html.
+
+    Locals:
+      presenter - a work or collection show presenter
+      field     - the compound attribute name (Symbol)
+%>
+<div class="card hyrax-compound-card">
+  <div class="card-header">
+    <h2 class="card-title"><%= compound_field_label(field) %></h2>
+  </div>
+  <div class="card-body">
+    <dl class="work-show">
+      <%= presenter.attribute_to_html(field.to_sym, render_as: :compound, html_dl: true,
+                                      label: compound_field_label(field)) %>
+    </dl>
+  </div>
+</div>

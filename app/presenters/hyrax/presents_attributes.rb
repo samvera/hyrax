@@ -19,6 +19,8 @@ module Hyrax
         return
       end
 
+      options = options.merge(subfields: compound_subfields_for(field)) if options[:render_as].to_s == 'compound'
+
       if options[:html_dl]
         renderer_for(field, options).new(field, send(field), options).render_dl_row
       else
@@ -45,6 +47,18 @@ module Hyrax
     end
 
     private
+
+    # Normalized sub-field specs for a compound, so the renderer can translate
+    # controlled ids to their terms; nil if the resource class can't be
+    # resolved (the renderer then renders raw values).
+    def compound_subfields_for(field)
+      klass = solr_document.try(:hydra_model) if respond_to?(:solr_document)
+      return nil unless klass
+      Hyrax::CompoundSchema.for(klass).definition_for(field)&.fetch(:subfields, nil)
+    rescue StandardError => e
+      Hyrax.logger.debug("compound_subfields_for(#{field}): #{e.message}")
+      nil
+    end
 
     def find_renderer_class(name)
       renderer = nil

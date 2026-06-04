@@ -1,0 +1,52 @@
+// Compound metadata display on work and collection show pages.
+// See documentation/forms/compound_fields.md.
+//
+// `!important` throughout: the collection metadata area styles nested divs with
+// a descendant selector (`.hyc-metadata div { display: flex; border-bottom }`
+// in _collections.scss) that would otherwise turn each entry into a bordered
+// flex row. These rules override it regardless of source order.
+.hyrax-compound-values {
+  display: block !important;
+  flex-direction: column;
+  border: 0 !important;
+  // Indent to align with scalar metadata values (their `ul.tabular` keeps the
+  // browser default ~40px list padding).
+  padding: 0 0 0 40px !important;
+  max-width: 100%;
+
+  // Force block flow on the entries/sub-fields; the label/value spans stay
+  // inline so each sub-field reads as "Label: value" on one wrapping line.
+  .hyrax-compound-entry,
+  .hyrax-compound-subfield {
+    display: block !important;
+  }
+
+  .hyrax-compound-entry,
+  .hyrax-compound-subfield,
+  .hyrax-compound-subfield-label,
+  .hyrax-compound-subfield-value {
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0;
+    background: none;
+  }
+
+  // A light divider between entries.
+  .hyrax-compound-entry + .hyrax-compound-entry {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem !important;
+    border-top: 1px solid $gray-200 !important;
+  }
+
+  .hyrax-compound-subfield {
+    display: block;
+    line-height: 1.4;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .hyrax-compound-subfield-label {
+    font-weight: 600;
+    margin-right: 0.25rem;
+  }
+}

@@ -44,11 +44,48 @@ module Hyrax
     # app/views/collections/_show_descriptions.html.erb
     def self.terms
       [:total_items, :alternative_title, :size, :resource_type, :creator, :contributor, :keyword, :license, :publisher, :date_created, :subject,
-       :language, :identifier, :based_near, :related_url]
+       :language, :identifier, :based_near, :related_url] + compound_terms
+    end
+
+    # Compound terms that render inline in the collection metadata list. Card
+    # compounds are excluded (they render via `render_compound_cards`). See
+    # documentation/forms/compound_fields.md.
+    def self.compound_terms
+      return [] unless Hyrax.config.compound_metadata_enabled?
+      Hyrax::CompoundSchema.for(Hyrax.config.collection_class).inline_compound_names
+    rescue StandardError
+      []
     end
 
     def terms_with_values
       self.class.terms.select { |t| self[t].present? }
+    end
+
+    def compound_terms
+      self.class.compound_terms
+    end
+
+    def compound_term?(term)
+      compound_terms.include?(term.to_sym)
+    end
+
+    def self.all_compound_names
+      return [] unless Hyrax.config.compound_metadata_enabled?
+      Hyrax::CompoundSchema.for(Hyrax.config.collection_class).compound_names
+    rescue StandardError
+      []
+    end
+
+    # Delegate compound readers to the solr document so the card display
+    # resolves on a collection as on a work. Via method_missing because the
+    # compound set is schema-driven, not known at class-definition time.
+    def respond_to_missing?(name, include_private = false)
+      self.class.all_compound_names.include?(name.to_sym) || super
+    end
+
+    def method_missing(name, *args, &block)
+      return solr_document.send(name, *args, &block) if self.class.all_compound_names.include?(name.to_sym)
+      super
     end
 
     ##
