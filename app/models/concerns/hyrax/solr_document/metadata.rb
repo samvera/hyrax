@@ -9,6 +9,15 @@ module Hyrax
             type.coerce(self[field])
           end
         end
+
+        # Declare a reader for a compound attribute, parsing the rows the
+        # indexer stored in `<name>_json_ss`. See
+        # documentation/forms/compound_fields.md.
+        def compound_attribute(name)
+          define_method name do
+            Solr::CompoundEntries.coerce(self["#{name}_json_ss"])
+          end
+        end
       end
 
       module Solr
@@ -16,6 +25,23 @@ module Hyrax
           # @return [Array]
           def self.coerce(input)
             ::Array.wrap(input)
+          end
+        end
+
+        # Parses a `<compound>_json_ss` field back into an Array of Hashes.
+        class CompoundEntries
+          # @return [Array<Hash>]
+          def self.coerce(input)
+            raw = ::Array.wrap(input).first
+            return [] if raw.blank?
+            parsed = raw.is_a?(::String) ? parse(raw) : raw
+            ::Array.wrap(parsed).select { |e| e.is_a?(::Hash) }
+          end
+
+          def self.parse(raw)
+            JSON.parse(raw)
+          rescue JSON::ParserError
+            []
           end
         end
 
