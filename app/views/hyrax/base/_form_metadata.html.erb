@@ -3,6 +3,11 @@
             <%= render_edit_field_partial(term, f: f) %>
           <% end %>
         </div>
+        <% if f.object.respond_to?(:compound_terms) %>
+          <% f.object.compound_terms.each do |term| %>
+            <%= render_compound_field(f, term) %>
+          <% end %>
+        <% end %>
         <% if f.object.display_additional_fields? %>
           <%= link_to t('hyrax.works.form.additional_fields'),
                       '#extended-terms',

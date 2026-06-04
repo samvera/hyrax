@@ -1,0 +1,134 @@
+# frozen_string_literal: true
+
+module Hyrax
+  # View helpers for rendering compound (hierarchical) metadata fields on forms
+  # and show pages. See documentation/forms/compound_fields.md.
+  module CompoundFieldsHelper
+    ##
+    # Renders one compound section (a repeatable stack of sub-field rows) for the
+    # given attribute via the `hyrax/compounds/*` partials.
+    #
+    # @return [String, nil] rendered HTML, or nil when the attribute is not a
+    #   declared compound on the model.
+    def render_compound_field(f, compound_name)
+      schema = Hyrax::CompoundSchema.for(f.object.model)
+      definition = schema.definition_for(compound_name)
+      return nil if definition.nil?
+
+      render 'hyrax/compounds/compound_section',
+             f: f,
+             compound_name: compound_name.to_sym,
+             definition: definition,
+             display_label: compound_field_label(compound_name)
+    end
+
+    ##
+    # @return [Boolean] whether the field is a card-display compound
+    #   (`view: { display: card }`). Show views use this to skip card compounds
+    #   in the inline metadata list.
+    def compound_card_field?(presenter, field)
+      klass = compound_resource_class_for(presenter)
+      return false unless klass
+      Hyrax::CompoundSchema.for(klass).card?(field)
+    rescue StandardError
+      false
+    end
+
+    ##
+    # Render every card-display compound that has a value as its own titled card
+    # (matching the relationships/items cards).
+    #
+    # @param [Object] presenter a work or collection show presenter
+    # @return [ActiveSupport::SafeBuffer]
+    def render_compound_cards(presenter)
+      klass = compound_resource_class_for(presenter)
+      return ''.html_safe unless klass
+
+      safe_join(Hyrax::CompoundSchema.for(klass).card_compound_names.map do |name|
+        next ''.html_safe unless presenter.respond_to?(name) && presenter.public_send(name).present?
+
+        render 'hyrax/compounds/compound_card', presenter: presenter, field: name
+      end)
+    rescue StandardError => e
+      Hyrax.logger.debug("render_compound_cards: #{e.message}")
+      ''.html_safe
+    end
+
+    # The resource class for a show presenter, to read its compound schema.
+    # Works and collections resolve it differently.
+    def compound_resource_class_for(presenter)
+      if presenter.respond_to?(:solr_document) && presenter.solr_document.respond_to?(:hydra_model)
+        presenter.solr_document.hydra_model
+      elsif presenter.is_a?(Hyrax::CollectionPresenter)
+        Hyrax.config.collection_class
+      end
+    end
+
+    ##
+    # Options for a `controlled` sub-field's `<select>`: an inline `values:`
+    # list when present, otherwise the named QA authority. A stored value not
+    # among the options is appended so it still renders (`include_current_value`).
+    #
+    # @return [Array<Array(String, String)>] `[[label, id], ...]`
+    def compound_subfield_options(spec, current_value = nil)
+      options = spec[:values].presence || authority_options(spec[:authority])
+      ensure_current_value(options, current_value)
+    end
+
+    ##
+    # @return [Boolean] whether +current_value+ is present but not among the
+    #   sub-field's offered options — i.e. a forced/stale value. The select
+    #   gets the +force-select+ class in that case, matching the ordinary
+    #   controlled-field convention.
+    def compound_subfield_forced?(spec, current_value = nil)
+      return false if current_value.blank?
+      base = spec[:values].presence || authority_options(spec[:authority])
+      base.none? { |(_label, id)| id.to_s == current_value.to_s }
+    end
+
+    ##
+    # The pre-selected `[label, value]` option for a `work_or_url` sub-field's
+    # select2, or nil when empty. An internal work id resolves to its title; an
+    # external URL is shown as-is.
+    #
+    # @return [Array(String, String), nil]
+    def compound_work_or_url_option(value)
+      return nil if value.blank?
+      return [value.to_s, value.to_s] if Hyrax::CompoundWorkResolver.url?(value)
+
+      title, = Hyrax::CompoundWorkResolver.title_and_path(value)
+      [title, value.to_s]
+    end
+
+    def compound_field_label(compound_name)
+      t("hyrax.compound_fields.#{compound_name}.label",
+        default: compound_name.to_s.humanize)
+    end
+
+    def compound_subfield_label(compound_name, sub_field)
+      t("hyrax.compound_fields.#{compound_name}.#{sub_field}",
+        default: sub_field.to_s.humanize)
+    end
+
+    private
+
+    # Options from a QA local authority. Uses {Hyrax::TolerantSelectService} so
+    # an authority file that omits `active:` treats its terms as active rather
+    # than raising, matching ordinary controlled fields.
+    def authority_options(authority_name)
+      return [] if authority_name.blank?
+      Hyrax::TolerantSelectService.new(authority_name).select_active_options
+    rescue StandardError => e
+      Hyrax.logger.debug("compound_subfield_options: #{authority_name}: #{e.message}")
+      []
+    end
+
+    # Append the stored value as its own option when it is not already present,
+    # so a value no longer offered by the authority/list still renders.
+    def ensure_current_value(options, current_value)
+      return options if current_value.blank?
+      return options if options.any? { |(_label, id)| id.to_s == current_value.to_s }
+      options + [[current_value.to_s, current_value.to_s]]
+    end
+  end
+end

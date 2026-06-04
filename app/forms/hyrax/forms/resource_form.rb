@@ -28,6 +28,7 @@ module Hyrax
 
       include BasedNearFieldBehavior
       include RedirectsFieldBehavior
+      include CompoundFieldBehavior
       include Hyrax::FormFields(:redirects) if Hyrax.config.redirects_enabled? && Hyrax.config.work_include_metadata?
       class_attribute :model_class
 
@@ -79,6 +80,10 @@ module Hyrax
           current_schema_fields.each do |field_name, options|
             singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
           end
+          # Register the virtual `<compound>_attributes` populators on the
+          # singleton before `super`, so they are part of Reform's schema for
+          # this instance (non-flexible mode wires them at class load).
+          register_compound_fields!(r) if respond_to?(:register_compound_fields!)
         end
 
         if resource.nil?
@@ -122,6 +127,7 @@ module Hyrax
           # subclass's model.
           subclass.prepend(BasedNearFieldBehavior)
           subclass.prepend(RedirectsFieldBehavior)
+          subclass.prepend(CompoundFieldBehavior)
           super
         end
 
@@ -226,7 +232,7 @@ module Hyrax
       def primary_terms
         terms = _form_field_definitions
                 .select { |_, definition| definition[:primary] }
-                .keys.map(&:to_sym)
+                .keys.map(&:to_sym) - compound_terms
 
         terms = [:schema_version, :contexts] + terms if model.flexible?
         terms
@@ -237,7 +243,18 @@ module Hyrax
       def secondary_terms
         _form_field_definitions
           .select { |_, definition| definition[:display] && !definition[:primary] }
-          .keys.map(&:to_sym)
+          .keys.map(&:to_sym) - compound_terms
+      end
+
+      ##
+      # @return [Array<Symbol>] compound attribute terms, rendered by the
+      #   compound form partials rather than as scalar fields (and so excluded
+      #   from {#primary_terms} / {#secondary_terms}).
+      def compound_terms
+        return [] unless respond_to?(:model) && model
+        Hyrax::CompoundSchema.for(model).compound_names
+      rescue StandardError
+        []
       end
 
       ##

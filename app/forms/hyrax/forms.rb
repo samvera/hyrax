@@ -14,6 +14,13 @@ module Hyrax
       Class.new(Hyrax::Forms::PcdmObjectForm) do
         self.model_class = work_class
         include Hyrax::FormFields(:core_metadata) if work_class.ancestors.detect { |k| k.inspect == "Hyrax::Schema(core_metadata)" }
+        # Wire the compound form properties only for works whose model includes
+        # the compound_metadata schema (non-flexible mode); the m3 loader
+        # supplies them at init in flexible mode.
+        if Hyrax.config.compound_metadata_enabled? && !Hyrax.config.flexible? &&
+           work_class.ancestors.detect { |k| k.inspect == "Hyrax::Schema(compound_metadata)" }
+          include Hyrax::FormFields(:compound_metadata)
+        end
 
         ##
         # @return [String]

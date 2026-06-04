@@ -858,6 +858,10 @@ en:
       create_service:
         admin_set_description: An aggregation of works that is intended to help with administrative control. Admin Sets provide a way of defining behaviors and policies around a set of works.
         default_description: A User Collection can be created by any user to organize their works.
+    compound_fields:
+      add_row: Add %{label}
+      remove_row: Remove
+      remove_row_with_label: Remove %{label}
     contact_form:
       button_label: Send
       email_label: Your Email
