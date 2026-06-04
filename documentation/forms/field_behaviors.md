@@ -15,6 +15,17 @@ Two examples ship with Hyrax:
 
 This document covers the contract a Field Behavior must satisfy, the decision points for a new behavior, and the worked examples.
 
+> **For new multi-sub-field compounds, prefer the generic, schema-driven path.**
+> A field whose entries are a hash of named sub-fields (each an open-entry
+> string or a controlled-vocabulary lookup) can be declared entirely in the
+> schema YAML / m3 profile and rendered, populated, and indexed with no
+> per-field Ruby or ERB — see [`compound_fields.md`](compound_fields.md). The
+> hand-written Field Behaviors documented below remain the right tool for
+> special cases: single-value-per-entry controlled URIs with a presenter
+> (`based_near`), or compounds with bespoke behavior such as a radio-group
+> selection, write-time normalization, global-uniqueness validation, or
+> feature gating (`redirects`).
+
 ## Why this pattern exists
 
 Reform's `FormBuilderMethods#deserialize!` rewrites the submitted `<name>_attributes` key to `<name>` before `from_hash` runs. If the form *also* has a property named `<name>` (e.g. from an `include Hyrax::Schema(:foo)`), Reform's `from_hash` writes the raw fragment hash onto the property — bypassing the populator entirely.
