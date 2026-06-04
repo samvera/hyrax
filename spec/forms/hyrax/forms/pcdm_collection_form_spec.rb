@@ -28,6 +28,20 @@ RSpec.describe Hyrax::Forms::PcdmCollectionForm do
     end
   end
 
+  # Compounds render via the dedicated compound section, not as scalar fields;
+  # they must be excluded from primary/secondary terms or they would render a
+  # second, broken scalar input (a `required` compound would block form submit
+  # client-side). PcdmCollectionForm overrides these terms, so it needs the same
+  # exclusion ResourceForm has.
+  describe 'compound terms are excluded from scalar term lists', if: Hyrax.config.compound_metadata_enabled? do
+    it 'keeps compounds out of primary_terms and secondary_terms' do
+      compounds = form.compound_terms
+      skip 'no compounds declared on the collection in this configuration' if compounds.empty?
+      expect(form.primary_terms).not_to include(*compounds)
+      expect(form.secondary_terms).not_to include(*compounds)
+    end
+  end
+
   describe '#banner_info' do
     let(:banner_info) do
       CollectionBrandingInfo.new(

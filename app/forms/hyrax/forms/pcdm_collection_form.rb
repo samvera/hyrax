@@ -71,7 +71,7 @@ module Hyrax
       def primary_terms
         terms = _form_field_definitions
                 .select { |_, definition| definition[:primary] }
-                .keys.map(&:to_sym)
+                .keys.map(&:to_sym) - compound_terms
 
         terms = [:schema_version] + terms if model.flexible?
         terms
@@ -82,7 +82,7 @@ module Hyrax
       def secondary_terms
         _form_field_definitions
           .select { |_, definition| definition[:display] && !definition[:primary] }
-          .keys.map(&:to_sym)
+          .keys.map(&:to_sym) - compound_terms
       end
 
       ##
