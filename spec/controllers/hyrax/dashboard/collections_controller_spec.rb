@@ -231,9 +231,11 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
           context "in validations" do
             let(:form) { instance_double(Hyrax::Forms::PcdmCollectionForm, errors: errors) }
-            let(:errors) { instance_double(Reform::Contract::CustomError, messages: messages) }
-            let(:messages) { { publisher: ["must exist"] } }
-            let(:errmsg) { "publisher must exist" }
+            # Plain double: a real Reform form's errors responds to full_messages,
+            # but Reform::Contract::CustomError (what instance_double would verify) does not.
+            let(:errors) { double("errors", full_messages: full_messages) }
+            let(:full_messages) { ["Publisher must exist"] }
+            let(:errmsg) { "Publisher must exist" }
 
             before do
               skip("these validations only apply to Valkyrie forms") if
@@ -459,9 +461,11 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
           context "in validations" do
             let(:form) { instance_double(Hyrax::Forms::PcdmCollectionForm, errors: errors) }
-            let(:errors) { instance_double(Reform::Contract::CustomError, messages: messages) }
-            let(:messages) { { publisher: ["must exist"] } }
-            let(:errmsg) { "publisher must exist" }
+            # Plain double: a real Reform form's errors responds to full_messages,
+            # but Reform::Contract::CustomError (what instance_double would verify) does not.
+            let(:errors) { double("errors", full_messages: full_messages) }
+            let(:full_messages) { ["Publisher must exist"] }
+            let(:errmsg) { "Publisher must exist" }
 
             before do
               skip("these validations only apply to Valkyrie forms") if

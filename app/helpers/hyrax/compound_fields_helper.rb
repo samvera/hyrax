@@ -27,9 +27,7 @@ module Hyrax
     #   (`view: { display: card }`). Show views use this to skip card compounds
     #   in the inline metadata list.
     def compound_card_field?(presenter, field)
-      klass = compound_resource_class_for(presenter)
-      return false unless klass
-      Hyrax::CompoundSchema.for(klass).card?(field)
+      compound_schema_for(presenter).card?(field)
     rescue StandardError
       false
     end
@@ -41,10 +39,7 @@ module Hyrax
     # @param [Object] presenter a work or collection show presenter
     # @return [ActiveSupport::SafeBuffer]
     def render_compound_cards(presenter)
-      klass = compound_resource_class_for(presenter)
-      return ''.html_safe unless klass
-
-      safe_join(Hyrax::CompoundSchema.for(klass).card_compound_names.map do |name|
+      safe_join(compound_schema_for(presenter).card_compound_names.map do |name|
         next ''.html_safe unless presenter.respond_to?(name) && presenter.public_send(name).present?
 
         render 'hyrax/compounds/compound_card', presenter: presenter, field: name
@@ -54,14 +49,19 @@ module Hyrax
       ''.html_safe
     end
 
-    # The resource class for a show presenter, to read its compound schema.
-    # Works and collections resolve it differently.
-    def compound_resource_class_for(presenter)
-      if presenter.respond_to?(:solr_document) && presenter.solr_document.respond_to?(:hydra_model)
-        presenter.solr_document.hydra_model
-      elsif presenter.is_a?(Hyrax::CollectionPresenter)
-        Hyrax.config.collection_class
-      end
+    # The compound schema for a show presenter, resolved from the backing Solr
+    # document so it works in flexible mode (where the class carries no
+    # compounds). Memoized per request. See {Hyrax::CompoundSchema.for_solr_document}.
+    def compound_schema_for(presenter)
+      @compound_schemas ||= {}
+      @compound_schemas[presenter.object_id] ||=
+        if presenter.respond_to?(:solr_document) && presenter.solr_document.respond_to?(:hydra_model)
+          Hyrax::CompoundSchema.for_solr_document(presenter.solr_document)
+        elsif presenter.is_a?(Hyrax::CollectionPresenter)
+          Hyrax::CompoundSchema.for(Hyrax.config.collection_class)
+        else
+          Hyrax::CompoundSchema.new
+        end
     end
 
     ##

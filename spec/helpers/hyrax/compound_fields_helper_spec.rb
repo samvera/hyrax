@@ -52,24 +52,12 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
                       card_compound_names: [:relationships])
     end
 
+    # Show presenters resolve their compound schema from the backing Solr
+    # document (so flexible mode works), so stub that resolution path.
     before do
-      allow(Hyrax::CompoundSchema).to receive(:for).and_return(schema)
+      allow(Hyrax::CompoundSchema).to receive(:for_solr_document).and_return(schema)
       allow(schema).to receive(:card?).with(:relationships).and_return(true)
       allow(schema).to receive(:card?).with(:contributors).and_return(false)
-    end
-
-    describe '#compound_resource_class_for' do
-      it 'uses the work hydra_model for a work presenter' do
-        solr_document = instance_double(SolrDocument, hydra_model: GenericWork)
-        presenter = instance_double(Hyrax::WorkShowPresenter, solr_document: solr_document)
-        allow(presenter).to receive(:respond_to?).with(:solr_document).and_return(true)
-        expect(helper.compound_resource_class_for(presenter)).to eq(GenericWork)
-      end
-
-      it 'uses the configured collection class for a collection presenter' do
-        presenter = Hyrax::CollectionPresenter.allocate
-        expect(helper.compound_resource_class_for(presenter)).to eq(Hyrax.config.collection_class)
-      end
     end
 
     describe '#compound_card_field?' do
@@ -88,7 +76,7 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
         expect(helper.compound_card_field?(presenter, :contributors)).to be false
       end
 
-      it 'is false (not raising) when the resource class cannot be resolved' do
+      it 'is false (not raising) when the schema cannot be resolved' do
         expect(helper.compound_card_field?(Object.new, :relationships)).to be false
       end
     end

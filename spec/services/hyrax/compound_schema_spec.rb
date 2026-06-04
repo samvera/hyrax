@@ -222,4 +222,43 @@ RSpec.describe Hyrax::CompoundSchema do
                             :required_compound, :cardinality_compound)
     end
   end
+
+  describe '.for_solr_document' do
+    # The attribute map a flexible schema loader returns for a version:
+    # `{ name => dry_type_with_meta }` — the same shape SchemaLoader#attributes_for
+    # produces. Show pages resolve compounds from this (via schema_version)
+    # without loading the resource.
+    let(:version_attributes) do
+      resource_class.schema.index_by(&:name)
+    end
+
+    context 'in flexible mode (document has a schema_version)' do
+      let(:document) { instance_double(SolrDocument, hydra_model: resource_class) }
+
+      before do
+        allow(document).to receive(:[]).with('schema_version_ssi').and_return('7')
+        loader = instance_double(Hyrax::M3SchemaLoader)
+        allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(loader)
+        allow(loader).to receive(:attributes_for)
+          .with(schema: 'TestResourceWithCompounds', version: '7', contexts: [])
+          .and_return(version_attributes)
+      end
+
+      it 'resolves compounds from the version attribute map (no resource load)' do
+        expect(described_class.for_solr_document(document).card_compound_names)
+          .to contain_exactly(:relationships)
+      end
+    end
+
+    context 'when the document has no schema_version (non-flexible)' do
+      let(:document) { instance_double(SolrDocument, hydra_model: resource_class) }
+
+      before { allow(document).to receive(:[]).with('schema_version_ssi').and_return(nil) }
+
+      it 'falls back to the model class schema' do
+        expect(described_class.for_solr_document(document).compound_names)
+          .to include(:relationships, :agent)
+      end
+    end
+  end
 end

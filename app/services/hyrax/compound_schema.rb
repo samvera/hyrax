@@ -23,6 +23,43 @@ module Hyrax
       new(*schema_sources_for(resource))
     end
 
+    ##
+    # Build a CompoundSchema for a show-page Solr document. In flexible mode the
+    # resource class carries no compounds (they are applied per-instance at
+    # load), so resolve them from the document's indexed `schema_version`
+    # without loading the resource; fall back to the model class (non-flexible).
+    #
+    # @param document [#hydra_model] a SolrDocument-like object
+    def self.for_solr_document(document)
+      new(*solr_document_schema_sources(document))
+    end
+
+    def self.solr_document_schema_sources(document)
+      klass = document.hydra_model if document.respond_to?(:hydra_model)
+      version = document['schema_version_ssi'] if document.respond_to?(:[])
+
+      if klass && version.present?
+        attrs = flexible_attributes_for(klass, version)
+        return [attrs] if attrs.present?
+      end
+
+      schema_sources_for(klass)
+    rescue StandardError => e
+      Hyrax.logger.debug("CompoundSchema.for_solr_document: #{e.message}")
+      []
+    end
+    private_class_method :solr_document_schema_sources
+
+    # The `{ name => dry_type }` attribute map for a class at a flexible schema
+    # version; nil when the loader is unavailable (non-flexible installs).
+    def self.flexible_attributes_for(klass, version)
+      loader = Hyrax::Schema.m3_schema_loader
+      loader.attributes_for(schema: klass.name, version: version, contexts: [])
+    rescue StandardError
+      nil
+    end
+    private_class_method :flexible_attributes_for
+
     # For a class, its own schema. For an instance, both the class schema
     # (non-flexible) and the singleton schema (flexible: the m3 attributes are
     # applied to the singleton at load time). Unioning both makes {.for} work in
@@ -129,14 +166,8 @@ module Hyrax
 
     def build_definitions
       schema_sources.each_with_object({}) do |schema, memo|
-        next unless schema.respond_to?(:each)
-
-        schema.each do |property|
-          meta = property.respond_to?(:meta) ? property.meta : nil
-          next if meta.nil?
-
-          name = property.name.to_sym
-          next if memo.key?(name)
+        name_meta_pairs(schema).each do |name, meta|
+          next if meta.nil? || memo.key?(name)
 
           config = meta.with_indifferent_access
           subfields = config['subfields']
@@ -144,6 +175,19 @@ module Hyrax
 
           memo[name] = normalize(config, subfields)
         end
+      end
+    end
+
+    # `[name, meta]` pairs for a schema source, which is either a Dry schema (an
+    # iterable of properties with `name`/`meta`) or a `{ name => dry_type }` Hash
+    # (the `SchemaLoader#attributes_for` output used for version resolution).
+    def name_meta_pairs(schema)
+      if schema.is_a?(::Hash)
+        schema.map { |name, type| [name.to_sym, (type.meta if type.respond_to?(:meta))] }
+      elsif schema.respond_to?(:each)
+        schema.map { |property| [property.name.to_sym, (property.meta if property.respond_to?(:meta))] }
+      else
+        []
       end
     end
 
