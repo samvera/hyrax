@@ -350,6 +350,17 @@ module Hyrax
     end
     alias redirects_enabled redirects_enabled?
 
+    # Whether the sample compound metadata schema ships on works and collections
+    # by default. Defaults to true; respects +HYRAX_COMPOUND_METADATA_ENABLED+.
+    #
+    # @see documentation/forms/compound_fields.md
+    attr_writer :compound_metadata_enabled
+    def compound_metadata_enabled?
+      return @compound_metadata_enabled if defined?(@compound_metadata_enabled) && !@compound_metadata_enabled.nil?
+      @compound_metadata_enabled = ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_COMPOUND_METADATA_ENABLED', true))
+    end
+    alias compound_metadata_enabled compound_metadata_enabled?
+
     # @return [Boolean] true when both feature gates are open. Single
     #   source of truth for "is the redirects feature actively in use
     #   right now?". Short-circuits on the config so the Flipflop call
