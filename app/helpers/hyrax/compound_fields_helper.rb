@@ -19,7 +19,7 @@ module Hyrax
              f: f,
              compound_name: compound_name.to_sym,
              definition: definition,
-             display_label: compound_field_label(compound_name)
+             display_label: compound_field_label(compound_name, display_label: definition[:display_label])
     end
 
     ##
@@ -100,9 +100,25 @@ module Hyrax
       [title, value.to_s]
     end
 
-    def compound_field_label(compound_name)
-      t("hyrax.compound_fields.#{compound_name}.label",
-        default: compound_name.to_s.humanize)
+    # The label for a compound. A declared `display_label` is resolved through
+    # the same path ordinary properties use ({Hyrax::AttributesHelper#conform_options});
+    # otherwise it falls back to the `hyrax.compound_fields.<name>.label` key.
+    #
+    # @param display_label [Hash, nil] the compound's `{ locale => label }` hash
+    def compound_field_label(compound_name, display_label: nil)
+      if display_label.present?
+        conform_options(compound_name.to_s, display_label: display_label)[:label]
+      else
+        t("hyrax.compound_fields.#{compound_name}.label", default: compound_name.to_s.humanize)
+      end
+    rescue StandardError
+      t("hyrax.compound_fields.#{compound_name}.label", default: compound_name.to_s.humanize)
+    end
+
+    # The card title for a compound on a show page (resolves the compound's
+    # declared display_label from the presenter's schema).
+    def compound_card_label(presenter, field)
+      compound_field_label(field, display_label: compound_schema_for(presenter).definition_for(field)&.dig(:display_label))
     end
 
     def compound_subfield_label(compound_name, sub_field)

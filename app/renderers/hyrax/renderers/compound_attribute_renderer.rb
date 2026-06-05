@@ -18,7 +18,11 @@ module Hyrax
       def render_dl_row
         return '' if blank_values? && !options[:include_empty]
 
-        %(<dt>#{label}</dt>\n<dd>#{entries_markup}</dd>).html_safe
+        # Wrap in the same `ul.tabular` structure ordinary fields use, so inline
+        # compound values inherit the same indentation as the surrounding
+        # metadata (whatever an app/theme styles `ul.tabular` to) rather than a
+        # fixed pad that misaligns downstream.
+        %(<dt>#{label}</dt>\n<dd><ul class="tabular"><li class="attribute attribute-#{field}">#{entries_markup}</li></ul></dd>).html_safe
       end
 
       # Just the entry rows, without a surrounding label/row wrapper. Used by
@@ -70,8 +74,23 @@ module Hyrax
           auto_link(ERB::Util.h(value.to_s))
         when 'work_or_url'
           work_or_url_markup(value)
+        when 'controlled'
+          controlled_markup(sub_field, value)
         else
           ERB::Util.h(display_value(sub_field, value))
+        end
+      end
+
+      # A controlled value displays its authority/value-list term. When the
+      # stored value is itself a linkable URI (e.g. a rights-statement or license
+      # URI), link the term to that URI — mirroring the ordinary rights/license
+      # renderer. Non-URI controlled values (e.g. inline option ids) stay plain.
+      def controlled_markup(sub_field, value)
+        label = display_value(sub_field, value)
+        if Hyrax::AuthorityRenderingHelper.linkable_uri?(value)
+          %(<a href="#{ERB::Util.h(value)}" target="_blank" rel="noopener noreferrer">#{ERB::Util.h(label)}</a>).html_safe
+        else
+          ERB::Util.h(label)
         end
       end
 

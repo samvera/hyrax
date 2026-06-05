@@ -44,6 +44,16 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
     end
   end
 
+  describe '#compound_field_label' do
+    it 'uses a declared display_label' do
+      expect(helper.compound_field_label(:compound_rights, display_label: { 'default' => 'Rights' })).to eq('Rights')
+    end
+
+    it 'falls back to a humanized name when no display_label or translation exists' do
+      expect(helper.compound_field_label(:nonexistent_compound)).to eq('Nonexistent compound')
+    end
+  end
+
   describe 'card display' do
     # A schema whose only card compound is :relationships.
     let(:schema) do

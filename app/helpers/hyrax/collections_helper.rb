@@ -30,6 +30,11 @@ module Hyrax
     # @since 3.0.0
     # @return [#to_s]
     def collection_metadata_label(collection, field)
+      if collection.respond_to?(:compound_term?) && collection.compound_term?(field)
+        definition = compound_schema_for(collection).definition_for(field)
+        return compound_field_label(field, display_label: definition&.fetch(:display_label, nil))
+      end
+
       Hyrax::PresenterRenderer.new(collection, self).label(field)
     end
 
@@ -37,16 +42,14 @@ module Hyrax
     # @since 3.0.0
     # @return [#to_s]
     def collection_metadata_value(collection, field)
-      # Compounds render through the shared CompoundAttributeRenderer. The show
-      # partials already wrap label/value in <dt>/<dd>, so render only the entry
-      # rows; pass the sub-field specs so controlled ids display as their term.
-      # See documentation/forms/compound_fields.md.
+      # Compounds render through the shared CompoundAttributeRenderer, resolving
+      # the definition from the presenter's document (correct in flexible mode).
+      # Collection scalar values render as bare spans (no `ul.tabular`), so the
+      # entries render flush to match. See documentation/forms/compound_fields.md.
       if collection.respond_to?(:compound_term?) && collection.compound_term?(field)
-        definition = Hyrax::CompoundSchema.for(Hyrax.config.collection_class).definition_for(field)
+        definition = compound_schema_for(collection).definition_for(field)
         return Hyrax::Renderers::CompoundAttributeRenderer
-               .new(field, collection[field],
-                    label: collection_metadata_label(collection, field),
-                    subfields: definition&.fetch(:subfields, nil))
+               .new(field, collection[field], subfields: definition&.fetch(:subfields, nil))
                .render_value
       end
 

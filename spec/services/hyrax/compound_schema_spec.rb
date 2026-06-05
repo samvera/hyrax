@@ -40,6 +40,7 @@ RSpec.describe Hyrax::CompoundSchema do
                     'related_item' => { 'type' => 'work_or_url' },
                     'relationship_type' => { 'type' => 'controlled', 'authority' => 'relationship_type' }
                   },
+                  display_label: { 'default' => 'Related works' },
                   view: { 'display' => 'card' }
                 )
       # Required at the compound level (non-flexible `required: true`) with two
@@ -107,6 +108,16 @@ RSpec.describe Hyrax::CompoundSchema do
     it 'records the display_mode on the definition' do
       expect(schema.definition_for(:relationships)[:display_mode]).to eq(:card)
       expect(schema.definition_for(:contributors)[:display_mode]).to eq(:inline)
+    end
+  end
+
+  describe 'display_label' do
+    it 'normalizes a declared display_label to a locale hash' do
+      expect(schema.definition_for(:relationships)[:display_label]).to eq('default' => 'Related works')
+    end
+
+    it 'is nil when none is declared' do
+      expect(schema.definition_for(:contributors)[:display_label]).to be_nil
     end
   end
 

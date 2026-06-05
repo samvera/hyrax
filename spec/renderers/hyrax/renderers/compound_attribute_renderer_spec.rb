@@ -82,6 +82,25 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
     end
   end
 
+  describe 'controlled sub-field with a linkable URI value' do
+    let(:uri) { 'http://rightsstatements.org/vocab/InC/1.0/' }
+    let(:values) { [{ 'rights_statement' => uri }] }
+    let(:subfields) do
+      { 'rights_statement' => { type: 'controlled', authority: 'rights_statements', values: nil } }
+    end
+    let(:renderer) { described_class.new(:compound_rights, values, label: 'Rights', html_dl: true, subfields: subfields) }
+
+    before do
+      allow(Hyrax::CompoundSubfieldLabeler).to receive(:label_for)
+        .with(subfields['rights_statement'], uri).and_return('In Copyright')
+    end
+
+    it 'links the resolved term to its URI' do
+      markup = renderer.render_dl_row
+      expect(markup).to include(%(<a href="#{uri}" target="_blank" rel="noopener noreferrer">In Copyright</a>))
+    end
+  end
+
   describe 'url sub-field auto-linking' do
     let(:values) { [{ 'related_item_url' => 'https://example.org/item/42', 'note' => 'see also' }] }
     let(:subfields) do

@@ -72,6 +72,8 @@ attributes:
     type: hash
     multiple: true
     predicate: http://purl.org/dc/terms/rights
+    display_label:
+      default: Rights
     form:
       primary: false
     subfields:

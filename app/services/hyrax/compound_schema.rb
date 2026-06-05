@@ -203,7 +203,16 @@ module Hyrax
       { subfields: sub,
         groups: normalize_groups(config['groups'], sub.keys),
         display_mode: display_mode,
-        required: compound_required?(config) }
+        required: compound_required?(config),
+        display_label: normalize_display_label(config) }
+    end
+
+    # The declared display label as `{ locale => String }` (the m3
+    # `display_label` shape), or nil when none is declared.
+    def normalize_display_label(config)
+      raw = config['display_label']
+      return nil if raw.blank?
+      raw.is_a?(Hash) ? raw.with_indifferent_access : { default: raw.to_s }.with_indifferent_access
     end
 
     def normalize_subfield(opts)
