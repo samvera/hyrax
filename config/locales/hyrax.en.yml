@@ -865,11 +865,11 @@ en:
       errors:
         required_but_empty: "%{compound} requires at least one entry"
         missing_required_subfields: "Each %{compound} entry requires: %{fields}"
-      agents:
-        label: Agents
+      participants:
+        label: Participants
         title: Title
-        agent_name: Name
-        agent_role: Role
+        participant_name: Name
+        participant_role: Role
       identifiers:
         label: Identifiers
         identifier: Identifier

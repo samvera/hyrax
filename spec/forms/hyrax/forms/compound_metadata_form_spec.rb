@@ -41,44 +41,44 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
 
   describe 'property registration' do
     it 'exposes the compound readers so the form partial can render existing rows' do
-      expect(form).to respond_to(:agents)
+      expect(form).to respond_to(:participants)
       expect(form).to respond_to(:identifiers)
     end
 
     it 'exposes the virtual `<compound>_attributes` setters for nested form params' do
-      expect(form).to respond_to(:agents_attributes=)
+      expect(form).to respond_to(:participants_attributes=)
       expect(form).to respond_to(:identifiers_attributes=)
     end
 
     it 'lists the compounds as compound_terms (and keeps them out of primary/secondary terms)' do
-      expect(form.compound_terms).to include(:agents, :identifiers, :compound_rights)
-      expect(form.primary_terms).not_to include(:agents, :identifiers, :compound_rights)
-      expect(form.secondary_terms).not_to include(:agents, :identifiers, :compound_rights)
+      expect(form.compound_terms).to include(:participants, :identifiers, :compound_rights)
+      expect(form.primary_terms).not_to include(:participants, :identifiers, :compound_rights)
+      expect(form.secondary_terms).not_to include(:participants, :identifiers, :compound_rights)
     end
 
-    it 'registers `agents_attributes` as a real Reform property (not just method-missing)' do
+    it 'registers `participants_attributes` as a real Reform property (not just method-missing)' do
       # This is the property that has to exist in Reform's schema *before*
       # validate runs; if it is registered too late the populator never fires.
       # In non-flexible mode it is registered on the form class via FormFields;
       # check the class definitions registry (the same lens the redirects
       # coverage uses).
       definition_keys = form.class.definitions.keys.map(&:to_s)
-      expect(definition_keys).to include('agents_attributes')
+      expect(definition_keys).to include('participants_attributes')
     end
   end
 
   describe 'validate + sync writes the compound to the model' do
     let(:params) do
-      { 'agents_attributes' =>
-          { '0' => { 'title' => 'Dr', 'agent_name' => 'Ada Lovelace', 'agent_role' => 'Author' } },
+      { 'participants_attributes' =>
+          { '0' => { 'title' => 'Dr', 'participant_name' => 'Ada Lovelace', 'participant_role' => 'Author' } },
         'identifiers_attributes' =>
           { '0' => { 'identifier' => '10.1234/x', 'identifier_type' => 'DOI' } } }
     end
 
     it 'populates the compound on the form during validate' do
       form.validate(params)
-      expect(form.agents)
-        .to eq([{ 'title' => 'Dr', 'agent_name' => 'Ada Lovelace', 'agent_role' => 'Author' }])
+      expect(form.participants)
+        .to eq([{ 'title' => 'Dr', 'participant_name' => 'Ada Lovelace', 'participant_role' => 'Author' }])
       expect(form.identifiers)
         .to eq([{ 'identifier' => '10.1234/x', 'identifier_type' => 'DOI' }])
     end
@@ -86,26 +86,26 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
     it 'writes the compound through to the model on sync' do
       form.validate(params)
       form.sync
-      expect(form.model.agents)
-        .to eq([{ 'title' => 'Dr', 'agent_name' => 'Ada Lovelace', 'agent_role' => 'Author' }])
+      expect(form.model.participants)
+        .to eq([{ 'title' => 'Dr', 'participant_name' => 'Ada Lovelace', 'participant_role' => 'Author' }])
       expect(form.model.identifiers)
         .to eq([{ 'identifier' => '10.1234/x', 'identifier_type' => 'DOI' }])
     end
 
     it 'drops `_destroy` and all-blank rows' do
-      form.validate('agents_attributes' =>
-        { '0' => { 'agent_name' => 'Keep', 'agent_role' => 'Author' },
-          '1' => { 'agent_name' => 'Remove', '_destroy' => 'true' },
-          '2' => { 'title' => '', 'agent_name' => '', 'agent_role' => '' } })
+      form.validate('participants_attributes' =>
+        { '0' => { 'participant_name' => 'Keep', 'participant_role' => 'Author' },
+          '1' => { 'participant_name' => 'Remove', '_destroy' => 'true' },
+          '2' => { 'title' => '', 'participant_name' => '', 'participant_role' => '' } })
       form.sync
-      expect(form.model.agents).to eq([{ 'title' => nil, 'agent_name' => 'Keep', 'agent_role' => 'Author' }])
+      expect(form.model.participants).to eq([{ 'title' => nil, 'participant_name' => 'Keep', 'participant_role' => 'Author' }])
     end
   end
 
   describe 'required-subfield validation blocks save' do
     # Exercises the real form + Hyrax::CompoundEntryValidator end to end against
     # the *shipped* compound schema (no stub). The shipped samples require
-    # sub-fields within a row (e.g. agents needs agent_name + agent_role,
+    # sub-fields within a row (e.g. participants needs participant_name + participant_role,
     # relationships needs related_item + relationship_type) but none is required
     # at the compound level, so an empty compound is valid. Asserting through the
     # real schema is what catches a validator that reads the form wrapper instead
@@ -119,13 +119,13 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
     end
 
     it 'allows an empty compound (none is required at the compound level)' do
-      form.validate('agents_attributes' => { '_marker' => { '_destroy' => '1' } })
+      form.validate('participants_attributes' => { '_marker' => { '_destroy' => '1' } })
       expect(base_errors(form)).to be_empty
     end
 
-    it 'flags an agents row that omits a required sub-field' do
-      form.validate('agents_attributes' => { '0' => { 'agent_role' => 'Author' } })
-      expect(base_errors(form)).to include(a_string_including('Agents'))
+    it 'flags a participants row that omits a required sub-field' do
+      form.validate('participants_attributes' => { '0' => { 'participant_role' => 'Author' } })
+      expect(base_errors(form)).to include(a_string_including('Participants'))
     end
 
     it 'flags a relationships row that omits a required sub-field' do
@@ -133,13 +133,13 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
       expect(base_errors(form)).to include(a_string_including('Relationships'))
     end
 
-    it 'does not flag agents when its required sub-fields are filled' do
-      form.validate('agents_attributes' => { '0' => { 'agent_name' => 'Ada', 'agent_role' => 'Author' } })
-      expect(base_errors(form)).not_to include(a_string_including('Agents'))
+    it 'does not flag participants when its required sub-fields are filled' do
+      form.validate('participants_attributes' => { '0' => { 'participant_name' => 'Ada', 'participant_role' => 'Author' } })
+      expect(base_errors(form)).not_to include(a_string_including('Participants'))
     end
 
     it 'never flags `compound_rights` (no required sub-fields)' do
-      form.validate('agents_attributes' => { '0' => { 'agent_name' => 'Ada', 'agent_role' => 'Author' } })
+      form.validate('participants_attributes' => { '0' => { 'participant_name' => 'Ada', 'participant_role' => 'Author' } })
       expect(base_errors(form)).not_to include(a_string_including('Rights'))
     end
   end
@@ -151,13 +151,13 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
       skip 'requires a Valkyrie (non-Fedora) persister' if
         Hyrax.persister.is_a?(Wings::Valkyrie::Persister)
 
-      form.validate('agents_attributes' =>
-        { '0' => { 'agent_name' => 'Grace Hopper', 'agent_role' => 'Editor' } })
+      form.validate('participants_attributes' =>
+        { '0' => { 'participant_name' => 'Grace Hopper', 'participant_role' => 'Editor' } })
       form.sync
       saved = Hyrax.persister.save(resource: form.model)
       reloaded = Hyrax.query_service.find_by(id: saved.id)
 
-      expect(reloaded.agents.first['agent_name'] || reloaded.agents.first[:agent_name])
+      expect(reloaded.participants.first['participant_name'] || reloaded.participants.first[:participant_name])
         .to eq('Grace Hopper')
     end
   end

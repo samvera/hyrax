@@ -956,7 +956,7 @@ properties:
   # `type: hash, multiple: true` property whose entries are hashes of the
   # `subfields:` keys, rendered/populated/indexed generically by the compound
   # foundation. See documentation/forms/compound_fields.md.
-  agents:
+  participants:
     available_on:
       class:
         - Hyrax::Work
@@ -965,7 +965,7 @@ properties:
     type: hash
     range: http://www.w3.org/2001/XMLSchema#string
     display_label:
-      default: Agents
+      default: Participants
     form:
       primary: false
     property_uri: http://id.loc.gov/vocabulary/relators/asn
@@ -973,17 +973,17 @@ properties:
       # Indexing per sub-field via `indexing:` (literal Solr field names), the
       # same mechanism scalar properties use. No `indexing:` => display-only.
       title: { type: string }
-      agent_name:
+      participant_name:
         type: string
         required: true
-        indexing: [agent_name_sim, agent_name_tesim]
-      agent_role:
+        indexing: [participant_name_sim, participant_name_tesim]
+      participant_role:
         type: controlled
         required: true
         values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
-        indexing: [agent_role_sim, agent_role_tesim]
+        indexing: [participant_role_sim, participant_role_tesim]
     groups:
-      - { label: ~, cols: 4, fields: [title, agent_name, agent_role] }
+      - { label: ~, cols: 4, fields: [title, participant_name, participant_role] }
     view:
       render_as: compound
       html_dl: true

@@ -37,7 +37,8 @@ module Hyrax
         # Attach to :base, not the attribute, because the work and collection
         # forms render errors differently (raw messages vs. full_messages):
         # keying on the attribute would either double the field name
-        # ("Agents Agents ...") or print the raw key ("agents ..."). A :base
+        # ("Participants Participants ...") or print the raw key
+        # ("participants ..."). A :base
         # error renders verbatim everywhere, and the message names the compound.
         record.errors.add(:base, message_for(name, violation))
       end

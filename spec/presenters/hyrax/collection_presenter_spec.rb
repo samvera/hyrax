@@ -36,8 +36,8 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     it 'appends this collection\'s inline compound terms' do
-      allow(presenter).to receive(:compound_terms).and_return([:agents, :identifiers])
-      expect(presenter.terms).to end_with(:agents, :identifiers)
+      allow(presenter).to receive(:compound_terms).and_return([:participants, :identifiers])
+      expect(presenter.terms).to end_with(:participants, :identifiers)
     end
 
     context 'with compound metadata disabled' do
