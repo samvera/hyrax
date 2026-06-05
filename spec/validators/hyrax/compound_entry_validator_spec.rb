@@ -63,8 +63,12 @@ RSpec.describe Hyrax::CompoundEntryValidator do
     end
 
     it 'names the compound and the missing sub-field in the message' do
-      record.valid?
-      expect(record.errors[:base].first).to include('Relationships').and include('Relationship type')
+      # Assert the English wording under :en, so the test is independent of the
+      # suite's default locale (other locales need only the same key structure).
+      I18n.with_locale(:en) do
+        record.valid?
+        expect(record.errors[:base].first).to include('Relationships').and include('Relationship type')
+      end
     end
   end
 
@@ -73,8 +77,11 @@ RSpec.describe Hyrax::CompoundEntryValidator do
 
     context 'and empty' do
       it 'flags the empty compound by name' do
-        record.valid?
-        expect(record.errors[:base].first).to include('Relationships').and include('at least one entry')
+        # English wording; see the note above on locale.
+        I18n.with_locale(:en) do
+          record.valid?
+          expect(record.errors[:base].first).to include('Relationships').and include('at least one entry')
+        end
       end
     end
 

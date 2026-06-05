@@ -20,50 +20,23 @@ module Hyrax
         end
       end
 
-      # Resolve a reader for any compound on the document, derived from the
-      # stored data rather than a hardcoded list. The compound set is
-      # schema-driven (see {Hyrax::CompoundSchema}) and, in flexible mode,
-      # per-document — so it cannot be enumerated at class-load time. A name that
-      # has the `<name>_json_ss` blob the compound indexer writes is parsed back
-      # into its rows. This keeps the show page working for an application's own
-      # compounds with no per-app declaration.
-      def method_missing(name, *args, &block)
-        return super unless args.empty? && block.nil?
-        return super unless compound_attribute?(name)
+      # Defines a reader for each compound on the document (its `<name>_json_ss`
+      # blob, written by {Hyrax::Indexers::CompoundIndexer}). Uses a real method
+      # rather than #method_missing on purpose: a Blacklight/Solr document can
+      # answer to an arbitrary field name with a nil-returning accessor that
+      # would shadow #method_missing, so a real method is required to win.
+      def define_compound_readers!
+        keys.each do |key|
+          next unless key.to_s.end_with?('_json_ss')
 
-        Solr::CompoundEntries.coerce(self["#{name}_json_ss"])
+          name = key.to_s.delete_suffix('_json_ss')
+          next if singleton_class.method_defined?(name)
+
+          define_singleton_method(name) do
+            Solr::CompoundEntries.coerce(self["#{name}_json_ss"])
+          end
+        end
       end
-
-      def respond_to_missing?(name, include_private = false)
-        compound_attribute?(name) || super
-      end
-
-      # A name is a dynamic compound reader when either the document carries the
-      # `<name>_json_ss` blob the compound indexer writes (the fast path, no
-      # schema load), or the document's active schema declares it as a compound.
-      # The schema check is what lets a *declared but empty* compound still
-      # answer (returning `[]`), which callers such as the collection presenter's
-      # `terms_with_values` rely on. The schema-name set is memoized per document
-      # and guarded so resolving it never recurses back through method_missing.
-      def compound_attribute?(name)
-        return false if @resolving_compound_names
-        return true if key?("#{name}_json_ss")
-
-        schema_compound_names.include?(name.to_sym)
-      end
-      private :compound_attribute?
-
-      def schema_compound_names
-        return @schema_compound_names if defined?(@schema_compound_names)
-
-        @resolving_compound_names = true
-        @schema_compound_names = Hyrax::CompoundSchema.for_solr_document(self).compound_names
-      rescue StandardError
-        @schema_compound_names = []
-      ensure
-        @resolving_compound_names = false
-      end
-      private :schema_compound_names
 
       module Solr
         class Array
@@ -169,8 +142,13 @@ module Hyrax
         attribute :modified_date, Solr::Date, "system_modified_dtsi"
         attribute :embargo_release_date, Solr::Date, Hydra.config.permissions.embargo.release_date
         attribute :lease_expiration_date, Solr::Date, Hydra.config.permissions.lease.expiration_date
-        # Compound readers are resolved dynamically per document (see
-        # #method_missing); they are schema-driven, not enumerated here.
+
+        # Define compound readers per-instance so an application's own compounds
+        # render with no per-app declaration. See #define_compound_readers!.
+        def initialize(source_doc = {}, *args)
+          super
+          define_compound_readers!
+        end
       end
     end
   end
