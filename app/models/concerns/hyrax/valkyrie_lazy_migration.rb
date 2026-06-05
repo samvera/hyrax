@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'wings'
 
 module Hyrax
   ##
@@ -51,7 +50,7 @@ module Hyrax
     #     Hyrax::ValkyrieLazyMigration.migrating(self, from: MyWork)
     #   end
     def self.migrating(klass, from:, name_class: Hyrax::ValkyrieLazyMigration::ResourceName)
-      Wings::ModelRegistry.register(klass, from)
+      Wings::ModelRegistry.register(klass, from) if defined?(Wings::ModelRegistry)
       from.singleton_class.define_method(:migrating_from) { from }
       from.singleton_class.define_method(:migrating_to) { klass }
       klass.singleton_class.define_method(:migrating_from) { from }
