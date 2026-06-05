@@ -29,8 +29,9 @@ HYRAX_DISABLE_INCLUDE_METADATA=true
 
 ### Dassie Flexible
 export HYRAX_FLEXIBLE=true
-export HYRAX_FLEXIBLE_CLASSES=AdministrativeSetResource,CollectionResource,Hyrax::FileSet,GenericWorkResource,Monograph
+export HYRAX_FLEXIBLE_CLASSES=AdminSetResource,CollectionResource,Hyrax::FileSet,GenericWorkResource,Monograph
 export HYRAX_DISABLE_INCLUDE_METADATA=true
+export VALKYRIE_TRANSITION=true # this is needed to properly load Valkyrie models in Hyrax config and Bulkrax
 
 ## Documentation
 
