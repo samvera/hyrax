@@ -49,17 +49,18 @@ module Hyrax
                      :keyword, :license, :publisher, :date_created, :subject, :language, :identifier,
                      :based_near, :related_url].freeze
 
-    # @deprecated kept for backward compatibility; the standard terms only. Use
-    #   the instance {#terms} to include this collection's compound terms.
+    # The standard (non-compound) terms. Class-level so downstream apps can
+    # override the list (e.g. to remove a term); the instance {#terms} builds on
+    # this and appends the per-resource compound terms.
     def self.terms
       DEFAULT_TERMS.dup
     end
 
-    # This collection's displayed terms: the standard terms plus its inline
-    # compound terms, resolved from the backing document so it is correct in
-    # flexible mode.
+    # This collection's displayed terms: the class-level standard terms (honoring
+    # any downstream override) plus its inline compound terms, which are resolved
+    # from the backing document so they are correct in flexible mode.
     def terms
-      DEFAULT_TERMS + compound_terms
+      self.class.terms + compound_terms
     end
 
     def terms_with_values
