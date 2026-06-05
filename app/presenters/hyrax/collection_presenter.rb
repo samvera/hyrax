@@ -119,8 +119,17 @@ module Hyrax
       when :total_items
         total_items
       else
+        # A declared compound with no indexed `<name>_json_ss` blob has no reader
+        # defined on the document; treat it as empty rather than raising.
+        return compound_value(key) if compound_term?(key) && !solr_document.respond_to?(key)
         solr_document.send key
       end
+    end
+
+    # The rows for a declared-but-empty compound term, coerced from the absent
+    # blob exactly as the SolrDocument reader would (nil => []).
+    def compound_value(key)
+      Hyrax::SolrDocument::Metadata::Solr::CompoundEntries.coerce(solr_document["#{key}_json_ss"])
     end
 
     # @deprecated to be removed in 4.0.0; this feature was replaced with a
