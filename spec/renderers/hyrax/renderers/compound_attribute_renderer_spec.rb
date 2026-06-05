@@ -113,12 +113,12 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
       end
     end
 
-    context 'when the value is an internal work id' do
+    context 'when the value resolves to an indexed work' do
       let(:values) { [{ 'related_item' => 'work-123' }] }
       let(:renderer) { described_class.new(:relationships, values, label: 'Relationships', html_dl: true, subfields: subfields) }
 
       before do
-        allow(Hyrax::CompoundWorkResolver).to receive(:title_and_path)
+        allow(Hyrax::CompoundWorkResolver).to receive(:resolve)
           .with('work-123').and_return(['Linked Work', '/catalog/work-123'])
       end
 
@@ -126,6 +126,19 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
         markup = renderer.render_dl_row
         expect(markup).to include('href="/catalog/work-123"')
         expect(markup).to include('Linked Work')
+      end
+    end
+
+    context 'when the value is neither a URL nor a resolvable work' do
+      let(:values) { [{ 'related_item' => 'not-a-real-id' }] }
+      let(:renderer) { described_class.new(:relationships, values, label: 'Relationships', html_dl: true, subfields: subfields) }
+
+      before { allow(Hyrax::CompoundWorkResolver).to receive(:resolve).with('not-a-real-id').and_return(nil) }
+
+      it 'renders the value as plain text without a link' do
+        markup = renderer.render_dl_row
+        expect(markup).to include('not-a-real-id')
+        expect(markup).not_to include('<a href')
       end
     end
   end

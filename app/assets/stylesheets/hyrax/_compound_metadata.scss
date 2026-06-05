@@ -9,9 +9,10 @@
   display: block !important;
   flex-direction: column;
   border: 0 !important;
-  // Indent to align with scalar metadata values (their `ul.tabular` keeps the
-  // browser default ~40px list padding).
-  padding: 0 0 0 40px !important;
+  // Sit flush with the value column. No indent of our own: scalar values get
+  // theirs from a `ul.tabular` wrapper that apps and themes style differently,
+  // so a fixed pad here would misalign in some of them.
+  padding: 0 !important;
   max-width: 100%;
 
   // Force block flow on the entries/sub-fields; the label/value spans stay

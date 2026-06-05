@@ -22,13 +22,35 @@ module Hyrax
       [title_for(id), path_for(id)]
     end
 
-    def self.title_for(id)
-      doc = Hyrax::SolrService.query("{!field f=id}#{id}", fl: 'title_tesim', rows: 1).first
-      Array(doc&.fetch('title_tesim', nil)).first.presence || id.to_s
-    rescue StandardError => e
-      Hyrax.logger.debug("CompoundWorkResolver.title_for(#{id}): #{e.message}")
-      id.to_s
+    ##
+    # Resolve an internal work id to its display title and show path, but only
+    # when a matching work is actually indexed. Returns nil when nothing
+    # matches, so callers can render a bare, unlinked value rather than a broken
+    # link to a non-existent work.
+    #
+    # @param id [String]
+    # @return [Array(String, String), nil] `[title, path]`, or nil when unresolved
+    def self.resolve(id)
+      title = indexed_title_for(id)
+      return nil if title.nil?
+      [title, path_for(id)]
     end
+
+    def self.title_for(id)
+      indexed_title_for(id) || id.to_s
+    end
+
+    # The indexed title for a work id, or nil when no such work is indexed
+    # (distinguishes "resolved to a real work" from "no match").
+    def self.indexed_title_for(id)
+      doc = Hyrax::SolrService.query("{!field f=id}#{id}", fl: 'title_tesim', rows: 1).first
+      return nil if doc.nil?
+      Array(doc['title_tesim']).first.presence || id.to_s
+    rescue StandardError => e
+      Hyrax.logger.debug("CompoundWorkResolver.indexed_title_for(#{id}): #{e.message}")
+      nil
+    end
+    private_class_method :indexed_title_for
 
     # The model-agnostic Blacklight show route (`/catalog/:id`) links any
     # indexed work without knowing its class.

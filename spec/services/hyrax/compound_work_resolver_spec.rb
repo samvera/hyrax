@@ -42,4 +42,24 @@ RSpec.describe Hyrax::CompoundWorkResolver do
       expect(title).to eq('work-123')
     end
   end
+
+  describe '.resolve' do
+    let(:id) { 'work-123' }
+
+    it 'returns [title, path] when a matching work is indexed' do
+      allow(Hyrax::SolrService).to receive(:query)
+        .and_return([{ 'title_tesim' => ['Resolved Title'] }])
+      expect(described_class.resolve(id)).to eq(['Resolved Title', '/catalog/work-123'])
+    end
+
+    it 'returns nil when no work matches (so the caller renders plain text)' do
+      allow(Hyrax::SolrService).to receive(:query).and_return([])
+      expect(described_class.resolve(id)).to be_nil
+    end
+
+    it 'returns nil when the Solr lookup raises' do
+      allow(Hyrax::SolrService).to receive(:query).and_raise(StandardError)
+      expect(described_class.resolve(id)).to be_nil
+    end
+  end
 end

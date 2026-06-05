@@ -75,13 +75,14 @@ module Hyrax
         end
       end
 
+      # Link a URL or a resolvable work; render anything else as plain text so
+      # we never emit a broken link to a non-existent work.
       def work_or_url_markup(value)
-        if Hyrax::CompoundWorkResolver.url?(value)
-          auto_link(ERB::Util.h(value.to_s))
-        else
-          title, path = Hyrax::CompoundWorkResolver.title_and_path(value)
-          link_to(ERB::Util.h(title), path)
-        end
+        return auto_link(ERB::Util.h(value.to_s)) if Hyrax::CompoundWorkResolver.url?(value)
+
+        title, path = Hyrax::CompoundWorkResolver.resolve(value)
+        return ERB::Util.h(value.to_s) if title.nil?
+        link_to(ERB::Util.h(title), path)
       end
 
       def display_value(sub_field, value)

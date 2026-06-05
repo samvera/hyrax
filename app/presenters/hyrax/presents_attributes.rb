@@ -52,9 +52,12 @@ module Hyrax
     # controlled ids to their terms; nil if the resource class can't be
     # resolved (the renderer then renders raw values).
     def compound_subfields_for(field)
-      klass = solr_document.try(:hydra_model) if respond_to?(:solr_document)
-      return nil unless klass
-      Hyrax::CompoundSchema.for(klass).definition_for(field)&.fetch(:subfields, nil)
+      return nil unless respond_to?(:solr_document) && solr_document.respond_to?(:hydra_model)
+      # Resolve from the backing document, not the class: in flexible mode the
+      # class carries no compounds, so a class lookup would drop the sub-field
+      # specs and the renderer would fall back to raw (unlinked, untranslated)
+      # values.
+      Hyrax::CompoundSchema.for_solr_document(solr_document).definition_for(field)&.fetch(:subfields, nil)
     rescue StandardError => e
       Hyrax.logger.debug("compound_subfields_for(#{field}): #{e.message}")
       nil
