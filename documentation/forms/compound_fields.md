@@ -234,8 +234,10 @@ or override the samples.
 
 Because the show page renders from Solr (not the live resource), the indexer
 also stores each compound's ordered rows (limited to sub-fields with `display:`
-not false) as a single JSON field (`<compound>_json_ss`). The SolrDocument exposes a `<compound>` reader that
-parses it back into an array of hashes, and the generic
+not false) as a single JSON field (`<compound>_json_ss`). The SolrDocument
+exposes a `<compound>` reader for any compound that has this blob — resolved
+dynamically, so an application's own compounds work with no per-document
+declaration — that parses it back into an array of hashes, and the generic
 `Hyrax::Renderers::CompoundAttributeRenderer` (selected by `view: render_as:
 compound`) renders each entry's populated sub-fields as a small definition
 list. Works render compounds through the standard `attribute_to_html` /
