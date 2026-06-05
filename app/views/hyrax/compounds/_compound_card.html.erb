@@ -12,9 +12,8 @@
     <h2 class="card-title"><%= compound_field_label(field) %></h2>
   </div>
   <div class="card-body">
-    <dl class="work-show">
-      <%= presenter.attribute_to_html(field.to_sym, render_as: :compound, html_dl: true,
-                                      label: compound_field_label(field)) %>
-    </dl>
+    <%# value_only: the compound's label is already the card title above, so
+        render just the entries (no duplicate field label). %>
+    <%= presenter.attribute_to_html(field.to_sym, render_as: :compound, value_only: true) %>
   </div>
 </div>

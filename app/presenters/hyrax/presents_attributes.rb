@@ -13,6 +13,9 @@ module Hyrax
     # @option options [String] :label The default label for the field if no translation is found
     # @option options [TrueClass, FalseClass] :include_empty should we display a row if there are no values?
     # @option options [String] :work_type name of work type class (e.g., "GenericWork")
+    # @option options [TrueClass, FalseClass] :value_only render only the value
+    #   markup, without the field-label row — used by compound cards, which
+    #   already show the label as the card title.
     def attribute_to_html(field, options = {})
       unless respond_to?(field)
         Hyrax.logger.warn("#{self.class} attempted to render #{field}, but no method exists with that name.")
@@ -20,11 +23,14 @@ module Hyrax
       end
 
       options = options.merge(subfields: compound_subfields_for(field)) if options[:render_as].to_s == 'compound'
+      renderer = renderer_for(field, options).new(field, send(field), options)
 
-      if options[:html_dl]
-        renderer_for(field, options).new(field, send(field), options).render_dl_row
+      if options[:value_only] && renderer.respond_to?(:render_value)
+        renderer.render_value
+      elsif options[:html_dl]
+        renderer.render_dl_row
       else
-        renderer_for(field, options).new(field, send(field), options).render
+        renderer.render
       end
     end
 
