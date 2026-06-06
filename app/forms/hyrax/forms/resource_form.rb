@@ -64,7 +64,7 @@ module Hyrax
         end
       end
 
-      # Required-compound / required-sub-field validation. Wired through a
+      # Required-compound / required-sub-property validation. Wired through a
       # `validation { ... }` block (not a bare `validates_with`) because these
       # are Reform/Disposable forms — a bare `validates_with` does not hook into
       # Reform's `validate`, so it would never run. Record-level (no

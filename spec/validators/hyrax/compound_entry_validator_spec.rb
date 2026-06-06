@@ -11,12 +11,12 @@ RSpec.describe Hyrax::CompoundEntryValidator do
   let(:record) { record_class.new.tap { |r| r.relationships = entries } }
   let(:entries) { [] }
 
-  # A schema with one required-sub-field compound (`relationships`), optional
+  # A schema with one required-sub-property compound (`relationships`), optional
   # at the compound level.
   let(:definition) do
     { required: false,
-      subfields: { 'related_item' => { type: 'work_or_url', required: true },
-                   'relationship_type' => { type: 'controlled', required: true } } }
+      subproperties: { 'related_item' => { type: 'work_or_url', required: true },
+                       'relationship_type' => { type: 'controlled', required: true } } }
   end
   let(:schema) { instance_double(Hyrax::CompoundSchema, definitions: { relationships: definition }) }
 
@@ -54,7 +54,7 @@ RSpec.describe Hyrax::CompoundEntryValidator do
     end
   end
 
-  context 'with a row missing a required sub-field' do
+  context 'with a row missing a required sub-property' do
     let(:entries) { [{ 'related_item' => 'work-1' }] }
 
     it 'adds one base error' do
@@ -62,7 +62,7 @@ RSpec.describe Hyrax::CompoundEntryValidator do
       expect(record.errors[:base].size).to eq(1)
     end
 
-    it 'names the compound and the missing sub-field in the message' do
+    it 'names the compound and the missing sub-property in the message' do
       # Assert the English wording under :en, so the test is independent of the
       # suite's default locale (other locales need only the same key structure).
       I18n.with_locale(:en) do

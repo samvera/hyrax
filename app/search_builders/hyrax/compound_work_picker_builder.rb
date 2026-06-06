@@ -2,7 +2,7 @@
 
 module Hyrax
   ##
-  # Search builder for the compound `work_or_url` sub-field's work picker. Finds
+  # Search builder for the compound `work_or_url` sub-property's work picker. Finds
   # works the current user can read (it subclasses {Hyrax::SearchBuilder}, so
   # permission filtering is retained), matching any indexed query term OR a
   # partial/prefix title.

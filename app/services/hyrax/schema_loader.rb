@@ -162,7 +162,7 @@ module Hyrax
       #
       # Recognized values:
       #   - `id`, `uri`, `date_time` — Valkyrie type shortcuts.
-      #   - `hash` — for attributes whose entries carry multiple sub-fields
+      #   - `hash` — for attributes whose entries carry multiple sub-properties
       #     (e.g. redirects, with path / canonical / sequence). Use this
       #     instead of nesting a Valkyrie::Resource. See
       #     `documentation/redirects.md` for a worked example.

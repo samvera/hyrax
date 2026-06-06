@@ -5,7 +5,7 @@ A **Field Behavior** is a Ruby module mixed into `Hyrax::Forms::ResourceForm` (a
 Use a Field Behavior when you have a property that:
 
 - Is rendered through `accepts_nested_attributes_for` semantics (`<name>_attributes` payload from the form).
-- Persists in a shape the view can't render directly (a hash of sub-fields, a URI string the view wants as a `ControlledVocabulary` instance, a triple of values, etc.).
+- Persists in a shape the view can't render directly (a hash of sub-properties, a URI string the view wants as a `ControlledVocabulary` instance, a triple of values, etc.).
 - Needs the same wiring on every form subclass.
 
 Two examples ship with Hyrax:
@@ -15,8 +15,8 @@ Two examples ship with Hyrax:
 
 This document covers the contract a Field Behavior must satisfy, the decision points for a new behavior, and the worked examples.
 
-> **For new multi-sub-field compounds, prefer the generic, schema-driven path.**
-> A field whose entries are a hash of named sub-fields (each an open-entry
+> **For new multi-sub-property compounds, prefer the generic, schema-driven path.**
+> A field whose entries are a hash of named sub-properties (each an open-entry
 > string or a controlled-vocabulary lookup) can be declared entirely in the
 > schema YAML / m3 profile and rendered, populated, and indexed with no
 > per-field Ruby or ERB — see [`compound_fields.md`](compound_fields.md). The
@@ -138,12 +138,12 @@ When adding a Field Behavior, work through these:
 ### 1. What does each entry look like?
 
 - **Single value per entry** (URI string, scalar): see `BasedNearFieldBehavior`.
-- **Multiple sub-fields per entry** (path + is_display_url; or label + value + lang): see `RedirectsFieldBehavior`.
+- **Multiple sub-properties per entry** (path + is_display_url; or label + value + lang): see `RedirectsFieldBehavior`.
 
 ### 2. Persisted as what?
 
 - **Plain string / scalar** — fine for single-value entries.
-- **Plain hash** with string keys — for multi-field entries. Add the `hash` shortcut to your YAML schema (`type: hash, multiple: true`). Use this *instead* of nesting a Valkyrie::Resource subclass; nested resources round-trip badly through Postgres JSONB (sub-fields strip, parent fields leak).
+- **Plain hash** with string keys — for multi-field entries. Add the `hash` shortcut to your YAML schema (`type: hash, multiple: true`). Use this *instead* of nesting a Valkyrie::Resource subclass; nested resources round-trip badly through Postgres JSONB (sub-properties strip, parent fields leak).
 
 ### 3. Does the view need a presenter?
 
@@ -248,7 +248,7 @@ The populator folds a sibling `redirects_display_url_index` scalar (a single rad
 
 - **Persisted shape:** array of plain hashes (`'path'`, `'is_display_url'`). Declared with `type: hash, multiple: true` in `config/metadata/redirects.yaml`.
 - **View-side shape:** array of `Hyrax::Redirect` presenters, exposing `.path` and `.is_display_url`. The form partial wraps each persisted hash inline rather than via a prepopulator.
-- **Diff from BasedNear:** entries carry multiple sub-fields, so the persisted shape is a hash rather than a string. The populator normalizes paths up front (canonical form lives in storage). The behavior is feature-gated — every callback consults `Hyrax.config.redirects_active?`.
+- **Diff from BasedNear:** entries carry multiple sub-properties, so the persisted shape is a hash rather than a string. The populator normalizes paths up front (canonical form lives in storage). The behavior is feature-gated — every callback consults `Hyrax.config.redirects_active?`.
 
 ## Wiring on `ResourceForm`
 

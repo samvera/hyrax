@@ -47,16 +47,16 @@ module Hyrax
     private
 
     # Full attribute config per field — carries keys beyond `form:` (e.g.
-    # `subfields:`), unlike form_field_definitions.
+    # `subproperties:`), unlike form_field_definitions.
     def attribute_configs
       @definition_loader.attributes_for(schema: name, version:, contexts:)
     end
 
-    # @return [Boolean] whether the named field declares `subfields:`.
+    # @return [Boolean] whether the named field declares `subproperties:`.
     def compound_field?(configs, field_name)
       type = configs[field_name.to_sym] || configs[field_name.to_s]
       meta = type.respond_to?(:meta) ? type.meta : {}
-      meta.with_indifferent_access['subfields'].present?
+      meta.with_indifferent_access['subproperties'].present?
     rescue StandardError
       false
     end
@@ -70,7 +70,7 @@ module Hyrax
         descendant.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
         is_compound = compound_field?(configs, field_name)
         # A compound's requiredness is enforced by Hyrax::CompoundEntryValidator
-        # (which understands per-row sub-field rules); a plain `presence` check
+        # (which understands per-row sub-property rules); a plain `presence` check
         # on the array would both duplicate that and pass on a present-but-empty
         # row. So only scalar fields get the generic presence validator.
         descendant.validates field_name.to_sym, presence: true if options.fetch(:required, false) && !is_compound

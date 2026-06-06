@@ -10,7 +10,7 @@ RSpec.describe Hyrax::CompoundSchema do
       attribute :title, Valkyrie::Types::Array.of(Valkyrie::Types::String)
       attribute :contributors,
                 Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
-                  subfields: {
+                  subproperties: {
                     'given_name' => { 'type' => 'string', 'index_keys' => %w[contributors_given_name_sim contributors_given_name_tesim] },
                     'family_name' => { 'type' => 'string', 'index_keys' => %w[contributors_family_name_tesim] },
                     'role_label' => { 'type' => 'controlled', 'authority' => 'contributor_role', 'display' => false }
@@ -22,21 +22,21 @@ RSpec.describe Hyrax::CompoundSchema do
                 )
       attribute :identifiers,
                 Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
-                  subfields: {
+                  subproperties: {
                     'value' => { 'type' => 'string' },
                     'identifier_type' => { 'type' => 'controlled', 'authority' => 'identifier_type' }
                   }
                 )
       attribute :agent,
                 Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
-                  subfields: {
+                  subproperties: {
                     'agent_name' => { 'type' => 'string' },
                     'agent_role' => { 'type' => 'controlled', 'values' => ['Author', { 'id' => 'ed', 'label' => 'Editor' }] }
                   }
                 )
       attribute :relationships,
                 Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
-                  subfields: {
+                  subproperties: {
                     'related_item' => { 'type' => 'work_or_url' },
                     'relationship_type' => { 'type' => 'controlled', 'authority' => 'relationship_type' }
                   },
@@ -44,11 +44,11 @@ RSpec.describe Hyrax::CompoundSchema do
                   view: { 'display' => 'card' }
                 )
       # Required at the compound level (non-flexible `required: true`) with two
-      # required sub-fields and one optional.
+      # required sub-properties and one optional.
       attribute :required_compound,
                 Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
                   required: true,
-                  subfields: {
+                  subproperties: {
                     'item' => { 'type' => 'string', 'required' => true },
                     'kind' => { 'type' => 'string', 'required' => true },
                     'note' => { 'type' => 'string' }
@@ -58,7 +58,7 @@ RSpec.describe Hyrax::CompoundSchema do
       attribute :cardinality_compound,
                 Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
                   cardinality: { 'minimum' => 1 },
-                  subfields: { 'value' => { 'type' => 'string' } }
+                  subproperties: { 'value' => { 'type' => 'string' } }
                 )
     end
   end
@@ -66,7 +66,7 @@ RSpec.describe Hyrax::CompoundSchema do
   subject(:schema) { described_class.for(resource_class) }
 
   describe '#compound_names' do
-    it 'returns only the attributes that declare subfields' do
+    it 'returns only the attributes that declare subproperties' do
       expect(schema.compound_names).to contain_exactly(:contributors, :identifiers, :agent, :relationships,
                                                        :required_compound, :cardinality_compound)
     end
@@ -140,25 +140,25 @@ RSpec.describe Hyrax::CompoundSchema do
       end
     end
 
-    describe '#required_subfield_keys' do
-      it 'returns the sub-fields declared required: true' do
-        expect(schema.required_subfield_keys(:required_compound)).to eq(%w[item kind])
+    describe '#required_subproperty_keys' do
+      it 'returns the sub-properties declared required: true' do
+        expect(schema.required_subproperty_keys(:required_compound)).to eq(%w[item kind])
       end
 
-      it 'is empty when no sub-field is required' do
-        expect(schema.required_subfield_keys(:relationships)).to eq([])
+      it 'is empty when no sub-property is required' do
+        expect(schema.required_subproperty_keys(:relationships)).to eq([])
       end
 
       it 'is empty for a non-compound' do
-        expect(schema.required_subfield_keys(:title)).to eq([])
+        expect(schema.required_subproperty_keys(:title)).to eq([])
       end
     end
 
-    it 'records required on the definition (subfield + compound level)' do
+    it 'records required on the definition (subproperty + compound level)' do
       definition = schema.definition_for(:required_compound)
       expect(definition[:required]).to be true
-      expect(definition[:subfields]['item'][:required]).to be true
-      expect(definition[:subfields]['note'][:required]).to be false
+      expect(definition[:subproperties]['item'][:required]).to be true
+      expect(definition[:subproperties]['note'][:required]).to be false
     end
   end
 
@@ -173,42 +173,42 @@ RSpec.describe Hyrax::CompoundSchema do
     end
   end
 
-  describe '#subfield_keys' do
-    it 'returns the ordered sub-field keys' do
-      expect(schema.subfield_keys(:contributors)).to eq(%w[given_name family_name role_label])
+  describe '#subproperty_keys' do
+    it 'returns the ordered sub-property keys' do
+      expect(schema.subproperty_keys(:contributors)).to eq(%w[given_name family_name role_label])
     end
 
     it 'is empty for a non-compound' do
-      expect(schema.subfield_keys(:title)).to eq([])
+      expect(schema.subproperty_keys(:title)).to eq([])
     end
   end
 
   describe '#definition_for' do
-    it 'normalizes subfields with type, authority, index_keys and display' do
+    it 'normalizes subproperties with type, authority, index_keys and display' do
       definition = schema.definition_for(:contributors)
-      expect(definition[:subfields]['role_label'])
+      expect(definition[:subproperties]['role_label'])
         .to eq(type: 'controlled', authority: 'contributor_role', values: nil, index_keys: [], display: false, required: false)
-      expect(definition[:subfields]['given_name'])
+      expect(definition[:subproperties]['given_name'])
         .to eq(type: 'string', authority: nil, values: nil,
                index_keys: %w[contributors_given_name_sim contributors_given_name_tesim], display: true, required: false)
     end
 
-    it 'reads per-sub-field index_keys (literal Solr field names)' do
-      expect(schema.definition_for(:contributors)[:subfields]['family_name'][:index_keys])
+    it 'reads per-sub-property index_keys (literal Solr field names)' do
+      expect(schema.definition_for(:contributors)[:subproperties]['family_name'][:index_keys])
         .to eq(%w[contributors_family_name_tesim])
     end
 
-    it 'defaults a sub-field with no index declaration to no index_keys' do
-      expect(schema.definition_for(:agent)[:subfields]['agent_name'][:index_keys]).to eq([])
+    it 'defaults a sub-property with no index declaration to no index_keys' do
+      expect(schema.definition_for(:agent)[:subproperties]['agent_name'][:index_keys]).to eq([])
     end
 
     it 'defaults display to true and honors display: false' do
-      expect(schema.definition_for(:contributors)[:subfields]['given_name'][:display]).to be true
-      expect(schema.definition_for(:contributors)[:subfields]['role_label'][:display]).to be false
+      expect(schema.definition_for(:contributors)[:subproperties]['given_name'][:display]).to be true
+      expect(schema.definition_for(:contributors)[:subproperties]['role_label'][:display]).to be false
     end
 
     it 'normalizes an inline controlled-vocabulary values list to [label, id] pairs' do
-      values = schema.definition_for(:agent)[:subfields]['agent_role'][:values]
+      values = schema.definition_for(:agent)[:subproperties]['agent_role'][:values]
       expect(values).to eq([%w[Author Author], %w[Editor ed]])
     end
 

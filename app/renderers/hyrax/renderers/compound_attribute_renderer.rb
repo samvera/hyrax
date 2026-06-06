@@ -5,9 +5,9 @@ module Hyrax
     ##
     # Renders a compound metadata attribute on a show page (selected via
     # `view: { render_as: compound }`). Each value is one entry — a hash of
-    # sub-fields produced by the SolrDocument `compound_attribute` reader — and
-    # renders as a block of its populated sub-fields. Sub-field labels come from
-    # the `hyrax.compound_fields.<compound>.<subfield>` i18n keys.
+    # sub-properties produced by the SolrDocument `compound_attribute` reader —
+    # and renders as a block of its populated sub-properties. Sub-property labels
+    # come from the `hyrax.compound_fields.<compound>.<subproperty>` i18n keys.
     class CompoundAttributeRenderer < AttributeRenderer
       def render
         return '' if blank_values? && !options[:include_empty]
@@ -51,33 +51,33 @@ module Hyrax
         pairs = entry_to_pairs(entry)
         return '' if pairs.empty?
 
-        items = pairs.map { |sub_field, value| subfield_markup(sub_field, value) }.join
+        items = pairs.map { |sub_property, value| subproperty_markup(sub_property, value) }.join
         %(<div class="hyrax-compound-entry">#{items}</div>)
       end
 
-      def subfield_markup(sub_field, value)
-        label_html = ERB::Util.h(sub_field_label(sub_field))
-        %(<div class="hyrax-compound-subfield">) +
-          %(<span class="hyrax-compound-subfield-label">#{label_html}:</span> ) +
-          %(<span class="hyrax-compound-subfield-value">#{value_markup(sub_field, value)}</span>) +
+      def subproperty_markup(sub_property, value)
+        label_html = ERB::Util.h(sub_property_label(sub_property))
+        %(<div class="hyrax-compound-subproperty">) +
+          %(<span class="hyrax-compound-subproperty-label">#{label_html}:</span> ) +
+          %(<span class="hyrax-compound-subproperty-value">#{value_markup(sub_property, value)}</span>) +
           %(</div>)
       end
 
-      # Display markup for one sub-field value, by sub-field type: `url` and
+      # Display markup for one sub-property value, by sub-property type: `url` and
       # `work_or_url` are linked; otherwise escaped text with controlled ids
       # translated to their term.
-      def value_markup(sub_field, value)
-        return ERB::Util.h(display_value(sub_field, value)) if value.blank?
+      def value_markup(sub_property, value)
+        return ERB::Util.h(display_value(sub_property, value)) if value.blank?
 
-        case subfield_spec(sub_field)&.dig(:type).to_s
+        case subproperty_spec(sub_property)&.dig(:type).to_s
         when 'url'
           auto_link(ERB::Util.h(value.to_s))
         when 'work_or_url'
           work_or_url_markup(value)
         when 'controlled'
-          controlled_markup(sub_field, value)
+          controlled_markup(sub_property, value)
         else
-          ERB::Util.h(display_value(sub_field, value))
+          ERB::Util.h(display_value(sub_property, value))
         end
       end
 
@@ -85,8 +85,8 @@ module Hyrax
       # stored value is itself a linkable URI (e.g. a rights-statement or license
       # URI), link the term to that URI — mirroring the ordinary rights/license
       # renderer. Non-URI controlled values (e.g. inline option ids) stay plain.
-      def controlled_markup(sub_field, value)
-        label = display_value(sub_field, value)
+      def controlled_markup(sub_property, value)
+        label = display_value(sub_property, value)
         if Hyrax::AuthorityRenderingHelper.linkable_uri?(value)
           %(<a href="#{ERB::Util.h(value)}" target="_blank" rel="noopener noreferrer">#{ERB::Util.h(label)}</a>).html_safe
         else
@@ -104,19 +104,19 @@ module Hyrax
         link_to(ERB::Util.h(title), path)
       end
 
-      def display_value(sub_field, value)
-        Hyrax::CompoundSubfieldLabeler.label_for(subfield_spec(sub_field), value)
+      def display_value(sub_property, value)
+        Hyrax::CompoundSubpropertyLabeler.label_for(subproperty_spec(sub_property), value)
       end
 
-      # The normalized sub-field spec, supplied by the caller via
-      # `options[:subfields]`.
-      def subfield_spec(sub_field)
-        specs = options[:subfields]
+      # The normalized sub-property spec, supplied by the caller via
+      # `options[:subproperties]`.
+      def subproperty_spec(sub_property)
+        specs = options[:subproperties]
         return nil unless specs.is_a?(Hash)
-        specs[sub_field] || specs[sub_field.to_sym]
+        specs[sub_property] || specs[sub_property.to_sym]
       end
 
-      # Populated [sub_field, value] pairs for one entry; blanks dropped.
+      # Populated [sub_property, value] pairs for one entry; blanks dropped.
       def entry_to_pairs(entry)
         return [] unless entry.respond_to?(:each_pair) || entry.is_a?(::Hash)
         entry.to_h.each_with_object([]) do |(key, value), memo|
@@ -125,8 +125,8 @@ module Hyrax
         end
       end
 
-      def sub_field_label(sub_field)
-        I18n.t("hyrax.compound_fields.#{field}.#{sub_field}", default: sub_field.to_s.humanize)
+      def sub_property_label(sub_property)
+        I18n.t("hyrax.compound_fields.#{field}.#{sub_property}", default: sub_property.to_s.humanize)
       end
     end
   end

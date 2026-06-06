@@ -102,10 +102,10 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
     end
   end
 
-  describe 'required-subfield validation blocks save' do
+  describe 'required-subproperty validation blocks save' do
     # Exercises the real form + Hyrax::CompoundEntryValidator end to end against
     # the *shipped* compound schema (no stub). The shipped samples require
-    # sub-fields within a row (e.g. participants needs participant_name + participant_role,
+    # sub-properties within a row (e.g. participants needs participant_name + participant_role,
     # relationships needs related_item + relationship_type) but none is required
     # at the compound level, so an empty compound is valid. Asserting through the
     # real schema is what catches a validator that reads the form wrapper instead
@@ -123,22 +123,22 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
       expect(base_errors(form)).to be_empty
     end
 
-    it 'flags a participants row that omits a required sub-field' do
+    it 'flags a participants row that omits a required sub-property' do
       form.validate('participants_attributes' => { '0' => { 'participant_role' => 'Author' } })
       expect(base_errors(form)).to include(a_string_including('Participants'))
     end
 
-    it 'flags a relationships row that omits a required sub-field' do
+    it 'flags a relationships row that omits a required sub-property' do
       form.validate('relationships_attributes' => { '0' => { 'relationship_type' => 'References' } })
       expect(base_errors(form)).to include(a_string_including('Relationships'))
     end
 
-    it 'does not flag participants when its required sub-fields are filled' do
+    it 'does not flag participants when its required sub-properties are filled' do
       form.validate('participants_attributes' => { '0' => { 'participant_name' => 'Ada', 'participant_role' => 'Author' } })
       expect(base_errors(form)).not_to include(a_string_including('Participants'))
     end
 
-    it 'never flags `compound_rights` (no required sub-fields)' do
+    it 'never flags `compound_rights` (no required sub-properties)' do
       form.validate('participants_attributes' => { '0' => { 'participant_name' => 'Ada', 'participant_role' => 'Author' } })
       expect(base_errors(form)).not_to include(a_string_including('Rights'))
     end

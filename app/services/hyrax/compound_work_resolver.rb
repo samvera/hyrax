@@ -4,7 +4,7 @@ module Hyrax
   ##
   # @api public
   #
-  # Helpers for the `work_or_url` compound sub-field, whose stored value is
+  # Helpers for the `work_or_url` compound sub-property, whose stored value is
   # either an external URL or an internal work id. Distinguishes the two and
   # resolves an internal work id to a display title (from Solr) and a show path.
   class CompoundWorkResolver

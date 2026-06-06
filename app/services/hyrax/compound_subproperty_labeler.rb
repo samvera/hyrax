@@ -4,14 +4,14 @@ module Hyrax
   ##
   # @api public
   #
-  # Resolves a `controlled` compound sub-field's stored id to its display term
-  # (via inline `values:` or a QA `authority:`). Non-controlled sub-fields and
+  # Resolves a `controlled` compound sub-property's stored id to its display term
+  # (via inline `values:` or a QA `authority:`). Non-controlled sub-properties and
   # ids with no matching term fall back to the value itself.
-  class CompoundSubfieldLabeler
+  class CompoundSubpropertyLabeler
     ##
-    # @param spec [Hash, nil] the normalized sub-field spec
+    # @param spec [Hash, nil] the normalized sub-property spec
     #   (`{ type:, authority:, values: }`) from {Hyrax::CompoundSchema}
-    # @param value [Object] the stored value (id for controlled sub-fields)
+    # @param value [Object] the stored value (id for controlled sub-properties)
     #
     # @return [String] the term to display
     def self.label_for(spec, value)
@@ -35,7 +35,7 @@ module Hyrax
     def self.label_from_authority(authority_name, value)
       Hyrax::TolerantSelectService.new(authority_name).label(value.to_s) { value.to_s }
     rescue StandardError => e
-      Hyrax.logger.debug("CompoundSubfieldLabeler: #{authority_name}: #{e.message}")
+      Hyrax.logger.debug("CompoundSubpropertyLabeler: #{authority_name}: #{e.message}")
       value.to_s
     end
     private_class_method :label_from_authority

@@ -1,46 +1,46 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
-  describe '#compound_subfield_options' do
+  describe '#compound_subproperty_options' do
     let(:spec) { { type: 'controlled', authority: nil, values: [%w[Author Author], %w[Editor ed]] } }
 
     it 'returns the inline values list' do
-      expect(helper.compound_subfield_options(spec)).to eq([%w[Author Author], %w[Editor ed]])
+      expect(helper.compound_subproperty_options(spec)).to eq([%w[Author Author], %w[Editor ed]])
     end
 
     it 'leaves the list unchanged when the current value is already offered' do
-      expect(helper.compound_subfield_options(spec, 'ed')).to eq([%w[Author Author], %w[Editor ed]])
+      expect(helper.compound_subproperty_options(spec, 'ed')).to eq([%w[Author Author], %w[Editor ed]])
     end
 
     it 'appends a stored value that is not among the offered options' do
-      expect(helper.compound_subfield_options(spec, 'Legacy'))
+      expect(helper.compound_subproperty_options(spec, 'Legacy'))
         .to eq([%w[Author Author], %w[Editor ed], %w[Legacy Legacy]])
     end
 
-    it 'returns an empty list for a controlled sub-field with neither values nor authority' do
-      expect(helper.compound_subfield_options({ type: 'controlled', authority: nil, values: nil })).to eq([])
+    it 'returns an empty list for a controlled sub-property with neither values nor authority' do
+      expect(helper.compound_subproperty_options({ type: 'controlled', authority: nil, values: nil })).to eq([])
     end
   end
 
-  describe '#compound_subfield_forced?' do
+  describe '#compound_subproperty_forced?' do
     let(:spec) { { type: 'controlled', authority: nil, values: [%w[Author Author]] } }
 
     it 'is false when the value is blank' do
-      expect(helper.compound_subfield_forced?(spec, '')).to be false
+      expect(helper.compound_subproperty_forced?(spec, '')).to be false
     end
 
     it 'is false when the value is among the offered options' do
-      expect(helper.compound_subfield_forced?(spec, 'Author')).to be false
+      expect(helper.compound_subproperty_forced?(spec, 'Author')).to be false
     end
 
     it 'is true when the value is not among the offered options' do
-      expect(helper.compound_subfield_forced?(spec, 'Legacy')).to be true
+      expect(helper.compound_subproperty_forced?(spec, 'Legacy')).to be true
     end
   end
 
-  describe '#compound_subfield_label' do
-    it 'falls back to a humanized sub-field key when no translation exists' do
-      expect(helper.compound_subfield_label(:nonexistent_compound, :some_field)).to eq('Some field')
+  describe '#compound_subproperty_label' do
+    it 'falls back to a humanized sub-property key when no translation exists' do
+      expect(helper.compound_subproperty_label(:nonexistent_compound, :some_field)).to eq('Some field')
     end
   end
 

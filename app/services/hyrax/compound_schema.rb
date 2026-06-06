@@ -5,9 +5,10 @@ module Hyrax
   # @api public
   #
   # Reads the compound metadata declarations off a resource's schema. A compound
-  # is a `type: hash, multiple: true` attribute carrying a `subfields:` map; the
-  # declaration drives the generic form, indexer, and renderer so a hierarchical
-  # field can be defined in YAML alone. See documentation/forms/compound_fields.md.
+  # is a `type: hash, multiple: true` attribute carrying a `subproperties:` map;
+  # the declaration drives the generic form, indexer, and renderer so a
+  # hierarchical field can be defined in YAML alone. See
+  # documentation/forms/compound_fields.md.
   #
   # Declarations are read from each attribute's Dry type `meta`, which both
   # schema loaders populate identically, so the result is the same in both flex
@@ -86,7 +87,7 @@ module Hyrax
 
     ##
     # @return [Boolean] whether the given attribute is a compound (declares
-    #   `subfields:`)
+    #   `subproperties:`)
     def compound?(attribute_name)
       definitions.key?(attribute_name.to_sym)
     end
@@ -122,8 +123,8 @@ module Hyrax
     # @param [#to_sym] attribute_name
     #
     # @return [Hash{Symbol => Object}, nil] the compound's declaration:
-    #   `{ subfields:, groups:, index_subfields: }`, or nil when the attribute
-    #   is not a compound.
+    #   `{ subproperties:, groups: }`, or nil when the attribute is not a
+    #   compound.
     def definition_for(attribute_name)
       definitions[attribute_name.to_sym]
     end
@@ -131,12 +132,12 @@ module Hyrax
     ##
     # @param [#to_sym] attribute_name
     #
-    # @return [Array<String>] the ordered sub-field keys declared for the
+    # @return [Array<String>] the ordered sub-property keys declared for the
     #   compound (empty when not a compound).
-    def subfield_keys(attribute_name)
+    def subproperty_keys(attribute_name)
       definition = definition_for(attribute_name)
       return [] unless definition
-      definition[:subfields].keys
+      definition[:subproperties].keys
     end
 
     ##
@@ -147,12 +148,12 @@ module Hyrax
     end
 
     ##
-    # @return [Array<String>] the sub-field keys declared `required: true` for
+    # @return [Array<String>] the sub-property keys declared `required: true` for
     #   the compound (each must be filled in every populated row).
-    def required_subfield_keys(attribute_name)
+    def required_subproperty_keys(attribute_name)
       definition = definition_for(attribute_name)
       return [] unless definition
-      definition[:subfields].select { |_key, spec| spec[:required] }.keys
+      definition[:subproperties].select { |_key, spec| spec[:required] }.keys
     end
 
     ##
@@ -170,10 +171,10 @@ module Hyrax
           next if meta.nil? || memo.key?(name)
 
           config = meta.with_indifferent_access
-          subfields = config['subfields']
-          next if subfields.blank?
+          subproperties = config['subproperties']
+          next if subproperties.blank?
 
-          memo[name] = normalize(config, subfields)
+          memo[name] = normalize(config, subproperties)
         end
       end
     end
@@ -193,14 +194,14 @@ module Hyrax
 
     # Normalizes the raw declaration into the symbol-keyed shape the form,
     # indexer, and renderer consume. See documentation/forms/compound_fields.md
-    # for the meaning of each sub-field key.
-    def normalize(config, subfields)
-      sub = subfields.each_with_object({}) { |(key, opts), memo| memo[key.to_s] = normalize_subfield(opts) }
+    # for the meaning of each sub-property key.
+    def normalize(config, subproperties)
+      sub = subproperties.each_with_object({}) { |(key, opts), memo| memo[key.to_s] = normalize_subproperty(opts) }
 
       view = config['view']
       display_mode = view.is_a?(Hash) && view['display'].to_s == 'card' ? :card : :inline
 
-      { subfields: sub,
+      { subproperties: sub,
         groups: normalize_groups(config['groups'], sub.keys),
         display_mode: display_mode,
         required: compound_required?(config),
@@ -215,7 +216,7 @@ module Hyrax
       raw.is_a?(Hash) ? raw.with_indifferent_access : { default: raw.to_s }.with_indifferent_access
     end
 
-    def normalize_subfield(opts)
+    def normalize_subproperty(opts)
       opts = (opts.is_a?(Hash) ? opts : {}).with_indifferent_access
       { type: (opts['type'] || 'string').to_s,
         authority: opts['authority']&.to_s,

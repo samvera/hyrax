@@ -2,7 +2,7 @@
 
 module Qa::Authorities
   ##
-  # Autocomplete authority for the compound `work_or_url` sub-field's work
+  # Autocomplete authority for the compound `work_or_url` sub-property's work
   # picker, mounted at `/authorities/search/compound_works`. Returns readable
   # works matched by {Hyrax::CompoundWorkPickerBuilder}.
   class CompoundWorks < Qa::Authorities::Base

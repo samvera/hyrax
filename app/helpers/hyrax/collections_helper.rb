@@ -49,7 +49,7 @@ module Hyrax
       if collection.respond_to?(:compound_term?) && collection.compound_term?(field)
         definition = compound_schema_for(collection).definition_for(field)
         return Hyrax::Renderers::CompoundAttributeRenderer
-               .new(field, collection[field], subfields: definition&.fetch(:subfields, nil))
+               .new(field, collection[field], subproperties: definition&.fetch(:subproperties, nil))
                .render_value
       end
 

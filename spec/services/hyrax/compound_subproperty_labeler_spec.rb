@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::CompoundSubfieldLabeler do
+RSpec.describe Hyrax::CompoundSubpropertyLabeler do
   describe '.label_for' do
-    it 'returns the value unchanged for a non-controlled sub-field' do
+    it 'returns the value unchanged for a non-controlled sub-property' do
       spec = { type: 'string', authority: nil, values: nil }
       expect(described_class.label_for(spec, 'plain text')).to eq('plain text')
     end

@@ -9,7 +9,7 @@ RSpec.describe Hyrax::CompoundNormalization do
 
       attribute :contributors,
                 Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
-                  subfields: { 'given_name' => { 'type' => 'string' } }
+                  subproperties: { 'given_name' => { 'type' => 'string' } }
                 )
 
       include Hyrax::CompoundNormalization

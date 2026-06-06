@@ -9,7 +9,7 @@ RSpec.describe Hyrax::CompoundFieldBehavior do
 
       attribute :contributors,
                 Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
-                  subfields: {
+                  subproperties: {
                     'given_name' => { 'type' => 'string' },
                     'family_name' => { 'type' => 'string' }
                   }
@@ -55,7 +55,7 @@ RSpec.describe Hyrax::CompoundFieldBehavior do
   subject(:form) { form_class.new(model) }
 
   describe '#compound_attributes_populator' do
-    it 'builds plain string-keyed hashes with only declared sub-fields' do
+    it 'builds plain string-keyed hashes with only declared sub-properties' do
       fragment = {
         '0' => { 'given_name' => 'Ada', 'family_name' => 'Lovelace', 'unknown' => 'drop me' },
         '1' => { 'given_name' => 'Alan', 'family_name' => 'Turing' }

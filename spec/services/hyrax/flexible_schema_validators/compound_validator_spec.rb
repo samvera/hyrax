@@ -15,7 +15,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
           'properties' => {
             'agent' => {
               'type' => 'hash',
-              'subfields' => {
+              'subproperties' => {
                 'title' => { 'type' => 'string' },
                 'agent_name' => { 'type' => 'string', 'indexing' => %w[agent_name_tesim] },
                 'agent_role' => { 'type' => 'controlled', 'values' => %w[Author Editor], 'indexing' => %w[agent_role_sim] }
@@ -31,13 +31,13 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
       end
     end
 
-    context 'with a controlled sub-field that uses an authority instead of inline values' do
+    context 'with a controlled sub-property that uses an authority instead of inline values' do
       let(:profile) do
         {
           'properties' => {
             'agent' => {
               'type' => 'hash',
-              'subfields' => { 'role' => { 'type' => 'controlled', 'authority' => 'agent_role' } }
+              'subproperties' => { 'role' => { 'type' => 'controlled', 'authority' => 'agent_role' } }
             }
           }
         }
@@ -49,13 +49,13 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
       end
     end
 
-    context 'with a controlled sub-field that declares neither authority nor values' do
+    context 'with a controlled sub-property that declares neither authority nor values' do
       let(:profile) do
         {
           'properties' => {
             'agent' => {
               'type' => 'hash',
-              'subfields' => { 'role' => { 'type' => 'controlled' } }
+              'subproperties' => { 'role' => { 'type' => 'controlled' } }
             }
           }
         }
@@ -63,7 +63,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
 
       it 'records an error' do
         validator.validate!
-        expect(errors).to include(t('controlled_without_source', property: 'agent', subfield: 'role'))
+        expect(errors).to include(t('controlled_without_source', property: 'agent', subproperty: 'role'))
       end
     end
 
@@ -74,41 +74,41 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
             'agent' => {
               'type' => 'hash',
               'indexing' => %w[agent_tesim],
-              'subfields' => { 'agent_name' => { 'type' => 'string' } }
+              'subproperties' => { 'agent_name' => { 'type' => 'string' } }
             }
           }
         }
       end
 
-      it 'records an error that indexing belongs on sub-fields' do
+      it 'records an error that indexing belongs on sub-properties' do
         validator.validate!
         expect(errors).to include(t('top_level_indexing', property: 'agent'))
       end
     end
 
-    context 'when subfields is not a mapping' do
+    context 'when subproperties is not a mapping' do
       let(:profile) do
-        { 'properties' => { 'agent' => { 'type' => 'hash', 'subfields' => %w[a b] } } }
+        { 'properties' => { 'agent' => { 'type' => 'hash', 'subproperties' => %w[a b] } } }
       end
 
       it 'records an error' do
         validator.validate!
-        expect(errors).to include(t('subfields_not_hash', property: 'agent'))
+        expect(errors).to include(t('subproperties_not_hash', property: 'agent'))
       end
     end
 
-    context 'when a sub-field config is not a mapping' do
+    context 'when a sub-property config is not a mapping' do
       let(:profile) do
-        { 'properties' => { 'agent' => { 'type' => 'hash', 'subfields' => { 'name' => 'string' } } } }
+        { 'properties' => { 'agent' => { 'type' => 'hash', 'subproperties' => { 'name' => 'string' } } } }
       end
 
       it 'records an error' do
         validator.validate!
-        expect(errors).to include(t('subfield_not_hash', property: 'agent', subfield: 'name', actual: 'String'))
+        expect(errors).to include(t('subproperty_not_hash', property: 'agent', subproperty: 'name', actual: 'String'))
       end
     end
 
-    context 'with a hash property that is not a compound (no subfields, e.g. redirects)' do
+    context 'with a hash property that is not a compound (no subproperties, e.g. redirects)' do
       let(:profile) do
         { 'properties' => { 'redirects' => { 'type' => 'hash' } } }
       end

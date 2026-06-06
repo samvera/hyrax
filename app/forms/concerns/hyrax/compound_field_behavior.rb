@@ -53,13 +53,13 @@ module Hyrax
     end
 
     # One populator serves every compound (Reform passes the property name as
-    # `as:`). Builds the replacement array of plain hashes — declared sub-field
-    # keys only, dropping `_destroy` and all-blank rows.
+    # `as:`). Builds the replacement array of plain hashes — declared
+    # sub-property keys only, dropping `_destroy` and all-blank rows.
     def compound_attributes_populator(fragment:, as:, **_options)
       name = as.to_s.delete_suffix('_attributes')
       return unless respond_to?(name)
 
-      allowed = Hyrax::CompoundSchema.for(model).subfield_keys(name)
+      allowed = Hyrax::CompoundSchema.for(model).subproperty_keys(name)
       public_send(:"#{name}=", build_compound_rows(fragment, allowed))
     end
 
@@ -75,7 +75,7 @@ module Hyrax
       fragment.respond_to?(:to_unsafe_h) ? fragment.to_unsafe_h : fragment.to_h
     end
 
-    # Returns nil for a row marked for destruction or whose declared sub-fields
+    # Returns nil for a row marked for destruction or whose declared sub-properties
     # are all blank, otherwise the persisted hash for that row.
     def compound_row_from(row, allowed_keys)
       row = row.respond_to?(:to_unsafe_h) ? row.to_unsafe_h : row.to_h

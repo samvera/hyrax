@@ -7,7 +7,7 @@
     if (document.hyraxCompoundsBound) return;
     document.hyraxCompoundsBound = true;
 
-    // Bind select2 to a `work_or_url` sub-field. The v3 API (Hyrax bundles
+    // Bind select2 to a `work_or_url` sub-property. The v3 API (Hyrax bundles
     // select2-rails 3.x) binds to a hidden input; createSearchChoice lets a
     // typed external URL be selected as-is.
     function bindWorkOrUrlInputs(root) {

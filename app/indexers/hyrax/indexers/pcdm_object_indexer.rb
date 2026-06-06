@@ -11,7 +11,7 @@ module Hyrax
       include Hyrax::ThumbnailIndexer
       include Hyrax::WorkflowIndexer
       include Hyrax::Indexers::RedirectsIndexer if Hyrax.config.redirects_enabled?
-      # Flatten compound (hierarchical) metadata sub-fields into Solr. No-op for
+      # Flatten compound (hierarchical) metadata sub-properties into Solr. No-op for
       # resources without compounds. See documentation/forms/compound_fields.md.
       include Hyrax::Indexers::CompoundIndexer if Hyrax.config.compound_metadata_enabled?
 

@@ -1,13 +1,13 @@
 # Sample compound (hierarchical) metadata that ships with Hyrax.
 #
 # Each attribute here is a compound: a `type: hash, multiple: true` field whose
-# entries are plain hashes of named sub-fields. The sub-fields are declared in
-# `subfields:` and rendered, populated, and indexed generically by the compound
+# entries are plain hashes of named sub-properties. The sub-properties are declared in
+# `subproperties:` and rendered, populated, and indexed generically by the compound
 # foundation — no per-field Ruby or ERB. See
 # `documentation/forms/compound_fields.md`.
 #
 # These are intentionally generic examples demonstrating the supported
-# sub-field input types (open-entry `string` and `controlled` vocabulary).
+# sub-property input types (open-entry `string` and `controlled` vocabulary).
 # Applications can add their own compounds the same way (in this file, an
 # app-level schema, or the m3 profile under HYRAX_FLEXIBLE=true) and may remove
 # these samples by setting `Hyrax.config.compound_metadata_enabled = false`.
@@ -20,9 +20,9 @@ attributes:
     predicate: http://id.loc.gov/vocabulary/relators/asn
     form:
       primary: false
-    subfields:
-      # Indexing is declared per sub-field via `index_keys:` (the literal Solr
-      # field names + suffixes), exactly like scalar fields. A sub-field with
+    subproperties:
+      # Indexing is declared per sub-property via `index_keys:` (the literal Solr
+      # field names + suffixes), exactly like scalar fields. A sub-property with
       # no `index_keys:` is display-only (rendered from the json blob, not its
       # own searchable field). `display: false` would omit it from the blob.
       title: { type: string }
@@ -30,7 +30,7 @@ attributes:
         type: string
         required: true
         index_keys: [participant_name_sim, participant_name_tesim]
-      # A controlled sub-field can take its options from an inline list (below)
+      # A controlled sub-property can take its options from an inline list (below)
       # or from an existing QA local authority (`authority: <name>`).
       participant_role:
         type: controlled
@@ -51,7 +51,7 @@ attributes:
     predicate: http://purl.org/dc/terms/identifier
     form:
       primary: false
-    subfields:
+    subproperties:
       identifier:
         type: string
         required: true
@@ -64,7 +64,7 @@ attributes:
     view:
       render_as: compound
       html_dl: true
-  # A rights grouping demonstrating controlled sub-fields backed by *existing*
+  # A rights grouping demonstrating controlled sub-properties backed by *existing*
   # QA local authorities (rather than inline `values:`), alongside an
   # open-ended note.
   compound_rights:
@@ -75,7 +75,7 @@ attributes:
       default: Rights
     form:
       primary: false
-    subfields:
+    subproperties:
       rights_statement:
         type: controlled
         authority: rights_statements
@@ -90,7 +90,7 @@ attributes:
     view:
       render_as: compound
       html_dl: true
-  # A related-item grouping demonstrating the `work_or_url` sub-field: the user
+  # A related-item grouping demonstrating the `work_or_url` sub-property: the user
   # searches for an internal work (typeahead) OR types an external URL. The
   # stored value is a work id or a URL; show pages link to the internal work
   # (by title) or auto-link the external URL.
@@ -100,7 +100,7 @@ attributes:
     predicate: http://purl.org/dc/terms/relation
     form:
       primary: false
-    subfields:
+    subproperties:
       related_item:
         type: work_or_url
         required: true

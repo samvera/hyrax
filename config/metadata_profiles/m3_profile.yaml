@@ -954,7 +954,7 @@ properties:
     property_uri: http://vocabulary.samvera.org/ns#transcriptIds
   # Sample compound (hierarchical) metadata shipped with Hyrax. Each is a
   # `type: hash, multiple: true` property whose entries are hashes of the
-  # `subfields:` keys, rendered/populated/indexed generically by the compound
+  # `subproperties:` keys, rendered/populated/indexed generically by the compound
   # foundation. See documentation/forms/compound_fields.md.
   participants:
     available_on:
@@ -969,8 +969,8 @@ properties:
     form:
       primary: false
     property_uri: http://id.loc.gov/vocabulary/relators/asn
-    subfields:
-      # Indexing per sub-field via `indexing:` (literal Solr field names), the
+    subproperties:
+      # Indexing per sub-property via `indexing:` (literal Solr field names), the
       # same mechanism scalar properties use. No `indexing:` => display-only.
       title: { type: string }
       participant_name:
@@ -1000,7 +1000,7 @@ properties:
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/identifier
-    subfields:
+    subproperties:
       identifier:
         type: string
         required: true
@@ -1026,7 +1026,7 @@ properties:
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/rights
-    subfields:
+    subproperties:
       rights_statement:
         type: controlled
         authority: rights_statements
@@ -1054,7 +1054,7 @@ properties:
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/relation
-    subfields:
+    subproperties:
       related_item:
         type: work_or_url
         required: true

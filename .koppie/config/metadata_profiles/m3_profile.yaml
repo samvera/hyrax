@@ -943,7 +943,7 @@ properties:
     form:
       primary: false
     property_uri: http://id.loc.gov/vocabulary/relators/asn
-    subfields:
+    subproperties:
       title: { type: string }
       agent_name:
         type: string
@@ -972,7 +972,7 @@ properties:
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/identifier
-    subfields:
+    subproperties:
       identifier:
         type: string
         required: true
@@ -998,7 +998,7 @@ properties:
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/rights
-    subfields:
+    subproperties:
       rights_statement:
         type: controlled
         authority: rights_statements
@@ -1026,7 +1026,7 @@ properties:
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/relation
-    subfields:
+    subproperties:
       related_item:
         type: work_or_url
         required: true
