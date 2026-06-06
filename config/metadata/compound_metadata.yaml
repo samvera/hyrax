@@ -9,7 +9,7 @@
 # `subproperty_of` entries are NOT registered as standalone resource attributes
 # — their data lives only as keys inside the parent compound's row hashes. Every
 # key under `attributes:` must be globally unique. See
-# `documentation/forms/compound_fields.md`.
+# `documentation/compound_fields.md`.
 #
 # These are intentionally generic examples demonstrating the supported
 # sub-property input types (open-entry `string` and `controlled` vocabulary).

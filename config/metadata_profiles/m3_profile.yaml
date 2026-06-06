@@ -957,7 +957,7 @@ properties:
   # separate properties pointing back with `subproperty_of: <parent>`, each
   # carrying its own `available_on`, indexing, and form placement. Sibling order
   # follows document order. `subproperty_of` entries are not standalone resource
-  # attributes. See documentation/forms/compound_fields.md.
+  # attributes. See documentation/compound_fields.md.
   participants:
     available_on:
       class:
