@@ -102,10 +102,8 @@ module Hyrax
     # Sample compound metadata. In flexible mode the compounds come from the m3
     # profile, so only the read-path normalization is included here. See
     # documentation/compound_fields.md.
-    if Hyrax.config.compound_metadata_enabled?
-      include Hyrax::Schema(:compound_metadata) unless Hyrax.config.flexible?
-      include Hyrax::CompoundNormalization
-    end
+    include Hyrax::Schema(:compound_metadata) unless Hyrax.config.flexible?
+    include Hyrax::CompoundNormalization
 
     attribute :admin_set_id,             Valkyrie::Types::ID
     attribute :member_ids,               Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)

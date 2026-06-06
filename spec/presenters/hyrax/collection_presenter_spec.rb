@@ -39,14 +39,6 @@ RSpec.describe Hyrax::CollectionPresenter do
       allow(presenter).to receive(:compound_terms).and_return([:participants, :identifiers])
       expect(presenter.terms).to end_with(:participants, :identifiers)
     end
-
-    context 'with compound metadata disabled' do
-      before { allow(Hyrax.config).to receive(:compound_metadata_enabled?).and_return(false) }
-
-      it 'is the default terms only' do
-        expect(presenter.terms).to eq described_class::DEFAULT_TERMS
-      end
-    end
   end
 
   describe "compound attribute delegation" do

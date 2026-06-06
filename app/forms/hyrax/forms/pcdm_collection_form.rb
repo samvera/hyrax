@@ -9,7 +9,7 @@ module Hyrax
       include Hyrax::FormFields(:core_metadata) if Hyrax.config.collection_include_metadata?
       # Wire the compound form properties (non-flexible mode), mirroring the
       # work-side wiring in the PcdmObjectForm factory.
-      if Hyrax.config.compound_metadata_enabled? && !Hyrax.config.flexible? &&
+      if !Hyrax.config.flexible? &&
          Hyrax::PcdmCollection.ancestors.detect { |k| k.inspect == "Hyrax::Schema(compound_metadata)" }
         include Hyrax::FormFields(:compound_metadata)
       end

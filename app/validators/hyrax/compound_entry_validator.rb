@@ -12,8 +12,6 @@ module Hyrax
   # documentation/compound_fields.md.
   class CompoundEntryValidator < ActiveModel::Validator
     def validate(record)
-      return unless Hyrax.config.compound_metadata_enabled?
-
       schema = Hyrax::CompoundSchema.for(schema_source(record))
       schema.definitions.each do |name, definition|
         next unless record.respond_to?(name)

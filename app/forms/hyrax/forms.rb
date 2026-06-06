@@ -17,7 +17,7 @@ module Hyrax
         # Wire the compound form properties only for works whose model includes
         # the compound_metadata schema (non-flexible mode); the m3 loader
         # supplies them at init in flexible mode.
-        if Hyrax.config.compound_metadata_enabled? && !Hyrax.config.flexible? &&
+        if !Hyrax.config.flexible? &&
            work_class.ancestors.detect { |k| k.inspect == "Hyrax::Schema(compound_metadata)" }
           include Hyrax::FormFields(:compound_metadata)
         end

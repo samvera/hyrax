@@ -21,23 +21,12 @@ RSpec.describe Hyrax::CompoundEntryValidator do
   let(:schema) { instance_double(Hyrax::CompoundSchema, definitions: { relationships: definition }) }
 
   before do
-    allow(Hyrax.config).to receive(:compound_metadata_enabled?).and_return(true)
     allow(Hyrax::CompoundSchema).to receive(:for).and_return(schema)
   end
 
   # Compound errors are attached to :base (so the work and collection forms,
   # which render errors differently, both show them cleanly), and the message
   # names the compound.
-  context 'when the feature is disabled' do
-    let(:entries) { [{ 'related_item' => 'x' }] } # would otherwise be invalid
-    before { allow(Hyrax.config).to receive(:compound_metadata_enabled?).and_return(false) }
-
-    it 'does not validate' do
-      record.valid?
-      expect(record.errors[:base]).to be_empty
-    end
-  end
-
   context 'with no rows (optional compound)' do
     it 'is valid' do
       record.valid?

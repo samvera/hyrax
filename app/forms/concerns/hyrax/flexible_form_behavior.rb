@@ -33,7 +33,6 @@ module Hyrax
     # the resource's compound schema — the flex form definitions don't carry
     # `subproperties`. Memoized per form instance.
     def compound_field?(field)
-      return false unless Hyrax.config.respond_to?(:compound_metadata_enabled?) && Hyrax.config.compound_metadata_enabled?
       @compound_field_names ||= Hyrax::CompoundSchema.for(model).compound_names
       @compound_field_names.include?(field.to_sym)
     rescue StandardError

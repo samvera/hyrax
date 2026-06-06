@@ -303,11 +303,8 @@ They are declared in `config/metadata/compound_metadata.yaml` (non-flexible
 mode) and in the default m3 profile (`config/metadata_profiles/m3_profile.yaml`,
 flexible mode, `available_on` both `Hyrax::Work` and the collection class).
 The engine base `Hyrax::Work` and `Hyrax::PcdmCollection` include them, and the
-base work and collection indexers flatten them, when
-`Hyrax.config.compound_metadata_enabled?` is true (the default; set
-`compound_metadata_enabled = false`, or `HYRAX_COMPOUND_METADATA_ENABLED=false`,
-to omit them). Applications can add their own compounds the same way and remove
-or override the samples.
+base work and collection indexers flatten them. Applications can add their own
+compounds the same way and remove or override the samples in their own schema.
 
 ## Show-page rendering
 
@@ -416,10 +413,10 @@ relationship_note:
 ```
 
 Required sub-properties and required compounds render a `*` marker on the form
-label. On save, `Hyrax::CompoundEntryValidator` (wired on the resource form,
-gated by `compound_metadata_enabled?`) adds one error per compound, keyed on the
-compound's attribute name, so the failure is reported against that field. The
-rules are the same in both flex modes.
+label. On save, `Hyrax::CompoundEntryValidator` (wired on the resource form)
+adds one error per compound, keyed on the compound's attribute name, so the
+failure is reported against that field. The rules are the same in both flex
+modes.
 
 The decision logic lives in `Hyrax::CompoundEntryValidation`, a plain object
 decoupled from ActiveModel and Reform — given a compound's definition and its

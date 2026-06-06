@@ -33,7 +33,7 @@ RSpec.describe Hyrax::Forms::PcdmCollectionForm do
   # second, broken scalar input (a `required` compound would block form submit
   # client-side). PcdmCollectionForm overrides these terms, so it needs the same
   # exclusion ResourceForm has.
-  describe 'compound terms are excluded from scalar term lists', if: Hyrax.config.compound_metadata_enabled? do
+  describe 'compound terms are excluded from scalar term lists' do
     it 'keeps compounds out of primary_terms and secondary_terms' do
       compounds = form.compound_terms
       skip 'no compounds declared on the collection in this configuration' if compounds.empty?

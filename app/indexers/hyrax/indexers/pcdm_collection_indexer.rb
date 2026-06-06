@@ -13,7 +13,7 @@ module Hyrax
       include Hyrax::Indexers::RedirectsIndexer if Hyrax.config.redirects_enabled?
       # Flatten compound (hierarchical) metadata sub-properties into Solr. No-op for
       # collections without compounds. See documentation/compound_fields.md.
-      include Hyrax::Indexers::CompoundIndexer if Hyrax.config.compound_metadata_enabled?
+      include Hyrax::Indexers::CompoundIndexer
       check_if_flexible(Hyrax::PcdmCollection)
 
       self.thumbnail_path_service = CollectionThumbnailPathService

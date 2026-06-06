@@ -71,7 +71,6 @@ module Hyrax
     # separately via `render_compound_cards`). Resolved from the backing
     # document. See documentation/compound_fields.md.
     def compound_terms
-      return [] unless Hyrax.config.compound_metadata_enabled?
       compound_schema.inline_compound_names
     rescue StandardError
       []
@@ -84,7 +83,6 @@ module Hyrax
     # All compound names (inline + card) declared for this collection, used to
     # delegate the readers to the solr document below.
     def all_compound_names
-      return [] unless Hyrax.config.compound_metadata_enabled?
       compound_schema.compound_names
     rescue StandardError
       []

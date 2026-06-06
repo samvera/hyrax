@@ -25,7 +25,6 @@
 # compound_field_behavior_spec and the live allinson UI.
 RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config.flexible? do
   before do
-    allow(Hyrax.config).to receive(:compound_metadata_enabled?).and_return(true)
     allow(Hyrax.config).to receive(:flexible?).and_return(false)
     # A work-like resource that includes the shipped compound schema, the way
     # Hyrax::Work does. Named so the form factory's `*Form` lookup falls back

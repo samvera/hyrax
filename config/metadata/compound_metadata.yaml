@@ -15,7 +15,7 @@
 # sub-property input types (open-entry `string` and `controlled` vocabulary).
 # Applications can add their own compounds the same way (in this file, an
 # app-level schema, or the m3 profile under HYRAX_FLEXIBLE=true) and may remove
-# these samples by setting `Hyrax.config.compound_metadata_enabled = false`.
+# or override these samples in their own schema.
 attributes:
   # Participants associated with the work: a person or organization with a
   # display title, a name, and a controlled role.
