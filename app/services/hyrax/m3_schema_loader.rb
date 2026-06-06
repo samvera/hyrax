@@ -67,8 +67,7 @@ module Hyrax
     # The schema's attributes after context filtering (but before the
     # subproperty exclusion {#definitions} applies). Yields `[name, config]`.
     def contextual_attributes(schema_name, version, contexts = nil)
-      schema = Hyrax::FlexibleSchema.find_by(id: version) || Hyrax::FlexibleSchema.create_default_schema
-      attributes = schema.attributes_for(schema_name)
+      attributes = resolve_schema(version)&.attributes_for(schema_name)
       attributes ||= fallback_schema_for(schema_name)
       attributes.filter_map do |name, config|
         # We might be able to consolidate these conditions, but they have been kept separate to make it easier to reason about
@@ -81,6 +80,17 @@ module Hyrax
         # Wew, we are in the clear to use this field
         [name, config]
       end
+    end
+
+    # The flexible schema to read attributes from: the requested version, else a
+    # freshly-created default, else the latest existing row. Any of these may be
+    # nil during early boot or on a fresh DB, so callers must guard with `&.`.
+    # (`create_default_schema` returns nil when a row already exists; `find_by`
+    # misses when `version` is unknown.)
+    def resolve_schema(version)
+      Hyrax::FlexibleSchema.find_by(id: version) ||
+        Hyrax::FlexibleSchema.create_default_schema ||
+        Hyrax::FlexibleSchema.order(:created_at).last
     end
 
     # rubocop:disable Metrics/MethodLength
