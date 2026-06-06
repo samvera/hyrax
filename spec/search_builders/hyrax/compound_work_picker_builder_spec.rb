@@ -18,11 +18,15 @@ RSpec.describe Hyrax::CompoundWorkPickerBuilder do
     end
   end
 
-  describe "#only_works?" do
+  describe "#filter_models" do
     let(:q) { "foo" }
 
-    it "restricts to works" do
-      expect(builder.only_works?).to be true
+    it "admits both works and collections (no only_works? restriction)" do
+      builder.send(:filter_models, solr_params)
+      clause = Array(solr_params[:fq]).find { |fq| fq.include?('has_model_ssim') }
+      models = clause.to_s.sub('{!terms f=has_model_ssim}', '').split(',')
+      expect(models).to include(*Hyrax::ModelRegistry.work_rdf_representations)
+      expect(models).to include(*Hyrax::ModelRegistry.collection_rdf_representations)
     end
   end
 

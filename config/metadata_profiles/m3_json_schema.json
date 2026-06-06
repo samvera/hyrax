@@ -185,8 +185,32 @@
       },
       "additionalProperties": {
         "type": "object",
-        "required": ["display_label", "available_on", "range"],
+        "comment": "A compound subproperty (declares `subproperty_of`) is a hierarchical member, not a standalone property: it inherits its class scope from its parent and has no label/range of its own, so it is exempt from the display_label/available_on/range requirements. All other properties require display_label, available_on, and range.",
+        "if": {
+          "properties": { "subproperty_of": { "type": "string" } },
+          "required": ["subproperty_of"]
+        },
+        "then": {},
+        "else": {
+          "required": ["display_label", "available_on", "range"]
+        },
         "properties": {
+
+          "subproperty_of": {
+            "type": "string",
+            "description": "Names the parent compound (`type: hash`) property this is a subproperty of. Such an entry is a hierarchical member, not a standalone resource attribute."
+          },
+
+          "group": {
+            "type": "string",
+            "description": "Optional group key clustering this subproperty with its siblings on the form/show; the parent compound's `groups:` block supplies the group's label."
+          },
+
+          "form": {
+            "type": "object",
+            "description": "Form placement for a subproperty: `cols` (Bootstrap column width out of 12) and an optional `as` widget override.",
+            "additionalProperties": true
+          },
 
           "display_label": {
             "type": "object",

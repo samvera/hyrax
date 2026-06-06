@@ -22,7 +22,7 @@ module Hyrax
         return
       end
 
-      options = options.merge(subfields: compound_subfields_for(field)) if options[:render_as].to_s == 'compound'
+      options = options.merge(subproperties: compound_subproperties_for(field)) if options[:render_as].to_s == 'compound'
       renderer = renderer_for(field, options).new(field, send(field), options)
 
       if options[:value_only] && renderer.respond_to?(:render_value)
@@ -54,18 +54,18 @@ module Hyrax
 
     private
 
-    # Normalized sub-field specs for a compound, so the renderer can translate
+    # Normalized sub-property specs for a compound, so the renderer can translate
     # controlled ids to their terms; nil if the resource class can't be
     # resolved (the renderer then renders raw values).
-    def compound_subfields_for(field)
+    def compound_subproperties_for(field)
       return nil unless respond_to?(:solr_document) && solr_document.respond_to?(:hydra_model)
       # Resolve from the backing document, not the class: in flexible mode the
-      # class carries no compounds, so a class lookup would drop the sub-field
+      # class carries no compounds, so a class lookup would drop the sub-property
       # specs and the renderer would fall back to raw (unlinked, untranslated)
       # values.
-      Hyrax::CompoundSchema.for_solr_document(solr_document).definition_for(field)&.fetch(:subfields, nil)
+      Hyrax::CompoundSchema.for_solr_document(solr_document).definition_for(field)&.fetch(:subproperties, nil)
     rescue StandardError => e
-      Hyrax.logger.debug("compound_subfields_for(#{field}): #{e.message}")
+      Hyrax.logger.debug("compound_subproperties_for(#{field}): #{e.message}")
       nil
     end
 

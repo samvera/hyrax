@@ -864,7 +864,7 @@ en:
       remove_row_with_label: Remove %{label}
       errors:
         required_but_empty: "%{compound} requires at least one entry"
-        missing_required_subfields: "Each %{compound} entry requires: %{fields}"
+        missing_required_subproperties: "Each %{compound} entry requires: %{fields}"
       participants:
         label: Participants
         title: Title
@@ -1417,10 +1417,9 @@ en:
     flexible_schema_validators:
       compound_validator:
         errors:
-          subfields_not_hash: "m3 profile compound property `%{property}` must declare `subfields` as a mapping of sub-field name to its configuration"
-          subfield_not_hash: "m3 profile compound property `%{property}` sub-field `%{subfield}` must be a mapping (got `%{actual}`)"
-          controlled_without_source: "m3 profile compound property `%{property}` sub-field `%{subfield}` is `type: controlled` but declares neither `authority` nor `values`"
-          top_level_indexing: "m3 profile compound property `%{property}` must not declare top-level `indexing`; declare `indexing` (or `index_keys`) on each sub-field instead"
+          unknown_parent: "m3 profile subproperty `%{property}` declares `subproperty_of: %{parent}`, but `%{parent}` is not a declared `type: hash` compound property"
+          controlled_without_source: "m3 profile compound subproperty `%{property}` is `type: controlled` but declares neither `authority` nor `values`"
+          top_level_indexing: "m3 profile compound property `%{property}` must not declare top-level `indexing`; declare `indexing` (or `index_keys`) on each subproperty instead"
       redirects_validator:
         errors:
           invalid_available_on: "m3 profile `redirects` property must be available on at least one work or collection class declared in this profile"

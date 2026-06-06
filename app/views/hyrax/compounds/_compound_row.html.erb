@@ -3,24 +3,23 @@
     Locals:
       f                  - form builder for the parent resource
       compound_name      - Symbol, e.g. :contributors
-      definition         - Hash{ subfields:, groups:, index_subfields: }
+      definition         - Hash{ subproperties:, groups: }
       row                - Hash of persisted values, or nil for a new row
       index              - Integer position, or the literal "__INDEX__"
                            placeholder when rendered inside the JS template
       row_label_singular - "Contributor", "License", etc.
 
-    Each sub-field renders according to its declared `type:` (string,
+    Each sub-property renders according to its declared `type:` (string,
     controlled, url, work_or_url). db_table / geocode are future types; the
     `else` branch is the extension seam.
 %>
-<% subfields = definition[:subfields] %>
+<% subproperties = definition[:subproperties] %>
 <% groups = definition[:groups] %>
-<% row_position = index.is_a?(String) ? '' : (index.to_i + 1).to_s %>
 <% row_value = ->(key) { row.is_a?(Hash) ? (row[key] || row[key.to_sym]) : nil } %>
 
-<div class="card mb-3 hyrax-compound-row" data-hyrax-compound-row role="group" aria-label="<%= row_label_singular %> <%= row_position %>">
+<div class="card mb-3 hyrax-compound-row" data-hyrax-compound-row role="group" aria-label="<%= row_label_singular %>">
   <div class="card-header bg-light d-flex justify-content-between align-items-center py-2 h6 mb-0">
-    <span><%= row_label_singular %> <%= row_position %></span>
+    <span><%= row_label_singular %></span>
     <button type="button"
             class="close py-0 px-2"
             aria-label="<%= t('hyrax.compound_fields.remove_row_with_label', label: row_label_singular, default: t('hyrax.compound_fields.remove_row')) %>"
@@ -34,22 +33,22 @@
         <h4 class="h6 text-muted text-uppercase mt-1 mb-2"><%= group[:label] %></h4>
       <% end %>
       <div class="form-row">
-        <% group[:fields].each do |sub_field| %>
-          <% spec = subfields[sub_field] || { type: 'string' } %>
-          <% input_id = "#{f.object_name}_#{compound_name}_attributes_#{index}_#{sub_field}" %>
-          <% input_name = "#{f.object_name}[#{compound_name}_attributes][#{index}][#{sub_field}]" %>
-          <% value = row_value.call(sub_field) %>
-          <div class="form-group col-md-<%= group.fetch(:cols, 6) %>">
+        <% group[:fields].each do |sub_property| %>
+          <% spec = subproperties[sub_property] || { type: 'string' } %>
+          <% input_id = "#{f.object_name}_#{compound_name}_attributes_#{index}_#{sub_property}" %>
+          <% input_name = "#{f.object_name}[#{compound_name}_attributes][#{index}][#{sub_property}]" %>
+          <% value = row_value.call(sub_property) %>
+          <div class="form-group col-md-<%= spec[:cols] || 6 %>">
             <%= label_tag input_id, class: 'form-label small text-muted' do %>
-              <%= compound_subfield_label(compound_name, sub_field) %><%
+              <%= compound_subproperty_label(compound_name, sub_property) %><%
                 if spec[:required] %><abbr title="<%= t('simple_form.required.text', default: 'required') %>" class="required text-danger">*</abbr><% end %>
             <% end %>
             <% case spec[:type] %>
             <% when 'controlled' %>
               <% select_classes = ['form-control', 'form-control-sm'] %>
-              <% select_classes << 'force-select' if compound_subfield_forced?(spec, value) %>
+              <% select_classes << 'force-select' if compound_subproperty_forced?(spec, value) %>
               <%= select_tag input_name,
-                             options_for_select(compound_subfield_options(spec, value), value),
+                             options_for_select(compound_subproperty_options(spec, value), value),
                              id: input_id,
                              include_blank: true,
                              class: select_classes.join(' ') %>

@@ -362,7 +362,7 @@ Add to the host app's Bulkrax field-mapping configuration (usually `config/initi
 'is_display_url' => { from: ['redirect_is_display_url'], object: 'redirects', nested_attributes: true }
 ```
 
-See [field_behaviors.md](forms/field_behaviors.md#wiring-up-bulkrax-imports) for the conventions around the `nested_attributes: true` flag.
+See [field_behaviors.md](field_behaviors.md#wiring-up-bulkrax-imports) for the conventions around the `nested_attributes: true` flag.
 
 ### Reserved-prefix list
 
@@ -412,7 +412,7 @@ Alternatively, gate the inclusion of the calling code itself on `Hyrax.config.re
 ## See also
 
 - `documentation/flexible_metadata.md` — m3 profile fundamentals and how the redirects feature interacts with flexible metadata.
-- `documentation/forms/field_behaviors.md` — the Field Behavior pattern used by `Hyrax::RedirectsFieldBehavior` to wire the form's nested-attribute property.
+- `documentation/field_behaviors.md` — the Field Behavior pattern used by `Hyrax::RedirectsFieldBehavior` to wire the form's nested-attribute property.
 - `Hyrax::Redirect` (`app/models/hyrax/redirect.rb`) — thin Ruby presenter for a single redirect entry; used on the form's render path.
 - `Hyrax::RedirectsFieldBehavior` (`app/forms/concerns/hyrax/redirects_field_behavior.rb`) — form-side wiring for the `redirects_attributes` virtual property and the `redirects_display_url_index` radio-group scalar. Owns the populator (which folds the radio-group index into per-row `is_display_url` flags) and the `deserialize!` strip for the nested-attributes payload. The form partial wraps each persisted hash in a `Hyrax::Redirect` presenter inline at render time.
 - `Hyrax::Indexers::RedirectsIndexer` (`app/indexers/hyrax/indexers/redirects_indexer.rb`) — the indexer mixin. Writes `redirects_path_tesim` to the Solr document for show-page rendering.

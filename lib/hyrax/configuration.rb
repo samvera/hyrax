@@ -353,7 +353,7 @@ module Hyrax
     # Whether the sample compound metadata schema ships on works and collections
     # by default. Defaults to true; respects +HYRAX_COMPOUND_METADATA_ENABLED+.
     #
-    # @see documentation/forms/compound_fields.md
+    # @see documentation/compound_fields.md
     attr_writer :compound_metadata_enabled
     def compound_metadata_enabled?
       return @compound_metadata_enabled if defined?(@compound_metadata_enabled) && !@compound_metadata_enabled.nil?

@@ -7,11 +7,12 @@ module Hyrax
   # Pure validation logic for a single compound's entries, decoupled from
   # ActiveModel and Reform so it can be reused (e.g. a future Bulkrax-side
   # check) and unit-tested directly. {Hyrax::CompoundEntryValidator} wraps this
-  # for the form layer. See documentation/forms/compound_fields.md.
+  # for the form layer. See documentation/compound_fields.md.
   #
   # Rules (driven by the normalized definition from {Hyrax::CompoundSchema}):
   #   * a compound marked `required` must have at least one populated row;
-  #   * every populated row must fill all of the compound's `required` sub-fields.
+  #   * every populated row must fill all of the compound's `required`
+  #     sub-properties.
   #
   # Rows are the post-populator persisted hashes (all-blank rows already
   # dropped), so a no-required compound with no rows is valid.
@@ -25,11 +26,11 @@ module Hyrax
 
     # @return [Array<Hash>] one violation per problem, each
     #   `{ type:, missing: [keys] }`. Empty when the compound is valid.
-    #   `type` is `:required_but_empty` or `:missing_required_subfields`.
+    #   `type` is `:required_but_empty` or `:missing_required_subproperties`.
     def violations
       return [{ type: :required_but_empty, missing: required_keys }] if required_but_empty?
 
-      rows_missing_required.map { |missing| { type: :missing_required_subfields, missing: missing } }
+      rows_missing_required.map { |missing| { type: :missing_required_subproperties, missing: missing } }
     end
 
     # @return [Boolean]
@@ -42,7 +43,7 @@ module Hyrax
     attr_reader :definition, :entries
 
     def required_keys
-      definition.fetch(:subfields, {}).select { |_k, spec| spec[:required] }.keys
+      definition.fetch(:subproperties, {}).select { |_k, spec| spec[:required] }.keys
     end
 
     def required_but_empty?

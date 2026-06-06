@@ -1,13 +1,18 @@
 # Sample compound (hierarchical) metadata that ships with Hyrax.
 #
-# Each attribute here is a compound: a `type: hash, multiple: true` field whose
-# entries are plain hashes of named sub-fields. The sub-fields are declared in
-# `subfields:` and rendered, populated, and indexed generically by the compound
-# foundation — no per-field Ruby or ERB. See
+# A compound is a `type: hash, multiple: true` parent property. Its members are
+# declared as separate top-level properties that point back to the parent with
+# `subproperty_of: <parent>`. Sibling order follows document order here; each
+# subproperty optionally names a `group:` and sets its form width via
+# `form: { cols: }`.
+#
+# `subproperty_of` entries are NOT registered as standalone resource attributes
+# — their data lives only as keys inside the parent compound's row hashes. Every
+# key under `attributes:` must be globally unique. See
 # `documentation/forms/compound_fields.md`.
 #
 # These are intentionally generic examples demonstrating the supported
-# sub-field input types (open-entry `string` and `controlled` vocabulary).
+# sub-property input types (open-entry `string` and `controlled` vocabulary).
 # Applications can add their own compounds the same way (in this file, an
 # app-level schema, or the m3 profile under HYRAX_FLEXIBLE=true) and may remove
 # these samples by setting `Hyrax.config.compound_metadata_enabled = false`.
@@ -19,53 +24,83 @@ attributes:
     multiple: true
     predicate: http://id.loc.gov/vocabulary/relators/asn
     form:
-      primary: false
-    subfields:
-      # Indexing is declared per sub-field via `index_keys:` (the literal Solr
-      # field names + suffixes), exactly like scalar fields. A sub-field with
-      # no `index_keys:` is display-only (rendered from the json blob, not its
-      # own searchable field). `display: false` would omit it from the blob.
-      title: { type: string }
-      participant_name:
-        type: string
-        required: true
-        index_keys: [participant_name_sim, participant_name_tesim]
-      # A controlled sub-field can take its options from an inline list (below)
-      # or from an existing QA local authority (`authority: <name>`).
-      participant_role:
-        type: controlled
-        required: true
-        values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
-        index_keys: [participant_role_sim, participant_role_tesim]
+      primary: true
+    # Group metadata (label) for the subproperties that declare `group: <key>`.
+    # Membership lives on each subproperty; this block only names the groups (no
+    # field lists). Sequencing follows document order — subproperties within a
+    # group by YAML position, groups by first-member appearance. Groups cluster
+    # fields on the form row and can drive structured show-page sections.
     groups:
-      - { label: ~, cols: 4, fields: [title, participant_name, participant_role] }
+      identity:
+        label: Identity
     view:
       render_as: compound
       html_dl: true
+  # A subproperty declares its group membership inline (`group:`) and its data
+  # `type:`. Under `form:`, `cols` sets how wide the input is on the row using
+  # Bootstrap's 12-column grid: 4 fits three across a row, 6 two across, 12 the
+  # full width. `as` (optional) overrides the input widget (e.g. `as: text` for
+  # a textarea); without it the widget follows `type:`.
+  participant_title:
+    type: string
+    subproperty_of: participants
+    group: identity
+    form:
+      cols: 4
+  # Indexing is declared per sub-property via `index_keys:` (the literal Solr
+  # field names + suffixes), exactly like scalar fields. A sub-property with no
+  # `index_keys:` is display-only (rendered from the json blob, not its own
+  # searchable field). `display: false` would omit it from the blob.
+  participant_name:
+    type: string
+    subproperty_of: participants
+    group: identity
+    required: true
+    index_keys: [participant_name_sim, participant_name_tesim]
+    form:
+      cols: 4
+  # A controlled sub-property can take its options from an inline list (below)
+  # or from an existing QA local authority (`authority: <name>`).
+  participant_role:
+    type: controlled
+    subproperty_of: participants
+    group: identity
+    required: true
+    values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
+    index_keys: [participant_role_sim, participant_role_tesim]
+    form:
+      cols: 4
+
   # A typed identifier: an open-entry value plus a controlled identifier type.
-  # Named `identifiers` (plural) to avoid colliding with the scalar
-  # `identifier` defined in basic_metadata / the default m3 profile.
+  # Named `identifiers` (plural) to avoid colliding with the scalar `identifier`
+  # defined in basic_metadata / the default m3 profile.
   identifiers:
     type: hash
     multiple: true
     predicate: http://purl.org/dc/terms/identifier
     form:
       primary: false
-    subfields:
-      identifier:
-        type: string
-        required: true
-        index_keys: [identifier_value_sim, identifier_value_tesim]
-      identifier_type:
-        type: controlled
-        required: true
-        values: [DOI, Handle, ISBN, ISSN, URL, URN, ARK, Other]
-        index_keys: [identifier_type_sim]
     view:
       render_as: compound
       html_dl: true
-  # A rights grouping demonstrating controlled sub-fields backed by *existing*
-  # QA local authorities (rather than inline `values:`), alongside an
+  identifier_value:
+    type: string
+    subproperty_of: identifiers
+    required: true
+    index_keys: [identifier_value_sim, identifier_value_tesim]
+    form:
+      cols: 6
+  identifier_type:
+    type: controlled
+    subproperty_of: identifiers
+    required: true
+    values: [DOI, Handle, ISBN, ISSN, URL, URN, ARK, Other]
+    index_keys: [identifier_type_sim]
+    form:
+      cols: 6
+
+  # A rights grouping demonstrating controlled sub-properties backed by
+  # *existing* QA local authorities (rather than inline `values:`), alongside an
   # open-ended note.
   compound_rights:
     type: hash
@@ -75,42 +110,57 @@ attributes:
       default: Rights
     form:
       primary: false
-    subfields:
-      rights_statement:
-        type: controlled
-        authority: rights_statements
-        index_keys: [compound_rights_statement_sim, compound_rights_statement_tesim]
-      license:
-        type: controlled
-        authority: licenses
-        index_keys: [compound_rights_license_sim, compound_rights_license_tesim]
-      rights_notes:
-        type: string
-        index_keys: [compound_rights_notes_tesim]
     view:
       render_as: compound
       html_dl: true
-  # A related-item grouping demonstrating the `work_or_url` sub-field: the user
-  # searches for an internal work (typeahead) OR types an external URL. The
-  # stored value is a work id or a URL; show pages link to the internal work
-  # (by title) or auto-link the external URL.
+  compound_rights_statement:
+    type: controlled
+    subproperty_of: compound_rights
+    authority: rights_statements
+    index_keys: [compound_rights_statement_sim, compound_rights_statement_tesim]
+    form:
+      cols: 6
+  compound_rights_license:
+    type: controlled
+    subproperty_of: compound_rights
+    authority: licenses
+    index_keys: [compound_rights_license_sim, compound_rights_license_tesim]
+    form:
+      cols: 6
+  compound_rights_notes:
+    type: string
+    subproperty_of: compound_rights
+    index_keys: [compound_rights_notes_tesim]
+    form:
+      cols: 12
+
+  # A related-item grouping demonstrating the `work_or_url` sub-property: the
+  # user searches for an internal work (typeahead) OR types an external URL. The
+  # stored value is a work id or a URL; show pages link to the internal work (by
+  # title) or auto-link the external URL. Displayed as its own card
+  # (`view: { display: card }`).
   relationships:
     type: hash
     multiple: true
     predicate: http://purl.org/dc/terms/relation
     form:
-      primary: false
-    subfields:
-      related_item:
-        type: work_or_url
-        required: true
-        index_keys: [relationships_item_ssim]
-      relationship_type:
-        type: controlled
-        required: true
-        values: [References, Is Referenced By, Is Part Of, Has Part, Is Version Of, Replaces, Requires, Other]
-        index_keys: [relationships_type_sim]
+      primary: true
     view:
       render_as: compound
       html_dl: true
       display: card
+  relationship_item:
+    type: work_or_url
+    subproperty_of: relationships
+    required: true
+    index_keys: [relationships_item_ssim]
+    form:
+      cols: 6
+  relationship_type:
+    type: controlled
+    subproperty_of: relationships
+    required: true
+    values: [References, Is Referenced By, Is Part Of, Has Part, Is Version Of, Replaces, Requires, Other]
+    index_keys: [relationships_type_sim]
+    form:
+      cols: 6

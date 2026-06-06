@@ -69,7 +69,7 @@ module Hyrax
 
     # Inline compound terms for this collection (card compounds render
     # separately via `render_compound_cards`). Resolved from the backing
-    # document. See documentation/forms/compound_fields.md.
+    # document. See documentation/compound_fields.md.
     def compound_terms
       return [] unless Hyrax.config.compound_metadata_enabled?
       compound_schema.inline_compound_names

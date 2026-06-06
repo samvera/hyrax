@@ -12,17 +12,17 @@
   padding: 0 !important;
   max-width: 100%;
 
-  // Force block flow on the entries/sub-fields; the label/value spans stay
-  // inline so each sub-field reads as "Label: value" on one wrapping line.
+  // Force block flow on the entries/sub-properties; the label/value spans stay
+  // inline so each sub-property reads as "Label: value" on one wrapping line.
   .hyrax-compound-entry,
-  .hyrax-compound-subfield {
+  .hyrax-compound-subproperty {
     display: block !important;
   }
 
   .hyrax-compound-entry,
-  .hyrax-compound-subfield,
-  .hyrax-compound-subfield-label,
-  .hyrax-compound-subfield-value {
+  .hyrax-compound-subproperty,
+  .hyrax-compound-subproperty-label,
+  .hyrax-compound-subproperty-value {
     border: 0 !important;
     padding: 0 !important;
     margin: 0;
@@ -36,14 +36,14 @@
     border-top: 1px solid $gray-200 !important;
   }
 
-  .hyrax-compound-subfield {
+  .hyrax-compound-subproperty {
     display: block;
     line-height: 1.4;
     overflow-wrap: break-word;
     word-break: break-word;
   }
 
-  .hyrax-compound-subfield-label {
+  .hyrax-compound-subproperty-label {
     font-weight: 600;
     margin-right: 0.25rem;
   }

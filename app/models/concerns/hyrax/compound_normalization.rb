@@ -2,7 +2,7 @@
 
 module Hyrax
   ##
-  # Defends compound attributes (`type: hash, multiple: true` with `subfields:` —
+  # Defends compound attributes (`type: hash, multiple: true` with `subproperties:` —
   # see {Hyrax::CompoundSchema}) against a read-path quirk in Valkyrie's Postgres
   # orm_converter: `JSONValueMapper` unwraps a single-element array to its first
   # element and re-symbolizes the Hash's keys, then dry-struct's `Array.of(Hash)`

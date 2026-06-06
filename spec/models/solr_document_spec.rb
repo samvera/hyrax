@@ -247,7 +247,7 @@ RSpec.describe ::SolrDocument, type: :model do
     # blob. The document defines a reader per such field at construction, so an
     # application's own compounds render without a per-app declaration and
     # without depending on the (possibly stale) flexible schema. See
-    # documentation/forms/compound_fields.md.
+    # documentation/compound_fields.md.
     let(:attributes) do
       { 'contributors_json_ss' =>
           [%([{"given_name":"Grace","family_name":"Hopper"}])],

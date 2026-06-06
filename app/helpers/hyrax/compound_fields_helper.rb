@@ -2,10 +2,10 @@
 
 module Hyrax
   # View helpers for rendering compound (hierarchical) metadata fields on forms
-  # and show pages. See documentation/forms/compound_fields.md.
+  # and show pages. See documentation/compound_fields.md.
   module CompoundFieldsHelper
     ##
-    # Renders one compound section (a repeatable stack of sub-field rows) for the
+    # Renders one compound section (a repeatable stack of sub-property rows) for the
     # given attribute via the `hyrax/compounds/*` partials.
     #
     # @return [String, nil] rendered HTML, or nil when the attribute is not a
@@ -65,29 +65,29 @@ module Hyrax
     end
 
     ##
-    # Options for a `controlled` sub-field's `<select>`: an inline `values:`
+    # Options for a `controlled` sub-property's `<select>`: an inline `values:`
     # list when present, otherwise the named QA authority. A stored value not
     # among the options is appended so it still renders (`include_current_value`).
     #
     # @return [Array<Array(String, String)>] `[[label, id], ...]`
-    def compound_subfield_options(spec, current_value = nil)
+    def compound_subproperty_options(spec, current_value = nil)
       options = spec[:values].presence || authority_options(spec[:authority])
       ensure_current_value(options, current_value)
     end
 
     ##
     # @return [Boolean] whether +current_value+ is present but not among the
-    #   sub-field's offered options — i.e. a forced/stale value. The select
+    #   sub-property's offered options — i.e. a forced/stale value. The select
     #   gets the +force-select+ class in that case, matching the ordinary
     #   controlled-field convention.
-    def compound_subfield_forced?(spec, current_value = nil)
+    def compound_subproperty_forced?(spec, current_value = nil)
       return false if current_value.blank?
       base = spec[:values].presence || authority_options(spec[:authority])
       base.none? { |(_label, id)| id.to_s == current_value.to_s }
     end
 
     ##
-    # The pre-selected `[label, value]` option for a `work_or_url` sub-field's
+    # The pre-selected `[label, value]` option for a `work_or_url` sub-property's
     # select2, or nil when empty. An internal work id resolves to its title; an
     # external URL is shown as-is.
     #
@@ -121,9 +121,9 @@ module Hyrax
       compound_field_label(field, display_label: compound_schema_for(presenter).definition_for(field)&.dig(:display_label))
     end
 
-    def compound_subfield_label(compound_name, sub_field)
-      t("hyrax.compound_fields.#{compound_name}.#{sub_field}",
-        default: sub_field.to_s.humanize)
+    def compound_subproperty_label(compound_name, sub_property)
+      t("hyrax.compound_fields.#{compound_name}.#{sub_property}",
+        default: sub_property.to_s.humanize)
     end
 
     private
@@ -135,7 +135,7 @@ module Hyrax
       return [] if authority_name.blank?
       Hyrax::TolerantSelectService.new(authority_name).select_active_options
     rescue StandardError => e
-      Hyrax.logger.debug("compound_subfield_options: #{authority_name}: #{e.message}")
+      Hyrax.logger.debug("compound_subproperty_options: #{authority_name}: #{e.message}")
       []
     end
 

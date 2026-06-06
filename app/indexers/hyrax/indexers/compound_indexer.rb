@@ -3,11 +3,11 @@
 module Hyrax
   module Indexers
     ##
-    # Indexer mixin that projects compound metadata sub-fields into Solr. For
+    # Indexer mixin that projects compound metadata sub-properties into Solr. For
     # every compound on the resource (see {Hyrax::CompoundSchema}), it writes
-    # each sub-field's declared `index_keys:`/`indexing:` Solr fields and stores
-    # the displayable rows as a `<compound>_json_ss` blob the show page renders
-    # from. See documentation/forms/compound_fields.md.
+    # each sub-property's declared `index_keys:`/`indexing:` Solr fields and
+    # stores the displayable rows as a `<compound>_json_ss` blob the show page
+    # renders from. See documentation/compound_fields.md.
     #
     # @example
     #   class WorkIndexer < Hyrax::Indexers::PcdmObjectIndexer
@@ -31,15 +31,15 @@ module Hyrax
 
       def index_compound(document, compound_name, definition)
         rows = Array(resource.public_send(compound_name))
-        index_searchable_subfields(document, definition, rows)
+        index_searchable_subproperties(document, definition, rows)
         index_display_blob(document, compound_name, definition, rows)
       end
 
-      def index_searchable_subfields(document, definition, rows)
-        definition[:subfields].each do |sub_field, spec|
+      def index_searchable_subproperties(document, definition, rows)
+        definition[:subproperties].each do |sub_property, spec|
           next if spec[:index_keys].blank?
 
-          values = rows.map { |row| compound_entry_value(row, sub_field) }.reject(&:blank?)
+          values = rows.map { |row| compound_entry_value(row, sub_property) }.reject(&:blank?)
           next if values.empty?
 
           spec[:index_keys].each { |index_key| document[index_key] = values }
@@ -47,7 +47,7 @@ module Hyrax
       end
 
       def index_display_blob(document, compound_name, definition, rows)
-        display_keys = definition[:subfields].select { |_k, spec| spec[:display] }.keys
+        display_keys = definition[:subproperties].select { |_k, spec| spec[:display] }.keys
         normalized = rows.map { |row| display_entry(row, display_keys) }.reject(&:empty?)
         document["#{compound_name}_json_ss"] = normalized.to_json unless normalized.empty?
       end
@@ -60,9 +60,9 @@ module Hyrax
         end
       end
 
-      def compound_entry_value(row, sub_field)
+      def compound_entry_value(row, sub_property)
         return nil unless row.respond_to?(:[])
-        row[sub_field] || row[sub_field.to_sym]
+        row[sub_property] || row[sub_property.to_sym]
       end
     end
   end

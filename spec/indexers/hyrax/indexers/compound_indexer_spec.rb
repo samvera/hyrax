@@ -9,9 +9,9 @@ RSpec.describe Hyrax::Indexers::CompoundIndexer do
 
       attribute :contributors,
                 Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
-                  subfields: {
+                  subproperties: {
                     # searchable + facetable, via the literal field names the
-                    # sub-field declares
+                    # sub-property declares
                     'given_name' => { 'type' => 'string',
                                       'index_keys' => %w[contributors_given_name_tesim contributors_given_name_sim] },
                     # searchable only
@@ -42,14 +42,14 @@ RSpec.describe Hyrax::Indexers::CompoundIndexer do
                          ])
     end
 
-    it 'writes each sub-field value to the literal Solr field names it declares' do
+    it 'writes each sub-property value to the literal Solr field names it declares' do
       doc = indexer.to_solr
       expect(doc['contributors_given_name_tesim']).to contain_exactly('Ada', 'Alan')
       expect(doc['contributors_given_name_sim']).to contain_exactly('Ada', 'Alan')
       expect(doc['contributors_family_name_tesim']).to contain_exactly('Lovelace', 'Turing')
     end
 
-    it 'does not write a Solr field for a sub-field with no index_keys' do
+    it 'does not write a Solr field for a sub-property with no index_keys' do
       # role_label declares no index_keys; it has no field of its own.
       expect(indexer.to_solr.keys.grep(/role_label/)).to be_empty
     end
@@ -60,7 +60,7 @@ RSpec.describe Hyrax::Indexers::CompoundIndexer do
       expect(doc['contributors_given_name_tesim']).to contain_exactly('Grace')
     end
 
-    it 'stores the displayable sub-fields as a JSON blob for the show page' do
+    it 'stores the displayable sub-properties as a JSON blob for the show page' do
       parsed = JSON.parse(indexer.to_solr['contributors_json_ss'])
       # role_label (display-only) is included; note (display: false) is omitted.
       expect(parsed).to eq([
@@ -69,7 +69,7 @@ RSpec.describe Hyrax::Indexers::CompoundIndexer do
                            ])
     end
 
-    it 'omits display: false sub-fields from the blob even though they are indexed' do
+    it 'omits display: false sub-properties from the blob even though they are indexed' do
       parsed = JSON.parse(indexer.to_solr['contributors_json_ss'])
       expect(parsed.first).not_to have_key('note')
       # ...but `note` is still written to its own searchable field

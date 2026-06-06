@@ -134,8 +134,8 @@ module Hyrax
     end
 
     # Validates compound (hierarchical) metadata properties — those declaring
-    # `subfields:` — for well-formed sub-fields and correct (per-sub-field)
-    # indexing declaration.
+    # `subproperties:` — for well-formed sub-properties and correct
+    # (per-sub-property) indexing declaration.
     #
     # @return [void]
     def validate_compound

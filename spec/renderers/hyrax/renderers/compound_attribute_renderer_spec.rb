@@ -18,12 +18,12 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
       expect(markup.scan('class="hyrax-compound-entry"').count).to eq(2)
     end
 
-    it 'renders each populated sub-field as a labeled value' do
+    it 'renders each populated sub-property as a labeled value' do
       expect(markup).to include('Ada Lovelace').and include('Author')
       expect(markup).to include('Alan Turing')
     end
 
-    it 'uses the i18n sub-field labels (humanized fallback)' do
+    it 'uses the i18n sub-property labels (humanized fallback)' do
       # `title` has no compound_fields.agent.title key in the engine locale by
       # default for an arbitrary compound, so it humanizes; agent_name maps to
       # the shipped label "Name".
@@ -36,10 +36,10 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
       expect(entries).not_to include('<dd')
     end
 
-    it 'omits blank sub-fields' do
-      # The second entry has only agent_name; it should not emit empty subfield blocks.
+    it 'omits blank sub-properties' do
+      # The second entry has only agent_name; it should not emit empty subproperty blocks.
       second_entry = markup.split('hyrax-compound-entry').last
-      expect(second_entry.scan('hyrax-compound-subfield"').count).to eq(1)
+      expect(second_entry.scan('hyrax-compound-subproperty"').count).to eq(1)
     end
   end
 
@@ -58,13 +58,13 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
     end
   end
 
-  describe 'controlled sub-field term translation' do
+  describe 'controlled sub-property term translation' do
     let(:values) { [{ 'role' => 'ed', 'name' => 'Ada' }] }
-    let(:subfields) do
+    let(:subproperties) do
       { 'role' => { type: 'controlled', authority: nil, values: [%w[Author author], %w[Editor ed]] },
         'name' => { type: 'string', authority: nil, values: nil } }
     end
-    let(:renderer) { described_class.new(:agent, values, label: 'Agent', html_dl: true, subfields: subfields) }
+    let(:renderer) { described_class.new(:agent, values, label: 'Agent', html_dl: true, subproperties: subproperties) }
 
     it 'displays the controlled term, not the stored id' do
       markup = renderer.render_dl_row
@@ -72,27 +72,27 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
       expect(markup).not_to match(/>ed</)
     end
 
-    it 'leaves non-controlled sub-fields unchanged' do
+    it 'leaves non-controlled sub-properties unchanged' do
       expect(renderer.render_dl_row).to include('Ada')
     end
 
-    it 'renders the raw id when no subfields specs are provided' do
+    it 'renders the raw id when no subproperties specs are provided' do
       markup = described_class.new(:agent, values, label: 'Agent', html_dl: true).render_dl_row
       expect(markup).to include('ed')
     end
   end
 
-  describe 'controlled sub-field with a linkable URI value' do
+  describe 'controlled sub-property with a linkable URI value' do
     let(:uri) { 'http://rightsstatements.org/vocab/InC/1.0/' }
     let(:values) { [{ 'rights_statement' => uri }] }
-    let(:subfields) do
+    let(:subproperties) do
       { 'rights_statement' => { type: 'controlled', authority: 'rights_statements', values: nil } }
     end
-    let(:renderer) { described_class.new(:compound_rights, values, label: 'Rights', html_dl: true, subfields: subfields) }
+    let(:renderer) { described_class.new(:compound_rights, values, label: 'Rights', html_dl: true, subproperties: subproperties) }
 
     before do
-      allow(Hyrax::CompoundSubfieldLabeler).to receive(:label_for)
-        .with(subfields['rights_statement'], uri).and_return('In Copyright')
+      allow(Hyrax::CompoundSubpropertyLabeler).to receive(:label_for)
+        .with(subproperties['rights_statement'], uri).and_return('In Copyright')
     end
 
     it 'links the resolved term to its URI' do
@@ -101,31 +101,31 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
     end
   end
 
-  describe 'url sub-field auto-linking' do
+  describe 'url sub-property auto-linking' do
     let(:values) { [{ 'related_item_url' => 'https://example.org/item/42', 'note' => 'see also' }] }
-    let(:subfields) do
+    let(:subproperties) do
       { 'related_item_url' => { type: 'url', authority: nil, values: nil },
         'note' => { type: 'string', authority: nil, values: nil } }
     end
-    let(:renderer) { described_class.new(:relationships, values, label: 'Relationships', html_dl: true, subfields: subfields) }
+    let(:renderer) { described_class.new(:relationships, values, label: 'Relationships', html_dl: true, subproperties: subproperties) }
 
-    it 'renders a url sub-field as an anchor' do
+    it 'renders a url sub-property as an anchor' do
       expect(renderer.render_dl_row).to include('<a href="https://example.org/item/42"')
     end
 
-    it 'leaves non-url sub-fields as plain escaped text' do
+    it 'leaves non-url sub-properties as plain escaped text' do
       markup = renderer.render_dl_row
       expect(markup).to include('see also')
       expect(markup).not_to include('<a href="see also"')
     end
   end
 
-  describe 'work_or_url sub-field' do
-    let(:subfields) { { 'related_item' => { type: 'work_or_url', authority: nil, values: nil } } }
+  describe 'work_or_url sub-property' do
+    let(:subproperties) { { 'related_item' => { type: 'work_or_url', authority: nil, values: nil } } }
 
     context 'when the value is an external URL' do
       let(:values) { [{ 'related_item' => 'https://example.org/x' }] }
-      let(:renderer) { described_class.new(:relationships, values, label: 'Relationships', html_dl: true, subfields: subfields) }
+      let(:renderer) { described_class.new(:relationships, values, label: 'Relationships', html_dl: true, subproperties: subproperties) }
 
       it 'auto-links the URL' do
         expect(renderer.render_dl_row).to include('<a href="https://example.org/x"')
@@ -134,7 +134,7 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
 
     context 'when the value resolves to an indexed work' do
       let(:values) { [{ 'related_item' => 'work-123' }] }
-      let(:renderer) { described_class.new(:relationships, values, label: 'Relationships', html_dl: true, subfields: subfields) }
+      let(:renderer) { described_class.new(:relationships, values, label: 'Relationships', html_dl: true, subproperties: subproperties) }
 
       before do
         allow(Hyrax::CompoundWorkResolver).to receive(:resolve)
@@ -150,7 +150,7 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
 
     context 'when the value is neither a URL nor a resolvable work' do
       let(:values) { [{ 'related_item' => 'not-a-real-id' }] }
-      let(:renderer) { described_class.new(:relationships, values, label: 'Relationships', html_dl: true, subfields: subfields) }
+      let(:renderer) { described_class.new(:relationships, values, label: 'Relationships', html_dl: true, subproperties: subproperties) }
 
       before { allow(Hyrax::CompoundWorkResolver).to receive(:resolve).with('not-a-real-id').and_return(nil) }
 

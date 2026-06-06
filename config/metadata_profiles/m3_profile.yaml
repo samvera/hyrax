@@ -952,10 +952,12 @@ properties:
       primary: false
     range: http://www.w3.org/2001/XMLSchema#string
     property_uri: http://vocabulary.samvera.org/ns#transcriptIds
-  # Sample compound (hierarchical) metadata shipped with Hyrax. Each is a
-  # `type: hash, multiple: true` property whose entries are hashes of the
-  # `subfields:` keys, rendered/populated/indexed generically by the compound
-  # foundation. See documentation/forms/compound_fields.md.
+  # Sample compound (hierarchical) metadata shipped with Hyrax. A compound is a
+  # `type: hash, multiple: true` parent property; its members are declared as
+  # separate properties pointing back with `subproperty_of: <parent>`, each
+  # carrying its own `available_on`, indexing, and form placement. Sibling order
+  # follows document order. `subproperty_of` entries are not standalone resource
+  # attributes. See documentation/forms/compound_fields.md.
   participants:
     available_on:
       class:
@@ -967,26 +969,42 @@ properties:
     display_label:
       default: Participants
     form:
-      primary: false
+      primary: true
     property_uri: http://id.loc.gov/vocabulary/relators/asn
-    subfields:
-      # Indexing per sub-field via `indexing:` (literal Solr field names), the
-      # same mechanism scalar properties use. No `indexing:` => display-only.
-      title: { type: string }
-      participant_name:
-        type: string
-        required: true
-        indexing: [participant_name_sim, participant_name_tesim]
-      participant_role:
-        type: controlled
-        required: true
-        values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
-        indexing: [participant_role_sim, participant_role_tesim]
+    # Group metadata (label) for subproperties declaring `group: <key>`.
     groups:
-      - { label: ~, cols: 4, fields: [title, participant_name, participant_role] }
+      identity:
+        label: Identity
     view:
       render_as: compound
       html_dl: true
+  # Subproperties omit `available_on`/`range`/`display_label`: they inherit the
+  # parent compound's class scope and are folded into it by the schema loader.
+  # Indexing per sub-property via `indexing:` (literal Solr field names), the
+  # same mechanism scalar properties use. No `indexing:` => display-only.
+  participant_title:
+    type: string
+    subproperty_of: participants
+    group: identity
+    form:
+      cols: 4
+  participant_name:
+    type: string
+    subproperty_of: participants
+    group: identity
+    required: true
+    indexing: [participant_name_sim, participant_name_tesim]
+    form:
+      cols: 4
+  participant_role:
+    type: controlled
+    subproperty_of: participants
+    group: identity
+    required: true
+    values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
+    indexing: [participant_role_sim, participant_role_tesim]
+    form:
+      cols: 4
   identifiers:
     available_on:
       class:
@@ -1000,19 +1018,24 @@ properties:
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/identifier
-    subfields:
-      identifier:
-        type: string
-        required: true
-        indexing: [identifier_value_sim, identifier_value_tesim]
-      identifier_type:
-        type: controlled
-        required: true
-        values: [DOI, Handle, ISBN, ISSN, URL, URN, ARK, Other]
-        indexing: [identifier_type_sim]
     view:
       render_as: compound
       html_dl: true
+  identifier_value:
+    type: string
+    subproperty_of: identifiers
+    required: true
+    indexing: [identifier_value_sim, identifier_value_tesim]
+    form:
+      cols: 6
+  identifier_type:
+    type: controlled
+    subproperty_of: identifiers
+    required: true
+    values: [DOI, Handle, ISBN, ISSN, URL, URN, ARK, Other]
+    indexing: [identifier_type_sim]
+    form:
+      cols: 6
   compound_rights:
     available_on:
       class:
@@ -1026,21 +1049,29 @@ properties:
     form:
       primary: false
     property_uri: http://purl.org/dc/terms/rights
-    subfields:
-      rights_statement:
-        type: controlled
-        authority: rights_statements
-        indexing: [compound_rights_statement_sim, compound_rights_statement_tesim]
-      license:
-        type: controlled
-        authority: licenses
-        indexing: [compound_rights_license_sim, compound_rights_license_tesim]
-      rights_notes:
-        type: string
-        indexing: [compound_rights_notes_tesim]
     view:
       render_as: compound
       html_dl: true
+  compound_rights_statement:
+    type: controlled
+    subproperty_of: compound_rights
+    authority: rights_statements
+    indexing: [compound_rights_statement_sim, compound_rights_statement_tesim]
+    form:
+      cols: 6
+  compound_rights_license:
+    type: controlled
+    subproperty_of: compound_rights
+    authority: licenses
+    indexing: [compound_rights_license_sim, compound_rights_license_tesim]
+    form:
+      cols: 6
+  compound_rights_notes:
+    type: string
+    subproperty_of: compound_rights
+    indexing: [compound_rights_notes_tesim]
+    form:
+      cols: 12
   relationships:
     available_on:
       class:
@@ -1052,19 +1083,24 @@ properties:
     display_label:
       default: Relationships
     form:
-      primary: false
+      primary: true
     property_uri: http://purl.org/dc/terms/relation
-    subfields:
-      related_item:
-        type: work_or_url
-        required: true
-        indexing: [relationships_item_ssim]
-      relationship_type:
-        type: controlled
-        required: true
-        values: [References, Is Referenced By, Is Part Of, Has Part, Is Version Of, Replaces, Requires, Other]
-        indexing: [relationships_type_sim]
     view:
       render_as: compound
       html_dl: true
       display: card
+  relationship_item:
+    type: work_or_url
+    subproperty_of: relationships
+    required: true
+    indexing: [relationships_item_ssim]
+    form:
+      cols: 6
+  relationship_type:
+    type: controlled
+    subproperty_of: relationships
+    required: true
+    values: [References, Is Referenced By, Is Part Of, Has Part, Is Version Of, Replaces, Requires, Other]
+    indexing: [relationships_type_sim]
+    form:
+      cols: 6

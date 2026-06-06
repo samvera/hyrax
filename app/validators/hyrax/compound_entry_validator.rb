@@ -3,12 +3,13 @@
 module Hyrax
   # Validates every compound (hierarchical) metadata attribute on a form,
   # blocking save when a required compound has no row or a populated row omits a
-  # required sub-field. Adds one error per compound, keyed on the compound name.
+  # required sub-property. Adds one error per compound, keyed on the compound
+  # name.
   #
   # Record-level (not an EachValidator) because the compound set is schema-driven
   # and not known at form-class-definition time. The per-compound rules live in
   # the reusable {Hyrax::CompoundEntryValidation}. See
-  # documentation/forms/compound_fields.md.
+  # documentation/compound_fields.md.
   class CompoundEntryValidator < ActiveModel::Validator
     def validate(record)
       return unless Hyrax.config.compound_metadata_enabled?
@@ -49,14 +50,14 @@ module Hyrax
     def message_for(name, violation)
       I18n.t("hyrax.compound_fields.errors.#{violation[:type]}",
              compound: compound_label(name),
-             fields: subfield_labels(name, violation[:missing]))
+             fields: subproperty_labels(name, violation[:missing]))
     end
 
     def compound_label(name)
       I18n.t("hyrax.compound_fields.#{name}.label", default: name.to_s.humanize)
     end
 
-    def subfield_labels(name, keys)
+    def subproperty_labels(name, keys)
       Array(keys).map do |key|
         I18n.t("hyrax.compound_fields.#{name}.#{key}", default: key.to_s.humanize)
       end.join(', ')

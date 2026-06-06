@@ -7,13 +7,11 @@ profile:
   type: Initial Profile
   version: 1
 classes:
-  Hyrax::Work:
-    display_label: Work
   GenericWorkResource:
     display_label: Work
   Monograph:
     display_label: Work
-  AdministrativeSetResource:
+  AdminSetResource:
     display_label: AdministrativeSet
   CollectionResource:
     display_label: PcdmCollection
@@ -39,10 +37,9 @@ properties:
   title:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -77,10 +74,9 @@ properties:
   date_modified:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -105,10 +101,9 @@ properties:
   date_uploaded:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -124,10 +119,9 @@ properties:
   depositor:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -143,6 +137,7 @@ properties:
     index_documentation: searchable
     indexing:
       - depositor_tesim
+      - depositor_ssim
     property_uri: http://id.loc.gov/vocabulary/relators/dpt
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
@@ -152,7 +147,6 @@ properties:
       class:
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -183,7 +177,7 @@ properties:
     name: creator
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
     cardinality:
       minimum: 0
     data_type: array
@@ -209,10 +203,9 @@ properties:
   license:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -240,10 +233,9 @@ properties:
   abstract:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -270,9 +262,8 @@ properties:
   access_right:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -299,9 +290,8 @@ properties:
   alternative_title:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -356,9 +346,8 @@ properties:
   arkivo_checksum:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -380,10 +369,9 @@ properties:
   based_near:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -411,9 +399,8 @@ properties:
   bibliographic_citation:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -440,10 +427,9 @@ properties:
   contributor:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -471,10 +457,9 @@ properties:
   date_created:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -503,10 +488,9 @@ properties:
   description:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -531,10 +515,9 @@ properties:
   identifier:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -563,9 +546,8 @@ properties:
   import_url:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -585,10 +567,9 @@ properties:
   keyword:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -641,10 +622,9 @@ properties:
   language:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -673,10 +653,9 @@ properties:
   publisher:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -704,10 +683,9 @@ properties:
   related_url:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -735,10 +713,9 @@ properties:
   relative_path:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -758,10 +735,9 @@ properties:
   resource_type:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -790,10 +766,9 @@ properties:
   rights_notes:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -820,10 +795,9 @@ properties:
   rights_statement:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -851,10 +825,9 @@ properties:
   source:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -882,10 +855,9 @@ properties:
   subject:
     available_on:
       class:
-        - AdministrativeSetResource
+        - AdminSetResource
         - Hyrax::FileSet
         - CollectionResource
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
     cardinality:
@@ -914,7 +886,6 @@ properties:
   dimensions:
     available_on:
       class:
-        - Hyrax::Work
         - Monograph
         - GenericWorkResource
       context:
