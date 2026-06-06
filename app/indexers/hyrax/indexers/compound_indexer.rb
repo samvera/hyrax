@@ -7,7 +7,7 @@ module Hyrax
     # every compound on the resource (see {Hyrax::CompoundSchema}), it writes
     # each sub-property's declared `index_keys:`/`indexing:` Solr fields and
     # stores the displayable rows as a `<compound>_json_ss` blob the show page
-    # renders from. See documentation/forms/compound_fields.md.
+    # renders from. See documentation/compound_fields.md.
     #
     # @example
     #   class WorkIndexer < Hyrax::Indexers::PcdmObjectIndexer

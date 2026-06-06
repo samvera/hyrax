@@ -15,16 +15,15 @@ Two examples ship with Hyrax:
 
 This document covers the contract a Field Behavior must satisfy, the decision points for a new behavior, and the worked examples.
 
-> **For new multi-sub-property compounds, prefer the generic, schema-driven path.**
-> A field whose entries are a hash of named sub-properties (each an open-entry
-> string or a controlled-vocabulary lookup) can be declared entirely in the
-> schema YAML / m3 profile and rendered, populated, and indexed with no
-> per-field Ruby or ERB — see [`compound_fields.md`](compound_fields.md). The
-> hand-written Field Behaviors documented below remain the right tool for
-> special cases: single-value-per-entry controlled URIs with a presenter
-> (`based_near`), or compounds with bespoke behavior such as a radio-group
-> selection, write-time normalization, global-uniqueness validation, or
-> feature gating (`redirects`).
+> **For a field whose entries are a hash of named sub-properties, prefer a
+> [compound](compound_fields.md) instead** — it satisfies this same contract
+> from the schema alone, with no per-field Ruby or ERB.
+> [`compound_fields.md`](compound_fields.md) covers when to use a compound vs. a
+> hand-written Field Behavior. The behaviors documented below are the right tool
+> for the cases a compound does not cover: a single controlled-URI value per
+> entry wrapped in a presenter (`based_near`), or bespoke behavior such as a
+> radio-group selection, write-time normalization, global-uniqueness validation,
+> or feature gating (`redirects`).
 
 ## Why this pattern exists
 
@@ -205,6 +204,21 @@ end
 - **View-side shape:** array of `Hyrax::ControlledVocabularies::Location` instances.
 - **Diff from a plain `_attributes` setup:** `deserialize!` strips `based_near` after the rename so `from_hash` doesn't overwrite the property with raw fragment hashes; the populator merges adds/removes onto the existing `model.based_near` so partial form submissions are non-destructive.
 
+`based_near` is **not** a [compound](compound_fields.md), for two reasons that
+make a compound the wrong fit rather than just an unused option:
+
+- Its persisted shape is a **bare URI string per entry**, where a compound
+  persists a hash of named sub-properties per entry. Declaring it as a compound
+  would change the stored shape from `["uri"]` to `[{ "key" => "uri" }]` — a data
+  migration, not a refactor.
+- Its populator **merges** (`(model.based_near + adds) - deletes`) rather than
+  replacing the whole array, so partial submissions are non-destructive; the
+  generic compound populator always writes a full replacement array.
+
+It is the reference case for the planned `geocode` compound sub-property type
+(see [`compound_fields.md`](compound_fields.md)), which will generalize a
+single-value controlled-URI location lookup once it lands.
+
 ## Example: `RedirectsFieldBehavior`
 
 ```ruby
@@ -249,6 +263,25 @@ The populator folds a sibling `redirects_display_url_index` scalar (a single rad
 - **Persisted shape:** array of plain hashes (`'path'`, `'is_display_url'`). Declared with `type: hash, multiple: true` in `config/metadata/redirects.yaml`.
 - **View-side shape:** array of `Hyrax::Redirect` presenters, exposing `.path` and `.is_display_url`. The form partial wraps each persisted hash inline rather than via a prepopulator.
 - **Diff from BasedNear:** entries carry multiple sub-properties, so the persisted shape is a hash rather than a string. The populator normalizes paths up front (canonical form lives in storage). The behavior is feature-gated — every callback consults `Hyrax.config.redirects_active?`.
+
+`redirects` already uses the compound **parent** shape (`type: hash, multiple:
+true`), but it is intentionally **not** declared with `subproperty_of: redirects`
+children, so [`Hyrax::CompoundSchema`](compound_fields.md) does not treat it as a
+compound. Declaring those children would activate the whole generic compound
+stack — indexer, `render_as: compound` renderer, `Hyrax::CompoundEntryValidator`,
+`Hyrax::CompoundNormalization`, the `_compound_section` partial, and a second
+`redirects_attributes` populator — which would collide with the redirects-specific
+`RedirectsLabelAttributeRenderer`, indexer, `RedirectValidator`,
+`RedirectsNormalization`, and `_form_redirects` partial. That is a functional
+change, not a refactor. The populator also folds the sibling
+`redirects_display_url_index` radio scalar into per-row `is_display_url` flags and
+normalizes each path — neither of which the generic compound populator does.
+
+The populator does share its fragment-coercion plumbing with the compound
+populator: both include `Hyrax::CompoundRowPlumbing` for `fragment_pairs`
+and `row_hash`. Each keeps its own row-drop rule (redirects drops blank-path rows;
+the compound drops all-blank rows) and its own value handling (redirects
+normalizes the path) — only the shape coercion is shared.
 
 ## Wiring on `ResourceForm`
 

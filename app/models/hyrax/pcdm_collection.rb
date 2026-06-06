@@ -47,7 +47,7 @@ module Hyrax
 
     # Sample compound metadata, mirroring Hyrax::Work. In flexible mode the
     # compounds come from the m3 profile, so only the read-path normalization is
-    # included here. See documentation/forms/compound_fields.md.
+    # included here. See documentation/compound_fields.md.
     if Hyrax.config.compound_metadata_enabled?
       include Hyrax::Schema(:compound_metadata) unless Hyrax.config.flexible?
       include Hyrax::CompoundNormalization

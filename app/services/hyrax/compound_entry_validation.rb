@@ -7,7 +7,7 @@ module Hyrax
   # Pure validation logic for a single compound's entries, decoupled from
   # ActiveModel and Reform so it can be reused (e.g. a future Bulkrax-side
   # check) and unit-tested directly. {Hyrax::CompoundEntryValidator} wraps this
-  # for the form layer. See documentation/forms/compound_fields.md.
+  # for the form layer. See documentation/compound_fields.md.
   #
   # Rules (driven by the normalized definition from {Hyrax::CompoundSchema}):
   #   * a compound marked `required` must have at least one populated row;

@@ -45,7 +45,7 @@ module Hyrax
       # Compounds render through the shared CompoundAttributeRenderer, resolving
       # the definition from the presenter's document (correct in flexible mode).
       # Collection scalar values render as bare spans (no `ul.tabular`), so the
-      # entries render flush to match. See documentation/forms/compound_fields.md.
+      # entries render flush to match. See documentation/compound_fields.md.
       if collection.respond_to?(:compound_term?) && collection.compound_term?(field)
         definition = compound_schema_for(collection).definition_for(field)
         return Hyrax::Renderers::CompoundAttributeRenderer

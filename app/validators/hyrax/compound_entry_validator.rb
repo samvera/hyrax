@@ -9,7 +9,7 @@ module Hyrax
   # Record-level (not an EachValidator) because the compound set is schema-driven
   # and not known at form-class-definition time. The per-compound rules live in
   # the reusable {Hyrax::CompoundEntryValidation}. See
-  # documentation/forms/compound_fields.md.
+  # documentation/compound_fields.md.
   class CompoundEntryValidator < ActiveModel::Validator
     def validate(record)
       return unless Hyrax.config.compound_metadata_enabled?

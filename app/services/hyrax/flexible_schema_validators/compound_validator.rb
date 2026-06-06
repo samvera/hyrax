@@ -10,7 +10,7 @@ module Hyrax
     # fields or unrenderable values. A compound is a `type: hash` parent with
     # members declared as separate properties pointing back via
     # `subproperty_of: <parent>` — see {Hyrax::CompoundSchema}. See
-    # documentation/forms/compound_fields.md for the rules.
+    # documentation/compound_fields.md for the rules.
     class CompoundValidator
       ##
       # @param profile [Hash] the flexible metadata profile

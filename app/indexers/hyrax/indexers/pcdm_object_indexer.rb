@@ -12,7 +12,7 @@ module Hyrax
       include Hyrax::WorkflowIndexer
       include Hyrax::Indexers::RedirectsIndexer if Hyrax.config.redirects_enabled?
       # Flatten compound (hierarchical) metadata sub-properties into Solr. No-op for
-      # resources without compounds. See documentation/forms/compound_fields.md.
+      # resources without compounds. See documentation/compound_fields.md.
       include Hyrax::Indexers::CompoundIndexer if Hyrax.config.compound_metadata_enabled?
 
       def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength

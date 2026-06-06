@@ -8,7 +8,7 @@ module Hyrax
   # is a `type: hash, multiple: true` parent property; its members are declared
   # as separate properties pointing back with `subproperty_of: <parent>`. The
   # declaration drives the generic form, indexer, and renderer so a hierarchical
-  # field can be defined in YAML alone. See documentation/forms/compound_fields.md.
+  # field can be defined in YAML alone. See documentation/compound_fields.md.
   #
   # The schema loaders exclude subproperties from a resource's real attributes
   # (so they get no accessor of their own) but fold each compound's members into
@@ -210,7 +210,7 @@ module Hyrax
 
     # Normalizes a parent config plus its (folded) child configs into the
     # symbol-keyed shape the form, indexer, and renderer consume. See
-    # documentation/forms/compound_fields.md for the meaning of each key.
+    # documentation/compound_fields.md for the meaning of each key.
     def normalize(config, children)
       sub = children.each_with_object({}) { |(key, opts), memo| memo[key.to_s] = normalize_subproperty(opts) }
 

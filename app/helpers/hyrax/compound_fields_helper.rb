@@ -2,7 +2,7 @@
 
 module Hyrax
   # View helpers for rendering compound (hierarchical) metadata fields on forms
-  # and show pages. See documentation/forms/compound_fields.md.
+  # and show pages. See documentation/compound_fields.md.
   module CompoundFieldsHelper
     ##
     # Renders one compound section (a repeatable stack of sub-property rows) for the

@@ -12,7 +12,7 @@ module Hyrax
 
         # Declare a reader for a compound attribute, parsing the rows the
         # indexer stored in `<name>_json_ss`. See
-        # documentation/forms/compound_fields.md.
+        # documentation/compound_fields.md.
         def compound_attribute(name)
           define_method name do
             Solr::CompoundEntries.coerce(self["#{name}_json_ss"])

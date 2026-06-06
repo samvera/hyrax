@@ -12,6 +12,28 @@ schema under `HYRAX_FLEXIBLE=false`, or the m3 profile under
 form input, populator, and indexer all read the declaration from the schema
 and behave identically in both flex modes.
 
+## When to use a compound vs. a Field Behavior
+
+A compound is the **default** for any field whose entries are a hash of named
+sub-properties (each an open-entry string or a controlled-vocabulary lookup):
+declare it in the schema and the generic form, populator, indexer, and renderer
+do the rest, with no per-field Ruby or ERB.
+
+Reach for a hand-written [Field Behavior](field_behaviors.md) only for the
+narrow cases the generic path does not cover:
+
+- **A single value per entry** rather than a hash of sub-properties — e.g. a
+  controlled-vocabulary URI string wrapped in a presenter for the form
+  (`Hyrax::BasedNearFieldBehavior`).
+- **Bespoke per-field behavior** — a radio-group selection, write-time value
+  normalization, global-uniqueness validation against a separate table, or
+  feature gating (`Hyrax::RedirectsFieldBehavior`).
+
+`Hyrax::CompoundFieldBehavior` is itself a Field Behavior — the generic,
+schema-driven one — so the two mechanisms share the same Reform contract
+(documented in [`field_behaviors.md`](field_behaviors.md)); a compound is the
+case where that contract is satisfied entirely from the schema.
+
 ## Declaring a compound
 
 A compound is a `type: hash, multiple: true` **parent** property. Its members
@@ -133,9 +155,12 @@ can read. The picker is mounted as the `compound_works` QA authority at
 `/authorities/search/compound_works`.
 
 `db_table` (a typeahead backed by an ActiveRecord lookup table, with
-add-new) and `geocode` (a Geonames/coordinate lookup, like `based_near`) are
-planned additional sub-property types; the form's row partial has an explicit
-extension point for them.
+add-new) and `geocode` (a Geonames/coordinate lookup) are planned additional
+sub-property types; the form's row partial has an explicit extension point for
+them. `geocode` generalizes the existing single-value controlled-URI location
+field — see `Hyrax::BasedNearFieldBehavior` and
+[`field_behaviors.md`](field_behaviors.md), which `geocode` is intended to
+replace once it lands.
 
 ### Grouping (`group:` + `groups:`, optional)
 
