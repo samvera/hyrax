@@ -269,14 +269,39 @@ module Hyrax
       end
 
       ##
+      # @return [Array<Symbol>] compounds whose `form: { primary: true }`, shown
+      #   in the primary form section alongside the primary scalar terms.
+      def primary_compound_terms
+        compound_terms.select { |term| compound_primary?(term) }
+      end
+
+      ##
+      # @return [Array<Symbol>] compounds that are not primary (the default),
+      #   shown in the "Additional fields" section.
+      def secondary_compound_terms
+        compound_terms.reject { |term| compound_primary?(term) }
+      end
+
+      ##
       # @return [Boolean] whether there are terms to display 'below-the-fold'
+      #   (secondary scalar terms or non-primary compounds)
       def display_additional_fields?
-        secondary_terms.any?
+        secondary_terms.any? || secondary_compound_terms.any?
       end
 
       delegate :flexible?, to: :model
 
       private
+
+      # Whether a compound declares `form: { primary: true }`. Defaults to false
+      # (compounds render in "Additional fields" unless explicitly primary),
+      # mirroring how secondary scalar terms are derived. Read from the compound
+      # definition, which carries the flag in both flex modes.
+      def compound_primary?(term)
+        Hyrax::CompoundSchema.for(model).primary?(term)
+      rescue StandardError
+        false
+      end
 
       def _form_field_definitions
         if model.flexible?

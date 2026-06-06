@@ -56,6 +56,14 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
       expect(form.secondary_terms).not_to include(:participants, :identifiers, :compound_rights)
     end
 
+    it 'partitions compounds by their form: { primary: } flag' do
+      # The shipped samples declare `participants` and `relationships` primary;
+      # `identifiers` and `compound_rights` are non-primary ("Additional fields").
+      expect(form.primary_compound_terms).to contain_exactly(:participants, :relationships)
+      expect(form.secondary_compound_terms).to contain_exactly(:identifiers, :compound_rights)
+      expect(form.display_additional_fields?).to be true
+    end
+
     it 'registers `participants_attributes` as a real Reform property (not just method-missing)' do
       # This is the property that has to exist in Reform's schema *before*
       # validate runs; if it is registered too late the populator never fires.
@@ -70,35 +78,35 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
   describe 'validate + sync writes the compound to the model' do
     let(:params) do
       { 'participants_attributes' =>
-          { '0' => { 'title' => 'Dr', 'participant_name' => 'Ada Lovelace', 'participant_role' => 'Author' } },
+          { '0' => { 'participant_title' => 'Dr', 'participant_name' => 'Ada Lovelace', 'participant_role' => 'Author' } },
         'identifiers_attributes' =>
-          { '0' => { 'identifier' => '10.1234/x', 'identifier_type' => 'DOI' } } }
+          { '0' => { 'identifier_value' => '10.1234/x', 'identifier_type' => 'DOI' } } }
     end
 
     it 'populates the compound on the form during validate' do
       form.validate(params)
       expect(form.participants)
-        .to eq([{ 'title' => 'Dr', 'participant_name' => 'Ada Lovelace', 'participant_role' => 'Author' }])
+        .to eq([{ 'participant_title' => 'Dr', 'participant_name' => 'Ada Lovelace', 'participant_role' => 'Author' }])
       expect(form.identifiers)
-        .to eq([{ 'identifier' => '10.1234/x', 'identifier_type' => 'DOI' }])
+        .to eq([{ 'identifier_value' => '10.1234/x', 'identifier_type' => 'DOI' }])
     end
 
     it 'writes the compound through to the model on sync' do
       form.validate(params)
       form.sync
       expect(form.model.participants)
-        .to eq([{ 'title' => 'Dr', 'participant_name' => 'Ada Lovelace', 'participant_role' => 'Author' }])
+        .to eq([{ 'participant_title' => 'Dr', 'participant_name' => 'Ada Lovelace', 'participant_role' => 'Author' }])
       expect(form.model.identifiers)
-        .to eq([{ 'identifier' => '10.1234/x', 'identifier_type' => 'DOI' }])
+        .to eq([{ 'identifier_value' => '10.1234/x', 'identifier_type' => 'DOI' }])
     end
 
     it 'drops `_destroy` and all-blank rows' do
       form.validate('participants_attributes' =>
         { '0' => { 'participant_name' => 'Keep', 'participant_role' => 'Author' },
           '1' => { 'participant_name' => 'Remove', '_destroy' => 'true' },
-          '2' => { 'title' => '', 'participant_name' => '', 'participant_role' => '' } })
+          '2' => { 'participant_title' => '', 'participant_name' => '', 'participant_role' => '' } })
       form.sync
-      expect(form.model.participants).to eq([{ 'title' => nil, 'participant_name' => 'Keep', 'participant_role' => 'Author' }])
+      expect(form.model.participants).to eq([{ 'participant_title' => nil, 'participant_name' => 'Keep', 'participant_role' => 'Author' }])
     end
   end
 
