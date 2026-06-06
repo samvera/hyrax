@@ -15,12 +15,11 @@
 %>
 <% subproperties = definition[:subproperties] %>
 <% groups = definition[:groups] %>
-<% row_position = index.is_a?(String) ? '' : (index.to_i + 1).to_s %>
 <% row_value = ->(key) { row.is_a?(Hash) ? (row[key] || row[key.to_sym]) : nil } %>
 
-<div class="card mb-3 hyrax-compound-row" data-hyrax-compound-row role="group" aria-label="<%= row_label_singular %> <%= row_position %>">
+<div class="card mb-3 hyrax-compound-row" data-hyrax-compound-row role="group" aria-label="<%= row_label_singular %>">
   <div class="card-header bg-light d-flex justify-content-between align-items-center py-2 h6 mb-0">
-    <span><%= row_label_singular %> <%= row_position %></span>
+    <span><%= row_label_singular %></span>
     <button type="button"
             class="close py-0 px-2"
             aria-label="<%= t('hyrax.compound_fields.remove_row_with_label', label: row_label_singular, default: t('hyrax.compound_fields.remove_row')) %>"
@@ -39,7 +38,7 @@
           <% input_id = "#{f.object_name}_#{compound_name}_attributes_#{index}_#{sub_property}" %>
           <% input_name = "#{f.object_name}[#{compound_name}_attributes][#{index}][#{sub_property}]" %>
           <% value = row_value.call(sub_property) %>
-          <div class="form-group col-md-<%= group.fetch(:cols, 6) %>">
+          <div class="form-group col-md-<%= spec[:cols] || 6 %>">
             <%= label_tag input_id, class: 'form-label small text-muted' do %>
               <%= compound_subproperty_label(compound_name, sub_property) %><%
                 if spec[:required] %><abbr title="<%= t('simple_form.required.text', default: 'required') %>" class="required text-danger">*</abbr><% end %>

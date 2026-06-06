@@ -16,8 +16,16 @@ module Hyrax
     # @return [Hash<Symbol, Dry::Types::Type>] a map from attribute names to
     #   types
     def attributes_for(schema:, version: 1, contexts: nil)
+      children = subproperties_by_parent(schema, version, contexts)
       definitions(schema, version, contexts).each_with_object({}) do |definition, hash|
-        hash[definition.name] = definition.type.meta(definition.config)
+        # Fold a compound parent's subproperties (which are excluded from the
+        # real attributes) into the parent's type metadata, so the resource's
+        # own schema carries them for Hyrax::CompoundSchema to read — without
+        # the subproperties becoming standalone attributes.
+        config = definition.config
+        subs = children[definition.name.to_s]
+        config = config.merge('subproperties' => subs) if subs.present?
+        hash[definition.name] = definition.type.meta(config)
       end
     end
 
@@ -43,6 +51,44 @@ module Hyrax
           hash[key] = definition.name
         end
       end
+    end
+
+    ##
+    # The raw per-attribute configs for a schema, INCLUDING compound
+    # subproperties (entries declaring `subproperty_of:`). Unlike
+    # {#attributes_for} et al. — which exclude subproperties so they never become
+    # standalone resource attributes — this returns everything declared, so
+    # {Hyrax::CompoundSchema} can gather each parent compound's subproperties.
+    #
+    # @return [Hash{Symbol => Hash}] `{ attribute_name => raw_config_hash }`
+    def raw_attribute_configs(schema:, version: 1, contexts: nil)
+      raw_definitions(schema, version, contexts).each_with_object({}) do |(name, config), hash|
+        hash[(config['name'] || name).to_sym] = config
+      end
+    end
+
+    # @return [Boolean] whether a raw per-attribute config is a compound
+    #   subproperty (declares `subproperty_of:`), which must be excluded from the
+    #   resource's real attributes.
+    def subproperty_config?(config)
+      config.is_a?(Hash) && config['subproperty_of'].present?
+    end
+
+    # Subproperty configs grouped under their parent compound, in document
+    # order: `{ parent_name => { child_name => child_config } }`. Used to fold
+    # each compound's members into its parent's type metadata (see
+    # {#attributes_for}).
+    def subproperties_by_parent(schema, version, contexts)
+      raw_definitions(schema, version, contexts).each_with_object({}) do |(name, config), memo|
+        next unless subproperty_config?(config)
+
+        parent = config['subproperty_of'].to_s
+        child_name = (config['name'] || name).to_s
+        (memo[parent] ||= {})[child_name] = config
+      end
+    rescue StandardError => e
+      Hyrax.logger.debug("subproperties_by_parent(#{schema}): #{e.message}")
+      {}
     end
 
     def current_version

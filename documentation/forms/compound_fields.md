@@ -14,35 +14,62 @@ and behave identically in both flex modes.
 
 ## Declaring a compound
 
-A compound is a `type: hash, multiple: true` attribute that also carries a
-`subproperties:` map:
+A compound is a `type: hash, multiple: true` **parent** property. Its members
+are declared as separate top-level properties that point back to the parent
+with `subproperty_of: <parent>`. Every property key (parent and subproperty)
+must be globally unique, so subproperties are conventionally named with a
+parent-derived prefix:
 
 ```yaml
 contributors:
   type: hash
   multiple: true
   predicate: https://prvoices.org/terms/contributor
-  subproperties:
-    given_name:
-      type: string
-      index_keys: [contributors_given_name_sim, contributors_given_name_tesim]
-    family_name:
-      type: string
-      index_keys: [contributors_family_name_sim, contributors_family_name_tesim]
-    name_type:       { type: controlled, authority: name_type }
-    role_label:      { type: controlled, authority: contributor_role }
-    name_identifier:
-      type: string
-      index_keys: [contributors_name_identifier_ssim]
-    affiliation:     { type: string }   # display-only (no index_keys)
+  # Optional group metadata (label only) for subproperties that name a `group:`.
   groups:
-    - { label: Identity, cols: 4, fields: [given_name, family_name, name_type] }
-    - { label: Role,     cols: 4, fields: [role_label, name_identifier, affiliation] }
+    identity: { label: Identity }
+    role:     { label: Role }
+
+contributor_given_name:
+  type: string
+  subproperty_of: contributors
+  group: identity
+  form: { cols: 4 }
+  index_keys: [contributors_given_name_sim, contributors_given_name_tesim]
+contributor_family_name:
+  type: string
+  subproperty_of: contributors
+  group: identity
+  form: { cols: 4 }
+  index_keys: [contributors_family_name_sim, contributors_family_name_tesim]
+contributor_name_type:
+  type: controlled
+  subproperty_of: contributors
+  group: identity
+  authority: name_type
+contributor_role_label:
+  type: controlled
+  subproperty_of: contributors
+  group: role
+  authority: contributor_role
+contributor_affiliation:
+  type: string
+  subproperty_of: contributors   # display-only (no index_keys)
+  group: role
 ```
 
+`subproperty_of` is a declaration hint only: a subproperty does **not** become a
+standalone resource attribute (no accessor, Solr index rule, or RDF predicate of
+its own). Its data lives only as a key inside the parent compound's row hashes;
+the schema loaders fold the subproperties into the parent's type metadata for
+the form, indexer, and renderer to read.
+
+Ordering is document order: subproperties render in the order they are declared,
+and groups in the order their first member appears.
+
 In the m3 profile the same declaration uses `data_type: array`, `type: hash`,
-and `available_on: class:` to scope the property, with the identical
-`subproperties:` / `groups:` keys; sub-property index targets are declared with
+and `available_on: class:` to scope each property (a subproperty repeats its
+parent's `available_on`); sub-property index targets are declared with
 `indexing:` (the flexible-mode spelling of `index_keys:`).
 
 > **Flexible mode:** the active schema is the `Hyrax::FlexibleSchema` row in the
@@ -53,9 +80,13 @@ and `available_on: class:` to scope the property, with the identical
 > singleton class at load time, so a stale running process serves the old
 > attribute set even when the profile YAML is current.
 
-### `subproperties:`
+### Subproperties
 
-An ordered map of `sub_property_key => { type:, ... }`. Supported `type:` values:
+Each subproperty is a top-level property declaring `subproperty_of: <parent>`,
+its data `type:`, and — under `form:` — its layout: `cols` (Bootstrap column
+width out of 12; 4 fits three across a row, 6 two across, 12 full width) and an
+optional `as` widget override (SimpleForm's `as:`, e.g. `as: text` for a
+textarea). Supported `type:` values:
 
 | `type:`      | Renders as          | Notes |
 |--------------|---------------------|-------|
@@ -67,21 +98,23 @@ An ordered map of `sub_property_key => { type:, ... }`. Supported `type:` values
 A `controlled` sub-property sources its options one of two ways:
 
 ```yaml
-subproperties:
-  # (a) inline list — no authority file needed
-  agent_role:
-    type: controlled
-    values: [Author, Editor, Contributor]
-  # (a') inline list with distinct id and label
-  status:
-    type: controlled
-    values:
-      - { id: pub, label: Published }
-      - { id: dft, label: Draft }
-  # (b) an existing QA local authority (config/authorities/<name>.yml)
-  identifier_type:
-    type: controlled
-    authority: identifier_type
+# (a) inline list — no authority file needed
+participant_role:
+  type: controlled
+  subproperty_of: participants
+  values: [Author, Editor, Contributor]
+# (a') inline list with distinct id and label
+participant_status:
+  type: controlled
+  subproperty_of: participants
+  values:
+    - { id: pub, label: Published }
+    - { id: dft, label: Draft }
+# (b) an existing QA local authority (config/authorities/<name>.yml)
+identifier_type:
+  type: controlled
+  subproperty_of: identifiers
+  authority: identifier_type
 ```
 
 Inline `values:` is convenient for small, stable lists and keeps the whole
@@ -104,12 +137,32 @@ add-new) and `geocode` (a Geonames/coordinate lookup, like `based_near`) are
 planned additional sub-property types; the form's row partial has an explicit
 extension point for them.
 
-### `groups:` (optional)
+### Grouping (`group:` + `groups:`, optional)
 
-Visual clustering of sub-properties within each entry's card. Each group is
-`{ label:, cols:, fields: [...] }`, where `cols` is the Bootstrap column width
-(out of 12) for each field in the group. When omitted, all sub-properties render in
-a single unlabeled group.
+Sub-properties can be clustered into labeled groups within each entry's card.
+Membership is declared inline on each sub-property with `group: <key>`; the
+parent compound declares the groups' display metadata in a `groups:` block keyed
+by that key (label only — no field lists):
+
+```yaml
+participants:
+  type: hash
+  multiple: true
+  groups:
+    identity: { label: Identity }
+    role:     { label: Role }
+
+participant_name:
+  type: string
+  subproperty_of: participants
+  group: identity
+  form: { cols: 4 }
+```
+
+A sub-property with no `group:` falls in a single leading unlabeled group.
+Groups appear in the order their first member is declared; sub-properties appear
+in document order within their group. Per-field width is `form: { cols: }` (out
+of 12), not a group-level setting.
 
 ### Indexing sub-properties (`index_keys:` / `indexing:`)
 
@@ -132,8 +185,8 @@ renders only the fields explicitly registered with Blacklight
 (`config.add_index_field`) — compound sub-properties are not registered by default.
 To show a sub-property in search results, register its Solr field name in your
 `CatalogController` (e.g.
-`config.add_index_field 'agent_name_tesim', label: 'Agent'`). The show page and
-edit form render compounds regardless.
+`config.add_index_field 'participant_name_tesim', label: 'Participant'`). The
+show page and edit form render compounds regardless.
 
 ### `display:` (optional, default true)
 
@@ -153,8 +206,8 @@ compound itself — marks the whole compound as required. See
 
 ## Persisted shape
 
-A compound persists as an array of plain string-keyed hashes — exactly the
-keys declared in `subproperties:`:
+A compound persists as an array of plain string-keyed hashes — one key per
+declared sub-property:
 
 ```ruby
 work.contributors
@@ -267,9 +320,14 @@ relationships:
   view:
     render_as: compound
     display: card
-  subproperties:
-    related_item:      { type: work_or_url }
-    relationship_type: { type: controlled, authority: relationship_type }
+
+relationship_item:
+  type: work_or_url
+  subproperty_of: relationships
+relationship_type:
+  type: controlled
+  subproperty_of: relationships
+  authority: relationship_type
 ```
 
 `Hyrax::CompoundSchema` reports each compound's `display_mode` (`:inline` or
@@ -292,12 +350,12 @@ path resolves on a collection as on a work.
 In flexible mode, `Hyrax::FlexibleSchemaValidators::CompoundValidator` checks
 compound declarations when an m3 profile is saved/uploaded, so a
 misconfiguration fails with a clear message instead of producing dead Solr
-fields or unrenderable values. It enforces: `subproperties:` is a mapping; each
-sub-property config is a mapping; a `type: controlled` sub-property declares an
-option source (`authority:` or `values:`); and the compound does **not** carry
-a top-level `indexing:` (indexing is declared per sub-property — a top-level
-`indexing:` would point the catalog at a `<compound>_tesim` field the indexer
-never writes).
+fields or unrenderable values. It enforces: a `subproperty_of:` points at a
+declared `type: hash` compound property; a `type: controlled` sub-property
+declares an option source (`authority:` or `values:`); and a compound parent
+does **not** carry a top-level `indexing:` (indexing is declared per
+sub-property — a top-level `indexing:` would point the catalog at a
+`<compound>_tesim` field the indexer never writes).
 
 ## Required sub-properties
 
@@ -317,10 +375,19 @@ relationships:
   type: hash
   multiple: true
   required: true            # the work must have at least one relationship
-  subproperties:
-    related_item:      { type: work_or_url, required: true }
-    relationship_type: { type: controlled, authority: relationship_type, required: true }
-    note:              { type: string }   # optional
+
+relationship_item:
+  type: work_or_url
+  subproperty_of: relationships
+  required: true
+relationship_type:
+  type: controlled
+  subproperty_of: relationships
+  authority: relationship_type
+  required: true
+relationship_note:
+  type: string
+  subproperty_of: relationships   # optional
 ```
 
 Required sub-properties and required compounds render a `*` marker on the form

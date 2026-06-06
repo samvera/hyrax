@@ -5,10 +5,11 @@ module Hyrax
     ##
     # @api private
     #
-    # Validates compound metadata properties (a `type: hash` property declaring
-    # `subproperties:` — see {Hyrax::CompoundSchema}) in an m3 profile at save
-    # time, so a misconfiguration fails with a clear message instead of producing
-    # dead Solr fields or unrenderable values. See
+    # Validates compound metadata in an m3 profile at save time, so a
+    # misconfiguration fails with a clear message instead of producing dead Solr
+    # fields or unrenderable values. A compound is a `type: hash` parent with
+    # members declared as separate properties pointing back via
+    # `subproperty_of: <parent>` — see {Hyrax::CompoundSchema}. See
     # documentation/forms/compound_fields.md for the rules.
     class CompoundValidator
       ##
@@ -21,45 +22,45 @@ module Hyrax
 
       # @return [void]
       def validate!
-        compound_properties.each do |name, config|
-          validate_subproperties(name, config['subproperties'])
-          validate_no_top_level_indexing(name, config)
-        end
+        subproperties.each { |name, config| validate_subproperty(name, config) }
+        compound_parents.each { |name, config| validate_no_top_level_indexing(name, config) }
       end
 
       private
 
-      # Compounds are detected by `subproperties:` presence (not `type`), so
-      # other hash fields like redirects stay out of scope.
-      def compound_properties
-        (@profile&.dig('properties') || {}).select do |_name, config|
-          config.is_a?(Hash) && config['subproperties'].present?
-        end
+      def properties
+        @properties ||= (@profile&.dig('properties') || {})
       end
 
-      def validate_subproperties(name, subproperties)
-        unless subproperties.is_a?(Hash)
-          @errors << t('subproperties_not_hash', property: name)
+      # Entries that declare `subproperty_of:` — the compound members.
+      def subproperties
+        properties.select { |_name, config| config.is_a?(Hash) && config['subproperty_of'].present? }
+      end
+
+      # `type: hash` parents that have at least one subproperty pointing at them.
+      # (A `type: hash` with no children — e.g. redirects — is not a compound.)
+      def compound_parents
+        parent_names = subproperties.values.filter_map { |c| c['subproperty_of'].to_s }.to_set
+        properties.select { |name, config| parent_names.include?(name.to_s) && config.is_a?(Hash) && config['type'].to_s == 'hash' }
+      end
+
+      def validate_subproperty(name, config)
+        parent_name = config['subproperty_of'].to_s
+        parent = properties[parent_name]
+        if parent.nil? || !parent.is_a?(Hash) || parent['type'].to_s != 'hash'
+          @errors << t('unknown_parent', property: name, parent: parent_name)
           return
         end
 
-        subproperties.each { |sub_name, sub_config| validate_subproperty(name, sub_name, sub_config) }
+        return unless config['type'].to_s == 'controlled'
+        return if config['authority'].present? || config['values'].present?
+
+        @errors << t('controlled_without_source', property: name)
       end
 
-      def validate_subproperty(name, sub_name, sub_config)
-        unless sub_config.is_a?(Hash)
-          @errors << t('subproperty_not_hash', property: name, subproperty: sub_name, actual: sub_config.class.to_s)
-          return
-        end
-
-        return unless sub_config['type'].to_s == 'controlled'
-        return if sub_config['authority'].present? || sub_config['values'].present?
-
-        @errors << t('controlled_without_source', property: name, subproperty: sub_name)
-      end
-
-      # A top-level `indexing:` would point the catalog at a `<compound>_tesim`
-      # field the indexer never writes; indexing is per sub-property.
+      # A top-level `indexing:` on a parent would point the catalog at a
+      # `<compound>_tesim` field the indexer never writes; indexing is declared
+      # per subproperty.
       def validate_no_top_level_indexing(name, config)
         return if config['indexing'].blank?
         @errors << t('top_level_indexing', property: name)

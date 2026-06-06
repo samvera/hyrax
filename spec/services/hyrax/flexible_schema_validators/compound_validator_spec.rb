@@ -9,18 +9,15 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
   end
 
   describe '#validate!' do
-    context 'with a well-formed compound property' do
+    context 'with a well-formed compound (parent + flat subproperties)' do
       let(:profile) do
         {
           'properties' => {
-            'agent' => {
-              'type' => 'hash',
-              'subproperties' => {
-                'title' => { 'type' => 'string' },
-                'agent_name' => { 'type' => 'string', 'indexing' => %w[agent_name_tesim] },
-                'agent_role' => { 'type' => 'controlled', 'values' => %w[Author Editor], 'indexing' => %w[agent_role_sim] }
-              }
-            }
+            'participants' => { 'type' => 'hash' },
+            'participant_title' => { 'type' => 'string', 'subproperty_of' => 'participants' },
+            'participant_name' => { 'type' => 'string', 'subproperty_of' => 'participants', 'indexing' => %w[participant_name_tesim] },
+            'participant_role' => { 'type' => 'controlled', 'subproperty_of' => 'participants',
+                                    'values' => %w[Author Editor], 'indexing' => %w[participant_role_sim] }
           }
         }
       end
@@ -31,14 +28,12 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
       end
     end
 
-    context 'with a controlled sub-property that uses an authority instead of inline values' do
+    context 'with a controlled subproperty that uses an authority instead of inline values' do
       let(:profile) do
         {
           'properties' => {
-            'agent' => {
-              'type' => 'hash',
-              'subproperties' => { 'role' => { 'type' => 'controlled', 'authority' => 'agent_role' } }
-            }
+            'participants' => { 'type' => 'hash' },
+            'participant_role' => { 'type' => 'controlled', 'subproperty_of' => 'participants', 'authority' => 'participant_role' }
           }
         }
       end
@@ -49,62 +44,55 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
       end
     end
 
-    context 'with a controlled sub-property that declares neither authority nor values' do
+    context 'with a controlled subproperty that declares neither authority nor values' do
       let(:profile) do
         {
           'properties' => {
-            'agent' => {
-              'type' => 'hash',
-              'subproperties' => { 'role' => { 'type' => 'controlled' } }
-            }
+            'participants' => { 'type' => 'hash' },
+            'participant_role' => { 'type' => 'controlled', 'subproperty_of' => 'participants' }
           }
         }
       end
 
-      it 'records an error' do
+      it 'records an error keyed on the subproperty' do
         validator.validate!
-        expect(errors).to include(t('controlled_without_source', property: 'agent', subproperty: 'role'))
+        expect(errors).to include(t('controlled_without_source', property: 'participant_role'))
       end
     end
 
-    context 'with a top-level indexing declaration on the compound' do
+    context 'with a top-level indexing declaration on the compound parent' do
       let(:profile) do
         {
           'properties' => {
-            'agent' => {
-              'type' => 'hash',
-              'indexing' => %w[agent_tesim],
-              'subproperties' => { 'agent_name' => { 'type' => 'string' } }
-            }
+            'participants' => { 'type' => 'hash', 'indexing' => %w[participants_tesim] },
+            'participant_name' => { 'type' => 'string', 'subproperty_of' => 'participants' }
           }
         }
       end
 
-      it 'records an error that indexing belongs on sub-properties' do
+      it 'records an error that indexing belongs on subproperties' do
         validator.validate!
-        expect(errors).to include(t('top_level_indexing', property: 'agent'))
+        expect(errors).to include(t('top_level_indexing', property: 'participants'))
       end
     end
 
-    context 'when subproperties is not a mapping' do
+    context 'with a subproperty whose parent is not a declared type: hash compound' do
       let(:profile) do
-        { 'properties' => { 'agent' => { 'type' => 'hash', 'subproperties' => %w[a b] } } }
+        {
+          'properties' => {
+            # parent missing entirely
+            'participant_name' => { 'type' => 'string', 'subproperty_of' => 'participants' },
+            # parent exists but is not a hash
+            'note' => { 'type' => 'string' },
+            'note_detail' => { 'type' => 'string', 'subproperty_of' => 'note' }
+          }
+        }
       end
 
-      it 'records an error' do
+      it 'records an unknown_parent error for each' do
         validator.validate!
-        expect(errors).to include(t('subproperties_not_hash', property: 'agent'))
-      end
-    end
-
-    context 'when a sub-property config is not a mapping' do
-      let(:profile) do
-        { 'properties' => { 'agent' => { 'type' => 'hash', 'subproperties' => { 'name' => 'string' } } } }
-      end
-
-      it 'records an error' do
-        validator.validate!
-        expect(errors).to include(t('subproperty_not_hash', property: 'agent', subproperty: 'name', actual: 'String'))
+        expect(errors).to include(t('unknown_parent', property: 'participant_name', parent: 'participants'))
+        expect(errors).to include(t('unknown_parent', property: 'note_detail', parent: 'note'))
       end
     end
 

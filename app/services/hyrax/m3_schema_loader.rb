@@ -39,10 +39,38 @@ module Hyrax
     # @param [#to_s] schema_name
     # @return [Enumerable<AttributeDefinition]
     def definitions(schema_name, version, contexts = nil)
+      contextual_attributes(schema_name, version, contexts).map do |name, config|
+        # Compound subproperties (entries declaring `subproperty_of:`) are not
+        # standalone resource attributes — they are gathered into their parent
+        # compound by Hyrax::CompoundSchema. Exclude them here so they get no
+        # accessor, form input, or index rule of their own.
+        next if subproperty_config?(config)
+
+        M3AttributeDefinition.new(name, config)
+      end.compact
+    rescue ActiveRecord::StatementInvalid
+      Rails.logger.error "Skipping definition load for migrations to run"
+      []
+    end
+
+    ##
+    # @return [Hash{String => Hash}] all attribute configs for the schema,
+    #   INCLUDING subproperties (see {SchemaLoader#raw_attribute_configs}), with
+    #   the same context filtering {#definitions} applies.
+    def raw_definitions(schema_name, version, contexts = nil)
+      contextual_attributes(schema_name, version, contexts).to_h
+    rescue ActiveRecord::StatementInvalid
+      Rails.logger.error "Skipping definition load for migrations to run"
+      {}
+    end
+
+    # The schema's attributes after context filtering (but before the
+    # subproperty exclusion {#definitions} applies). Yields `[name, config]`.
+    def contextual_attributes(schema_name, version, contexts = nil)
       schema = Hyrax::FlexibleSchema.find_by(id: version) || Hyrax::FlexibleSchema.create_default_schema
       attributes = schema.attributes_for(schema_name)
       attributes ||= fallback_schema_for(schema_name)
-      attributes.map do |name, config|
+      attributes.filter_map do |name, config|
         # We might be able to consolidate these conditions, but they have been kept separate to make it easier to reason about
         # If there is a context filter on the metadata field and no context is set, skip it
         next if contexts.blank? && config['context'].present?
@@ -51,11 +79,8 @@ module Hyrax
         next if contexts.present? && config['context'].present? && !(Array(contexts) & Array(config['context'])).any?
 
         # Wew, we are in the clear to use this field
-        M3AttributeDefinition.new(name, config)
-      end.compact
-    rescue ActiveRecord::StatementInvalid
-      Rails.logger.error "Skipping definition load for migrations to run"
-      []
+        [name, config]
+      end
     end
 
     # rubocop:disable Metrics/MethodLength

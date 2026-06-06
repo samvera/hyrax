@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::CompoundSchema do
+  # These resources stand in for what the schema loaders produce: each compound
+  # parent is a `hash` attribute whose meta carries the folded `subproperties:`
+  # map (the loaders fold each compound's `subproperty_of` members into the
+  # parent's meta) plus optional `groups:` label metadata. Each subproperty spec
+  # carries its own `group`, `form` (cols/as), index_keys, etc.
   let(:resource_class) do
     Class.new(Hyrax::Resource) do
       def self.name
@@ -11,14 +16,13 @@ RSpec.describe Hyrax::CompoundSchema do
       attribute :contributors,
                 Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
                   subproperties: {
-                    'given_name' => { 'type' => 'string', 'index_keys' => %w[contributors_given_name_sim contributors_given_name_tesim] },
-                    'family_name' => { 'type' => 'string', 'index_keys' => %w[contributors_family_name_tesim] },
-                    'role_label' => { 'type' => 'controlled', 'authority' => 'contributor_role', 'display' => false }
+                    'given_name' => { 'type' => 'string', 'group' => 'identity', 'form' => { 'cols' => 6 },
+                                      'index_keys' => %w[contributors_given_name_sim contributors_given_name_tesim] },
+                    'family_name' => { 'type' => 'string', 'group' => 'identity', 'form' => { 'cols' => 6 },
+                                       'index_keys' => %w[contributors_family_name_tesim] },
+                    'role_label' => { 'type' => 'controlled', 'authority' => 'contributor_role', 'group' => 'role', 'display' => false }
                   },
-                  groups: [
-                    { 'label' => 'Identity', 'cols' => 6, 'fields' => %w[given_name family_name] },
-                    { 'label' => 'Role', 'cols' => 6, 'fields' => %w[role_label] }
-                  ]
+                  groups: { 'identity' => { 'label' => 'Identity' }, 'role' => { 'label' => 'Role' } }
                 )
       attribute :identifiers,
                 Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
@@ -184,13 +188,15 @@ RSpec.describe Hyrax::CompoundSchema do
   end
 
   describe '#definition_for' do
-    it 'normalizes subproperties with type, authority, index_keys and display' do
+    it 'normalizes subproperties with type, authority, index_keys, display, group, cols and as' do
       definition = schema.definition_for(:contributors)
       expect(definition[:subproperties]['role_label'])
-        .to eq(type: 'controlled', authority: 'contributor_role', values: nil, index_keys: [], display: false, required: false)
+        .to eq(type: 'controlled', authority: 'contributor_role', values: nil, index_keys: [],
+               display: false, required: false, group: 'role', cols: 6, as: nil)
       expect(definition[:subproperties]['given_name'])
         .to eq(type: 'string', authority: nil, values: nil,
-               index_keys: %w[contributors_given_name_sim contributors_given_name_tesim], display: true, required: false)
+               index_keys: %w[contributors_given_name_sim contributors_given_name_tesim],
+               display: true, required: false, group: 'identity', cols: 6, as: nil)
     end
 
     it 'reads per-sub-property index_keys (literal Solr field names)' do
@@ -207,22 +213,26 @@ RSpec.describe Hyrax::CompoundSchema do
       expect(schema.definition_for(:contributors)[:subproperties]['role_label'][:display]).to be false
     end
 
+    it 'defaults cols to 6 when no form placement is declared' do
+      expect(schema.definition_for(:identifiers)[:subproperties]['value'][:cols]).to eq(6)
+    end
+
     it 'normalizes an inline controlled-vocabulary values list to [label, id] pairs' do
       values = schema.definition_for(:agent)[:subproperties]['agent_role'][:values]
       expect(values).to eq([%w[Author Author], %w[Editor ed]])
     end
 
-    it 'carries the declared groups' do
+    it 'reconstructs groups from subproperty membership and the parent group labels' do
       groups = schema.definition_for(:contributors)[:groups]
       expect(groups).to eq([
-                             { label: 'Identity', cols: 6, fields: %w[given_name family_name] },
-                             { label: 'Role', cols: 6, fields: %w[role_label] }
+                             { key: 'identity', label: 'Identity', fields: %w[given_name family_name] },
+                             { key: 'role', label: 'Role', fields: %w[role_label] }
                            ])
     end
 
-    it 'defaults groups to a single all-fields group when none declared' do
+    it 'puts subproperties with no group in a single default (unlabeled) group' do
       groups = schema.definition_for(:identifiers)[:groups]
-      expect(groups).to eq([{ label: nil, cols: 6, fields: %w[value identifier_type] }])
+      expect(groups).to eq([{ key: nil, label: nil, fields: %w[value identifier_type] }])
     end
   end
 
@@ -236,9 +246,10 @@ RSpec.describe Hyrax::CompoundSchema do
 
   describe '.for_solr_document' do
     # The attribute map a flexible schema loader returns for a version:
-    # `{ name => dry_type_with_meta }` — the same shape SchemaLoader#attributes_for
-    # produces. Show pages resolve compounds from this (via schema_version)
-    # without loading the resource.
+    # `{ name => dry_type_with_meta }` (with subproperties folded into the
+    # parent meta) — the same shape SchemaLoader#attributes_for produces. Show
+    # pages resolve compounds from this (via schema_version) without loading the
+    # resource.
     let(:version_attributes) do
       resource_class.schema.index_by(&:name)
     end
