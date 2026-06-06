@@ -8,6 +8,8 @@ module Hyrax
   # model and wires each one's virtual `<name>_attributes` property and
   # populator from the schema, in both flex modes.
   module CompoundFieldBehavior
+    include Hyrax::CompoundRowPlumbing
+
     # Register the virtual `<name>_attributes` populator properties on the
     # singleton class for every compound on the resource. Must run before Reform
     # builds the deserialization schema; the flexible-mode init path calls this,
@@ -30,7 +32,7 @@ module Hyrax
 
     # Strip each compound's renamed bare key so the `<name>_attributes`
     # populator is the single write entry point (the Field Behavior contract;
-    # see documentation/forms/field_behaviors.md).
+    # see documentation/field_behaviors.md).
     def deserialize!(params)
       result = super
       return result unless result.respond_to?(:delete)
@@ -64,21 +66,16 @@ module Hyrax
     end
 
     def build_compound_rows(fragment, allowed_keys)
-      compound_fragment_pairs(fragment)
+      fragment_pairs(fragment)
         .sort_by { |key, _row| key.to_i }
         .map { |_key, row| compound_row_from(row, allowed_keys) }
         .compact
     end
 
-    def compound_fragment_pairs(fragment)
-      return {} if fragment.nil?
-      fragment.respond_to?(:to_unsafe_h) ? fragment.to_unsafe_h : fragment.to_h
-    end
-
     # Returns nil for a row marked for destruction or whose declared sub-properties
     # are all blank, otherwise the persisted hash for that row.
     def compound_row_from(row, allowed_keys)
-      row = row.respond_to?(:to_unsafe_h) ? row.to_unsafe_h : row.to_h
+      row = row_hash(row)
       return nil if %w[true 1].include?(row['_destroy'].to_s)
 
       entry = allowed_keys.each_with_object({}) do |key, memo|
