@@ -152,19 +152,41 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     profile['classes'].keys.each do |class_name|
       @class_names[class_name] = {}
     end
-    profile['properties'].each do |key, values|
+    all_properties = profile['properties'] || {}
+    all_properties.each do |key, values|
       property_name = values['name'] || key
-      values['available_on']['class'].each do |property_class|
+      # A compound subproperty may omit `available_on`; it inherits the class
+      # scope of its parent compound. (It still appears in each class's attribute
+      # map so the schema loader can fold it into the parent; the loader excludes
+      # it from the resource's real attributes.)
+      classes = property_classes(values, all_properties)
+      next if classes.blank?
+
+      classes.each do |property_class|
         # map some m3 items to what Hyrax expects
-        values = values_map(values)
-        @class_names[property_class][property_name] = values
+        mapped = values_map(values)
+        @class_names[property_class] ||= {}
+        @class_names[property_class][property_name] = mapped
       end
     end
     @class_names
   end
 
+  # The classes a property is available on: its own `available_on`, or — for a
+  # compound subproperty that omits it — its parent compound's `available_on`.
+  def property_classes(values, all_properties)
+    own = values.dig('available_on', 'class')
+    return Array(own) if own.present?
+
+    parent = values['subproperty_of'] && all_properties[values['subproperty_of'].to_s]
+    Array(parent&.dig('available_on', 'class'))
+  end
+
   def values_map(values)
-    values['type'] = lookup_type(values['range'])
+    # Derive the Dry type from the XSD `range` when present; otherwise keep the
+    # declared `type:` (compound subproperties declare `type:` directly and have
+    # no `range` of their own).
+    values['type'] = lookup_type(values['range']) if values['range'].present?
     values['predicate'] = values['property_uri']
     values['index_keys'] = values['indexing']
     values['context'] = values.dig('available_on', 'context')
@@ -209,6 +231,8 @@ class Hyrax::FlexibleSchema < ApplicationRecord
 
   def lookup_type(range)
     case range
+    when nil, ''
+      nil
     when "http://www.w3.org/2001/XMLSchema#dateTime"
       'date_time'
     else
