@@ -52,10 +52,48 @@ module Hyrax
           return
         end
 
-        return unless config['type'].to_s == 'controlled'
-        return if config['authority'].present? || config['values'].present?
+        case config['type'].to_s
+        when 'controlled' then validate_controlled_source(name, config)
+        when 'orcid'      then validate_orcid(name, config, parent_name)
+        end
+      end
 
+      def validate_controlled_source(name, config)
+        return if config['authority'].present? || config['values'].present?
         @errors << t('controlled_without_source', property: name)
+      end
+
+      # An orcid sub-property must not declare an option source (it is a
+      # free-text iD, not a controlled vocabulary). Its optional `badge_for:`
+      # must name a sibling sub-property on the same compound parent — not
+      # itself, and not a property that lives outside the parent.
+      def validate_orcid(name, config, parent_name)
+        if config['authority'].present? || config['values'].present?
+          @errors << t('orcid_with_option_source',
+                       property: name,
+                       default: "Sub-property `#{name}` declares type: orcid and must not set authority: or values:.")
+        end
+        validate_badge_for(name, config, parent_name)
+      end
+
+      def validate_badge_for(name, config, parent_name)
+        badge_for = config['badge_for'].to_s
+        return if badge_for.blank?
+
+        if badge_for == name.to_s
+          @errors << t('orcid_badge_for_self',
+                       property: name,
+                       default: "Sub-property `#{name}` declares badge_for: pointing at itself.")
+          return
+        end
+
+        target = properties[badge_for]
+        return if target.is_a?(Hash) && target['subproperty_of'].to_s == parent_name
+
+        @errors << t('orcid_badge_for_unknown_sibling',
+                     property: name, target: badge_for, parent: parent_name,
+                     default: "Sub-property `#{name}` declares badge_for: `#{badge_for}`, " \
+                              "which is not a sibling sub-property of `#{parent_name}`.")
       end
 
       # A top-level `indexing:` on a parent would point the catalog at a

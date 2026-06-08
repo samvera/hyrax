@@ -115,5 +115,128 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
         expect(errors).to be_empty
       end
     end
+
+    context 'with a well-formed orcid sub-property bound to a sibling' do
+      let(:profile) do
+        {
+          'properties' => {
+            'participants' => { 'type' => 'hash' },
+            'participant_name' => { 'type' => 'string', 'subproperty_of' => 'participants' },
+            'participant_orcid' => { 'type' => 'orcid', 'subproperty_of' => 'participants', 'badge_for' => 'participant_name' }
+          }
+        }
+      end
+
+      it 'is valid' do
+        validator.validate!
+        expect(errors).to be_empty
+      end
+    end
+
+    context 'with a well-formed orcid sub-property and no badge_for' do
+      let(:profile) do
+        {
+          'properties' => {
+            'participants' => { 'type' => 'hash' },
+            'participant_orcid' => { 'type' => 'orcid', 'subproperty_of' => 'participants' }
+          }
+        }
+      end
+
+      it 'is valid' do
+        validator.validate!
+        expect(errors).to be_empty
+      end
+    end
+
+    context 'with an orcid sub-property that also declares values:' do
+      let(:profile) do
+        {
+          'properties' => {
+            'participants' => { 'type' => 'hash' },
+            'participant_orcid' => { 'type' => 'orcid', 'subproperty_of' => 'participants',
+                                     'values' => %w[Author Editor] }
+          }
+        }
+      end
+
+      it 'records an error' do
+        validator.validate!
+        expect(errors.join("\n")).to include('participant_orcid')
+        expect(errors.join("\n")).to match(/authority|values/i)
+      end
+    end
+
+    context 'with an orcid sub-property that also declares authority:' do
+      let(:profile) do
+        {
+          'properties' => {
+            'participants' => { 'type' => 'hash' },
+            'participant_orcid' => { 'type' => 'orcid', 'subproperty_of' => 'participants',
+                                     'authority' => 'participant_role' }
+          }
+        }
+      end
+
+      it 'records an error' do
+        validator.validate!
+        expect(errors.join("\n")).to include('participant_orcid')
+      end
+    end
+
+    context 'with an orcid sub-property whose badge_for points at itself' do
+      let(:profile) do
+        {
+          'properties' => {
+            'participants' => { 'type' => 'hash' },
+            'participant_orcid' => { 'type' => 'orcid', 'subproperty_of' => 'participants',
+                                     'badge_for' => 'participant_orcid' }
+          }
+        }
+      end
+
+      it 'records an error' do
+        validator.validate!
+        expect(errors.join("\n")).to include('participant_orcid')
+        expect(errors.join("\n")).to match(/itself/i)
+      end
+    end
+
+    context 'with an orcid sub-property whose badge_for points at a non-sibling' do
+      let(:profile) do
+        {
+          'properties' => {
+            'participants' => { 'type' => 'hash' },
+            'participant_orcid' => { 'type' => 'orcid', 'subproperty_of' => 'participants',
+                                     'badge_for' => 'unrelated_property' },
+            # Exists at the top level but is not a sibling of participant_orcid
+            'unrelated_property' => { 'type' => 'string' }
+          }
+        }
+      end
+
+      it 'records an error' do
+        validator.validate!
+        expect(errors.join("\n")).to include('participant_orcid')
+        expect(errors.join("\n")).to include('unrelated_property')
+      end
+    end
+
+    context 'with an orcid sub-property whose badge_for points at a missing sibling' do
+      let(:profile) do
+        {
+          'properties' => {
+            'participants' => { 'type' => 'hash' },
+            'participant_orcid' => { 'type' => 'orcid', 'subproperty_of' => 'participants',
+                                     'badge_for' => 'missing_sibling' }
+          }
+        }
+      end
+
+      it 'records an error' do
+        validator.validate!
+        expect(errors.join("\n")).to include('missing_sibling')
+      end
+    end
   end
 end
