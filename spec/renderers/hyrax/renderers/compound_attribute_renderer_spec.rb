@@ -120,6 +120,67 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
     end
   end
 
+  describe 'orcid sub-property' do
+    let(:bare_id) { '0000-0002-2385-985X' }
+
+    context 'when bound to a sibling via badge_for:' do
+      let(:values) { [{ 'participant_name' => 'Hosseini, Mohammad', 'participant_orcid' => bare_id }] }
+      let(:subproperties) do
+        { 'participant_name' => { type: 'string', authority: nil, values: nil, badge_for: nil },
+          'participant_orcid' => { type: 'orcid', authority: nil, values: nil, badge_for: 'participant_name' } }
+      end
+      let(:renderer) { described_class.new(:participants, values, label: 'Participants', html_dl: true, subproperties: subproperties) }
+
+      it 'appends the badge inside the sibling sub-property value' do
+        markup = renderer.render_dl_row
+        value_block = markup[/hyrax-compound-subproperty-value">.*?<\/span>/m, 0]
+        expect(value_block).to include('Hosseini, Mohammad')
+        expect(value_block).to include('hyrax-compound-orcid-badge')
+        expect(value_block).to include("https://orcid.org/#{bare_id}")
+      end
+
+      it 'does not render the orcid as its own sub-property row' do
+        markup = renderer.render_dl_row
+        expect(markup).not_to match(/Participant orcid:/)
+      end
+
+      it 'uses the sibling display value in the badge aria-label' do
+        markup = renderer.render_dl_row
+        expect(markup).to include('aria-label="ORCID iD for Hosseini, Mohammad"')
+      end
+    end
+
+    context 'when the badge_for: target is blank in this row' do
+      let(:values) { [{ 'participant_orcid' => bare_id }] }
+      let(:subproperties) do
+        { 'participant_name' => { type: 'string', authority: nil, values: nil, badge_for: nil },
+          'participant_orcid' => { type: 'orcid', authority: nil, values: nil, badge_for: 'participant_name' } }
+      end
+      let(:renderer) { described_class.new(:participants, values, label: 'Participants', html_dl: true, subproperties: subproperties) }
+
+      it 'falls back to rendering the orcid as its own sub-property row' do
+        markup = renderer.render_dl_row
+        expect(markup).to match(/Participant orcid:/)
+        expect(markup).to include("https://orcid.org/#{bare_id}")
+      end
+    end
+
+    context 'when no badge_for: is declared' do
+      let(:values) { [{ 'participant_name' => 'Ada', 'participant_orcid' => bare_id }] }
+      let(:subproperties) do
+        { 'participant_name' => { type: 'string', authority: nil, values: nil, badge_for: nil },
+          'participant_orcid' => { type: 'orcid', authority: nil, values: nil, badge_for: nil } }
+      end
+      let(:renderer) { described_class.new(:participants, values, label: 'Participants', html_dl: true, subproperties: subproperties) }
+
+      it 'renders the orcid as its own sub-property row' do
+        markup = renderer.render_dl_row
+        expect(markup).to match(/Participant orcid:/)
+        expect(markup).to include("https://orcid.org/#{bare_id}")
+      end
+    end
+  end
+
   describe 'work_or_url sub-property' do
     let(:subproperties) { { 'related_item' => { type: 'work_or_url', authority: nil, values: nil } } }
 
