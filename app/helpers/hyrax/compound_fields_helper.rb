@@ -126,6 +126,35 @@ module Hyrax
         default: sub_property.to_s.humanize)
     end
 
+    ##
+    # Renders a small linked ORCID iD badge. The href targets
+    # `https://orcid.org/<id>`; the bare iD is extracted from either input form
+    # (bare or full URL) via {Hyrax::OrcidValidator.extract_bare_orcid}, so the
+    # caller does not need to normalize first.
+    #
+    # @param value [String, nil] a bare ORCID iD (`0000-0000-0000-0000`) or the
+    #   full URL form
+    # @param name [String, nil] the sibling's display value; used in the
+    #   accessibility / hover label ("ORCID iD for Hosseini, Mohammad").
+    #   When blank, falls back to the plain "ORCID iD" alt text.
+    # @return [ActiveSupport::SafeBuffer, nil] the badge HTML, or nil when
+    #   +value+ is blank or unparseable.
+    def orcid_badge(value, name: nil)
+      bare_id = Hyrax::OrcidValidator.extract_bare_orcid(from: value.to_s)
+      return nil if bare_id.blank?
+
+      alt = t('hyrax.compound_fields.orcid.badge_alt', default: 'ORCID iD')
+      label = name.present? ? t('hyrax.compound_fields.orcid.badge_aria', name: name, default: "ORCID iD for #{name}") : alt
+      link_to "https://orcid.org/#{bare_id}",
+              class: 'hyrax-compound-orcid-badge',
+              target: '_blank',
+              rel: 'noopener noreferrer',
+              'aria-label' => label,
+              title: label do
+        image_tag('orcid.png', alt: alt)
+      end
+    end
+
     private
 
     # Options from a QA local authority. Uses {Hyrax::TolerantSelectService} so

@@ -129,4 +129,50 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
       end
     end
   end
+
+  describe '#orcid_badge' do
+    let(:bare_id) { '0000-0002-2385-985X' }
+
+    it 'returns nil when the value is blank' do
+      expect(helper.orcid_badge(nil)).to be_nil
+      expect(helper.orcid_badge('')).to be_nil
+    end
+
+    it 'returns nil for an unparseable value' do
+      expect(helper.orcid_badge('not-an-orcid')).to be_nil
+    end
+
+    it 'links to https://orcid.org/<id> with the bare iD when given the bare form' do
+      html = helper.orcid_badge(bare_id)
+      expect(html).to match(%r{href="https://orcid\.org/#{bare_id}"})
+    end
+
+    it 'links to https://orcid.org/<id> when given the full URL form' do
+      html = helper.orcid_badge("https://orcid.org/#{bare_id}")
+      expect(html).to match(%r{href="https://orcid\.org/#{bare_id}"})
+    end
+
+    it 'opens in a new tab with rel=noopener noreferrer' do
+      html = helper.orcid_badge(bare_id)
+      expect(html).to include('target="_blank"')
+      expect(html).to include('rel="noopener noreferrer"')
+    end
+
+    it 'uses the sibling name in the aria-label and title when provided' do
+      html = helper.orcid_badge(bare_id, name: 'Hosseini, Mohammad')
+      expect(html).to include('aria-label="ORCID iD for Hosseini, Mohammad"')
+      expect(html).to include('title="ORCID iD for Hosseini, Mohammad"')
+    end
+
+    it 'falls back to the plain alt text when no sibling name is given' do
+      html = helper.orcid_badge(bare_id)
+      expect(html).to include('aria-label="ORCID iD"')
+    end
+
+    it 'renders the orcid.png image with an alt attribute' do
+      html = helper.orcid_badge(bare_id)
+      expect(html).to match(/<img[^>]*alt="ORCID iD"/)
+      expect(html).to match(/<img[^>]*src="[^"]*orcid[^"]*\.png"/)
+    end
+  end
 end
