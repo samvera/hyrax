@@ -979,6 +979,17 @@ properties:
     indexing: [participant_role_sim, participant_role_tesim]
     form:
       cols: 4
+  # An ORCID iD sub-property. `badge_for:` binds the iD to a sibling so the
+  # show renderer appends an inline ORCID badge next to that sibling's value
+  # instead of rendering the iD as its own row.
+  participant_orcid:
+    type: orcid
+    subproperty_of: participants
+    group: identity
+    badge_for: participant_name
+    indexing: [participant_orcid_ssim]
+    form:
+      cols: 4
   identifiers:
     available_on:
       class:
