@@ -864,6 +864,12 @@ de:
         number_of_results_to_display_per_page: Anzahl der Ergebnisse die pro Seite angezeigt werden
         results_per_page: "Ergebnisse pro Seite:"
         sort_by_html: "<span>Sortieren nach:</span>"
+    compound_fields:
+      orcid:
+        badge_alt: ORCID iD
+        badge_aria: ORCID iD von %{name}
+        invalid: "%{compound} > %{field}: \"%{value}\" ist keine gültige ORCID iD"
+        placeholder: 0000-0000-0000-0000
     contact_form:
       button_label: Senden
       email_label: Ihre E-Mail
