@@ -244,6 +244,29 @@ RSpec.describe Hyrax::CompoundSchema do
     end
   end
 
+  describe 'instance schema source ordering (singleton before class)' do
+    # build_definitions is first-source-wins per name, so a flexible instance's
+    # singleton schema (current version) must precede its class schema (frozen
+    # at class-load) for a freshly-uploaded profile to win. See
+    # #schema_sources_for.
+    it 'lists the singleton schema before the class schema for an instance' do
+      class_schema = double('class_schema')
+      singleton_schema = double('singleton_schema')
+      resource = double('resource',
+                        class: double('klass', schema: class_schema),
+                        singleton_class: double('singleton', schema: singleton_schema))
+
+      sources = described_class.send(:schema_sources_for, resource)
+      expect(sources).to eq([singleton_schema, class_schema])
+    end
+
+    it 'uses the class schema alone for a class argument (non-flexible)' do
+      schema_obj = double('schema')
+      klass = Class.new { define_singleton_method(:schema) { schema_obj } }
+      expect(described_class.send(:schema_sources_for, klass)).to eq([schema_obj])
+    end
+  end
+
   describe '.for_solr_document' do
     # The attribute map a flexible schema loader returns for a version:
     # `{ name => dry_type_with_meta }` (with subproperties folded into the

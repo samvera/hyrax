@@ -64,17 +64,24 @@ module Hyrax
     end
     private_class_method :flexible_attributes_for
 
-    # For a class, its own schema. For an instance, both the class schema
-    # (non-flexible) and the singleton schema (flexible: the m3 attributes are
-    # applied to the singleton at load time). Unioning both makes {.for} work in
-    # both flex modes.
+    # For a class, its own schema. For an instance, both the singleton schema
+    # (flexible mode) and the class schema (non-flexible mode), so {.for} works
+    # in both.
+    #
+    # Order is load-bearing: the singleton schema must come first so it wins
+    # {#build_definitions}' first-source-per-name dedup. The class schema is
+    # frozen at class-load and not refreshed when the active FlexibleSchema
+    # version changes, so a flexible instance's singleton schema (rebuilt at the
+    # current version) is the authoritative source for a freshly-uploaded
+    # profile. In non-flexible mode the singleton has no extra schema, so order
+    # is moot.
     def self.schema_sources_for(resource)
       if resource.is_a?(Class)
         [(resource.schema if resource.respond_to?(:schema))]
       else
         sources = []
-        sources << resource.class.schema if resource.class.respond_to?(:schema)
         sources << resource.singleton_class.schema if resource.respond_to?(:singleton_class) && resource.singleton_class.respond_to?(:schema)
+        sources << resource.class.schema if resource.class.respond_to?(:schema)
         sources
       end.compact
     end
