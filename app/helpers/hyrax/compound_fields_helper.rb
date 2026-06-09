@@ -145,20 +145,23 @@ module Hyrax
 
       alt = t('hyrax.compound_fields.orcid.badge_alt', default: 'ORCID iD')
       label = name.present? ? t('hyrax.compound_fields.orcid.badge_aria', name: name, default: "ORCID iD for #{name}") : alt
-      # `ActionController::Base.helpers.image_tag` (not the bare `image_tag`)
-      # resolves the asset path through a full view-equivalent context, so the
-      # badge image works the same whether the helper is called from a view
-      # (helper context) or from inside `CompoundAttributeRenderer` (a non-view
-      # Ruby object that only includes the helper module).
-      img = ActionController::Base.helpers.image_tag('orcid.png', alt: alt)
-      link_to "https://orcid.org/#{bare_id}",
-              class: 'hyrax-compound-orcid-badge',
-              target: '_blank',
-              rel: 'noopener noreferrer',
-              'aria-label' => label,
-              title: label do
-        img
-      end
+      # `ActionController::Base.helpers` is a view-equivalent proxy that
+      # resolves asset paths and tag helpers without needing the caller to
+      # carry `output_buffer`. Using it for both `image_tag` and `link_to`
+      # keeps the helper safe in either context: a view (where `self` already
+      # has output_buffer) or `Hyrax::Renderers::CompoundAttributeRenderer`
+      # (a non-view Ruby object). The non-block `link_to(content, url, opts)`
+      # form is required on Rails 6.1 — the block form calls `capture` which
+      # would raise `undefined method output_buffer=` on the renderer.
+      helpers = ActionController::Base.helpers
+      img = helpers.image_tag('orcid.png', alt: alt)
+      helpers.link_to(img,
+                      "https://orcid.org/#{bare_id}",
+                      class: 'hyrax-compound-orcid-badge',
+                      target: '_blank',
+                      rel: 'noopener noreferrer',
+                      'aria-label' => label,
+                      title: label)
     end
 
     private
