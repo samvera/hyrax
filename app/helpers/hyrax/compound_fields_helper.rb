@@ -145,13 +145,19 @@ module Hyrax
 
       alt = t('hyrax.compound_fields.orcid.badge_alt', default: 'ORCID iD')
       label = name.present? ? t('hyrax.compound_fields.orcid.badge_aria', name: name, default: "ORCID iD for #{name}") : alt
+      # `ActionController::Base.helpers.image_tag` (not the bare `image_tag`)
+      # resolves the asset path through a full view-equivalent context, so the
+      # badge image works the same whether the helper is called from a view
+      # (helper context) or from inside `CompoundAttributeRenderer` (a non-view
+      # Ruby object that only includes the helper module).
+      img = ActionController::Base.helpers.image_tag('orcid.png', alt: alt)
       link_to "https://orcid.org/#{bare_id}",
               class: 'hyrax-compound-orcid-badge',
               target: '_blank',
               rel: 'noopener noreferrer',
               'aria-label' => label,
               title: label do
-        image_tag('orcid.png', alt: alt)
+        img
       end
     end
 

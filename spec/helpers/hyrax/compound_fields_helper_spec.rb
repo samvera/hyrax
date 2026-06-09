@@ -172,7 +172,9 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
     it 'renders the orcid.png image with an alt attribute' do
       html = helper.orcid_badge(bare_id)
       expect(html).to match(/<img[^>]*alt="ORCID iD"/)
-      expect(html).to match(/<img[^>]*src="[^"]*orcid[^"]*\.png"/)
+      # Asset-pipeline-resolved path (rooted) so the image loads regardless of
+      # whether the helper is called from a view or from the renderer.
+      expect(html).to match(%r{<img[^>]*src="/[^"]*orcid[^"]*\.png})
     end
   end
 end
