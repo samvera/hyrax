@@ -962,6 +962,8 @@ properties:
     available_on:
       class:
         - Hyrax::Work
+        - Monograph
+        - GenericWork
         - CollectionResource
     data_type: array
     type: hash

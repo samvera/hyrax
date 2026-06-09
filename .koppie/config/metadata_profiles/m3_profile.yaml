@@ -938,6 +938,7 @@ properties:
     available_on:
       class:
         - GenericWork
+        - Monograph
         - CollectionResource
     data_type: array
     type: hash
