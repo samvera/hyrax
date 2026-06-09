@@ -963,7 +963,7 @@ properties:
       class:
         - Hyrax::Work
         - Monograph
-        - GenericWork
+        - GenericWorkResource
         - CollectionResource
     data_type: array
     type: hash
