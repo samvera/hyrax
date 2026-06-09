@@ -3,8 +3,8 @@
 // rebinding. The sentinel guards against the IIFE running twice (Turbolinks
 // re-evaluates module scripts on some navigation paths), which would stack
 // duplicate listeners. Mirrors hyrax/redirects.js.
-(function() {
-    if (document.hyraxCompoundsBound) return;
+(function () {
+    if (document.hyraxCompoundsBound) { return; }
     document.hyraxCompoundsBound = true;
 
     // Bind select2 to a `work_or_url` sub-property. The v3 API (Hyrax bundles
@@ -58,41 +58,51 @@
     }
     document.addEventListener('turbolinks:load', bindAll);
 
-    document.addEventListener('click', function(event) {
+    // Remove a compound row: persisted rows are hidden + their `_destroy` flag
+    // flipped so the server-side populator drops them; unsaved rows are
+    // removed from the DOM outright. Returns true when the click was a
+    // remove-row gesture (so the dispatcher can stop further handling).
+    function handleRemoveClick(event) {
         var removeButton = event.target.closest('[data-hyrax-compound-remove-row]');
-        if (removeButton) {
-            var row = removeButton.closest('[data-hyrax-compound-row]');
-            if (!row) return;
-            var destroyFlag = row.querySelector('[data-hyrax-compound-destroy-flag]');
-            if (destroyFlag && destroyFlag.value !== undefined) {
-                // Persisted rows: flip the _destroy flag and hide so the
-                // populator drops the row server-side.
-                destroyFlag.value = '1';
-                row.style.display = 'none';
-            } else {
-                row.parentNode.removeChild(row);
-            }
-            return;
+        if (!removeButton) { return false; }
+        var row = removeButton.closest('[data-hyrax-compound-row]');
+        if (!row) { return true; }
+        var destroyFlag = row.querySelector('[data-hyrax-compound-destroy-flag]');
+        if (destroyFlag && destroyFlag.value !== undefined) {
+            destroyFlag.value = '1';
+            row.style.display = 'none';
+        } else {
+            row.parentNode.removeChild(row);
         }
+        return true;
+    }
 
+    // Add a compound row: clone the section's template, swap the `__INDEX__`
+    // placeholder for a monotonic counter, append, and bind any select2
+    // inputs the new row carries. Returns true when the click was an
+    // add-row gesture.
+    function handleAddClick(event) {
         var addButton = event.target.closest('[data-hyrax-compound-add-row]');
-        if (!addButton) return;
+        if (!addButton) { return false; }
         var section = addButton.closest('[data-hyrax-compound]');
-        if (!section) return;
+        if (!section) { return true; }
         var template = section.querySelector('[data-hyrax-compound-row-template]');
         var rowsHost = section.querySelector('[data-hyrax-compound-rows]');
-        if (!template || !rowsHost) return;
+        if (!template || !rowsHost) { return true; }
 
-        // Monotonic counter on the section; never recycle an index after a
-        // row is removed. Fallback to row count when the attribute is missing.
         var nextIndex = parseInt(section.dataset.nextIndex, 10);
         if (isNaN(nextIndex)) {
             nextIndex = rowsHost.querySelectorAll('[data-hyrax-compound-row]').length;
         }
         var html = template.innerHTML.replace(/__INDEX__/g, nextIndex);
         rowsHost.insertAdjacentHTML('beforeend', html);
-        // Bind select2 on any work_or_url inputs in the row just added.
         bindWorkOrUrlInputs(rowsHost.lastElementChild || rowsHost);
         section.dataset.nextIndex = String(nextIndex + 1);
+        return true;
+    }
+
+    document.addEventListener('click', function (event) {
+        if (handleRemoveClick(event)) { return; }
+        handleAddClick(event);
     });
-})();
+}());
