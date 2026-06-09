@@ -188,6 +188,26 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
       end
     end
 
+    context 'when the orcid value is unparseable' do
+      let(:values) { [{ 'participant_name' => 'Hosseini, Mohammad', 'participant_orcid' => 'not-an-id' }] }
+      let(:subproperties) do
+        { 'participant_name' => { type: 'string', authority: nil, values: nil, badge_for: nil },
+          'participant_orcid' => { type: 'orcid', authority: nil, values: nil, badge_for: 'participant_name' } }
+      end
+      let(:renderer) { described_class.new(:participants, values, label: 'Participants', html_dl: true, subproperties: subproperties) }
+
+      it 'falls back to its own row so the stored value is not dropped' do
+        markup = renderer.render_dl_row
+        expect(markup).to match(/Participant orcid:/)
+        expect(markup).to include('not-an-id')
+      end
+
+      it 'does not append a badge to the sibling' do
+        markup = renderer.render_dl_row
+        expect(markup).not_to include('hyrax-compound-orcid-badge')
+      end
+    end
+
     context 'when no badge_for: is declared' do
       let(:values) { [{ 'participant_name' => 'Ada', 'participant_orcid' => bare_id }] }
       let(:subproperties) do

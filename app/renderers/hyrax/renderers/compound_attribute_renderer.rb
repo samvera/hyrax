@@ -94,7 +94,9 @@ module Hyrax
         when 'controlled'
           controlled_markup(sub_property, value)
         when 'orcid'
-          orcid_badge(value).to_s
+          # When the value is unparseable, `orcid_badge` returns nil — fall
+          # back to escaped text so the stored value is still visible.
+          orcid_badge(value).presence || ERB::Util.h(value.to_s)
         else
           string_markup(sub_property, value)
         end
@@ -116,8 +118,10 @@ module Hyrax
       # For each row, decide which `type: orcid` sub-properties attach inline
       # to a sibling rather than render as their own row. Returns
       # `{ skip: [<source>...], attach: { <target> => <orcid_value> } }`.
-      # An orcid with no `badge_for:` (or whose target is blank in this row)
-      # is left in place and renders standalone via value_markup.
+      # An orcid is skipped (and the badge attached) only when its value
+      # parses to a bare iD via {Hyrax::OrcidValidator.extract_bare_orcid} —
+      # an unparseable value falls back to its own row so the stored value
+      # is still surfaced on the show page rather than silently dropped.
       def badge_attachments(pairs)
         return { skip: [], attach: {} } unless options[:subproperties].is_a?(Hash)
 
@@ -129,6 +133,7 @@ module Hyrax
           next unless spec.is_a?(Hash) && spec[:type].to_s == 'orcid'
           target = spec[:badge_for].to_s
           next if target.blank? || by_key[target].blank?
+          next if Hyrax::OrcidValidator.extract_bare_orcid(from: value.to_s).blank?
           skip << sub_property
           attach[target] = value
         end
