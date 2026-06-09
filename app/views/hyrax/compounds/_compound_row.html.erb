@@ -58,7 +58,9 @@
                                 class: 'form-control form-control-sm' %>
             <% when 'orcid' %>
               <%# A bare iD (0000-0000-0000-0000) or the full https://orcid.org/ URL.
-                  Hyrax::OrcidSubpropertyValidator normalizes either form on save. %>
+                  Hyrax::OrcidSubpropertyValidator accepts either form (the show
+                  renderer extracts the bare iD via Hyrax::OrcidValidator);
+                  the stored value is kept as the user typed it. %>
               <%= text_field_tag input_name, value,
                                  id: input_id,
                                  class: 'form-control form-control-sm',
