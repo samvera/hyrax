@@ -112,7 +112,7 @@ textarea). Supported `type:` values:
 
 | `type:`      | Renders as          | Notes |
 |--------------|---------------------|-------|
-| `string`     | text input          | The default when `type:` is omitted. |
+| `string`     | text input          | The default when `type:` is omitted. Add `search_field: <solr_field>` to wrap the show-page value in a link to a catalog search filtered on that Solr field (same affordance the scalar `render_as: faceted` path provides). |
 | `url`        | url input → auto-linked on show | The stored value is rendered as a clickable `<a href>` on show pages (matching the scalar `render_as: external_link` behavior). |
 | `work_or_url` | select2 typeahead → linked on show | Searches internal works (via the `compound_works` QA authority, backed by `Hyrax::CompoundWorkPickerBuilder`) **or** accepts a typed external URL. The stored value is a work id or a URL; on show, a work id links to the work's show page with its title (resolved by `Hyrax::CompoundWorkResolver`), a URL is auto-linked. |
 | `controlled` | `<select>` dropdown | Options come from either an inline `values:` list or a QA local authority named by `authority:` (see below). The row's stored value is preserved even if it is no longer offered, matching the `include_current_value` convention of the ordinary controlled-field partials. |

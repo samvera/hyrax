@@ -80,7 +80,9 @@ module Hyrax
       # Display markup for one sub-property value, by sub-property type: `url`
       # and `work_or_url` are linked; `orcid` renders as a standalone badge
       # (used when no `badge_for:` sibling is bound); otherwise escaped text
-      # with controlled ids translated to their term.
+      # with controlled ids translated to their term. A string sub-property
+      # that declares `search_field:` is wrapped in a facet search link to
+      # that Solr field, matching the scalar `render_as: faceted` behavior.
       def value_markup(sub_property, value)
         return ERB::Util.h(display_value(sub_property, value)) if value.blank?
 
@@ -94,8 +96,21 @@ module Hyrax
         when 'orcid'
           orcid_badge(value).to_s
         else
-          ERB::Util.h(display_value(sub_property, value))
+          string_markup(sub_property, value)
         end
+      end
+
+      # Plain string: facet-link the value when the sub-property opts in via
+      # `search_field:`, otherwise escape and emit verbatim.
+      def string_markup(sub_property, value)
+        spec = subproperty_spec(sub_property)
+        facet = spec.is_a?(Hash) ? spec[:search_field].to_s : ''
+        display = display_value(sub_property, value)
+        return ERB::Util.h(display) if facet.blank?
+
+        link_to(ERB::Util.h(display),
+                Rails.application.routes.url_helpers
+                     .search_catalog_path("f[#{ERB::Util.h(facet)}][]": value, locale: I18n.locale))
       end
 
       # For each row, decide which `type: orcid` sub-properties attach inline

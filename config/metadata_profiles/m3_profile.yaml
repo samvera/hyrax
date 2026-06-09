@@ -994,6 +994,7 @@ properties:
     group: identity
     required: true
     indexing: [participant_name_sim, participant_name_tesim]
+    search_field: participant_name_sim
     form:
       cols: 4
   participant_role:

@@ -120,6 +120,29 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
     end
   end
 
+  describe 'string sub-property with search_field' do
+    let(:values) { [{ 'participant_name' => 'Hosseini, Mohammad' }] }
+    let(:subproperties) do
+      { 'participant_name' => { type: 'string', authority: nil, values: nil,
+                                search_field: 'participant_name_sim' } }
+    end
+    let(:renderer) { described_class.new(:participants, values, label: 'Participants', html_dl: true, subproperties: subproperties) }
+
+    it 'wraps the value in a link to the catalog search filtered by the named Solr field' do
+      markup = renderer.render_dl_row
+      expect(markup).to match(%r{<a href="/catalog\?[^"]*f%5Bparticipant_name_sim%5D[^"]*=Hosseini[^"]*"})
+      expect(markup).to include('Hosseini, Mohammad')
+    end
+
+    it 'leaves a value without search_field as plain escaped text' do
+      r = described_class.new(:participants,
+                              [{ 'participant_name' => 'Hosseini, Mohammad' }],
+                              label: 'Participants', html_dl: true,
+                              subproperties: { 'participant_name' => { type: 'string', search_field: nil } })
+      expect(r.render_dl_row).not_to match(%r{<a href="/catalog})
+    end
+  end
+
   describe 'orcid sub-property' do
     let(:bare_id) { '0000-0002-2385-985X' }
 

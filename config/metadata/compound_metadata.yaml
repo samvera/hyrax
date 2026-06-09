@@ -57,6 +57,10 @@ attributes:
     group: identity
     required: true
     index_keys: [participant_name_sim, participant_name_tesim]
+    # `search_field:` opts a string sub-property into faceted-link display:
+    # on show, the value renders as a link to a catalog search filtered on
+    # the named Solr field, matching the scalar `render_as: faceted` path.
+    search_field: participant_name_sim
     form:
       cols: 4
   # A controlled sub-property can take its options from an inline list (below)
