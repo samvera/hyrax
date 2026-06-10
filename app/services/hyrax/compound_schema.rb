@@ -6,7 +6,7 @@ module Hyrax
   #
   # Reads the compound metadata declarations off a resource's schema. A compound
   # is a `type: hash, multiple: true` parent property; its members are declared
-  # as separate properties pointing back with `subproperty_of: <parent>`. The
+  # as separate properties naming it via `available_on: { properties: [<parent>] }`. The
   # declaration drives the generic form, indexer, and renderer so a hierarchical
   # field can be defined in YAML alone. See documentation/compound_fields.md.
   #
@@ -185,8 +185,8 @@ module Hyrax
 
     # Assemble one normalized definition per compound parent. A parent is an
     # attribute whose type meta carries a folded `subproperties:` map (the
-    # loaders fold each compound's `subproperty_of` members into the parent's
-    # meta; see {SchemaLoader#attributes_for}). A `type: hash` with no
+    # loaders fold each compound's `available_on: { properties: [...] }` members
+    # into the parent's meta; see {SchemaLoader#attributes_for}). A `type: hash` with no
     # subproperties (e.g. redirects) is not a compound and is skipped.
     def build_definitions
       schema_sources.each_with_object({}) do |schema, memo|

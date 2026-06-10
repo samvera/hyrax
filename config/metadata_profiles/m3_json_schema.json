@@ -185,21 +185,23 @@
       },
       "additionalProperties": {
         "type": "object",
-        "comment": "A compound subproperty (declares `subproperty_of`) is a hierarchical member, not a standalone property: it inherits its class scope from its parent and has no label/range of its own, so it is exempt from the display_label/available_on/range requirements. All other properties require display_label, available_on, and range.",
+        "comment": "A compound subproperty declares `available_on: { properties: [...] }` naming its parent compound(s). It is a hierarchical member, not a standalone property: it inherits its class scope from its parent(s) and has no label/range of its own, so it is exempt from the display_label/range requirements (it still declares available_on, with `properties`). All other properties require display_label, available_on, and range.",
         "if": {
-          "properties": { "subproperty_of": { "type": "string" } },
-          "required": ["subproperty_of"]
+          "properties": {
+            "available_on": {
+              "type": "object",
+              "required": ["properties"]
+            }
+          },
+          "required": ["available_on"]
         },
-        "then": {},
+        "then": {
+          "required": ["available_on"]
+        },
         "else": {
           "required": ["display_label", "available_on", "range"]
         },
         "properties": {
-
-          "subproperty_of": {
-            "type": "string",
-            "description": "Names the parent compound (`type: hash`) property this is a subproperty of. Such an entry is a hierarchical member, not a standalone resource attribute."
-          },
 
           "group": {
             "type": "string",
@@ -245,6 +247,13 @@
               },
               "context": {
                 "comment": "Listed values must match a context defined in the contexts block.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "properties": {
+                "comment": "Marks this entry as a compound subproperty: listed values name the parent `type: hash` compound property(ies) it is a member of. Such an entry is a hierarchical member, not a standalone resource attribute, and inherits its class scope from its parent(s).",
                 "type": "array",
                 "items": {
                   "type": "string"

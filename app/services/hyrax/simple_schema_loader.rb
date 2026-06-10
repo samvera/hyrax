@@ -27,10 +27,10 @@ module Hyrax
     # @param [#to_s] schema_name
     # @return [Enumerable<AttributeDefinition]
     def definitions(schema_name, _version, _contexts = nil)
-      # Compound subproperties (entries declaring `subproperty_of:`) are not
-      # standalone resource attributes — they are gathered into their parent
-      # compound by Hyrax::CompoundSchema. Exclude them here so they get no
-      # accessor, form input, or index rule of their own.
+      # Compound subproperties (entries declaring `available_on: { properties:
+      # [...] }`) are not standalone resource attributes — they are gathered
+      # into their parent compound by Hyrax::CompoundSchema. Exclude them here so
+      # they get no accessor, form input, or index rule of their own.
       schema_config(schema_name)['attributes'].reject { |_name, config| subproperty_config?(config) }.map do |name, config|
         AttributeDefinition.new(name, config)
       end

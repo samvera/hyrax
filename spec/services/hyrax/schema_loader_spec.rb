@@ -11,6 +11,64 @@ RSpec.describe Hyrax::SchemaLoader do
         .to raise_error(NotImplementedError, 'Implement #definitions in a child class')
     end
   end
+
+  describe 'compound subproperty discovery and folding' do
+    # A subproperty declares membership via `available_on: { properties: [...] }`
+    # (naming its parent compound[s]); a standalone property does not. A loader
+    # subclass need only supply #raw_definitions for the folding helpers to run.
+    let(:loader_class) do
+      Class.new(described_class) do
+        attr_reader :raw
+        def initialize(raw)
+          @raw = raw
+        end
+
+        def raw_definitions(_schema, _version, _contexts)
+          raw
+        end
+      end
+    end
+    subject(:loader) { loader_class.new(raw) }
+
+    let(:raw) do
+      {
+        'relationships' => { 'type' => 'hash', 'available_on' => { 'class' => ['Portfolio'] } },
+        'contributors' => { 'type' => 'hash', 'available_on' => { 'class' => ['Portfolio'] } },
+        # standalone (no available_on.properties)
+        'title' => { 'type' => 'string', 'available_on' => { 'class' => ['Portfolio'] } },
+        # subproperty of one parent
+        'relationship_item' => { 'type' => 'string', 'available_on' => { 'properties' => ['relationships'] } },
+        # one definition reused by two parents, aliased to `title` inside each
+        'shared_label' => { 'type' => 'string', 'name' => 'title',
+                            'available_on' => { 'properties' => %w[relationships contributors] } }
+      }
+    end
+
+    describe '#subproperty_config?' do
+      it 'is true only for entries declaring available_on.properties' do
+        expect(loader.subproperty_config?(raw['relationship_item'])).to be true
+        expect(loader.subproperty_config?(raw['shared_label'])).to be true
+        expect(loader.subproperty_config?(raw['title'])).to be false
+        expect(loader.subproperty_config?(raw['relationships'])).to be false
+      end
+    end
+
+    describe '#subproperties_by_parent' do
+      subject(:folded) { loader.subproperties_by_parent(:schema, 1, nil) }
+
+      it 'folds a subproperty under each parent it names, keyed by its name: alias' do
+        expect(folded['relationships'].keys).to contain_exactly('relationship_item', 'title')
+        # the shared definition appears under both parents, under the local `title` key
+        expect(folded['contributors'].keys).to contain_exactly('title')
+        expect(folded['relationships']['title']).to eq(raw['shared_label'])
+        expect(folded['contributors']['title']).to eq(raw['shared_label'])
+      end
+
+      it 'omits standalone properties' do
+        expect(folded).not_to have_key('title')
+      end
+    end
+  end
 end
 
 RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do

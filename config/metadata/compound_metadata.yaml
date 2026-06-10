@@ -1,14 +1,15 @@
 # Sample compound (hierarchical) metadata that ships with Hyrax.
 #
 # A compound is a `type: hash, multiple: true` parent property. Its members are
-# declared as separate top-level properties that point back to the parent with
-# `subproperty_of: <parent>`. Sibling order follows document order here; each
-# subproperty optionally names a `group:` and sets its form width via
-# `form: { cols: }`.
+# declared as separate top-level properties that name the parent via
+# `available_on: { properties: [<parent>] }`. Sibling order follows document
+# order here; each subproperty optionally names a `group:` and sets its form
+# width via `form: { cols: }`. A member may name more than one parent, and
+# `name:` sets its key inside the compound.
 #
-# `subproperty_of` entries are NOT registered as standalone resource attributes
-# — their data lives only as keys inside the parent compound's row hashes. Every
-# key under `attributes:` must be globally unique. See
+# Such members are NOT registered as standalone resource attributes — their data
+# lives only as keys inside the parent compound's row hashes. Every key under
+# `attributes:` must be globally unique. See
 # `documentation/compound_fields.md`.
 #
 # These are intentionally generic examples demonstrating the supported
@@ -43,7 +44,10 @@ attributes:
   # a textarea); without it the widget follows `type:`.
   participant_title:
     type: string
-    subproperty_of: participants
+    name: title
+    available_on:
+      properties:
+        - participants
     group: identity
     form:
       cols: 4
@@ -53,7 +57,10 @@ attributes:
   # searchable field). `display: false` would omit it from the blob.
   participant_name:
     type: string
-    subproperty_of: participants
+    name: name
+    available_on:
+      properties:
+        - participants
     group: identity
     required: true
     index_keys: [participant_name_sim, participant_name_tesim]
@@ -63,7 +70,10 @@ attributes:
   # or from an existing QA local authority (`authority: <name>`).
   participant_role:
     type: controlled
-    subproperty_of: participants
+    name: role
+    available_on:
+      properties:
+        - participants
     group: identity
     required: true
     values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
@@ -85,14 +95,20 @@ attributes:
       html_dl: true
   identifier_value:
     type: string
-    subproperty_of: identifiers
+    name: value
+    available_on:
+      properties:
+        - identifiers
     required: true
     index_keys: [identifier_value_sim, identifier_value_tesim]
     form:
       cols: 6
   identifier_type:
     type: controlled
-    subproperty_of: identifiers
+    name: type
+    available_on:
+      properties:
+        - identifiers
     required: true
     values: [DOI, Handle, ISBN, ISSN, URL, URN, ARK, Other]
     index_keys: [identifier_type_sim]
@@ -115,21 +131,30 @@ attributes:
       html_dl: true
   compound_rights_statement:
     type: controlled
-    subproperty_of: compound_rights
+    name: statement
+    available_on:
+      properties:
+        - compound_rights
     authority: rights_statements
     index_keys: [compound_rights_statement_sim, compound_rights_statement_tesim]
     form:
       cols: 6
   compound_rights_license:
     type: controlled
-    subproperty_of: compound_rights
+    name: license
+    available_on:
+      properties:
+        - compound_rights
     authority: licenses
     index_keys: [compound_rights_license_sim, compound_rights_license_tesim]
     form:
       cols: 6
   compound_rights_notes:
     type: string
-    subproperty_of: compound_rights
+    name: notes
+    available_on:
+      properties:
+        - compound_rights
     index_keys: [compound_rights_notes_tesim]
     form:
       cols: 12
@@ -151,16 +176,41 @@ attributes:
       display: card
   relationship_item:
     type: work_or_url
-    subproperty_of: relationships
+    name: item
+    available_on:
+      properties:
+        - relationships
     required: true
     index_keys: [relationships_item_ssim]
     form:
       cols: 6
   relationship_type:
     type: controlled
-    subproperty_of: relationships
+    name: type
+    available_on:
+      properties:
+        - relationships
     required: true
     values: [References, Is Referenced By, Is Part Of, Has Part, Is Version Of, Replaces, Requires, Other]
     index_keys: [relationships_type_sim]
     form:
       cols: 6
+
+  # A single subproperty definition reused by two compounds. The top-level key
+  # (`shared_title`) is globally unique, while `name: title` sets the cleaner key
+  # inside each compound row (so both `participants` and `relationships` rows
+  # carry a `title`), and `available_on.properties` lists both parents.
+  # Display-only here (no `index_keys:`): the value is stored in the row and
+  # shown on the work page, but is not written to its own searchable Solr field.
+  # A reused subproperty cannot share one explicit Solr field across parents
+  # without collision. See the `display:` section in
+  # documentation/compound_fields.md.
+  shared_title:
+    type: string
+    name: title
+    available_on:
+      properties:
+        - participants
+        - relationships
+    form:
+      cols: 12

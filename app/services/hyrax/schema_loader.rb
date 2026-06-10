@@ -55,7 +55,7 @@ module Hyrax
 
     ##
     # The raw per-attribute configs for a schema, INCLUDING compound
-    # subproperties (entries declaring `subproperty_of:`). Unlike
+    # subproperties (entries declaring `available_on: { properties: [...] }`). Unlike
     # {#attributes_for} et al. — which exclude subproperties so they never become
     # standalone resource attributes — this returns everything declared, so
     # {Hyrax::CompoundSchema} can gather each parent compound's subproperties.
@@ -68,23 +68,35 @@ module Hyrax
     end
 
     # @return [Boolean] whether a raw per-attribute config is a compound
-    #   subproperty (declares `subproperty_of:`), which must be excluded from the
+    #   subproperty (declares `available_on: { properties: [...] }`, naming the
+    #   parent compound(s) it belongs to), which must be excluded from the
     #   resource's real attributes.
     def subproperty_config?(config)
-      config.is_a?(Hash) && config['subproperty_of'].present?
+      config.is_a?(Hash) && subproperty_parents(config).present?
+    end
+
+    # The parent compound names a subproperty config declares membership in, via
+    # `available_on: { properties: [...] }`. Empty for a non-subproperty.
+    def subproperty_parents(config)
+      return [] unless config.is_a?(Hash)
+      Array(config.dig('available_on', 'properties')).map(&:to_s)
     end
 
     # Subproperty configs grouped under their parent compound, in document
-    # order: `{ parent_name => { child_name => child_config } }`. Used to fold
-    # each compound's members into its parent's type metadata (see
-    # {#attributes_for}).
+    # order: `{ parent_name => { child_name => child_config } }`. A subproperty
+    # may name more than one parent, so it is folded into each. The child key is
+    # the subproperty's `name:` (falling back to its key), so the same field can
+    # surface under a shared in-compound name (e.g. `title`) in several
+    # compounds. Used to fold each compound's members into its parent's type
+    # metadata (see {#attributes_for}).
     def subproperties_by_parent(schema, version, contexts)
       raw_definitions(schema, version, contexts).each_with_object({}) do |(name, config), memo|
         next unless subproperty_config?(config)
 
-        parent = config['subproperty_of'].to_s
         child_name = (config['name'] || name).to_s
-        (memo[parent] ||= {})[child_name] = config
+        subproperty_parents(config).each do |parent|
+          (memo[parent] ||= {})[child_name] = config
+        end
       end
     rescue StandardError => e
       Hyrax.logger.debug("subproperties_by_parent(#{schema}): #{e.message}")

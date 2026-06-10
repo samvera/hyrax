@@ -108,8 +108,13 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   def validate_property_name_conflicts
     return unless profile&.dig('properties')
 
-    # Group properties by their resolved name
+    # Group standalone properties by their resolved name. Subproperties are
+    # excluded: they never become standalone resource attributes, and two may
+    # intentionally share an in-compound `name:` alias (e.g. `title`) without
+    # conflicting - the loader folds them under their respective parents.
     properties_by_name = profile['properties'].each_with_object({}) do |(key, config), hash|
+      next if subproperty?(config)
+
       property_name = config['name'] || key
       hash[property_name] ||= []
       hash[property_name] << { key: key, config: config }
@@ -154,11 +159,14 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     end
     all_properties = profile['properties'] || {}
     all_properties.each do |key, values|
-      property_name = values['name'] || key
-      # A compound subproperty may omit `available_on`; it inherits the class
-      # scope of its parent compound. (It still appears in each class's attribute
-      # map so the schema loader can fold it into the parent; the loader excludes
-      # it from the resource's real attributes.)
+      # A compound subproperty (declares `available_on: { properties: [...] }`)
+      # inherits the class scope of its parent compound(s). It still appears in
+      # each class's attribute map so the schema loader can fold it into the
+      # parent, but is keyed by its original profile key rather than its `name:`
+      # alias - two subproperties may share an in-compound alias (e.g. `title`),
+      # which would collide if keyed by the alias. Standalone properties key by
+      # their resolved `name:` (which becomes the resource attribute).
+      property_name = subproperty?(values) ? key : (values['name'] || key)
       classes = property_classes(values, all_properties)
       next if classes.blank?
 
@@ -172,14 +180,26 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     @class_names
   end
 
-  # The classes a property is available on: its own `available_on`, or — for a
-  # compound subproperty that omits it — its parent compound's `available_on`.
-  def property_classes(values, all_properties)
-    own = values.dig('available_on', 'class')
-    return Array(own) if own.present?
+  # @return [Boolean] whether a property config is a compound subproperty,
+  #   i.e. declares `available_on: { properties: [...] }` naming its parent
+  #   compound(s).
+  def subproperty?(config)
+    config.is_a?(Hash) && Array(config.dig('available_on', 'properties')).present?
+  end
 
-    parent = values['subproperty_of'] && all_properties[values['subproperty_of'].to_s]
-    Array(parent&.dig('available_on', 'class'))
+  # The classes a property is available on. A standalone property declares its
+  # own `available_on: { class: [...] }`. A compound subproperty instead declares
+  # `available_on: { properties: [...] }` naming its parent compound(s), and
+  # inherits the union of those parents' class scope (so it appears in each
+  # class's attribute map for the loader to fold into the parent; the loader
+  # excludes it from the resource's real attributes).
+  def property_classes(values, all_properties)
+    parents = Array(values.dig('available_on', 'properties')).map(&:to_s)
+    if parents.present?
+      return parents.flat_map { |p| Array(all_properties[p]&.dig('available_on', 'class')) }.uniq
+    end
+
+    Array(values.dig('available_on', 'class'))
   end
 
   def values_map(values)

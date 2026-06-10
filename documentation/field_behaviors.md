@@ -265,8 +265,8 @@ The populator folds a sibling `redirects_display_url_index` scalar (a single rad
 - **Diff from BasedNear:** entries carry multiple sub-properties, so the persisted shape is a hash rather than a string. The populator normalizes paths up front (canonical form lives in storage). The behavior is feature-gated — every callback consults `Hyrax.config.redirects_active?`.
 
 `redirects` already uses the compound **parent** shape (`type: hash, multiple:
-true`), but it is intentionally **not** declared with `subproperty_of: redirects`
-children, so [`Hyrax::CompoundSchema`](compound_fields.md) does not treat it as a
+true`), but it intentionally has **no** subproperty children declaring
+`available_on: { properties: [redirects] }`, so [`Hyrax::CompoundSchema`](compound_fields.md) does not treat it as a
 compound. Declaring those children would activate the whole generic compound
 stack — indexer, `render_as: compound` renderer, `Hyrax::CompoundEntryValidator`,
 `Hyrax::CompoundNormalization`, the `_compound_section` partial, and a second

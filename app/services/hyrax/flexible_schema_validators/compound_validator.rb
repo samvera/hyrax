@@ -8,8 +8,9 @@ module Hyrax
     # Validates compound metadata in an m3 profile at save time, so a
     # misconfiguration fails with a clear message instead of producing dead Solr
     # fields or unrenderable values. A compound is a `type: hash` parent with
-    # members declared as separate properties pointing back via
-    # `subproperty_of: <parent>` — see {Hyrax::CompoundSchema}. See
+    # members declared as separate properties naming it via
+    # `available_on: { properties: [<parent>] }` (see {Hyrax::CompoundSchema}); a
+    # subproperty may name more than one parent. See
     # documentation/compound_fields.md for the rules.
     class CompoundValidator
       ##
@@ -32,24 +33,30 @@ module Hyrax
         @properties ||= (@profile&.dig('properties') || {})
       end
 
-      # Entries that declare `subproperty_of:` — the compound members.
+      # Entries that name parent compound(s) via `available_on: { properties:
+      # [...] }` — the compound members.
       def subproperties
-        properties.select { |_name, config| config.is_a?(Hash) && config['subproperty_of'].present? }
+        properties.select { |_name, config| subproperty_parents(config).present? }
       end
 
-      # `type: hash` parents that have at least one subproperty pointing at them.
+      def subproperty_parents(config)
+        return [] unless config.is_a?(Hash)
+        Array(config.dig('available_on', 'properties')).map(&:to_s)
+      end
+
+      # `type: hash` parents that have at least one subproperty naming them.
       # (A `type: hash` with no children — e.g. redirects — is not a compound.)
       def compound_parents
-        parent_names = subproperties.values.filter_map { |c| c['subproperty_of'].to_s }.to_set
+        parent_names = subproperties.values.flat_map { |c| subproperty_parents(c) }.to_set
         properties.select { |name, config| parent_names.include?(name.to_s) && config.is_a?(Hash) && config['type'].to_s == 'hash' }
       end
 
       def validate_subproperty(name, config)
-        parent_name = config['subproperty_of'].to_s
-        parent = properties[parent_name]
-        if parent.nil? || !parent.is_a?(Hash) || parent['type'].to_s != 'hash'
+        subproperty_parents(config).each do |parent_name|
+          parent = properties[parent_name]
+          next if parent.is_a?(Hash) && parent['type'].to_s == 'hash'
+
           @errors << t('unknown_parent', property: name, parent: parent_name)
-          return
         end
 
         return unless config['type'].to_s == 'controlled'

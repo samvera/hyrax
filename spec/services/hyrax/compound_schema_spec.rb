@@ -3,7 +3,7 @@
 RSpec.describe Hyrax::CompoundSchema do
   # These resources stand in for what the schema loaders produce: each compound
   # parent is a `hash` attribute whose meta carries the folded `subproperties:`
-  # map (the loaders fold each compound's `subproperty_of` members into the
+  # map (the loaders fold each compound's `available_on: { properties: [...] }` members into the
   # parent's meta) plus optional `groups:` label metadata. Each subproperty spec
   # carries its own `group`, `form` (cols/as), index_keys, etc.
   let(:resource_class) do

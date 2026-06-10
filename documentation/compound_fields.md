@@ -37,10 +37,12 @@ case where that contract is satisfied entirely from the schema.
 ## Declaring a compound
 
 A compound is a `type: hash, multiple: true` **parent** property. Its members
-are declared as separate top-level properties that point back to the parent
-with `subproperty_of: <parent>`. Every property key (parent and subproperty)
-must be globally unique, so subproperties are conventionally named with a
-parent-derived prefix:
+are declared as separate top-level properties that name the parent compound(s)
+they belong to via `available_on: { properties: [<parent>] }` — the same
+`available_on` block a standalone property uses to declare its class scope, but
+with a `properties:` list (the parent compounds) instead of `class:`. Every
+property key is globally unique, so subproperty keys are conventionally prefixed;
+the field's key *inside* the compound is its `name:` (falling back to the key):
 
 ```yaml
 contributors:
@@ -54,45 +56,64 @@ contributors:
 
 contributor_given_name:
   type: string
-  subproperty_of: contributors
+  name: given_name                 # key inside the compound row
+  available_on: { properties: [contributors] }
   group: identity
   form: { cols: 4 }
   index_keys: [contributors_given_name_sim, contributors_given_name_tesim]
 contributor_family_name:
   type: string
-  subproperty_of: contributors
+  name: family_name
+  available_on: { properties: [contributors] }
   group: identity
   form: { cols: 4 }
   index_keys: [contributors_family_name_sim, contributors_family_name_tesim]
 contributor_name_type:
   type: controlled
-  subproperty_of: contributors
+  name: name_type
+  available_on: { properties: [contributors] }
   group: identity
   authority: name_type
 contributor_role_label:
   type: controlled
-  subproperty_of: contributors
+  name: role
+  available_on: { properties: [contributors] }
   group: role
   authority: contributor_role
 contributor_affiliation:
   type: string
-  subproperty_of: contributors   # display-only (no index_keys)
+  name: affiliation
+  available_on: { properties: [contributors] }   # display-only (no index_keys)
   group: role
 ```
 
-`subproperty_of` is a declaration hint only: a subproperty does **not** become a
-standalone resource attribute (no accessor, Solr index rule, or RDF predicate of
-its own). Its data lives only as a key inside the parent compound's row hashes;
-the schema loaders fold the subproperties into the parent's type metadata for
-the form, indexer, and renderer to read.
+`available_on: { properties: [...] }` is a declaration hint only: a subproperty
+does **not** become a standalone resource attribute (no accessor, Solr index
+rule, or RDF predicate of its own). Its data lives only as a key inside the
+parent compound's row hashes; the schema loaders fold the subproperties into the
+parent's type metadata for the form, indexer, and renderer to read.
+
+**A subproperty may belong to more than one compound** — list several parents
+(`available_on: { properties: [contributors, participants] }`) and the same
+definition is folded into each. Combined with `name:`, this lets a shared field
+surface under the same in-compound key (e.g. `title`) in several compounds
+without repeating its full definition. A subproperty inherits its class scope
+(the works/collections it is available on) from the union of its parents'
+`available_on: { class: }`.
+
+A reused subproperty must be **display-only** (no `index_keys:`/`indexing:`): a
+single explicit Solr field name cannot be written from more than one parent
+compound without collision (the last-indexed compound's values would overwrite
+the others'). Display-only means the value is still stored in each compound's
+rows and rendered on the show page — it simply has no searchable Solr field of
+its own. See the [`display:`](#display-optional-default-true) section.
 
 Ordering is document order: subproperties render in the order they are declared,
 and groups in the order their first member appears.
 
-In the m3 profile the same declaration uses `data_type: array`, `type: hash`,
-and `available_on: class:` to scope each property (a subproperty repeats its
-parent's `available_on`); sub-property index targets are declared with
-`indexing:` (the flexible-mode spelling of `index_keys:`).
+The m3 profile uses the same shape with `data_type: array`, `type: hash` on the
+parent; sub-property index targets are declared with `indexing:` (the
+flexible-mode spelling of `index_keys:`).
 
 > **Flexible mode:** the active schema is the `Hyrax::FlexibleSchema` row in the
 > database, seeded from the m3 profile — not the YAML file directly. After
@@ -104,8 +125,8 @@ parent's `available_on`); sub-property index targets are declared with
 
 ### Subproperties
 
-Each subproperty is a top-level property declaring `subproperty_of: <parent>`,
-its data `type:`, and — under `form:` — its layout: `cols` (Bootstrap column
+Each subproperty is a top-level property declaring `available_on: { properties:
+[<parent>] }`, its data `type:`, and — under `form:` — its layout: `cols` (Bootstrap column
 width out of 12; 4 fits three across a row, 6 two across, 12 full width) and an
 optional `as` widget override (SimpleForm's `as:`, e.g. `as: text` for a
 textarea). Supported `type:` values:
@@ -123,19 +144,19 @@ A `controlled` sub-property sources its options one of two ways:
 # (a) inline list — no authority file needed
 participant_role:
   type: controlled
-  subproperty_of: participants
+  available_on: { properties: [participants] }
   values: [Author, Editor, Contributor]
 # (a') inline list with distinct id and label
 participant_status:
   type: controlled
-  subproperty_of: participants
+  available_on: { properties: [participants] }
   values:
     - { id: pub, label: Published }
     - { id: dft, label: Draft }
 # (b) an existing QA local authority (config/authorities/<name>.yml)
 identifier_type:
   type: controlled
-  subproperty_of: identifiers
+  available_on: { properties: [identifiers] }
   authority: identifier_type
 ```
 
@@ -179,7 +200,7 @@ participants:
 
 participant_name:
   type: string
-  subproperty_of: participants
+  available_on: { properties: [participants] }
   group: identity
   form: { cols: 4 }
 ```
@@ -215,13 +236,27 @@ show page and edit form render compounds regardless.
 
 ### `display:` (optional, default true)
 
-Controls whether a sub-property is included in the `<compound>_json_ss` blob that
-the show page renders from. Combined with indexing, each sub-property can be:
+A sub-property has two **independent** capabilities:
 
-- **display + searchable** — has `index_keys:` and `display` not false
-- **display-only** — no `index_keys:` (renders on show, not separately searchable)
-- **searchable-only** — has `index_keys:` and `display: false` (indexed, hidden on show)
-- **neither** — no `index_keys:` and `display: false`
+- **Display** — whether it appears on the work's show page. The indexer writes
+  the compound's rows as a `<compound>_json_ss` blob the show page renders from;
+  a sub-property is included in that blob unless it sets `display: false`.
+- **Searchable indexing** — whether its value is *also* written to its own Solr
+  field(s) (via `index_keys:`/`indexing:`), which is what makes it independently
+  searchable/facetable.
+
+Because these are separate, each sub-property can be in one of four states:
+
+- **display + searchable** — has `index_keys:` and `display` not false: shown on
+  the work page **and** written to its own searchable Solr field.
+- **display-only** — no `index_keys:` (and `display` not false): stored in the
+  rows and shown on the work page, but **not** written to its own searchable
+  Solr field, so it cannot be searched/faceted on independently. (A subproperty
+  reused across multiple compounds must be display-only — see
+  [Declaring a compound](#declaring-a-compound).)
+- **searchable-only** — has `index_keys:` and `display: false`: written to its
+  Solr field (searchable) but omitted from the show page.
+- **neither** — no `index_keys:` and `display: false`.
 
 ### `required:` (optional, default false)
 
@@ -345,10 +380,10 @@ relationships:
 
 relationship_item:
   type: work_or_url
-  subproperty_of: relationships
+  available_on: { properties: [relationships] }
 relationship_type:
   type: controlled
-  subproperty_of: relationships
+  available_on: { properties: [relationships] }
   authority: relationship_type
 ```
 
@@ -372,8 +407,9 @@ path resolves on a collection as on a work.
 In flexible mode, `Hyrax::FlexibleSchemaValidators::CompoundValidator` checks
 compound declarations when an m3 profile is saved/uploaded, so a
 misconfiguration fails with a clear message instead of producing dead Solr
-fields or unrenderable values. It enforces: a `subproperty_of:` points at a
-declared `type: hash` compound property; a `type: controlled` sub-property
+fields or unrenderable values. It enforces: each parent named in a subproperty's
+`available_on: { properties: [...] }` is a declared `type: hash` compound
+property; a `type: controlled` sub-property
 declares an option source (`authority:` or `values:`); and a compound parent
 does **not** carry a top-level `indexing:` (indexing is declared per
 sub-property — a top-level `indexing:` would point the catalog at a
@@ -400,16 +436,16 @@ relationships:
 
 relationship_item:
   type: work_or_url
-  subproperty_of: relationships
+  available_on: { properties: [relationships] }
   required: true
 relationship_type:
   type: controlled
-  subproperty_of: relationships
+  available_on: { properties: [relationships] }
   authority: relationship_type
   required: true
 relationship_note:
   type: string
-  subproperty_of: relationships   # optional
+  available_on: { properties: [relationships] }   # optional
 ```
 
 Required sub-properties and required compounds render a `*` marker on the form

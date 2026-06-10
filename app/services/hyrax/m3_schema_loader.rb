@@ -40,10 +40,10 @@ module Hyrax
     # @return [Enumerable<AttributeDefinition]
     def definitions(schema_name, version, contexts = nil)
       contextual_attributes(schema_name, version, contexts).map do |name, config|
-        # Compound subproperties (entries declaring `subproperty_of:`) are not
-        # standalone resource attributes — they are gathered into their parent
-        # compound by Hyrax::CompoundSchema. Exclude them here so they get no
-        # accessor, form input, or index rule of their own.
+        # Compound subproperties (entries declaring `available_on: { properties:
+        # [...] }`) are not standalone resource attributes — they are gathered
+        # into their parent compound by Hyrax::CompoundSchema. Exclude them here
+        # so they get no accessor, form input, or index rule of their own.
         next if subproperty_config?(config)
 
         M3AttributeDefinition.new(name, config)
