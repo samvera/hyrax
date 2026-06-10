@@ -868,6 +868,12 @@ zh:
         number_of_results_to_display_per_page: 数量的结果显示，每页
         results_per_page: 每页结果
         sort_by_html: "<跨>排序：</跨>"
+    compound_fields:
+      orcid:
+        badge_alt: ORCID iD
+        badge_aria: "%{name} 的 ORCID iD"
+        invalid: "%{compound} > %{field}：\"%{value}\" 不是有效的 ORCID iD"
+        placeholder: 0000-0000-0000-0000
     contact_form:
       button_label: 发送
       email_label: 您的邮件

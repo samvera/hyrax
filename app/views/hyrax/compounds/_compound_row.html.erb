@@ -10,8 +10,8 @@
       row_label_singular - "Contributor", "License", etc.
 
     Each sub-property renders according to its declared `type:` (string,
-    controlled, url, work_or_url). db_table / geocode are future types; the
-    `else` branch is the extension seam.
+    controlled, url, work_or_url, orcid). db_table / geocode are future types;
+    the `else` branch is the extension seam.
 %>
 <% subproperties = definition[:subproperties] %>
 <% groups = definition[:groups] %>
@@ -56,6 +56,16 @@
               <%= url_field_tag input_name, value,
                                 id: input_id,
                                 class: 'form-control form-control-sm' %>
+            <% when 'orcid' %>
+              <%# A bare iD (0000-0000-0000-0000) or the full https://orcid.org/ URL.
+                  Hyrax::OrcidSubpropertyValidator accepts either form (the show
+                  renderer extracts the bare iD via Hyrax::OrcidValidator);
+                  the stored value is kept as the user typed it. %>
+              <%= text_field_tag input_name, value,
+                                 id: input_id,
+                                 class: 'form-control form-control-sm',
+                                 placeholder: t('hyrax.compound_fields.orcid.placeholder', default: '0000-0000-0000-0000'),
+                                 autocomplete: 'off' %>
             <% when 'work_or_url' %>
               <%# select2 v3 (bound in compound_metadata.js) binds to this
                   hidden input; `data-label` pre-seeds the displayed text. %>

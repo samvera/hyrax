@@ -8,7 +8,10 @@ module Hyrax
     # sub-properties produced by the SolrDocument `compound_attribute` reader —
     # and renders as a block of its populated sub-properties. Sub-property labels
     # come from the `hyrax.compound_fields.<compound>.<subproperty>` i18n keys.
-    class CompoundAttributeRenderer < AttributeRenderer
+    class CompoundAttributeRenderer < AttributeRenderer # rubocop:disable Metrics/ClassLength
+      include ActionView::Helpers::AssetTagHelper
+      include Hyrax::CompoundFieldsHelper
+
       def render
         return '' if blank_values? && !options[:include_empty]
 
@@ -51,21 +54,35 @@ module Hyrax
         pairs = entry_to_pairs(entry)
         return '' if pairs.empty?
 
-        items = pairs.map { |sub_property, value| subproperty_markup(sub_property, value) }.join
+        bindings = badge_attachments(pairs)
+        visible = pairs.reject { |(sub_property, _)| bindings[:skip].include?(sub_property) }
+        return '' if visible.empty?
+
+        items = visible.map do |sub_property, value|
+          subproperty_markup(sub_property, value, attached_orcid: bindings[:attach][sub_property])
+        end.join
         %(<div class="hyrax-compound-entry">#{items}</div>)
       end
 
-      def subproperty_markup(sub_property, value)
+      def subproperty_markup(sub_property, value, attached_orcid: nil)
         label_html = ERB::Util.h(sub_property_label(sub_property))
+        value_html = value_markup(sub_property, value).to_s
+        if attached_orcid.present?
+          badge = orcid_badge(attached_orcid, name: display_value(sub_property, value).to_s).to_s
+          value_html = "#{value_html} #{badge}" unless badge.empty?
+        end
         %(<div class="hyrax-compound-subproperty">) +
           %(<span class="hyrax-compound-subproperty-label">#{label_html}:</span> ) +
-          %(<span class="hyrax-compound-subproperty-value">#{value_markup(sub_property, value)}</span>) +
+          %(<span class="hyrax-compound-subproperty-value">#{value_html}</span>) +
           %(</div>)
       end
 
-      # Display markup for one sub-property value, by sub-property type: `url` and
-      # `work_or_url` are linked; otherwise escaped text with controlled ids
-      # translated to their term.
+      # Display markup for one sub-property value, by sub-property type: `url`
+      # and `work_or_url` are linked; `orcid` renders as a standalone badge
+      # (used when no `badge_for:` sibling is bound); otherwise escaped text
+      # with controlled ids translated to their term. A string sub-property
+      # that declares `search_field:` is wrapped in a facet search link to
+      # that Solr field, matching the scalar `render_as: faceted` behavior.
       def value_markup(sub_property, value)
         return ERB::Util.h(display_value(sub_property, value)) if value.blank?
 
@@ -76,9 +93,51 @@ module Hyrax
           work_or_url_markup(value)
         when 'controlled'
           controlled_markup(sub_property, value)
+        when 'orcid'
+          # When the value is unparseable, `orcid_badge` returns nil — fall
+          # back to escaped text so the stored value is still visible.
+          orcid_badge(value).presence || ERB::Util.h(value.to_s)
         else
-          ERB::Util.h(display_value(sub_property, value))
+          string_markup(sub_property, value)
         end
+      end
+
+      # Plain string: facet-link the value when the sub-property opts in via
+      # `search_field:`, otherwise escape and emit verbatim.
+      def string_markup(sub_property, value)
+        spec = subproperty_spec(sub_property)
+        facet = spec.is_a?(Hash) ? spec[:search_field].to_s : ''
+        display = display_value(sub_property, value)
+        return ERB::Util.h(display) if facet.blank?
+
+        link_to(ERB::Util.h(display),
+                Rails.application.routes.url_helpers
+                     .search_catalog_path("f[#{ERB::Util.h(facet)}][]": value, locale: I18n.locale))
+      end
+
+      # For each row, decide which `type: orcid` sub-properties attach inline
+      # to a sibling rather than render as their own row. Returns
+      # `{ skip: [<source>...], attach: { <target> => <orcid_value> } }`.
+      # An orcid is skipped (and the badge attached) only when its value
+      # parses to a bare iD via {Hyrax::OrcidValidator.extract_bare_orcid} —
+      # an unparseable value falls back to its own row so the stored value
+      # is still surfaced on the show page rather than silently dropped.
+      def badge_attachments(pairs)
+        return { skip: [], attach: {} } unless options[:subproperties].is_a?(Hash)
+
+        by_key = pairs.to_h
+        skip = []
+        attach = {}
+        pairs.each do |sub_property, value|
+          spec = subproperty_spec(sub_property)
+          next unless spec.is_a?(Hash) && spec[:type].to_s == 'orcid'
+          target = spec[:badge_for].to_s
+          next if target.blank? || by_key[target].blank?
+          next if Hyrax::OrcidValidator.extract_bare_orcid(from: value.to_s).blank?
+          skip << sub_property
+          attach[target] = value
+        end
+        { skip: skip, attach: attach }
       end
 
       # A controlled value displays its authority/value-list term. When the

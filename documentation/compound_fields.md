@@ -112,10 +112,11 @@ textarea). Supported `type:` values:
 
 | `type:`      | Renders as          | Notes |
 |--------------|---------------------|-------|
-| `string`     | text input          | The default when `type:` is omitted. |
+| `string`     | text input          | The default when `type:` is omitted. Add `search_field: <solr_field>` to wrap the show-page value in a link to a catalog search filtered on that Solr field (same affordance the scalar `render_as: faceted` path provides). |
 | `url`        | url input → auto-linked on show | The stored value is rendered as a clickable `<a href>` on show pages (matching the scalar `render_as: external_link` behavior). |
 | `work_or_url` | select2 typeahead → linked on show | Searches internal works (via the `compound_works` QA authority, backed by `Hyrax::CompoundWorkPickerBuilder`) **or** accepts a typed external URL. The stored value is a work id or a URL; on show, a work id links to the work's show page with its title (resolved by `Hyrax::CompoundWorkResolver`), a URL is auto-linked. |
 | `controlled` | `<select>` dropdown | Options come from either an inline `values:` list or a QA local authority named by `authority:` (see below). The row's stored value is preserved even if it is no longer offered, matching the `include_current_value` convention of the ordinary controlled-field partials. |
+| `orcid` | text input → ORCID iD badge on show | Accepts either a bare iD (`0000-0000-0000-0000`) or the full `https://orcid.org/` URL; `Hyrax::OrcidSubpropertyValidator` blocks save on a malformed value. On show, an optional `badge_for:` declaration attaches the iD inline as a linked badge next to the named sibling sub-property (matching Zenodo's "name [iD]" treatment) instead of rendering as its own row. See [ORCID badges](#orcid-badges) below. |
 
 A `controlled` sub-property sources its options one of two ways:
 
@@ -161,6 +162,56 @@ them. `geocode` generalizes the existing single-value controlled-URI location
 field — see `Hyrax::BasedNearFieldBehavior` and
 [`field_behaviors.md`](field_behaviors.md), which `geocode` is intended to
 replace once it lands.
+
+### ORCID badges (`type: orcid` + `badge_for:`)
+
+An `orcid` sub-property carries an [ORCID iD](https://orcid.org/) and can
+attach inline to a sibling sub-property as a small linked badge on the show
+page — matching Zenodo's treatment of author names. The sample
+`participants` compound demonstrates the pattern:
+
+```yaml
+participant_name:
+  type: string
+  subproperty_of: participants
+  group: identity
+  index_keys: [participant_name_sim, participant_name_tesim]
+  form: { cols: 4 }
+
+participant_orcid:
+  type: orcid
+  subproperty_of: participants
+  group: identity
+  badge_for: participant_name        # attach the badge to this sibling on show
+  index_keys: [participant_orcid_ssim]
+  form: { cols: 4 }
+```
+
+The form input accepts either the bare iD (`0000-0000-0000-0000`) or the
+full `https://orcid.org/` URL; `Hyrax::OrcidSubpropertyValidator` blocks
+save on a malformed value (a blank value is allowed —
+required-ness lives in `Hyrax::CompoundEntryValidator`).
+
+On the show page, `Hyrax::CompoundAttributeRenderer` consumes an orcid
+whose `badge_for:` names a sibling that has a value in the same row,
+appending a linked ORCID badge inside that sibling's value markup and
+omitting the orcid as its own labeled row. The badge points at
+`https://orcid.org/<id>` and carries an `aria-label` / `title` of "ORCID iD
+for <sibling value>" so screen readers and tooltips identify the link
+target. The bare iD is extracted from either input form via
+`Hyrax::OrcidValidator.extract_bare_orcid`.
+
+`badge_for:` is optional. An orcid sub-property declared without it — or
+one whose `badge_for:` target is blank in a given row — falls back to
+rendering as its own labeled row, with the badge icon + linked iD as the
+value. So the same `type: orcid` works whether or not it is bound.
+
+In flexible mode, `Hyrax::FlexibleSchemaValidators::CompoundValidator`
+catches misconfiguration on m3 profile save: a `type: orcid` sub-property
+must not declare `authority:` or `values:` (orcid is a free-text iD, not
+a controlled vocabulary), and `badge_for:` must name a sibling
+sub-property on the same compound parent — not itself, and not a property
+that lives outside the parent.
 
 ### Grouping (`group:` + `groups:`, optional)
 

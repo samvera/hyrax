@@ -870,6 +870,11 @@ en:
         title: Title
         participant_name: Name
         participant_role: Role
+      orcid:
+        badge_alt: ORCID iD
+        badge_aria: ORCID iD for %{name}
+        invalid: "%{compound} > %{field}: \"%{value}\" is not a valid ORCID iD"
+        placeholder: 0000-0000-0000-0000
       identifiers:
         label: Identifiers
         identifier: Identifier
@@ -1420,6 +1425,9 @@ en:
           unknown_parent: "m3 profile subproperty `%{property}` declares `subproperty_of: %{parent}`, but `%{parent}` is not a declared `type: hash` compound property"
           controlled_without_source: "m3 profile compound subproperty `%{property}` is `type: controlled` but declares neither `authority` nor `values`"
           top_level_indexing: "m3 profile compound property `%{property}` must not declare top-level `indexing`; declare `indexing` (or `index_keys`) on each subproperty instead"
+          orcid_with_option_source: "m3 profile compound subproperty `%{property}` is `type: orcid` and must not declare `authority` or `values` (ORCID iDs are free-text, not a controlled vocabulary)"
+          orcid_badge_for_self: "m3 profile compound subproperty `%{property}` declares `badge_for: %{property}` (it cannot point at itself)"
+          orcid_badge_for_unknown_sibling: "m3 profile compound subproperty `%{property}` declares `badge_for: %{target}`, but `%{target}` is not a sibling sub-property of `%{parent}`"
       redirects_validator:
         errors:
           invalid_available_on: "m3 profile `redirects` property must be available on at least one work or collection class declared in this profile"

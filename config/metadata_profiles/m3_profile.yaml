@@ -962,6 +962,8 @@ properties:
     available_on:
       class:
         - Hyrax::Work
+        - Monograph
+        - GenericWorkResource
         - CollectionResource
     data_type: array
     type: hash
@@ -994,6 +996,7 @@ properties:
     group: identity
     required: true
     indexing: [participant_name_sim, participant_name_tesim]
+    search_field: participant_name_sim
     form:
       cols: 4
   participant_role:
@@ -1003,6 +1006,17 @@ properties:
     required: true
     values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
     indexing: [participant_role_sim, participant_role_tesim]
+    form:
+      cols: 4
+  # An ORCID iD sub-property. `badge_for:` binds the iD to a sibling so the
+  # show renderer appends an inline ORCID badge next to that sibling's value
+  # instead of rendering the iD as its own row.
+  participant_orcid:
+    type: orcid
+    subproperty_of: participants
+    group: identity
+    badge_for: participant_name
+    indexing: [participant_orcid_ssim]
     form:
       cols: 4
   identifiers:

@@ -258,7 +258,9 @@ module Hyrax
         required: truthy?(opts['required']),
         group: opts['group']&.to_s,
         cols: (form['cols'] || DEFAULT_COLS).to_i,
-        as: form['as']&.to_s }
+        as: form['as']&.to_s,
+        badge_for: opts['badge_for']&.to_s,
+        search_field: opts['search_field']&.to_s }
     end
 
     # Whether the compound itself is required (at least one row must exist).

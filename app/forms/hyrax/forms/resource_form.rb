@@ -71,6 +71,7 @@ module Hyrax
       # `attributes:`), so it is replay-safe.
       validation(name: :default, inherit: true) do
         validates_with Hyrax::CompoundEntryValidator
+        validates_with Hyrax::OrcidSubpropertyValidator
       end
 
       ##

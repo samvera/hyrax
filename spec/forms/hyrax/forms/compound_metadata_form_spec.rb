@@ -85,7 +85,8 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
     it 'populates the compound on the form during validate' do
       form.validate(params)
       expect(form.participants)
-        .to eq([{ 'participant_title' => 'Dr', 'participant_name' => 'Ada Lovelace', 'participant_role' => 'Author' }])
+        .to eq([{ 'participant_title' => 'Dr', 'participant_name' => 'Ada Lovelace',
+                  'participant_role' => 'Author', 'participant_orcid' => nil }])
       expect(form.identifiers)
         .to eq([{ 'identifier_value' => '10.1234/x', 'identifier_type' => 'DOI' }])
     end
@@ -94,7 +95,8 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
       form.validate(params)
       form.sync
       expect(form.model.participants)
-        .to eq([{ 'participant_title' => 'Dr', 'participant_name' => 'Ada Lovelace', 'participant_role' => 'Author' }])
+        .to eq([{ 'participant_title' => 'Dr', 'participant_name' => 'Ada Lovelace',
+                  'participant_role' => 'Author', 'participant_orcid' => nil }])
       expect(form.model.identifiers)
         .to eq([{ 'identifier_value' => '10.1234/x', 'identifier_type' => 'DOI' }])
     end
@@ -105,7 +107,8 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
           '1' => { 'participant_name' => 'Remove', '_destroy' => 'true' },
           '2' => { 'participant_title' => '', 'participant_name' => '', 'participant_role' => '' } })
       form.sync
-      expect(form.model.participants).to eq([{ 'participant_title' => nil, 'participant_name' => 'Keep', 'participant_role' => 'Author' }])
+      expect(form.model.participants).to eq([{ 'participant_title' => nil, 'participant_name' => 'Keep',
+                                               'participant_role' => 'Author', 'participant_orcid' => nil }])
     end
   end
 

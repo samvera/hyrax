@@ -192,11 +192,13 @@ RSpec.describe Hyrax::CompoundSchema do
       definition = schema.definition_for(:contributors)
       expect(definition[:subproperties]['role_label'])
         .to eq(type: 'controlled', authority: 'contributor_role', values: nil, index_keys: [],
-               display: false, required: false, group: 'role', cols: 6, as: nil)
+               display: false, required: false, group: 'role', cols: 6, as: nil, badge_for: nil,
+               search_field: nil)
       expect(definition[:subproperties]['given_name'])
         .to eq(type: 'string', authority: nil, values: nil,
                index_keys: %w[contributors_given_name_sim contributors_given_name_tesim],
-               display: true, required: false, group: 'identity', cols: 6, as: nil)
+               display: true, required: false, group: 'identity', cols: 6, as: nil, badge_for: nil,
+               search_field: nil)
     end
 
     it 'reads per-sub-property index_keys (literal Solr field names)' do
@@ -233,6 +235,77 @@ RSpec.describe Hyrax::CompoundSchema do
     it 'puts subproperties with no group in a single default (unlabeled) group' do
       groups = schema.definition_for(:identifiers)[:groups]
       expect(groups).to eq([{ key: nil, label: nil, fields: %w[value identifier_type] }])
+    end
+  end
+
+  describe 'orcid sub-property + badge_for' do
+    # A compound that carries a name + an orcid sub-property bound to the name
+    # via `badge_for:`. The schema service should pass `type` and `badge_for`
+    # through to the normalized spec untouched; the consumers (renderer, view,
+    # validator) read them from there.
+    let(:badge_resource_class) do
+      Class.new(Hyrax::Resource) do
+        def self.name
+          'TestResourceWithOrcidCompound'
+        end
+
+        attribute :participants,
+                  Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
+                    subproperties: {
+                      'participant_name' => { 'type' => 'string' },
+                      'participant_orcid' => { 'type' => 'orcid', 'badge_for' => 'participant_name' }
+                    }
+                  )
+      end
+    end
+
+    subject(:badge_schema) { described_class.for(badge_resource_class) }
+
+    it 'preserves type: orcid as a sub-property type' do
+      expect(badge_schema.definition_for(:participants)[:subproperties]['participant_orcid'][:type])
+        .to eq('orcid')
+    end
+
+    it 'preserves badge_for: as a sibling reference' do
+      expect(badge_schema.definition_for(:participants)[:subproperties]['participant_orcid'][:badge_for])
+        .to eq('participant_name')
+    end
+
+    it 'leaves badge_for nil on sub-properties that do not declare it' do
+      expect(badge_schema.definition_for(:participants)[:subproperties]['participant_name'][:badge_for])
+        .to be_nil
+    end
+  end
+
+  describe 'search_field on a sub-property' do
+    # A compound where the name sub-property opts into faceted search via
+    # `search_field:`. The schema service should pass that through unchanged
+    # for the renderer to consume.
+    let(:searchable_resource_class) do
+      Class.new(Hyrax::Resource) do
+        def self.name
+          'TestResourceWithSearchableCompound'
+        end
+
+        attribute :participants,
+                  Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
+                    subproperties: {
+                      'participant_name' => { 'type' => 'string',
+                                              'search_field' => 'participant_name_sim' }
+                    }
+                  )
+      end
+    end
+
+    subject(:searchable_schema) { described_class.for(searchable_resource_class) }
+
+    it 'preserves search_field as a Solr facet field reference' do
+      expect(searchable_schema.definition_for(:participants)[:subproperties]['participant_name'][:search_field])
+        .to eq('participant_name_sim')
+    end
+
+    it 'leaves search_field nil on sub-properties that do not declare it' do
+      expect(schema.definition_for(:contributors)[:subproperties]['given_name'][:search_field]).to be_nil
     end
   end
 

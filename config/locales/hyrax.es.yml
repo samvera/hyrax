@@ -870,6 +870,12 @@ es:
         number_of_results_to_display_per_page: Número de resultados a mostrar por página
         results_per_page: "Resultados por página:"
         sort_by_html: "<span>Tipo:</span>"
+    compound_fields:
+      orcid:
+        badge_alt: ORCID iD
+        badge_aria: ORCID iD de %{name}
+        invalid: "%{compound} > %{field}: \"%{value}\" no es un ORCID iD válido"
+        placeholder: 0000-0000-0000-0000
     contact_form:
       button_label: Enviar
       email_label: Tu Correo Electrónico

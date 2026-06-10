@@ -6,11 +6,11 @@
 // in _collections.scss) that would otherwise turn each entry into a bordered
 // flex row. These rules override it regardless of source order.
 .hyrax-compound-values {
+  border: 0 !important;
   display: block !important;
   flex-direction: column;
-  border: 0 !important;
-  padding: 0 !important;
   max-width: 100%;
+  padding: 0 !important;
 
   // Force block flow on the entries/sub-properties; the label/value spans stay
   // inline so each sub-property reads as "Label: value" on one wrapping line.
@@ -23,17 +23,17 @@
   .hyrax-compound-subproperty,
   .hyrax-compound-subproperty-label,
   .hyrax-compound-subproperty-value {
-    border: 0 !important;
-    padding: 0 !important;
-    margin: 0;
     background: none;
+    border: 0 !important;
+    margin: 0;
+    padding: 0 !important;
   }
 
   // A light divider between entries.
   .hyrax-compound-entry + .hyrax-compound-entry {
+    border-top: 1px solid $gray-200 !important;
     margin-top: 0.5rem;
     padding-top: 0.5rem !important;
-    border-top: 1px solid $gray-200 !important;
   }
 
   .hyrax-compound-subproperty {
@@ -46,5 +46,19 @@
   .hyrax-compound-subproperty-label {
     font-weight: 600;
     margin-right: 0.25rem;
+  }
+}
+
+// Small inline ORCID iD badge appended next to a sibling sub-property value
+// when a `type: orcid` sub-property declares `badge_for:`.
+.hyrax-compound-orcid-badge {
+  display: inline-block;
+  margin-left: 0.25rem;
+  vertical-align: baseline;
+
+  img {
+    height: 1em;
+    vertical-align: -0.125em;
+    width: auto;
   }
 }
