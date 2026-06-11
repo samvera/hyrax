@@ -60,16 +60,15 @@ contributor_given_name:
   available_on: { properties: [contributors] }
   group: identity
   form: { cols: 4 }
-  index_keys: [contributors_given_name_sim, contributors_given_name_tesim]
+  # no indexing declared -> derived: contributors_given_name_sim + _tesim
 contributor_family_name:
   type: string
   name: family_name
   available_on: { properties: [contributors] }
   group: identity
   form: { cols: 4 }
-  index_keys: [contributors_family_name_sim, contributors_family_name_tesim]
 contributor_name_type:
-  type: controlled
+  type: controlled                 # derived facet-only: contributors_name_type_sim
   name: name_type
   available_on: { properties: [contributors] }
   group: identity
@@ -83,7 +82,8 @@ contributor_role_label:
 contributor_affiliation:
   type: string
   name: affiliation
-  available_on: { properties: [contributors] }   # display-only (no index_keys)
+  available_on: { properties: [contributors] }
+  indexing: false                  # display-only: shown on the page, no Solr field
   group: role
 ```
 
@@ -101,19 +101,20 @@ without repeating its full definition. A subproperty inherits its class scope
 (the works/collections it is available on) from the union of its parents'
 `available_on: { class: }`.
 
-A reused subproperty must be **display-only** (no `index_keys:`/`indexing:`): a
-single explicit Solr field name cannot be written from more than one parent
-compound without collision (the last-indexed compound's values would overwrite
-the others'). Display-only means the value is still stored in each compound's
-rows and rendered on the show page — it simply has no searchable Solr field of
-its own. See the [`display:`](#display-optional-default-true) section.
+A reused subproperty is indexed **per parent**: its Solr fields are derived as
+`<compound>_<name>_<suffix>`, so the same `title` folded into `participants` and
+`relationships` writes to `participants_title_*` and `relationships_title_*` —
+distinct fields, no collision, no hand-written `indexing:`. (Declaring an
+explicit `index_keys:`/`indexing:` on a reused subproperty is therefore a
+mistake: one literal field name would be written from every parent and collide.
+See [Indexing](#indexing-sub-properties-derived-by-default).)
 
 Ordering is document order: subproperties render in the order they are declared,
 and groups in the order their first member appears.
 
 The m3 profile uses the same shape with `data_type: array`, `type: hash` on the
-parent; sub-property index targets are declared with `indexing:` (the
-flexible-mode spelling of `index_keys:`).
+parent. Where an explicit index override is needed, the flexible-mode spelling
+of `index_keys:` is `indexing:` (see [Indexing](#indexing-sub-properties-derived-by-default)).
 
 > **Flexible mode:** the active schema is the `Hyrax::FlexibleSchema` row in the
 > database, seeded from the m3 profile — not the YAML file directly. After
@@ -210,28 +211,48 @@ Groups appear in the order their first member is declared; sub-properties appear
 in document order within their group. Per-field width is `form: { cols: }` (out
 of 12), not a group-level setting.
 
-### Indexing sub-properties (`index_keys:` / `indexing:`)
+### Indexing sub-properties (derived by default)
 
-Indexing is declared **per sub-property**, exactly as for scalar fields: list the
-literal Solr field names the sub-property's value should be written to, under
-`index_keys:` (non-flexible mode) or `indexing:` (flexible mode). The Solr
-suffix on each name chooses the behavior — `_tesim` (stored + searchable,
-multi-valued), `_sim` (facetable, not stored), `_ssim` (stored + facetable),
-etc. — the same conventions scalar fields use. The author picks both the field
-names and the suffixes.
+A sub-property is indexed to Solr by default — you do **not** declare its field
+names. The indexer derives them as `<compound>_<name>_<suffix>` from the
+compound name, the sub-property's in-compound `name:` (or key), and a suffix set
+chosen by its `type:`:
 
-A sub-property with no `index_keys:`/`indexing:` is **not** written to a Solr field
-of its own; it can still appear on the show page (see below). As with scalar
-fields, the non-field control tokens (`facetable`, `stored_searchable`,
-`admin_only`, `editor_only`) are filtered out if present.
+| `type:`                  | Derived suffixes | Role |
+|--------------------------|------------------|------|
+| `string`                 | `_sim`, `_tesim` | facetable **and** full-text searchable |
+| `controlled`             | `_sim`           | facetable only (a closed vocabulary needs no full-text) |
+| `url`, `work_or_url`, `id` | `_ssim`        | stored exact-match string |
+| `date_time`, `date`      | `_dtsi`          | date |
+
+So `participants` with a `name`-aliased `title` (type `string`) is indexed to
+`participants_title_sim` and `participants_title_tesim` with no `indexing:`
+declaration. **Deriving per compound is what makes a reused sub-property safe:**
+the same `title` definition folded into `participants` and `relationships`
+produces `participants_title_*` and `relationships_title_*` — distinct fields,
+no collision.
+
+Two ways to depart from the default:
+
+- **Override the field names** — declare an explicit `index_keys:`
+  (non-flexible) / `indexing:` (flexible) list and it is used **verbatim**,
+  replacing the derived set. Use this for a non-standard suffix choice (e.g. a
+  free-text notes field you want searchable but not faceted: `indexing:
+  [rights_notes_tesim]`, `_tesim` only) or a legacy field name.
+- **Opt out of indexing** — set `indexing: false` / `index_keys: false`. The
+  sub-property gets no Solr field of its own (it can still display; see below).
+
+As with scalar fields, the non-field control tokens (`facetable`,
+`stored_searchable`, `admin_only`, `editor_only`) are filtered out of an explicit
+list if present.
 
 Indexing a sub-property makes it **searchable/facetable** in Solr; it does **not**
 make it appear as a column on the catalog/search-results page. The catalog
 renders only the fields explicitly registered with Blacklight
 (`config.add_index_field`) — compound sub-properties are not registered by default.
-To show a sub-property in search results, register its Solr field name in your
-`CatalogController` (e.g.
-`config.add_index_field 'participant_name_tesim', label: 'Participant'`). The
+To show a sub-property in search results, register its derived Solr field name in
+your `CatalogController` (e.g.
+`config.add_index_field 'participants_name_tesim', label: 'Participant'`). The
 show page and edit form render compounds regardless.
 
 ### `display:` (optional, default true)
@@ -241,22 +262,21 @@ A sub-property has two **independent** capabilities:
 - **Display** — whether it appears on the work's show page. The indexer writes
   the compound's rows as a `<compound>_json_ss` blob the show page renders from;
   a sub-property is included in that blob unless it sets `display: false`.
-- **Searchable indexing** — whether its value is *also* written to its own Solr
-  field(s) (via `index_keys:`/`indexing:`), which is what makes it independently
-  searchable/facetable.
+- **Searchable indexing** — whether its value is written to its own Solr
+  field(s). On by default (derived; see [Indexing](#indexing-sub-properties-derived-by-default)),
+  turned off with `indexing: false` / `index_keys: false`.
 
 Because these are separate, each sub-property can be in one of four states:
 
-- **display + searchable** — has `index_keys:` and `display` not false: shown on
-  the work page **and** written to its own searchable Solr field.
-- **display-only** — no `index_keys:` (and `display` not false): stored in the
-  rows and shown on the work page, but **not** written to its own searchable
-  Solr field, so it cannot be searched/faceted on independently. (A subproperty
-  reused across multiple compounds must be display-only — see
-  [Declaring a compound](#declaring-a-compound).)
-- **searchable-only** — has `index_keys:` and `display: false`: written to its
-  Solr field (searchable) but omitted from the show page.
-- **neither** — no `index_keys:` and `display: false`.
+- **display + searchable** (the default) — `display` not false and indexing not
+  opted out: shown on the work page **and** written to its (derived or explicit)
+  Solr field.
+- **display-only** — `indexing: false` (and `display` not false): stored in the
+  rows and shown on the work page, but with no Solr field of its own, so it
+  cannot be searched/faceted on independently.
+- **searchable-only** — `display: false` (indexing not opted out): written to
+  its Solr field but omitted from the show page.
+- **neither** — `display: false` **and** `indexing: false`.
 
 ### `required:` (optional, default false)
 
@@ -300,9 +320,9 @@ per-compound code:
   resource, guards against Valkyrie's single-element-array key-splay quirk on
   reload.
 - **Indexing** — `Hyrax::Indexers::CompoundIndexer`, included on the indexer,
-  writes each sub-property's value to the Solr field names it declares
-  (`index_keys:`/`indexing:`) and stores the displayable sub-properties as a
-  `<compound>_json_ss` blob for the show page.
+  writes each sub-property's value to its derived `<compound>_<name>_<suffix>`
+  Solr fields (or an explicit `index_keys:`/`indexing:` override) and stores the
+  displayable sub-properties as a `<compound>_json_ss` blob for the show page.
 
 A resource and its indexer opt in with one include each:
 

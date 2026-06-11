@@ -76,8 +76,9 @@ RSpec.describe 'Compound metadata form flow', type: :model, unless: Hyrax.config
 
   describe 'validate + sync writes the compound to the model' do
     # The shipped samples alias each subproperty's in-compound key via `name:`
-    # (e.g. `participant_title` -> `title`), so form rows and the persisted
-    # hashes are keyed by those generic names.
+    # (e.g. `participant_name` -> `name`), so form rows and the persisted
+    # hashes are keyed by those generic names. `participants` gets its `title`
+    # from the reused `shared_title` definition.
     let(:params) do
       { 'participants_attributes' =>
           { '0' => { 'title' => 'Dr', 'name' => 'Ada Lovelace', 'role' => 'Author' } },

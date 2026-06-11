@@ -254,6 +254,10 @@ module Hyrax
         authority: opts['authority']&.to_s,
         values: normalize_values(opts['values']),
         index_keys: normalize_index_keys(opts),
+        # Indexing trigger: an explicit `index_keys:` list overrides; otherwise
+        # the indexer derives `<parent>_<name>_<suffix>` from the type — unless
+        # indexing is opted out with `indexing: false` / `index_keys: false`.
+        index: index_opt_out?(opts) ? false : true,
         display: opts.fetch('display', true) != false,
         required: truthy?(opts['required']),
         group: opts['group']&.to_s,
@@ -275,11 +279,17 @@ module Hyrax
     end
 
     # Reads `index_keys:` (non-flexible) or `indexing:` (flexible), filtering the
-    # non-field control tokens, mirroring AttributeDefinition#index_keys.
+    # non-field control tokens, mirroring AttributeDefinition#index_keys. A
+    # boolean opt-out (`false`) carries no field names.
     INDEX_CONTROL_TOKENS = %w[facetable stored_searchable admin_only editor_only].freeze
     def normalize_index_keys(opts)
       raw = opts['indexing'] || opts['index_keys'] || []
+      return [] if [true, false].include?(raw)
       Array(raw).reject { |k| INDEX_CONTROL_TOKENS.include?(k.to_s) }.map(&:to_s)
+    end
+
+    def index_opt_out?(opts)
+      [opts['indexing'], opts['index_keys']].include?(false)
     end
 
     # Normalizes an inline option list into `[[label, id], ...]`; nil when none.

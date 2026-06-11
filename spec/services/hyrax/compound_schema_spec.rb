@@ -192,11 +192,11 @@ RSpec.describe Hyrax::CompoundSchema do
       definition = schema.definition_for(:contributors)
       expect(definition[:subproperties]['role_label'])
         .to eq(type: 'controlled', authority: 'contributor_role', values: nil, index_keys: [],
-               display: false, required: false, group: 'role', cols: 6, as: nil)
+               index: true, display: false, required: false, group: 'role', cols: 6, as: nil)
       expect(definition[:subproperties]['given_name'])
         .to eq(type: 'string', authority: nil, values: nil,
                index_keys: %w[contributors_given_name_sim contributors_given_name_tesim],
-               display: true, required: false, group: 'identity', cols: 6, as: nil)
+               index: true, display: true, required: false, group: 'identity', cols: 6, as: nil)
     end
 
     it 'reads per-sub-property index_keys (literal Solr field names)' do
@@ -206,6 +206,43 @@ RSpec.describe Hyrax::CompoundSchema do
 
     it 'defaults a sub-property with no index declaration to no index_keys' do
       expect(schema.definition_for(:agent)[:subproperties]['agent_name'][:index_keys]).to eq([])
+    end
+
+    describe 'index trigger normalization (index_keys / indexing)' do
+      let(:resource_class) do
+        Class.new(Hyrax::Resource) do
+          def self.name
+            'IndexTriggerResource'
+          end
+          attribute :things,
+                    Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
+                      subproperties: {
+                        # explicit list -> override
+                        'explicit' => { 'type' => 'string', 'index_keys' => %w[things_explicit_tesim] },
+                        # absent -> derive-eligible (index true, no explicit keys)
+                        'derived' => { 'type' => 'string' },
+                        # opt out -> index false
+                        'unindexed' => { 'type' => 'string', 'indexing' => false }
+                      }
+                    )
+        end
+      end
+      subject(:subs) { described_class.for(resource_class).definition_for(:things)[:subproperties] }
+
+      it 'keeps an explicit index_keys list and marks it indexed' do
+        expect(subs['explicit'][:index_keys]).to eq(%w[things_explicit_tesim])
+        expect(subs['explicit'][:index]).to be true
+      end
+
+      it 'leaves index_keys empty but index true for a derive-eligible sub-property' do
+        expect(subs['derived'][:index_keys]).to eq([])
+        expect(subs['derived'][:index]).to be true
+      end
+
+      it 'marks index false for a sub-property that opts out (indexing: false)' do
+        expect(subs['unindexed'][:index]).to be false
+        expect(subs['unindexed'][:index_keys]).to eq([])
+      end
     end
 
     it 'defaults display to true and honors display: false' do

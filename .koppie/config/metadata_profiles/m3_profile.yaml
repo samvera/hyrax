@@ -957,16 +957,10 @@ properties:
       html_dl: true
   # Subproperties declare `available_on: { properties: [<parent>] }` (no
   # `class:`/`range`/`display_label`): they inherit their parent compound's class
-  # scope and are folded into it by the schema loader.
-  participant_title:
-    type: string
-    name: title
-    available_on:
-      properties:
-        - participants
-    group: identity
-    form:
-      cols: 4
+  # scope and are folded into it by the schema loader. Solr fields are derived
+  # per sub-property (`<parent>_<name>_<suffix>`) unless an explicit `indexing:`
+  # overrides or `indexing: false` opts out. (`participants` gets its `title`
+  # from the reused `shared_title` below.)
   participant_name:
     type: string
     name: name
@@ -975,7 +969,6 @@ properties:
         - participants
     group: identity
     required: true
-    indexing: [participant_name_sim, participant_name_tesim]
     form:
       cols: 4
   participant_role:
@@ -987,7 +980,6 @@ properties:
     group: identity
     required: true
     values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
-    indexing: [participant_role_sim, participant_role_tesim]
     form:
       cols: 4
   identifiers:
@@ -1013,7 +1005,6 @@ properties:
       properties:
         - identifiers
     required: true
-    indexing: [identifier_value_sim, identifier_value_tesim]
     form:
       cols: 6
   identifier_type:
@@ -1024,7 +1015,6 @@ properties:
         - identifiers
     required: true
     values: [DOI, Handle, ISBN, ISSN, URL, URN, ARK, Other]
-    indexing: [identifier_type_sim]
     form:
       cols: 6
   compound_rights:
@@ -1050,7 +1040,6 @@ properties:
       properties:
         - compound_rights
     authority: rights_statements
-    indexing: [compound_rights_statement_sim, compound_rights_statement_tesim]
     form:
       cols: 6
   compound_rights_license:
@@ -1060,9 +1049,12 @@ properties:
       properties:
         - compound_rights
     authority: licenses
-    indexing: [compound_rights_license_sim, compound_rights_license_tesim]
     form:
       cols: 6
+  # Overriding the derived index keys: a `string` would derive both
+  # `compound_rights_notes_sim` (facet) and `_tesim` (full-text). A free-text
+  # notes field is worth searching but not faceting, so an explicit `indexing:`
+  # narrows it to `_tesim` only. An explicit list replaces the derived set.
   compound_rights_notes:
     type: string
     name: notes
@@ -1096,7 +1088,6 @@ properties:
       properties:
         - relationships
     required: true
-    indexing: [relationships_item_ssim]
     form:
       cols: 6
   relationship_type:
@@ -1107,18 +1098,15 @@ properties:
         - relationships
     required: true
     values: [References, Is Referenced By, Is Part Of, Has Part, Is Version Of, Replaces, Requires, Other]
-    indexing: [relationships_type_sim]
     form:
       cols: 6
   # A single subproperty definition reused by two compounds. The top-level key
   # (`shared_title`) is globally unique, while `name: title` sets the cleaner key
   # inside each compound row (so both `participants` and `relationships` rows
-  # carry a `title`), and `available_on.properties` lists both parents.
-  # Display-only here (no `indexing:`): the value is stored in the row and shown
-  # on the work page, but is not written to its own searchable Solr field. A
-  # reused subproperty cannot share one explicit Solr field across parents
-  # without collision. See the `display:` section in
-  # documentation/compound_fields.md.
+  # carry a `title`), and `available_on.properties` lists both parents. Its Solr
+  # fields are derived per parent (`participants_title_sim`/`_tesim` and
+  # `relationships_title_sim`/`_tesim`), so the reused field is searchable in
+  # each compound with no collision and no hand-written `indexing:`.
   shared_title:
     type: string
     name: title

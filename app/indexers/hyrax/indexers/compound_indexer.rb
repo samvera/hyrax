@@ -5,9 +5,13 @@ module Hyrax
     ##
     # Indexer mixin that projects compound metadata sub-properties into Solr. For
     # every compound on the resource (see {Hyrax::CompoundSchema}), it writes
-    # each sub-property's declared `index_keys:`/`indexing:` Solr fields and
-    # stores the displayable rows as a `<compound>_json_ss` blob the show page
-    # renders from. See documentation/compound_fields.md.
+    # each sub-property's searchable Solr fields and stores the displayable rows
+    # as a `<compound>_json_ss` blob the show page renders from. A sub-property's
+    # Solr field names are *derived* — `<compound>_<name>_<suffix>` from its
+    # `type:` — unless it declares an explicit `index_keys:` list (used verbatim)
+    # or opts out with `indexing: false`. Deriving per-compound is what lets one
+    # sub-property be reused across compounds without its fields colliding. See
+    # documentation/compound_fields.md.
     #
     # @example
     #   class WorkIndexer < Hyrax::Indexers::PcdmObjectIndexer
@@ -31,19 +35,47 @@ module Hyrax
 
       def index_compound(document, compound_name, definition)
         rows = Array(resource.public_send(compound_name))
-        index_searchable_subproperties(document, definition, rows)
+        index_searchable_subproperties(document, definition, rows, compound_name)
         index_display_blob(document, compound_name, definition, rows)
       end
 
-      def index_searchable_subproperties(document, definition, rows)
+      # Solr suffix set per sub-property `type:`, following the field-role
+      # conventions: a `string` (open text) is both facetable (`_sim`) and
+      # full-text searchable (`_tesim`); a `controlled` value is a closed
+      # vocabulary, so it is facetable only (`_sim`) — full-text tokenization
+      # adds nothing for fixed terms; ids/URIs get a single stored string
+      # (`_ssim`); dates a date field (`_dtsi`).
+      DERIVED_SUFFIXES = {
+        'string' => %w[_sim _tesim],
+        'controlled' => %w[_sim],
+        'url' => %w[_ssim],
+        'work_or_url' => %w[_ssim],
+        'id' => %w[_ssim],
+        'date_time' => %w[_dtsi],
+        'date' => %w[_dtsi]
+      }.freeze
+      DEFAULT_SUFFIXES = %w[_tesim].freeze
+
+      def index_searchable_subproperties(document, definition, rows, compound_name)
         definition[:subproperties].each do |sub_property, spec|
-          next if spec[:index_keys].blank?
+          index_keys = solr_index_keys(compound_name, sub_property, spec)
+          next if index_keys.empty?
 
           values = rows.map { |row| compound_entry_value(row, sub_property) }.reject(&:blank?)
           next if values.empty?
 
-          spec[:index_keys].each { |index_key| document[index_key] = values }
+          index_keys.each { |index_key| document[index_key] = values }
         end
+      end
+
+      # An explicit `index_keys:` list wins; opting out (`index: false`) yields
+      # none; otherwise the field names are derived from the type.
+      def solr_index_keys(compound_name, sub_property, spec)
+        return spec[:index_keys] if spec[:index_keys].present?
+        return [] if spec[:index] == false
+
+        suffixes = DERIVED_SUFFIXES.fetch(spec[:type].to_s, DEFAULT_SUFFIXES)
+        suffixes.map { |suffix| "#{compound_name}_#{sub_property}#{suffix}" }
       end
 
       def index_display_blob(document, compound_name, definition, rows)
