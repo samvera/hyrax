@@ -41,6 +41,13 @@ module Hyrax
       { id: doc['id'],
         label: Array(doc['title_tesim']).first || 'Untitled',
         type: model,
+        creator: Array(doc['creator_tesim']),
+        resource_type: Array(doc['resource_type_tesim']).first,
+        date: Array(doc['date_created_tesim']).first,
+        keywords: Array(doc['keyword_tesim']),
+        description: Array(doc['description_tesim']).first,
+        rights: Array(doc['rights_statement_tesim']).first,
+        thumb: Array(doc['demo_thumb_ss']).first,
         closed: doc['visibility_ssi'] == 'restricted',
         path: model.present? ? "/concern/#{model.tableize}/#{doc['id']}" : "/#{doc['id']}" }
     end

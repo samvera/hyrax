@@ -86,7 +86,7 @@ function buildGraph(){
 
   document.getElementById("empty").style.display = "none";
   const elements = [
-    ...G.nodes.map(n => ({ data: { id:n.id, label:n.label, type:n.type, closed:!!n.closed, path:n.path } })),
+    ...G.nodes.map(n => ({ data: { ...n } })), // carry all fields (thumb, creator, type, date, keywords, description...)
     ...G.links.map((l,i) => ({ data: { id:'e'+i, source:l.source, target:l.target, rel:l.rel, note:l.note, rl:relLabelOf(l.rel) } }))
   ];
 
@@ -95,11 +95,12 @@ function buildGraph(){
     style: [
       { selector:'node', style:{
         'background-color': e => e.data('closed') ? '#6cc04a' : '#cccccc',
-        'border-color':'#111', 'border-width':1.5, 'width':24, 'height':24,
+        'background-image': e => e.data('thumb') || 'none', 'background-fit':'cover',
+        'border-color':'#111', 'border-width':1.5, 'width':46, 'height':46,
         'label':'data(label)', 'color':'#cfcfcf', 'font-size':'10px',
         'text-valign':'bottom', 'text-halign':'center', 'text-margin-y':6,
-        'text-wrap':'wrap', 'text-max-width':'100px' } },
-      { selector:'node.primary', style:{ 'border-color':'#6cc04a', 'border-width':3, 'width':30, 'height':30 } },
+        'text-wrap':'wrap', 'text-max-width':'110px' } },
+      { selector:'node.primary', style:{ 'border-color':'#6cc04a', 'border-width':4, 'width':58, 'height':58 } },
       { selector:'edge', style:{
         'line-color': relColor, 'width':2.5, 'curve-style':'bezier',
         'label':'data(rl)', 'font-size':'9px', 'color':'#9a9a9a',
@@ -134,10 +135,16 @@ function buildGraph(){
 
   function showNode(node){
     const d = node.data();
-    let html = `<h1 style="font-size:16px">${d.label}</h1>`;
-    if (d.type) html += `<div class="meta"><b>Model:</b> ${d.type}</div>`;
+    let html = '';
+    if (d.thumb) html += `<img src="${d.thumb}" alt="" style="width:120px;height:120px;border-radius:8px;float:right;margin:0 0 8px 10px">`;
+    html += `<h1 style="font-size:16px">${d.label}</h1>`;
+    if (d.resource_type) html += `<div class="meta"><b>Type:</b> ${d.resource_type}</div>`;
+    if (d.creator && d.creator.length) html += `<div class="meta"><b>Creator:</b> ${d.creator.join(', ')}</div>`;
+    if (d.date) html += `<div class="meta"><b>Date:</b> ${d.date}</div>`;
+    if (d.keywords && d.keywords.length) html += `<div class="meta"><b>Keywords:</b> ${d.keywords.join(', ')}</div>`;
     if (d.closed) html += `<div class="meta"><b>Access:</b> restricted</div>`;
-    html += `<p style="margin:12px 0 2px"><a class="pagelink" href="${d.path}">&#8599; View this work's page</a></p>`;
+    if (d.description) html += `<p class="meta" style="margin-top:8px">${d.description}</p>`;
+    html += `<p style="clear:both;margin:12px 0 2px"><a class="pagelink" href="${d.path}">&#8599; View this work's page</a></p>`;
     const edges = node.connectedEdges();
     if (edges.length){
       html += `<div class="legend" style="border:0;padding-top:12px"><h2>Relationships</h2>`;
