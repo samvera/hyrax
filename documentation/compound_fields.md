@@ -495,8 +495,57 @@ in the populator, whose only job is shape conversion. This mirrors the
 
 A compound round-trips through Bulkrax import and export with no additional
 code, using Bulkrax's declarative `nested_attributes: true` field-mapping flag
-(Bulkrax v9.4.3+). Declare the flag on every sibling mapping that shares the
-compound's `object:` value, and keep each mapping key equal to the sub-property
-key. See `field_behaviors.md` for the column conventions. Note: Bulkrax's
-controlled-URI sanitization does not currently descend into compound
-sub-properties.
+(Bulkrax v9.5.0+). Each compound is an `object:` whose members map into a
+`<compound>_attributes` numbered-key hash — the same shape the form's
+`compound_attributes_populator` consumes (see [field_behaviors.md](field_behaviors.md#wiring-up-bulkrax-imports)
+for the underlying mechanism, and the [Configuring Bulkrax wiki](https://github.com/samvera/bulkrax/wiki/Configuring-Bulkrax#mapping-into-form-_attributes-properties)
+for the option reference).
+
+### Field mapping
+
+Declare one mapping per sub-property, all sharing the compound's `object:` value,
+each with `nested_attributes: true`. The key written inside each row is the
+sub-property's key (`name`, `role`, `title`, …). When that key is also a unique
+top-level mapping key you can use it directly; otherwise give the entry a unique
+mapping key and set the row key with `name:` (see "Shared and colliding row keys"
+below).
+
+```ruby
+# In the host app's Bulkrax field-mapping configuration
+'name'  => { from: ['participant_name'], object: 'participants', nested_attributes: true },
+'role'  => { from: ['participant_role'], object: 'participants', nested_attributes: true },
+'value' => { from: ['identifier_value'], object: 'identifiers',  nested_attributes: true },
+```
+
+### CSV columns
+
+Columns are the mapping's `from:` name suffixed `_N`, one group per row in the
+compound. For two participants on one work:
+
+```
+participant_name_1, participant_role_1, participant_name_2, participant_role_2
+```
+
+Each `_N` group becomes one entry in `participants_attributes` (index `N-1`),
+folded by the populator into the persisted `Array<Hash>`.
+
+### Shared and colliding row keys
+
+A sub-property reused across compounds needs the same row key in each (e.g. a
+`title` shared by `participants` and `relationships`), but Bulkrax mapping keys
+must be globally unique. Bulkrax v9.5.1+ resolves this with `name:` (alias
+`row_key:`), which sets the row key independently of the mapping key:
+
+```ruby
+'participant_title'  => { from: ['participant_title'],  object: 'participants',  nested_attributes: true, name: 'title' },
+'relationship_title' => { from: ['relationship_title'], object: 'relationships', nested_attributes: true, name: 'title' },
+```
+
+The same applies when a sub-property's row key collides with an existing scalar
+mapping (e.g. a compound `license` alongside a top-level `license`): give the
+compound entry a unique mapping key and `name: 'license'`. See the
+[Configuring Bulkrax wiki](https://github.com/samvera/bulkrax/wiki/Configuring-Bulkrax#reusing-a-row-key-across-objects)
+for details.
+
+Note: Bulkrax's controlled-URI sanitization does not currently descend into
+compound sub-properties.
