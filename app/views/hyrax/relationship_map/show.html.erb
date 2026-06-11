@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Relationship map — Enact (prototype)</title>
+<!-- PROTOTYPE. Data comes from the spec §3.5 relationship_* Solr fields via
+     Hyrax::RelationshipMapController. D3 v7 from CDN. -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<style>
+  :root { --bg:#181818; --panel:#222; --ink:#e8e8e8; --muted:#9a9a9a; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+  #app { display:flex; height:100vh; }
+  #graphwrap { flex:1; position:relative; }
+  #graph { width:100%; height:100%; }
+  #empty { position:absolute; inset:0; display:flex; align-items:center;
+    justify-content:center; color:var(--muted); }
+  #focusbar { position:absolute; top:12px; left:12px; background:#2b2b2b;
+    border:1px solid #3a3a3a; border-radius:6px; padding:7px 12px; font-size:12px;
+    display:none; align-items:center; gap:10px; }
+  #focusbar b { color:#fff; } #focusbar a { color:#6cc04a; cursor:pointer; }
+  #side { width:350px; background:var(--panel); border-left:1px solid #333;
+    padding:18px; overflow:auto; }
+  h1 { font-size:15px; margin:0 0 4px; } .sub { color:var(--muted); font-size:12px; margin-bottom:16px; }
+  .hint { color:var(--muted); font-size:12px; }
+  .pill { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; background:#333; color:#ddd; margin:2px 4px 2px 0; }
+  .datacite { color:var(--muted); font-size:11px; font-family:ui-monospace,Menlo,monospace; }
+  .rel-name { font-weight:600; }
+  .narr { background:#1b1b1b; border-left:3px solid #6cc04a; padding:10px 12px; border-radius:4px; margin-top:10px; color:#d7d7d7; font-style:italic; }
+  .legend { margin-top:18px; border-top:1px solid #333; padding-top:14px; }
+  .legend h2 { font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:0 0 8px; }
+  .legend .row { display:flex; align-items:center; gap:8px; margin:5px 0; font-size:12px; }
+  .swatch { width:22px; border-top:3px solid; flex:none; }
+  .dot { width:12px; height:12px; border-radius:50%; flex:none; border:1px solid #000; }
+  text.label { fill:#cfcfcf; font-size:10px; pointer-events:none; }
+  text.rellabel { fill:#8a8a8a; font-size:9px; pointer-events:none; }
+  .meta { color:var(--muted); font-size:12px; margin:2px 0; } .meta b { color:#ddd; font-weight:600; }
+  a.reset { color:#6cc04a; cursor:pointer; font-size:12px; }
+  a.pagelink { color:#6cc04a; cursor:pointer; font-weight:600; text-decoration:none; font-size:13px; }
+  a.pagelink:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="graphwrap">
+    <svg id="graph"></svg>
+    <div id="empty">No related works are visible to you.</div>
+    <div id="focusbar"><span>Showing how <b id="focuslabel"></b> relates</span><a id="focusclear">show all ×</a></div>
+  </div>
+  <div id="side">
+    <h1>Relationship map</h1>
+    <div class="sub">Enact prototype · ItemRelationship "patch cables" (spec §3.5)</div>
+    <div id="detail"><p class="hint">Click a <b>node</b> to see how it relates to everything else (others hide).
+      Click a <b>line</b> for the relationship and its curatorial note. Drag to rearrange; scroll to zoom.</p></div>
+    <div class="legend"><h2>Relationship types (spec §3.5)</h2><div id="rel-legend"></div></div>
+  </div>
+</div>
+<script>
+const REL = {
+  "sequence":        { label:"sequence",        color:"#5b9bd5", dc:"IsContinuedBy / Continues" },
+  "source-of":       { label:"source of",       color:"#c0823c", dc:"IsSourceOf / IsDerivedFrom" },
+  "pair-with":       { label:"pair / variant",  color:"#b05ec0", dc:"IsVariantFormOf" },
+  "response-to":     { label:"response to",     color:"#c9544b", dc:"References / IsReferencedBy" },
+  "documents":       { label:"documents",       color:"#4aa3a3", dc:"Documents / IsDocumentedBy" },
+  "juxtaposed-with": { label:"juxtaposed with", color:"#c2a83e", dc:"IsRelatedMaterial" }
+};
+function rel(d){ return REL[d.rel] || { label:d.rel, color:"#888", dc:"" }; }
+
+// Server-fed data from the spec §3.5 relationship Solr fields
+const nodes = <%= raw @graph[:nodes].to_json %>;
+const linkData = <%= raw @graph[:links].to_json %>;
+const FOCUS = "<%= j @focus %>";
+
+const legend = d3.select("#rel-legend");
+Object.keys(REL).forEach(k => {
+  const row = legend.append("div").attr("class","row");
+  row.append("span").attr("class","swatch").style("border-color", REL[k].color);
+  row.append("span").html(`${REL[k].label} <span class="datacite">${REL[k].dc}</span>`);
+});
+
+if (nodes.length === 0) { /* leave the #empty message showing */ }
+else {
+  document.getElementById("empty").style.display = "none";
+  const svg = d3.select("#graph");
+  let W = svg.node().clientWidth, H = svg.node().clientHeight;
+  svg.attr("viewBox",[0,0,W,H]);
+  const root = svg.append("g");
+  svg.call(d3.zoom().scaleExtent([0.3,3]).on("zoom", e => root.attr("transform", e.transform)));
+
+  const sim = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(linkData).id(d=>d.id).distance(130).strength(0.5))
+    .force("charge", d3.forceManyBody().strength(-300))
+    .force("center", d3.forceCenter(W/2, H/2))
+    .force("x", d3.forceX(W/2).strength(0.07)).force("y", d3.forceY(H/2).strength(0.07))
+    .force("collide", d3.forceCollide(30));
+
+  const link = root.append("g").selectAll("line").data(linkData).join("line")
+    .attr("stroke", d => rel(d).color).attr("stroke-width", 2.5).attr("opacity", 0.9)
+    .style("cursor","pointer").on("click", (e,d)=>{ e.stopPropagation(); showLink(d); });
+  const relLabel = root.append("g").selectAll("text").data(linkData).join("text")
+    .attr("class","rellabel").text(d => rel(d).label);
+
+  function fill(d){ return d.closed ? "#6cc04a" : "#cccccc"; }
+  const node = root.append("g").selectAll("circle").data(nodes).join("circle")
+    .attr("r", 11).attr("fill", fill).attr("stroke","#111").attr("stroke-width",1.5).style("cursor","pointer")
+    .on("click", (e,d)=>{ e.stopPropagation(); showNode(d); setFocus(d.id); })
+    .call(d3.drag()
+      .on("start",(e,d)=>{ if(!e.active) sim.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
+      .on("drag",(e,d)=>{ d.fx=e.x; d.fy=e.y; })
+      .on("end",(e,d)=>{ if(!e.active) sim.alphaTarget(0); d.fx=null; d.fy=null; }));
+  const label = root.append("g").selectAll("text").data(nodes).join("text")
+    .attr("class","label").attr("dx",15).attr("dy",4).text(d=>d.label);
+
+  svg.on("click", ()=>{ resetPanel(); clearFocus(); });
+  sim.on("tick", () => {
+    link.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y).attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
+    relLabel.attr("x",d=>(d.source.x+d.target.x)/2).attr("y",d=>(d.source.y+d.target.y)/2);
+    node.attr("cx",d=>d.x).attr("cy",d=>d.y);
+    label.attr("x",d=>d.x).attr("y",d=>d.y);
+  });
+
+  const focusbar = document.getElementById("focusbar");
+  function setFocus(id){
+    const keep = new Set([id]);
+    linkData.forEach(l => { const s=l.source.id||l.source, t=l.target.id||l.target;
+      if(s===id) keep.add(t); if(t===id) keep.add(s); });
+    const inc = l => (l.source.id||l.source)===id || (l.target.id||l.target)===id;
+    node.style("display", n => keep.has(n.id) ? null : "none");
+    label.style("display", n => keep.has(n.id) ? null : "none");
+    link.style("display", l => inc(l) ? null : "none");
+    relLabel.style("display", l => inc(l) ? null : "none");
+    node.attr("stroke", n => n.id===id ? "#6cc04a" : "#111").attr("stroke-width", n => n.id===id ? 3 : 1.5);
+    const n = nodes.find(x=>x.id===id);
+    document.getElementById("focuslabel").textContent = n ? n.label : id;
+    focusbar.style.display = "flex";
+  }
+  function clearFocus(){
+    node.style("display",null).attr("stroke","#111").attr("stroke-width",1.5);
+    label.style("display",null); link.style("display",null); relLabel.style("display",null);
+    focusbar.style.display = "none";
+  }
+  document.getElementById("focusclear").addEventListener("click", ()=>{ clearFocus(); resetPanel(); });
+
+  const detail = d3.select("#detail");
+  function showNode(d){
+    const rels = linkData.filter(l => (l.source.id||l.source)===d.id || (l.target.id||l.target)===d.id);
+    let html = `<h1 style="font-size:16px">${d.label}</h1>`;
+    if (d.type) html += `<div class="meta"><b>Model:</b> ${d.type}</div>`;
+    if (d.closed) html += `<div class="meta"><b>Access:</b> restricted</div>`;
+    html += `<p style="margin:12px 0 2px"><a class="pagelink" href="${d.path}">&#8599; View this work's page</a></p>`;
+    if (rels.length){
+      html += `<div class="legend" style="border:0;padding-top:12px"><h2>Relationships</h2>`;
+      rels.forEach(l => {
+        const srcId = l.source.id||l.source, other = srcId===d.id ? (l.target.label||l.target) : (l.source.label||l.source);
+        const verb = srcId===d.id ? rel(l).label : "is "+rel(l).label+" (of)";
+        html += `<div class="meta" style="margin:6px 0"><span class="rel-name" style="color:${rel(l).color}">${verb}</span> → ${other}</div>`;
+      });
+      html += `</div>`;
+    }
+    html += `<p style="margin-top:14px"><a class="reset">← clear</a></p>`;
+    detail.html(html); detail.select(".reset").on("click", ()=>{ resetPanel(); clearFocus(); });
+  }
+  function showLink(d){
+    let html = `<h1 style="font-size:16px">Relationship</h1>`;
+    html += `<div class="meta" style="margin:8px 0;font-size:14px"><b>${d.source.label}</b> `
+          + `<span class="rel-name" style="color:${rel(d).color}">${rel(d).label}</span> <b>${d.target.label}</b></div>`;
+    html += `<span class="pill">ItemRelationship</span>`;
+    html += `<div class="datacite" style="margin-top:6px">relation_type: ${d.rel} · DataCite ${rel(d).dc}</div>`;
+    if (d.note) html += `<div class="narr">${d.note}</div><div class="datacite" style="margin-top:4px">note — the curatorial "why"</div>`;
+    html += `<p style="margin-top:14px"><a class="reset">← back</a></p>`;
+    detail.html(html); detail.select(".reset").on("click", resetPanel);
+  }
+  function resetPanel(){
+    detail.html(`<p class="hint">Click a <b>node</b> to see how it relates to everything else (others hide).
+      Click a <b>line</b> for the relationship and its curatorial note.</p>`);
+  }
+
+  if (FOCUS && nodes.some(n=>n.id===FOCUS)){
+    const apply = () => { const d = nodes.find(n=>n.id===FOCUS); if(d){ showNode(d); setFocus(d.id); } };
+    sim.on("end", apply); setTimeout(apply, 1200);
+  }
+  addEventListener("resize", () => { W=svg.node().clientWidth; H=svg.node().clientHeight;
+    svg.attr("viewBox",[0,0,W,H]); sim.force("center", d3.forceCenter(W/2,H/2)).alpha(0.3).restart(); });
+}
+</script>
+</body>
+</html>

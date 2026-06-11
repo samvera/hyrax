@@ -110,6 +110,10 @@ Hyrax::Engine.routes.draw do
     resources :operations, only: [:index, :show], controller: 'operations'
   end
 
+  # Enact relationship map prototype — reads the spec §3.5 relationship_*
+  # Solr fields and renders an interactive graph. ?focus=<id> centres on a work.
+  get '/relationship-map', to: 'relationship_map#show', as: :relationship_map
+
   # Dashboard page
   resource :dashboard, controller: 'dashboard', only: [:show]
   resources :dashboard, only: [] do

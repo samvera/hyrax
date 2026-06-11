@@ -22,6 +22,7 @@
       <% # analytics graph will not show unless the page is refreshed. %>
       <%= link_to t('.analytics'), presenter.stats_path, id: 'stats', class: 'btn btn-secondary', data: { turbolinks: false } %>
     <% end %>
+    <%= link_to 'Relationship map', hyrax.relationship_map_path(focus: presenter.id), class: 'btn btn-secondary' %>
   </div>
 
   <div class="col-sm-6 text-right">
