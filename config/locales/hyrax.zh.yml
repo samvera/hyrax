@@ -1400,6 +1400,12 @@ zh:
         save_your_note: 您必须点击“保存修订版”还原此文件的先前版本
         upload: 上传新版本
     flexible_schema_validators:
+      compound_validator:
+        errors:
+          unknown_parent: "m3 配置文件中的子属性 `%{property}` 声明了 `available_on: { properties: [%{parent}] }`，但 `%{parent}` 不是已声明的 `type: hash` 复合属性"
+          controlled_without_source: "m3 配置文件中的复合子属性 `%{property}` 为 `type: controlled`，但既未声明 `authority` 也未声明 `values`"
+          top_level_indexing: "m3 配置文件中的复合属性 `%{property}` 不得在顶层声明 `indexing`；请在每个子属性上声明 `indexing`（或 `index_keys`）"
+          duplicate_subproperty_name: "m3 配置文件中的复合属性 `%{parent}` 有多个子属性解析为相同的内部名称 `%{name}`（%{properties}）；同一复合属性中的每个子属性必须解析为唯一名称（请设置不同的 `name:`）"
       redirects_validator:
         errors:
           invalid_available_on: "m3 配置文件的 `redirects` 属性必须在此配置文件中声明的至少一个作品或收藏类上可用"
