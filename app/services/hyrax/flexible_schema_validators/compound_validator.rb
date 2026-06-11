@@ -25,6 +25,7 @@ module Hyrax
       def validate!
         subproperties.each { |name, config| validate_subproperty(name, config) }
         compound_parents.each { |name, config| validate_no_top_level_indexing(name, config) }
+        validate_unique_subproperty_names
       end
 
       private
@@ -71,6 +72,26 @@ module Hyrax
       def validate_no_top_level_indexing(name, config)
         return if config['indexing'].blank?
         @errors << t('top_level_indexing', property: name)
+      end
+
+      # Within one compound, two sub-properties cannot resolve to the same
+      # in-compound key (a `name:` alias, or the property key when no alias). The
+      # loader folds members by that key, so a collision would silently drop one
+      # definition. (The same name reused across *different* compounds is fine —
+      # that is the multi-parent reuse case.)
+      def validate_unique_subproperty_names
+        names_by_parent = Hash.new { |memo, parent| memo[parent] = Hash.new { |h, k| h[k] = [] } }
+        subproperties.each do |key, config|
+          in_compound_name = (config['name'] || key).to_s
+          subproperty_parents(config).each { |parent| names_by_parent[parent][in_compound_name] << key.to_s }
+        end
+
+        names_by_parent.each do |parent, by_name|
+          by_name.each do |in_compound_name, keys|
+            next if keys.size < 2
+            @errors << t('duplicate_subproperty_name', parent: parent, name: in_compound_name, properties: keys.sort.join(', '))
+          end
+        end
       end
 
       def t(key, **opts)

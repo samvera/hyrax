@@ -429,7 +429,10 @@ compound declarations when an m3 profile is saved/uploaded, so a
 misconfiguration fails with a clear message instead of producing dead Solr
 fields or unrenderable values. It enforces: each parent named in a subproperty's
 `available_on: { properties: [...] }` is a declared `type: hash` compound
-property; a `type: controlled` sub-property
+property; no two sub-properties of the same compound resolve to the same
+in-compound name (a `name:` alias or the property key), which would otherwise
+silently drop one when the loader folds members by that name (the same name
+reused across *different* compounds is fine); a `type: controlled` sub-property
 declares an option source (`authority:` or `values:`); and a compound parent
 does **not** carry a top-level `indexing:` (indexing is declared per
 sub-property — a top-level `indexing:` would point the catalog at a

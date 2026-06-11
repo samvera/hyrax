@@ -156,5 +156,57 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
         expect(errors).not_to include(t('unknown_parent', property: 'shared_title', parent: 'participants'))
       end
     end
+
+    context 'with two sub-properties resolving to the same in-compound name in one compound' do
+      # The exact collision that silently dropped a definition: a per-compound
+      # `participant_title` and a reused `shared_title` both alias `name: title`
+      # under `participants`.
+      let(:profile) do
+        {
+          'properties' => {
+            'participants' => { 'type' => 'hash' },
+            'relationships' => { 'type' => 'hash' },
+            'participant_title' => { 'type' => 'string', 'name' => 'title', **member_of('participants') },
+            'shared_title' => { 'type' => 'string', 'name' => 'title',
+                                **member_of('participants', 'relationships') }
+          }
+        }
+      end
+
+      it 'records a duplicate-name error naming the compound and the colliding keys' do
+        validator.validate!
+        expect(errors).to include(
+          t('duplicate_subproperty_name', parent: 'participants', name: 'title',
+                                          properties: 'participant_title, shared_title')
+        )
+      end
+
+      it 'does not flag the same name when it lands in different compounds' do
+        # `shared_title` resolves to `title` in both participants and relationships,
+        # but relationships has no other `title`, so no collision there.
+        validator.validate!
+        expect(errors).not_to include(
+          t('duplicate_subproperty_name', parent: 'relationships', name: 'title',
+                                          properties: a_string_including('shared_title'))
+        )
+      end
+    end
+
+    context 'with distinct in-compound names (no collision)' do
+      let(:profile) do
+        {
+          'properties' => {
+            'participants' => { 'type' => 'hash' },
+            'participant_name' => { 'type' => 'string', 'name' => 'name', **member_of('participants') },
+            'participant_role' => { 'type' => 'string', 'name' => 'role', **member_of('participants') }
+          }
+        }
+      end
+
+      it 'records no duplicate-name error' do
+        validator.validate!
+        expect(errors).to be_empty
+      end
+    end
   end
 end
