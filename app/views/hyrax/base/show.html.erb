@@ -34,6 +34,10 @@
       </div>
     </div><!-- /.card -->
 
+    <%# Compounds declared `view: { display: card }` render as their own cards,
+        above the Relationships and Items cards. %>
+    <%= render_compound_cards(@presenter) %>
+
     <div class="card">
       <div class="card-header">
         <h2 class="card-title"><%= t('hyrax.base.show.relationships') %></h2>

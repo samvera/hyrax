@@ -108,8 +108,13 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   def validate_property_name_conflicts
     return unless profile&.dig('properties')
 
-    # Group properties by their resolved name
+    # Group standalone properties by their resolved name. Subproperties are
+    # excluded: they never become standalone resource attributes, and two may
+    # intentionally share an in-compound `name:` alias (e.g. `title`) without
+    # conflicting - the loader folds them under their respective parents.
     properties_by_name = profile['properties'].each_with_object({}) do |(key, config), hash|
+      next if subproperty?(config)
+
       property_name = config['name'] || key
       hash[property_name] ||= []
       hash[property_name] << { key: key, config: config }
@@ -152,19 +157,56 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     profile['classes'].keys.each do |class_name|
       @class_names[class_name] = {}
     end
-    profile['properties'].each do |key, values|
-      property_name = values['name'] || key
-      values['available_on']['class'].each do |property_class|
+    all_properties = profile['properties'] || {}
+    all_properties.each do |key, values|
+      # A compound subproperty (declares `available_on: { properties: [...] }`)
+      # inherits the class scope of its parent compound(s). It still appears in
+      # each class's attribute map so the schema loader can fold it into the
+      # parent, but is keyed by its original profile key rather than its `name:`
+      # alias - two subproperties may share an in-compound alias (e.g. `title`),
+      # which would collide if keyed by the alias. Standalone properties key by
+      # their resolved `name:` (which becomes the resource attribute).
+      property_name = subproperty?(values) ? key : (values['name'] || key)
+      classes = property_classes(values, all_properties)
+      next if classes.blank?
+
+      classes.each do |property_class|
         # map some m3 items to what Hyrax expects
-        values = values_map(values)
-        @class_names[property_class][property_name] = values
+        mapped = values_map(values)
+        @class_names[property_class] ||= {}
+        @class_names[property_class][property_name] = mapped
       end
     end
     @class_names
   end
 
+  # @return [Boolean] whether a property config is a compound subproperty,
+  #   i.e. declares `available_on: { properties: [...] }` naming its parent
+  #   compound(s).
+  def subproperty?(config)
+    config.is_a?(Hash) && Array(config.dig('available_on', 'properties')).present?
+  end
+
+  # The classes a property is available on. A standalone property declares its
+  # own `available_on: { class: [...] }`. A compound subproperty instead declares
+  # `available_on: { properties: [...] }` naming its parent compound(s), and
+  # inherits the union of those parents' class scope (so it appears in each
+  # class's attribute map for the loader to fold into the parent; the loader
+  # excludes it from the resource's real attributes).
+  def property_classes(values, all_properties)
+    parents = Array(values.dig('available_on', 'properties')).map(&:to_s)
+    if parents.present?
+      return parents.flat_map { |p| Array(all_properties[p]&.dig('available_on', 'class')) }.uniq
+    end
+
+    Array(values.dig('available_on', 'class'))
+  end
+
   def values_map(values)
-    values['type'] = lookup_type(values['range'])
+    # Derive the Dry type from the XSD `range` when present; otherwise keep the
+    # declared `type:` (compound subproperties declare `type:` directly and have
+    # no `range` of their own).
+    values['type'] = lookup_type(values['range']) if values['range'].present?
     values['predicate'] = values['property_uri']
     values['index_keys'] = values['indexing']
     values['context'] = values.dig('available_on', 'context')
@@ -209,6 +251,8 @@ class Hyrax::FlexibleSchema < ApplicationRecord
 
   def lookup_type(range)
     case range
+    when nil, ''
+      nil
     when "http://www.w3.org/2001/XMLSchema#dateTime"
       'date_time'
     else

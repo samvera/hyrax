@@ -610,11 +610,18 @@ button.branding-banner-remove:hover {
 
     dt {
       flex-basis: 115px;
+      // Hold the label column fixed so every value column (dd) starts at the
+      // same x; otherwise a long unbreakable value (e.g. a URL link) shrinks
+      // this column and shifts the value left.
+      flex-shrink: 0;
       font-weight: bold;
     }
 
     dd {
       flex-basis: auto;
+      // Let the value column shrink to its flex space so long URLs wrap within
+      // it rather than forcing the row wider.
+      min-width: 0;
     }
 
   }

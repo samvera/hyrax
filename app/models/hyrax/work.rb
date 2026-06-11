@@ -99,6 +99,12 @@ module Hyrax
     include Hyrax::Schema(:redirects) if Hyrax.config.work_default_metadata && Hyrax.config.redirects_enabled?
     include Hyrax::RedirectsNormalization if Hyrax.config.redirects_enabled?
 
+    # Sample compound metadata. In flexible mode the compounds come from the m3
+    # profile, so only the read-path normalization is included here. See
+    # documentation/compound_fields.md.
+    include Hyrax::Schema(:compound_metadata) unless Hyrax.config.flexible?
+    include Hyrax::CompoundNormalization
+
     attribute :admin_set_id,             Valkyrie::Types::ID
     attribute :member_ids,               Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
     attribute :member_of_collection_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID)

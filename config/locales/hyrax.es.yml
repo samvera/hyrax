@@ -1405,6 +1405,12 @@ es:
         save_your_note: Debe hacer clic en "Guardar revisión" para revertir una versión anterior de este archivo
         upload: Subir nueva versión
     flexible_schema_validators:
+      compound_validator:
+        errors:
+          unknown_parent: "la subpropiedad `%{property}` del perfil m3 declara `available_on: { properties: [%{parent}] }`, pero `%{parent}` no es una propiedad compuesta `type: hash` declarada"
+          controlled_without_source: "la subpropiedad compuesta `%{property}` del perfil m3 es `type: controlled` pero no declara ni `authority` ni `values`"
+          top_level_indexing: "la propiedad compuesta `%{property}` del perfil m3 no debe declarar `indexing` de nivel superior; declare `indexing` (o `index_keys`) en cada subpropiedad"
+          duplicate_subproperty_name: "el compuesto `%{parent}` del perfil m3 tiene varias subpropiedades que se resuelven al mismo nombre interno `%{name}` (%{properties}); cada subpropiedad de un compuesto debe resolverse a un nombre único (defina un `name:` distinto)"
       redirects_validator:
         errors:
           invalid_available_on: "la propiedad `redirects` del perfil m3 debe estar disponible en al menos una clase de obra o colección declarada en este perfil"

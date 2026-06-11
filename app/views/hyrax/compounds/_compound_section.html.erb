@@ -1,0 +1,60 @@
+<%# Renders one compound-attribute section: a repeatable stack of cards, one
+    per entry. Schema-driven via the `definition` local. See
+    documentation/compound_fields.md.
+
+    Locals:
+      f             - form builder for the parent resource
+      compound_name - Symbol, e.g. :contributors
+      definition    - Hash{ subproperties:, groups: } from CompoundSchema#definition_for
+      display_label - String shown as the section heading
+
+    Form params: <obj>[<compound>_attributes][<index>][<sub_property>]
+%>
+<%# Read rows from the form when it exposes the compound reader, else the model. %>
+<% source = f.object.respond_to?(compound_name) ? f.object : f.object.model %>
+<% rows = Array(source.public_send(compound_name)) %>
+<% row_label_singular = display_label.to_s.sub(/s\z/, '').presence || display_label.to_s %>
+<% compound_id = "#{f.object_name}-#{compound_name}".parameterize %>
+
+<section class="hyrax-compound mb-4" data-hyrax-compound data-next-index="<%= rows.length %>" id="<%= compound_id %>">
+  <%# A label element, not a heading, so it matches the form's field labels
+      rather than inheriting Bootstrap's h1–h6 sizing. role=heading for a11y. %>
+  <label class="control-label d-block mb-2" role="heading" aria-level="3"><%= display_label %><%
+    if definition[:required] %> <abbr title="<%= t('simple_form.required.text', default: 'required') %>" class="required text-danger">*</abbr><% end %></label>
+
+  <%# Always-submitted marker so the populator runs even when every row is
+      removed from the DOM. The populator drops the `_marker` row. %>
+  <%= hidden_field_tag "#{f.object_name}[#{compound_name}_attributes][_marker][_destroy]", '1' %>
+
+  <div data-hyrax-compound-rows>
+    <% rows.each_with_index do |row, index| %>
+      <%= render 'hyrax/compounds/compound_row',
+                 f: f,
+                 compound_name: compound_name,
+                 definition: definition,
+                 row: row,
+                 index: index,
+                 row_label_singular: row_label_singular %>
+    <% end %>
+  </div>
+
+  <p class="mt-2">
+    <button type="button" class="btn btn-outline-secondary btn-sm" data-hyrax-compound-add-row>
+      <%= t('hyrax.compound_fields.add_row', label: row_label_singular) %>
+    </button>
+  </p>
+
+  <%# Template cloned by JS on Add; __INDEX__ is replaced with a row counter. %>
+  <template data-hyrax-compound-row-template>
+    <%= render 'hyrax/compounds/compound_row',
+               f: f,
+               compound_name: compound_name,
+               definition: definition,
+               row: nil,
+               index: '__INDEX__',
+               row_label_singular: row_label_singular %>
+  </template>
+</section>
+
+<%# Add/remove-row behavior lives in the engine asset
+    app/assets/javascripts/hyrax/compound_metadata.js (required via hyrax.js). %>

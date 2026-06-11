@@ -28,6 +28,7 @@ module Hyrax
 
       include BasedNearFieldBehavior
       include RedirectsFieldBehavior
+      include CompoundFieldBehavior
       include Hyrax::FormFields(:redirects) if Hyrax.config.redirects_enabled? && Hyrax.config.work_include_metadata?
       class_attribute :model_class
 
@@ -63,6 +64,15 @@ module Hyrax
         end
       end
 
+      # Required-compound / required-sub-property validation. Wired through a
+      # `validation { ... }` block (not a bare `validates_with`) because these
+      # are Reform/Disposable forms — a bare `validates_with` does not hook into
+      # Reform's `validate`, so it would never run. Record-level (no
+      # `attributes:`), so it is replay-safe.
+      validation(name: :default, inherit: true) do
+        validates_with Hyrax::CompoundEntryValidator
+      end
+
       ##
       # @api public
       #
@@ -79,6 +89,10 @@ module Hyrax
           current_schema_fields.each do |field_name, options|
             singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
           end
+          # Register the virtual `<compound>_attributes` populators on the
+          # singleton before `super`, so they are part of Reform's schema for
+          # this instance (non-flexible mode wires them at class load).
+          register_compound_fields!(r) if respond_to?(:register_compound_fields!)
         end
 
         if resource.nil?
@@ -122,6 +136,7 @@ module Hyrax
           # subclass's model.
           subclass.prepend(BasedNearFieldBehavior)
           subclass.prepend(RedirectsFieldBehavior)
+          subclass.prepend(CompoundFieldBehavior)
           super
         end
 
@@ -226,7 +241,7 @@ module Hyrax
       def primary_terms
         terms = _form_field_definitions
                 .select { |_, definition| definition[:primary] }
-                .keys.map(&:to_sym)
+                .keys.map(&:to_sym) - compound_terms
 
         terms = [:schema_version, :contexts] + terms if model.flexible?
         terms
@@ -237,18 +252,54 @@ module Hyrax
       def secondary_terms
         _form_field_definitions
           .select { |_, definition| definition[:display] && !definition[:primary] }
-          .keys.map(&:to_sym)
+          .keys.map(&:to_sym) - compound_terms
+      end
+
+      ##
+      # @return [Array<Symbol>] compound attribute terms, rendered by the
+      #   compound form partials rather than as scalar fields (and so excluded
+      #   from {#primary_terms} / {#secondary_terms}).
+      def compound_terms
+        return [] unless respond_to?(:model) && model
+        Hyrax::CompoundSchema.for(model).compound_names
+      rescue StandardError
+        []
+      end
+
+      ##
+      # @return [Array<Symbol>] compounds whose `form: { primary: true }`, shown
+      #   in the primary form section alongside the primary scalar terms.
+      def primary_compound_terms
+        compound_terms.select { |term| compound_primary?(term) }
+      end
+
+      ##
+      # @return [Array<Symbol>] compounds that are not primary (the default),
+      #   shown in the "Additional fields" section.
+      def secondary_compound_terms
+        compound_terms.reject { |term| compound_primary?(term) }
       end
 
       ##
       # @return [Boolean] whether there are terms to display 'below-the-fold'
+      #   (secondary scalar terms or non-primary compounds)
       def display_additional_fields?
-        secondary_terms.any?
+        secondary_terms.any? || secondary_compound_terms.any?
       end
 
       delegate :flexible?, to: :model
 
       private
+
+      # Whether a compound declares `form: { primary: true }`. Defaults to false
+      # (compounds render in "Additional fields" unless explicitly primary),
+      # mirroring how secondary scalar terms are derived. Read from the compound
+      # definition, which carries the flag in both flex modes.
+      def compound_primary?(term)
+        Hyrax::CompoundSchema.for(model).primary?(term)
+      rescue StandardError
+        false
+      end
 
       def _form_field_definitions
         if model.flexible?

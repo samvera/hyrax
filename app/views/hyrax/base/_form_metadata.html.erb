@@ -3,6 +3,13 @@
             <%= render_edit_field_partial(term, f: f) %>
           <% end %>
         </div>
+        <%# Primary compounds (form: { primary: true }) render in the primary
+            section; non-primary compounds render in "Additional fields" below. %>
+        <% if f.object.respond_to?(:primary_compound_terms) %>
+          <% f.object.primary_compound_terms.each do |term| %>
+            <%= render_compound_field(f, term) %>
+          <% end %>
+        <% end %>
         <% if f.object.display_additional_fields? %>
           <%= link_to t('hyrax.works.form.additional_fields'),
                       '#extended-terms',
@@ -15,6 +22,11 @@
             <%= render 'form_media', f: f %>
             <% f.object.secondary_terms.each do |term| %>
               <%= render_edit_field_partial(term, f: f) %>
+            <% end %>
+            <% if f.object.respond_to?(:secondary_compound_terms) %>
+              <% f.object.secondary_compound_terms.each do |term| %>
+                <%= render_compound_field(f, term) %>
+              <% end %>
             <% end %>
           </div>
         <% end %>

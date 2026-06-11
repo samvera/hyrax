@@ -27,9 +27,21 @@ module Hyrax
     # @param [#to_s] schema_name
     # @return [Enumerable<AttributeDefinition]
     def definitions(schema_name, _version, _contexts = nil)
-      schema_config(schema_name)['attributes'].map do |name, config|
+      # Compound subproperties (entries declaring `available_on: { properties:
+      # [...] }`) are not standalone resource attributes — they are gathered
+      # into their parent compound by Hyrax::CompoundSchema. Exclude them here so
+      # they get no accessor, form input, or index rule of their own.
+      schema_config(schema_name)['attributes'].reject { |_name, config| subproperty_config?(config) }.map do |name, config|
         AttributeDefinition.new(name, config)
       end
+    end
+
+    ##
+    # @param [#to_s] schema_name
+    # @return [Hash{String => Hash}] all attribute configs, INCLUDING
+    #   subproperties (see {SchemaLoader#raw_attribute_configs}).
+    def raw_definitions(schema_name, _version, _contexts = nil)
+      schema_config(schema_name)['attributes']
     end
 
     ##
@@ -70,6 +82,11 @@ module Hyrax
 
     def predicate_pairs(ret_hsh, schema_name)
       schema_config(schema_name)['attributes'].each do |name, config|
+        # Compound subproperties are not standalone resource attributes (see
+        # SchemaLoader#definitions), so they have no predicate of their own and
+        # are excluded from the permissive Valkyrie schema.
+        next if subproperty_config?(config)
+
         predicate = RDF::URI(config['predicate'])
         if ret_hsh[name].blank?
           ret_hsh[name.to_sym] = predicate

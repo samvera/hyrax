@@ -28,6 +28,8 @@ module Hyrax
   # `Flipflop.redirects?` directly is unsafe when the config is off
   # because the feature isn't registered in that case.
   module RedirectsFieldBehavior
+    include Hyrax::CompoundRowPlumbing
+
     def self.included(descendant)
       return unless Hyrax.config.redirects_enabled?
       # Declare the radio-group scalar before redirects_attributes so Reform
@@ -66,19 +68,14 @@ module Hyrax
     def redirects_attributes_populator(fragment:, **_options)
       return unless respond_to?(:redirects)
       return unless Hyrax.config.redirects_active?
-      pairs = redirects_fragment_pairs(fragment)
+      pairs = fragment_pairs(fragment)
       self.redirects = pairs.sort_by { |k, _row| k.to_i }
                             .map { |k, row| redirects_entry_from(k, row) }
                             .compact
     end
 
-    def redirects_fragment_pairs(fragment)
-      return {} if fragment.nil?
-      fragment.respond_to?(:to_unsafe_h) ? fragment.to_unsafe_h : fragment.to_h
-    end
-
     def redirects_entry_from(key, row)
-      row = row.respond_to?(:to_unsafe_h) ? row.to_unsafe_h : row
+      row = row_hash(row)
       return nil if row['_destroy'].to_s == 'true' || row['path'].to_s.strip.empty?
       { 'path' => Hyrax::RedirectPathNormalizer.call(row['path']),
         'is_display_url' => redirects_is_display_url_flag_for(key, row) }

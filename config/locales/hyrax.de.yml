@@ -1396,6 +1396,12 @@ de:
         save_your_note: Sie müssen auf "Revision speichern" klicken. um eine frühere Version dieser Datei wiederherzustellen
         upload: Neue Version hochladen
     flexible_schema_validators:
+      compound_validator:
+        errors:
+          unknown_parent: "Die Unterelement-Eigenschaft `%{property}` im m3-Profil deklariert `available_on: { properties: [%{parent}] }`, aber `%{parent}` ist keine deklarierte `type: hash`-Verbundeigenschaft"
+          controlled_without_source: "Die Verbund-Unterelement-Eigenschaft `%{property}` im m3-Profil ist `type: controlled`, deklariert aber weder `authority` noch `values`"
+          top_level_indexing: "Die Verbundeigenschaft `%{property}` im m3-Profil darf kein `indexing` auf oberster Ebene deklarieren; deklarieren Sie `indexing` (oder `index_keys`) stattdessen an jedem Unterelement"
+          duplicate_subproperty_name: "Der Verbund `%{parent}` im m3-Profil hat mehrere Unterelemente, die zum selben internen Namen `%{name}` führen (%{properties}); jedes Unterelement eines Verbunds muss einen eindeutigen Namen ergeben (setzen Sie ein eindeutiges `name:`)"
       redirects_validator:
         errors:
           invalid_available_on: "die Eigenschaft `redirects` des m3-Profils muss in mindestens einer im Profil deklarierten Werk- oder Sammlungsklasse verfügbar sein"

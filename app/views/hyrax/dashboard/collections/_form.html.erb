@@ -49,6 +49,14 @@
                 <%= render_edit_field_partial(term, f: f) %>
               <% end %>
 
+              <%# Primary compounds (form: { primary: true }) render here;
+                  non-primary compounds render in "Additional fields" below. %>
+              <% if f.object.respond_to?(:primary_compound_terms) %>
+                <% f.object.primary_compound_terms.each do |term| %>
+                  <%= render_compound_field(f, term) %>
+                <% end %>
+              <% end %>
+
               <% # TODO: Remove check for PcdmCollection when Issue #5286 is resolved. %>
               <% if f.object.persisted? && !(Hyrax.config.collection_class < Valkyrie::Resource) %>
                 <%# we're loading these values dynamically to speed page load %>
@@ -67,6 +75,11 @@
               <div id="extended-terms" class='collapse'>
                 <% f.object.secondary_terms.each do |term| %>
                   <%= render_edit_field_partial(term, f: f) %>
+                <% end %>
+                <% if f.object.respond_to?(:secondary_compound_terms) %>
+                  <% f.object.secondary_compound_terms.each do |term| %>
+                    <%= render_compound_field(f, term) %>
+                  <% end %>
                 <% end %>
               </div>
             <% end %>
