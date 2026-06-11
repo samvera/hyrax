@@ -4,11 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Relationship map — Enact (prototype)</title>
-<!-- PROTOTYPE (version B). Built on Cytoscape.js (a purpose-built graph
-     library) instead of hand-rolled D3. Vendored locally and served from the
-     app at /cytoscape.min.js (no CDN, so it can't be blocked / blank on first
-     load). Data comes from the spec §3.5 relationship_* Solr fields via
-     Hyrax::RelationshipMapController. -->
+<!-- PROTOTYPE (version B). Cytoscape.js, vendored at /cytoscape.min.js (no CDN).
+     Data from the spec §3.5 relationship_* Solr fields via
+     Hyrax::RelationshipMapController. The graph is built only once the
+     container has a measured size, so it renders on first load. -->
 <script src="/cytoscape.min.js"></script>
 <style>
   :root { --bg:#181818; --panel:#222; --ink:#e8e8e8; --muted:#9a9a9a; }
@@ -17,7 +16,7 @@
     font:14px/1.5 -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
   #app { display:flex; height:100vh; }
   #graphwrap { flex:1; position:relative; }
-  #cy { width:100%; height:100%; }
+  #cy { position:absolute; inset:0; }
   #empty { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--muted); }
   #focusbar { position:absolute; top:12px; left:12px; background:#2b2b2b; border:1px solid #3a3a3a;
     border-radius:6px; padding:7px 12px; font-size:12px; display:none; align-items:center; gap:10px; z-index:5; }
@@ -69,17 +68,22 @@ const relLabelOf = r => (REL[r] || { label:r }).label;
 const G = { nodes: <%= raw @graph[:nodes].to_json %>, links: <%= raw @graph[:links].to_json %> };
 const FOCUS = "<%= j @focus %>";
 
-// legend (independent of the graph data)
-const legend = document.getElementById("rel-legend");
+// legend (independent of the graph)
+const legendEl = document.getElementById("rel-legend");
 Object.keys(REL).forEach(k => {
   const row = document.createElement("div"); row.className = "row";
   row.innerHTML = `<span class="swatch" style="border-color:${REL[k].color}"></span>`
     + `<span>${REL[k].label} <span class="datacite">${REL[k].dc}</span></span>`;
-  legend.appendChild(row);
+  legendEl.appendChild(row);
 });
 
-if (G.nodes.length === 0) { /* leave the #empty message visible */ }
-else {
+function buildGraph(){
+  const container = document.getElementById('cy');
+  // Wait until the flex container has a real size; cose run in a 0x0 box
+  // collapses/blank-renders. Retry on the next frame until it's measured.
+  if (!container.clientWidth || !container.clientHeight) { requestAnimationFrame(buildGraph); return; }
+  if (!window.cytoscape) { requestAnimationFrame(buildGraph); return; }
+
   document.getElementById("empty").style.display = "none";
   const elements = [
     ...G.nodes.map(n => ({ data: { id:n.id, label:n.label, type:n.type, closed:!!n.closed, path:n.path } })),
@@ -87,9 +91,7 @@ else {
   ];
 
   const cy = cytoscape({
-    container: document.getElementById('cy'),
-    elements,
-    minZoom: 0.3, maxZoom: 1.4,
+    container, elements, minZoom:0.3, maxZoom:1.4,
     style: [
       { selector:'node', style:{
         'background-color': e => e.data('closed') ? '#6cc04a' : '#cccccc',
@@ -104,20 +106,19 @@ else {
         'text-background-opacity':1, 'text-background-padding':2 } },
       { selector:'.dimmed', style:{ 'display':'none' } }
     ],
-    layout: { name:'cose', animate:false, padding:50, nodeRepulsion: 9000, idealEdgeLength: 120, nodeOverlap: 20 }
+    layout: { name:'cose', animate:false, padding:50, nodeRepulsion: 9000, idealEdgeLength: 120, nodeOverlap: 24 }
   });
 
   const detail = document.getElementById("detail");
   const focusbar = document.getElementById("focusbar");
 
   function focusNode(node){
-    const nbh = node.closedNeighborhood(); // node + its edges + adjacent nodes
-    cy.elements().addClass('dimmed');
-    nbh.removeClass('dimmed');
+    const nbh = node.closedNeighborhood();
+    cy.elements().addClass('dimmed'); nbh.removeClass('dimmed');
     cy.nodes().removeClass('primary'); node.addClass('primary');
     document.getElementById("focuslabel").textContent = node.data('label');
     focusbar.style.display = "flex";
-    cy.animate({ fit: { eles: nbh, padding: 80 }, duration: 300 });
+    cy.animate({ fit: { eles: nbh, padding: 90 }, duration: 300 });
   }
   function clearFocus(){
     cy.elements().removeClass('dimmed'); cy.nodes().removeClass('primary');
@@ -168,12 +169,18 @@ else {
   cy.on('tap', 'edge', e => showLink(e.target));
   cy.on('tap', e => { if (e.target === cy) { resetPanel(); clearFocus(); } });
 
-  // layout runs synchronously (animate:false), so positions are ready now
-  if (FOCUS) {
-    const n = cy.getElementById(FOCUS);
-    if (n && n.nonempty()) { showNode(n); focusNode(n); }
-  }
+  cy.ready(() => {
+    cy.resize();
+    if (FOCUS && cy.getElementById(FOCUS).nonempty()) {
+      const n = cy.getElementById(FOCUS); showNode(n); focusNode(n);
+    } else {
+      cy.fit(cy.elements(), 50);
+    }
+  });
 }
+
+if (G.nodes.length === 0) { /* leave the #empty message visible */ }
+else { buildGraph(); }
 </script>
 </body>
 </html>
