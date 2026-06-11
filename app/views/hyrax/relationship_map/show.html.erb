@@ -113,18 +113,22 @@ function buildGraph(){
   const detail = document.getElementById("detail");
   const focusbar = document.getElementById("focusbar");
 
+  const COSE = { name:'cose', animate:false, padding:60, nodeRepulsion:22000, idealEdgeLength:170, nodeOverlap:32, componentSpacing:150, gravity:0.3 };
   function focusNode(node){
     const nbh = node.closedNeighborhood();
     cy.elements().addClass('dimmed'); nbh.removeClass('dimmed');
     cy.nodes().removeClass('primary'); node.addClass('primary');
     document.getElementById("focuslabel").textContent = node.data('label');
     focusbar.style.display = "flex";
-    cy.animate({ fit: { eles: nbh, padding: 90 }, duration: 300 });
+    // lay the focused node + its relations out as a clean ego graph (focused
+    // node centred, relations in a ring) so labels never collide
+    nbh.layout({ name:'concentric', concentric: n => (n.id() === node.id() ? 2 : 1),
+                 levelWidth: () => 1, minNodeSpacing: 90, animate:false, fit:true, padding:100 }).run();
   }
   function clearFocus(){
     cy.elements().removeClass('dimmed'); cy.nodes().removeClass('primary');
     focusbar.style.display = "none";
-    cy.animate({ fit: { eles: cy.elements(), padding: 50 }, duration: 300 });
+    cy.layout(COSE).run(); // re-spread the full graph
   }
   document.getElementById("focusclear").addEventListener("click", () => { clearFocus(); resetPanel(); });
 
