@@ -55,6 +55,42 @@ RSpec.describe Hyrax::CompoundNormalization do
     end
   end
 
+  # These pin behavior that is a deliberate consequence of an information limit,
+  # not an accident: by the time Valkyrie's EnumeratorValue has unwrapped single-key
+  # hashes, some origins are indistinguishable here. Changing any of these is a
+  # behavior change, not a cleanup - the comments say why each reading was chosen.
+  describe 'information-limited disambiguation (load-bearing choices)' do
+    it 'reads distinct-key pairs as ONE multi-field entry, not several one-field entries' do
+      # [[:name, A], [:role, R]] is genuinely ambiguous once unwrapped: it could be
+      # one entry {name:, role:} splayed apart, or two one-field entries with
+      # different keys. Only the repeated-key case is decidable; with distinct keys
+      # we keep the single-entry reading (the common shape, and the non-lossy
+      # default). Do not "fix" this to split - the signal to do so does not survive
+      # Valkyrie's read path; that would require a Valkyrie-layer change.
+      expect(Hyrax::CompoundNormalization.normalize_compound([[:name, 'Ada'], [:role, 'Author']]))
+        .to eq([{ 'name' => 'Ada', 'role' => 'Author' }])
+    end
+
+    it 'splits correctly when two pairs share a key and a third is distinct' do
+      # The repeated key (:name) proves these are separate entries, so every pair
+      # becomes its own one-field entry - including the distinct :role pair.
+      expect(Hyrax::CompoundNormalization.normalize_compound([[:name, 'A'], [:name, 'B'], [:role, 'X']]))
+        .to eq([{ 'name' => 'A' }, { 'name' => 'B' }, { 'role' => 'X' }])
+    end
+
+    it 'leaves a flat pair whose value is non-scalar untouched (conservative guard)' do
+      # collapse_flat_pair only rebuilds a one-field entry when the value is a
+      # scalar - the only shape a real compound subproperty produces. A value that
+      # is an Array or Hash is not a recognizable splayed entry, so it is left for
+      # schema coercion to accept or reject loudly, rather than silently mangled
+      # into a fabricated entry.
+      expect(Hyrax::CompoundNormalization.normalize_compound([:aliases, %w[x y]]))
+        .to eq([:aliases, %w[x y]])
+      expect(Hyrax::CompoundNormalization.normalize_compound([:meta, { 'k' => 'v' }]))
+        .to eq([:meta, { 'k' => 'v' }])
+    end
+  end
+
   describe 'round-trip through the class constructor' do
     it 'normalizes splayed compound input passed to .new' do
       resource = resource_class.new(contributors: [[:given_name, 'Ada']])
