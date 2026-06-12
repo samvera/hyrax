@@ -32,6 +32,14 @@ RSpec.describe Hyrax::FlexibleSchema, :clean_repo, type: :model do
         expect(subject.attributes_for('NonExistentClass')).to be_nil
       end
     end
+
+    context 'when a property declares an xsd:anyURI range' do
+      it "maps the type to 'uri'" do
+        profile_data['properties']['title']['range'] = 'http://www.w3.org/2001/XMLSchema#anyURI'
+        attributes = subject.attributes_for('GenericWork')
+        expect(attributes['title']['type']).to eq('uri')
+      end
+    end
   end
 
   describe '#mappings_data_for' do
