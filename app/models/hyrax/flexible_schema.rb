@@ -255,6 +255,8 @@ class Hyrax::FlexibleSchema < ApplicationRecord
       nil
     when "http://www.w3.org/2001/XMLSchema#dateTime"
       'date_time'
+    when "http://www.w3.org/2001/XMLSchema#anyURI"
+      'uri'
     else
       range.split('#').last.underscore
     end
