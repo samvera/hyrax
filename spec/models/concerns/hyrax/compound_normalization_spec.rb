@@ -30,6 +30,16 @@ RSpec.describe Hyrax::CompoundNormalization do
         .to eq([{ 'given_name' => 'Ada', 'family' => 'Lovelace' }])
     end
 
+    it 'rebuilds one entry per pair when a key repeats (several one-field entries)' do
+      # JSONValueMapper also unwraps each one-key hash in a multi-entry value
+      # to its [key, value] pair, so a persisted [{name: A}, {name: B}] arrives
+      # as pairs too. A repeated key can only mean separate entries - one
+      # splayed entry never repeats a key - so do not merge them into one hash
+      # (that silently keeps only the last value).
+      expect(Hyrax::CompoundNormalization.normalize_compound([[:name, 'A'], [:name, 'B']]))
+        .to eq([{ 'name' => 'A' }, { 'name' => 'B' }])
+    end
+
     it 'leaves a well-formed array of hashes unchanged (stringifying keys)' do
       expect(Hyrax::CompoundNormalization.normalize_compound([{ given_name: 'Ada' }]))
         .to eq([{ 'given_name' => 'Ada' }])
