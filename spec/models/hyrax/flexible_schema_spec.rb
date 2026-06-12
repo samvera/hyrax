@@ -35,9 +35,14 @@ RSpec.describe Hyrax::FlexibleSchema, :clean_repo, type: :model do
 
     context 'when a property declares an xsd:anyURI range' do
       it "maps the type to 'uri'" do
-        profile_data['properties']['title']['range'] = 'http://www.w3.org/2001/XMLSchema#anyURI'
+        # Use `abstract`: the fixture declares three properties whose `name:`
+        # resolves to `title` (title, title_primary, title_alternative), and
+        # attributes_for keys by resolved name so the last one wins - changing
+        # `properties.title` and reading back attributes['title'] asserts
+        # against a different property. `abstract` has no such shadow.
+        profile_data['properties']['abstract']['range'] = 'http://www.w3.org/2001/XMLSchema#anyURI'
         attributes = subject.attributes_for('GenericWork')
-        expect(attributes['title']['type']).to eq('uri')
+        expect(attributes['abstract']['type']).to eq('uri')
       end
     end
   end
