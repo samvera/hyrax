@@ -67,11 +67,25 @@ module Hyrax
       arr.map { |entry| entry.is_a?(::Hash) ? entry.transform_keys(&:to_s) : entry }
     end
 
-    # Multi-key splay: `[[:a, 1], [:b, 2]]` -> `[{a: 1, b: 2}]`. Returns nil
-    # if the input doesn't look like a pair array.
+    # Rebuild entries from an array of [key, value] pairs. Pairs arrive two
+    # different ways and need different repairs:
+    #
+    # * ONE entry with several fields, splayed apart:
+    #   `[[:a, 1], [:b, 2]]` -> `[{a: 1, b: 2}]`
+    # * SEVERAL entries with one field each, each unwrapped to its pair:
+    #   `[[:a, 1], [:a, 2]]` -> `[{a: 1}, {a: 2}]`
+    #
+    # A repeated key is the tell: one splayed entry can never repeat a key, so
+    # repeats always mean "one entry per pair". Merging those into a single
+    # hash would quietly keep only the last value - saving two contributors
+    # with just names and getting one back. When every key is distinct the two
+    # origins are indistinguishable here, so keep the single-entry reading
+    # (the far more common shape). Returns nil if the input doesn't look like
+    # a pair array.
     def self.collapse_pair_array(arr)
       return nil if arr.empty?
       return nil unless arr.all? { |e| pair?(e) }
+      return arr.map { |pair| ::Hash[[pair]] } if arr.map { |pair| pair.first.to_s }.uniq.length < arr.length
       [::Hash[arr]]
     end
 
