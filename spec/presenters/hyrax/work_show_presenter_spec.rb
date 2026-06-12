@@ -22,6 +22,31 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
   it { is_expected.to delegate_method(:to_s).to(:solr_document) }
 
+  describe '#define_dynamic_methods' do
+    let(:attributes) do
+      { "id" => '888888',
+        "title_tesim" => ['foo'],
+        "has_model_ssim" => ["GenericWork"],
+        "schema_version_ssi" => '1' }
+    end
+    let(:profile) do
+      { 'properties' => {
+        'abstract' => { 'indexing' => ['abstract_tesim'], 'multiple' => true }
+      } }
+    end
+
+    before { allow(Hyrax::FlexibleSchema).to receive(:current_version).and_return(profile) }
+
+    it 'defines a reader for each indexed profile property' do
+      expect(presenter).to respond_to(:abstract)
+    end
+
+    it 'reads the flexible schema once, not once per property' do
+      presenter
+      expect(Hyrax::FlexibleSchema).to have_received(:current_version).once
+    end
+  end
+
   it { is_expected.to respond_to(:suppressed?) }
   it { is_expected.to respond_to(:human_readable_type) }
   it { is_expected.to respond_to(:date_created) }
