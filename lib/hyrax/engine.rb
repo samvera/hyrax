@@ -27,6 +27,9 @@ module Hyrax
     require 'hydra/derivatives'
     require 'hyrax/active_fedora_dummy_model'
     require 'hyrax/controller_resource'
+    # Preserve compound entry boundaries on the Postgres read path (any adapter
+    # routing through Valkyrie's ORMConverter). See the decorator for why.
+    require 'hyrax/valkyrie_persistence/postgres/orm_converter_decorator'
     require 'hyrax/form_fields'
     require 'hyrax/indexer'
     require 'hyrax/model_decorator'
