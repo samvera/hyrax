@@ -15,8 +15,14 @@
 # The only place that signal still exists is the conversion boundary itself,
 # before the unwrap - i.e. Freyja/Frigg's ORMConverter. This spec drives a real
 # persister save/reload (the merge does NOT reproduce through .new/.load alone)
-# and expects both entries to survive. It is EXPECTED TO FAIL until a
-# compound-scoped read override lands in the Hyrax adapter layer.
+# and expects both entries to survive.
+#
+# Postgres-only: compounds are stored as JSONB, and this is the JSONB read path.
+# The Fedora adapter cannot serialize a plain-hash compound to RDF at all (its
+# NestedProperty mapper only handles nested Valkyrie resources, i.e. hashes with
+# an :internal_resource key), so the compound feature targets the Postgres path.
+# The example skips on a Fedora-backed persister, matching
+# spec/forms/hyrax/forms/compound_metadata_form_spec.rb.
 RSpec.describe 'compound distinct-key entries survive a persist/reload round-trip' do
   let(:profile) { YAML.safe_load_file(Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'm3_profile.yaml')) }
   let(:test_profile) do
@@ -68,6 +74,13 @@ RSpec.describe 'compound distinct-key entries survive a persist/reload round-tri
   end
 
   it 'keeps two one-field entries with different keys as two separate entries' do
+    # Gate on the configured metadata adapter, not Hyrax.persister: other specs
+    # routinely stub Hyrax.persister, and a leaked stub made this run (and fail)
+    # on the Wings/Fedora stack. The adapter class is config-level and far less
+    # likely to be left mutated across examples.
+    skip 'requires the Postgres metadata adapter (compounds are JSONB)' unless
+      Valkyrie.config.metadata_adapter.is_a?(Valkyrie::Persistence::Postgres::MetadataAdapter)
+
     work = Hyrax::Test::CompoundRoundTrip::TestWork.new(title: ['t'])
     work.participants = [{ 'name' => 'Ada' }, { 'role' => 'Editor' }]
 
