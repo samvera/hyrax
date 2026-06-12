@@ -35,8 +35,7 @@ module Hyrax
       # work show page builds one presenter per member row) multiplies into
       # thousands of identical queries and minutes of render time on
       # member-heavy works.
-      properties = Hyrax::FlexibleSchema.current_version&.[]("properties") || {}
-      properties.each do |method_name, property_details|
+      Hyrax::FlexibleSchema.current_version["properties"].each do |method_name, property_details|
         index_keys = property_details["indexing"]
         next unless index_keys
 
