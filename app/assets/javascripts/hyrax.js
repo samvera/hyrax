@@ -97,3 +97,4 @@
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require hyrax/batch_edit
+//= require hyrax/hydra_editor_override
