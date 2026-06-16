@@ -20,9 +20,7 @@ module Hyrax
   module RichTextEditFieldBehavior
     def render_edit_field_partial(field_name, locals)
       form = locals[:f]&.object
-      if form.respond_to?(:input_type) && form.input_type(field_name).to_s == 'rich_text'
-        return render('records/edit_fields/rich_text', locals.merge(key: field_name))
-      end
+      return render('records/edit_fields/rich_text', locals.merge(key: field_name)) if form.respond_to?(:input_type) && form.input_type(field_name).to_s == 'rich_text'
 
       super
     end
