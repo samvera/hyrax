@@ -93,6 +93,47 @@ admin_note:
 
 Use `admin_only` in place of `editor_only` to restrict visibility to admins only.
 
+## Rich-text fields
+
+A string property can be edited with a rich-text (WYSIWYG) editor and rendered as sanitized HTML. This works in both flexible and non-flexible mode and is driven by two independent directives:
+
+- **`form: { input_type: rich_text }`** — the edit form renders the field through `records/edit_fields/_rich_text`, which emits a plain `<textarea class="rich-text">` (one per value; multi-valued fields keep the standard "Add another" control). Hyrax bundles **no** editor JavaScript: the `rich-text` class is an engine-agnostic hook so the host application can attach its own editor (e.g. TinyMCE), and the field degrades to a normal textarea when none is attached. Applications supporting multi-valued rich text should (re)initialize their editor on the `managed_field:add` event so cloned rows become editors too.
+- **`view: { render_as: html }`** — the show page renders the stored markup through `Hyrax::Renderers::HtmlAttributeRenderer`, which runs Rails' `sanitize` against a fixed tag/attribute allow-list (headings, lists, links, emphasis, tables; `href`/`title`/`target`/`rel`/`start`). Unsafe markup (`<script>`, `onclick`, …) is stripped at render time. This renderer owns its output, so it is unaffected by the `treat_some_user_inputs_as_markdown` Flipflop flag or any markdown decorator.
+
+The editor stores HTML directly, so no markdown engine is involved. Sanitization happens at render time; applications may additionally sanitize on save as defense in depth.
+
+```yaml
+# HYRAX_FLEXIBLE=false (config/metadata/*.yaml)
+context_narrative:
+  type: string
+  multiple: false
+  predicate: http://purl.org/dc/terms/description
+  form:
+    input_type: rich_text
+  view:
+    render_as: html
+```
+
+```yaml
+# HYRAX_FLEXIBLE=true (m3 profile)
+context_narrative:
+  available_on:
+    class:
+      - GenericWorkResource
+  data_type: string
+  indexing:
+    - context_narrative_tesim
+  property_uri: http://purl.org/dc/terms/description
+  form:
+    input_type: rich_text
+  view:
+    render_as: html
+```
+
+## Featured display
+
+**`view: { position: featured }`** removes a field from the standard metadata table: `field_visible?` returns false for it (the same hook that hides `admin_only`/`editor_only` fields), so it is not duplicated there. The host application's show template is responsible for rendering featured fields wherever it wants them — typically prominently at the top of the work show page. Combine with `render_as: html` to feature a rich-text narrative above the metadata table.
+
 ## Related features
 
 - **URL Redirects** (`HYRAX_REDIRECTS_ENABLED`): when enabled, the redirects feature requires a `redirects` property in the m3 profile (when also Flipflop-enabled per tenant). See [`documentation/redirects.md`](redirects.md) for the full schema and gating model.
