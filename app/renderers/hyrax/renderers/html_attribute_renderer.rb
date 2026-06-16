@@ -53,7 +53,11 @@ module Hyrax
         sanitized = sanitize(value.to_s, tags: ALLOWED_TAGS, attributes: ALLOWED_ATTRIBUTES)
         return sanitized if microdata_value_attributes(field).blank?
 
-        "<span#{html_attributes(microdata_value_attributes(field))}>#{sanitized}</span>".html_safe
+        # Return the assembled span as a plain string (matching the base
+        # AttributeRenderer#attribute_value_to_html contract); the caller in
+        # #render applies html_safe once to the full markup. `sanitized` is
+        # already allow-list sanitized, so no unsafe content is reintroduced.
+        "<span#{html_attributes(microdata_value_attributes(field))}>#{sanitized}</span>"
       end
 
       # Kept for callers/subclasses that invoke +li_value+ directly; mirrors the
