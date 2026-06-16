@@ -1,17 +1,15 @@
 <%# Rich-text edit field. Rendered for flexible-metadata fields declared with
-    `form: { input_type: rich_text }`. Engine-agnostic: emits a plain textarea
+    `form: { input_type: rich_text }`. Engine-agnostic: emits plain textareas
     carrying the `rich-text` class so applications can attach their own WYSIWYG
-    editor (e.g. TinyMCE) to that hook. Degrades to a normal textarea with no JS.
+    editor (e.g. TinyMCE) to that hook. Degrades to normal textareas with no JS.
 
-    Rich text is authored as a single HTML blob, so we always render one
-    textarea. When the underlying property is multi-valued (flexible metadata
-    defines every property as an array), we name the field as an array element
-    so it round-trips through the existing permitted-params handling. %>
+    Multi-valued properties render the standard multi_value widget (with its
+    "Add another" control) using textareas; single-valued properties render one
+    textarea. Applications should (re)initialize their editor on
+    `managed_field:add` so cloned fields become editors too. %>
 <% if f.object.multiple?(key) %>
-  <%= f.input key, as: :text, required: f.object.required?(key),
-        input_html: { class: 'form-control rich-text', rows: '14',
-                      name: "#{f.object_name}[#{key}][]",
-                      value: Array(f.object.send(key)).first } %>
+  <%= f.input key, as: :multi_value, required: f.object.required?(key),
+        input_html: { type: 'textarea', class: 'form-control rich-text', rows: '14' } %>
 <% else %>
   <%= f.input key, as: :text, required: f.object.required?(key),
         input_html: { class: 'form-control rich-text', rows: '14' } %>
