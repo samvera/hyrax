@@ -287,6 +287,22 @@ module Hyrax
         secondary_terms.any? || secondary_compound_terms.any?
       end
 
+      ##
+      # The form input widget requested for a term via the schema's
+      # `form: { input_type: ... }` option (e.g. `:rich_text`). Used by the
+      # edit-field partial lookup to render a richer editor than the default
+      # text input. Returns +nil+ when no input type is declared.
+      #
+      # @param [#to_sym] term
+      # @return [Symbol, nil]
+      def input_type(term)
+        definition = _form_field_definitions[term.to_sym] || _form_field_definitions[term.to_s]
+        return if definition.nil?
+
+        value = definition[:input_type]
+        value&.to_sym
+      end
+
       delegate :flexible?, to: :model
 
       private

@@ -103,6 +103,15 @@ module Hyrax
       end
     end
 
+    # Teach the edit-field partial lookup to honor `form: { input_type: rich_text }`
+    # by rendering the shared rich-text editor partial. Prepended onto hydra-editor's
+    # helper so all render_edit_field_partial call sites are covered.
+    initializer 'hyrax.rich_text_edit_field' do
+      ActiveSupport::Reloader.to_prepare do
+        RecordsHelperBehavior.prepend(Hyrax::RichTextEditFieldBehavior) if defined?(RecordsHelperBehavior)
+      end
+    end
+
     initializer 'routing' do
       require 'hyrax/rails/routes'
     end
