@@ -10,8 +10,11 @@
 // Applications may override this file (or the toolbar/plugins below) to swap in
 // a different editor; with no JS at all the field degrades to a plain textarea.
 (function () {
-  var TOOLBAR = 'undo redo | bold italic underline | bullist numlist | blockquote link | removeformat | code';
+  var TOOLBAR = 'undo redo | formatselect | bold italic underline | bullist numlist | blockquote link | removeformat | code';
   var PLUGINS = 'lists link autolink code';
+  // Block-format dropdown (formatselect): paragraph plus the heading levels the
+  // renderer allows, so editors can apply H1-H4 without typing markup.
+  var BLOCK_FORMATS = 'Paragraph=p; Heading 1=h1; Heading 2=h2; Heading 3=h3; Heading 4=h4';
   // Keep stored markup aligned with HtmlAttributeRenderer's allow-list.
   var VALID_ELEMENTS = 'p,br,strong/b,em/i,u,s,a[href|title|target|rel],ul,ol,li,blockquote,h1,h2,h3,h4,h5,h6,code,pre,span';
 
@@ -29,6 +32,11 @@
       branding: false,
       plugins: PLUGINS,
       toolbar: TOOLBAR,
+      block_formats: BLOCK_FORMATS,
+      // Fill the field width; without this TinyMCE uses its default size and looks
+      // cramped inside the multi_value widget's input-group wrapper. The companion
+      // rule in hyrax/_tinymce.scss handles that wrapper's flex layout.
+      width: '100%',
       valid_elements: VALID_ELEMENTS
     });
   }
