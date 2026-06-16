@@ -57,4 +57,14 @@ RSpec.describe Hyrax::Renderers::HtmlAttributeRenderer do
       end
     end
   end
+
+  # The renderer must own its value rendering so that a markdown/escaping
+  # decorator prepended onto the base AttributeRenderer by a downstream app
+  # (e.g. Hyku's `treat_some_user_inputs_as_markdown` flag wraps values in
+  # `markdown()`) cannot intercept and re-process sanitized HTML.
+  describe 'rendering ownership (flag independence)' do
+    it 'overrides attribute_value_to_html on the class itself' do
+      expect(described_class.instance_method(:attribute_value_to_html).owner).to eq(described_class)
+    end
+  end
 end
