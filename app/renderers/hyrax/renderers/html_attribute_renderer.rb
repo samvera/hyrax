@@ -41,8 +41,23 @@ module Hyrax
 
       private
 
-      # Override the base renderer's escaping behavior: render the stored markup
-      # as sanitized HTML instead of escaping it.
+      # Render the stored markup as sanitized HTML.
+      #
+      # We override +attribute_value_to_html+ (not just +li_value+) so this
+      # renderer fully owns its output and is unaffected by any markdown/escaping
+      # decorator an application may prepend onto the base AttributeRenderer
+      # (e.g. Hyku's `treat_some_user_inputs_as_markdown` feature flag wraps
+      # values in `markdown()`). Sanitized rich text should render identically
+      # regardless of that flag.
+      def attribute_value_to_html(value)
+        sanitized = sanitize(value.to_s, tags: ALLOWED_TAGS, attributes: ALLOWED_ATTRIBUTES)
+        return sanitized if microdata_value_attributes(field).blank?
+
+        "<span#{html_attributes(microdata_value_attributes(field))}>#{sanitized}</span>".html_safe
+      end
+
+      # Kept for callers/subclasses that invoke +li_value+ directly; mirrors the
+      # sanitizing behavior above.
       def li_value(value)
         sanitize(value.to_s, tags: ALLOWED_TAGS, attributes: ALLOWED_ATTRIBUTES)
       end
