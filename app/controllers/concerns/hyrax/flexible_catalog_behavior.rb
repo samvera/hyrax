@@ -75,6 +75,13 @@ module Hyrax
               blacklight_config.index_fields[name].if = :render_optionally?
             end
 
+            # Carry an author-declared catalog truncation length onto the field
+            # config (`view: { search_results_truncate: N }`, or `false` to opt out)
+            # so render_html_index_value can honor it for render_as: html fields.
+            if view_options.is_a?(Hash) && view_options.key?('search_results_truncate')
+              blacklight_config.index_fields[name].search_results_truncate = view_options['search_results_truncate']
+            end
+
             qf = blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
             unless qf.include?(name)
               qf << " #{name}"

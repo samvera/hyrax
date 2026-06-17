@@ -239,6 +239,11 @@ module Hyrax
     # declare it on the field directly, e.g.
     #   config.add_index_field 'my_html_field_tesim', helper_method: :render_html_index_value
     #
+    # Truncation length is author-declarable per property; default is 230.
+    #   flexible:     view: { render_as: html, search_results_truncate: 300 }   # or false to disable
+    #   non-flexible: config.add_index_field 'x_tesim',
+    #                   helper_method: :render_html_index_value, search_results_truncate: 300
+    #
     # @param field [String, Hash{Symbol=>Array}] Blacklight passes a Hash with a
     #   :value array (and :config); a bare String is also accepted.
     # @return [String] truncated plain-text snippet, no markup
@@ -248,7 +253,11 @@ module Hyrax
       # stragglers, decode entities (e.g. &rsquo; -> '), then collapse whitespace.
       text = strip_tags(raw.gsub(/<[^>]+>/, ' '))
       text = CGI.unescapeHTML(text).gsub(/\s+/, ' ').strip
-      truncate(text, length: 230, separator: ' ')
+
+      limit = field.is_a?(Hash) ? field[:config].try(:search_results_truncate) : nil
+      return text if limit == false # `search_results_truncate: false` opts out of truncation
+
+      truncate(text, length: (limit || 230).to_i, separator: ' ')
     end
 
     # *Sometimes* a Blacklight index field helper_method

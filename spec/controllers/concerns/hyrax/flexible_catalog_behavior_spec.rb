@@ -94,6 +94,7 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
           view:
             render_as: html
             html_dl: true
+            search_results_truncate: 50
     YAML
   end
 
@@ -198,6 +199,10 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
 
         # department_tesim should not have helper methods
         expect(blacklight_config.index_fields['department_tesim'].helper_method).to be_nil
+      end
+
+      it 'carries an author-declared view.search_results_truncate onto the field config' do
+        expect(blacklight_config.index_fields['narrative_tesim'].search_results_truncate).to eq(50)
       end
 
       it 'have the render_optionally? condition added to the blacklight config' do
