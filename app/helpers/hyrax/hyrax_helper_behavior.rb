@@ -228,6 +228,29 @@ module Hyrax
       end
     end
 
+    # Blacklight index helper_method for properties stored as HTML markup
+    # (`form: { input_type: rich_text }`, `view: { render_as: html }`). Catalog
+    # search-result columns escape values by default, which dumps the raw tags;
+    # this renders a clean, truncated plain-text snippet instead. The full
+    # sanitized HTML still renders on the work show page via HtmlAttributeRenderer.
+    #
+    # Works the same in both metadata modes: in flexible mode FlexibleCatalogBehavior
+    # assigns this helper from the property's `render_as: html`; in non-flexible mode
+    # declare it on the field directly, e.g.
+    #   config.add_index_field 'my_html_field_tesim', helper_method: :render_html_index_value
+    #
+    # @param field [String, Hash{Symbol=>Array}] Blacklight passes a Hash with a
+    #   :value array (and :config); a bare String is also accepted.
+    # @return [String] truncated plain-text snippet, no markup
+    def render_html_index_value(field)
+      raw = field.is_a?(Hash) ? Array(field[:value]).join(' ') : field.to_s
+      # Tags -> spaces so block boundaries don't glue words together, strip any
+      # stragglers, decode entities (e.g. &rsquo; -> '), then collapse whitespace.
+      text = strip_tags(raw.gsub(/<[^>]+>/, ' '))
+      text = CGI.unescapeHTML(text).gsub(/\s+/, ' ').strip
+      truncate(text, length: 230, separator: ' ')
+    end
+
     # *Sometimes* a Blacklight index field helper_method
     # @param [String,User,Hash{Symbol=>Array}] args if a hash, the user_key must be under :value
     # @return [ActiveSupport::SafeBuffer] the html_safe link
