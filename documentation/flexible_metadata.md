@@ -110,9 +110,9 @@ context_narrative:
   multiple: false
   predicate: http://purl.org/dc/terms/description
   form:
-    input_type: rich_text
+    input_type: rich_text   # WYSIWYG (TinyMCE) editor on the edit form
   view:
-    render_as: html
+    render_as: html         # sanitize + render the stored markup as HTML on the show page
 ```
 
 ```yaml
@@ -126,9 +126,9 @@ context_narrative:
     - context_narrative_tesim
   property_uri: http://purl.org/dc/terms/description
   form:
-    input_type: rich_text
+    input_type: rich_text   # WYSIWYG (TinyMCE) editor on the edit form
   view:
-    render_as: html
+    render_as: html         # sanitize + render the stored markup as HTML on the show page
     search_results_truncate: 300 # optional; catalog snippet length, `false` to disable (default 230)
 ```
 
