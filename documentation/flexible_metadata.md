@@ -99,6 +99,7 @@ A string property can be edited with a rich-text (WYSIWYG) editor and rendered a
 
 - **`form: { input_type: rich_text }`** — the edit form renders the field through `records/edit_fields/_rich_text`, which emits a `<textarea class="rich-text">` (one per value; multi-valued fields keep the standard "Add another" control). `hyrax/rich_text_editor.js` attaches a **TinyMCE** WYSIWYG editor to every `textarea.rich-text` by default (tinymce-rails ships with Hyrax) and re-binds on the `managed_field:add` event so cloned rows become editors too. The `rich-text` class is also a clean override point — an app can attach a different editor — and with no JS the field degrades to a plain textarea.
 - **`view: { render_as: html }`** — the show page renders the stored markup through `Hyrax::Renderers::HtmlAttributeRenderer`, which runs Rails' `sanitize` against a fixed tag/attribute allow-list (headings, lists, links, emphasis, tables; `href`/`title`/`target`/`rel`/`start`). Unsafe markup (`<script>`, `onclick`, …) is stripped at render time. This renderer owns its output, so it is unaffected by the `treat_some_user_inputs_as_markdown` Flipflop flag or any markdown decorator.
+- **In catalog search results** — without a render helper, Blacklight escapes the value and dumps raw tags into the index column. `Hyrax::HyraxHelperBehavior#render_html_index_value` instead renders a clean, truncated plain-text snippet (tags → spaces, stripped, entities decoded; default 230 characters). In flexible mode `Hyrax::FlexibleCatalogBehavior` wires this helper automatically from `render_as: html`; in non-flexible mode declare it on the field, e.g. `config.add_index_field 'context_narrative_tesim', helper_method: :render_html_index_value`. The snippet length is author-declarable with `view: { search_results_truncate: N }` (or `false` to show the full snippet, default 230); in non-flexible mode pass it as a field option (`search_results_truncate: N`).
 
 The editor stores HTML directly, so no markdown engine is involved. Sanitization happens at render time; applications may additionally sanitize on save as defense in depth.
 
@@ -128,6 +129,7 @@ context_narrative:
     input_type: rich_text
   view:
     render_as: html
+    search_results_truncate: 300 # optional; catalog snippet length, `false` to disable (default 230)
 ```
 
 ## Featured display
