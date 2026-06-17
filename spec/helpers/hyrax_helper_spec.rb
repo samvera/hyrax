@@ -343,6 +343,18 @@ RSpec.describe HyraxHelper, type: :helper do
       expect(result).to end_with('...')
     end
 
+    it "honors a per-field truncation length from the field config" do
+      arg = { value: ["<p>#{'word ' * 100}</p>"], config: double(search_results_truncate: 20) }
+      expect(helper.render_html_index_value(arg).length).to be <= 20
+    end
+
+    it "skips truncation when search_results_truncate is false" do
+      arg = { value: ["<p>#{'word ' * 100}</p>"], config: double(search_results_truncate: false) }
+      result = helper.render_html_index_value(arg)
+      expect(result.length).to be > 230
+      expect(result).not_to end_with('...')
+    end
+
     it "accepts Blacklight's hash form with a :value array" do
       arg = { value: ['<p>Hello <em>world</em></p>'], field: 'narrative_tesim' }
       expect(helper.render_html_index_value(arg)).to eq('Hello world')
