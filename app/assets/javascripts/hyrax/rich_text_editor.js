@@ -89,4 +89,4 @@
   document.addEventListener('DOMContentLoaded', bind);
   document.addEventListener('turbo:load', bind);
   document.addEventListener('turbolinks:load', bind);
-})();
+}());

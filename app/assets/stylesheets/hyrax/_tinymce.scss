@@ -25,4 +25,4 @@
 // the inline "Remove" control. Let the editor use the full field width and wrap the
 // append control beneath it, so the box matches other full-width fields.
 .form-group .listing .field-wrapper.input-group { flex-wrap: wrap; width: 100%; }
-.form-group .listing .field-wrapper .tox-tinymce { flex: 1 1 100%; width: 100% !important; }
+.form-group .listing .field-wrapper .tox-tinymce { flex: 1 1 100%; }
