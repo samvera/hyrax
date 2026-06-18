@@ -262,7 +262,39 @@ module Hyrax
         required: truthy?(opts['required']),
         group: opts['group']&.to_s,
         cols: (form['cols'] || DEFAULT_COLS).to_i,
-        as: form['as']&.to_s }
+        as: form['as']&.to_s }.merge(linked_record_keys(opts))
+    end
+
+    # The `linked_record`-specific declarations: profile-driven lookup-or-create
+    # (`creatable:` + `create_fields:`) and which field of the resolved record
+    # supplies the show-page link text (`view: { label_field: }`). Inert for
+    # every other type (false/[]/nil). See documentation/compound_fields.md.
+    def linked_record_keys(opts)
+      view = opts['view'].is_a?(Hash) ? opts['view'] : {}
+      { creatable: truthy?(opts['creatable']),
+        create_fields: normalize_create_fields(opts['create_fields']),
+        label_field: view['label_field'].presence&.to_s }
+    end
+
+    # Each create field declares its own input spec so the generic add-form can
+    # render it without model knowledge: name, input kind (`as`: string/select),
+    # whether it's required, and any select `values`. A bare string entry is
+    # treated as a name-only string field.
+    def normalize_create_fields(fields)
+      Array(fields).filter_map { |field| normalize_create_field(field) }
+    end
+
+    def normalize_create_field(field)
+      field = { 'name' => field } unless field.is_a?(Hash)
+      field = field.with_indifferent_access
+      name = field['name']
+      return if name.blank?
+
+      values = field['values'].presence
+      { name: name.to_s,
+        as: field['as'].presence&.to_s || 'string',
+        required: truthy?(field['required']),
+        values: values && Array(values).map(&:to_s) }
     end
 
     # Whether the compound itself is required (at least one row must exist).

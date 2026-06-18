@@ -231,7 +231,7 @@ module Hyrax
       #
       # @param [String]
       # @return [Dry::Types::Type]
-      def type_for(type)
+      def type_for(type) # rubocop:disable Metrics/MethodLength
         case type
         when 'id'
           Valkyrie::Types::ID
@@ -241,6 +241,8 @@ module Hyrax
           Valkyrie::Types::DateTime
         when 'hash'
           Dry::Types['hash']
+        when 'linked_record'
+          Valkyrie::Types::String
         else
           "Valkyrie::Types::#{type.classify}".safe_constantize ||
             raise(ArgumentError, "Unrecognized type: #{type}")

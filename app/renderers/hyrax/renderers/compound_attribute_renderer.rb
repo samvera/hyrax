@@ -74,11 +74,28 @@ module Hyrax
           auto_link(ERB::Util.h(value.to_s))
         when 'work_or_url'
           work_or_url_markup(value)
+        when 'linked_record'
+          linked_record_markup(sub_property, value)
         when 'controlled'
           controlled_markup(sub_property, value)
         else
           ERB::Util.h(display_value(sub_property, value))
         end
+      end
+
+      # Resolve a `linked_record` reference (a row id) to the record's label,
+      # linked to its show path, via the sub-property's registered source
+      # (`spec[:authority]`). The link text prefers the profile-declared
+      # `view: { label_field: }`, else the source's registered label proc.
+      # Renders the bare id when it doesn't resolve, so the link is never broken.
+      def linked_record_markup(sub_property, value)
+        spec = subproperty_spec(sub_property)
+        label, path = Hyrax::CompoundLinkedRecordResolver.title_and_path(
+          spec&.dig(:authority), value, label_field: spec&.dig(:label_field)
+        )
+        return ERB::Util.h(value.to_s) if path.blank?
+
+        link_to(ERB::Util.h(label), path)
       end
 
       # A controlled value displays its authority/value-list term. When the
