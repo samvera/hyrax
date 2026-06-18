@@ -93,6 +93,29 @@ admin_note:
 
 Use `admin_only` in place of `editor_only` to restrict visibility to admins only.
 
+## HTML fields in catalog search results
+
+A field declared `view: { render_as: html }` stores HTML markup. Without a render helper, Blacklight escapes the value and dumps raw tags into the search-results column. `Hyrax::HyraxHelperBehavior#render_html_index_value` instead renders a clean, truncated plain-text snippet (tags → spaces, stripped, entities decoded; default 230 characters).
+
+In flexible mode `Hyrax::FlexibleCatalogBehavior` wires this helper automatically from `render_as: html`; in non-flexible mode declare it on the field, e.g. `config.add_index_field 'context_narrative_tesim', helper_method: :render_html_index_value`.
+
+The snippet length is author-declarable with `view: { search_results_truncate: N }` (`false` shows the full snippet; default 230). In non-flexible mode pass it as a field option (`search_results_truncate: N`).
+
+```yaml
+# HYRAX_FLEXIBLE=true (m3 profile)
+context_narrative:
+  available_on:
+    class:
+      - GenericWorkResource
+  data_type: string
+  indexing:
+    - context_narrative_tesim
+  property_uri: http://purl.org/dc/terms/description
+  view:
+    render_as: html              # render the stored markup as HTML (sanitized) on the show page
+    search_results_truncate: 300 # optional; catalog snippet length, `false` to disable (default 230)
+```
+
 ## Related features
 
 - **URL Redirects** (`HYRAX_REDIRECTS_ENABLED`): when enabled, the redirects feature requires a `redirects` property in the m3 profile (when also Flipflop-enabled per tenant). See [`documentation/redirects.md`](redirects.md) for the full schema and gating model.
