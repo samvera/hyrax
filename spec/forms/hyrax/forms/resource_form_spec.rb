@@ -232,6 +232,96 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe 'flexible form after M3 profile update adds a compound field' do
+    # Regression: a work created on an older schema version, edited after a
+    # compound (e.g. :participants) is added to the M3 profile, raised
+    # `NoMethodError: undefined method 'participants_attributes'` on update.
+    #
+    # Root cause: the form registers the compound's virtual
+    # `<name>_attributes=` writer from the *resource's stored* schema version
+    # (which predates the compound), while it loads the `<name>` reader from the
+    # *current* schema version. The form ends up with a `participants` reader but
+    # no `participants_attributes=` writer, so Reform's deserialization of the
+    # `participants_attributes` form param hits a missing setter.
+
+    # A compound parent, with folded subproperties in its Dry type meta — the
+    # shape CompoundSchema reads to discover a compound.
+    let(:participants_type) do
+      Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
+        subproperties: {
+          'name' => { 'type' => 'string' },
+          'role' => { 'type' => 'string' }
+        }
+      )
+    end
+
+    # Mutable profile state. The class schema is baked once (at boot, version 1,
+    # no compound); the compound is added to the profile *afterwards*, bumping
+    # the live version to 2. The loader reflects whichever version it is asked
+    # for, so the class schema (baked at v1) genuinely lacks the compound while
+    # the live current version (v2) has it.
+    let(:profile) { { version: 1, compound: false } }
+
+    let(:schema_loader) do
+      state = profile
+      compound_type = participants_type
+      loader = instance_double(Hyrax::M3SchemaLoader)
+      allow(loader).to receive(:current_version) { state[:version] }
+      allow(loader).to receive(:attributes_for) do |version:, **_kwargs|
+        state[:compound] && version.to_i >= 2 ? { participants: compound_type } : {}
+      end
+      allow(loader).to receive(:form_definitions_for) do
+        state[:compound] ? { 'participants' => { required: false, primary: true, display: true } } : {}
+      end
+      allow(loader).to receive(:index_rules_for).and_return({})
+      loader
+    end
+
+    let(:work_class) do
+      klass = Class.new(Hyrax::Work) do
+        def self.name
+          'TestFlexibleCompoundWork'
+        end
+      end
+      klass.acts_as_flexible_resource
+      klass
+    end
+
+    let(:work) { work_class.new(schema_version: '1') }
+
+    before do
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
+      allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
+      allow(Hyrax::FlexibleSchema).to receive(:current_schema_id) { profile[:version] }
+
+      # Bake the class schema at v1 (no compound) by forcing `work` to load,
+      # then add the compound and bump the live version — leaving the class
+      # schema stale, as a running app's does when an admin edits the profile.
+      work
+      profile[:version] = 2
+      profile[:compound] = true
+    end
+
+    after do
+      Hyrax.config.flexible_classes.delete('TestFlexibleCompoundWork')
+    end
+
+    it 'registers the compound `<name>_attributes=` writer from the current schema' do
+      form = described_class.for(resource: work)
+
+      expect(form).to respond_to(:participants)
+      expect(form).to respond_to(:participants_attributes=)
+    end
+
+    it 'deserializes `<name>_attributes` form params onto the compound' do
+      form = described_class.for(resource: work)
+
+      form.validate('participants_attributes' => { '0' => { 'name' => 'Ada', 'role' => 'Author' } })
+
+      expect(form.participants).to eq([{ 'name' => 'Ada', 'role' => 'Author' }])
+    end
+  end
+
   describe '#based_near', unless: Hyrax.config.flexible? do
     subject(:form) { form_class.new(work) }
 

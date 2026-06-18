@@ -92,7 +92,9 @@ module Hyrax
           # Register the virtual `<compound>_attributes` populators on the
           # singleton before `super`, so they are part of Reform's schema for
           # this instance (non-flexible mode wires them at class load).
-          register_compound_fields!(r) if respond_to?(:register_compound_fields!)
+          # Resolve against the current schema version, not `r` — whose stored
+          # version may predate a compound the readers above already added.
+          register_compound_fields!(resource_at_current_schema(r)) if respond_to?(:register_compound_fields!)
         end
 
         if resource.nil?
@@ -290,6 +292,20 @@ module Hyrax
       delegate :flexible?, to: :model
 
       private
+
+      # A copy of the resource loaded at the current schema version, so its
+      # singleton schema reflects the live profile (including compounds added
+      # after the resource's stored version). Falls back to the original
+      # resource if the rebuild fails.
+      def resource_at_current_schema(resource)
+        return resource unless resource.respond_to?(:attributes) && resource.class.respond_to?(:new)
+        hash = resource.attributes.dup
+        hash[:schema_version] = Hyrax::FlexibleSchema.current_schema_id
+        resource.class.new(hash)
+      rescue StandardError => e
+        Hyrax.logger.debug("ResourceForm: could not rebuild resource at current schema: #{e.message}")
+        resource
+      end
 
       # Whether a compound declares `form: { primary: true }`. Defaults to false
       # (compounds render in "Additional fields" unless explicitly primary),
