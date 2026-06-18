@@ -93,6 +93,43 @@ admin_note:
 
 Use `admin_only` in place of `editor_only` to restrict visibility to admins only.
 
+## Rich-text fields
+
+A string property can be edited with a rich-text (WYSIWYG) editor and rendered as sanitized HTML. This works in both flexible and non-flexible mode and is driven by two independent directives:
+
+- **`form: { input_type: rich_text }`** — the edit form renders the field through `records/edit_fields/_rich_text`, which emits a `<textarea class="rich-text">` (one per value; multi-valued fields keep the standard "Add another" control). `hyrax/rich_text_editor.js` attaches a **TinyMCE** WYSIWYG editor to every `textarea.rich-text` by default (tinymce-rails ships with Hyrax) and re-binds on the `managed_field:add` event so cloned rows become editors too. The `rich-text` class is also a clean override point — an app can attach a different editor — and with no JS the field degrades to a plain textarea.
+- **`view: { render_as: html }`** — the show page renders the stored markup through `Hyrax::Renderers::HtmlAttributeRenderer`, which runs Rails' `sanitize` against a fixed tag/attribute allow-list (headings, lists, links, emphasis, tables; `href`/`title`/`target`/`rel`/`start`). Unsafe markup (`<script>`, `onclick`, …) is stripped at render time. This renderer owns its output, so it is unaffected by the `treat_some_user_inputs_as_markdown` Flipflop flag or any markdown decorator.
+
+The editor stores HTML directly, so no markdown engine is involved. Sanitization happens at render time; applications may additionally sanitize on save as defense in depth.
+
+```yaml
+# HYRAX_FLEXIBLE=false (config/metadata/*.yaml)
+context_narrative:
+  type: string
+  multiple: false
+  predicate: http://purl.org/dc/terms/description
+  form:
+    input_type: rich_text   # WYSIWYG (TinyMCE) editor on the edit form
+  view:
+    render_as: html         # sanitize + render the stored markup as HTML on the show page
+```
+
+```yaml
+# HYRAX_FLEXIBLE=true (m3 profile)
+context_narrative:
+  available_on:
+    class:
+      - GenericWorkResource
+  data_type: string
+  indexing:
+    - context_narrative_tesim
+  property_uri: http://purl.org/dc/terms/description
+  form:
+    input_type: rich_text   # WYSIWYG (TinyMCE) editor on the edit form
+  view:
+    render_as: html         # sanitize + render the stored markup as HTML on the show page
+```
+
 ## Related features
 
 - **URL Redirects** (`HYRAX_REDIRECTS_ENABLED`): when enabled, the redirects feature requires a `redirects` property in the m3 profile (when also Flipflop-enabled per tenant). See [`documentation/redirects.md`](redirects.md) for the full schema and gating model.
