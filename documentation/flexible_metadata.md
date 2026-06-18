@@ -93,6 +93,10 @@ admin_note:
 
 Use `admin_only` in place of `editor_only` to restrict visibility to admins only.
 
+## Featured display
+
+**`view: { position: featured }`** removes a field from the standard metadata table: `field_visible?` returns false for it (the same hook that hides `admin_only`/`editor_only` fields), so it is not duplicated there. The host application's show template is responsible for rendering featured fields wherever it wants them — typically prominently at the top of the work show page.
+
 ## Related features
 
 - **URL Redirects** (`HYRAX_REDIRECTS_ENABLED`): when enabled, the redirects feature requires a `redirects` property in the m3 profile (when also Flipflop-enabled per tenant). See [`documentation/redirects.md`](redirects.md) for the full schema and gating model.
