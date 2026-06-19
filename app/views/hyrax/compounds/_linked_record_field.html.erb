@@ -1,0 +1,74 @@
+<%# A `linked_record` sub-property field: a select2 search picker over the
+    source's QA authority (Qa::Authorities::LinkedRecord, keyed by the
+    sub-property's `authority:`), plus — when the sub-property declares
+    `creatable: true` — an inline "add new" form built from its `create_fields`.
+    Source-agnostic: everything keys off `spec[:authority]` /
+    `spec[:create_fields]`; no model knowledge here. See
+    Hyrax::CompoundLinkedRecordResolver and documentation/compound_fields.md.
+
+    Locals: spec, input_id, input_name, value %>
+<% source = spec[:authority] %>
+<% current_option = compound_linked_record_option(value, source) %>
+<% placeholder = t("hyrax.compound_fields.linked_record.#{source}.placeholder",
+                   default: t('hyrax.compound_fields.linked_record.placeholder', default: 'Search')) %>
+
+<div class="hyrax-linked-record" data-hyrax-linked-record
+     data-source="<%= source %>"
+     data-creatable="<%= spec[:creatable] ? 'true' : 'false' %>"
+     data-create-url="<%= Hyrax::Engine.routes.url_helpers.compound_linked_record_path(source: source) %>">
+  <%# The select2 picker (same hidden-input binding as work_or_url). %>
+  <%= hidden_field_tag input_name, value,
+                       id: input_id,
+                       class: 'form-control form-control-sm',
+                       data: { 'hyrax-compound-work-input': true,
+                               'hyrax-linked-record-input': true,
+                               'label': current_option&.first,
+                               'placeholder': placeholder,
+                               'autocomplete-url': "#{Rails.application.routes.url_helpers.qa_path}/search/linked_record/#{source}" } %>
+
+  <% if spec[:creatable] && spec[:create_fields].present? %>
+    <%# Trigger shown by JS only when a search returns no results. %>
+    <button type="button" class="btn btn-link btn-sm px-0 mt-1 d-none"
+            data-hyrax-linked-record-add hidden>
+      <%= t('hyrax.compound_fields.linked_record.add_new', default: '+ Add new') %>
+    </button>
+
+    <%# Inline create form (hidden until the trigger is clicked). Each field
+        renders from its declared spec: string -> text input, select -> dropdown
+        of `values`. Inputs are NOT part of the work form's params (no `name`);
+        JS reads them by data-create-field and POSTs to data-create-url. %>
+    <div class="hyrax-linked-record-create card card-body p-2 mt-1 d-none"
+         data-hyrax-linked-record-create-form hidden>
+      <% spec[:create_fields].each do |field| %>
+        <% field_id = "#{input_id}_new_#{field[:name]}" %>
+        <div class="form-group mb-2">
+          <label for="<%= field_id %>" class="form-label small text-muted mb-0">
+            <%= t("hyrax.compound_fields.linked_record.fields.#{field[:name]}", default: field[:name].to_s.humanize) %><%
+              if field[:required] %><abbr title="required" class="required text-danger">*</abbr><% end %>
+          </label>
+          <% if field[:as] == 'select' %>
+            <select id="<%= field_id %>" class="form-control form-control-sm"
+                    data-create-field="<%= field[:name] %>">
+              <option value=""></option>
+              <% Array(field[:values]).each do |v| %>
+                <option value="<%= v %>"><%= v.to_s.humanize %></option>
+              <% end %>
+            </select>
+          <% else %>
+            <input type="text" id="<%= field_id %>" class="form-control form-control-sm"
+                   data-create-field="<%= field[:name] %>">
+          <% end %>
+        </div>
+      <% end %>
+      <div class="d-flex">
+        <button type="button" class="btn btn-primary btn-sm mr-2" data-hyrax-linked-record-create-submit>
+          <%= t('hyrax.compound_fields.linked_record.create', default: 'Create') %>
+        </button>
+        <button type="button" class="btn btn-link btn-sm" data-hyrax-linked-record-create-cancel>
+          <%= t('hyrax.compound_fields.linked_record.cancel', default: 'Cancel') %>
+        </button>
+      </div>
+      <div class="text-danger small mt-1 d-none" data-hyrax-linked-record-create-errors></div>
+    </div>
+  <% end %>
+</div>

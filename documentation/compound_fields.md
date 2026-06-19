@@ -137,6 +137,7 @@ textarea). Supported `type:` values:
 | `string`     | text input          | The default when `type:` is omitted. |
 | `url`        | url input → auto-linked on show | The stored value is rendered as a clickable `<a href>` on show pages (matching the scalar `render_as: external_link` behavior). |
 | `work_or_url` | select2 typeahead → linked on show | Searches internal works (via the `compound_works` QA authority, backed by `Hyrax::CompoundWorkPickerBuilder`) **or** accepts a typed external URL. The stored value is a work id or a URL; on show, a work id links to the work's show page with its title (resolved by `Hyrax::CompoundWorkResolver`), a URL is auto-linked. |
+| `linked_record` | select2 typeahead → linked on show | A reference to a row in a database table (a person, organization, funder, place, …). The stored value is the row id; the picker searches that table and, optionally, lets a cataloger add a new record inline. On show, the id links to the record using the resolved label. The table and its procs are registered by the host application — see [`linked_record` sub-properties](#linked_record-sub-properties) below. |
 | `controlled` | `<select>` dropdown | Options come from either an inline `values:` list or a QA local authority named by `authority:` (see below). The row's stored value is preserved even if it is no longer offered, matching the `include_current_value` convention of the ordinary controlled-field partials. |
 
 A `controlled` sub-property sources its options one of two ways:
@@ -176,13 +177,97 @@ catalog's read-permission filtering is retained — a user only sees works they
 can read. The picker is mounted as the `compound_works` QA authority at
 `/authorities/search/compound_works`.
 
-`db_table` (a typeahead backed by an ActiveRecord lookup table, with
-add-new) and `geocode` (a Geonames/coordinate lookup) are planned additional
-sub-property types; the form's row partial has an explicit extension point for
-them. `geocode` generalizes the existing single-value controlled-URI location
-field — see `Hyrax::BasedNearFieldBehavior` and
+`geocode` (a Geonames/coordinate lookup) is a planned additional sub-property
+type; the form's row partial has an explicit extension point for it. `geocode`
+generalizes the existing single-value controlled-URI location field — see
+`Hyrax::BasedNearFieldBehavior` and
 [`field_behaviors.md`](field_behaviors.md), which `geocode` is intended to
 replace once it lands.
+
+### `linked_record` sub-properties
+
+A `linked_record` sub-property's value is a reference to a row in a database
+table — a person, organization, funder, place, or any other entity you want to
+record once and cite from many works, rather than retyping the same name on each
+work. The stored value is the row id; on show pages it renders as a link to that
+record using a resolved label.
+
+Hyrax provides the **mechanism**; the host application provides the **table**.
+You register a *source* — a name plus the procs that map between a stored id and
+a record — with `Hyrax::CompoundLinkedRecordResolver`, and name that source in
+the sub-property's `authority:` key. (Hyrax ships no person/organization table
+itself, so the examples below assume an application-supplied `Person` model.)
+
+```ruby
+# config/initializers/linked_records.rb
+Rails.application.config.to_prepare do
+  Hyrax::CompoundLinkedRecordResolver.register(
+    :people,
+    finder: ->(id)    { Person.find_by(id:) },
+    label:  ->(person) { person.display_name },
+    path:   ->(person) { Rails.application.routes.url_helpers.person_path(person) },
+    # optional — enables the picker autocomplete:
+    search: ->(q) { Person.where('display_name ILIKE ?', "%#{q}%").limit(20)
+                          .map { |p| { id: p.id.to_s, label: p.display_name, value: p.id.to_s } } },
+    # optional — enables inline "add new" (lookup-or-create):
+    create: ->(attrs) { Person.create(attrs.slice(:display_name, :orcid)) }
+  )
+end
+```
+
+**What the table needs.** The source can wrap any object the four procs can
+operate on — typically an `ActiveRecord` model, but nothing about the type is
+prescribed. The only contract is what the procs imply:
+
+- a stable identifier the `finder` can look up by and that is safe to persist as
+  a string (an integer or UUID primary key is fine — it is stored as its string
+  form);
+- a human-readable label (whatever `label:` / `view: { label_field: }` returns);
+- any other fields the `path:`, `search:`, or `create:` procs reference.
+
+There is **no base class to inherit, no required column names, no migration or
+schema Hyrax imposes, and no per-source authority or controller class to write** —
+the generic authority and create endpoint (below) serve every source. Registering
+the source is the whole integration.
+
+```yaml
+# the sub-property names the registered source via `authority:`
+creator_ref:
+  type: linked_record
+  name: creator
+  available_on: { properties: [creators] }
+  authority: people          # the registered source name
+  view:
+    label_field: display_name # which record field supplies the show-page link text
+  # optional inline lookup-or-create form (only when `create:` is registered):
+  creatable: true
+  create_fields:
+    - { name: display_name, as: string, required: true }
+    - { name: orcid, as: string }
+    - { name: kind, as: select, values: [person, organization] }
+```
+
+How the pieces fit together:
+
+- **Search picker.** The picker is the generic `linked_record` QA authority,
+  mounted at `/authorities/search/linked_record/:source`. The source name is the
+  sub-authority segment, so one authority serves every source — there is no
+  per-source authority class. It delegates the query to the source's `search:`
+  proc. A source registered without `search:` renders a plain text input.
+- **Show-page link.** `Hyrax::CompoundLinkedRecordResolver` resolves the stored
+  id to `[label, path]`. The link text is the record field named by
+  `view: { label_field: }` when present, otherwise the source's `label:` proc.
+  An id that no longer resolves renders as bare text, never a broken link.
+- **Inline lookup-or-create.** When the sub-property declares `creatable: true`
+  and the source registers a `create:` proc, a search that returns no matches
+  offers an "Add new" form built from `create_fields`. Submitting it POSTs to
+  `/linked_records/:source`, which calls the source's `create:` proc and selects
+  the new record in the picker. Each `create_fields` entry declares its own
+  input: `as: string` (text input) or `as: select` (a dropdown of `values:`),
+  and `required:`.
+- **Indexing & reverse lookup.** A `linked_record` indexes as a single stored
+  string `<compound>_<name>_ssim` (like an id), so you can reverse-look-up "which
+  works reference this record?" with a Solr query on that field.
 
 ### Grouping (`group:` + `groups:`, optional)
 
@@ -222,7 +307,7 @@ chosen by its `type:`:
 |--------------------------|------------------|------|
 | `string`                 | `_sim`, `_tesim` | facetable **and** full-text searchable |
 | `controlled`             | `_sim`           | facetable only (a closed vocabulary needs no full-text) |
-| `url`, `work_or_url`, `id` | `_ssim`        | stored exact-match string |
+| `url`, `work_or_url`, `linked_record`, `id` | `_ssim` | stored exact-match string (reverse-lookup id) |
 | `date_time`, `date`      | `_dtsi`          | date |
 
 So `participants` with a `name`-aliased `title` (type `string`) is indexed to

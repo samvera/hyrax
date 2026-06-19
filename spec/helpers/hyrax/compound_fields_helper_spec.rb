@@ -129,4 +129,46 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
       end
     end
   end
+
+  describe '#compound_work_or_url_option' do
+    it 'is nil for a blank value' do
+      expect(helper.compound_work_or_url_option('')).to be_nil
+    end
+
+    it 'shows an external URL as-is (label and value both the URL)' do
+      expect(helper.compound_work_or_url_option('https://example.com/a'))
+        .to eq(['https://example.com/a', 'https://example.com/a'])
+    end
+
+    it 'resolves an internal work id to its title, keeping the id as the value' do
+      allow(Hyrax::CompoundWorkResolver).to receive(:title_and_path)
+        .with('work-1').and_return(['A Work', '/concern/works/work-1'])
+      expect(helper.compound_work_or_url_option('work-1')).to eq(['A Work', 'work-1'])
+    end
+  end
+
+  describe '#compound_linked_record_option' do
+    before do
+      Hyrax::CompoundLinkedRecordResolver.register(
+        :stub_people,
+        finder: ->(id) { id.to_s == '7' ? { id: 7 } : nil },
+        label: ->(_r) { 'Ada Lovelace' },
+        path: ->(_r) { '/people/7' }
+      )
+    end
+
+    after { Hyrax::CompoundLinkedRecordResolver.registry.delete(:stub_people) }
+
+    it 'returns [label, value] for pre-seeding the picker' do
+      expect(helper.compound_linked_record_option('7', 'stub_people')).to eq(['Ada Lovelace', '7'])
+    end
+
+    it 'is nil for a blank value' do
+      expect(helper.compound_linked_record_option('', 'stub_people')).to be_nil
+    end
+
+    it 'falls back to the id label when the value does not resolve' do
+      expect(helper.compound_linked_record_option('999', 'stub_people')).to eq(['999', '999'])
+    end
+  end
 end
