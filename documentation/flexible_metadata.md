@@ -95,7 +95,9 @@ Use `admin_only` in place of `editor_only` to restrict visibility to admins only
 
 ## Featured display
 
-**`view: { position: featured }`** removes a field from the standard metadata table: `field_visible?` returns false for it (the same hook that hides `admin_only`/`editor_only` fields), so it is not duplicated there. The host application's show template is responsible for rendering featured fields wherever it wants them — typically prominently at the top of the work show page.
+**`view: { position: featured }`** removes a field from the standard metadata table: `field_visible?` returns false for it (the same hook that hides `admin_only`/`editor_only` fields), so it is not duplicated there. The host application's show template is responsible for rendering featured fields wherever it wants them, typically prominently at the top of the work show page.
+
+Note: `position: featured` only *hides* the field from the standard table; it does not render it anywhere on its own. If your show template does not explicitly render the featured field, it will not appear at all. This is a template-integration responsibility and is not checked by m3 profile validation, since the profile cannot know what the app's templates render.
 
 ## Related features
 
