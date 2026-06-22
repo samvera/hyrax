@@ -102,6 +102,8 @@ A string property can be edited with a rich-text (WYSIWYG) editor and rendered a
 
 The editor stores HTML directly, so no markdown engine is involved. Sanitization happens at render time; applications may additionally sanitize on save as defense in depth.
 
+`rich_text` is for free-text properties only. Declaring it on a controlled-vocabulary property (one whose `controlled_values.sources` names a real authority, a built-in controlled field such as `rights_statement`/`license`/`resource_type`, or a `type: controlled` compound subproperty) replaces the controlled input with a free-text editor and stores arbitrary HTML where a controlled value is expected. Saving such a profile raises a validation warning; see `Hyrax::FlexibleSchemaValidators::RichTextValidator`.
+
 ```yaml
 # HYRAX_FLEXIBLE=false (config/metadata/*.yaml)
 context_narrative:

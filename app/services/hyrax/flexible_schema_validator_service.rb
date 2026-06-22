@@ -40,6 +40,7 @@ module Hyrax
       validate_sort_properties
       validate_redirects
       validate_compound
+      validate_rich_text
     end
 
     # The default JSON schema used when no custom schema is provided.
@@ -140,6 +141,16 @@ module Hyrax
     # @return [void]
     def validate_compound
       FlexibleSchemaValidators::CompoundValidator.new(profile: profile, errors: @errors).validate!
+    end
+
+    # Warns (does not block) when a property declares
+    # `form: { input_type: rich_text }` alongside a controlled-vocabulary
+    # configuration, since rich text stores free-form HTML and bypasses the
+    # controlled input.
+    #
+    # @return [void]
+    def validate_rich_text
+      FlexibleSchemaValidators::RichTextValidator.new(profile, @warnings).validate!
     end
 
     # Validates that a `label` property exists and that it is available on
