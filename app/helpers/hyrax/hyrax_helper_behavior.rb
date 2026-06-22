@@ -249,15 +249,27 @@ module Hyrax
     # @return [String] truncated plain-text snippet, no markup
     def render_html_index_value(field)
       raw = field.is_a?(Hash) ? Array(field[:value]).join(' ') : field.to_s
-      # Tags -> spaces so block boundaries don't glue words together, strip any
-      # stragglers, decode entities (e.g. &rsquo; -> '), then collapse whitespace.
-      text = strip_tags(raw.gsub(/<[^>]+>/, ' '))
-      text = CGI.unescapeHTML(text).gsub(/\s+/, ' ').strip
+      # Decode entities first (e.g. &lt;em&gt; -> <em>) so escaped markup is then
+      # removed by tag-stripping rather than resurfacing as literal tags; tags ->
+      # spaces so block boundaries don't glue words together; collapse whitespace.
+      decoded = CGI.unescapeHTML(raw)
+      text = strip_tags(decoded.gsub(/<[^>]+>/, ' ')).gsub(/\s+/, ' ').strip
 
       limit = field.is_a?(Hash) ? field[:config].try(:search_results_truncate) : nil
       return text if limit == false # `search_results_truncate: false` opts out of truncation
 
-      truncate(text, length: (limit || 230).to_i, separator: ' ')
+      truncate(text, length: html_index_truncate_length(limit), separator: ' ')
+    end
+
+    # Coerce the declared `search_results_truncate` value into a positive integer
+    # length, falling back to the 230-character default for nil or malformed
+    # values (e.g. a stray string or non-positive number) rather than producing a
+    # near-empty snippet. `false` is handled by the caller as an explicit opt-out.
+    # @api private
+    DEFAULT_HTML_INDEX_TRUNCATE = 230
+    def html_index_truncate_length(limit)
+      length = Integer(limit, exception: false)
+      length&.positive? ? length : DEFAULT_HTML_INDEX_TRUNCATE
     end
 
     # *Sometimes* a Blacklight index field helper_method

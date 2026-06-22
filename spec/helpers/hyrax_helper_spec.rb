@@ -355,6 +355,29 @@ RSpec.describe HyraxHelper, type: :helper do
       expect(result).not_to end_with('...')
     end
 
+    it "strips markup that arrives as escaped entities" do
+      expect(helper.render_html_index_value('&lt;em&gt;hi&lt;/em&gt; there')).to eq('hi there')
+    end
+
+    it "falls back to the default length for a non-integer truncation value" do
+      arg = { value: ["<p>#{'word ' * 100}</p>"], config: double(search_results_truncate: 'oops') }
+      result = helper.render_html_index_value(arg)
+      expect(result.length).to be <= 230
+      expect(result).to end_with('...')
+    end
+
+    it "falls back to the default length for a non-positive truncation value" do
+      arg = { value: ["<p>#{'word ' * 100}</p>"], config: double(search_results_truncate: 0) }
+      result = helper.render_html_index_value(arg)
+      expect(result.length).to be <= 230
+      expect(result).to end_with('...')
+    end
+
+    it "coerces a numeric string truncation value" do
+      arg = { value: ["<p>#{'word ' * 100}</p>"], config: double(search_results_truncate: '20') }
+      expect(helper.render_html_index_value(arg).length).to be <= 20
+    end
+
     it "accepts Blacklight's hash form with a :value array" do
       arg = { value: ['<p>Hello <em>world</em></p>'], field: 'narrative_tesim' }
       expect(helper.render_html_index_value(arg)).to eq('Hello world')
