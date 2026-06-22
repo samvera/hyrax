@@ -49,6 +49,23 @@ RSpec.describe Hyrax::Renderers::HtmlAttributeRenderer do
       end
     end
 
+    context 'with a target="_blank" link' do
+      let(:value) { '<p><a href="https://example.com" target="_blank">x</a></p>' }
+
+      it 'adds rel="noopener noreferrer" to prevent reverse tabnabbing' do
+        expect(html).to include('rel="noopener noreferrer"')
+      end
+    end
+
+    context 'with a target="_blank" link that already declares a rel' do
+      let(:value) { '<p><a href="https://example.com" target="_blank" rel="nofollow">x</a></p>' }
+
+      it 'preserves the existing rel and de-duplicates the safety tokens' do
+        expect(html).to include('nofollow').and include('noopener').and include('noreferrer')
+        expect(html.scan('noopener').size).to eq(1)
+      end
+    end
+
     context 'with a blank value' do
       let(:value) { nil }
 

@@ -950,4 +950,51 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       end
     end
   end
+
+  describe '#input_type' do
+    # Stub the underlying field definitions so this is a focused unit test of the
+    # lookup/coercion logic, independent of flexible mode and the loaded profile.
+    before { allow(form).to receive(:_form_field_definitions).and_return(definitions) }
+
+    context 'when the definition declares an input_type' do
+      let(:definitions) { { 'summary' => { input_type: :rich_text } } }
+
+      it 'looks the term up by its string name' do
+        expect(form.input_type('summary')).to eq(:rich_text)
+      end
+
+      it 'accepts a symbol term' do
+        expect(form.input_type(:summary)).to eq(:rich_text)
+      end
+
+      it 'coerces a string input_type value to a symbol' do
+        definitions['summary'] = { input_type: 'rich_text' }
+        expect(form.input_type(:summary)).to eq(:rich_text)
+      end
+    end
+
+    context 'when the definitions are keyed by symbol' do
+      let(:definitions) { { summary: { input_type: :rich_text } } }
+
+      it 'finds the term through the symbol lookup' do
+        expect(form.input_type('summary')).to eq(:rich_text)
+      end
+    end
+
+    context 'when the term is absent' do
+      let(:definitions) { {} }
+
+      it 'returns nil' do
+        expect(form.input_type(:missing)).to be_nil
+      end
+    end
+
+    context 'when the definition has no input_type' do
+      let(:definitions) { { 'summary' => {} } }
+
+      it 'returns nil' do
+        expect(form.input_type(:summary)).to be_nil
+      end
+    end
+  end
 end

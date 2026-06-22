@@ -15,8 +15,19 @@
   // Block-format dropdown (formatselect): paragraph plus the heading levels the
   // renderer allows, so editors can apply H1-H4 without typing markup.
   var BLOCK_FORMATS = 'Paragraph=p; Heading 1=h1; Heading 2=h2; Heading 3=h3; Heading 4=h4';
-  // Keep stored markup aligned with HtmlAttributeRenderer's allow-list.
-  var VALID_ELEMENTS = 'p,br,strong/b,em/i,u,s,a[href|title|target|rel],ul,ol,li,blockquote,h1,h2,h3,h4,h5,h6,code,pre,span';
+  // Keep stored markup aligned with HtmlAttributeRenderer's allow-list (ALLOWED_TAGS
+  // + ALLOWED_ATTRIBUTES). Anything the editor strips here that the renderer would
+  // otherwise allow causes confusing paste/save/re-open round-trips, so the two
+  // lists must stay in sync.
+  var VALID_ELEMENTS = [
+    'p', 'br', 'hr', 'span', 'div',
+    'strong/b', 'em/i', 'u', 's', 'strike', 'sub', 'sup',
+    'a[href|title|target|rel]',
+    'ul', 'ol[start]', 'li',
+    'blockquote', 'pre', 'code',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'table', 'thead', 'tbody', 'tr', 'th', 'td'
+  ].join(',');
 
   function uniqueId() {
     return 'rich-text-' + Date.now() + '-' + Math.floor(Math.random() * 100000);

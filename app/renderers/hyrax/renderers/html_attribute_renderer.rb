@@ -50,20 +50,42 @@ module Hyrax
       # values in `markdown()`). Sanitized rich text should render identically
       # regardless of that flag.
       def attribute_value_to_html(value)
-        sanitized = sanitize(value.to_s, tags: ALLOWED_TAGS, attributes: ALLOWED_ATTRIBUTES)
+        sanitized = sanitize_rich_text(value.to_s)
         return sanitized if microdata_value_attributes(field).blank?
 
-        # Return the assembled span as a plain string (matching the base
-        # AttributeRenderer#attribute_value_to_html contract); the caller in
-        # #render applies html_safe once to the full markup. `sanitized` is
-        # already allow-list sanitized, so no unsafe content is reintroduced.
-        "<span#{html_attributes(microdata_value_attributes(field))}>#{sanitized}</span>"
+        # Wrap in a block-level <div> (not <span>) when carrying microdata: the
+        # allow-list permits block elements (p, div, table, ...) and nesting
+        # those inside a <span> is invalid HTML. Returned as a plain string per
+        # the base AttributeRenderer#attribute_value_to_html contract; #render
+        # applies html_safe once to the full markup. `sanitized` is already
+        # allow-list sanitized, so no unsafe content is reintroduced.
+        "<div#{html_attributes(microdata_value_attributes(field))}>#{sanitized}</div>"
       end
 
       # Kept for callers/subclasses that invoke +li_value+ directly; mirrors the
       # sanitizing behavior above.
       def li_value(value)
-        sanitize(value.to_s, tags: ALLOWED_TAGS, attributes: ALLOWED_ATTRIBUTES)
+        sanitize_rich_text(value.to_s)
+      end
+
+      # Allow-list sanitize, then ensure any author-supplied `target="_blank"`
+      # link also carries `rel="noopener noreferrer"`. Without it, the opened
+      # page can reach back through `window.opener` (reverse tabnabbing); Hyrax
+      # adds this rel consistently elsewhere (e.g. LicenseAttributeRenderer).
+      def sanitize_rich_text(value)
+        harden_blank_target_links(sanitize(value, tags: ALLOWED_TAGS, attributes: ALLOWED_ATTRIBUTES))
+      end
+
+      def harden_blank_target_links(html)
+        return html unless html.to_s.include?('target')
+
+        fragment = Nokogiri::HTML.fragment(html)
+        fragment.css('a[target="_blank"]').each do |anchor|
+          anchor['rel'] = (anchor['rel'].to_s.split + %w[noopener noreferrer]).uniq.join(' ')
+        end
+        # Plain String per the attribute_value_to_html contract; #render applies
+        # html_safe once. The content is already allow-list sanitized above.
+        fragment.to_html
       end
     end
   end
