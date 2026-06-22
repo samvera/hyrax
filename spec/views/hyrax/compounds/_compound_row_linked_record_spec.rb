@@ -33,9 +33,15 @@ RSpec.describe 'hyrax/compounds/_compound_row', type: :view do
         'person' => { type: 'linked_record', authority: 'people', cols: 6,
                       creatable: true,
                       create_fields: [
-                        { name: 'display_name', as: 'string', required: true, values: nil },
-                        { name: 'orcid', as: 'string', required: false, values: nil },
-                        { name: 'kind', as: 'select', required: false, values: %w[person organization] }
+                        { name: 'display_name', as: 'string', required: true, repeatable: false, values: nil, fields: nil },
+                        { name: 'orcid', as: 'string', required: false, repeatable: false, values: nil, fields: nil },
+                        { name: 'kind', as: 'select', required: false, repeatable: false, values: %w[person organization], fields: nil },
+                        { name: 'identifiers', as: 'group', required: false, repeatable: true, values: nil,
+                          fields: [
+                            { name: 'value', as: 'string', required: false, repeatable: false, values: nil, fields: nil },
+                            { name: 'scheme', as: 'select', required: false, repeatable: false, values: %w[ISNI ROR], fields: nil }
+                          ] },
+                        { name: 'affiliations', as: 'string', required: false, repeatable: true, values: nil, fields: nil }
                       ] },
         'role' => { type: 'string', cols: 6 }
       },
@@ -82,6 +88,30 @@ RSpec.describe 'hyrax/compounds/_compound_row', type: :view do
     it 'renders the select options from the field values' do
       expect(rendered).to have_css('select[data-create-field="kind"] option[value="person"]', visible: false)
       expect(rendered).to have_css('select[data-create-field="kind"] option[value="organization"]', visible: false)
+    end
+
+    describe 'a repeatable group create-field' do
+      it 'renders a group container marked repeatable with an Add button' do
+        expect(rendered).to have_css('[data-create-group="identifiers"][data-repeatable="true"]', visible: false)
+        expect(rendered).to have_css('[data-create-group="identifiers"] button[data-create-group-add]', visible: false)
+      end
+
+      it 'renders an initial row with the sub-field inputs tagged data-create-subfield' do
+        expect(rendered).to have_css('[data-create-group-rows] [data-create-group-row] input[data-create-subfield="value"]', visible: false)
+        expect(rendered).to have_css('[data-create-group-rows] [data-create-group-row] select[data-create-subfield="scheme"]', visible: false)
+      end
+
+      it 'provides a row <template> for JS to clone' do
+        expect(rendered).to have_css('[data-create-group="identifiers"] template[data-create-group-row-template]', visible: false)
+      end
+    end
+
+    describe 'a repeatable scalar create-field' do
+      it 'renders as add/remove rows marked data-create-scalar with one input per row' do
+        expect(rendered).to have_css('[data-create-group="affiliations"][data-create-scalar="true"]', visible: false)
+        expect(rendered).to have_css('[data-create-group="affiliations"] button[data-create-group-add]', visible: false)
+        expect(rendered).to have_css('[data-create-group="affiliations"] [data-create-group-rows] input[data-create-subfield="affiliations"]', visible: false)
+      end
     end
   end
 

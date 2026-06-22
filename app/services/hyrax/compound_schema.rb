@@ -277,9 +277,11 @@ module Hyrax
     end
 
     # Each create field declares its own input spec so the generic add-form can
-    # render it without model knowledge: name, input kind (`as`: string/select),
-    # whether it's required, and any select `values`. A bare string entry is
-    # treated as a name-only string field.
+    # render it without model knowledge: name, input kind (`as`:
+    # string/select/group), whether it's required, any select `values`, whether
+    # it `repeatable`s, and — for `as: group` — its nested `fields`. A group
+    # field collects a list of {sub-field => value} hashes; a bare string entry
+    # is treated as a name-only string field.
     def normalize_create_fields(fields)
       Array(fields).filter_map { |field| normalize_create_field(field) }
     end
@@ -290,11 +292,16 @@ module Hyrax
       name = field['name']
       return if name.blank?
 
+      as = field['as'].presence&.to_s || 'string'
       values = field['values'].presence
       { name: name.to_s,
-        as: field['as'].presence&.to_s || 'string',
+        as: as,
         required: truthy?(field['required']),
-        values: values && Array(values).map(&:to_s) }
+        repeatable: truthy?(field['repeatable']),
+        values: values && Array(values).map(&:to_s),
+        # A group's nested sub-fields are themselves create-fields; everything
+        # else has no sub-fields.
+        fields: as == 'group' ? normalize_create_fields(field['fields']) : nil }
     end
 
     # Whether the compound itself is required (at least one row must exist).

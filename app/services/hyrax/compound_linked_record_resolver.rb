@@ -47,7 +47,8 @@ module Hyrax
       # @param search [#call, nil] `(query) -> Array<{id:, label:, value:}>` for
       #   the picker autocomplete
       # @param create [#call, nil] `(attributes Hash) -> record` for the
-      #   lookup-or-create flow
+      #   lookup-or-create flow. A scalar create-field arrives as a single value;
+      #   a `group` create-field arrives as an Array of Hashes (one per row).
       def register(source, finder:, label:, path:, search: nil, create: nil)
         registry[source.to_sym] = Source.new(finder:, label:, path:, search:, create:)
       end

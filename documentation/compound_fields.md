@@ -245,6 +245,15 @@ creator_ref:
     - { name: display_name, as: string, required: true }
     - { name: orcid, as: string }
     - { name: kind, as: select, values: [person, organization] }
+    # a repeatable scalar -> the proc receives an Array of strings:
+    - { name: affiliations, as: string, repeatable: true }
+    # a repeatable group -> the proc receives an Array of Hashes:
+    - name: identifiers
+      as: group
+      repeatable: true
+      fields:
+        - { name: value, as: string }
+        - { name: scheme, as: select, values: [ISNI, VIAF, ROR] }
 ```
 
 How the pieces fit together:
@@ -265,6 +274,12 @@ How the pieces fit together:
   the new record in the picker. Each `create_fields` entry declares its own
   input: `as: string` (text input) or `as: select` (a dropdown of `values:`),
   and `required:`.
+- **Repeatable create-fields** (see `affiliations` and `identifiers` above). Mark
+  any create-field `repeatable: true` and the "Add new" form renders add/remove
+  rows for it. A repeatable **scalar** (`as: string`/`select`, no `fields:`)
+  collects a plain **Array of strings** (`affiliations: ["A", "B"]`). A
+  repeatable **group** (`as: group` with nested `fields:`) collects an **Array of
+  Hashes**, one per non-blank row (`identifiers: [{ value: "…", scheme: "ISNI" }, …]`).
 - **Indexing & reverse lookup.** A `linked_record` indexes as a single stored
   string `<compound>_<name>_ssim` (like an id), so you can reverse-look-up "which
   works reference this record?" with a Solr query on that field.

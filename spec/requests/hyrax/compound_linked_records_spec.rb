@@ -7,9 +7,10 @@
 # routes by the :source segment to whatever Hyrax::CompoundLinkedRecordResolver
 # has registered. Driven here through an in-memory stub source.
 RSpec.describe 'Hyrax linked_record create endpoint', type: :request do
-  # A minimal in-memory record + store the stub source creates into.
+  # A minimal in-memory record + store the stub source creates into. `ids`
+  # captures a `group` create-field so a test can assert its shape.
   let(:store) { {} }
-  let(:record_class) { Struct.new(:id, :display_name, :persisted?, :errors, keyword_init: true) }
+  let(:record_class) { Struct.new(:id, :display_name, :ids, :affiliations, :persisted?, :errors, keyword_init: true) }
 
   before do
     s = store
@@ -22,10 +23,10 @@ RSpec.describe 'Hyrax linked_record create endpoint', type: :request do
       create: lambda { |attrs|
         name = attrs[:display_name].to_s
         if name.empty?
-          rc.new(id: nil, display_name: name, persisted?: false, errors: ['Display name is required'])
+          rc.new(id: nil, display_name: name, ids: nil, affiliations: nil, persisted?: false, errors: ['Display name is required'])
         else
           id = (s.size + 1).to_s
-          rec = rc.new(id:, display_name: name, persisted?: true, errors: [])
+          rec = rc.new(id:, display_name: name, ids: attrs[:ids], affiliations: attrs[:affiliations], persisted?: true, errors: [])
           s[id] = rec
           rec
         end
@@ -59,6 +60,30 @@ RSpec.describe 'Hyrax linked_record create endpoint', type: :request do
            params: { record: { display_name: 'X' } }
 
       expect(response).to have_http_status(:not_found)
+    end
+
+    it 'passes a group create-field through to the proc as a deep-symbolized array of hashes' do
+      post hyrax.compound_linked_record_path(source: 'stub_people'),
+           params: { record: { display_name: 'Grace Hopper',
+                               ids: [{ value: '0000000121032683', scheme: 'ISNI' },
+                                     { value: 'https://ror.org/02mhbdp94', scheme: 'ROR' }] } }
+
+      expect(response).to have_http_status(:created)
+      created = store[response.parsed_body['id'].to_s]
+      expect(created.ids).to eq(
+        [{ value: '0000000121032683', scheme: 'ISNI' },
+         { value: 'https://ror.org/02mhbdp94', scheme: 'ROR' }]
+      )
+    end
+
+    it 'passes a repeatable scalar create-field through as a plain array of strings' do
+      post hyrax.compound_linked_record_path(source: 'stub_people'),
+           params: { record: { display_name: 'Grace Hopper',
+                               affiliations: ['US Navy', 'Vassar College'] } }
+
+      expect(response).to have_http_status(:created)
+      created = store[response.parsed_body['id'].to_s]
+      expect(created.affiliations).to eq(['US Navy', 'Vassar College'])
     end
   end
 end

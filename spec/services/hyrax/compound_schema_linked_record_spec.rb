@@ -25,7 +25,12 @@ RSpec.describe Hyrax::CompoundSchema do
                       'create_fields' => [
                         { 'name' => 'display_name', 'as' => 'string', 'required' => true },
                         { 'name' => 'orcid', 'as' => 'string' },
-                        { 'name' => 'kind', 'as' => 'select', 'values' => %w[person organization] }
+                        { 'name' => 'kind', 'as' => 'select', 'values' => %w[person organization] },
+                        { 'name' => 'identifiers', 'as' => 'group', 'repeatable' => true,
+                          'fields' => [
+                            { 'name' => 'value', 'as' => 'string' },
+                            { 'name' => 'scheme', 'as' => 'select', 'values' => %w[ISNI ROR] }
+                          ] }
                       ]
                     },
                     'role' => { 'type' => 'controlled' }
@@ -48,12 +53,24 @@ RSpec.describe Hyrax::CompoundSchema do
     expect(spec[:creatable]).to be(true)
   end
 
-  it 'normalizes create_fields with name/as/values/required' do
-    expect(spec[:create_fields]).to eq(
+  it 'normalizes scalar create_fields with name/as/required/repeatable/values/fields' do
+    scalar = spec[:create_fields].reject { |f| f[:as] == 'group' }
+    expect(scalar).to eq(
       [
-        { name: 'display_name', as: 'string', required: true, values: nil },
-        { name: 'orcid', as: 'string', required: false, values: nil },
-        { name: 'kind', as: 'select', required: false, values: %w[person organization] }
+        { name: 'display_name', as: 'string', required: true, repeatable: false, values: nil, fields: nil },
+        { name: 'orcid', as: 'string', required: false, repeatable: false, values: nil, fields: nil },
+        { name: 'kind', as: 'select', required: false, repeatable: false, values: %w[person organization], fields: nil }
+      ]
+    )
+  end
+
+  it 'normalizes a repeatable group create-field with nested sub-fields' do
+    group = spec[:create_fields].find { |f| f[:name] == 'identifiers' }
+    expect(group).to include(name: 'identifiers', as: 'group', repeatable: true, values: nil)
+    expect(group[:fields]).to eq(
+      [
+        { name: 'value', as: 'string', required: false, repeatable: false, values: nil, fields: nil },
+        { name: 'scheme', as: 'select', required: false, repeatable: false, values: %w[ISNI ROR], fields: nil }
       ]
     )
   end

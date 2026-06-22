@@ -32,12 +32,14 @@ module Hyrax
 
     # Pass the submitted record attributes through to the source's create proc,
     # which decides what it accepts. The source owns the field contract (declared
-    # via the profile's create_fields), so permit an open hash.
+    # via the profile's create_fields), so permit an open hash. A `group`
+    # create-field arrives as an Array of Hashes (one per row); deep-symbolize so
+    # the create proc sees symbol keys at every level, including nested rows.
     def create_attributes
       raw = params[:record]
       return {} unless raw.respond_to?(:to_unsafe_h) || raw.is_a?(ActionController::Parameters)
 
-      raw.to_unsafe_h.symbolize_keys
+      raw.to_unsafe_h.deep_symbolize_keys
     end
 
     def record_valid?(record)

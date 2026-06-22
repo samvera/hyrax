@@ -117,8 +117,35 @@
         var form = wrap.querySelector('[data-hyrax-linked-record-create-form]');
         var errors = form.querySelector('[data-hyrax-linked-record-create-errors]');
         var record = {};
+        // Scalar create-fields: one value each. Skip inputs that live inside a
+        // group (those are collected per-row below).
         form.querySelectorAll('[data-create-field]').forEach(function(input) {
+            if (input.closest('[data-create-group]')) return;
             record[input.getAttribute('data-create-field')] = input.value;
+        });
+        // Repeatable create-fields: collected from their rows (the <template>
+        // row is inert). A group field becomes an array of {subfield: value}
+        // hashes; a repeatable scalar (data-create-scalar) becomes a plain array
+        // of strings. Blank rows are skipped.
+        form.querySelectorAll('[data-create-group]').forEach(function(group) {
+            var name = group.getAttribute('data-create-group');
+            var scalar = group.getAttribute('data-create-scalar') === 'true';
+            var rows = [];
+            group.querySelectorAll('[data-create-group-rows] [data-create-group-row]').forEach(function(rowEl) {
+                if (scalar) {
+                    var input = rowEl.querySelector('[data-create-subfield]');
+                    if (input && input.value) rows.push(input.value);
+                } else {
+                    var row = {};
+                    var any = false;
+                    rowEl.querySelectorAll('[data-create-subfield]').forEach(function(sub) {
+                        row[sub.getAttribute('data-create-subfield')] = sub.value;
+                        if (sub.value) any = true;
+                    });
+                    if (any) rows.push(row);
+                }
+            });
+            record[name] = rows;
         });
 
         var token = (document.querySelector('meta[name="csrf-token"]') || {}).content;
@@ -158,6 +185,27 @@
         var createCancel = event.target.closest('[data-hyrax-linked-record-create-cancel]');
         if (createCancel) {
             closeCreateForm(createCancel.closest('[data-hyrax-linked-record]'));
+            return;
+        }
+        // Repeatable group create-field: add a row (clone the template) / remove a row.
+        var groupAdd = event.target.closest('[data-create-group-add]');
+        if (groupAdd) {
+            var group = groupAdd.closest('[data-create-group]');
+            var template = group.querySelector('[data-create-group-row-template]');
+            var rows = group.querySelector('[data-create-group-rows]');
+            if (template && rows) rows.appendChild(template.content.cloneNode(true));
+            return;
+        }
+        var groupRemove = event.target.closest('[data-create-group-remove]');
+        if (groupRemove) {
+            var groupRows = groupRemove.closest('[data-create-group-rows]');
+            var thisRow = groupRemove.closest('[data-create-group-row]');
+            // Keep at least one row present; clear it instead of removing the last.
+            if (groupRows && groupRows.querySelectorAll('[data-create-group-row]').length > 1) {
+                thisRow.parentNode.removeChild(thisRow);
+            } else if (thisRow) {
+                thisRow.querySelectorAll('[data-create-subfield]').forEach(function(i) { i.value = ''; });
+            }
             return;
         }
 
