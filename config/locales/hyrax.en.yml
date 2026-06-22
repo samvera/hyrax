@@ -1429,6 +1429,9 @@ en:
         warnings:
           config_disabled: "m3 profile declares a `redirects` property but Hyrax.config.redirects_enabled? is false; the property will be ignored"
           flipflop_disabled: "m3 profile declares a `redirects` property but the :redirects feature flag is off; the property will be ignored"
+      search_results_truncate_validator:
+        warnings:
+          requires_html: "m3 profile property `%{property}` declares `view: { search_results_truncate }` without `render_as: html`; the truncation length is only applied to `render_as: html` catalog fields, so it has no effect here."
       sort_properties_validator:
         warnings:
           message: "%{property} must be defined on %{classes} to support sorting on that property, unless you have indexed %{property}_ssi on some other field."
