@@ -533,7 +533,9 @@ property; no two sub-properties of the same compound resolve to the same
 in-compound name (a `name:` alias or the property key), which would otherwise
 silently drop one when the loader folds members by that name (the same name
 reused across *different* compounds is fine); a `type: controlled` sub-property
-declares an option source (`authority:` or `values:`); and a compound parent
+declares an option source (`authority:` or `values:`); a `type: linked_record`
+sub-property declares an `authority:` naming a registered source (without one the
+picker and show-page link can't resolve); and a compound parent
 does **not** carry a top-level `indexing:` (indexing is declared per
 sub-property — a top-level `indexing:` would point the catalog at a
 `<compound>_tesim` field the indexer never writes).

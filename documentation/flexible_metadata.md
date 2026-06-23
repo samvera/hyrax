@@ -60,6 +60,15 @@ Restricted fields (declared with either `admin_only` or `editor_only`) are **not
 
 Visibility for restricted fields is enforced on show pages by the `field_visible?` view helper.
 
+### `view:`-driven visibility (show page and catalog separately)
+
+Beyond the role flags, a property's `view:` block controls show-page and catalog visibility independently:
+
+- **Show page is opt-in via `view:`.** A property renders on the show page only when it declares a meaningful `view:` block (e.g. `html_dl: true`); a property with no `view:` block is not enrolled in show-page rendering at all (the `display_label` / `admin_only` / `editor_only` keys alone don't count). Within a rendered field, `view: { show_page: false }` hides it from the show page for everyone (the value is still stored and indexed).
+- **`view: { search_results: false }`** drops the property's column from catalog search results, while leaving it on the show page. It suppresses only the search-results column — the property can still be **facetable** (declare `facetable` in `indexing:`).
+
+These combine with the role flags: `admin_only` / `editor_only` remove a property from the catalog entirely (column *and* facet) at registration time, whereas `search_results: false` removes only the column.
+
 ### Declaring the flags
 
 In a YAML schema (HYRAX_FLEXIBLE=false), declare the flag at the top level of the property:
@@ -95,6 +104,7 @@ Use `admin_only` in place of `editor_only` to restrict visibility to admins only
 
 ## Related features
 
+- **Compound (hierarchical) metadata**: an m3 profile (or YAML schema) can declare a `type: hash` property whose members are separate properties naming it via `available_on: { properties: [...] }` — repeatable groups of sub-fields such as `contributors`, `titles`, or `relationships`. Member sub-property types include `string`, `controlled`, `url`, `work_or_url`, and `linked_record` (a reference to a row in a database table, with an inline search-or-create picker). See [`documentation/compound_fields.md`](compound_fields.md) for declaring compounds, the supported sub-property types, indexing, and show-page rendering.
 - **URL Redirects** (`HYRAX_REDIRECTS_ENABLED`): when enabled, the redirects feature requires a `redirects` property in the m3 profile (when also Flipflop-enabled per tenant). See [`documentation/redirects.md`](redirects.md) for the full schema and gating model.
 - **Copy permalink button** (Flipflop `copy_permalink_button`): a show-page button that copies the record's canonical UUID-based URL. See [`documentation/copy_permalink.md`](copy_permalink.md).
 
