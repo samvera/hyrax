@@ -100,7 +100,10 @@
           <%= t('hyrax.compound_fields.linked_record.cancel', default: 'Cancel') %>
         </button>
       </div>
-      <div class="text-danger small mt-1 d-none" data-hyrax-linked-record-create-errors></div>
+      <%# data-default-message: the localized fallback the JS shows when the server
+          returns no usable error body; server 422 errors take precedence. %>
+      <div class="text-danger small mt-1 d-none" data-hyrax-linked-record-create-errors
+           data-default-message="<%= t('hyrax.compound_fields.linked_record.create_failed', default: 'Could not create — please try again.') %>"></div>
     </div>
   <% end %>
 </div>

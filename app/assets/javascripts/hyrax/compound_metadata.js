@@ -148,13 +148,30 @@
             record[name] = rows;
         });
 
+        // Show server-supplied messages (already localized), falling back to the
+        // localized default the partial set on `data-default-message`.
+        function showError(messages) {
+            if (!errors) return;
+            var fallback = errors.getAttribute('data-default-message') || 'Could not create';
+            var list = [].concat(messages || []).filter(Boolean);
+            errors.textContent = (list.length ? list : [fallback]).join(', ');
+            errors.classList.remove('d-none');
+        }
+
         var token = (document.querySelector('meta[name="csrf-token"]') || {}).content;
         fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': token || '', 'Accept': 'application/json' },
             body: JSON.stringify({ record: record })
         }).then(function(resp) {
-            return resp.json().then(function(body) { return { ok: resp.ok, body: body }; });
+            // A 5xx (e.g. a DB-level failure) returns an HTML error page, not
+            // JSON; tolerate a non-JSON body so the form still surfaces a message
+            // instead of silently swallowing the parse error.
+            return resp.text().then(function(text) {
+                var body;
+                try { body = JSON.parse(text); } catch (e) { body = {}; }
+                return { ok: resp.ok, body: body };
+            });
         }).then(function(result) {
             if (result.ok) {
                 // Select the new record in the picker (select2 v3 takes {id,text}).
@@ -163,10 +180,12 @@
                 closeCreateForm(wrap);
                 var $add = jQuery(wrap).find('[data-hyrax-linked-record-add]');
                 $add.addClass('d-none').prop('hidden', true);
-            } else if (errors) {
-                errors.textContent = [].concat(result.body.errors || ['Could not create']).join(', ');
-                errors.classList.remove('d-none');
+            } else {
+                showError(result.body.errors);
             }
+        }).catch(function() {
+            // No-arg showError falls back to the localized default message.
+            showError();
         });
     }
 
