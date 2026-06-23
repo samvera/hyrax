@@ -56,13 +56,13 @@ module Hyrax
       # @param source [Symbol, String]
       # @return [Boolean] whether the source is registered with a `search` proc
       def searchable?(source)
-        registry[source.to_sym]&.search.present?
+        spec_for(source)&.search.present?
       end
 
       # @param source [Symbol, String]
       # @return [Boolean] whether the source is registered with a `create` proc
       def creatable?(source)
-        registry[source.to_sym]&.create.present?
+        spec_for(source)&.create.present?
       end
 
       # @param source [Symbol, String]
@@ -71,7 +71,7 @@ module Hyrax
       #   (`{ id:, label:, value: }`); `[]` when the source is unregistered or
       #   not searchable
       def search(source, query)
-        spec = registry[source.to_sym]
+        spec = spec_for(source)
         return [] if spec.nil? || spec.search.nil?
 
         Array(spec.search.call(query))
@@ -88,7 +88,7 @@ module Hyrax
       # @return [Object, nil] the new record (resolvable via the same source), or
       #   nil when the source is unregistered or not creatable
       def create(source, attrs)
-        spec = registry[source.to_sym]
+        spec = spec_for(source)
         return nil if spec.nil? || spec.create.nil?
 
         spec.create.call(attrs)
@@ -103,7 +103,7 @@ module Hyrax
         record = find(source, id)
         return nil if record.nil?
 
-        spec = registry[source.to_sym]
+        spec = spec_for(source)
         [spec.label.call(record), spec.path.call(record)]
       end
 
@@ -115,7 +115,7 @@ module Hyrax
       # @return [String] the record's label, or the id string when unresolved
       def label_for(source, id, label_field: nil)
         record = find(source, id)
-        record ? record_label(registry[source.to_sym], record, label_field) : id.to_s
+        record ? record_label(spec_for(source), record, label_field) : id.to_s
       end
 
       # @param source [Symbol, String]
@@ -123,7 +123,7 @@ module Hyrax
       # @return [String, nil] the record's show path, or nil when unresolved
       def path_for(source, id)
         record = find(source, id)
-        record ? registry[source.to_sym].path.call(record) : nil
+        record ? spec_for(source).path.call(record) : nil
       end
 
       # Label + path with id/nil fallbacks when unresolved — convenient for the
@@ -138,7 +138,7 @@ module Hyrax
         record = find(source, id)
         return [id.to_s, nil] if record.nil?
 
-        spec = registry[source.to_sym]
+        spec = spec_for(source)
         [record_label(spec, record, label_field), spec.path.call(record)]
       end
 
@@ -149,7 +149,7 @@ module Hyrax
       # @param id [String] the stored row id
       # @return [Object, nil] the record, or nil when unregistered/blank/unfound
       def find(source, id)
-        spec = registry[source.to_sym]
+        spec = spec_for(source)
         return nil if spec.nil? || id.blank?
 
         spec.finder.call(id)
@@ -159,6 +159,15 @@ module Hyrax
       end
 
       private
+
+      # The registered Source for a source name, or nil when the name is blank
+      # (a misconfigured/default-schema sub-property with no `authority:`) or
+      # unregistered — so callers never hit `nil.to_sym`.
+      def spec_for(source)
+        return nil if source.blank?
+
+        registry[source.to_sym]
+      end
 
       # Prefer the profile-declared `label_field` read off the record; fall back
       # to the source's registered label proc (when no field is named, the field

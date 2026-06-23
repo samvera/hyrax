@@ -7,21 +7,33 @@
 
     Locals:
       field     - a normalized create-field spec (name, as, required, values)
-      input_id  - the DOM id for this input
+      input_id  - the DOM id for this input, or blank for a repeatable row
       data_attr - 'create-field' or 'create-subfield' %>
+<%# A repeatable group row passes a blank `input_id`: the row template is cloned
+    by JS, so a fixed `id`/`for` would create duplicate ids and break label
+    targeting. With no id, the label wraps the control (no `for`); a top-level
+    field keeps the standard label + `for`. The `id` attribute is only emitted
+    when present. %>
+<% label_text = t("hyrax.compound_fields.linked_record.fields.#{field[:name]}", default: field[:name].to_s.humanize) %>
+<% id_html = input_id.present? ? "id=\"#{input_id}\"".html_safe : ''.html_safe %>
 <div class="form-group mb-2">
-  <label for="<%= input_id %>" class="form-label small text-muted mb-0">
-    <%= t("hyrax.compound_fields.linked_record.fields.#{field[:name]}", default: field[:name].to_s.humanize) %><%
-      if field[:required] %><abbr title="required" class="required text-danger">*</abbr><% end %>
-  </label>
+  <% if input_id.present? %>
+    <label for="<%= input_id %>" class="form-label small text-muted mb-0">
+      <%= label_text %><% if field[:required] %><abbr title="required" class="required text-danger">*</abbr><% end %>
+    </label>
+  <% else %>
+    <label class="form-label small text-muted mb-0">
+      <%= label_text %><% if field[:required] %><abbr title="required" class="required text-danger">*</abbr><% end %>
+  <% end %>
   <% if field[:as] == 'select' %>
-    <select id="<%= input_id %>" class="form-control form-control-sm" data-<%= data_attr %>="<%= field[:name] %>">
+    <select <%= id_html %> class="form-control form-control-sm" data-<%= data_attr %>="<%= field[:name] %>">
       <option value=""></option>
       <% Array(field[:values]).each do |v| %>
         <option value="<%= v %>"><%= v.to_s.humanize %></option>
       <% end %>
     </select>
   <% else %>
-    <input type="text" id="<%= input_id %>" class="form-control form-control-sm" data-<%= data_attr %>="<%= field[:name] %>">
+    <input type="text" <%= id_html %> class="form-control form-control-sm" data-<%= data_attr %>="<%= field[:name] %>">
   <% end %>
+  <% unless input_id.present? %></label><% end %>
 </div>

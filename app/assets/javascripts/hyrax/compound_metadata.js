@@ -98,6 +98,7 @@
     // typed search term), POST it to the source's create endpoint, and on
     // success select the new record in the picker.
     function openCreateForm(wrap) {
+        if (!wrap) return;
         var form = wrap.querySelector('[data-hyrax-linked-record-create-form]');
         if (!form) return;
         form.classList.remove('d-none');
@@ -108,13 +109,16 @@
     }
 
     function closeCreateForm(wrap) {
+        if (!wrap) return;
         var form = wrap.querySelector('[data-hyrax-linked-record-create-form]');
         if (form) { form.classList.add('d-none'); form.hidden = true; }
     }
 
     function submitCreateForm(wrap) {
+        if (!wrap) return;
         var url = wrap.getAttribute('data-create-url');
         var form = wrap.querySelector('[data-hyrax-linked-record-create-form]');
+        if (!url || !form) return;
         var errors = form.querySelector('[data-hyrax-linked-record-create-errors]');
         var record = {};
         // Scalar create-fields: one value each. Skip inputs that live inside a

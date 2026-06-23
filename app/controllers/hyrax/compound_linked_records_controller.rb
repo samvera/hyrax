@@ -14,6 +14,10 @@ module Hyrax
   # `create` proc owns the attribute contract (declared via the profile's
   # `create_fields`), so the submitted `record` hash is passed through as-is.
   class CompoundLinkedRecordsController < ApplicationController
+    # Server-side record creation — require a logged-in user so anonymous
+    # visitors can't create records against any registered source.
+    before_action :authenticate_user!
+
     def create
       source = params[:source].to_s
       return head(:not_found) unless Hyrax::CompoundLinkedRecordResolver.creatable?(source)
@@ -26,6 +30,11 @@ module Hyrax
       else
         render json: { errors: record_errors(record) }, status: :unprocessable_entity
       end
+    rescue StandardError => e
+      # The source's create proc may raise; return a controlled 422 (so the
+      # picker shows a message) rather than a 500 HTML page, and log the cause.
+      Hyrax.logger.error("CompoundLinkedRecordsController#create(#{params[:source]}): #{e.class}: #{e.message}")
+      render json: { errors: ['could not be created'] }, status: :unprocessable_entity
     end
 
     private
@@ -42,8 +51,14 @@ module Hyrax
       raw.to_unsafe_h.deep_symbolize_keys
     end
 
+    # A record is a success when it reports `persisted?`; for a record-like
+    # object that doesn't implement `persisted?`, require an id and (when it
+    # exposes errors) no errors — so we never 201 with a nil/invalid id.
     def record_valid?(record)
-      record.respond_to?(:persisted?) ? record.persisted? : true
+      return record.persisted? if record.respond_to?(:persisted?)
+
+      record.respond_to?(:id) && record.id.present? &&
+        (!record.respond_to?(:errors) || Array(record.errors).empty?)
     end
 
     # Messages for an invalid record. Accepts either an ActiveModel errors object

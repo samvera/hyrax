@@ -8,25 +8,35 @@
 
     Locals: spec, input_id, input_name, value %>
 <% source = spec[:authority] %>
-<% current_option = compound_linked_record_option(value, source) %>
-<% placeholder = t("hyrax.compound_fields.linked_record.#{source}.placeholder",
-                   default: t('hyrax.compound_fields.linked_record.placeholder', default: 'Search')) %>
+<% searchable = source.present? && Hyrax::CompoundLinkedRecordResolver.searchable?(source) %>
 
-<div class="hyrax-linked-record" data-hyrax-linked-record
-     data-source="<%= source %>"
-     data-creatable="<%= spec[:creatable] ? 'true' : 'false' %>"
-     data-create-url="<%= Hyrax::Engine.routes.url_helpers.compound_linked_record_path(source: source) %>">
-  <%# The select2 picker (same hidden-input binding as work_or_url). %>
-  <%= hidden_field_tag input_name, value,
-                       id: input_id,
-                       class: 'form-control form-control-sm',
-                       data: { 'hyrax-compound-work-input': true,
-                               'hyrax-linked-record-input': true,
-                               'label': current_option&.first,
-                               'placeholder': placeholder,
-                               'autocomplete-url': "#{Rails.application.routes.url_helpers.qa_path}/search/linked_record/#{source}" } %>
+<% unless searchable %>
+  <%# No registered/searchable source: the select2 picker would have nothing to
+      search and (createSearchChoice is off for linked_record) no way to enter a
+      value, so fall back to a plain text input holding the stored reference. %>
+  <%= text_field_tag input_name, value, id: input_id, class: 'form-control form-control-sm' %>
+<% else %>
+  <% current_option = compound_linked_record_option(value, source) %>
+  <% placeholder = t("hyrax.compound_fields.linked_record.#{source}.placeholder",
+                     default: t('hyrax.compound_fields.linked_record.placeholder', default: 'Search')) %>
 
-  <% if spec[:creatable] && spec[:create_fields].present? %>
+  <div class="hyrax-linked-record" data-hyrax-linked-record
+       data-source="<%= source %>"
+       data-creatable="<%= spec[:creatable] ? 'true' : 'false' %>"
+       data-create-url="<%= Hyrax::Engine.routes.url_helpers.compound_linked_record_path(source: source) %>">
+    <%# The select2 picker (same hidden-input binding as work_or_url). %>
+    <%= hidden_field_tag input_name, value,
+                         id: input_id,
+                         class: 'form-control form-control-sm',
+                         data: { 'hyrax-compound-work-input': true,
+                                 'hyrax-linked-record-input': true,
+                                 'label': current_option&.first,
+                                 'placeholder': placeholder,
+                                 'autocomplete-url': "#{Rails.application.routes.url_helpers.qa_path}/search/linked_record/#{source}" } %>
+
+  <%# Offer inline create only when the profile asks for it AND the source
+      actually registers a `create:` proc — otherwise the endpoint would 404. %>
+  <% if spec[:creatable] && spec[:create_fields].present? && Hyrax::CompoundLinkedRecordResolver.creatable?(source) %>
     <%# Trigger shown by JS only when a search returns no results. %>
     <button type="button" class="btn btn-link btn-sm px-0 mt-1 d-none"
             data-hyrax-linked-record-add hidden>
@@ -60,9 +70,9 @@
               <div class="hyrax-linked-record-group-row d-flex align-items-end" data-create-group-row>
                 <div class="flex-grow-1">
                   <% row_fields.each do |sub| %>
+                    <%# input_id blank: rows are cloned, so no fixed id/for. %>
                     <%= render 'hyrax/compounds/linked_record_create_input',
-                               field: sub, input_id: "#{input_id}_new_#{field[:name]}_#{sub[:name]}",
-                               data_attr: 'create-subfield' %>
+                               field: sub, input_id: nil, data_attr: 'create-subfield' %>
                   <% end %>
                 </div>
                 <button type="button" class="btn btn-link btn-sm text-danger pb-3" data-create-group-remove
@@ -74,8 +84,7 @@
                 <div class="flex-grow-1">
                   <% row_fields.each do |sub| %>
                     <%= render 'hyrax/compounds/linked_record_create_input',
-                               field: sub, input_id: "#{input_id}_new_#{field[:name]}_#{sub[:name]}",
-                               data_attr: 'create-subfield' %>
+                               field: sub, input_id: nil, data_attr: 'create-subfield' %>
                   <% end %>
                 </div>
                 <button type="button" class="btn btn-link btn-sm text-danger pb-3" data-create-group-remove
@@ -106,4 +115,5 @@
            data-default-message="<%= t('hyrax.compound_fields.linked_record.create_failed', default: 'Could not create — please try again.') %>"></div>
     </div>
   <% end %>
-</div>
+  </div>
+<% end %>

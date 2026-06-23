@@ -144,4 +144,26 @@ RSpec.describe Hyrax::CompoundLinkedRecordResolver do
       expect(described_class.create(:nope, display_name: 'X')).to be_nil
     end
   end
+
+  # A misconfigured profile (or the default schema) can leave a linked_record
+  # sub-property with no `authority:`, so the lookups receive a nil/blank source.
+  # These must degrade gracefully rather than raise NoMethodError on `nil.to_sym`.
+  describe 'with a nil or blank source' do
+    it 'reports not searchable / not creatable' do
+      expect(described_class.searchable?(nil)).to be(false)
+      expect(described_class.creatable?('')).to be(false)
+    end
+
+    it 'returns safe empties from search/create' do
+      expect(described_class.search(nil, 'q')).to eq([])
+      expect(described_class.create('', display_name: 'X')).to be_nil
+    end
+
+    it 'falls back to the id string / nils for label and path lookups' do
+      expect(described_class.label_for(nil, '7')).to eq('7')
+      expect(described_class.path_for('', '7')).to be_nil
+      expect(described_class.title_and_path(nil, '7')).to eq(['7', nil])
+      expect(described_class.find(nil, '7')).to be_nil
+    end
+  end
 end

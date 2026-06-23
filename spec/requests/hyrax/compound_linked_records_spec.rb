@@ -11,8 +11,10 @@ RSpec.describe 'Hyrax linked_record create endpoint', type: :request do
   # captures a `group` create-field so a test can assert its shape.
   let(:store) { {} }
   let(:record_class) { Struct.new(:id, :display_name, :ids, :affiliations, :persisted?, :errors, keyword_init: true) }
+  let(:user) { create(:user) }
 
   before do
+    login_as user # the endpoint requires an authenticated user
     s = store
     rc = record_class
     Hyrax::CompoundLinkedRecordResolver.register(
@@ -84,6 +86,31 @@ RSpec.describe 'Hyrax linked_record create endpoint', type: :request do
       expect(response).to have_http_status(:created)
       created = store[response.parsed_body['id'].to_s]
       expect(created.affiliations).to eq(['US Navy', 'Vassar College'])
+    end
+
+    it 'returns a controlled 422 (not a 500) when the create proc raises' do
+      Hyrax::CompoundLinkedRecordResolver.registry.delete(:stub_people)
+      Hyrax::CompoundLinkedRecordResolver.register(
+        :stub_people, finder: ->(_i) {}, label: ->(_r) {}, path: ->(_r) {},
+        create: ->(_attrs) { raise 'boom' }
+      )
+      post hyrax.compound_linked_record_path(source: 'stub_people'),
+           params: { record: { display_name: 'Grace Hopper' } }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body['errors']).to be_present
+    end
+  end
+
+  describe 'without an authenticated user' do
+    before { logout }
+
+    it 'does not allow anonymous creation' do
+      post hyrax.compound_linked_record_path(source: 'stub_people'),
+           params: { record: { display_name: 'Grace Hopper' } }
+
+      expect(response).not_to have_http_status(:created)
+      expect(store).to be_empty
     end
   end
 end

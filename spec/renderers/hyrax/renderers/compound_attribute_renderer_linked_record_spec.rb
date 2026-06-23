@@ -63,4 +63,31 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
       expect(markup).not_to include('href="/people/999"')
     end
   end
+
+  context 'when the record resolves but its path is blank' do
+    # A source whose `path:` proc returns blank: the resolved label must still
+    # render as text (the bare id should never replace a resolved name).
+    around do |example|
+      Hyrax::CompoundLinkedRecordResolver.register(
+        :pathless, finder: ->(id) { id.to_s == '7' ? record : nil },
+        label: ->(r) { r.display_name }, path: ->(_r) { '' }
+      )
+      example.run
+    ensure
+      Hyrax::CompoundLinkedRecordResolver.registry.delete(:pathless)
+    end
+
+    let(:subproperties) do
+      { 'person' => { type: 'linked_record', authority: 'pathless', label_field: 'display_name', values: nil } }
+    end
+    let(:values) { [{ 'person' => '7' }] }
+    let(:renderer) { described_class.new(:people, values, label: 'People', html_dl: true, subproperties:) }
+
+    it 'renders the resolved label as text, not the id, and no link' do
+      markup = renderer.render_dl_row
+      expect(markup).to include('Ada Lovelace')
+      expect(markup).not_to include('href=')
+      expect(markup).not_to match(/>\s*7\s*</) # not the bare id
+    end
+  end
 end

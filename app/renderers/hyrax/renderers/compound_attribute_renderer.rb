@@ -93,7 +93,11 @@ module Hyrax
         label, path = Hyrax::CompoundLinkedRecordResolver.title_and_path(
           spec&.dig(:authority), value, label_field: spec&.dig(:label_field)
         )
-        return ERB::Util.h(value.to_s) if path.blank?
+        # When there's no path (record resolves but its `path:` proc returns
+        # blank, or it doesn't resolve), render the resolved label as plain text
+        # — `label` is the record's label when resolved, else the id string — so
+        # a resolved name is never discarded in favor of the bare id.
+        return ERB::Util.h(label.to_s) if path.blank?
 
         link_to(ERB::Util.h(label), path)
       end
