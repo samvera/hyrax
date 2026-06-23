@@ -27,7 +27,7 @@ module Hyrax
   # The M3 profile names the source via the sub-property's `authority:` key; see
   # documentation/compound_fields.md.
   class CompoundLinkedRecordResolver
-    Source = Struct.new(:finder, :label, :path, :search, :create, keyword_init: true)
+    Source = Struct.new(:finder, :label, :path, :search, :create, :match, keyword_init: true)
 
     class << self
       # @return [Hash{Symbol => Source}] the registered sources, by name
@@ -49,8 +49,13 @@ module Hyrax
       # @param create [#call, nil] `(attributes Hash) -> record` for the
       #   lookup-or-create flow. A scalar create-field arrives as a single value;
       #   a `group` create-field arrives as an Array of Hashes (one per row).
-      def register(source, finder:, label:, path:, search: nil, create: nil)
-        registry[source.to_sym] = Source.new(finder:, label:, path:, search:, create:)
+      # @param match [#call, nil] `(attributes Hash) -> record | nil` an exact,
+      #   single-row lookup on a natural key (e.g. a name or external id), for the
+      #   find-or-create import flow. Distinct from `search`, which is fuzzy and
+      #   multi-row for the picker — a fuzzy hit is the wrong record to reuse when
+      #   resolving an imported reference with no human to disambiguate.
+      def register(source, finder:, label:, path:, search: nil, create: nil, match: nil)
+        registry[source.to_sym] = Source.new(finder:, label:, path:, search:, create:, match:)
       end
 
       # @param source [Symbol, String]
@@ -63,6 +68,12 @@ module Hyrax
       # @return [Boolean] whether the source is registered with a `create` proc
       def creatable?(source)
         spec_for(source)&.create.present?
+      end
+
+      # @param source [Symbol, String]
+      # @return [Boolean] whether the source is registered with a `match` proc
+      def matchable?(source)
+        spec_for(source)&.match.present?
       end
 
       # @param source [Symbol, String]
@@ -92,6 +103,38 @@ module Hyrax
         return nil if spec.nil? || spec.create.nil?
 
         spec.create.call(attrs)
+      end
+
+      # Find an existing record by an exact natural key, via the source's `match`
+      # proc. The find half of the find-or-create import flow; on its own it is
+      # also the find-ONLY entry point (a caller that must not create uses this
+      # and treats nil as "no match", rather than calling {.find_or_create}).
+      #
+      # @param source [Symbol, String]
+      # @param attrs [Hash] the natural-key attributes (e.g. `display_name:`)
+      # @return [Object, nil] the single matching record, or nil when the source
+      #   is unregistered, not matchable, or nothing matches
+      def match(source, attrs)
+        spec = spec_for(source)
+        return nil if spec.nil? || spec.match.nil?
+
+        spec.match.call(attrs)
+      rescue StandardError => e
+        Hyrax.logger.debug("CompoundLinkedRecordResolver.match(#{source}): #{e.message}")
+        nil
+      end
+
+      # Find an existing record by natural key, else create one — the id-yielding
+      # entry point for importers that receive a natural key (a name) rather than
+      # a stored row id. Create-allowed by definition; a find-only caller uses
+      # {.match} instead and does not fall back to create.
+      #
+      # @param source [Symbol, String]
+      # @param attrs [Hash] attributes for both the match and (on a miss) create
+      # @return [Object, nil] the existing-or-new record, or nil when the source
+      #   can neither match nor create
+      def find_or_create(source, attrs)
+        match(source, attrs) || create(source, attrs)
       end
 
       # @param source [Symbol, String]
