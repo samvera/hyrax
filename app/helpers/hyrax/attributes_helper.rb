@@ -94,9 +94,9 @@ module Hyrax
     # Returns true when the field should render in the work show page's
     # standard attribute list. Honors these view options:
     #   * `show_page: false` — suppresses the field on the show page for everyone.
-    #   * `position: featured` — the field is rendered elsewhere (e.g. near the
-    #     top of the show page), so it is omitted from the attribute list to
-    #     avoid duplicating it.
+    #   * `position: featured` — the field is rendered prominently near the top
+    #     of the show page by the `featured_attributes` partial instead, so it is
+    #     omitted from the attribute list to avoid duplicating it.
     #   * `admin_only: true` — only visible to admins.
     #   * `editor_only: true` — only visible to users the presenter reports as editors.
     # Setting both `admin_only` and `editor_only` is effectively equivalent to

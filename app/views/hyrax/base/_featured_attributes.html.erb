@@ -1,0 +1,28 @@
+<%# Renders any property flagged `view: { position: featured }` prominently near
+    the top of the work show page, above the standard metadata table. This is the
+    default implementation of `position: featured`: the same hook that hides the
+    field from the attribute list (Hyrax::AttributesHelper#field_visible?) is paired
+    here with a place to actually display it, so the directive is self-contained.
+
+    Profile-driven (not tied to a specific field) and works whether or not flexible
+    metadata is enabled, since view_options_for resolves view definitions in both
+    modes. Values are rendered as sanitized HTML using the same allow-list as
+    Hyrax::Renderers::HtmlAttributeRenderer, so a `render_as: html` field looks
+    identical here and in the metadata table.
+
+    Host apps that override base/show.html.erb (or ship custom show themes) should
+    render this partial wherever they want featured fields to appear. %>
+<% view_options_for(presenter).each do |field, view_options| %>
+  <% next unless view_options.with_indifferent_access[:position].to_s == 'featured' %>
+  <% render_field = conform_field(field, view_options) %>
+  <% next unless presenter.respond_to?(render_field) %>
+  <% featured_value = Array(presenter.public_send(render_field)).join(' ').to_s %>
+  <% next if featured_value.blank? %>
+  <section class="work-featured-attribute card mb-4 attribute-<%= field %>">
+    <div class="card-body">
+      <%= sanitize(featured_value,
+                   tags: Hyrax::Renderers::HtmlAttributeRenderer::ALLOWED_TAGS,
+                   attributes: Hyrax::Renderers::HtmlAttributeRenderer::ALLOWED_ATTRIBUTES) %>
+    </div>
+  </section>
+<% end %>
