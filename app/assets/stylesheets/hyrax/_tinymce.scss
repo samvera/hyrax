@@ -18,3 +18,15 @@
 .tox .tox-tbtn--bespoke .tox-tbtn__select-label { overflow: visible !important; }
 .tox .tox-tbtn { overflow: visible !important; }
 .tox-tinymce { overflow: visible !important; }
+
+// Rich-text (`form: { input_type: rich_text }`) editors are block WYSIWYG fields,
+// not single-line inputs. Inside the multi_value widget's `input-group input-append`
+// wrapper they otherwise render at TinyMCE's default width and look cramped next to
+// the inline "Remove" control. Let the editor use the full field width and wrap the
+// append control beneath it, so the box matches other full-width fields.
+//
+// Scoped to `.rich-text-field` (set via `wrapper_html` in
+// records/edit_fields/_rich_text) so other multi-value inputs keep their default
+// inline layout.
+.rich-text-field .listing .field-wrapper.input-group { flex-wrap: wrap; width: 100%; }
+.rich-text-field .listing .field-wrapper .tox-tinymce { flex: 1 1 100%; }

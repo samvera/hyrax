@@ -1435,6 +1435,11 @@ en:
         warnings:
           config_disabled: "m3 profile declares a `redirects` property but Hyrax.config.redirects_enabled? is false; the property will be ignored"
           flipflop_disabled: "m3 profile declares a `redirects` property but the :redirects feature flag is off; the property will be ignored"
+      rich_text_validator:
+        warnings:
+          controlled_sources: "m3 profile property `%{property}` declares `form: { input_type: rich_text }` but also a controlled vocabulary (`controlled_values.sources: %{sources}`); rich text stores free-form HTML and will bypass the controlled input. Use `rich_text` only on free-text properties."
+          built_in: "m3 profile property `%{property}` declares `form: { input_type: rich_text }`, but `%{property}` is rendered with a controlled vocabulary input; rich text stores free-form HTML and will bypass it. Use `rich_text` only on free-text properties."
+          controlled_type: "m3 profile compound subproperty `%{property}` is `type: controlled` but declares `form: { input_type: rich_text }`; rich text stores free-form HTML and conflicts with a controlled value."
       search_results_truncate_validator:
         warnings:
           requires_html: "m3 profile property `%{property}` declares `view: { search_results_truncate }` without `render_as: html`; the truncation length is only applied to `render_as: html` catalog fields, so it has no effect here."
