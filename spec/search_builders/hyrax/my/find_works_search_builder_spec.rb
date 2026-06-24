@@ -19,9 +19,24 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
   describe "#filter_on_title" do
     subject { builder.filter_on_title(solr_params) }
 
-    it "is successful" do
+    it "finds works whose title contains or starts with the typed term" do
       subject
-      expect(solr_params[:fq]).to eq [Hyrax::SolrQueryBuilderService.construct_query(title_tesim: q)]
+      expect(solr_params[:q]).to include('title_tesim:(foo)').and include('title_tesim:(foo*)')
+      expect(solr_params[:defType]).to eq 'lucene'
+    end
+
+    it "does not require an exact whole-title match" do
+      subject
+      expect(solr_params[:fq]).to be_blank
+    end
+
+    context "when no search term is given" do
+      let(:q) { '' }
+
+      it "applies no title filter" do
+        subject
+        expect(solr_params[:q]).to be_blank
+      end
     end
   end
 
