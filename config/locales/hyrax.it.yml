@@ -699,6 +699,8 @@ it:
         title: Titolo
         unauthorized: Non ci sono articoli disponibili pubblicamente in questo %{type}.
         visibility: Visibilità
+      member_of_collections:
+        header: Membro di collezioni
       relationships:
         empty: Questo %{type} non è in una raccolta.
         header: Le relazioni
@@ -850,6 +852,9 @@ it:
         admin_set_description: Un'aggregazione di opere che ha lo scopo di aiutare con il controllo amministrativo. I set di amministratori forniscono un modo per definire comportamenti e politiche attorno a un insieme di opere.
         default_description: Una User Collection può essere creata da qualsiasi utente per organizzare i propri lavori.
     collections:
+      collection_counts:
+        collections: Collezioni
+        works: Lavori
       search_form:
         button_label: Partire
         label: Cerca la raccolta %{title}

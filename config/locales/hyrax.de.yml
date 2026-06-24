@@ -693,6 +693,8 @@ de:
         title: Titel
         unauthorized: Es gibt keine öffentlich verfügbaren Elemente in diesem %{type}.
         visibility: Sichtbarkeit
+      member_of_collections:
+        header: Mitglied von Sammlungen
       relationships:
         empty: Diese %{type} ist derzeit noch keiner Sammlung zugeordnet.
         header: Beziehungen
@@ -844,6 +846,9 @@ de:
         admin_set_description: Eine Sammlung von Arbeiten, die bei der administrativen Kontrolle helfen sollen. Admin-Sets bieten eine Möglichkeit, Verhaltensweisen und Richtlinien für eine Reihe von Arbeiten zu definieren.
         default_description: Eine Benutzer-Sammlung kann von jedem Benutzer erstellt werden, um ihre Arbeiten zu organisieren.
     collections:
+      collection_counts:
+        collections: Sammlungen
+        works: Arbeiten
       search_form:
         button_label: Suche
         label: Suche Sammlung %{title}
