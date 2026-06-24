@@ -649,5 +649,53 @@ compound entry a unique mapping key and `name: 'license'`. See the
 [Configuring Bulkrax wiki](https://github.com/samvera/bulkrax/wiki/Configuring-Bulkrax#reusing-a-row-key-across-objects)
 for details.
 
+### Importing `linked_record` sub-properties with Bulkrax
+
+A [`linked_record`](#linked_record-sub-properties) member stores a **row id**, but
+a CSV column naturally carries a human-readable natural key — a name. A plain
+`nested_attributes: true` mapping would store that name verbatim, and it would
+never resolve, because the source's `finder` looks records up by id. So importing
+a `linked_record` takes one extra step the host application supplies: resolving the
+cell to a row id (and, where appropriate, creating the record).
+
+Hyrax provides the resolution **verb** but not the table knowledge. Register two
+optional procs on the source alongside `finder`/`label`/`path`:
+
+```ruby
+Hyrax::CompoundLinkedRecordResolver.register(
+  :people,
+  # …finder/label/path/search/create as above…
+  # exact, single-row lookup on a natural key, for import resolution:
+  match: ->(attrs) { Person.where('LOWER(display_name) = LOWER(?)', attrs[:display_name].to_s.strip).order(:id).first }
+)
+```
+
+`match` is deliberately distinct from `search`: `search` is the fuzzy, multi-row
+query behind the picker autocomplete, where a human disambiguates; `match` is an
+exact, single-row lookup, because an importer resolving a reference has no human to
+choose among near-matches. The resolver composes them:
+
+- `Hyrax::CompoundLinkedRecordResolver.match(source, attrs)` — find an existing
+  record by its natural key, or `nil`.
+- `Hyrax::CompoundLinkedRecordResolver.find_or_create(source, attrs)` — `match`,
+  else fall back to the `create` proc. The id-yielding entry point for an importer.
+
+Where the resolution itself runs is the host's: Bulkrax has no model of
+`linked_record`, and Bulkrax is not a Hyrax dependency, so the glue lives in the
+application — typically a Bulkrax entry decorator that, after the compound's
+`_attributes` are assembled, replaces each member's natural-key cell with the
+resolved row id. (A per-cell matcher cannot do this when the resolution depends on
+sibling columns, e.g. matching on an identifier carried in a separate column.)
+
+Two policy choices the host owns:
+
+- **Find vs. find-or-create.** Drive it from the sub-property's
+  [`creatable:`](#linked_record-sub-properties) flag: a creatable member uses
+  `find_or_create` (an unmatched name is created); a find-only member uses `match`
+  alone and skips an unmatched cell rather than fabricating a record.
+- **The match key.** What counts as "the same record" — a name, an external
+  identifier, or an identifier-then-name fallback — is encoded entirely in the
+  `match` proc. The resolver never inspects it.
+
 Note: Bulkrax's controlled-URI sanitization does not currently descend into
 compound sub-properties.
