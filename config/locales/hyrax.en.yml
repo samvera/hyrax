@@ -1419,6 +1419,7 @@ en:
         errors:
           unknown_parent: "m3 profile subproperty `%{property}` declares `available_on: { properties: [%{parent}] }`, but `%{parent}` is not a declared `type: hash` compound property"
           controlled_without_source: "m3 profile compound subproperty `%{property}` is `type: controlled` but declares neither `authority` nor `values`"
+          linked_record_without_source: "m3 profile compound subproperty `%{property}` is `type: linked_record` but declares no `authority` naming a registered linked-record source"
           top_level_indexing: "m3 profile compound property `%{property}` must not declare top-level `indexing`; declare `indexing` (or `index_keys`) on each subproperty instead"
           duplicate_subproperty_name: "m3 profile compound `%{parent}` has multiple sub-properties resolving to the in-compound name `%{name}` (%{properties}); each sub-property in a compound must resolve to a unique name (set a distinct `name:`)"
       redirects_validator:
