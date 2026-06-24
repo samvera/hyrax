@@ -100,6 +100,21 @@ module Hyrax
       [title, value.to_s]
     end
 
+    # The pre-selected `[label, value]` option for a `linked_record`
+    # sub-property's select2, or nil when empty. The stored id resolves to its
+    # label via the registered `source`; an unresolvable id falls back to the id
+    # string so the picker still shows the stored value.
+    #
+    # @param value [String] the stored row id
+    # @param source [String, Symbol] the registered source name (`authority:`)
+    # @return [Array(String, String), nil]
+    def compound_linked_record_option(value, source)
+      return nil if value.blank?
+
+      label = Hyrax::CompoundLinkedRecordResolver.label_for(source, value)
+      [label, value.to_s]
+    end
+
     # The label for a compound. A declared `display_label` is resolved through
     # the same path ordinary properties use ({Hyrax::AttributesHelper#conform_options});
     # otherwise it falls back to the `hyrax.compound_fields.<name>.label` key.

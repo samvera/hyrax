@@ -60,6 +60,15 @@ Restricted fields (declared with either `admin_only` or `editor_only`) are **not
 
 Visibility for restricted fields is enforced on show pages by the `field_visible?` view helper.
 
+### `view:`-driven visibility (show page and catalog separately)
+
+Beyond the role flags, a property's `view:` block controls show-page and catalog visibility independently:
+
+- **Show page is opt-in via `view:`.** A property renders on the show page only when it declares a meaningful `view:` block (e.g. `html_dl: true`); a property with no `view:` block is not enrolled in show-page rendering at all (the `display_label` / `admin_only` / `editor_only` keys alone don't count). Within a rendered field, `view: { show_page: false }` hides it from the show page for everyone (the value is still stored and indexed).
+- **`view: { search_results: false }`** drops the property's column from catalog search results, while leaving it on the show page. It suppresses only the search-results column — the property can still be **facetable** (declare `facetable` in `indexing:`).
+
+These combine with the role flags: `admin_only` / `editor_only` remove a property from the catalog entirely (column *and* facet) at registration time, whereas `search_results: false` removes only the column.
+
 ### Declaring the flags
 
 In a YAML schema (HYRAX_FLEXIBLE=false), declare the flag at the top level of the property:
@@ -116,6 +125,14 @@ context_narrative:
     render_as: html         # sanitize + render the stored markup as HTML on the show page
 ```
 
+## HTML fields in catalog search results
+
+A field declared `view: { render_as: html }` stores HTML markup. Without a render helper, Blacklight escapes the value and dumps raw tags into the search-results column. `Hyrax::HyraxHelperBehavior#render_html_index_value` instead renders a clean, truncated plain-text snippet (tags → spaces, stripped, entities decoded; default 230 characters).
+
+In flexible mode `Hyrax::FlexibleCatalogBehavior` wires this helper automatically from `render_as: html`; in non-flexible mode declare it on the field, e.g. `config.add_index_field 'context_narrative_tesim', helper_method: :render_html_index_value`.
+
+The snippet length is author-declarable with `view: { search_results_truncate: N }` (`false` shows the full snippet; default 230). In non-flexible mode pass it as a field option (`search_results_truncate: N`). `search_results_truncate` only applies to `render_as: html` fields; declaring it without `render_as: html` raises a validation warning (it would otherwise be a silent no-op).
+
 ```yaml
 # HYRAX_FLEXIBLE=true (m3 profile)
 context_narrative:
@@ -127,9 +144,10 @@ context_narrative:
     - context_narrative_tesim
   property_uri: http://purl.org/dc/terms/description
   form:
-    input_type: rich_text   # WYSIWYG (TinyMCE) editor on the edit form
+    input_type: rich_text        # WYSIWYG (TinyMCE) editor on the edit form
   view:
-    render_as: html         # sanitize + render the stored markup as HTML on the show page
+    render_as: html              # render the stored markup as HTML (sanitized) on the show page
+    search_results_truncate: 300 # optional; catalog snippet length, `false` to disable (default 230)
 ```
 
 ## Featured display
@@ -154,6 +172,7 @@ This is intentionally **not** covered by an m3 profile validator: the profile ca
 
 ## Related features
 
+- **Compound (hierarchical) metadata**: an m3 profile (or YAML schema) can declare a `type: hash` property whose members are separate properties naming it via `available_on: { properties: [...] }` — repeatable groups of sub-fields such as `contributors`, `titles`, or `relationships`. Member sub-property types include `string`, `controlled`, `url`, `work_or_url`, and `linked_record` (a reference to a row in a database table, with an inline search-or-create picker). See [`documentation/compound_fields.md`](compound_fields.md) for declaring compounds, the supported sub-property types, indexing, and show-page rendering.
 - **URL Redirects** (`HYRAX_REDIRECTS_ENABLED`): when enabled, the redirects feature requires a `redirects` property in the m3 profile (when also Flipflop-enabled per tenant). See [`documentation/redirects.md`](redirects.md) for the full schema and gating model.
 - **Copy permalink button** (Flipflop `copy_permalink_button`): a show-page button that copies the record's canonical UUID-based URL. See [`documentation/copy_permalink.md`](copy_permalink.md).
 

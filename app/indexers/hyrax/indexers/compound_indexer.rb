@@ -50,6 +50,7 @@ module Hyrax
         'controlled' => %w[_sim],
         'url' => %w[_ssim],
         'work_or_url' => %w[_ssim],
+        'linked_record' => %w[_ssim],
         'id' => %w[_ssim],
         'date_time' => %w[_dtsi],
         'date' => %w[_dtsi]

@@ -60,10 +60,23 @@ module Hyrax
           @errors << t('unknown_parent', property: name, parent: parent_name)
         end
 
-        return unless config['type'].to_s == 'controlled'
-        return if config['authority'].present? || config['values'].present?
+        validate_option_source(name, config)
+      end
 
-        @errors << t('controlled_without_source', property: name)
+      # A type that resolves its value/options from a source is meaningless
+      # without one: catch the omission at profile-save rather than letting it
+      # produce an unresolvable picker/value at runtime.
+      def validate_option_source(name, config)
+        case config['type'].to_s
+        when 'controlled'
+          return if config['authority'].present? || config['values'].present?
+
+          @errors << t('controlled_without_source', property: name)
+        when 'linked_record'
+          return if config['authority'].present?
+
+          @errors << t('linked_record_without_source', property: name)
+        end
       end
 
       # A top-level `indexing:` on a parent would point the catalog at a

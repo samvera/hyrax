@@ -81,6 +81,20 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
           view:
             html_dl: true
             search_results: false
+        narrative:
+          available_on:
+            class:
+              - GenericWork
+          display_label:
+            default: Narrative
+          indexing:
+            - narrative_tesim
+          property_uri: http://purl.org/dc/terms/description
+          range: http://www.w3.org/2001/XMLSchema#string
+          view:
+            render_as: html
+            html_dl: true
+            search_results_truncate: 50
     YAML
   end
 
@@ -179,8 +193,16 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
         expect(blacklight_config.index_fields['medium_tesim'].helper_method).to eq(:index_field_link)
         expect(blacklight_config.index_fields['medium_tesim'].field_name).to eq('medium')
 
+        # narrative_tesim should have render_html_index_value helper (render_as: html)
+        expect(blacklight_config.index_fields['narrative_tesim'].helper_method).to eq(:render_html_index_value)
+        expect(blacklight_config.index_fields['narrative_tesim'].field_name).to eq('narrative')
+
         # department_tesim should not have helper methods
         expect(blacklight_config.index_fields['department_tesim'].helper_method).to be_nil
+      end
+
+      it 'carries an author-declared view.search_results_truncate onto the field config' do
+        expect(blacklight_config.index_fields['narrative_tesim'].search_results_truncate).to eq(50)
       end
 
       it 'have the render_optionally? condition added to the blacklight config' do
@@ -352,6 +374,11 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
       expect(result).to be true
     end
 
+    it 'returns true for html render_as' do
+      result = controller.class.send(:require_view_helper_method?, { 'render_as' => 'html' })
+      expect(result).to be true
+    end
+
     it 'returns false for other render_as values' do
       result = controller.class.send(:require_view_helper_method?, { 'render_as' => 'faceted' })
       expect(result).to be false
@@ -377,6 +404,11 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
     it 'returns :rights_statement_links for rights_statement' do
       result = controller.class.send(:view_option_for_helper_method, { 'render_as' => 'rights_statement' })
       expect(result).to eq(:rights_statement_links)
+    end
+
+    it 'returns :render_html_index_value for html' do
+      result = controller.class.send(:view_option_for_helper_method, { 'render_as' => 'html' })
+      expect(result).to eq(:render_html_index_value)
     end
   end
 

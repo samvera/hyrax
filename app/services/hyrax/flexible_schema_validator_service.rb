@@ -41,6 +41,7 @@ module Hyrax
       validate_redirects
       validate_compound
       validate_rich_text
+      validate_search_results_truncate
     end
 
     # The default JSON schema used when no custom schema is provided.
@@ -151,6 +152,15 @@ module Hyrax
     # @return [void]
     def validate_rich_text
       FlexibleSchemaValidators::RichTextValidator.new(profile, @warnings).validate!
+    end
+
+    # Warns (does not block) when `view: { search_results_truncate: N }` is
+    # declared without `view: { render_as: html }`, where the setting is a
+    # silent no-op.
+    #
+    # @return [void]
+    def validate_search_results_truncate
+      FlexibleSchemaValidators::SearchResultsTruncateValidator.new(profile, @warnings).validate!
     end
 
     # Validates that a `label` property exists and that it is available on

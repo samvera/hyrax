@@ -65,6 +65,38 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
       end
     end
 
+    context 'with a linked_record subproperty that declares an authority (source)' do
+      let(:profile) do
+        {
+          'properties' => {
+            'creators' => { 'type' => 'hash' },
+            'creator_ref' => { 'type' => 'linked_record', **member_of('creators'), 'authority' => 'people' }
+          }
+        }
+      end
+
+      it 'is valid (authority names the registered source)' do
+        validator.validate!
+        expect(errors).to be_empty
+      end
+    end
+
+    context 'with a linked_record subproperty that declares no authority' do
+      let(:profile) do
+        {
+          'properties' => {
+            'creators' => { 'type' => 'hash' },
+            'creator_ref' => { 'type' => 'linked_record', **member_of('creators') }
+          }
+        }
+      end
+
+      it 'records an error keyed on the subproperty' do
+        validator.validate!
+        expect(errors).to include(t('linked_record_without_source', property: 'creator_ref'))
+      end
+    end
+
     context 'with a top-level indexing declaration on the compound parent' do
       let(:profile) do
         {
