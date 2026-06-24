@@ -132,6 +132,26 @@ context_narrative:
     render_as: html         # sanitize + render the stored markup as HTML on the show page
 ```
 
+## Featured display
+
+**`view: { position: featured }`** promotes a field out of the standard metadata table and renders it prominently near the top of the work show page:
+
+- `field_visible?` returns false for a featured field (the same hook that hides `admin_only`/`editor_only` fields), so it is **not** duplicated in the attribute table.
+- The `hyrax/base/_featured_attributes` partial renders every featured field above the metadata card. The default `hyrax/base/show.html.erb` includes this partial, so the directive works out of the box. Values are sanitized with the same allow-list as `Hyrax::Renderers::HtmlAttributeRenderer`, so a field that also declares `render_as: html` looks identical featured and in the table.
+
+It pairs naturally with `render_as: html` for a rich-text "narrative" field, but works on any property:
+
+```yaml
+# add to either schema mode's `view:` block
+  view:
+    render_as: html        # optional: sanitize + render stored markup as HTML
+    position: featured      # promote above the metadata table
+```
+
+Host applications that override `hyrax/base/show.html.erb` (or ship custom show themes) are responsible for rendering `<%= render 'featured_attributes', presenter: @presenter %>` wherever they want featured fields to appear; an override that omits it will simply not show them.
+
+This is intentionally **not** covered by an m3 profile validator: the profile cannot know what an app's templates render.
+
 ## Related features
 
 - **URL Redirects** (`HYRAX_REDIRECTS_ENABLED`): when enabled, the redirects feature requires a `redirects` property in the m3 profile (when also Flipflop-enabled per tenant). See [`documentation/redirects.md`](redirects.md) for the full schema and gating model.
