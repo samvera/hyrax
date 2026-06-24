@@ -102,6 +102,29 @@ admin_note:
 
 Use `admin_only` in place of `editor_only` to restrict visibility to admins only.
 
+## Rich-text fields
+
+A string property can be edited with a rich-text (WYSIWYG) editor and rendered as sanitized HTML. This works in both flexible and non-flexible mode and is driven by two independent directives:
+
+- **`form: { input_type: rich_text }`** — the edit form renders the field through `records/edit_fields/_rich_text`, which emits a `<textarea class="rich-text">` (one per value; multi-valued fields keep the standard "Add another" control). `hyrax/rich_text_editor.js` attaches a **TinyMCE** WYSIWYG editor to every `textarea.rich-text` by default (tinymce-rails ships with Hyrax) and re-binds on the `managed_field:add` event so cloned rows become editors too. The `rich-text` class is also a clean override point — an app can attach a different editor — and with no JS the field degrades to a plain textarea.
+- **`view: { render_as: html }`** — the show page renders the stored markup through `Hyrax::Renderers::HtmlAttributeRenderer`, which runs Rails' `sanitize` against a fixed tag/attribute allow-list (headings, lists, links, emphasis, tables; `href`/`title`/`target`/`rel`/`start`). Unsafe markup (`<script>`, `onclick`, …) is stripped at render time. This renderer owns its output, so it is unaffected by the `treat_some_user_inputs_as_markdown` Flipflop flag or any markdown decorator.
+
+The editor stores HTML directly, so no markdown engine is involved. Sanitization happens at render time; applications may additionally sanitize on save as defense in depth.
+
+`rich_text` is for free-text properties only. Declaring it on a controlled-vocabulary property (one whose `controlled_values.sources` names a real authority, a built-in controlled field such as `rights_statement`/`license`/`resource_type`, or a `type: controlled` compound subproperty) replaces the controlled input with a free-text editor and stores arbitrary HTML where a controlled value is expected. Saving such a profile raises a validation warning; see `Hyrax::FlexibleSchemaValidators::RichTextValidator`.
+
+```yaml
+# HYRAX_FLEXIBLE=false (config/metadata/*.yaml)
+context_narrative:
+  type: string
+  multiple: false
+  predicate: http://purl.org/dc/terms/description
+  form:
+    input_type: rich_text   # WYSIWYG (TinyMCE) editor on the edit form
+  view:
+    render_as: html         # sanitize + render the stored markup as HTML on the show page
+```
+
 ## HTML fields in catalog search results
 
 A field declared `view: { render_as: html }` stores HTML markup. Without a render helper, Blacklight escapes the value and dumps raw tags into the search-results column. `Hyrax::HyraxHelperBehavior#render_html_index_value` instead renders a clean, truncated plain-text snippet (tags → spaces, stripped, entities decoded; default 230 characters).
@@ -120,10 +143,32 @@ context_narrative:
   indexing:
     - context_narrative_tesim
   property_uri: http://purl.org/dc/terms/description
+  form:
+    input_type: rich_text        # WYSIWYG (TinyMCE) editor on the edit form
   view:
     render_as: html              # render the stored markup as HTML (sanitized) on the show page
     search_results_truncate: 300 # optional; catalog snippet length, `false` to disable (default 230)
 ```
+
+## Featured display
+
+**`view: { position: featured }`** promotes a field out of the standard metadata table and renders it prominently near the top of the work show page:
+
+- `field_visible?` returns false for a featured field (the same hook that hides `admin_only`/`editor_only` fields), so it is **not** duplicated in the attribute table.
+- The `hyrax/base/_featured_attributes` partial renders every featured field above the metadata card. The default `hyrax/base/show.html.erb` includes this partial, so the directive works out of the box. Values are sanitized with the same allow-list as `Hyrax::Renderers::HtmlAttributeRenderer`, so a field that also declares `render_as: html` looks identical featured and in the table.
+
+It pairs naturally with `render_as: html` for a rich-text "narrative" field, but works on any property:
+
+```yaml
+# add to either schema mode's `view:` block
+  view:
+    render_as: html        # optional: sanitize + render stored markup as HTML
+    position: featured      # promote above the metadata table
+```
+
+Host applications that override `hyrax/base/show.html.erb` (or ship custom show themes) are responsible for rendering `<%= render 'featured_attributes', presenter: @presenter %>` wherever they want featured fields to appear; an override that omits it will simply not show them.
+
+This is intentionally **not** covered by an m3 profile validator: the profile cannot know what an app's templates render.
 
 ## Related features
 
