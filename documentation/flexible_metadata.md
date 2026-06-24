@@ -102,6 +102,29 @@ admin_note:
 
 Use `admin_only` in place of `editor_only` to restrict visibility to admins only.
 
+## HTML fields in catalog search results
+
+A field declared `view: { render_as: html }` stores HTML markup. Without a render helper, Blacklight escapes the value and dumps raw tags into the search-results column. `Hyrax::HyraxHelperBehavior#render_html_index_value` instead renders a clean, truncated plain-text snippet (tags → spaces, stripped, entities decoded; default 230 characters).
+
+In flexible mode `Hyrax::FlexibleCatalogBehavior` wires this helper automatically from `render_as: html`; in non-flexible mode declare it on the field, e.g. `config.add_index_field 'context_narrative_tesim', helper_method: :render_html_index_value`.
+
+The snippet length is author-declarable with `view: { search_results_truncate: N }` (`false` shows the full snippet; default 230). In non-flexible mode pass it as a field option (`search_results_truncate: N`). `search_results_truncate` only applies to `render_as: html` fields; declaring it without `render_as: html` raises a validation warning (it would otherwise be a silent no-op).
+
+```yaml
+# HYRAX_FLEXIBLE=true (m3 profile)
+context_narrative:
+  available_on:
+    class:
+      - GenericWorkResource
+  data_type: string
+  indexing:
+    - context_narrative_tesim
+  property_uri: http://purl.org/dc/terms/description
+  view:
+    render_as: html              # render the stored markup as HTML (sanitized) on the show page
+    search_results_truncate: 300 # optional; catalog snippet length, `false` to disable (default 230)
+```
+
 ## Related features
 
 - **Compound (hierarchical) metadata**: an m3 profile (or YAML schema) can declare a `type: hash` property whose members are separate properties naming it via `available_on: { properties: [...] }` — repeatable groups of sub-fields such as `contributors`, `titles`, or `relationships`. Member sub-property types include `string`, `controlled`, `url`, `work_or_url`, and `linked_record` (a reference to a row in a database table, with an inline search-or-create picker). See [`documentation/compound_fields.md`](compound_fields.md) for declaring compounds, the supported sub-property types, indexing, and show-page rendering.
