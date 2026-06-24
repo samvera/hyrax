@@ -700,6 +700,8 @@ fr:
         title: Titre
         unauthorized: Il n'y a pas d'objets disponibles publiquement dans ce %{type}.
         visibility: Visibilité
+      member_of_collections:
+        header: Membre de collections
       relationships:
         empty: Ce %{type} ne se trouve actuellement dans aucune collection.
         header: Des relations
@@ -851,6 +853,9 @@ fr:
         admin_set_description: Une agrégation de travaux destinée à faciliter le contrôle administratif. Les ensembles d'administration permettent de définir des comportements et des stratégies autour d'un ensemble de travaux.
         default_description: Une collection d'utilisateurs peut être créée par n'importe quel utilisateur pour organiser leurs travaux.
     collections:
+      collection_counts:
+        collections: Collections
+        works: Travaux
       search_form:
         button_label: Aller
         label: Rechercher Collection %{title}

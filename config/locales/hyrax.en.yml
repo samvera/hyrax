@@ -687,6 +687,8 @@ en:
         title: Title
         unauthorized: There are no publicly available items in this %{type}.
         visibility: Visibility
+      member_of_collections:
+        header: Member of Collections
       relationships:
         empty: This %{type} is not currently in any collections.
         header: Relationships
@@ -831,6 +833,9 @@ en:
         title: Add to collection
         update: Save changes
     collections:
+      collection_counts:
+        collections: Collections
+        works: Works
       search_form:
         button_label: Go
         label: Search Collection %{title}

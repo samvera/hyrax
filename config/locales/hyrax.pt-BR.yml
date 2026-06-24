@@ -692,6 +692,8 @@ pt-BR:
         title: Título
         unauthorized: Não há itens publicados neste %{type}.
         visibility: Acesso
+      member_of_collections:
+        header: Membro de coleções
       relationships:
         empty: Este %{type} atualmente não está em nenhuma coleção.
         header: Relações
@@ -843,6 +845,9 @@ pt-BR:
         admin_set_description: Um agregado de obras destinado a ajudar no controle administrativo. Os conjuntos administrativos fornecem uma maneira de definir comportamentos e regras para um conjunto de obras.
         default_description: Uma Coleção de Usuário pode ser criada por qualquer usuário para organizar suas obras.
     collections:
+      collection_counts:
+        collections: Coleções
+        works: Obras
       search_form:
         button_label: Ir
         label: Pesquisar Coleção %{title}

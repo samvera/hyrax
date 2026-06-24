@@ -699,6 +699,8 @@ es:
         title: Título
         unauthorized: No hay elementos disponibles públicamente en este %{type}.
         visibility: Visibilidad
+      member_of_collections:
+        header: Miembro de colecciones
       relationships:
         empty: Este %{type} no está actualmente disponible en ninguna colección.
         header: Relaciones
@@ -850,6 +852,9 @@ es:
         admin_set_description: Una agregación de trabajos que está destinada a ayudar con el control administrativo. Los conjuntos de administración proporcionan una forma de definir comportamientos y políticas en torno a un conjunto de trabajos.
         default_description: Un usuario puede crear una Colección de usuarios para organizar sus trabajos.
     collections:
+      collection_counts:
+        collections: Colecciones
+        works: Trabajos
       search_form:
         button_label: Ir
         label: Buscar Colección %{title}
