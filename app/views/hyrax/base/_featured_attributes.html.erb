@@ -11,15 +11,23 @@
     identical here and in the metadata table.
 
     Host apps that override base/show.html.erb (or ship custom show themes) should
-    render this partial wherever they want featured fields to appear. %>
+    render this partial wherever they want featured fields to appear.
+
+    More than one property may be featured: each renders as its own labeled card,
+    stacked in profile order. The label is resolved the same way as the standard
+    metadata table (conform_options), so a featured field reads identically here. %>
 <% view_options_for(presenter).each do |field, view_options| %>
   <% next unless view_options.with_indifferent_access[:position].to_s == 'featured' %>
   <% render_field = conform_field(field, view_options) %>
   <% next unless presenter.respond_to?(render_field) %>
   <% featured_value = Array(presenter.public_send(render_field)).join(' ').to_s %>
   <% next if featured_value.blank? %>
+  <% featured_label = conform_options(field, view_options)[:label] %>
   <section class="work-featured-attribute card mb-4 attribute-<%= field %>">
     <div class="card-body">
+      <% if featured_label.present? %>
+        <h2 class="h5 work-featured-attribute-label"><%= featured_label %></h2>
+      <% end %>
       <%= sanitize(featured_value,
                    tags: Hyrax::Renderers::HtmlAttributeRenderer::ALLOWED_TAGS,
                    attributes: Hyrax::Renderers::HtmlAttributeRenderer::ALLOWED_ATTRIBUTES) %>
