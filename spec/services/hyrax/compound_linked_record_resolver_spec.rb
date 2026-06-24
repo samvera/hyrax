@@ -30,6 +30,14 @@ RSpec.describe Hyrax::CompoundLinkedRecordResolver do
         )
         store[rec.id] = rec
         rec
+      },
+      # Exact, single-row lookup on a natural key (display_name), distinct from
+      # the fuzzy multi-row `search`. Returns one record or nil.
+      match: lambda { |attrs|
+        name = attrs[:display_name].to_s
+        next nil if name.empty?
+
+        ([record] + store.values).find { |r| r.name.to_s.casecmp?(name) }
       }
     )
     example.run
@@ -129,6 +137,72 @@ RSpec.describe Hyrax::CompoundLinkedRecordResolver do
       expect(described_class.searchable?(:stub_people)).to be(true)
       expect(described_class.creatable?(:stub_people)).to be(true)
       expect(described_class.creatable?(:nope)).to be(false)
+    end
+  end
+
+  describe '.matchable?' do
+    it 'reports whether a source declares an exact-match proc' do
+      expect(described_class.matchable?(:stub_people)).to be(true)
+      expect(described_class.matchable?(:nope)).to be(false)
+    end
+
+    it 'is false for a source registered without a match proc' do
+      described_class.register(:matchless, finder: ->(_id) {}, label: ->(_r) {}, path: ->(_r) {})
+      expect(described_class.matchable?(:matchless)).to be(false)
+    ensure
+      described_class.registry.delete(:matchless)
+    end
+  end
+
+  describe '.match' do
+    it 'returns a single existing record for an exact natural-key hit' do
+      expect(described_class.match(:stub_people, display_name: 'Ada Lovelace')).to eq(record)
+    end
+
+    it 'is case-insensitive on the key, not a fuzzy substring like search' do
+      expect(described_class.match(:stub_people, display_name: 'ADA LOVELACE')).to eq(record)
+      expect(described_class.match(:stub_people, display_name: 'Ada')).to be_nil
+    end
+
+    it 'returns nil on a miss, an unregistered source, or a raising proc' do
+      expect(described_class.match(:stub_people, display_name: 'Nobody')).to be_nil
+      expect(described_class.match(:nope, display_name: 'Ada Lovelace')).to be_nil
+      described_class.register(:boom, finder: ->(_id) {}, label: ->(_r) {}, path: ->(_r) {},
+                                      match: ->(_attrs) { raise 'kaboom' })
+      expect(described_class.match(:boom, display_name: 'Ada Lovelace')).to be_nil
+    ensure
+      described_class.registry.delete(:boom)
+    end
+  end
+
+  describe '.find_or_create' do
+    it 'returns the existing record on a match without invoking create' do
+      created = described_class.find_or_create(:stub_people, display_name: 'Ada Lovelace')
+      expect(created).to eq(record)
+      expect(store).to be_empty # create proc was not called
+    end
+
+    it 'creates a record when the match misses' do
+      created = described_class.find_or_create(:stub_people, display_name: 'Grace Hopper')
+      expect(created.display_name).to eq('Grace Hopper')
+      expect(described_class.label_for(:stub_people, created.id)).to eq('Grace Hopper')
+    end
+
+    it 'always creates when the source has no match proc' do
+      described_class.register(:create_only, finder: ->(id) { store[id.to_s] }, label: ->(r) { r.name },
+                                             path: ->(r) { "/x/#{r.id}" },
+                                             create: ->(attrs) { store['9'] = Struct.new(:id, :name).new('9', attrs[:display_name]) })
+      created = described_class.find_or_create(:create_only, display_name: 'X')
+      expect(created.name).to eq('X')
+    ensure
+      described_class.registry.delete(:create_only)
+    end
+
+    it 'returns nil when the source can neither match nor create' do
+      described_class.register(:inert, finder: ->(_id) {}, label: ->(_r) {}, path: ->(_r) {})
+      expect(described_class.find_or_create(:inert, display_name: 'X')).to be_nil
+    ensure
+      described_class.registry.delete(:inert)
     end
   end
 
