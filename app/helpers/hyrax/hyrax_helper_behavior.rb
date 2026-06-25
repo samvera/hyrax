@@ -418,5 +418,14 @@ module Hyrax
     def institution
       Institution
     end
+
+    ##
+    # Returns the generator identification string for HTML meta tags.
+    # Override this method in your application to customize how your instance identifies itself.
+    # @return [String] The generator identification (e.g., "Samvera Hyrax 5.x.y")
+    def hyrax_generator_meta_tag
+      "Samvera Hyrax #{::Hyrax::VERSION}"
+    end
+
   end
 end
