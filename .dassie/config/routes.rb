@@ -36,4 +36,9 @@ Rails.application.routes.draw do
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
+  # Catch-all redirect resolver — must be last. See documentation/redirects.md.
+  get '*alias_path', to: 'hyrax/redirects#show',
+                     constraints: ->(_req) { Hyrax.config.redirects_active? },
+                     format: false
 end

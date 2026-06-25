@@ -9,6 +9,7 @@ module Hyrax
     include Blacklight::AccessControls::Catalog
     include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
     include Hyrax::EnsureMigratedBehavior
+    include Hyrax::RedirectToDisplayUrl
 
     included do
       with_themed_layout :decide_layout
@@ -139,12 +140,15 @@ module Hyrax
     end
 
     def manifest
-      headers['Access-Control-Allow-Origin'] = '*'
+      locale = params[:locale] || current_user&.preferred_locale || I18n.default_locale
+      I18n.with_locale(locale) do
+        headers['Access-Control-Allow-Origin'] = '*'
 
-      json = iiif_manifest_builder.manifest_for(presenter: iiif_manifest_presenter)
+        json = iiif_manifest_builder.manifest_for(presenter: iiif_manifest_presenter)
 
-      respond_to do |wants|
-        wants.any { render json: json }
+        respond_to do |wants|
+          wants.any { render json: json }
+        end
       end
     end
 
@@ -178,7 +182,7 @@ module Hyrax
     end
 
     def user_collections
-      collections_service.search_results(:deposit)
+      collections_service.all_search_results(:deposit)
     end
 
     def collections_service
@@ -427,8 +431,17 @@ module Hyrax
     end
 
     # Creating a form object that can re-render most of the submitted parameters.
-    # Required for ActiveFedora::Base objects only.
+    #
+    # The +FailedSubmissionFormWrapper+ re-exposes submitted params for the +new+
+    # view to re-render, and is required for +ActiveFedora::Base+ objects only. A
+    # Valkyrie +ChangeSet+ form already holds the submitted, validated state — it
+    # was populated by +form.validate(params)+ before the error — so +@form+
+    # re-renders directly with the user's input and errors. The wrapper has no
+    # +permitted_params+ source for a ChangeSet, so wrapping it would raise.
+    # Mirrors the same +Hyrax::ChangeSet+ guard in {#after_update_error}.
     def rebuild_form(original_input_params_for_form)
+      return if @form.is_a?(Hyrax::ChangeSet)
+
       build_form
       @form = Hyrax::Forms::FailedSubmissionFormWrapper
               .new(form: @form,

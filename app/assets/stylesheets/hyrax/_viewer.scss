@@ -11,9 +11,17 @@
   left: 0;
 }
 
+// Universal Viewer:
 // Show various footer, header, left and right panels on larger screens only
 @media only screen and (min-width: 640px) {
   .viewer-wrapper {
     height: 640px;
   }
+}
+
+// Clover IIIF Viewer:
+// Increase the height so that thumbnails below the player are visible
+// (for works with multiple audio/video files)
+.viewer-wrapper.clover-viewer-wrapper {
+  height: 775px;
 }

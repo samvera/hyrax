@@ -271,11 +271,11 @@ module Hyrax
       end
 
       def form_err_msg(form)
-        errmsg = []
-        form.errors.messages.each do |fld, err|
-          errmsg << "#{fld} #{err.to_sentence}"
-        end
-        errmsg.to_sentence
+        # Use ActiveModel's full_messages: it humanizes the attribute name
+        # ("collection_type_gid" -> "Collection type gid") and renders :base
+        # errors (e.g. the compound-required messages) verbatim, instead of the
+        # raw "#{field_key} #{message}" we'd otherwise emit ("base ...").
+        form.errors.full_messages.to_sentence
       end
 
       def default_collection_type

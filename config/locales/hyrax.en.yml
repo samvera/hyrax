@@ -38,6 +38,13 @@ en:
       carrierwave_processing_error: Cannot resize image.
       extension_blacklist_error: "You are not allowed to upload %{extension} files, prohibited types: %{prohibited_types}"
       extension_whitelist_error: "You are not allowed to upload %{extension} files, allowed types: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" is already used by another work or collection.'
+        blank: A redirect path can't be blank.
+        intra_record_duplicate: '"%{path}" is listed more than once on this record.'
+        invalid_format: '"%{path}" is not a valid path. Paths must start with "/" and contain no spaces, "?", or "#".'
+        multiple_display_url: At most one redirect entry may be marked as the display URL.
+        reserved_prefix: '"%{path}" can''t be used. The path is reserved by the application and may not be used as an alias.'
   helpers:
     action:
       accept: Accept
@@ -680,6 +687,8 @@ en:
         title: Title
         unauthorized: There are no publicly available items in this %{type}.
         visibility: Visibility
+      member_of_collections:
+        header: Member of Collections
       relationships:
         empty: This %{type} is not currently in any collections.
         header: Relationships
@@ -824,6 +833,9 @@ en:
         title: Add to collection
         update: Save changes
     collections:
+      collection_counts:
+        collections: Collections
+        works: Works
       search_form:
         button_label: Go
         label: Search Collection %{title}
@@ -851,6 +863,31 @@ en:
       create_service:
         admin_set_description: An aggregation of works that is intended to help with administrative control. Admin Sets provide a way of defining behaviors and policies around a set of works.
         default_description: A User Collection can be created by any user to organize their works.
+    compound_fields:
+      add_row: Add %{label}
+      remove_row: Remove
+      remove_row_with_label: Remove %{label}
+      errors:
+        required_but_empty: "%{compound} requires at least one entry"
+        missing_required_subproperties: "Each %{compound} entry requires: %{fields}"
+      participants:
+        label: Participants
+        title: Title
+        participant_name: Name
+        participant_role: Role
+      identifiers:
+        label: Identifiers
+        identifier: Identifier
+        identifier_type: Type
+      compound_rights:
+        label: Rights
+        rights_statement: Rights statement
+        license: License
+        rights_notes: Notes
+      relationships:
+        label: Relationships
+        related_item: Related item
+        relationship_type: Relationship type
     contact_form:
       button_label: Send
       email_label: Your Email
@@ -880,6 +917,9 @@ en:
       contact: Contact
       help: Help
       home: Home
+    copy_permalink:
+      button: Copy permalink
+      success: Copied!
     dashboard:
       additional_notifications: See all notifications
       admin_sets:
@@ -918,6 +958,7 @@ en:
             branding: Branding
             description: Description
             discovery: Discovery
+            redirects: Aliases
             relationships: Relationships
             sharing: Sharing
         form_branding:
@@ -1309,6 +1350,9 @@ en:
         header: Edit %{file_set}
         permissions: Permissions
         versions: Versions
+        form:
+          language:
+            title: Language
       extra_fields_modal:
         additional: Additional
         label: Additional %{label}(s)
@@ -1376,6 +1420,29 @@ en:
         save_your_note: You must click "Save Revision" to revert a previous version of this file
         upload: Upload New Version
     flexible_schema_validators:
+      compound_validator:
+        errors:
+          unknown_parent: "m3 profile subproperty `%{property}` declares `available_on: { properties: [%{parent}] }`, but `%{parent}` is not a declared `type: hash` compound property"
+          controlled_without_source: "m3 profile compound subproperty `%{property}` is `type: controlled` but declares neither `authority` nor `values`"
+          linked_record_without_source: "m3 profile compound subproperty `%{property}` is `type: linked_record` but declares no `authority` naming a registered linked-record source"
+          top_level_indexing: "m3 profile compound property `%{property}` must not declare top-level `indexing`; declare `indexing` (or `index_keys`) on each subproperty instead"
+          duplicate_subproperty_name: "m3 profile compound `%{parent}` has multiple sub-properties resolving to the in-compound name `%{name}` (%{properties}); each sub-property in a compound must resolve to a unique name (set a distinct `name:`)"
+      redirects_validator:
+        errors:
+          invalid_available_on: "m3 profile `redirects` property must be available on at least one work or collection class declared in this profile"
+          invalid_type: "m3 profile `redirects` property must declare `type: hash` (got `%{actual_type}`)"
+          property_required: "m3 profile must declare a `redirects` property when the redirects feature is enabled"
+        warnings:
+          config_disabled: "m3 profile declares a `redirects` property but Hyrax.config.redirects_enabled? is false; the property will be ignored"
+          flipflop_disabled: "m3 profile declares a `redirects` property but the :redirects feature flag is off; the property will be ignored"
+      rich_text_validator:
+        warnings:
+          controlled_sources: "m3 profile property `%{property}` declares `form: { input_type: rich_text }` but also a controlled vocabulary (`controlled_values.sources: %{sources}`); rich text stores free-form HTML and will bypass the controlled input. Use `rich_text` only on free-text properties."
+          built_in: "m3 profile property `%{property}` declares `form: { input_type: rich_text }`, but `%{property}` is rendered with a controlled vocabulary input; rich text stores free-form HTML and will bypass it. Use `rich_text` only on free-text properties."
+          controlled_type: "m3 profile compound subproperty `%{property}` is `type: controlled` but declares `form: { input_type: rich_text }`; rich text stores free-form HTML and conflicts with a controlled value."
+      search_results_truncate_validator:
+        warnings:
+          requires_html: "m3 profile property `%{property}` declares `view: { search_results_truncate }` without `render_as: html`; the truncation length is only applied to `render_as: html` catalog fields, so it has no effect here."
       sort_properties_validator:
         warnings:
           message: "%{property} must be defined on %{classes} to support sorting on that property, unless you have indexed %{property}_ssi on some other field."
@@ -1802,9 +1869,30 @@ en:
         in_collections: Collections
         in_other_works: This Work in Other Works
         in_this_work: Other Works in this Work
+        redirects:
+          add_label: Add another alias
+          caption: List of URL aliases for this resource
+          display_url:
+            help_html: Optionally mark one alias as the <em>display URL</em>. When set, the record's permanent UUID URL redirects to the chosen alias. Leave as "None" to keep the UUID URL as the destination.
+            none_label: None (use the record's UUID URL)
+            row_label: 'Use "%{path}" as the display URL'
+          errors_heading: Please correct the following alias errors
+          header:
+            actions: Actions
+            display_url: Display URL
+            path: Path
+          heading: URL Aliases
+          help_html: 'Register legacy URL paths that should redirect to this record. Each path will resolve from this site''s root. Reserved Hyrax routes (e.g. <code>/concern</code>, <code>/dashboard</code>) cannot be used.'
+          new_path_label: New alias path
+          path_label: Alias path
+          placeholder:
+            path: Enter a path...
+          remove_label: Remove
+          remove_with_path_label: 'Remove %{path}'
         tab:
           files: Files
           metadata: Descriptions
+          redirects: Aliases
           relationships: Relationships
           share: Sharing
         visibility_until: until
@@ -1865,6 +1953,9 @@ en:
         rights_notes: Contains information about rights held in and over the resource.
         subject: Headings or index terms describing what the work is about; these do need to conform to an existing vocabulary.
         title: A name to aid in identifying a work.
+      file_set:
+        language: The language of the file's content. For audio/video transcriptions, this can be the <a href="https://id.loc.gov/vocabulary/iso639-2.html" target="_blank">ISO 639-2</a> code, the <a href="https://id.loc.gov/vocabulary/iso639-3.html" target="_blank">ISO 639-3</a> code, or the English name of the language.
+        transcript_ids: Select file(s) for displaying as captions or subtitles of this file. File(s) must be children of the same parent work and be in <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API/Web_Video_Text_Tracks_Format" target="_blank">Web Video Text Tracks (VTT) format</a>.
     labels:
       collection:
         size: Size
@@ -1904,6 +1995,9 @@ en:
         visibility_after_lease: then restrict it to
         visibility_during_embargo: Restricted to
         visibility_during_lease: Is available to
+      file_set:
+        language: Language
+        transcript_ids: Transcript(s)
       proxy_deposit_request:
         sender_comment: Comments
         transfer_to: User

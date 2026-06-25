@@ -37,6 +37,7 @@ module Hyrax
       require 'hyrax/transactions/steps/apply_collection_type_permissions'
       require 'hyrax/transactions/steps/apply_permission_template'
       require 'hyrax/transactions/steps/apply_permission_template_on_update'
+      require 'hyrax/transactions/steps/apply_workflow_on_admin_set_change'
       require 'hyrax/transactions/steps/change_depositor'
       require 'hyrax/transactions/steps/check_for_default_admin_set'
       require 'hyrax/transactions/steps/check_for_empty_admin_set'
@@ -50,6 +51,7 @@ module Hyrax
       require 'hyrax/transactions/steps/set_collection_type_gid'
       require 'hyrax/transactions/steps/remove_file_set_from_work'
       require 'hyrax/transactions/steps/remove_from_membership'
+      require 'hyrax/transactions/steps/remove_redirect_paths'
       require 'hyrax/transactions/steps/save'
       require 'hyrax/transactions/steps/save_access_control'
       require 'hyrax/transactions/steps/save_collection_banner'
@@ -59,6 +61,7 @@ module Hyrax
       require 'hyrax/transactions/steps/set_uploaded_date_unless_present'
       require 'hyrax/transactions/steps/set_user_as_creator'
       require 'hyrax/transactions/steps/set_user_as_depositor'
+      require 'hyrax/transactions/steps/sync_redirect_paths'
       require 'hyrax/transactions/steps/update_work_members'
       require 'hyrax/transactions/steps/validate'
 
@@ -246,6 +249,14 @@ module Hyrax
         ops.register 'save_collection_logo' do
           Steps::SaveCollectionLogo.new
         end
+
+        ops.register 'sync_redirect_paths' do
+          Steps::SyncRedirectPaths.new
+        end
+
+        ops.register 'remove_redirect_paths' do
+          Steps::RemoveRedirectPaths.new
+        end
       end
 
       namespace 'work_resource' do |ops| # Hyrax::Work resource
@@ -263,6 +274,10 @@ module Hyrax
 
         ops.register 'apply_permission_template_on_update' do
           Steps::ApplyPermissionTemplateOnUpdate.new
+        end
+
+        ops.register 'apply_workflow_on_admin_set_change' do
+          Steps::ApplyWorkflowOnAdminSetChange.new
         end
 
         ops.register 'change_depositor' do
@@ -291,6 +306,14 @@ module Hyrax
 
         ops.register 'update_work_members' do
           Steps::UpdateWorkMembers.new
+        end
+
+        ops.register 'sync_redirect_paths' do
+          Steps::SyncRedirectPaths.new
+        end
+
+        ops.register 'remove_redirect_paths' do
+          Steps::RemoveRedirectPaths.new
         end
       end
       # rubocop:enable Metrics/BlockLength

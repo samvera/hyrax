@@ -9,6 +9,33 @@ module Hyrax
             type.coerce(self[field])
           end
         end
+
+        # Declare a reader for a compound attribute, parsing the rows the
+        # indexer stored in `<name>_json_ss`. See
+        # documentation/compound_fields.md.
+        def compound_attribute(name)
+          define_method name do
+            Solr::CompoundEntries.coerce(self["#{name}_json_ss"])
+          end
+        end
+      end
+
+      # Defines a reader for each compound on the document (its `<name>_json_ss`
+      # blob, written by {Hyrax::Indexers::CompoundIndexer}). Uses a real method
+      # rather than #method_missing on purpose: a Blacklight/Solr document can
+      # answer to an arbitrary field name with a nil-returning accessor that
+      # would shadow #method_missing, so a real method is required to win.
+      def define_compound_readers!
+        keys.each do |key|
+          next unless key.to_s.end_with?('_json_ss')
+
+          name = key.to_s.delete_suffix('_json_ss')
+          next if singleton_class.method_defined?(name)
+
+          define_singleton_method(name) do
+            Solr::CompoundEntries.coerce(self["#{name}_json_ss"])
+          end
+        end
       end
 
       module Solr
@@ -16,6 +43,23 @@ module Hyrax
           # @return [Array]
           def self.coerce(input)
             ::Array.wrap(input)
+          end
+        end
+
+        # Parses a `<compound>_json_ss` field back into an Array of Hashes.
+        class CompoundEntries
+          # @return [Array<Hash>]
+          def self.coerce(input)
+            raw = ::Array.wrap(input).first
+            return [] if raw.blank?
+            parsed = raw.is_a?(::String) ? parse(raw) : raw
+            ::Array.wrap(parsed).select { |e| e.is_a?(::Hash) }
+          end
+
+          def self.parse(raw)
+            JSON.parse(raw)
+          rescue JSON::ParserError
+            []
           end
         end
 
@@ -53,6 +97,7 @@ module Hyrax
         attribute :identifier, Solr::Array, "identifier_tesim"
         attribute :based_near, Solr::Array, "based_near_tesim"
         attribute :based_near_label, Solr::Array, "based_near_label_tesim"
+        attribute :redirects_path, Solr::Array, "redirects_path_tesim"
         attribute :related_url, Solr::Array, "related_url_tesim"
         attribute :resource_type, Solr::Array, "resource_type_tesim"
         attribute :edit_groups, Solr::Array, ::Ability.edit_group_field
@@ -97,6 +142,13 @@ module Hyrax
         attribute :modified_date, Solr::Date, "system_modified_dtsi"
         attribute :embargo_release_date, Solr::Date, Hydra.config.permissions.embargo.release_date
         attribute :lease_expiration_date, Solr::Date, Hydra.config.permissions.lease.expiration_date
+
+        # Define compound readers per-instance so an application's own compounds
+        # render with no per-app declaration. See #define_compound_readers!.
+        def initialize(source_doc = {}, *args)
+          super
+          define_compound_readers!
+        end
       end
     end
   end

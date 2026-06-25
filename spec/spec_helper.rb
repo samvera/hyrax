@@ -233,6 +233,14 @@ RSpec.configure do |config|
   end
 
   config.before do |example|
+    # Reset the locale before every example. Controller actions set
+    # `I18n.locale = params[:locale]` (see Hyrax::Controller#set_locale) without
+    # restoring it, so a controller/request spec that passes `locale: 'fr'`
+    # leaves I18n.locale = :fr for the rest of the process, breaking later specs
+    # that render views (e.g. "Translation missing: fr...."). Starting each
+    # example from the default keeps that leak from crossing example boundaries.
+    I18n.locale = I18n.default_locale
+
     if example.metadata[:type] == :feature && Capybara.current_driver != :rack_test
       # Preserve the flexible_schemas table across feature specs. The
       # before(:suite) block creates a FlexibleSchema from the allinson

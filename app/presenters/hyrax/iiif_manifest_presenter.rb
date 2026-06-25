@@ -130,6 +130,21 @@ module Hyrax
     end
 
     ##
+    # Provides a link to the work page as the homepage for the object
+    # represented by the IIIF manifest (see
+    # https://iiif.io/api/cookbook/recipe/0047-homepage/).
+    # This can be helpful if the IIIF manifest is reused on an external site.
+    # @return [Array<Hash{String => String}>]
+    def homepage
+      [{
+        'id' => Rails.application.routes.url_helpers.polymorphic_url(model, host: hostname),
+        'type' => 'Text',
+        'format' => 'text/html',
+        'label' => { 'none' => [Array(title).first || ''] }
+      }]
+    end
+
+    ##
     # @return [Boolean]
     def work?
       object.try(:work?) || !file_set?
@@ -189,6 +204,7 @@ module Hyrax
 
       include Hyrax::DisplaysImage
       include Hyrax::DisplaysContent
+      include Hyrax::AnnotatesContent
 
       ##
       # @!attribute [w] ability

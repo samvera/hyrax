@@ -59,6 +59,27 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
       it { expect(subject).to be_equivalent_to(expected) }
     end
 
+    context 'with an array whose entries are all blank' do
+      # A common Valkyrie persistence pattern: a single-value attribute
+      # round-trips as a one-element array containing an empty string,
+      # and a multi-value attribute can hold a mix of blank strings and
+      # nils. Neither should render any markup.
+      let(:renderer) { described_class.new(field, ['', '   ', nil]) }
+
+      it 'renders nothing when include_empty is not set' do
+        expect(renderer.render).to eq('')
+      end
+
+      context 'with include_empty: true' do
+        let(:renderer) { described_class.new(field, ['', '   ', nil], include_empty: true) }
+
+        it 'renders the row even when every value is blank' do
+          expect(renderer.render).not_to eq('')
+          expect(renderer.render).to include('<tr>')
+        end
+      end
+    end
+
     context 'with links and < characters' do
       let(:field) { :description }
       let(:renderer) { described_class.new(field, ['Foo < Bar http://www.example.com. & More Text']) }
@@ -91,6 +112,23 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
 
     it { expect(renderer).not_to be_microdata(field) }
     it { expect(subject).to be_equivalent_to(expected) }
+
+    context 'with an array whose entries are all blank' do
+      let(:renderer) { described_class.new(field, ['', '   ', nil]) }
+
+      it 'renders nothing when include_empty is not set' do
+        expect(renderer.render_dl_row).to eq('')
+      end
+
+      context 'with include_empty: true' do
+        let(:renderer) { described_class.new(field, ['', '   ', nil], include_empty: true) }
+
+        it 'renders the row even when every value is blank' do
+          expect(renderer.render_dl_row).not_to eq('')
+          expect(renderer.render_dl_row).to include('<dt>')
+        end
+      end
+    end
   end
 
   describe "#label" do

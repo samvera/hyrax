@@ -512,4 +512,99 @@ RSpec.describe Hyrax::FileSetPresenter do
       end
     end
   end
+
+  describe '#transcripts' do
+    context 'without any transcript_ids' do
+      it 'returns an empty array' do
+        expect(presenter.transcripts).to be_empty
+      end
+    end
+
+    context 'with transcript_ids' do
+      let(:transcript) do
+        FactoryBot.valkyrie_create(:hyrax_file_set)
+      end
+
+      before do
+        allow(file_set).to receive(:transcript_ids).and_return [transcript.id]
+      end
+
+      it 'returns an array of solr documents' do
+        expect(presenter.transcripts).not_to be_empty
+        expect(presenter.transcripts.first).to be_a SolrDocument
+      end
+    end
+  end
+
+  describe '#transcript_url' do
+    subject(:presenter) { described_class.new(solr_document, ability, request) }
+    let(:request) { double('request', base_url: 'http://test.host') }
+
+    context 'with a Valkyrie file set document' do
+      let(:transcript) { SolrDocument.new(id: 'baz') }
+
+      it 'returns the url to VTT file contents' do
+        expect(presenter.transcript_url(transcript)).to eq "http://test.host/transcripts/baz.vtt"
+      end
+    end
+
+    context 'with an ActiveFedora file set document' do
+      let(:transcript) { SolrDocument.new(id: 'bar') }
+
+      it 'returns the url to VTT file contents' do
+        expect(presenter.transcript_url(transcript)).to eq "http://test.host/transcripts/bar.vtt"
+      end
+    end
+  end
+
+  describe '#language_code' do
+    let(:transcript) { SolrDocument.new(language_tesim: language) }
+    subject { presenter.language_code(transcript.language) }
+
+    context 'when transcript has no language' do
+      let(:language) { [] }
+
+      it { is_expected.to be_nil }
+    end
+
+    context 'when transcript has language' do
+      context 'with a 3-letter language code' do
+        let(:language) { ['eng'] }
+
+        it 'returns the 2-letter language code' do
+          expect(subject).to eq('en')
+        end
+      end
+
+      context 'with 2-letter language code' do
+        let(:language) { ['en'] }
+
+        it 'returns the 2-letter language code' do
+          expect(subject).to eq('en')
+        end
+      end
+
+      context 'with a URI' do
+        let(:language) { ['http://id.loc.gov/vocabulary/iso639-3/zho'] }
+
+        it 'returns the 2-letter language code' do
+          expect(subject).to eq('zh')
+        end
+      end
+
+      context 'with a language name' do
+        let(:language) { ['German'] }
+
+        it 'returns the 2-letter language code' do
+          expect(subject).to eq('de')
+        end
+      end
+
+      context 'with no parseable language' do
+        let(:language) { ['xyz'] }
+
+        it { is_expected.to be_nil }
+      end
+    end
+  end
 end

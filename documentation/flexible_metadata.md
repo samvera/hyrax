@@ -29,8 +29,9 @@ HYRAX_DISABLE_INCLUDE_METADATA=true
 
 ### Dassie Flexible
 export HYRAX_FLEXIBLE=true
-export HYRAX_FLEXIBLE_CLASSES=AdministrativeSetResource,CollectionResource,Hyrax::FileSet,GenericWorkResource,Monograph
+export HYRAX_FLEXIBLE_CLASSES=AdminSetResource,CollectionResource,Hyrax::FileSet,GenericWorkResource,Monograph
 export HYRAX_DISABLE_INCLUDE_METADATA=true
+export VALKYRIE_TRANSITION=true # this is needed to properly load Valkyrie models in Hyrax config and Bulkrax
 
 ## Documentation
 
@@ -43,6 +44,137 @@ For comprehensive information about flexible metadata, including:
 - User guide for administrators
 
 See the official [Flexible Metadata Documentation](https://samvera.atlassian.net/wiki/spaces/hyraxdocs/pages/3382542341/Flexible+Metadata) on the Samvera Confluence.
+
+## Property visibility flags
+
+A property declaration can mark a field as restricted so it is hidden from public visitors. Two flags are supported, each enforcing an independent restriction:
+
+- **`admin_only`** — the field renders on show pages only when the current user has the admin role.
+- **`editor_only`** — the field renders on show pages only when the current user has CanCan `:edit` ability on the record being viewed. Admins satisfy this by virtue of edit permission on everything, so an `editor_only` field is visible to admins as well as to per-record editors.
+
+Each flag is an independent restrictor. When both are set on the same field, both must pass: the field renders only for users who are admin *and* an editor of the record.
+
+### Catalog behavior
+
+Restricted fields (declared with either `admin_only` or `editor_only`) are **not exposed through the Blacklight catalog at all** — no search-results column, no facet, and not added to free-text search. Hiding occurs at field registration time, not at render time, so a restricted field's data does not appear in catalog responses for any user.
+
+Visibility for restricted fields is enforced on show pages by the `field_visible?` view helper.
+
+### `view:`-driven visibility (show page and catalog separately)
+
+Beyond the role flags, a property's `view:` block controls show-page and catalog visibility independently:
+
+- **Show page is opt-in via `view:`.** A property renders on the show page only when it declares a meaningful `view:` block (e.g. `html_dl: true`); a property with no `view:` block is not enrolled in show-page rendering at all (the `display_label` / `admin_only` / `editor_only` keys alone don't count). Within a rendered field, `view: { show_page: false }` hides it from the show page for everyone (the value is still stored and indexed).
+- **`view: { search_results: false }`** drops the property's column from catalog search results, while leaving it on the show page. It suppresses only the search-results column — the property can still be **facetable** (declare `facetable` in `indexing:`).
+
+These combine with the role flags: `admin_only` / `editor_only` remove a property from the catalog entirely (column *and* facet) at registration time, whereas `search_results: false` removes only the column.
+
+### Declaring the flags
+
+In a YAML schema (HYRAX_FLEXIBLE=false), declare the flag at the top level of the property:
+
+```yaml
+admin_note:
+  type: string
+  multiple: false
+  predicate: http://schema.org/positiveNotes
+  editor_only: true
+  view:
+    html_dl: true
+```
+
+In an m3 profile (HYRAX_FLEXIBLE=true), declare the flag as a string entry in the property's `indexing:` array, alongside index keys and the standard `stored_searchable` / `facetable` flags:
+
+```yaml
+admin_note:
+  available_on:
+    class:
+      - GenericWork
+  display_label:
+    default: Admin Note
+  indexing:
+    - admin_note_tesim
+    - stored_searchable
+    - editor_only
+  property_uri: http://schema.org/positiveNotes
+  range: http://www.w3.org/2001/XMLSchema#string
+```
+
+Use `admin_only` in place of `editor_only` to restrict visibility to admins only.
+
+## Rich-text fields
+
+A string property can be edited with a rich-text (WYSIWYG) editor and rendered as sanitized HTML. This works in both flexible and non-flexible mode and is driven by two independent directives:
+
+- **`form: { input_type: rich_text }`** — the edit form renders the field through `records/edit_fields/_rich_text`, which emits a `<textarea class="rich-text">` (one per value; multi-valued fields keep the standard "Add another" control). `hyrax/rich_text_editor.js` attaches a **TinyMCE** WYSIWYG editor to every `textarea.rich-text` by default (tinymce-rails ships with Hyrax) and re-binds on the `managed_field:add` event so cloned rows become editors too. The `rich-text` class is also a clean override point — an app can attach a different editor — and with no JS the field degrades to a plain textarea.
+- **`view: { render_as: html }`** — the show page renders the stored markup through `Hyrax::Renderers::HtmlAttributeRenderer`, which runs Rails' `sanitize` against a fixed tag/attribute allow-list (headings, lists, links, emphasis, tables; `href`/`title`/`target`/`rel`/`start`). Unsafe markup (`<script>`, `onclick`, …) is stripped at render time. This renderer owns its output, so it is unaffected by the `treat_some_user_inputs_as_markdown` Flipflop flag or any markdown decorator.
+
+The editor stores HTML directly, so no markdown engine is involved. Sanitization happens at render time; applications may additionally sanitize on save as defense in depth.
+
+`rich_text` is for free-text properties only. Declaring it on a controlled-vocabulary property (one whose `controlled_values.sources` names a real authority, a built-in controlled field such as `rights_statement`/`license`/`resource_type`, or a `type: controlled` compound subproperty) replaces the controlled input with a free-text editor and stores arbitrary HTML where a controlled value is expected. Saving such a profile raises a validation warning; see `Hyrax::FlexibleSchemaValidators::RichTextValidator`.
+
+```yaml
+# HYRAX_FLEXIBLE=false (config/metadata/*.yaml)
+context_narrative:
+  type: string
+  multiple: false
+  predicate: http://purl.org/dc/terms/description
+  form:
+    input_type: rich_text   # WYSIWYG (TinyMCE) editor on the edit form
+  view:
+    render_as: html         # sanitize + render the stored markup as HTML on the show page
+```
+
+## HTML fields in catalog search results
+
+A field declared `view: { render_as: html }` stores HTML markup. Without a render helper, Blacklight escapes the value and dumps raw tags into the search-results column. `Hyrax::HyraxHelperBehavior#render_html_index_value` instead renders a clean, truncated plain-text snippet (tags → spaces, stripped, entities decoded; default 230 characters).
+
+In flexible mode `Hyrax::FlexibleCatalogBehavior` wires this helper automatically from `render_as: html`; in non-flexible mode declare it on the field, e.g. `config.add_index_field 'context_narrative_tesim', helper_method: :render_html_index_value`.
+
+The snippet length is author-declarable with `view: { search_results_truncate: N }` (`false` shows the full snippet; default 230). In non-flexible mode pass it as a field option (`search_results_truncate: N`). `search_results_truncate` only applies to `render_as: html` fields; declaring it without `render_as: html` raises a validation warning (it would otherwise be a silent no-op).
+
+```yaml
+# HYRAX_FLEXIBLE=true (m3 profile)
+context_narrative:
+  available_on:
+    class:
+      - GenericWorkResource
+  data_type: string
+  indexing:
+    - context_narrative_tesim
+  property_uri: http://purl.org/dc/terms/description
+  form:
+    input_type: rich_text        # WYSIWYG (TinyMCE) editor on the edit form
+  view:
+    render_as: html              # render the stored markup as HTML (sanitized) on the show page
+    search_results_truncate: 300 # optional; catalog snippet length, `false` to disable (default 230)
+```
+
+## Featured display
+
+**`view: { position: featured }`** promotes a field out of the standard metadata table and renders it prominently near the top of the work show page:
+
+- `field_visible?` returns false for a featured field (the same hook that hides `admin_only`/`editor_only` fields), so it is **not** duplicated in the attribute table.
+- The `hyrax/base/_featured_attributes` partial renders every featured field above the metadata card. The default `hyrax/base/show.html.erb` includes this partial, so the directive works out of the box. Values are sanitized with the same allow-list as `Hyrax::Renderers::HtmlAttributeRenderer`, so a field that also declares `render_as: html` looks identical featured and in the table.
+
+It pairs naturally with `render_as: html` for a rich-text "narrative" field, but works on any property:
+
+```yaml
+# add to either schema mode's `view:` block
+  view:
+    render_as: html        # optional: sanitize + render stored markup as HTML
+    position: featured      # promote above the metadata table
+```
+
+Host applications that override `hyrax/base/show.html.erb` (or ship custom show themes) are responsible for rendering `<%= render 'featured_attributes', presenter: @presenter %>` wherever they want featured fields to appear; an override that omits it will simply not show them.
+
+This is intentionally **not** covered by an m3 profile validator: the profile cannot know what an app's templates render.
+
+## Related features
+
+- **Compound (hierarchical) metadata**: an m3 profile (or YAML schema) can declare a `type: hash` property whose members are separate properties naming it via `available_on: { properties: [...] }` — repeatable groups of sub-fields such as `contributors`, `titles`, or `relationships`. Member sub-property types include `string`, `controlled`, `url`, `work_or_url`, and `linked_record` (a reference to a row in a database table, with an inline search-or-create picker). See [`documentation/compound_fields.md`](compound_fields.md) for declaring compounds, the supported sub-property types, indexing, and show-page rendering.
+- **URL Redirects** (`HYRAX_REDIRECTS_ENABLED`): when enabled, the redirects feature requires a `redirects` property in the m3 profile (when also Flipflop-enabled per tenant). See [`documentation/redirects.md`](redirects.md) for the full schema and gating model.
+- **Copy permalink button** (Flipflop `copy_permalink_button`): a show-page button that copies the record's canonical UUID-based URL. See [`documentation/copy_permalink.md`](copy_permalink.md).
 
 ## Flexible TODOs
 * add the schema loader

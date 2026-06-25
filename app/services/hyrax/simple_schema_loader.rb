@@ -27,15 +27,29 @@ module Hyrax
     # @param [#to_s] schema_name
     # @return [Enumerable<AttributeDefinition]
     def definitions(schema_name, _version, _contexts = nil)
-      schema_config(schema_name)['attributes'].map do |name, config|
+      # Compound subproperties (entries declaring `available_on: { properties:
+      # [...] }`) are not standalone resource attributes — they are gathered
+      # into their parent compound by Hyrax::CompoundSchema. Exclude them here so
+      # they get no accessor, form input, or index rule of their own.
+      schema_config(schema_name)['attributes'].reject { |_name, config| subproperty_config?(config) }.map do |name, config|
         AttributeDefinition.new(name, config)
       end
     end
 
     ##
     # @param [#to_s] schema_name
+    # @return [Hash{String => Hash}] all attribute configs, INCLUDING
+    #   subproperties (see {SchemaLoader#raw_attribute_configs}).
+    def raw_definitions(schema_name, _version, _contexts = nil)
+      schema_config(schema_name)['attributes']
+    end
+
+    ##
+    # @param [#to_s] schema_name
     # @return [Hash]
     def schema_config(schema_name)
+      raise(UndefinedSchemaError, "No schema defined: #{schema_name}") if disabled_schemas.include?(schema_name.to_s)
+
       schema_config_path = config_paths(schema_name).find { |path| File.exist? path }
       raise(UndefinedSchemaError, "No schema defined: #{schema_name}") unless schema_config_path
 
@@ -49,11 +63,30 @@ module Hyrax
     def metadata_files
       file_name_arr = []
       config_search_paths.each { |root_path| file_name_arr += Dir.entries(root_path.to_s + "/config/metadata/") }
-      file_name_arr.reject { |fn| !fn.include?('.yaml') }.uniq.map { |y| y.gsub('.yaml', '') }
+      file_name_arr
+        .reject { |fn| !fn.include?('.yaml') }
+        .uniq
+        .map { |y| y.gsub('.yaml', '') }
+        .reject { |schema_name| disabled_schemas.include?(schema_name) }
+    end
+
+    # Names of schemas in `config/metadata/` that the host app has not
+    # opted in to. {#metadata_files} skips them and {#schema_config}
+    # raises `UndefinedSchemaError` for them, so they behave as if the
+    # YAML did not exist.
+    def disabled_schemas
+      disabled = []
+      disabled << 'redirects' unless Hyrax.config.redirects_enabled?
+      disabled
     end
 
     def predicate_pairs(ret_hsh, schema_name)
       schema_config(schema_name)['attributes'].each do |name, config|
+        # Compound subproperties are not standalone resource attributes (see
+        # SchemaLoader#definitions), so they have no predicate of their own and
+        # are excluded from the permissive Valkyrie schema.
+        next if subproperty_config?(config)
+
         predicate = RDF::URI(config['predicate'])
         if ret_hsh[name].blank?
           ret_hsh[name.to_sym] = predicate

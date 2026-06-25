@@ -20,6 +20,7 @@ RSpec.describe Hyrax::Forms::FileSetForm do
     its(:fields) { is_expected.to have_key('subject') }
     its(:fields) { is_expected.to have_key('title') }
     its(:fields) { is_expected.to have_key('visibility') }
+    its(:fields) { is_expected.to have_key('transcript_ids') }
     # rubocop:enable RSpec/RepeatedDescription
   end
 

@@ -390,6 +390,130 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
         end
       end
     end
+
+    describe '#annotation_content' do
+      let(:ability) { Ability.new(user) }
+      let(:user) { create(:user) }
+      let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, :public) }
+      let(:work) { valkyrie_create(:monograph, members: [file_set, vtt_file_set]) }
+
+      let(:vtt_file_metadata) do
+        valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                        file_set: vtt_file_set,
+                        original_filename: 'sample.vtt',
+                        mime_type: 'text/vtt')
+      end
+
+      let(:vtt_file_set) do
+        FactoryBot.valkyrie_create(:hyrax_file_set,
+                                   :public,
+                                   title: ['English Captions'],
+                                   language: language)
+      end
+      
+      let(:language) { [] }
+
+      let(:solr_doc) do
+        vtt_file_metadata
+        work # ensure work is created with members
+
+        solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
+        solr_hash['mime_type_ssi'] = 'video/mp4'
+        solr_hash['duration_tesim'] = ['120']
+        SolrDocument.new(solr_hash)
+      end
+
+      subject(:presenter) { described_class.new(solr_doc) }
+
+      before do
+        presenter.hostname = 'samvera.org'
+        presenter.ability = ability
+      end
+
+      context 'with video file and vtt file set' do
+        before do
+          allow(solr_doc).to receive(:transcript_ids).and_return([vtt_file_set.id.to_s])
+        end
+        
+        it 'returns transcript annotations' do
+          annotations = presenter.annotation_content
+
+          expect(annotations).to be_an(Array)
+          expect(annotations.first).to be_a(IIIFManifest::V3::AnnotationContent)
+          expect(annotations.first.type).to eq('Text')
+          expect(annotations.first.motivation).to eq('supplementing')
+          expect(annotations.first.format).to eq('text/vtt')
+          expect(annotations.first.language).not_to be_present
+          expect(annotations.first.label).to eq('English Captions')
+          expect(annotations.first.body_id).to include('transcripts')
+          expect(annotations.first.body_id).to end_with('.vtt')
+        end
+
+        context 'when transcript has a language' do
+          context 'with a locale' do
+            let(:vtt_file_set) do
+              FactoryBot.valkyrie_create(:hyrax_file_set,
+                                         :public,
+                                         title: ['English Captions'],
+                                         language: ['en'])
+            end
+            let(:vtt_file_set_2) do
+              FactoryBot.valkyrie_create(:hyrax_file_set,
+                                         :public,
+                                         title: ['English Captions'],
+                                         language: ['ur'])
+            end
+            
+            let!(:vtt_file_metadata_2) do
+              valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
+                              file_set: vtt_file_set_2,
+                              original_filename: 'sample.vtt',
+                              mime_type: 'text/vtt')
+            end
+
+            let(:work) { valkyrie_create(:monograph, members: [file_set, vtt_file_set, vtt_file_set_2]) }
+
+            before do
+              allow(solr_doc).to receive(:transcript_ids).and_return(
+                [vtt_file_set.id.to_s, vtt_file_set_2.id.to_s]
+              )
+              allow(I18n).to receive(:locale).and_return(:ur)
+            end
+
+            it 'moves the current locale/language to the top of the transcript list' do
+              expect(presenter.annotation_content.map(&:language)).to eq ['ur','en']
+            end
+          end
+        end
+      end
+
+      context 'with video file but no vtt file sets' do
+        let(:work) { valkyrie_create(:monograph, members: [file_set]) }
+
+        it 'returns empty array' do
+          annotations = presenter.annotation_content
+
+          expect(annotations).to eq([])
+        end
+      end
+
+      context 'with non-video/audio file' do
+        let(:image_file_metadata) do
+          valkyrie_create(:hyrax_file_metadata, :original_file, :image, :with_file,
+                          file_set: file_set)
+        end
+
+        let(:solr_doc) do
+          image_file_metadata
+          SolrDocument.new(Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr)
+        end
+
+        it 'returns nil' do
+          expect(presenter.annotation_content).to be_nil
+        end
+      end
+      
+    end
   end
 
   describe '#description' do

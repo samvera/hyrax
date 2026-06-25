@@ -41,6 +41,13 @@ es:
       carrierwave_processing_error: No se puede cambiar el tamaño de la imagen.
       extension_blacklist_error: "La subida de archivos %{extension} no está permitida, tipos prohibidos: %{prohibited_types}"
       extension_whitelist_error: "La subida de archivos %{extension} no está permitida, tipos permitidos: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" ya está siendo usado por otro trabajo o colección.'
+        blank: Una ruta de redirección no puede estar en blanco.
+        intra_record_duplicate: '"%{path}" aparece más de una vez en este registro.'
+        invalid_format: '"%{path}" no es una ruta válida. Las rutas deben comenzar con "/" y no contener espacios, "?" ni "#".'
+        multiple_display_url: A lo sumo una entrada de redirección puede marcarse como la URL de visualización.
+        reserved_prefix: '"%{path}" no se puede usar. La ruta está reservada por la aplicación y no puede usarse como alias.'
   helpers:
     action:
       accept: Aceptar
@@ -692,6 +699,8 @@ es:
         title: Título
         unauthorized: No hay elementos disponibles públicamente en este %{type}.
         visibility: Visibilidad
+      member_of_collections:
+        header: Miembro de colecciones
       relationships:
         empty: Este %{type} no está actualmente disponible en ninguna colección.
         header: Relaciones
@@ -843,6 +852,9 @@ es:
         admin_set_description: Una agregación de trabajos que está destinada a ayudar con el control administrativo. Los conjuntos de administración proporcionan una forma de definir comportamientos y políticas en torno a un conjunto de trabajos.
         default_description: Un usuario puede crear una Colección de usuarios para organizar sus trabajos.
     collections:
+      collection_counts:
+        collections: Colecciones
+        works: Trabajos
       search_form:
         button_label: Ir
         label: Buscar Colección %{title}
@@ -892,6 +904,9 @@ es:
       contact: Contacto
       help: Ayuda
       home: Inicio
+    copy_permalink:
+      button: Copiar enlace permanente
+      success: ¡Copiado!
     dashboard:
       additional_notifications: ver todas las notificaciones
       admin_sets:
@@ -1395,6 +1410,20 @@ es:
         save_your_note: Debe hacer clic en "Guardar revisión" para revertir una versión anterior de este archivo
         upload: Subir nueva versión
     flexible_schema_validators:
+      compound_validator:
+        errors:
+          unknown_parent: "la subpropiedad `%{property}` del perfil m3 declara `available_on: { properties: [%{parent}] }`, pero `%{parent}` no es una propiedad compuesta `type: hash` declarada"
+          controlled_without_source: "la subpropiedad compuesta `%{property}` del perfil m3 es `type: controlled` pero no declara ni `authority` ni `values`"
+          top_level_indexing: "la propiedad compuesta `%{property}` del perfil m3 no debe declarar `indexing` de nivel superior; declare `indexing` (o `index_keys`) en cada subpropiedad"
+          duplicate_subproperty_name: "el compuesto `%{parent}` del perfil m3 tiene varias subpropiedades que se resuelven al mismo nombre interno `%{name}` (%{properties}); cada subpropiedad de un compuesto debe resolverse a un nombre único (defina un `name:` distinto)"
+      redirects_validator:
+        errors:
+          invalid_available_on: "la propiedad `redirects` del perfil m3 debe estar disponible en al menos una clase de obra o colección declarada en este perfil"
+          invalid_type: "la propiedad `redirects` del perfil m3 debe declarar `type: hash` (se recibió `%{actual_type}`)"
+          property_required: "el perfil m3 debe declarar una propiedad `redirects` cuando la función de redirecciones está habilitada"
+        warnings:
+          config_disabled: "el perfil m3 declara una propiedad `redirects` pero Hyrax.config.redirects_enabled? es false; la propiedad será ignorada"
+          flipflop_disabled: "el perfil m3 declara una propiedad `redirects` pero la bandera de característica :redirects está desactivada; la propiedad será ignorada"
       sort_properties_validator:
         warnings:
           message: "%{property} debe estar definido en %{classes} para permitir la ordenación por esa propiedad, a menos que haya indexado %{property}_ssi en algún otro campo."
@@ -1822,6 +1851,26 @@ es:
         in_collections: Colecciones
         in_other_works: Este Trabajo en otros Trabajos
         in_this_work: Otros Trabaos en este Trabajo
+        redirects:
+          add_label: Agregar otro alias
+          caption: Lista de alias de URL para este recurso
+          display_url:
+            help_html: Opcionalmente, marque un alias como la <em>URL de visualización</em>. Cuando se establece, la URL UUID permanente del registro redirige al alias elegido. Deje en "Ninguno" para mantener la URL UUID como destino.
+            none_label: Ninguno (usar la URL UUID del registro)
+            row_label: 'Usar "%{path}" como URL de visualización'
+          errors_heading: Por favor corrija los siguientes errores de alias
+          header:
+            actions: Acciones
+            display_url: URL de visualización
+            path: Ruta
+          heading: Alias de URL
+          help_html: 'Registre rutas de URL antiguas que deberían redirigir a este registro. Cada ruta se resolverá desde la raíz de este sitio. Las rutas reservadas de Hyrax (por ejemplo, <code>/concern</code>, <code>/dashboard</code>) no pueden utilizarse.'
+          new_path_label: Nueva ruta de alias
+          path_label: Ruta de alias
+          placeholder:
+            path: Ingrese una ruta antigua...
+          remove_label: Eliminar
+          remove_with_path_label: 'Eliminar %{path}'
         tab:
           files: Archivos
           metadata: Descripciones

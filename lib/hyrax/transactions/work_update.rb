@@ -6,9 +6,11 @@ module Hyrax
     class WorkUpdate < Transaction
       DEFAULT_STEPS = ['change_set.apply',
                        'work_resource.apply_permission_template_on_update',
+                       'work_resource.apply_workflow_on_admin_set_change',
                        'work_resource.save_acl',
                        'work_resource.add_file_sets',
-                       'work_resource.update_work_members'].freeze
+                       'work_resource.update_work_members',
+                       'work_resource.sync_redirect_paths'].freeze
 
       ##
       # @see Hyrax::Transactions::Transaction

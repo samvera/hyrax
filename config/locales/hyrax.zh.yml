@@ -41,6 +41,13 @@ zh:
       carrierwave_processing_error: 图片大小不能调整。
       extension_blacklist_error: "%{extension} 的文件不能上传, 限制上传的扩展类型: %{prohibited_types}"
       extension_whitelist_error: "%{extension} 的文件不能上传, 可上传的扩展类型: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" 已被另一个作品或集合使用。'
+        blank: 重定向路径不能为空。
+        intra_record_duplicate: '"%{path}" 在此记录中列出多次。'
+        invalid_format: '"%{path}" 不是有效路径。路径必须以 "/" 开头，且不能包含空格、"?" 或 "#"。'
+        multiple_display_url: 每条记录最多只能将一个重定向条目标记为显示 URL。
+        reserved_prefix: '"%{path}" 不能使用。该路径已被应用程序保留，不能用作别名。'
   helpers:
     action:
       accept: 接受
@@ -690,6 +697,8 @@ zh:
         title: 标题
         unauthorized: 这个%{type}中没有公开可用的项目。
         visibility: 公开度
+      member_of_collections:
+        header: 所属采集
       relationships:
         empty: 该 %{type} 目前未纳入任何收藏集内。
         header: 关联
@@ -841,6 +850,9 @@ zh:
         admin_set_description: 旨在帮助行政控制的作品集合。管理员集合提供了定义一组作品周围的行为和策略的方法。
         default_description: 用户集合可由任何用户创建以组织他们的作品。
     collections:
+      collection_counts:
+        collections: 采集
+        works: 作品
       search_form:
         button_label: 去
         label: 搜索收藏集 %{title}
@@ -890,6 +902,9 @@ zh:
       contact: 联系
       help: 帮助
       home: 首页
+    copy_permalink:
+      button: 复制永久链接
+      success: 已复制!
     dashboard:
       additional_notifications: 见所有通知
       admin_sets:
@@ -1390,6 +1405,20 @@ zh:
         save_your_note: 您必须点击“保存修订版”还原此文件的先前版本
         upload: 上传新版本
     flexible_schema_validators:
+      compound_validator:
+        errors:
+          unknown_parent: "m3 配置文件中的子属性 `%{property}` 声明了 `available_on: { properties: [%{parent}] }`，但 `%{parent}` 不是已声明的 `type: hash` 复合属性"
+          controlled_without_source: "m3 配置文件中的复合子属性 `%{property}` 为 `type: controlled`，但既未声明 `authority` 也未声明 `values`"
+          top_level_indexing: "m3 配置文件中的复合属性 `%{property}` 不得在顶层声明 `indexing`；请在每个子属性上声明 `indexing`（或 `index_keys`）"
+          duplicate_subproperty_name: "m3 配置文件中的复合属性 `%{parent}` 有多个子属性解析为相同的内部名称 `%{name}`（%{properties}）；同一复合属性中的每个子属性必须解析为唯一名称（请设置不同的 `name:`）"
+      redirects_validator:
+        errors:
+          invalid_available_on: "m3 配置文件的 `redirects` 属性必须在此配置文件中声明的至少一个作品或收藏类上可用"
+          invalid_type: "m3 配置文件的 `redirects` 属性必须声明 `type: hash`（实际为 `%{actual_type}`）"
+          property_required: "启用重定向功能时，m3 配置文件必须声明 `redirects` 属性"
+        warnings:
+          config_disabled: "m3 配置文件声明了 `redirects` 属性，但 Hyrax.config.redirects_enabled? 为 false；该属性将被忽略"
+          flipflop_disabled: "m3 配置文件声明了 `redirects` 属性，但 :redirects 功能标志已关闭；该属性将被忽略"
       sort_properties_validator:
         warnings:
           message: "%{property} 必须在 %{classes} 上定义才能支持该属性的排序，除非您已在其他字段上索引了 %{property}_ssi。"
@@ -1817,6 +1846,26 @@ zh:
         in_collections: 集合
         in_other_works: 在其它作品中包括的这件作品
         in_this_work: 这件作品包括的其它作品
+        redirects:
+          add_label: 添加另一个别名
+          caption: 此资源的 URL 别名列表
+          display_url:
+            help_html: 可以选择将一个别名标记为<em>显示 URL</em>。设置后，记录的永久 UUID URL 将重定向到所选别名。保留为"无"以将 UUID URL 作为目标。
+            none_label: 无（使用记录的 UUID URL）
+            row_label: '使用 "%{path}" 作为显示 URL'
+          errors_heading: 请更正以下别名错误
+          header:
+            actions: 操作
+            display_url: 显示 URL
+            path: 路径
+          heading: URL 别名
+          help_html: '注册应重定向到此记录的旧 URL 路径。每个路径将从本站点的根目录解析。保留的 Hyrax 路由（例如 <code>/concern</code>、<code>/dashboard</code>）不能使用。'
+          new_path_label: 新别名路径
+          path_label: 别名路径
+          placeholder:
+            path: 输入旧路径...
+          remove_label: 删除
+          remove_with_path_label: '删除 %{path}'
         tab:
           files: 文件
           metadata: 描述

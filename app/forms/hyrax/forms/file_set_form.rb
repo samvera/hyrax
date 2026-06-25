@@ -14,6 +14,7 @@ module Hyrax
       include Hyrax::ContainedInWorksBehavior
       include Hyrax::LeaseabilityBehavior
       include Hyrax::PermissionBehavior
+      include Hyrax::TranscriptsBehavior
 
       property :representative_id, type: Valkyrie::Types::String, writeable: false
       property :thumbnail_id, type: Valkyrie::Types::String, writeable: false

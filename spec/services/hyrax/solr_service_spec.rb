@@ -297,4 +297,89 @@ RSpec.describe Hyrax::SolrService do
       end
     end
   end
+
+  describe '.fetch_all' do
+    def mock_response(num_found:, docs: [])
+      double("Blacklight::Solr::Response",
+             response: { 'numFound' => num_found },
+             documents: docs)
+    end
+
+    context 'when there are no results' do
+      it 'returns [] after a single count probe' do
+        calls = []
+        result = described_class.fetch_all do |rows, start|
+          calls << [rows, start]
+          mock_response(num_found: 0)
+        end
+
+        expect(result).to eq []
+        expect(calls).to eq [[0, 0]]
+      end
+    end
+
+    context 'when numFound fits in a single request' do
+      it 'makes one data call with rows=numFound and start=0' do
+        docs = [double('doc1'), double('doc2'), double('doc3')]
+        allow(Hyrax.config).to receive(:solr_rows_per_request).and_return(1_000)
+        allow(Hyrax.config).to receive(:solr_max_results).and_return(10_000)
+
+        calls = []
+        result = described_class.fetch_all do |rows, start|
+          calls << [rows, start]
+          if rows.zero?
+            mock_response(num_found: docs.size)
+          else
+            mock_response(num_found: docs.size, docs: docs)
+          end
+        end
+
+        expect(calls).to eq [[0, 0], [3, 0]]
+        expect(result).to eq docs
+      end
+    end
+
+    context 'when numFound exceeds rows_per_request' do
+      it 'pages with ascending start and concatenates documents' do
+        allow(Hyrax.config).to receive(:solr_rows_per_request).and_return(2)
+        allow(Hyrax.config).to receive(:solr_max_results).and_return(10_000)
+        all_docs = (1..5).map { |i| "doc#{i}" }
+
+        calls = []
+        result = described_class.fetch_all do |rows, start|
+          calls << [rows, start]
+          if rows.zero?
+            mock_response(num_found: all_docs.size)
+          else
+            mock_response(num_found: all_docs.size, docs: all_docs[start, rows])
+          end
+        end
+
+        expect(calls).to eq [[0, 0], [2, 0], [2, 2], [1, 4]]
+        expect(result).to eq all_docs
+      end
+    end
+
+    context 'when numFound exceeds solr_max_results' do
+      it 'truncates at the cap and logs a warning' do
+        allow(Hyrax.config).to receive(:solr_rows_per_request).and_return(2)
+        allow(Hyrax.config).to receive(:solr_max_results).and_return(3)
+        all_docs = (1..10).map { |i| "doc#{i}" }
+        expect(Hyrax.logger).to receive(:warn).with(/truncated: numFound=10 exceeds.*solr_max_results=3/)
+
+        calls = []
+        result = described_class.fetch_all do |rows, start|
+          calls << [rows, start]
+          if rows.zero?
+            mock_response(num_found: all_docs.size)
+          else
+            mock_response(num_found: all_docs.size, docs: all_docs[start, rows])
+          end
+        end
+
+        expect(calls).to eq [[0, 0], [2, 0], [1, 2]]
+        expect(result).to eq all_docs.first(3)
+      end
+    end
+  end
 end

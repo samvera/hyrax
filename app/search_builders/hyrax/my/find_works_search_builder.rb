@@ -2,6 +2,7 @@
 # Search for possible works that user can edit and could be a work's child or parent.
 class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
   include Hyrax::FilterByType
+  include Hyrax::PartialTitleQuery
 
   self.default_processor_chain += [:filter_on_title, :show_only_other_works, :show_only_works_not_child, :show_only_works_not_parent]
 
@@ -13,9 +14,15 @@ class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
     @q = context.params[:q]
   end
 
+  # Match works by a partial/prefix term so the child/parent-work picker finds
+  # works as the user types, rather than only on a complete title. Sets the
+  # query directly (lucene `q`); the exclusion processors below still add their
+  # own `fq` filters.
   def filter_on_title(solr_parameters)
-    solr_parameters[:fq] ||= []
-    solr_parameters[:fq] += [Hyrax::SolrQueryBuilderService.construct_query(title_tesim: @q)]
+    return if @q.blank?
+
+    solr_parameters[:q] = partial_title_query(@q.to_s.strip)
+    solr_parameters[:defType] = 'lucene'
   end
 
   def show_only_other_works(solr_parameters)

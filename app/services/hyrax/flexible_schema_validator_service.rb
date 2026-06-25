@@ -38,6 +38,10 @@ module Hyrax
       validate_label_prop
       validate_core_metadata
       validate_sort_properties
+      validate_redirects
+      validate_compound
+      validate_rich_text
+      validate_search_results_truncate
     end
 
     # The default JSON schema used when no custom schema is provided.
@@ -117,6 +121,46 @@ module Hyrax
     # @return [void]
     def validate_sort_properties
       FlexibleSchemaValidators::SortPropertiesValidator.new(profile, @warnings).validate!
+    end
+
+    # Validates that the `redirects` property is declared on every work and
+    # collection class when both `Hyrax.config.redirects_enabled?` and
+    # `Flipflop.redirects?` are true. When either gate is closed, this
+    # validator is a no-op.
+    #
+    # @return [void]
+    def validate_redirects
+      FlexibleSchemaValidators::RedirectsValidator.new(
+        profile: profile, errors: @errors, warnings: @warnings
+      ).validate!
+    end
+
+    # Validates compound (hierarchical) metadata properties — those declaring
+    # `subproperties:` — for well-formed sub-properties and correct
+    # (per-sub-property) indexing declaration.
+    #
+    # @return [void]
+    def validate_compound
+      FlexibleSchemaValidators::CompoundValidator.new(profile: profile, errors: @errors).validate!
+    end
+
+    # Warns (does not block) when a property declares
+    # `form: { input_type: rich_text }` alongside a controlled-vocabulary
+    # configuration, since rich text stores free-form HTML and bypasses the
+    # controlled input.
+    #
+    # @return [void]
+    def validate_rich_text
+      FlexibleSchemaValidators::RichTextValidator.new(profile, @warnings).validate!
+    end
+
+    # Warns (does not block) when `view: { search_results_truncate: N }` is
+    # declared without `view: { render_as: html }`, where the setting is a
+    # silent no-op.
+    #
+    # @return [void]
+    def validate_search_results_truncate
+      FlexibleSchemaValidators::SearchResultsTruncateValidator.new(profile, @warnings).validate!
     end
 
     # Validates that a `label` property exists and that it is available on

@@ -13,7 +13,8 @@ module Hyrax
                        'change_set.add_to_collections',
                        'change_set.apply',
                        'collection_resource.apply_collection_type_permissions',
-                       'collection_resource.save_acl'].freeze
+                       'collection_resource.save_acl',
+                       'collection_resource.sync_redirect_paths'].freeze
 
       ##
       # @see Hyrax::Transactions::Transaction

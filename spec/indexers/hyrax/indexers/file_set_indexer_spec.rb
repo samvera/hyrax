@@ -25,7 +25,8 @@ RSpec.describe Hyrax::Indexers::FileSetIndexer, :frozen_time, if: Hyrax.config.u
       resource_type: ['Book'],
       identifier: ['urn:isbn:1234567890'],
       based_near: ['Oakland, California'],
-      related_url: ['https://id.loc.gov/resources/works/17452360.html']
+      related_url: ['https://id.loc.gov/resources/works/17452360.html'],
+      transcript_ids: ['foo678910']
     )
   end
 
@@ -156,6 +157,7 @@ RSpec.describe Hyrax::Indexers::FileSetIndexer, :frozen_time, if: Hyrax.config.u
       expect(subject['extracted_text_id_ssi']).to eq mock_text.id.to_s
       expect(subject['hasRelatedMediaFragment_ssim']).to eq fileset_id
       expect(subject['hasRelatedImage_ssim']).to eq mock_thumbnail.id.to_s
+      expect(subject['transcript_ids_ssim']).to eq ["foo678910"]
 
       # from ThumbnailIndexer
       expect(subject['thumbnail_path_ss']).to eq "/downloads/#{file_set.id}?file=thumbnail"
@@ -238,6 +240,23 @@ RSpec.describe Hyrax::Indexers::FileSetIndexer, :frozen_time, if: Hyrax.config.u
 
       it "does not have version info indexed" do
         expect(subject['original_file_id_ssi']).to eq "#{file_set.id}/files/#{file_set.original_file_id}"
+      end
+    end
+
+    context "when the FileSet does not carry the file_set_metadata schema" do
+      # Adopters running flexible mode with HYRAX_DISABLE_INCLUDE_METADATA=true
+      # don't include Hyrax::Schema(:file_set_metadata) on Hyrax::FileSet, so
+      # transcript_ids (and other schema attributes) aren't defined. Simulate
+      # this by making transcript_ids raise NoMethodError when the indexer
+      # tries to read it.
+      before do
+        allow(file_set).to receive(:respond_to?).and_call_original
+        allow(file_set).to receive(:respond_to?).with(:transcript_ids).and_return(false)
+        allow(file_set).to receive(:transcript_ids).and_raise(NoMethodError)
+      end
+
+      it "skips the transcript_ids field instead of raising" do
+        expect { subject }.not_to raise_error
       end
     end
 
