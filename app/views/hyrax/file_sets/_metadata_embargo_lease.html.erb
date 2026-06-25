@@ -1,0 +1,8 @@
+<% [:embargo_release_date, :lease_expiration_date].each do |field| %>
+  <% value = presenter.try(field) %>
+  <% next unless value.present? %>
+  <div class="row">
+    <dt class="col-5"><%= t("blacklight.search.fields.show.#{field}_dtsi", default: field.to_s.humanize) %></dt>
+    <dd class="col-7"><%= value %></dd>
+  </div>
+<% end %>

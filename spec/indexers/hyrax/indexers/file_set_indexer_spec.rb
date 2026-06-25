@@ -2,6 +2,10 @@
 RSpec.describe Hyrax::Indexers::FileSetIndexer, :frozen_time, if: Hyrax.config.use_valkyrie? do
   include Hyrax::FactoryHelpers
 
+  it 'projects compound metadata into Solr like works and collections' do
+    expect(described_class.ancestors).to include(Hyrax::Indexers::CompoundIndexer)
+  end
+
   let(:fileset_id) { 'fs1' }
   let(:file_set) do
     Hyrax::FileSet.new(

@@ -15,6 +15,10 @@
       <%= render partial_path %>
       <% end %>
 
+      <%# Render compound metadata declared with `view: { display: card }` as
+          cards, matching the work (base/show) and collection show pages. %>
+      <%= render_compound_cards(@presenter) %>
+
       <%= render 'hyrax/users/activity_log', events: @presenter.events %>
     </div><!-- /columns second -->
   </div> <!-- /.row -->

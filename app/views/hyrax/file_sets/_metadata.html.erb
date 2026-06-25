@@ -1,15 +1,24 @@
 <h2><%= t('.metadata') %></h2>
+<%# Compound metadata is not gated on flexible mode, matching the work show page
+    (base/_attribute_rows): `compound_schema_for` resolves compounds from the
+    flexible schema or, with flexibility off, the model class schema. Card
+    compounds render via `render_compound_cards` on the show page; inline
+    compounds render in their own list below; the scalar list renders per mode.
+    Scalars and inline compounds get separate column-count: 2 lists so a tall
+    compound block doesn't unbalance the scalar columns. %>
+<% compound_schema = compound_schema_for(@presenter) %>
+<% inline_compounds = compound_schema.inline_compound_names.select { |name| Array(@presenter.try(name)).reject(&:blank?).any? } %>
+
 <dl class="file-show-term file-show-details">
   <% if @presenter.try(:flexible?) %>
     <% view_options_for(@presenter).each do |field, options| %>
       <% view_options = conform_options(field, options) %>
       <% next unless field_visible?(view_options, @presenter) %>
-      <% values = Array(@presenter.try(field)).reject(&:blank?) %>
-      <% next if values.empty? %>
-      <% label = view_options["label"] %>
+      <% next if compound_schema.card?(field) || compound_schema.inline_compound_names.include?(field.to_sym) %>
+      <% next if Array(@presenter.try(field)).reject(&:blank?).empty? %>
       <div class="row">
-        <dt class="col-5"><%= label %></dt>
-        <dd class="col-7"><%= auto_link(values.join(', '), html: { target: '_blank' }) %></dd>
+        <dt class="col-5"><%= view_options["label"] %></dt>
+        <dd class="col-7"><%= auto_link(Array(@presenter.try(field)).reject(&:blank?).join(', '), html: { target: '_blank' }) %></dd>
       </div>
     <% end %>
   <% else %>
@@ -23,13 +32,15 @@
       </div>
     <% end %>
   <% end %>
-
-  <% [:embargo_release_date, :lease_expiration_date].each do |field| %>
-    <% value = @presenter.try(field) %>
-    <% next unless value.present? %>
-    <div class="row">
-      <dt class="col-5"><%= t("blacklight.search.fields.show.#{field}_dtsi", default: field.to_s.humanize) %></dt>
-      <dd class="col-7"><%= value %></dd>
-    </div>
-  <% end %>
+  <%= render 'hyrax/file_sets/metadata_embargo_lease', presenter: @presenter %>
 </dl>
+
+<% if inline_compounds.any? %>
+  <dl class="file-show-term file-show-details">
+    <% inline_compounds.each do |field| %>
+      <div class="compound-inline" style="break-inside: avoid;">
+        <%= @presenter.attribute_to_html(field.to_sym, render_as: :compound, html_dl: true) %>
+      </div>
+    <% end %>
+  </dl>
+<% end %>

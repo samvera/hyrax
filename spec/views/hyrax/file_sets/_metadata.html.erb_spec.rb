@@ -37,6 +37,25 @@ RSpec.describe 'hyrax/file_sets/_metadata.html.erb', type: :view do
     end
   end
 
+  context 'with an inline compound and flexible metadata disabled' do
+    let(:compound_schema) { instance_double(Hyrax::CompoundSchema, inline_compound_names: [:provenance], card?: false) }
+
+    before do
+      allow(Hyrax.config).to receive(:flexible?).and_return(false)
+      allow(view).to receive(:compound_schema_for).and_return(compound_schema)
+      allow(presenter).to receive(:provenance).and_return([{ 'scheme' => 'C2PA' }])
+      allow(presenter).to receive(:attribute_to_html)
+        .with(:provenance, render_as: :compound, html_dl: true)
+        .and_return('<dt>Provenance</dt><dd>Scheme: C2PA</dd>'.html_safe)
+      render
+    end
+
+    it 'renders the inline compound even with flexibility off' do
+      expect(presenter).to have_received(:attribute_to_html).with(:provenance, render_as: :compound, html_dl: true)
+      expect(rendered).to have_selector('dd', text: 'Scheme: C2PA')
+    end
+  end
+
   context 'when using flexible metadata' do
     before do
       allow(Hyrax.config).to receive(:flexible?).and_return(true)
