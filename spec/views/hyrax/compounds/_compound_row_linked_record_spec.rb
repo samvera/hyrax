@@ -83,8 +83,8 @@ RSpec.describe 'hyrax/compounds/_compound_row', type: :view do
       expect(rendered).to match(%r{data-create-url="[^"]*/linked_records/people"})
     end
 
-    it 'renders the (hidden) Add new trigger' do
-      expect(rendered).to have_css('button[data-hyrax-linked-record-add]', text: '+ Add new', visible: false)
+    it 'renders the (hidden) Add new trigger naming the source item' do
+      expect(rendered).to have_css('button[data-hyrax-linked-record-add]', text: 'Add a person', visible: false)
     end
 
     it 'renders the create form fields from create_fields (string inputs + a select)' do
