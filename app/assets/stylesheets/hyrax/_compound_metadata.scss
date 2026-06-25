@@ -48,3 +48,13 @@
     margin-right: 0.25rem;
   }
 }
+
+.hyrax-linked-record-create {
+  .form-group > label,
+  .hyrax-linked-record-group > label {
+    display: block;
+    margin-bottom: 0.25rem;
+    text-align: left;
+    width: 100%;
+  }
+}
