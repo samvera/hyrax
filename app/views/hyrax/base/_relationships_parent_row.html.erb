@@ -1,4 +1,4 @@
-<dt> <%= t(".label", type: type.humanize) %> </dt>
+<dt><%= t(".#{type}_label", default: :".label", type: type.humanize) %></dt>
 <dd>
     <% if items.blank? %>
       <p><%= t('.empty', type: type.humanize) %></p>
