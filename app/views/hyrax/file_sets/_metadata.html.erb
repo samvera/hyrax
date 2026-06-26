@@ -8,6 +8,13 @@
     compound block doesn't unbalance the scalar columns. %>
 <% compound_schema = compound_schema_for(@presenter) %>
 <% inline_compounds = compound_schema.inline_compound_names.select { |name| Array(@presenter.try(name)).reject(&:blank?).any? } %>
+<%# A flexible profile declares each compound's display label; resolve it the same
+    way the scalar rows below do (conform_options) so an inline compound's <dt>
+    matches its label on the work/collection show pages instead of a humanized
+    fallback. Read on dup'd options so this pass doesn't disturb the scalar loop's
+    own conform_options (which mutates its input). Non-flexible mode has no declared
+    display_label, so the renderer's i18n/humanize fallback stands (matching scalars). %>
+<% compound_labels = inline_compounds.any? && @presenter.try(:flexible?) ? view_options_for(@presenter).each_with_object({}) { |(field, options), memo| memo[field.to_sym] = conform_options(field, options.dup)[:label] } : {} %>
 
 <dl class="file-show-term file-show-details">
   <% if @presenter.try(:flexible?) %>
@@ -18,7 +25,7 @@
       <% next if Array(@presenter.try(field)).reject(&:blank?).empty? %>
       <div class="row">
         <dt class="col-5"><%= view_options["label"] %></dt>
-        <dd class="col-7"><%= auto_link(Array(@presenter.try(field)).reject(&:blank?).join(', '), html: { target: '_blank' }) %></dd>
+        <dd class="col-7"><%= auto_link(Array(@presenter.try(field)).reject(&:blank?).join(', '), html: { target: '_blank', rel: 'noopener noreferrer' }) %></dd>
       </div>
     <% end %>
   <% else %>
@@ -28,7 +35,7 @@
       <% next if values.empty? %>
       <div class="row">
         <dt class="col-5"><%= t("blacklight.search.fields.show.#{field}_tesim", default: field.to_s.humanize) %></dt>
-        <dd class="col-7"><%= auto_link(values.join(', '), html: { target: '_blank' }) %></dd>
+        <dd class="col-7"><%= auto_link(values.join(', '), html: { target: '_blank', rel: 'noopener noreferrer' }) %></dd>
       </div>
     <% end %>
   <% end %>
@@ -38,8 +45,13 @@
 <% if inline_compounds.any? %>
   <dl class="file-show-term file-show-details">
     <% inline_compounds.each do |field| %>
+      <% label = compound_labels[field.to_sym] %>
       <div class="compound-inline" style="break-inside: avoid;">
-        <%= @presenter.attribute_to_html(field.to_sym, render_as: :compound, html_dl: true) %>
+        <% if label.present? %>
+          <%= @presenter.attribute_to_html(field.to_sym, render_as: :compound, html_dl: true, label: label) %>
+        <% else %>
+          <%= @presenter.attribute_to_html(field.to_sym, render_as: :compound, html_dl: true) %>
+        <% end %>
       </div>
     <% end %>
   </dl>

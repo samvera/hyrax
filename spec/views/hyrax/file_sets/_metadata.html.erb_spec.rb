@@ -56,6 +56,38 @@ RSpec.describe 'hyrax/file_sets/_metadata.html.erb', type: :view do
     end
   end
 
+  context 'with an inline compound and flexible metadata enabled' do
+    let(:compound_schema) { instance_double(Hyrax::CompoundSchema, inline_compound_names: [:provenance], card?: false) }
+
+    before do
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
+      # FileSet#flexible? is driven by the document's schema_version, not the
+      # global config, so stub it directly to exercise the flexible branch.
+      allow(presenter).to receive(:flexible?).and_return(true)
+      allow(view).to receive(:compound_schema_for).and_return(compound_schema)
+      # A flexible profile declares the compound's display label. conform_options
+      # resolves it (the same path the scalar rows use) - the multi-word label is
+      # passed through humanize, hence 'Provenance statement', and it differs from
+      # the humanized field name ('Provenance'), so the assertion proves the
+      # declared label - not the renderer's field-name fallback - is what reaches
+      # attribute_to_html.
+      allow(view).to receive(:view_options_for).and_return(
+        { provenance: { display_label: { default: 'Provenance Statement' } } }
+      )
+      allow(presenter).to receive(:provenance).and_return([{ 'scheme' => 'C2PA' }])
+      allow(presenter).to receive(:attribute_to_html)
+        .with(:provenance, render_as: :compound, html_dl: true, label: 'Provenance statement')
+        .and_return('<dt>Provenance statement</dt><dd>Scheme: C2PA</dd>'.html_safe)
+      render
+    end
+
+    it 'passes the schema-declared display label to the inline compound renderer' do
+      expect(presenter).to have_received(:attribute_to_html)
+        .with(:provenance, render_as: :compound, html_dl: true, label: 'Provenance statement')
+      expect(rendered).to have_selector('dt', text: 'Provenance statement')
+    end
+  end
+
   context 'when using flexible metadata' do
     before do
       allow(Hyrax.config).to receive(:flexible?).and_return(true)
