@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 module Hyrax
   class PermissionsController < ApplicationController
-    resource_klass = Hyrax.config.use_valkyrie? ? Hyrax::Resource : ActiveFedora::Base
-    load_resource class: resource_klass, instance_name: :curation_concern
+    load_resource class: Hyrax::Resource, instance_name: :curation_concern
 
     attr_reader :curation_concern
     helper_method :curation_concern
