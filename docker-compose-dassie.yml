@@ -140,6 +140,11 @@ services:
     image: solr:9.9
     env_file:
       - .dassie/.env
+    environment:
+      # Cap the Solr heap so it doesn't auto-size off host RAM and starve the
+      # rest of the stack on memory-constrained CI runners. The test index is
+      # tiny; 512m is ample.
+      - SOLR_JAVA_MEM=-Xms512m -Xmx512m
     ports:
       - 8983:8983
     command:
