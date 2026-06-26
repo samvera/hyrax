@@ -16,6 +16,33 @@ RSpec.describe Hyrax::FileSetPresenter do
                                title: ["File title"])
   end
 
+  describe '#define_dynamic_methods' do
+    let(:attributes) do
+      { "id" => '999', "has_model_ssim" => ["FileSet"],
+        "schema_version_ssi" => '1', "alt_text_tesim" => ['a cat'] }
+    end
+    let(:profile) do
+      { 'properties' => { 'alt_text' => { 'indexing' => ['alt_text_tesim'], 'multiple' => false } } }
+    end
+    # The readers don't use the ability; stub it so this stays a DB-free unit test.
+    let(:ability) { instance_double(Ability) }
+
+    before { allow(Hyrax::FlexibleSchema).to receive(:current_version).and_return(profile) }
+
+    it 'defines a reader for each indexed profile property' do
+      expect(presenter).to respond_to(:alt_text)
+    end
+
+    it 'reads the indexed value off the Solr document' do
+      expect(presenter.alt_text).to eq(['a cat'])
+    end
+
+    it 'reads the flexible schema once, not once per property' do
+      presenter
+      expect(Hyrax::FlexibleSchema).to have_received(:current_version).once
+    end
+  end
+
   describe 'stats_path' do
     its(:stats_path) { is_expected.to eq Hyrax::Engine.routes.url_helpers.stats_file_path(id: file_set, locale: 'en') }
   end

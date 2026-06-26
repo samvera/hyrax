@@ -18,6 +18,7 @@ module Hyrax
       @solr_document = solr_document
       @current_ability = current_ability
       @request = request
+      define_dynamic_methods if solr_document.try(:flexible?)
     end
 
     delegate :to_s, to: :solr_document
@@ -122,6 +123,29 @@ module Hyrax
       Hyrax::PresenterFactory.build_for(ids: ids,
                                         presenter_class: WorkShowPresenter,
                                         presenter_args: current_ability).first
+    end
+
+    # Define a reader for each flexible-profile property that carries indexing
+    # keys, reading the first present indexed value off the Solr document.
+    # Mirrors WorkShowPresenter#define_dynamic_methods, but defines the readers
+    # directly on the presenter because a FileSet's SolrDocument is not
+    # OrderedMembers-decorated. current_version is read once here (not per
+    # property), matching the work presenter.
+    def define_dynamic_methods # rubocop:disable Metrics/MethodLength
+      Hyrax::FlexibleSchema.current_version["properties"].each do |method_name, property_details|
+        index_keys = property_details["indexing"]
+        next unless index_keys
+        next if self.class.method_defined?(method_name)
+
+        multi_value = property_details["multiple"] || (property_details["data_type"] == "array")
+        self.class.send(:define_method, method_name) do |*_args|
+          index_keys.each do |index_key|
+            value = solr_document[index_key]
+            return(multi_value ? Array.wrap(value) : value) if value.present?
+          end
+          multi_value ? [] : ""
+        end
+      end
     end
   end
 end
