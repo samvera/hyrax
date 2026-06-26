@@ -21,14 +21,22 @@ services:
       - VALKYRIE_METADATA_ADAPTER=fedora_metadata
       - VALKYRIE_STORAGE_ADAPTER=fedora_storage
     depends_on:
-      - worker
-      - chrome
-      - fcrepo
-      - fits
-      - memcached
-      - postgres
-      - redis
-      - solr
+      worker:
+        condition: service_started
+      chrome:
+        condition: service_started
+      fcrepo:
+        condition: service_healthy
+      fits:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      solr:
+        condition: service_healthy
     ports:
       - 3002:3000
       - 9878:9876
@@ -63,12 +71,18 @@ services:
       - HYRAX_FLEXIBLE_CLASSES=
       - HYRAX_DISABLE_INCLUDE_METADATA=false
     depends_on:
-      - fcrepo
-      - fits
-      - memcached
-      - postgres
-      - redis
-      - solr
+      fcrepo:
+        condition: service_healthy
+      fits:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      solr:
+        condition: service_healthy
     volumes:
       - ./bin:/app/samvera
       - .koppie:/app/samvera/hyrax-webapp
@@ -112,6 +126,11 @@ services:
       - "5434:5432"
     volumes:
       - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     networks:
       - sirenia
 
@@ -130,6 +149,13 @@ services:
       - fcrepo:/fcrepo-home
     ports:
       - 8081:8080
+    healthcheck:
+      # fcrepo6 returns 401 (auth required) on /fcrepo/rest/ once the webapp is
+      # serving; treat 200 or 401 as healthy, anything else as not-yet-ready.
+      test: ["CMD-SHELL", "c=$$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/fcrepo/rest/); [ \"$$c\" = 200 ] || [ \"$$c\" = 401 ]"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
     networks:
       - sirenia
 
@@ -137,6 +163,11 @@ services:
     image: ghcr.io/samvera/fitsservlet:1.6.0
     ports:
       - 9082:8080
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/fits/version || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
     networks:
       - sirenia
 
@@ -153,6 +184,11 @@ services:
       - .koppie/.env
     volumes:
       - redis:/bitnamilegacy/redis/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping | grep -q PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     networks:
       - sirenia
 
@@ -178,6 +214,11 @@ services:
       nofile:
         soft: 65536
         hard: 524288
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf 'http://localhost:8983/solr/admin/cores?action=STATUS' || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
     networks:
       - sirenia
 

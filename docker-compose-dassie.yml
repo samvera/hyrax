@@ -19,14 +19,22 @@ services:
       - HYRAX_FLEXIBLE_CLASSES=
       - HYRAX_DISABLE_INCLUDE_METADATA=false
     depends_on:
-      - worker
-      - chrome
-      - fcrepo
-      - fits
-      - memcached
-      - postgres
-      - redis
-      - solr
+      worker:
+        condition: service_started
+      chrome:
+        condition: service_started
+      fcrepo:
+        condition: service_healthy
+      fits:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      solr:
+        condition: service_healthy
     ports:
       - 3000:3000
       - 9876:9876
@@ -51,12 +59,18 @@ services:
     env_file:
       - .dassie/.env
     depends_on:
-      - fcrepo
-      - fits
-      - memcached
-      - postgres
-      - redis
-      - solr
+      fcrepo:
+        condition: service_healthy
+      fits:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      solr:
+        condition: service_healthy
     volumes:
       - ./bin:/app/samvera
       - .dassie:/app/samvera/hyrax-webapp
@@ -101,6 +115,11 @@ services:
       - "5432:5432"
     volumes:
       - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     networks:
       - hyrax
 
@@ -110,6 +129,11 @@ services:
       - fcrepo:/data:cached
     ports:
       - 8080:8080
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/rest/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
     networks:
       - hyrax
 
@@ -117,6 +141,11 @@ services:
     image: ghcr.io/samvera/fitsservlet:1.6.0
     ports:
       - 8080
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/fits/version || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
     networks:
       - hyrax
 
@@ -133,6 +162,11 @@ services:
       - .dassie/.env
     volumes:
       - redis:/bitnamilegacy/redis/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping | grep -q PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     networks:
       - hyrax
 
@@ -158,6 +192,11 @@ services:
       nofile:
         soft: 65536
         hard: 524288
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf 'http://localhost:8983/solr/admin/cores?action=STATUS' || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
     networks:
       - hyrax
 

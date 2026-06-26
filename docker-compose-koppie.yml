@@ -21,13 +21,20 @@ services:
       - HYRAX_FLEXIBLE_CLASSES=
       - HYRAX_DISABLE_INCLUDE_METADATA=false
     depends_on:
-      - worker
-      - chrome
-      - fits
-      - memcached
-      - postgres
-      - redis
-      - solr
+      worker:
+        condition: service_started
+      chrome:
+        condition: service_started
+      fits:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      solr:
+        condition: service_healthy
     ports:
       - 3001:3000
       - 9877:9876
@@ -54,11 +61,16 @@ services:
     env_file:
       - .koppie/.env
     depends_on:
-      - fits
-      - memcached
-      - postgres
-      - redis
-      - solr
+      fits:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      solr:
+        condition: service_healthy
     volumes:
       - ./bin:/app/samvera
       - .koppie:/app/samvera/hyrax-webapp
@@ -102,6 +114,11 @@ services:
       - "5433:5432"
     volumes:
       - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     networks:
       - koppie
 
@@ -109,6 +126,11 @@ services:
     image: ghcr.io/samvera/fitsservlet:1.6.0
     ports:
       - 8080
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/fits/version || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
     networks:
       - koppie
 
@@ -125,6 +147,11 @@ services:
       - .koppie/.env
     volumes:
       - redis:/bitnamilegacy/redis/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping | grep -q PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     networks:
       - koppie
 
@@ -150,6 +177,11 @@ services:
       nofile:
         soft: 65536
         hard: 524288
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf 'http://localhost:8983/solr/admin/cores?action=STATUS' || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
     networks:
       - koppie
 
