@@ -21,8 +21,9 @@ services:
       - VALKYRIE_METADATA_ADAPTER=fedora_metadata
       - VALKYRIE_STORAGE_ADAPTER=fedora_storage
     depends_on:
-      worker:
-        condition: service_started
+      # worker (sidekiq) is intentionally omitted: the test suite uses the
+      # ActiveJob :test adapter (see spec/spec_helper.rb), so jobs run
+      # in-process and a live sidekiq container only wastes memory in CI.
       chrome:
         condition: service_started
       fcrepo:

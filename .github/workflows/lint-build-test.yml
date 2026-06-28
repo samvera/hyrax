@@ -120,23 +120,22 @@ jobs:
         with:
           name: hyrax-dev
           path: ${{runner.temp}}
-      - name: Start containers
+      - name: Load hyrax image
         run: |
           docker load --input ${{runner.temp}}/hyrax-dev-${{ github.sha }}.tar
           docker image ls -a
-          docker compose -f docker-compose-${{ matrix.ci_test_app }}.yml up -d --quiet-pull --pull missing --no-build
       - name: RSpec
         env:
           CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
           CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+        # Use `run` instead of `up`: this starts only the web service and the
+        # services it depends_on (web's depends_on excludes the sidekiq worker),
+        # rather than every service in the compose file, reducing CI memory use.
+        # Let the container's default entrypoint run in the webapp dir (it does
+        # db:prepare/migrate), then cd into the engine for the specs.
         run: >-
-          docker compose -f docker-compose-${{ matrix.ci_test_app }}.yml exec -T -w /app/samvera/hyrax-engine web sh -c
-          "git config --global --add safe.directory /app/samvera/hyrax-engine && bundle install && yarn install && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
-      - name: Capture Container Logs
-        if: always()
-        uses: jwalton/gh-docker-logs@v2
-        with:
-          images: 'selenium/standalone-chromium,postgres,fcrepo/fcrepo,solr,bitnami/redis,ghcr.io/samvera/fitsservlet,ghcr.io/samvera/fcrepo4'
+          docker compose -f docker-compose-${{ matrix.ci_test_app }}.yml run -T --quiet-pull --pull missing web sh -c
+          "git config --global --add safe.directory /app/samvera/hyrax-engine && cd ../hyrax-engine && bundle install && yarn install && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
       - name: Move Test Files
         if: always()
         env:

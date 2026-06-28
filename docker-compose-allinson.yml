@@ -22,8 +22,9 @@ services:
       - HYRAX_FLEXIBLE_CLASSES=Hyrax::AdministrativeSet,CollectionResource,FileSet,GenericWork,Monograph
       - HYRAX_DISABLE_INCLUDE_METADATA=true
     depends_on:
-      worker:
-        condition: service_started
+      # worker (sidekiq) is intentionally omitted: the test suite uses the
+      # ActiveJob :test adapter (see spec/spec_helper.rb), so jobs run
+      # in-process and a live sidekiq container only wastes memory in CI.
       chrome:
         condition: service_started
       fits:
