@@ -131,17 +131,21 @@ jobs:
         # Use `run` instead of `up`: this starts only the web service and the
         # services it depends_on (web's depends_on excludes the sidekiq worker),
         # rather than every service in the compose file, reducing CI memory use.
-        # Let the container's default entrypoint run in the webapp dir (it does
-        # db:prepare/migrate), then cd into the engine for the specs.
         #
-        # GIT_CONFIG_* marks every repo path as a git safe.directory before the
-        # entrypoint runs. The checkout is owned by a different uid than the
-        # container user, so without this git aborts (dubious ownership) while
-        # the entrypoint and bundler touch the engine and git-sourced gems.
+        # --entrypoint sh skips the image's dev entrypoint (db:prepare/migrate/seed
+        # + service waits). The specs don't need it: spec_helper.rb creates and
+        # migrates its own test database. Skipping it also avoids running db:seed,
+        # which isn't needed for specs.
+        #
+        # GIT_CONFIG_* marks every repo path as a git safe.directory. The checkout
+        # is owned by a different uid than the container user, so without this git
+        # aborts (dubious ownership) while bundler touches the engine and
+        # git-sourced gems.
         run: >-
           docker compose -f docker-compose-${{ matrix.ci_test_app }}.yml run -T --quiet-pull --pull missing
+          --entrypoint sh
           -e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0='*'
-          web sh -c
+          web -c
           "cd ../hyrax-engine && bundle install && yarn install && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
       - name: Move Test Files
         if: always()
