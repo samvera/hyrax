@@ -17,12 +17,21 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe '#define_dynamic_methods' do
+    # Use a property the SolrDocument has no native reader for, so the reader
+    # under test comes from #define_dynamic_methods rather than delegation. A
+    # native attribute (e.g. alt_text) would make these pass even if the method
+    # were removed.
     let(:attributes) do
       { "id" => '999', "has_model_ssim" => ["FileSet"],
-        "schema_version_ssi" => '1', "alt_text_tesim" => ['a cat'] }
+        "schema_version_ssi" => '1', "practice_note_tesim" => ['a cat'] }
     end
     let(:profile) do
-      { 'properties' => { 'alt_text' => { 'indexing' => ['alt_text_tesim'], 'multiple' => false } } }
+      { 'properties' => {
+        'practice_note' => { 'indexing' => ['practice_note_tesim'], 'multiple' => false },
+        # A native SolrDocument attribute: the reader must NOT be redefined here,
+        # or it would shadow the delegation MissingMethodBehavior provides.
+        'contributor' => { 'indexing' => ['contributor_tesim'], 'multiple' => true }
+      } }
     end
     # The readers don't use the ability; stub it so this stays a DB-free unit test.
     let(:ability) { instance_double(Ability) }
@@ -30,11 +39,15 @@ RSpec.describe Hyrax::FileSetPresenter do
     before { allow(Hyrax::FlexibleSchema).to receive(:current_version).and_return(profile) }
 
     it 'defines a reader for each indexed profile property' do
-      expect(presenter).to respond_to(:alt_text)
+      expect(presenter).to respond_to(:practice_note)
     end
 
     it 'reads the indexed value off the Solr document' do
-      expect(presenter.alt_text).to eq(['a cat'])
+      expect(presenter.practice_note).to eq(['a cat'])
+    end
+
+    it 'does not shadow properties the SolrDocument already delegates' do
+      expect(presenter.class.instance_methods(false)).not_to include(:contributor)
     end
 
     it 'reads the flexible schema once, not once per property' do

@@ -135,7 +135,14 @@ module Hyrax
       Hyrax::FlexibleSchema.current_version["properties"].each do |method_name, property_details|
         index_keys = property_details["indexing"]
         next unless index_keys
-        next if self.class.method_defined?(method_name)
+        # Skip properties the presenter already defines, or that the SolrDocument
+        # responds to (e.g. contributor, creator) and MissingMethodBehavior
+        # already delegates - a direct-read method here would shadow that
+        # delegation. This reader only fills the gap for flexible properties the
+        # document has no method for. WorkShowPresenter guards the same way but can
+        # use `&&` because its generated method delegates to the document; this one
+        # reads the index directly, so either match must skip.
+        next if self.class.method_defined?(method_name) || solr_document.respond_to?(method_name)
 
         multi_value = property_details["multiple"] || (property_details["data_type"] == "array")
         self.class.send(:define_method, method_name) do |*_args|
