@@ -126,6 +126,11 @@ services:
 
   fcrepo:
     image: ghcr.io/samvera/fcrepo4:4.7.5
+    environment:
+      # Give the (Jetty-based) fcrepo4 JVM a real heap. Untuned it relies on the
+      # JVM default, which makes the HTTP round-trips dassie specs depend on slow.
+      # Sized to stay within the CI runner's memory budget.
+      - JAVA_OPTIONS=-Xms512m -Xmx1500m
     volumes:
       - fcrepo:/data:cached
     ports:
