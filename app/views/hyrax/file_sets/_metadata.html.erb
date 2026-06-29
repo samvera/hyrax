@@ -1,34 +1,62 @@
 <h2><%= t('.metadata') %></h2>
-<%# Compound metadata is not gated on flexible mode, matching the work show page
-    (base/_attribute_rows): `compound_schema_for` resolves compounds from the
-    flexible schema or, with flexibility off, the model class schema. Card
-    compounds render via `render_compound_cards` on the show page; inline
-    compounds render in their own list below; the scalar list renders per mode.
-    Scalars and inline compounds get separate column-count: 2 lists so a tall
-    compound block doesn't unbalance the scalar columns. %>
-<% compound_schema = compound_schema_for(@presenter) %>
-<% inline_compounds = compound_schema.inline_compound_names.select { |name| Array(@presenter.try(name)).reject(&:blank?).any? } %>
-<%# A flexible profile declares each compound's display label; resolve it the same
-    way the scalar rows below do (conform_options) so an inline compound's <dt>
-    matches its label on the work/collection show pages instead of a humanized
-    fallback. Read on dup'd options so this pass doesn't disturb the scalar loop's
-    own conform_options (which mutates its input). Non-flexible mode has no declared
-    display_label, so the renderer's i18n/humanize fallback stands (matching scalars). %>
-<% compound_labels = inline_compounds.any? && @presenter.try(:flexible?) ? view_options_for(@presenter).each_with_object({}) { |(field, options), memo| memo[field.to_sym] = conform_options(field, options.dup)[:label] } : {} %>
+<%# Compound metadata renders on the FileSet show page the same way works and
+    collections render it (base/_attribute_rows): every field - scalar or inline
+    compound - goes through attribute_to_html, so a compound declared
+    `view: { render_as: compound, html_dl: true }` is drawn by the compound
+    renderer automatically and its declared display_label is honored. Card
+    compounds render separately as cards via render_compound_cards on the show
+    page and are skipped here.
 
-<dl class="file-show-term file-show-details">
-  <% if @presenter.try(:flexible?) %>
-    <% view_options_for(@presenter).each do |field, options| %>
-      <% view_options = conform_options(field, options) %>
-      <% next unless field_visible?(view_options, @presenter) %>
-      <% next if compound_schema.card?(field) || compound_schema.inline_compound_names.include?(field.to_sym) %>
-      <% next if Array(@presenter.try(field)).reject(&:blank?).empty? %>
-      <div class="row">
-        <dt class="col-5"><%= view_options["label"] %></dt>
-        <dd class="col-7"><%= auto_link(Array(@presenter.try(field)).reject(&:blank?).join(', '), html: { target: '_blank', rel: 'noopener noreferrer' }) %></dd>
-      </div>
-    <% end %>
-  <% else %>
+    field_visible? gates every field - scalars and compounds alike - so an
+    admin_only / editor_only / show_page: false field is hidden from those it
+    should be (the inline-compound visibility leak the earlier separate loop had).
+
+    Visible rows are split into two col-md-6 columns in Ruby (not via CSS
+    column-count) so a tall compound block is never split mid-column; each dl
+    overrides the column-count .file-show-details would otherwise apply.
+    compound_schema_for resolves compounds from the flexible schema or, with
+    flexibility off, the model class schema. %>
+<% compound_schema = compound_schema_for(@presenter) %>
+
+<% if @presenter.try(:flexible?) %>
+  <%
+    # Conform once per field and reuse the result: conform_options mutates its
+    # argument, and a second pass would drop the resolved display_label, so keep
+    # the [render_field, view_options] pairs from this single pass.
+    rows = view_options_for(@presenter).filter_map do |field, options|
+      next if compound_card_field?(@presenter, field) # rendered as its own card
+      render_field = conform_field(field, options)
+      view_options = conform_options(field, options)
+      next unless field_visible?(view_options, @presenter)
+      next unless @presenter.respond_to?(render_field) && Array(@presenter.public_send(render_field)).reject(&:blank?).present?
+      [render_field, view_options]
+    end
+    half = (rows.count / 2.0).ceil
+    left_rows = rows[0...half]
+    right_rows = rows[half..] || []
+  %>
+  <div class="row" <%= @presenter.microdata_type_to_html %>>
+    <div class="col-md-6">
+      <dl class="file-show-term file-show-details" style="column-count: unset; columns: unset;">
+        <% left_rows.each do |render_field, view_options| %>
+          <%= @presenter.attribute_to_html(render_field, view_options.merge(html_dl: true)) %>
+        <% end %>
+      </dl>
+    </div>
+    <div class="col-md-6">
+      <dl class="file-show-term file-show-details" style="column-count: unset; columns: unset;">
+        <% right_rows.each do |render_field, view_options| %>
+          <%= @presenter.attribute_to_html(render_field, view_options.merge(html_dl: true)) %>
+        <% end %>
+        <%= render 'hyrax/file_sets/metadata_embargo_lease', presenter: @presenter %>
+      </dl>
+    </div>
+  </div>
+<% else %>
+  <%# Non-flexible mode has no per-field view options to gate or render_as to key
+      off: render the standard scalar list, then any compound the model class
+      declares (resolved from compound_schema). %>
+  <dl class="file-show-term file-show-details">
     <% { description: nil, creator: nil, license: nil, subject: nil, keyword: nil,
          date_created: nil, related_url: nil, resource_type: nil, alt_text: nil }.each_key do |field| %>
       <% values = Array(@presenter.try(field)).reject(&:blank?) %>
@@ -38,21 +66,10 @@
         <dd class="col-7"><%= auto_link(values.join(', '), html: { target: '_blank', rel: 'noopener noreferrer' }) %></dd>
       </div>
     <% end %>
-  <% end %>
-  <%= render 'hyrax/file_sets/metadata_embargo_lease', presenter: @presenter %>
-</dl>
-
-<% if inline_compounds.any? %>
-  <dl class="file-show-term file-show-details">
-    <% inline_compounds.each do |field| %>
-      <% label = compound_labels[field.to_sym] %>
-      <div class="compound-inline" style="break-inside: avoid;">
-        <% if label.present? %>
-          <%= @presenter.attribute_to_html(field.to_sym, render_as: :compound, html_dl: true, label: label) %>
-        <% else %>
-          <%= @presenter.attribute_to_html(field.to_sym, render_as: :compound, html_dl: true) %>
-        <% end %>
-      </div>
+    <% compound_schema.inline_compound_names.each do |field| %>
+      <% next if Array(@presenter.try(field)).reject(&:blank?).empty? %>
+      <%= @presenter.attribute_to_html(field.to_sym, render_as: :compound, html_dl: true) %>
     <% end %>
+    <%= render 'hyrax/file_sets/metadata_embargo_lease', presenter: @presenter %>
   </dl>
 <% end %>

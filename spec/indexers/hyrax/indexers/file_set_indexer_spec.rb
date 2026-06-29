@@ -321,6 +321,41 @@ RSpec.describe Hyrax::Indexers::FileSetIndexer, :frozen_time, if: Hyrax.config.u
         expect(subject['lease_history_ssim']).to eq lease.lease_history
       end
     end
+
+    context 'when the FileSet carries a compound' do
+      # A stock FileSet declares no compounds; an app adds one in its profile.
+      # Model that with a subclass carrying a compound attribute and assert the
+      # CompoundIndexer (now mixed into FileSetIndexer) projects it into Solr -
+      # the display blob plus a derived searchable sub-property field - exactly
+      # as it does for works and collections.
+      let(:file_set_class) do
+        Class.new(Hyrax::FileSet) do
+          def self.name
+            'TestCompoundFileSet'
+          end
+
+          attribute :provenance,
+                    Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
+                      subproperties: { 'scheme' => { 'type' => 'string' } }
+                    )
+        end
+      end
+      let(:file_set) do
+        file_set_class.new(
+          id: fileset_id,
+          file_ids: [mock_file.id, mock_text.id, mock_thumbnail.id],
+          original_file_id: mock_file.id,
+          thumbnail_id: mock_thumbnail.id,
+          extracted_text_id: mock_text.id,
+          provenance: [{ 'scheme' => 'C2PA' }]
+        )
+      end
+
+      it 'projects the display blob and a derived sub-property field into Solr' do
+        expect(JSON.parse(subject['provenance_json_ss'])).to eq([{ 'scheme' => 'C2PA' }])
+        expect(subject['provenance_scheme_tesim']).to contain_exactly('C2PA')
+      end
+    end
   end
 
   describe '#file_format' do
