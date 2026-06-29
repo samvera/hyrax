@@ -19,14 +19,23 @@ services:
       - HYRAX_FLEXIBLE_CLASSES=
       - HYRAX_DISABLE_INCLUDE_METADATA=false
     depends_on:
-      - worker
-      - chrome
-      - fcrepo
-      - fits
-      - memcached
-      - postgres
-      - redis
-      - solr
+      # worker (sidekiq) is intentionally omitted: the test suite uses the
+      # ActiveJob :test adapter (see spec/spec_helper.rb), so jobs run
+      # in-process and a live sidekiq container only wastes memory in CI.
+      chrome:
+        condition: service_started
+      fcrepo:
+        condition: service_healthy
+      fits:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      solr:
+        condition: service_healthy
     ports:
       - 3000:3000
       - 9876:9876
@@ -51,12 +60,18 @@ services:
     env_file:
       - .dassie/.env
     depends_on:
-      - fcrepo
-      - fits
-      - memcached
-      - postgres
-      - redis
-      - solr
+      fcrepo:
+        condition: service_healthy
+      fits:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      solr:
+        condition: service_healthy
     volumes:
       - ./bin:/app/samvera
       - .dassie:/app/samvera/hyrax-webapp
@@ -101,6 +116,11 @@ services:
       - "5432:5432"
     volumes:
       - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     networks:
       - hyrax
 
@@ -110,6 +130,11 @@ services:
       - fcrepo:/data:cached
     ports:
       - 8080:8080
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/rest/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
     networks:
       - hyrax
 
@@ -117,6 +142,11 @@ services:
     image: ghcr.io/samvera/fitsservlet:1.6.0
     ports:
       - 8080
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/fits/version || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
     networks:
       - hyrax
 
@@ -133,6 +163,11 @@ services:
       - .dassie/.env
     volumes:
       - redis:/bitnamilegacy/redis/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping | grep -q PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     networks:
       - hyrax
 
@@ -140,6 +175,11 @@ services:
     image: solr:9.9
     env_file:
       - .dassie/.env
+    environment:
+      # Cap the Solr heap so it doesn't auto-size off host RAM and starve the
+      # rest of the stack on memory-constrained CI runners. The test index is
+      # tiny; 512m is ample.
+      - SOLR_JAVA_MEM=-Xms512m -Xmx512m
     ports:
       - 8983:8983
     command:
@@ -153,6 +193,11 @@ services:
       nofile:
         soft: 65536
         hard: 524288
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf 'http://localhost:8983/solr/admin/cores?action=STATUS' || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
     networks:
       - hyrax
 

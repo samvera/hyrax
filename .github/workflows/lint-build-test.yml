@@ -120,23 +120,38 @@ jobs:
         with:
           name: hyrax-dev
           path: ${{runner.temp}}
-      - name: Start containers
+      - name: Load hyrax image
         run: |
           docker load --input ${{runner.temp}}/hyrax-dev-${{ github.sha }}.tar
           docker image ls -a
-          docker compose -f docker-compose-${{ matrix.ci_test_app }}.yml up -d --quiet-pull --pull missing --no-build
       - name: RSpec
         env:
           CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
           CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+        # Use `run` instead of `up`: this starts only the web service and the
+        # services it depends_on (web's depends_on excludes the sidekiq worker),
+        # rather than every service in the compose file, reducing CI memory use.
+        #
+        # --entrypoint sh skips the image's dev entrypoint (db:prepare/migrate/seed
+        # + service waits). The specs don't need it: spec_helper.rb creates and
+        # migrates its own test database. Skipping it also avoids running db:seed,
+        # which isn't needed for specs.
+        #
+        # GIT_CONFIG_* marks every repo path as a git safe.directory. The checkout
+        # is owned by a different uid than the container user, so without this git
+        # aborts (dubious ownership) while bundler touches the engine and
+        # git-sourced gems.
+        #
+        # --use-aliases gives the run container the web service's network aliases,
+        # so the remote browser can reach the karma server at http://web:9876
+        # (the jasmine spec). Without it `run` omits the alias and the browser
+        # fails with net::ERR_NAME_NOT_RESOLVED.
         run: >-
-          docker compose -f docker-compose-${{ matrix.ci_test_app }}.yml exec -T -w /app/samvera/hyrax-engine web sh -c
-          "bundle install && yarn install && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
-      - name: Capture Container Logs
-        if: always()
-        uses: jwalton/gh-docker-logs@v2
-        with:
-          images: 'selenium/standalone-chromium,postgres,fcrepo/fcrepo,solr,bitnami/redis,ghcr.io/samvera/fitsservlet,ghcr.io/samvera/fcrepo4'
+          docker compose -f docker-compose-${{ matrix.ci_test_app }}.yml run -T --quiet-pull --pull missing
+          --use-aliases --entrypoint sh
+          -e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0='*'
+          web -c
+          "cd ../hyrax-engine && bundle install && yarn install && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
       - name: Move Test Files
         if: always()
         env:
