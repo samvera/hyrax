@@ -48,3 +48,43 @@
     margin-right: 0.25rem;
   }
 }
+
+.hyrax-linked-record-create {
+  .form-group {
+    margin-bottom: 0.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .form-group > label,
+  .hyrax-linked-record-group > label {
+    display: block;
+    margin-bottom: 0.25rem;
+    text-align: left;
+    width: 100%;
+  }
+
+  .hyrax-linked-record-group-row {
+    align-items: flex-start;
+    background: $gray-100;
+    border: 1px solid $gray-200;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+
+    [data-create-group-remove] {
+      padding-bottom: 0;
+      padding-top: 0;
+    }
+  }
+
+  [data-create-group-rows] .hyrax-linked-record-group-row:last-child {
+    margin-bottom: 0;
+  }
+
+  [data-create-group-add] {
+    margin-top: 0.25rem;
+  }
+}
