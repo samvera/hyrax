@@ -19,6 +19,13 @@ RSpec.describe 'hyrax/file_sets/_valkyrie_form.html.erb', type: :view do
       [SolrDocument.new(id: "baz", title_tesim: "foo")]
     )
 
+    # Compound fields: the form responds to these (ResourceForm), but a
+    # non-flexible FileSet declares none. Stub them so we can assert the view
+    # renders compounds the same way the work and collection forms do.
+    allow(form).to receive(:primary_compound_terms).and_return([:rights])
+    allow(form).to receive(:secondary_compound_terms).and_return([:funding])
+    allow(view).to receive(:render_compound_field).and_return('<div class="compound-field"></div>'.html_safe)
+
     render partial: 'hyrax/file_sets/valkyrie_form', locals: { form_object: form }
   end
 
@@ -49,5 +56,13 @@ RSpec.describe 'hyrax/file_sets/_valkyrie_form.html.erb', type: :view do
 
   it 'renders the language form field' do
     expect(rendered).to have_selector('input[name="file_set[language][]"]')
+  end
+
+  it 'renders primary compound fields' do
+    expect(view).to have_received(:render_compound_field).with(anything, :rights)
+  end
+
+  it 'renders secondary compound fields under additional fields' do
+    expect(view).to have_received(:render_compound_field).with(anything, :funding)
   end
 end
