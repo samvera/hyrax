@@ -284,6 +284,42 @@ How the pieces fit together:
   string `<compound>_<name>_ssim` (like an id), so you can reverse-look-up "which
   works reference this record?" with a Solr query on that field.
 
+#### Labelling the create form (i18n)
+
+Every label and button in the inline create form reads from i18n, so a host app
+can name things without touching the partial. All keys live under
+`hyrax.compound_fields.linked_record` and fall back to a humanized default when
+unset.
+
+| Key | Controls | Default when unset |
+|-----|----------|--------------------|
+| `fields.<field_name>` | the label above a create-field input, and the heading above a repeatable field's rows. For a multi-field `group`, the sub-field labels are dropped and each `fields.<subfield_name>` is shown as the input's placeholder instead. | humanized field name |
+| `item_label.<source>` | the noun in the **"Add new"** trigger (e.g. `contributor`), keyed by the sub-property's `authority:` | the source name, singularized + downcased |
+| `item_label.<field_name>` | the noun in a repeatable field's **"add another row"** button | that field's `fields.<field_name>` label |
+| `add_new` | the **"Add new"** trigger wording; interpolates `%{item}` from `item_label.<source>`. A `fa-plus` icon precedes it. | `Add new` |
+| `add_row` | the **"add another row"** button wording; interpolates `%{item}` from `item_label.<field_name>`. A `fa-plus` icon precedes it. | `Add another <field>` |
+
+```yaml
+# config/locales/<app>.en.yml
+en:
+  hyrax:
+    compound_fields:
+      linked_record:
+        add_new: Add a %{item}              # → "＋ Add a contributor"
+        add_row: Add another %{item}        # → "＋ Add another affiliation"
+        item_label:
+          contributors: contributor         # the source (authority:)
+          affiliations: affiliation         # a repeatable create-field
+        fields:
+          display_name: Name
+          name_identifiers: Name identifiers
+```
+
+`item_label` is the single noun reused by both add buttons, so changing it keeps
+the trigger and the row button consistent. It is independent of `fields.<name>`
+(the heading/placeholder), so relabeling a field's heading does not change its
+button noun unless you also set `item_label`.
+
 ### Grouping (`group:` + `groups:`, optional)
 
 Sub-properties can be clustered into labeled groups within each entry's card.
