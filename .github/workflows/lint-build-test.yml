@@ -141,9 +141,14 @@ jobs:
         # is owned by a different uid than the container user, so without this git
         # aborts (dubious ownership) while bundler touches the engine and
         # git-sourced gems.
+        #
+        # --use-aliases gives the run container the web service's network aliases,
+        # so the remote browser can reach the karma server at http://web:9876
+        # (the jasmine spec). Without it `run` omits the alias and the browser
+        # fails with net::ERR_NAME_NOT_RESOLVED.
         run: >-
           docker compose -f docker-compose-${{ matrix.ci_test_app }}.yml run -T --quiet-pull --pull missing
-          --entrypoint sh
+          --use-aliases --entrypoint sh
           -e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0='*'
           web -c
           "cd ../hyrax-engine && bundle install && yarn install && rspec_booster --job ${{ matrix.ci_node_index }}/${{ matrix.ci_node_total }}"
