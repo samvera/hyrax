@@ -14,6 +14,7 @@ RSpec.describe Hyrax::Characterization::ValkyrieCharacterizationService do
 
     before do
       Hyrax.publisher.subscribe(listener)
+      allow(file_metadata).to receive(:checksum=).and_call_original
       described_class
         .run(metadata: file_metadata, file: file_set.original_file.file, characterizer: characterizer)
     end
@@ -31,6 +32,10 @@ RSpec.describe Hyrax::Characterization::ValkyrieCharacterizationService do
       it 'publishes metadata updated for file metadata node' do
         expect(listener.file_metadata_updated&.payload&.values&.map(&:id))
           .to include(::User.system_user.id, file_metadata.id)
+      end
+      
+      it 'maps original checksum to checksum by default' do
+        expect(file_metadata).to have_received(:checksum=)
       end
     end
   end
