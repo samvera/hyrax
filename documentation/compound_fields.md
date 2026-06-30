@@ -459,6 +459,9 @@ per-compound code:
   writes each sub-property's value to its derived `<compound>_<name>_<suffix>`
   Solr fields (or an explicit `index_keys:`/`indexing:` override) and stores the
   displayable sub-properties as a `<compound>_json_ss` blob for the show page.
+  It is mixed into the work, collection, and FileSet indexers
+  (`Hyrax::Indexers::FileSetIndexer`), so compounds on any of the three reach
+  Solr the same way.
 
 A resource and its indexer opt in with one include each:
 
@@ -473,6 +476,10 @@ class GenericWorkResourceIndexer < Hyrax::ValkyrieWorkIndexer
   include Hyrax::Indexers::CompoundIndexer
 end
 ```
+
+The engine's `Hyrax::Indexers::FileSetIndexer` includes
+`Hyrax::Indexers::CompoundIndexer` the same way, so a compound declared on
+`Hyrax::FileSet` is indexed with no extra wiring.
 
 ## Sample compounds shipped with Hyrax
 
@@ -497,6 +504,14 @@ The engine base `Hyrax::Work` and `Hyrax::PcdmCollection` include them, and the
 base work and collection indexers flatten them. Applications can add their own
 compounds the same way and remove or override the samples in their own schema.
 
+The default profile declares the sample compounds `available_on` `Hyrax::Work`
+and the collection class only — none on `Hyrax::FileSet` — so a stock FileSet
+show page lists no compounds. FileSet compounds activate only when an
+application adds one to `Hyrax::FileSet` in its profile, declared
+`view: { render_as: compound, html_dl: true }` (omit `display: card` for an
+inline compound). The indexing, show-page, and form paths are already wired for
+FileSets; only the profile declaration is missing by default.
+
 ## Show-page rendering
 
 Because the show page renders from Solr (not the live resource), the indexer
@@ -510,8 +525,12 @@ compound`) renders each entry's populated sub-properties as a small definition
 list. Works render compounds through the standard `attribute_to_html` /
 `render_as` path; collections render them through the same shared renderer,
 invoked from the collection show view for terms the presenter reports as
-compounds. Sub-property labels come from the `hyrax.compound_fields.<compound>.<subproperty>`
-i18n keys (humanized fallback).
+compounds. FileSets render inline compounds through the same
+`attribute_to_html` / `render_as` path (laid out in two columns by
+`hyrax/file_sets/_metadata`), and card compounds via `render_compound_cards` on
+the FileSet show page — the same two surfaces works use. Sub-property labels
+come from the `hyrax.compound_fields.<compound>.<subproperty>` i18n keys
+(humanized fallback).
 
 For a `controlled` sub-property, the show page displays the authority/value-list
 **term**, not the stored id — `Hyrax::CompoundSubpropertyLabeler` resolves the id
@@ -551,6 +570,8 @@ relationship_type:
   cards.
 - On a **collection** show page, the cards render after the search-within bar
   and before the works list.
+- On a **FileSet** show page, the cards render below the two-column metadata
+  list, via `render_compound_cards` in `hyrax/file_sets/show.html.erb`.
 
 Inline compounds are still listed by the presenter's `terms`; card compounds are
 excluded from the inline list (`inline_compound_names`) so they appear only as
