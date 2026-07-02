@@ -33,7 +33,7 @@ RSpec.describe Hyrax::Characterization::ValkyrieCharacterizationService do
         expect(listener.file_metadata_updated&.payload&.values&.map(&:id))
           .to include(::User.system_user.id, file_metadata.id)
       end
-      
+
       it 'maps original checksum to checksum by default' do
         expect(file_metadata).to have_received(:checksum=)
       end
