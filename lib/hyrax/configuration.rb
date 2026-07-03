@@ -793,6 +793,14 @@ module Hyrax
           f.request :multipart
           f.request :url_encoded
           f.adapter Faraday.default_adapter
+
+          user = ENV['FEDORA_USER'] || 'fedoraAdmin'
+          password = ENV['FEDORA_PASSWORD'] || 'fedoraAdmin'
+          if Gem::Version.new(Faraday::VERSION) < Gem::Version.new('2')
+            f.request :basic_auth, user, password
+          else
+            f.request :authorization, :basic, user, password
+          end
         end
       }
     end
