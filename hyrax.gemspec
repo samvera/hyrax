@@ -52,6 +52,7 @@ SUMMARY
   spec.add_dependency 'dry-events', '~> 1.0', '>= 1.0.1'
   spec.add_dependency 'dry-monads', '~> 1.6'
   spec.add_dependency 'dry-validation', '~> 1.10'
+  spec.add_dependency 'erb', '~> 4.0'
   spec.add_dependency 'flipflop', '~> 2.3'
   # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'flot-rails', '~> 0.0.6'
