@@ -28,12 +28,6 @@ module Hyrax
 
       include BasedNearFieldBehavior
       include CompoundFieldBehavior
-      # Do NOT wire redirects here. Its property, behavior, and validator live on
-      # PcdmObjectForm and PcdmCollectionForm instead. Declaring the `redirects`
-      # property on this shared base makes Reform read `redirects` off every model
-      # when building the form twin, and FileSet (whose form also inherits
-      # ResourceForm) has no such attribute — so it raises NoMethodError on
-      # edit/validate in non-flexible mode.
       class_attribute :model_class
 
       property :human_readable_type, writable: false
