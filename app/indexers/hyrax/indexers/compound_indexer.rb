@@ -41,12 +41,14 @@ module Hyrax
 
       # Solr suffix set per sub-property `type:`, following the field-role
       # conventions: a `string` (open text) is both facetable (`_sim`) and
-      # full-text searchable (`_tesim`); a `controlled` value is a closed
-      # vocabulary, so it is facetable only (`_sim`) — full-text tokenization
-      # adds nothing for fixed terms; ids/URIs get a single stored string
-      # (`_ssim`); dates a date field (`_dtsi`).
+      # full-text searchable (`_tesim`), as is a `datepicker` (its ISO date is
+      # text, not a `_dtsi` field); a `controlled` value is a closed vocabulary,
+      # so it is facetable only (`_sim`) — full-text tokenization adds nothing
+      # for fixed terms; ids/URIs get a single stored string (`_ssim`); dates a
+      # date field (`_dtsi`).
       DERIVED_SUFFIXES = {
         'string' => %w[_sim _tesim],
+        'datepicker' => %w[_sim _tesim],
         'controlled' => %w[_sim],
         'url' => %w[_ssim],
         'work_or_url' => %w[_ssim],
