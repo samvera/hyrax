@@ -9,6 +9,30 @@ RSpec.describe Hyrax::Forms::ResourceForm do
   let(:default_admin_set) { instance_double(Hyrax::AdministrativeSet, title: "DEFAULT_ADMINSET", id: "DEFAULT_ADMINSET_ID") }
   before { allow(Hyrax::AdminSetCreateService).to receive(:find_or_create_default_admin_set).and_return(default_admin_set) }
 
+  # Redirects is a Work/Collection concern, never a FileSet one. The FileSet
+  # form must not declare the property (its model has no `redirects` attribute) —
+  # guarding the regression where declaring redirects on the shared base
+  # ResourceForm leaked it onto FileSetForm. True in both flex modes.
+  # Requires HYRAX_REDIRECTS_ENABLED=true at load.
+  context 'redirects property placement', if: Hyrax.config.redirects_enabled? do
+    it 'is not declared on the FileSet form' do
+      expect(Hyrax::Forms::FileSetForm.definitions.keys).not_to include('redirects')
+    end
+
+    # In non-flexible mode the property is installed via FormFields(:redirects)
+    # on the work/collection forms. In flexible mode it comes from the m3 profile
+    # instead (adopters declare it there), so this positive check is flex-false.
+    context 'in non-flexible mode', unless: Hyrax.config.flexible? do
+      it 'is declared on a work form' do
+        expect(described_class.for(Hyrax::Work.new).class.definitions.keys).to include('redirects')
+      end
+
+      it 'is declared on a collection form' do
+        expect(Hyrax::Forms::PcdmCollectionForm.definitions.keys).to include('redirects')
+      end
+    end
+  end
+
   describe '.required_fields=' do
     subject(:form) { form_class.new(work) }
 

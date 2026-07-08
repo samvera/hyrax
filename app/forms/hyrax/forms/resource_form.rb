@@ -27,9 +27,13 @@ module Hyrax
       end
 
       include BasedNearFieldBehavior
-      include RedirectsFieldBehavior
       include CompoundFieldBehavior
-      include Hyrax::FormFields(:redirects) if Hyrax.config.redirects_enabled? && Hyrax.config.work_include_metadata?
+      # Do NOT wire redirects here. Its property, behavior, and validator live on
+      # PcdmObjectForm and PcdmCollectionForm instead. Declaring the `redirects`
+      # property on this shared base makes Reform read `redirects` off every model
+      # when building the form twin, and FileSet (whose form also inherits
+      # ResourceForm) has no such attribute — so it raises NoMethodError on
+      # edit/validate in non-flexible mode.
       class_attribute :model_class
 
       property :human_readable_type, writable: false
@@ -58,11 +62,6 @@ module Hyrax
       # the literal options hash on every replay so each subclass gets its own
       # clean copy. This pattern applies to *any* `validates_with` that takes
       # an `attributes:` keyword.
-      if Hyrax.config.redirects_enabled?
-        validation(name: :default, inherit: true) do
-          validates_with Hyrax::RedirectValidator, attributes: [:redirects]
-        end
-      end
 
       # Required-compound / required-sub-property validation. Wired through a
       # `validation { ... }` block (not a bare `validates_with`) because these
