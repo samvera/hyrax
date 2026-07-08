@@ -7,6 +7,14 @@ module Hyrax
     # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
     class PcdmCollectionForm < Hyrax::Forms::ResourceForm # rubocop:disable Metrics/ClassLength
       include Hyrax::FormFields(:core_metadata) if Hyrax.config.collection_include_metadata?
+      include RedirectsFieldBehavior
+      include Hyrax::FormFields(:redirects) if Hyrax.config.redirects_enabled? && Hyrax.config.collection_include_metadata?
+      if Hyrax.config.redirects_enabled?
+        validation(name: :default, inherit: true) do
+          validates_with Hyrax::RedirectValidator, attributes: [:redirects]
+        end
+      end
+
       check_if_flexible(Hyrax::PcdmCollection)
 
       BannerInfoPrepopulator = lambda do |**_options|

@@ -27,8 +27,7 @@ module Hyrax
       end
 
       include BasedNearFieldBehavior
-      include RedirectsFieldBehavior
-      include Hyrax::FormFields(:redirects) if Hyrax.config.redirects_enabled? && Hyrax.config.work_include_metadata?
+      include CompoundFieldBehavior
       class_attribute :model_class
 
       property :human_readable_type, writable: false
@@ -57,11 +56,6 @@ module Hyrax
       # the literal options hash on every replay so each subclass gets its own
       # clean copy. This pattern applies to *any* `validates_with` that takes
       # an `attributes:` keyword.
-      if Hyrax.config.redirects_enabled?
-        validation(name: :default, inherit: true) do
-          validates_with Hyrax::RedirectValidator, attributes: [:redirects]
-        end
-      end
 
       ##
       # @api public
