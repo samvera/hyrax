@@ -13,6 +13,17 @@ module Hyrax
          Hyrax::PcdmCollection.ancestors.detect { |k| k.inspect == "Hyrax::Schema(compound_metadata)" }
         include Hyrax::FormFields(:compound_metadata)
       end
+
+      # redirects is wired here (and on PcdmObjectForm), not on the shared
+      # ResourceForm; see ResourceForm for why FileSetForm must not inherit it.
+      include RedirectsFieldBehavior
+      include Hyrax::FormFields(:redirects) if Hyrax.config.redirects_enabled? && Hyrax.config.collection_include_metadata?
+      if Hyrax.config.redirects_enabled?
+        validation(name: :default, inherit: true) do
+          validates_with Hyrax::RedirectValidator, attributes: [:redirects]
+        end
+      end
+
       check_if_flexible(Hyrax::PcdmCollection)
 
       BannerInfoPrepopulator = lambda do |**_options|
