@@ -1,6 +1,6 @@
 <% provide :page_title, construct_page_title(@presenter.title) %>
 <% content_for :canonical_url do %>
-  <link rel="canonical" href="<%= permalink_for(@presenter) %>" />
+  <link rel="canonical" href="<%= canonical_url_for(@presenter) %>" />
 <% end %>
 <div class="hyc-container" itemscope itemtype="http://schema.org/CollectionPage">
   <div class="row hyc-header">
@@ -98,6 +98,10 @@
       <%= render 'search_form', presenter: @presenter, url: hyrax.collection_path(@presenter.id) %>
     </div>
   </div>
+
+  <%# Compounds declared `view: { display: card }` render as their own cards,
+      after the search-within-collection bar and before the works list. %>
+  <%= render_compound_cards(@presenter) %>
 
   <!-- Subcollections -->
   <% if @presenter.collection_type_is_nestable? && @subcollection_count > 0 %>

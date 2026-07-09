@@ -1,19 +1,29 @@
 # Field Behaviors
 
-A **Field Behavior** is a Ruby module mixed into `Hyrax::Forms::ResourceForm` (and its subclasses) that wires up a single property whose persisted shape and submitted-form shape differ. It owns the populator, prepopulator, and `deserialize!` strip for that property.
+A **Field Behavior** is a Ruby module mixed into `Hyrax::Forms::ResourceForm` (and its subclasses) that wires up a single property whose persisted shape and submitted-form shape differ. It owns the populator and the `deserialize!` strip for that property, and may optionally provide a prepopulator if the view needs a presenter wrapping each entry.
 
 Use a Field Behavior when you have a property that:
 
 - Is rendered through `accepts_nested_attributes_for` semantics (`<name>_attributes` payload from the form).
-- Persists in a shape the view can't render directly (a hash of sub-fields, a URI string the view wants as a `ControlledVocabulary` instance, a triple of values, etc.).
+- Persists in a shape the view can't render directly (a hash of sub-properties, a URI string the view wants as a `ControlledVocabulary` instance, a triple of values, etc.).
 - Needs the same wiring on every form subclass.
 
-Two reference exemplars ship with Hyrax:
+Two examples ship with Hyrax:
 
-- `Hyrax::BasedNearFieldBehavior` — single-string-per-entry (URI), hydrated to a `ControlledVocabularies::Location` for the view.
-- `Hyrax::RedirectsFieldBehavior` — multi-field-per-entry (path / canonical / sequence), hydrated to a `Hyrax::Redirect` presenter for the view.
+- `Hyrax::BasedNearFieldBehavior` — single-string-per-entry (URI), wrapped in a `ControlledVocabularies::Location` for the view.
+- `Hyrax::RedirectsFieldBehavior` — multi-field-per-entry (path / is_display_url), wrapped in a `Hyrax::Redirect` presenter for the view.
 
 This document covers the contract a Field Behavior must satisfy, the decision points for a new behavior, and the worked examples.
+
+> **For a field whose entries are a hash of named sub-properties, prefer a
+> [compound](compound_fields.md) instead** — it satisfies this same contract
+> from the schema alone, with no per-field Ruby or ERB.
+> [`compound_fields.md`](compound_fields.md) covers when to use a compound vs. a
+> hand-written Field Behavior. The behaviors documented below are the right tool
+> for the cases a compound does not cover: a single controlled-URI value per
+> entry wrapped in a presenter (`based_near`), or bespoke behavior such as a
+> radio-group selection, write-time normalization, global-uniqueness validation,
+> or feature gating (`redirects`).
 
 ## Why this pattern exists
 
@@ -25,19 +35,18 @@ Reform's `FormBuilderMethods#deserialize!` rewrites the submitted `<name>_attrib
 
 A Field Behavior is a module that:
 
-1. **Registers a virtual `<name>_attributes` property** in `self.included`, with a populator and prepopulator. If the persisted `<name>` property is not already on the form via some other include path, also load it from the corresponding YAML schema in `self.included` so the form partial can read `f.object.<name>` directly.
+1. **Registers a virtual `<name>_attributes` property** in `self.included`, with a populator. Add a prepopulator if the view needs a presenter wrapping each persisted entry; otherwise the form partial can wrap entries inline at render time. If the persisted `<name>` property is not already on the form via some other include path, also load it from the corresponding YAML schema in `self.included` so the form partial can read `f.object.<name>` directly.
 
    ```ruby
    def self.included(descendant)
      descendant.include Hyrax::FormFields(:<name>)
      descendant.property :<name>_attributes,
                          virtual: true,
-                         populator: :<name>_attributes_populator,
-                         prepopulator: :<name>_attributes_prepopulator
+                         populator: :<name>_attributes_populator
    end
    ```
 
-   Whether to load the persisted property depends on where the schema is included on application forms. `BasedNearFieldBehavior` skips this step because adopter forms include `Hyrax::FormFields(:basic_metadata)` directly, which already registers `based_near`. `RedirectsFieldBehavior` includes it because the redirects schema is engine-level and not part of any per-form include — without the include here, non-flexible forms would not have the property registered, and the partial's `f.object.redirects` call would crash. A flexible install's m3 loader redefines the property on each instance harmlessly when this include is present.
+   Whether to load the persisted property depends on where the schema is included on application forms. `BasedNearFieldBehavior` skips this step because adopter forms include `Hyrax::FormFields(:basic_metadata)` directly, which already registers `based_near`. `RedirectsFieldBehavior` does not include the schema either; the persisted `redirects` property is provided by either the m3 loader (flexible mode) or by a per-class-level include on `ResourceForm` (non-flexible mode). Either way, when the schema is engine-level and not on a per-form include path, an extra `descendant.include Hyrax::FormFields(:<name>)` here is the third option.
 
 2. **Composes via `super` in `deserialize!`**, then deletes its own renamed key.
 
@@ -68,7 +77,7 @@ A Field Behavior is a module that:
 
    Drop empty rows and rows marked `_destroy` here. Normalize values here too — the persisted shape should be canonical so non-form callers (importers, console, validators) don't have to re-normalize.
 
-4. **Provides a prepopulator** that hydrates the persisted value into a render-friendly object.
+4. **Optionally, provides a prepopulator** that wraps each persisted entry in a presenter the view can use. If you skip the prepopulator, the form partial can wrap entries inline at render time instead — useful when the view needs more control over which entries get wrapped or when wrapping should happen lazily.
 
    ```ruby
    def <name>_attributes_prepopulator
@@ -76,6 +85,8 @@ A Field Behavior is a module that:
      self.<name> = Array(<name>).map { |entry| MyPresenter.wrap(entry) }
    end
    ```
+
+   `BasedNearFieldBehavior` uses a prepopulator; `RedirectsFieldBehavior` wraps inline in the partial.
 
 5. **Is `prepend`ed onto every subclass** in `ResourceForm.inherited`:
 
@@ -126,16 +137,16 @@ When adding a Field Behavior, work through these:
 ### 1. What does each entry look like?
 
 - **Single value per entry** (URI string, scalar): see `BasedNearFieldBehavior`.
-- **Multiple sub-fields per entry** (path + canonical + sequence; or label + value + lang): see `RedirectsFieldBehavior`.
+- **Multiple sub-properties per entry** (path + is_display_url; or label + value + lang): see `RedirectsFieldBehavior`.
 
 ### 2. Persisted as what?
 
 - **Plain string / scalar** — fine for single-value entries.
-- **Plain hash** with string keys — for multi-field entries. Add the `hash` shortcut to your YAML schema (`type: hash, multiple: true`). Use this *instead* of nesting a Valkyrie::Resource subclass; nested resources round-trip badly through Postgres JSONB (sub-fields strip, parent fields leak).
+- **Plain hash** with string keys — for multi-field entries. Add the `hash` shortcut to your YAML schema (`type: hash, multiple: true`). Use this *instead* of nesting a Valkyrie::Resource subclass; nested resources round-trip badly through Postgres JSONB (sub-properties strip, parent fields leak).
 
 ### 3. Does the view need a presenter?
 
-- **Yes** if the view calls `.something` accessors on each entry. Build a small Ruby class with `path` / `value` / etc. readers and a `wrap(input)` class method that accepts both raw and already-wrapped input. The prepopulator wraps every entry; the view can rely on the presenter API.
+- **Yes** if the view calls `.something` accessors on each entry. Build a small Ruby class with `path` / `value` / etc. readers and a `wrap(input)` class method that accepts both raw and already-wrapped input. Either the prepopulator wraps every entry up front (the `BasedNearFieldBehavior` pattern), or the form partial wraps entries inline at render time (the `RedirectsFieldBehavior` pattern). Either way the view code can rely on the presenter API.
 - **No** if the view reads keys directly. Skip the presenter and let the view call `entry['key']`.
 
 ### 4. What happens to invalid input?
@@ -144,9 +155,9 @@ The populator drops empty rows and `_destroy` rows. Format validation belongs in
 
 ### 5. Is the property optional on some forms?
 
-Always guard with `respond_to?(:<name>)` at the top of populator and prepopulator. Adopter forms whose models don't include the schema get a no-op rather than a crash.
+Always guard with `respond_to?(:<name>)` at the top of the populator (and the prepopulator, if you have one). Adopter forms whose models don't include the schema get a no-op rather than a crash.
 
-## Exemplar: `BasedNearFieldBehavior`
+## Example: `BasedNearFieldBehavior`
 
 ```ruby
 module Hyrax
@@ -193,18 +204,35 @@ end
 - **View-side shape:** array of `Hyrax::ControlledVocabularies::Location` instances.
 - **Diff from a plain `_attributes` setup:** `deserialize!` strips `based_near` after the rename so `from_hash` doesn't overwrite the property with raw fragment hashes; the populator merges adds/removes onto the existing `model.based_near` so partial form submissions are non-destructive.
 
-## Exemplar: `RedirectsFieldBehavior`
+`based_near` is **not** a [compound](compound_fields.md), for two reasons that
+make a compound the wrong fit rather than just an unused option:
+
+- Its persisted shape is a **bare URI string per entry**, where a compound
+  persists a hash of named sub-properties per entry. Declaring it as a compound
+  would change the stored shape from `["uri"]` to `[{ "key" => "uri" }]` — a data
+  migration, not a refactor.
+- Its populator **merges** (`(model.based_near + adds) - deletes`) rather than
+  replacing the whole array, so partial submissions are non-destructive; the
+  generic compound populator always writes a full replacement array.
+
+It is the reference case for the planned `geocode` compound sub-property type
+(see [`compound_fields.md`](compound_fields.md)), which will generalize a
+single-value controlled-URI location lookup once it lands.
+
+## Example: `RedirectsFieldBehavior`
 
 ```ruby
 module Hyrax
   module RedirectsFieldBehavior
     def self.included(descendant)
       return unless Hyrax.config.redirects_enabled?
-      descendant.include Hyrax::FormFields(:redirects)
+      # Declare the radio-group scalar before redirects_attributes so Reform
+      # deserializes it first; the populator reads its value while building
+      # per-row entries.
+      descendant.property :redirects_display_url_index, virtual: true
       descendant.property :redirects_attributes,
                           virtual: true,
-                          populator: :redirects_attributes_populator,
-                          prepopulator: :redirects_attributes_prepopulator
+                          populator: :redirects_attributes_populator
     end
 
     def deserialize!(params)
@@ -221,28 +249,39 @@ module Hyrax
     def redirects_attributes_populator(fragment:, **_options)
       return unless respond_to?(:redirects)
       return unless Hyrax.config.redirects_active?
-      entries = Array(fragment&.values)
-                .reject { |row| row['_destroy'].to_s == 'true' || row['path'].to_s.strip.empty? }
-                .each_with_index.map do |row, i|
-        { 'path' => Hyrax::RedirectPathNormalizer.call(row['path']),
-          'canonical' => row['canonical'].to_s == 'true',
-          'sequence' => row['sequence'].presence&.to_i || i }
-      end
-      self.redirects = entries
-    end
-
-    def redirects_attributes_prepopulator
-      return unless respond_to?(:redirects)
-      return unless Hyrax.config.redirects_active?
-      self.redirects = Array(redirects).map { |entry| Hyrax::Redirect.wrap(entry) }
+      pairs = redirects_fragment_pairs(fragment)
+      self.redirects = pairs.sort_by { |k, _row| k.to_i }
+                            .map { |k, row| redirects_entry_from(k, row) }
+                            .compact
     end
   end
 end
 ```
 
-- **Persisted shape:** array of plain hashes (`'path'`, `'canonical'`, `'sequence'`). Declared with `type: hash, multiple: true` in `config/metadata/redirects.yaml` and loaded onto the form via `Hyrax::FormFields(:redirects)` in `self.included`.
-- **View-side shape:** array of `Hyrax::Redirect` presenters, exposing `.path` / `.canonical` / `.sequence`.
-- **Diff from BasedNear:** entries carry multiple sub-fields, so the persisted shape is a hash rather than a string. The populator normalizes paths up front (canonical form lives in storage). The behavior is feature-gated — every callback consults `Hyrax.config.redirects_active?`. The behavior also loads the persisted `redirects` property from YAML in `self.included`, since `Hyrax::Schema(:redirects)` puts the attribute on the model but the form needs the property registered separately for the partial's `f.object.redirects` call to work.
+The populator folds a sibling `redirects_display_url_index` scalar (a single radio-group value) into per-row `is_display_url` flags. When the index is unset (e.g. Bulkrax import), the row's own `is_display_url` value is honored.
+
+- **Persisted shape:** array of plain hashes (`'path'`, `'is_display_url'`). Declared with `type: hash, multiple: true` in `config/metadata/redirects.yaml`.
+- **View-side shape:** array of `Hyrax::Redirect` presenters, exposing `.path` and `.is_display_url`. The form partial wraps each persisted hash inline rather than via a prepopulator.
+- **Diff from BasedNear:** entries carry multiple sub-properties, so the persisted shape is a hash rather than a string. The populator normalizes paths up front (canonical form lives in storage). The behavior is feature-gated — every callback consults `Hyrax.config.redirects_active?`.
+
+`redirects` already uses the compound **parent** shape (`type: hash, multiple:
+true`), but it intentionally has **no** subproperty children declaring
+`available_on: { properties: [redirects] }`, so [`Hyrax::CompoundSchema`](compound_fields.md) does not treat it as a
+compound. Declaring those children would activate the whole generic compound
+stack — indexer, `render_as: compound` renderer, `Hyrax::CompoundEntryValidator`,
+`Hyrax::CompoundNormalization`, the `_compound_section` partial, and a second
+`redirects_attributes` populator — which would collide with the redirects-specific
+`RedirectsLabelAttributeRenderer`, indexer, `RedirectValidator`,
+`RedirectsNormalization`, and `_form_redirects` partial. That is a functional
+change, not a refactor. The populator also folds the sibling
+`redirects_display_url_index` radio scalar into per-row `is_display_url` flags and
+normalizes each path — neither of which the generic compound populator does.
+
+The populator does share its fragment-coercion plumbing with the compound
+populator: both include `Hyrax::CompoundRowPlumbing` for `fragment_pairs`
+and `row_hash`. Each keeps its own row-drop rule (redirects drops blank-path rows;
+the compound drops all-blank rows) and its own value handling (redirects
+normalizes the path) — only the shape coercion is shared.
 
 ## Wiring on `ResourceForm`
 
@@ -269,7 +308,7 @@ Both behaviors compose. A subclass's ancestor chain ends up with both behaviors'
 
 ## Wiring up Bulkrax imports
 
-Field Behaviors that strip their bare attribute key need a corresponding declaration on the Bulkrax import side. Bulkrax's CSV importer would otherwise emit data under the bare attribute name (`redirects`) — which the form's `deserialize!` would strip — and the data would silently never reach the resource.
+Field Behaviors that strip their bare attribute key need a corresponding declaration on the Bulkrax import side. Bulkrax's CSV importer would otherwise write data under the bare attribute name (`redirects`) — which the form's `deserialize!` would strip — and the data would silently never reach the resource.
 
 Bulkrax v9.5 and later supports a `nested_attributes: true` field-mapping flag for this case. When set alongside an `object:` value, Bulkrax routes the imported data to `parsed_metadata['<object>_attributes']` as a numbered-key hash with `_destroy: 'false'` per row — the same shape Reform's nested-attributes machinery expects, and the same shape this Field Behavior's populator consumes.
 
@@ -277,12 +316,11 @@ Example for `RedirectsFieldBehavior`:
 
 ```ruby
 # In the host app's Bulkrax field-mapping configuration
-'path'      => { from: ['redirect_path'],      object: 'redirects', nested_attributes: true },
-'canonical' => { from: ['redirect_canonical'], object: 'redirects', nested_attributes: true },
-'sequence'  => { from: ['redirect_sequence'],  object: 'redirects', nested_attributes: true },
+'path'           => { from: ['redirect_path'],           object: 'redirects', nested_attributes: true },
+'is_display_url' => { from: ['redirect_is_display_url'], object: 'redirects', nested_attributes: true }
 ```
 
-CSV columns are `redirect_path_1`, `redirect_canonical_1`, `redirect_sequence_1`, `redirect_path_2`, …
+CSV columns are `redirect_path_1`, `redirect_is_display_url_1`, `redirect_path_2`, `redirect_is_display_url_2`, …
 
 Conventions:
 

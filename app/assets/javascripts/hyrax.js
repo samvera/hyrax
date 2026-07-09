@@ -45,6 +45,9 @@
 //= require hyrax/sorting
 //= require hyrax/single_use_links_manager
 //= require hyrax/copy_permalink_button
+//= require hyrax/redirects
+//= require hyrax/compound_metadata
+//= require hyrax/rich_text_editor
 //= require hyrax/dashboard_actions
 //= require hyrax/batch
 //= require hyrax/flot_stats

@@ -18,13 +18,56 @@ RSpec.describe Hyrax::CollectionPresenter do
   it { is_expected.to delegate_method(:date_created).to(:solr_document) }
 
   describe ".terms" do
+    # The class method is the default terms only; compound terms are resolved
+    # per instance (see "#terms") because a flexible schema is per-resource.
     subject { described_class.terms }
 
-    it do
+    it 'is the default terms' do
       is_expected.to eq [:total_items, :alternative_title, :size, :resource_type, :creator,
                          :contributor, :keyword, :license, :publisher,
                          :date_created, :subject, :language, :identifier,
                          :based_near, :related_url]
+    end
+  end
+
+  describe "#terms" do
+    it 'starts with the default terms' do
+      expect(presenter.terms.first(15)).to eq described_class::DEFAULT_TERMS
+    end
+
+    it 'appends this collection\'s inline compound terms' do
+      allow(presenter).to receive(:compound_terms).and_return([:participants, :identifiers])
+      expect(presenter.terms).to end_with(:participants, :identifiers)
+    end
+  end
+
+  describe "compound attribute delegation" do
+    # Resolution is per instance, from the backing document's compound schema.
+    context "when a compound is declared for the collection" do
+      before do
+        allow(presenter).to receive(:all_compound_names).and_return([:relationships])
+        allow(solr_doc).to receive(:relationships).and_return([{ 'related_item' => 'https://example.org' }])
+      end
+
+      it "responds to the declared compound reader" do
+        expect(presenter).to respond_to(:relationships)
+      end
+
+      it "delegates the compound reader to the solr document" do
+        expect(presenter.relationships).to eq([{ 'related_item' => 'https://example.org' }])
+      end
+    end
+
+    context "for an undeclared method" do
+      before { allow(presenter).to receive(:all_compound_names).and_return([]) }
+
+      it "does not respond to it" do
+        expect(presenter).not_to respond_to(:not_a_compound)
+      end
+
+      it "raises NoMethodError" do
+        expect { presenter.not_a_compound }.to raise_error(NoMethodError)
+      end
     end
   end
 

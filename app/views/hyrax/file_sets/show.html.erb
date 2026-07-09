@@ -15,13 +15,17 @@
       <%= render partial_path %>
       <% end %>
 
+      <%# Render compound metadata declared with `view: { display: card }` as
+          cards, matching the work (base/show) and collection show pages. %>
+      <%= render_compound_cards(@presenter) %>
+
       <%= render 'hyrax/users/activity_log', events: @presenter.events %>
     </div><!-- /columns second -->
   </div> <!-- /.row -->
 </div><!-- /.container-fluid -->
 
 <% @presenter.member_of_collection_ids.each do |collection_id| %>
-  <span class='hide analytics-event' data-category="file-set-in-collection" data-action="file-set-in-collection-view" data-name="<%= collection_id %>" >
+  <span class='hide analytics-event' data-category="file-set-in-collection" data-action="file-set-in-collection-view" data-name="<%= collection_id %>" ></span>
 <% end %>
-<span class='hide analytics-event' data-category="file-set-in-work" data-action="file-set-in-work-view" data-name="<%= @presenter.parent.id %>" >
-<span class='hide analytics-event' data-category="file-set" data-action="file-set-view" data-name="<%= @presenter.id %>" >
+<span class='hide analytics-event' data-category="file-set-in-work" data-action="file-set-in-work-view" data-name="<%= @presenter.parent.id %>" ></span>
+<span class='hide analytics-event' data-category="file-set" data-action="file-set-view" data-name="<%= @presenter.id %>" ></span>

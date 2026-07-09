@@ -1,0 +1,140 @@
+<%# A `linked_record` sub-property field: a select2 search picker over the
+    source's QA authority (Qa::Authorities::LinkedRecord, keyed by the
+    sub-property's `authority:`), plus — when the sub-property declares
+    `creatable: true` — an inline "add new" form built from its `create_fields`.
+    Source-agnostic: everything keys off `spec[:authority]` /
+    `spec[:create_fields]`; no model knowledge here. See
+    Hyrax::CompoundLinkedRecordResolver and documentation/compound_fields.md.
+
+    Locals: spec, input_id, input_name, value %>
+<% source = spec[:authority] %>
+<% searchable = source.present? && Hyrax::CompoundLinkedRecordResolver.searchable?(source) %>
+
+<% unless searchable %>
+  <%# No registered/searchable source: the select2 picker would have nothing to
+      search and (createSearchChoice is off for linked_record) no way to enter a
+      value, so fall back to a plain text input holding the stored reference. %>
+  <%= text_field_tag input_name, value, id: input_id, class: 'form-control form-control-sm' %>
+<% else %>
+  <% current_option = compound_linked_record_option(value, source) %>
+  <% placeholder = t("hyrax.compound_fields.linked_record.#{source}.placeholder",
+                     default: t('hyrax.compound_fields.linked_record.placeholder', default: 'Search')) %>
+  <%# The add buttons' noun; override per source via item_label.<source>. %>
+  <% record_item_label = t("hyrax.compound_fields.linked_record.item_label.#{source}",
+                           default: source.to_s.singularize.humanize.downcase) %>
+
+  <div class="hyrax-linked-record" data-hyrax-linked-record
+       data-source="<%= source %>"
+       data-creatable="<%= spec[:creatable] ? 'true' : 'false' %>"
+       data-create-url="<%= Hyrax::Engine.routes.url_helpers.compound_linked_record_path(source: source) %>">
+    <%# Picker + "add new" trigger on one row, so the add button sits beside the
+        search field rather than below it (where the select2 "no results"
+        dropdown would cover it). %>
+    <% creatable = spec[:creatable] && spec[:create_fields].present? && Hyrax::CompoundLinkedRecordResolver.creatable?(source) %>
+    <div class="d-flex align-items-start">
+      <div class="flex-grow-1">
+        <%# The select2 picker (same hidden-input binding as work_or_url). %>
+        <%= hidden_field_tag input_name, value,
+                             id: input_id,
+                             class: 'form-control form-control-sm',
+                             data: { 'hyrax-compound-work-input': true,
+                                     'hyrax-linked-record-input': true,
+                                     'label': current_option&.first,
+                                     'placeholder': placeholder,
+                                     'autocomplete-url': "#{Rails.application.routes.url_helpers.qa_path}/search/linked_record/#{source}" } %>
+      </div>
+      <% if creatable %>
+        <%# Shown by JS only when a search returns no results. %>
+        <button type="button" class="btn btn-link btn-sm text-nowrap ml-2 d-none"
+                data-hyrax-linked-record-add hidden>
+          <span class="fa fa-plus"></span>
+          <%= t('hyrax.compound_fields.linked_record.add_new', item: record_item_label, default: 'Add new') %>
+        </button>
+      <% end %>
+    </div>
+
+  <%# Offer the inline create FORM only when the source is creatable. %>
+  <% if creatable %>
+
+    <%# Inline create form (hidden until the trigger is clicked). A scalar field
+        (string/select) renders one input tagged `data-create-field`; a
+        `as: group` field renders a repeatable set of rows (its sub-fields tagged
+        `data-create-subfield`) the JS collects into an array of hashes. Inputs
+        are NOT part of the work form's params (no `name`); JS reads them by the
+        data attributes and POSTs to data-create-url. %>
+    <div class="hyrax-linked-record-create card card-body p-2 mt-1 d-none"
+         data-hyrax-linked-record-create-form hidden>
+      <% spec[:create_fields].each do |field| %>
+        <% if field[:repeatable] || field[:as] == 'group' %>
+          <%# Repeatable field — rendered as add/remove rows. A `group` row holds
+              its nested sub-fields (collected into a Hash); a repeatable scalar
+              (`as: string/select`, no sub-fields) holds one input (collected as a
+              plain string). `data-create-scalar` tells the JS which shape to emit.
+              The <template> row is cloned on "+ Add"; one row renders initially. %>
+          <% scalar = field[:as] != 'group' %>
+          <%# The add-row button's noun; override per field via item_label.<name>. %>
+          <% field_item_label = t("hyrax.compound_fields.linked_record.item_label.#{field[:name]}",
+                                  default: t("hyrax.compound_fields.linked_record.fields.#{field[:name]}",
+                                             default: field[:name].to_s.humanize)) %>
+          <div class="form-group mb-2 hyrax-linked-record-group"
+               data-create-group="<%= field[:name] %>" data-repeatable="true"
+               data-create-scalar="<%= scalar ? 'true' : 'false' %>">
+            <label class="form-label small text-muted mb-1 d-block">
+              <%= t("hyrax.compound_fields.linked_record.fields.#{field[:name]}", default: field[:name].to_s.humanize) %>
+            </label>
+            <% row_fields = scalar ? [field] : Array(field[:fields]) %>
+            <template data-create-group-row-template>
+              <div class="hyrax-linked-record-group-row d-flex" data-create-group-row>
+                <div class="flex-grow-1">
+                  <% row_fields.each do |sub| %>
+                    <%# input_id blank: rows are cloned, so no fixed id/for. Labels
+                        are hidden; a multi-field group names sub-fields via placeholder. %>
+                    <%= render 'hyrax/compounds/linked_record_create_input',
+                               field: sub, input_id: nil, data_attr: 'create-subfield',
+                               hide_label: true, placeholder: !scalar %>
+                  <% end %>
+                </div>
+                <button type="button" class="btn btn-link text-danger hyrax-linked-record-group-remove" data-create-group-remove
+                        aria-label="<%= t('hyrax.compound_fields.remove_row', default: 'Remove') %>"><span class="fa fa-times"></span></button>
+              </div>
+            </template>
+            <div data-create-group-rows>
+              <div class="hyrax-linked-record-group-row d-flex" data-create-group-row>
+                <div class="flex-grow-1">
+                  <% row_fields.each do |sub| %>
+                    <%= render 'hyrax/compounds/linked_record_create_input',
+                               field: sub, input_id: nil, data_attr: 'create-subfield',
+                               hide_label: true, placeholder: !scalar %>
+                  <% end %>
+                </div>
+                <button type="button" class="btn btn-link text-danger hyrax-linked-record-group-remove" data-create-group-remove
+                        aria-label="<%= t('hyrax.compound_fields.remove_row', default: 'Remove') %>"><span class="fa fa-times"></span></button>
+              </div>
+            </div>
+            <button type="button" class="btn btn-link btn-sm px-0" data-create-group-add>
+              <span class="fa fa-plus"></span>
+              <%= t('hyrax.compound_fields.linked_record.add_row', item: field_item_label, default: "Add another #{field_item_label}") %>
+            </button>
+          </div>
+        <% else %>
+          <%= render 'hyrax/compounds/linked_record_create_input',
+                     field: field, input_id: "#{input_id}_new_#{field[:name]}",
+                     data_attr: 'create-field' %>
+        <% end %>
+      <% end %>
+      <div class="d-flex">
+        <button type="button" class="btn btn-primary btn-sm mr-2" data-hyrax-linked-record-create-submit>
+          <%= t('hyrax.compound_fields.linked_record.create', default: 'Create') %>
+        </button>
+        <button type="button" class="btn btn-link btn-sm" data-hyrax-linked-record-create-cancel>
+          <%= t('hyrax.compound_fields.linked_record.cancel', default: 'Cancel') %>
+        </button>
+      </div>
+      <%# data-default-message: the localized fallback the JS shows when the server
+          returns no usable error body; server 422 errors take precedence. %>
+      <div class="text-danger small mt-1 d-none" data-hyrax-linked-record-create-errors
+           data-default-message="<%= t('hyrax.compound_fields.linked_record.create_failed', default: 'Could not create — please try again.') %>"></div>
+    </div>
+  <% end %>
+  </div>
+<% end %>

@@ -27,7 +27,7 @@ module Hyrax
       end
 
       include BasedNearFieldBehavior
-      include RedirectsFieldBehavior
+      include CompoundFieldBehavior
       class_attribute :model_class
 
       property :human_readable_type, writable: false
@@ -56,10 +56,14 @@ module Hyrax
       # the literal options hash on every replay so each subclass gets its own
       # clean copy. This pattern applies to *any* `validates_with` that takes
       # an `attributes:` keyword.
-      if Hyrax.config.redirects_enabled?
-        validation(name: :default, inherit: true) do
-          validates_with Hyrax::RedirectValidator, attributes: [:redirects]
-        end
+
+      # Required-compound / required-sub-property validation. Wired through a
+      # `validation { ... }` block (not a bare `validates_with`) because these
+      # are Reform/Disposable forms — a bare `validates_with` does not hook into
+      # Reform's `validate`, so it would never run. Record-level (no
+      # `attributes:`), so it is replay-safe.
+      validation(name: :default, inherit: true) do
+        validates_with Hyrax::CompoundEntryValidator
       end
 
       ##
@@ -78,6 +82,12 @@ module Hyrax
           current_schema_fields.each do |field_name, options|
             singleton_class.property field_name.to_sym, options.merge(display: options.fetch(:display, true), default: [])
           end
+          # Register the virtual `<compound>_attributes` populators on the
+          # singleton before `super`, so they are part of Reform's schema for
+          # this instance (non-flexible mode wires them at class load).
+          # Resolve against the current schema version, not `r` — whose stored
+          # version may predate a compound the readers above already added.
+          register_compound_fields!(resource_at_current_schema(r)) if respond_to?(:register_compound_fields!)
         end
 
         if resource.nil?
@@ -89,7 +99,6 @@ module Hyrax
               to_remove = singleton_class.definitions.select { |k, v| !deprecated_resource.respond_to?(k) && v.instance_variable_get("@options")[:display] }
               to_remove.keys.each { |removed_field| singleton_class.definitions.delete(removed_field) }
             end
-            install_redirects_property_if_supported(deprecated_resource)
             super(deprecated_resource)
           else
             super()
@@ -108,21 +117,10 @@ module Hyrax
             end
           end
 
-          install_redirects_property_if_supported(resource)
           super(resource)
         end
       end
-
-      # Install the `redirects` form property on the singleton class when
-      # the resource actually has it. Runs after any flexible-mode resource
-      # reconstruction so we check the resource Reform will see — not the
-      # pre-reconstruction copy whose schema version may be stale.
-      def install_redirects_property_if_supported(resource_for_form)
-        return unless Hyrax.config.redirects_enabled?
-        return unless resource_for_form&.respond_to?(:redirects)
-        return if singleton_class.definitions.key?(:redirects)
-        singleton_class.include Hyrax::FormFields(:redirects)
-      end # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
       class << self
         def inherited(subclass)
@@ -133,6 +131,7 @@ module Hyrax
           # subclass's model.
           subclass.prepend(BasedNearFieldBehavior)
           subclass.prepend(RedirectsFieldBehavior)
+          subclass.prepend(CompoundFieldBehavior)
           super
         end
 
@@ -237,7 +236,7 @@ module Hyrax
       def primary_terms
         terms = _form_field_definitions
                 .select { |_, definition| definition[:primary] }
-                .keys.map(&:to_sym)
+                .keys.map(&:to_sym) - compound_terms
 
         terms = [:schema_version, :contexts] + terms if model.flexible?
         terms
@@ -248,18 +247,84 @@ module Hyrax
       def secondary_terms
         _form_field_definitions
           .select { |_, definition| definition[:display] && !definition[:primary] }
-          .keys.map(&:to_sym)
+          .keys.map(&:to_sym) - compound_terms
+      end
+
+      ##
+      # @return [Array<Symbol>] compound attribute terms, rendered by the
+      #   compound form partials rather than as scalar fields (and so excluded
+      #   from {#primary_terms} / {#secondary_terms}).
+      def compound_terms
+        return [] unless respond_to?(:model) && model
+        Hyrax::CompoundSchema.for(model).compound_names
+      rescue StandardError
+        []
+      end
+
+      ##
+      # @return [Array<Symbol>] compounds whose `form: { primary: true }`, shown
+      #   in the primary form section alongside the primary scalar terms.
+      def primary_compound_terms
+        compound_terms.select { |term| compound_primary?(term) }
+      end
+
+      ##
+      # @return [Array<Symbol>] compounds that are not primary (the default),
+      #   shown in the "Additional fields" section.
+      def secondary_compound_terms
+        compound_terms.reject { |term| compound_primary?(term) }
       end
 
       ##
       # @return [Boolean] whether there are terms to display 'below-the-fold'
+      #   (secondary scalar terms or non-primary compounds)
       def display_additional_fields?
-        secondary_terms.any?
+        secondary_terms.any? || secondary_compound_terms.any?
+      end
+
+      ##
+      # The form input widget requested for a term via the schema's
+      # `form: { input_type: ... }` option (e.g. `:rich_text`). Used by the
+      # edit-field partial lookup to render a richer editor than the default
+      # text input. Returns +nil+ when no input type is declared.
+      #
+      # @param [#to_sym] term
+      # @return [Symbol, nil]
+      def input_type(term)
+        definition = _form_field_definitions[term.to_sym] || _form_field_definitions[term.to_s]
+        return if definition.nil?
+
+        value = definition[:input_type]
+        value&.to_sym
       end
 
       delegate :flexible?, to: :model
 
       private
+
+      # A copy of the resource loaded at the current schema version, so its
+      # singleton schema reflects the live profile (including compounds added
+      # after the resource's stored version). Falls back to the original
+      # resource if the rebuild fails.
+      def resource_at_current_schema(resource)
+        return resource unless resource.respond_to?(:attributes) && resource.class.respond_to?(:new)
+        hash = resource.attributes.dup
+        hash[:schema_version] = Hyrax::FlexibleSchema.current_schema_id
+        resource.class.new(hash)
+      rescue StandardError => e
+        Hyrax.logger.debug("ResourceForm: could not rebuild resource at current schema: #{e.message}")
+        resource
+      end
+
+      # Whether a compound declares `form: { primary: true }`. Defaults to false
+      # (compounds render in "Additional fields" unless explicitly primary),
+      # mirroring how secondary scalar terms are derived. Read from the compound
+      # definition, which carries the flag in both flex modes.
+      def compound_primary?(term)
+        Hyrax::CompoundSchema.for(model).primary?(term)
+      rescue StandardError
+        false
+      end
 
       def _form_field_definitions
         if model.flexible?

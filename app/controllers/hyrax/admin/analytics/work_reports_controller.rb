@@ -53,16 +53,16 @@ module Hyrax
         end
 
         def accessible_file_sets
-          file_set_model_clause = "has_model_ssim:\"#{Hyrax::ModelRegistry.file_set_rdf_representations.join('" OR "')}\""
+          models = Hyrax::ModelRegistry.file_set_rdf_representations.map { |m| "\"#{m}\"" }
           if current_user.ability.admin?
             Hyrax::SolrService.query(
-              file_set_model_clause,
+              "has_model_ssim:(#{models.join(' OR ')})",
               fl: 'title_tesim, id',
               rows: 50_000
             )
           else
             Hyrax::SolrService.query(
-              "edit_access_person_ssim:#{current_user} AND #{file_set_model_clause}",
+              "edit_access_person_ssim:#{current_user} AND has_model_ssim:(#{models.join(' OR ')})",
               fl: 'title_tesim, id',
               rows: 50_000
             )

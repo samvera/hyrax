@@ -11,7 +11,7 @@ Rails.application.reloader.to_prepare do
     # config.default_work_type = "MyWork"
 
     # Factory Class to use when generating and saving objects
-    config.object_factory = Bulkrax::ObjectFactory
+    config.object_factory = Hyrax.config.valkyrie_transition? ? Bulkrax::ValkyrieObjectFactory : Bulkrax::ObjectFactory
     # Use this for a Postgres-backed Valkyrized Hyrax
     # config.object_factory = Bulkrax::ValkyrieObjectFactory
 

@@ -143,12 +143,13 @@ module Hyrax
     #
     # @return [Hash{Symbol => Object}]
     def file_set_args(file, file_set_params = {})
+      extra = file_set_params.respond_to?(:to_unsafe_h) ? file_set_params.to_unsafe_h : file_set_params.to_h
       { depositor: file.user.user_key,
         creator: Array.wrap(file.user.user_key),
         date_uploaded: file.created_at,
         date_modified: Hyrax::TimeService.time_in_utc,
         label: file.uploader.filename,
-        title: Array.wrap(file.uploader.filename) }.merge(file_set_params)
+        title: Array.wrap(file.uploader.filename) }.merge(extra.symbolize_keys)
     end
 
     ##

@@ -13,6 +13,12 @@ module Hyrax
         include Hyrax::Indexer(:file_set_metadata)
       end
       check_if_flexible(Hyrax::FileSet)
+      # Project compound metadata (sub-property search fields + a
+      # <compound>_json_ss display blob) into Solr, matching the work and
+      # collection indexers (PcdmObjectIndexer, PcdmCollectionIndexer). Without
+      # this a FileSet's compounds never reach Solr and can't render on the show
+      # page. Included last so its #to_solr runs via super from the class method.
+      include Hyrax::Indexers::CompoundIndexer
 
       def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
         super.tap do |solr_doc| # rubocop:disable Metrics/BlockLength
@@ -24,7 +30,7 @@ module Hyrax
           solr_doc['extracted_text_id_ssi']        = resource.extracted_text_id.to_s
           solr_doc['hasRelatedMediaFragment_ssim'] = resource.representative_id.to_s
           solr_doc['hasRelatedImage_ssim']         = resource.thumbnail_id.to_s
-          solr_doc['transcript_ids_ssim']          = resource.transcript_ids&.map(&:to_s)
+          solr_doc['transcript_ids_ssim']          = resource.transcript_ids&.map(&:to_s) if resource.respond_to?(:transcript_ids)
 
           index_lease(solr_doc)
           index_embargo(solr_doc)

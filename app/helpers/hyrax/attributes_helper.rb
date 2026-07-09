@@ -91,10 +91,20 @@ module Hyrax
       view_options
     end
 
-    # Returns true when the field should render for the current user.
-    # Honors `admin_only` and `editor_only` view options with OR semantics:
-    # when both are set, the field is visible to admins *or* editors.
+    # Returns true when the field should render in the work show page's
+    # standard attribute list. Honors these view options:
+    #   * `show_page: false` — suppresses the field on the show page for everyone.
+    #   * `position: featured` — the field is rendered prominently near the top
+    #     of the show page by the `featured_attributes` partial instead, so it is
+    #     omitted from the attribute list to avoid duplicating it.
+    #   * `admin_only: true` — only visible to admins.
+    #   * `editor_only: true` — only visible to users the presenter reports as editors.
+    # Setting both `admin_only` and `editor_only` is effectively equivalent to
+    # `admin_only` alone: admins are editors of every record, so they pass both
+    # guards, but a plain editor of the record still fails the admin guard.
     def field_visible?(view_options, presenter)
+      return false if view_options[:show_page] == false
+      return false if view_options[:position].to_s == 'featured'
       return false if view_options[:admin_only] && !current_user&.admin?
       return false if view_options[:editor_only] && !presenter.try(:editor?)
       true
