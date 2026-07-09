@@ -29,7 +29,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
@@ -38,7 +38,7 @@ jobs:
       - name: Rubocop
         run: bundle install && bundle exec rubocop --parallel --format progress --format junit --out rubocop.xml --display-only-failed
       - name: Archive rubocop reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: rubocop-reports
@@ -51,18 +51,18 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Auth to ghcr.io
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
       - name: Setup image tags
         id: image-meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -70,7 +70,7 @@ jobs:
             type=ref,event=pr
             type=sha,format=long,prefix=
       - name: Build and export
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           build-args: |
             BUILD_TIMESTAMP=${{ fromJSON(steps.image-meta.outputs.json).labels['org.opencontainers.image.created'] }}
@@ -84,7 +84,7 @@ jobs:
           labels: ${{ steps.image-meta.outputs.labels }}
           outputs: type=docker,dest=${{runner.temp}}/hyrax-dev-${{ github.sha }}.tar
       - name: Trigger Nurax Deployment
-        uses: peter-evans/repository-dispatch@v3
+        uses: peter-evans/repository-dispatch@v4
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           token: ${{ secrets.NURAX_ACCESS_TOKEN }}
@@ -92,7 +92,7 @@ jobs:
           repository: samvera-labs/nurax-terraform
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
       - name: Upload built image artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: hyrax-dev
           path: ${{runner.temp}}/hyrax-dev-${{ github.sha }}.tar
@@ -108,7 +108,7 @@ jobs:
         ci_node_index: [0,1,2,3]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
@@ -116,7 +116,7 @@ jobs:
           limit-access-to-actor: true
           detached: true
       - name: Download built image artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: hyrax-dev
           path: ${{runner.temp}}
@@ -161,7 +161,7 @@ jobs:
         run: >-
           mv rspec.xml rspec-${CI_TEST_APP}-${CI_NODE_INDEX}.xml
       - name: Archive spec reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: spec-reports-${{ matrix.ci_test_app }}-${{ matrix.ci_node_index }}
@@ -172,7 +172,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Event File
         path: ${{ github.event_path }}
