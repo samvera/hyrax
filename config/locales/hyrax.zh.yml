@@ -697,6 +697,8 @@ zh:
         title: 标题
         unauthorized: 这个%{type}中没有公开可用的项目。
         visibility: 公开度
+      member_of_collections:
+        header: 所属采集
       relationships:
         empty: 该 %{type} 目前未纳入任何收藏集内。
         header: 关联
@@ -848,6 +850,9 @@ zh:
         admin_set_description: 旨在帮助行政控制的作品集合。管理员集合提供了定义一组作品周围的行为和策略的方法。
         default_description: 用户集合可由任何用户创建以组织他们的作品。
     collections:
+      collection_counts:
+        collections: 采集
+        works: 作品
       search_form:
         button_label: 去
         label: 搜索收藏集 %{title}
@@ -1400,6 +1405,12 @@ zh:
         save_your_note: 您必须点击“保存修订版”还原此文件的先前版本
         upload: 上传新版本
     flexible_schema_validators:
+      compound_validator:
+        errors:
+          unknown_parent: "m3 配置文件中的子属性 `%{property}` 声明了 `available_on: { properties: [%{parent}] }`，但 `%{parent}` 不是已声明的 `type: hash` 复合属性"
+          controlled_without_source: "m3 配置文件中的复合子属性 `%{property}` 为 `type: controlled`，但既未声明 `authority` 也未声明 `values`"
+          top_level_indexing: "m3 配置文件中的复合属性 `%{property}` 不得在顶层声明 `indexing`；请在每个子属性上声明 `indexing`（或 `index_keys`）"
+          duplicate_subproperty_name: "m3 配置文件中的复合属性 `%{parent}` 有多个子属性解析为相同的内部名称 `%{name}`（%{properties}）；同一复合属性中的每个子属性必须解析为唯一名称（请设置不同的 `name:`）"
       redirects_validator:
         errors:
           invalid_available_on: "m3 配置文件的 `redirects` 属性必须在此配置文件中声明的至少一个作品或收藏类上可用"

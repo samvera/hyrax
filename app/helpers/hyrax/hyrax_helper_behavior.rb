@@ -20,6 +20,7 @@ module Hyrax
     include Hyrax::WorkflowsHelper
     include Hyrax::FacetsHelper
     include Hyrax::AttributesHelper
+    include Hyrax::CompoundFieldsHelper
     include Hyrax::PermalinkHelper
     include Hyrax::WorksHelper
     include Hyrax::FileSetFormHelper
@@ -227,6 +228,50 @@ module Hyrax
       end
     end
 
+    # Blacklight index helper_method for properties stored as HTML markup
+    # (`form: { input_type: rich_text }`, `view: { render_as: html }`). Catalog
+    # search-result columns escape values by default, which dumps the raw tags;
+    # this renders a clean, truncated plain-text snippet instead. The full
+    # sanitized HTML still renders on the work show page via HtmlAttributeRenderer.
+    #
+    # Works the same in both metadata modes: in flexible mode FlexibleCatalogBehavior
+    # assigns this helper from the property's `render_as: html`; in non-flexible mode
+    # declare it on the field directly, e.g.
+    #   config.add_index_field 'my_html_field_tesim', helper_method: :render_html_index_value
+    #
+    # Truncation length is author-declarable per property; default is 230.
+    #   flexible:     view: { render_as: html, search_results_truncate: 300 }   # or false to disable
+    #   non-flexible: config.add_index_field 'x_tesim',
+    #                   helper_method: :render_html_index_value, search_results_truncate: 300
+    #
+    # @param field [String, Hash{Symbol=>Array}] Blacklight passes a Hash with a
+    #   :value array (and :config); a bare String is also accepted.
+    # @return [String] truncated plain-text snippet, no markup
+    def render_html_index_value(field)
+      raw = field.is_a?(Hash) ? Array(field[:value]).join(' ') : field.to_s
+      # Decode entities first (e.g. &lt;em&gt; -> <em>) so escaped markup is then
+      # removed by tag-stripping rather than resurfacing as literal tags; tags ->
+      # spaces so block boundaries don't glue words together; collapse whitespace.
+      decoded = CGI.unescapeHTML(raw)
+      text = strip_tags(decoded.gsub(/<[^>]+>/, ' ')).gsub(/\s+/, ' ').strip
+
+      limit = field.is_a?(Hash) ? field[:config].try(:search_results_truncate) : nil
+      return text if limit == false # `search_results_truncate: false` opts out of truncation
+
+      truncate(text, length: html_index_truncate_length(limit), separator: ' ')
+    end
+
+    # Coerce the declared `search_results_truncate` value into a positive integer
+    # length, falling back to the 230-character default for nil or malformed
+    # values (e.g. a stray string or non-positive number) rather than producing a
+    # near-empty snippet. `false` is handled by the caller as an explicit opt-out.
+    # @api private
+    DEFAULT_HTML_INDEX_TRUNCATE = 230
+    def html_index_truncate_length(limit)
+      length = Integer(limit, exception: false)
+      length&.positive? ? length : DEFAULT_HTML_INDEX_TRUNCATE
+    end
+
     # *Sometimes* a Blacklight index field helper_method
     # @param [String,User,Hash{Symbol=>Array}] args if a hash, the user_key must be under :value
     # @return [ActiveSupport::SafeBuffer] the html_safe link
@@ -426,5 +471,14 @@ module Hyrax
     def institution
       Institution
     end
+
+    ##
+    # Returns the generator identification string for HTML meta tags.
+    # Override this method in your application to customize how your instance identifies itself.
+    # @return [String] The generator identification (e.g., "Samvera Hyrax 5.x.y")
+    def hyrax_generator_meta_tag
+      "Samvera Hyrax #{::Hyrax::VERSION}"
+    end
+
   end
 end

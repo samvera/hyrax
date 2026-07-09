@@ -99,6 +99,10 @@
     </div>
   </div>
 
+  <%# Compounds declared `view: { display: card }` render as their own cards,
+      after the search-within-collection bar and before the works list. %>
+  <%= render_compound_cards(@presenter) %>
+
   <!-- Subcollections -->
   <% if @presenter.collection_type_is_nestable? && @subcollection_count > 0 %>
       <div class="hyc-blacklight hyc-bl-title">

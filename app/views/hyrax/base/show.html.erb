@@ -12,6 +12,7 @@
   <div itemscope itemtype="http://schema.org/CreativeWork" class="col-12">
     <%= render 'work_title', presenter: @presenter %>
     <%= render 'show_actions', presenter: @presenter %>
+    <%= render 'featured_attributes', presenter: @presenter %>
     <div class="card">
       <div class="card-body">
         <div class="row">
@@ -33,6 +34,10 @@
         </div>
       </div>
     </div><!-- /.card -->
+
+    <%# Compounds declared `view: { display: card }` render as their own cards,
+        above the Relationships and Items cards. %>
+    <%= render_compound_cards(@presenter) %>
 
     <div class="card">
       <div class="card-header">

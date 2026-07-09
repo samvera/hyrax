@@ -1,0 +1,94 @@
+<%# Single card for one compound-attribute row.
+
+    Locals:
+      f                  - form builder for the parent resource
+      compound_name      - Symbol, e.g. :contributors
+      definition         - Hash{ subproperties:, groups: }
+      row                - Hash of persisted values, or nil for a new row
+      index              - Integer position, or the literal "__INDEX__"
+                           placeholder when rendered inside the JS template
+      row_label_singular - "Contributor", "License", etc.
+
+    Each sub-property renders according to its declared `type:` (string,
+    controlled, url, work_or_url). db_table / geocode are future types; the
+    `else` branch is the extension seam.
+%>
+<% subproperties = definition[:subproperties] %>
+<% groups = definition[:groups] %>
+<% row_value = ->(key) { row.is_a?(Hash) ? (row[key] || row[key.to_sym]) : nil } %>
+
+<div class="card mb-3 hyrax-compound-row" data-hyrax-compound-row role="group" aria-label="<%= row_label_singular %>">
+  <div class="card-header bg-light d-flex justify-content-between align-items-center py-2 h6 mb-0">
+    <span><%= row_label_singular %></span>
+    <button type="button"
+            class="close py-0 px-2"
+            aria-label="<%= t('hyrax.compound_fields.remove_row_with_label', label: row_label_singular, default: t('hyrax.compound_fields.remove_row')) %>"
+            data-hyrax-compound-remove-row>
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="card-body">
+    <% groups.each do |group| %>
+      <% if group[:label].present? %>
+        <h4 class="h6 text-muted text-uppercase mt-1 mb-2"><%= group[:label] %></h4>
+      <% end %>
+      <div class="form-row">
+        <% group[:fields].each do |sub_property| %>
+          <% spec = subproperties[sub_property] || { type: 'string' } %>
+          <% input_id = "#{f.object_name}_#{compound_name}_attributes_#{index}_#{sub_property}" %>
+          <% input_name = "#{f.object_name}[#{compound_name}_attributes][#{index}][#{sub_property}]" %>
+          <% value = row_value.call(sub_property) %>
+          <div class="form-group col-md-<%= spec[:cols] || 6 %>">
+            <%= label_tag input_id, class: 'form-label small text-muted' do %>
+              <%= compound_subproperty_label(compound_name, sub_property) %><%
+                if spec[:required] %><abbr title="<%= t('simple_form.required.text', default: 'required') %>" class="required text-danger">*</abbr><% end %>
+            <% end %>
+            <% case spec[:type] %>
+            <% when 'controlled' %>
+              <% select_classes = ['form-control', 'form-control-sm'] %>
+              <% select_classes << 'force-select' if compound_subproperty_forced?(spec, value) %>
+              <%= select_tag input_name,
+                             options_for_select(compound_subproperty_options(spec, value), value),
+                             id: input_id,
+                             include_blank: true,
+                             class: select_classes.join(' ') %>
+            <% when 'url' %>
+              <%= url_field_tag input_name, value,
+                                id: input_id,
+                                class: 'form-control form-control-sm' %>
+            <% when 'work_or_url' %>
+              <%# select2 v3 (bound in compound_metadata.js) binds to this
+                  hidden input; `data-label` pre-seeds the displayed text. %>
+              <% current_option = compound_work_or_url_option(value) %>
+              <%= hidden_field_tag input_name, value,
+                                   id: input_id,
+                                   class: 'form-control form-control-sm',
+                                   data: { 'hyrax-compound-work-input': true,
+                                           'label': current_option&.first,
+                                           'autocomplete-url': "#{Rails.application.routes.url_helpers.qa_path}/search/compound_works" } %>
+            <% when 'linked_record' %>
+              <%# A reference to a row in a database table: a select2 picker over
+                  the source's QA authority, plus an optional inline create form.
+                  See _linked_record_field and Hyrax::CompoundLinkedRecordResolver. %>
+              <%= render 'hyrax/compounds/linked_record_field',
+                         spec: spec, input_id: input_id, input_name: input_name, value: value %>
+            <% when 'datepicker' %>
+              <%= date_field_tag input_name, value,
+                                 id: input_id,
+                                 class: 'datepicker form-control form-control-sm' %>
+            <% else %>
+              <%# string (default); geocode and other types slot in here later. %>
+              <%= text_field_tag input_name, value,
+                                 id: input_id,
+                                 class: 'form-control form-control-sm' %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%= hidden_field_tag "#{f.object_name}[#{compound_name}_attributes][#{index}][_destroy]", '0',
+                         id: "#{f.object_name}_#{compound_name}_attributes_#{index}__destroy",
+                         data: { 'hyrax-compound-destroy-flag': true } %>
+  </div>
+</div>

@@ -323,6 +323,72 @@ RSpec.describe HyraxHelper, type: :helper do
     end
   end
 
+  describe "#render_html_index_value" do
+    it "strips tags and renders a plain-text snippet" do
+      html = '<h3>Title</h3><p>Body <strong>bold</strong> text.</p>'
+      expect(helper.render_html_index_value(html)).to eq('Title Body bold text.')
+    end
+
+    it "decodes HTML entities" do
+      expect(helper.render_html_index_value('<p>Bruce McLean&rsquo;s work</p>')).to eq('Bruce McLean’s work')
+    end
+
+    it "does not glue words across block boundaries" do
+      expect(helper.render_html_index_value('<li>one</li><li>two</li>')).to eq('one two')
+    end
+
+    it "truncates long values" do
+      result = helper.render_html_index_value("<p>#{'word ' * 100}</p>")
+      expect(result.length).to be <= 230
+      expect(result).to end_with('...')
+    end
+
+    it "honors a per-field truncation length from the field config" do
+      arg = { value: ["<p>#{'word ' * 100}</p>"], config: double(search_results_truncate: 20) }
+      expect(helper.render_html_index_value(arg).length).to be <= 20
+    end
+
+    it "skips truncation when search_results_truncate is false" do
+      arg = { value: ["<p>#{'word ' * 100}</p>"], config: double(search_results_truncate: false) }
+      result = helper.render_html_index_value(arg)
+      expect(result.length).to be > 230
+      expect(result).not_to end_with('...')
+    end
+
+    it "strips markup that arrives as escaped entities" do
+      expect(helper.render_html_index_value('&lt;em&gt;hi&lt;/em&gt; there')).to eq('hi there')
+    end
+
+    it "falls back to the default length for a non-integer truncation value" do
+      arg = { value: ["<p>#{'word ' * 100}</p>"], config: double(search_results_truncate: 'oops') }
+      result = helper.render_html_index_value(arg)
+      expect(result.length).to be <= 230
+      expect(result).to end_with('...')
+    end
+
+    it "falls back to the default length for a non-positive truncation value" do
+      arg = { value: ["<p>#{'word ' * 100}</p>"], config: double(search_results_truncate: 0) }
+      result = helper.render_html_index_value(arg)
+      expect(result.length).to be <= 230
+      expect(result).to end_with('...')
+    end
+
+    it "coerces a numeric string truncation value" do
+      arg = { value: ["<p>#{'word ' * 100}</p>"], config: double(search_results_truncate: '20') }
+      expect(helper.render_html_index_value(arg).length).to be <= 20
+    end
+
+    it "accepts Blacklight's hash form with a :value array" do
+      arg = { value: ['<p>Hello <em>world</em></p>'], field: 'narrative_tesim' }
+      expect(helper.render_html_index_value(arg)).to eq('Hello world')
+    end
+
+    it "returns an empty string for blank values" do
+      expect(helper.render_html_index_value(nil)).to eq('')
+      expect(helper.render_html_index_value(value: [])).to eq('')
+    end
+  end
+
   describe "#license_links" do
     it "maps the url to a link with a label" do
       expect(helper.license_links(

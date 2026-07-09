@@ -9,6 +9,30 @@ RSpec.describe Hyrax::Forms::ResourceForm do
   let(:default_admin_set) { instance_double(Hyrax::AdministrativeSet, title: "DEFAULT_ADMINSET", id: "DEFAULT_ADMINSET_ID") }
   before { allow(Hyrax::AdminSetCreateService).to receive(:find_or_create_default_admin_set).and_return(default_admin_set) }
 
+  # Redirects is a Work/Collection concern, never a FileSet one. The FileSet
+  # form must not declare the property (its model has no `redirects` attribute) —
+  # guarding the regression where declaring redirects on the shared base
+  # ResourceForm leaked it onto FileSetForm. True in both flex modes.
+  # Requires HYRAX_REDIRECTS_ENABLED=true at load.
+  context 'redirects property placement', if: Hyrax.config.redirects_enabled? do
+    it 'is not declared on the FileSet form' do
+      expect(Hyrax::Forms::FileSetForm.definitions.keys).not_to include('redirects')
+    end
+
+    # In non-flexible mode the property is installed via FormFields(:redirects)
+    # on the work/collection forms. In flexible mode it comes from the m3 profile
+    # instead (adopters declare it there), so this positive check is flex-false.
+    context 'in non-flexible mode', unless: Hyrax.config.flexible? do
+      it 'is declared on a work form' do
+        expect(described_class.for(Hyrax::Work.new).class.definitions.keys).to include('redirects')
+      end
+
+      it 'is declared on a collection form' do
+        expect(Hyrax::Forms::PcdmCollectionForm.definitions.keys).to include('redirects')
+      end
+    end
+  end
+
   describe '.required_fields=' do
     subject(:form) { form_class.new(work) }
 
@@ -229,6 +253,96 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
       form = described_class.for(resource: work)
       expect(form.secondary_terms).not_to include(:video_embed)
+    end
+  end
+
+  describe 'flexible form after M3 profile update adds a compound field' do
+    # Regression: a work created on an older schema version, edited after a
+    # compound (e.g. :participants) is added to the M3 profile, raised
+    # `NoMethodError: undefined method 'participants_attributes'` on update.
+    #
+    # Root cause: the form registers the compound's virtual
+    # `<name>_attributes=` writer from the *resource's stored* schema version
+    # (which predates the compound), while it loads the `<name>` reader from the
+    # *current* schema version. The form ends up with a `participants` reader but
+    # no `participants_attributes=` writer, so Reform's deserialization of the
+    # `participants_attributes` form param hits a missing setter.
+
+    # A compound parent, with folded subproperties in its Dry type meta — the
+    # shape CompoundSchema reads to discover a compound.
+    let(:participants_type) do
+      Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
+        subproperties: {
+          'name' => { 'type' => 'string' },
+          'role' => { 'type' => 'string' }
+        }
+      )
+    end
+
+    # Mutable profile state. The class schema is baked once (at boot, version 1,
+    # no compound); the compound is added to the profile *afterwards*, bumping
+    # the live version to 2. The loader reflects whichever version it is asked
+    # for, so the class schema (baked at v1) genuinely lacks the compound while
+    # the live current version (v2) has it.
+    let(:profile) { { version: 1, compound: false } }
+
+    let(:schema_loader) do
+      state = profile
+      compound_type = participants_type
+      loader = instance_double(Hyrax::M3SchemaLoader)
+      allow(loader).to receive(:current_version) { state[:version] }
+      allow(loader).to receive(:attributes_for) do |version:, **_kwargs|
+        state[:compound] && version.to_i >= 2 ? { participants: compound_type } : {}
+      end
+      allow(loader).to receive(:form_definitions_for) do
+        state[:compound] ? { 'participants' => { required: false, primary: true, display: true } } : {}
+      end
+      allow(loader).to receive(:index_rules_for).and_return({})
+      loader
+    end
+
+    let(:work_class) do
+      klass = Class.new(Hyrax::Work) do
+        def self.name
+          'TestFlexibleCompoundWork'
+        end
+      end
+      klass.acts_as_flexible_resource
+      klass
+    end
+
+    let(:work) { work_class.new(schema_version: '1') }
+
+    before do
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
+      allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
+      allow(Hyrax::FlexibleSchema).to receive(:current_schema_id) { profile[:version] }
+
+      # Bake the class schema at v1 (no compound) by forcing `work` to load,
+      # then add the compound and bump the live version — leaving the class
+      # schema stale, as a running app's does when an admin edits the profile.
+      work
+      profile[:version] = 2
+      profile[:compound] = true
+    end
+
+    after do
+      Hyrax.config.flexible_classes.delete('TestFlexibleCompoundWork')
+    end
+
+    it 'registers the compound `<name>_attributes=` writer from the current schema' do
+      form = described_class.for(resource: work)
+
+      expect(form).to respond_to(:participants)
+      expect(form).to respond_to(:participants_attributes=)
+    end
+
+    it 'deserializes `<name>_attributes` form params onto the compound' do
+      form = described_class.for(resource: work)
+
+      form.validate('participants_attributes' => { '0' => { 'name' => 'Ada', 'role' => 'Author' } })
+
+      expect(form.participants).to eq([{ 'name' => 'Ada', 'role' => 'Author' }])
     end
   end
 
@@ -857,6 +971,53 @@ RSpec.describe Hyrax::Forms::ResourceForm do
           .to change { form.visibility_during_lease }
           .from(nil)
           .to('open')
+      end
+    end
+  end
+
+  describe '#input_type' do
+    # Stub the underlying field definitions so this is a focused unit test of the
+    # lookup/coercion logic, independent of flexible mode and the loaded profile.
+    before { allow(form).to receive(:_form_field_definitions).and_return(definitions) }
+
+    context 'when the definition declares an input_type' do
+      let(:definitions) { { 'summary' => { input_type: :rich_text } } }
+
+      it 'looks the term up by its string name' do
+        expect(form.input_type('summary')).to eq(:rich_text)
+      end
+
+      it 'accepts a symbol term' do
+        expect(form.input_type(:summary)).to eq(:rich_text)
+      end
+
+      it 'coerces a string input_type value to a symbol' do
+        definitions['summary'] = { input_type: 'rich_text' }
+        expect(form.input_type(:summary)).to eq(:rich_text)
+      end
+    end
+
+    context 'when the definitions are keyed by symbol' do
+      let(:definitions) { { summary: { input_type: :rich_text } } }
+
+      it 'finds the term through the symbol lookup' do
+        expect(form.input_type('summary')).to eq(:rich_text)
+      end
+    end
+
+    context 'when the term is absent' do
+      let(:definitions) { {} }
+
+      it 'returns nil' do
+        expect(form.input_type(:missing)).to be_nil
+      end
+    end
+
+    context 'when the definition has no input_type' do
+      let(:definitions) { { 'summary' => {} } }
+
+      it 'returns nil' do
+        expect(form.input_type(:summary)).to be_nil
       end
     end
   end

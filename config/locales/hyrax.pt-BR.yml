@@ -692,6 +692,8 @@ pt-BR:
         title: Título
         unauthorized: Não há itens publicados neste %{type}.
         visibility: Acesso
+      member_of_collections:
+        header: Membro de coleções
       relationships:
         empty: Este %{type} atualmente não está em nenhuma coleção.
         header: Relações
@@ -843,6 +845,9 @@ pt-BR:
         admin_set_description: Um agregado de obras destinado a ajudar no controle administrativo. Os conjuntos administrativos fornecem uma maneira de definir comportamentos e regras para um conjunto de obras.
         default_description: Uma Coleção de Usuário pode ser criada por qualquer usuário para organizar suas obras.
     collections:
+      collection_counts:
+        collections: Coleções
+        works: Obras
       search_form:
         button_label: Ir
         label: Pesquisar Coleção %{title}
@@ -1395,6 +1400,12 @@ pt-BR:
         save_your_note: Você deve clicar em "Salvar revisão". reverter uma versão anterior deste arquivo
         upload: Carregar nova versão
     flexible_schema_validators:
+      compound_validator:
+        errors:
+          unknown_parent: "a subpropriedade `%{property}` do perfil m3 declara `available_on: { properties: [%{parent}] }`, mas `%{parent}` não é uma propriedade composta `type: hash` declarada"
+          controlled_without_source: "a subpropriedade composta `%{property}` do perfil m3 é `type: controlled` mas não declara `authority` nem `values`"
+          top_level_indexing: "a propriedade composta `%{property}` do perfil m3 não deve declarar `indexing` de nível superior; declare `indexing` (ou `index_keys`) em cada subpropriedade"
+          duplicate_subproperty_name: "o composto `%{parent}` do perfil m3 tem várias subpropriedades que resolvem para o mesmo nome interno `%{name}` (%{properties}); cada subpropriedade de um composto deve resolver para um nome único (defina um `name:` distinto)"
       redirects_validator:
         errors:
           invalid_available_on: "a propriedade `redirects` do perfil m3 deve estar disponível em pelo menos uma classe de obra ou coleção declarada neste perfil"

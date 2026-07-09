@@ -29,11 +29,13 @@ module Hyrax
     end
 
     def define_dynamic_methods # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
-      Hyrax::FlexibleSchema.default_properties.each do |prop|
-        method_name = prop.to_s
-        property_details = Hyrax::FlexibleSchema.current_version["properties"][method_name]
-        next unless property_details
-
+      # Fetch and parse the profile ONCE per call. FlexibleSchema.current_version
+      # loads the latest row and deserializes the whole profile JSONB, so calling
+      # it inside the loop (once per property, for every presenter built - and a
+      # work show page builds one presenter per member row) multiplies into
+      # thousands of identical queries and minutes of render time on
+      # member-heavy works.
+      Hyrax::FlexibleSchema.current_version["properties"].each do |method_name, property_details|
         index_keys = property_details["indexing"]
         next unless index_keys
 

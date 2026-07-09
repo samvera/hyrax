@@ -10,8 +10,18 @@ module Hyrax
   class SimpleSchemaLoader < Hyrax::SchemaLoader
     def view_definitions_for(schema:, version: 1, contexts: nil) # rubocop:disable Lint/UnusedMethodArgument
       schema.each_with_object({}) do |property, metadata|
-        view_options = property.meta['view']
-        metadata[property.name.to_s] = view_options.with_indifferent_access unless view_options.nil?
+        config = property.meta || {}
+        view_options = config['view']
+        # Promote top-level `admin_only` / `editor_only` (and their `indexing:`
+        # sentinel form) into the view options, so non-flexible mode honors them
+        # the same way the M3 (flexible) loader does via AttributeDefinition.
+        # A nested `view: { admin_only: true }` continues to work; without this a
+        # top-level flag was silently dropped here and the field rendered to
+        # everyone. A top-level flag wins over a nested one, matching M3.
+        gating = visibility_gating_for(config)
+        next if view_options.nil? && gating.empty?
+
+        metadata[property.name.to_s] = (view_options || {}).merge(gating).with_indifferent_access
       end
     end # rubocop:enable Lint/UnusedMethodArgument
 
@@ -24,12 +34,40 @@ module Hyrax
     private
 
     ##
+    # Mirrors {SchemaLoader::AttributeDefinition#admin_only?} / `#editor_only?`:
+    # a visibility flag is on when set truthy at the top level of the property
+    # config OR listed in its `indexing:` array. Returns only the flags that are
+    # actually set, so unset flags don't clobber a nested `view:` value.
+    #
+    # @param [Hash] config the property's metadata config
+    # @return [Hash{String => true}]
+    def visibility_gating_for(config)
+      indexing = Array(config['indexing'])
+      {}.tap do |opts|
+        opts['admin_only'] = true if config['admin_only'] || indexing.include?('admin_only')
+        opts['editor_only'] = true if config['editor_only'] || indexing.include?('editor_only')
+      end
+    end
+
+    ##
     # @param [#to_s] schema_name
     # @return [Enumerable<AttributeDefinition]
     def definitions(schema_name, _version, _contexts = nil)
-      schema_config(schema_name)['attributes'].map do |name, config|
+      # Compound subproperties (entries declaring `available_on: { properties:
+      # [...] }`) are not standalone resource attributes — they are gathered
+      # into their parent compound by Hyrax::CompoundSchema. Exclude them here so
+      # they get no accessor, form input, or index rule of their own.
+      schema_config(schema_name)['attributes'].reject { |_name, config| subproperty_config?(config) }.map do |name, config|
         AttributeDefinition.new(name, config)
       end
+    end
+
+    ##
+    # @param [#to_s] schema_name
+    # @return [Hash{String => Hash}] all attribute configs, INCLUDING
+    #   subproperties (see {SchemaLoader#raw_attribute_configs}).
+    def raw_definitions(schema_name, _version, _contexts = nil)
+      schema_config(schema_name)['attributes']
     end
 
     ##
@@ -70,6 +108,11 @@ module Hyrax
 
     def predicate_pairs(ret_hsh, schema_name)
       schema_config(schema_name)['attributes'].each do |name, config|
+        # Compound subproperties are not standalone resource attributes (see
+        # SchemaLoader#definitions), so they have no predicate of their own and
+        # are excluded from the permissive Valkyrie schema.
+        next if subproperty_config?(config)
+
         predicate = RDF::URI(config['predicate'])
         if ret_hsh[name].blank?
           ret_hsh[name.to_sym] = predicate

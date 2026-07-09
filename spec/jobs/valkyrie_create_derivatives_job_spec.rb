@@ -27,6 +27,14 @@ RSpec.describe ValkyrieCreateDerivativesJob, perform_enqueued: true do
     # This job depends on routes existing for the work. SimpleWork doesn't here, so skip it.
     allow(ContentUpdateEventJob).to receive(:perform_later)
 
+    # Ingesting publishes `file.characterized`, whose listener enqueues a real
+    # ValkyrieCreateDerivativesJob. Under `perform_enqueued: true` that runs
+    # inline and shells out to ImageMagick on the fixture - which is slow and
+    # intermittently fails ("no decode delegate ...") on a temp-file race. The
+    # examples drive the job directly with a stubbed derivative service, so the
+    # listener-enqueued run is unwanted setup noise; suppress it.
+    allow(ValkyrieCreateDerivativesJob).to receive(:perform_later)
+
     # Using ValkyrieIngestJob here is slow and runs the job this spec is supposed to test.
     # It should instead be handled by factories once real files can be attached
     # in the Hyrax::Work and Hyrax::FileSet factories.

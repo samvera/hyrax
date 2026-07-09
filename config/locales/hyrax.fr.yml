@@ -700,6 +700,8 @@ fr:
         title: Titre
         unauthorized: Il n'y a pas d'objets disponibles publiquement dans ce %{type}.
         visibility: Visibilité
+      member_of_collections:
+        header: Membre de collections
       relationships:
         empty: Ce %{type} ne se trouve actuellement dans aucune collection.
         header: Des relations
@@ -851,6 +853,9 @@ fr:
         admin_set_description: Une agrégation de travaux destinée à faciliter le contrôle administratif. Les ensembles d'administration permettent de définir des comportements et des stratégies autour d'un ensemble de travaux.
         default_description: Une collection d'utilisateurs peut être créée par n'importe quel utilisateur pour organiser leurs travaux.
     collections:
+      collection_counts:
+        collections: Collections
+        works: Travaux
       search_form:
         button_label: Aller
         label: Rechercher Collection %{title}
@@ -1403,6 +1408,12 @@ fr:
         save_your_note: Vous devez cliquer sur "Enregistrer la révision". pour revenir à une version précédente de ce fichier
         upload: Télécharger une nouvelle version
     flexible_schema_validators:
+      compound_validator:
+        errors:
+          unknown_parent: "la sous-propriété `%{property}` du profil m3 déclare `available_on: { properties: [%{parent}] }`, mais `%{parent}` n'est pas une propriété composée `type: hash` déclarée"
+          controlled_without_source: "la sous-propriété composée `%{property}` du profil m3 est `type: controlled` mais ne déclare ni `authority` ni `values`"
+          top_level_indexing: "la propriété composée `%{property}` du profil m3 ne doit pas déclarer `indexing` au niveau supérieur ; déclarez `indexing` (ou `index_keys`) sur chaque sous-propriété"
+          duplicate_subproperty_name: "le composé `%{parent}` du profil m3 a plusieurs sous-propriétés qui se résolvent au même nom interne `%{name}` (%{properties}) ; chaque sous-propriété d'un composé doit se résoudre à un nom unique (définissez un `name:` distinct)"
       redirects_validator:
         errors:
           invalid_available_on: "la propriété `redirects` du profil m3 doit être disponible sur au moins une classe d'œuvre ou de collection déclarée dans ce profil"

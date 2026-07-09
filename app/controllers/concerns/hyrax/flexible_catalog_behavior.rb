@@ -75,6 +75,13 @@ module Hyrax
               blacklight_config.index_fields[name].if = :render_optionally?
             end
 
+            # Carry an author-declared catalog truncation length onto the field
+            # config (`view: { search_results_truncate: N }`, or `false` to opt out)
+            # so render_html_index_value can honor it for render_as: html fields.
+            if view_options.is_a?(Hash) && view_options.key?('search_results_truncate')
+              blacklight_config.index_fields[name].search_results_truncate = view_options['search_results_truncate']
+            end
+
             qf = blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
             unless qf.include?(name)
               qf << " #{name}"
@@ -100,7 +107,7 @@ module Hyrax
       # @param view_options [Hash] the view options ex: {"render_as"=>"linked", "html_dl"=>true}
       # @return [Boolean] to determine if the view_option_for_helper_method should be called
       def require_view_helper_method?(view_options)
-        view_options.present? && %w[external_link linked rights_statement].include?(view_options.dig('render_as'))
+        view_options.present? && %w[external_link linked rights_statement html].include?(view_options.dig('render_as'))
       end
 
       # Returns the helper method that will render the linked field correctly in the index view
@@ -111,6 +118,7 @@ module Hyrax
         return :iconify_auto_link if render_as == 'external_link'
         return :index_field_link if render_as == 'linked'
         return :rights_statement_links if render_as == 'rights_statement'
+        return :render_html_index_value if render_as == 'html'
       end
 
       def display_label_for(field_name, config)
