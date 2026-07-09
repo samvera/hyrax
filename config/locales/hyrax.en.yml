@@ -870,6 +870,9 @@ en:
       errors:
         required_but_empty: "%{compound} requires at least one entry"
         missing_required_subproperties: "Each %{compound} entry requires: %{fields}"
+      linked_record:
+        add_new: Add a %{item}
+        add_row: Add another %{item}
       participants:
         label: Participants
         title: Title
