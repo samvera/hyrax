@@ -4,7 +4,8 @@ module Hyrax
     ##
     # @api public
     class NestCollectionsController < ApplicationController
-      include Blacklight::Base
+      include Blacklight::Configurable
+      include Blacklight::SearchContext
 
       class_attribute :form_class, :new_collection_form_class
       self.form_class = Hyrax::Forms::Dashboard::NestCollectionForm

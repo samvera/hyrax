@@ -6,17 +6,26 @@ Hyrax::Engine.routes.draw do
   # Route the home page as the root
   root to: 'homepage#index'
 
+  get '/robots', to: 'homepage#robots'
+
   # Handle routes that existed in Hyrax < 7
   #   e.g. https://scholarsphere.psu.edu/files/gm80hv36p
   get '/files/:id', to: redirect('/concern/generic_works/%{id}')
 
   resources :downloads, only: :show
 
+  get 'transcripts/:id.:file_ext', to: 'transcripts#show', as: :transcript
+
   # ResourceSync routes
   get '/.well-known/resourcesync' => 'resource_sync#source_description', as: :source_description
   get '/capabilitylist' => 'resource_sync#capability_list', as: :capability_list
   get '/resourcelist' => 'resource_sync#resource_list', as: :resource_list
   get '/changelist' => 'resource_sync#change_list', as: :change_list
+
+  # Inline create endpoint for the `linked_record` compound picker's
+  # lookup-or-create flow; `:source` selects a registered
+  # Hyrax::CompoundLinkedRecordResolver source.
+  post '/linked_records/:source', to: 'compound_linked_records#create', as: :compound_linked_record
 
   delete '/uploads/:id', to: 'uploads#destroy', as: :uploaded_file
   post '/uploads', to: 'uploads#create'

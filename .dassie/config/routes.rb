@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   mount Riiif::Engine => 'images', as: :riiif if Hyrax.config.iiif_image_server?
         mount BrowseEverything::Engine => '/browse'
 
+  mount Bulkrax::Engine, at: '/'
   mount Blacklight::Engine => '/'
 
   concern :searchable, Blacklight::Routes::Searchable.new
@@ -16,6 +17,7 @@ Rails.application.routes.draw do
   mount Hydra::RoleManagement::Engine => '/'
 
   mount Qa::Engine => '/authorities'
+  mount BlacklightDynamicSitemap::Engine => '/'
   mount Hyrax::Engine, at: '/'
   resources :welcome, only: 'index'
   root 'hyrax/homepage#index'
@@ -34,4 +36,9 @@ Rails.application.routes.draw do
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
+  # Catch-all redirect resolver — must be last. See documentation/redirects.md.
+  get '*alias_path', to: 'hyrax/redirects#show',
+                     constraints: ->(_req) { Hyrax.config.redirects_active? },
+                     format: false
 end

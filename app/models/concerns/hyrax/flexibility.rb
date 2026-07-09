@@ -67,7 +67,7 @@ module Hyrax
           load(attributes, safe)
         end
       rescue Dry::Types::CoercionError => e
-        raise Dry::Error, "[#{self}.new] #{e}", e.backtrace
+        raise RuntimeError, "[#{self}.new] #{e.class}: #{e.message}", e.backtrace
       end
 
       ## Read the schema from the database and load the correct schemas for the instance in to the class
@@ -77,9 +77,27 @@ module Hyrax
         schema_version = attributes[:schema_version]
         contexts = attributes[:contexts] || []
         struct.singleton_class.attributes(Hyrax::Schema(self, schema_loader: Hyrax::Schema.m3_schema_loader, schema_version:, contexts:).attributes)
+        attributes = normalize_compound_attributes(struct, attributes)
         clean_attributes = safe ? struct.singleton_class.schema.call_safe(attributes) { |output = attributes| return yield output } : struct.singleton_class.schema.call_unsafe(attributes)
         struct.__send__(:initialize, clean_attributes)
         struct
+      end
+
+      # Put compound entries back together before the schema coerces them.
+      # Reading a work back from Postgres can hand us a compound whose entry
+      # hashes were taken apart into loose [key, value] pairs (see
+      # Hyrax::CompoundNormalization for the how and why). This is the one spot
+      # on the flexible-mode reload path that already knows which attributes
+      # are compounds - the singleton schema was applied on the line above -
+      # so repair the values here, before coercion sees them. Without this,
+      # the class-level normalization hook never fires in flexible mode (the
+      # class schema carries no compounds) and the broken shape either raises
+      # in coercion or reaches the instance looking like pairs, not entries.
+      def normalize_compound_attributes(struct, attributes)
+        compound_names = Hyrax::CompoundSchema.new(struct.singleton_class.schema).compound_names
+        return attributes if compound_names.empty?
+
+        Hyrax::CompoundNormalization.normalize_attrs(attributes, compound_names)
       end
     end
 

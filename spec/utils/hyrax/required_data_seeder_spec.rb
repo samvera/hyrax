@@ -7,6 +7,8 @@ RSpec.describe Hyrax::RequiredDataSeeder do
     let(:logger) { double }
 
     it "makes the user an admin" do
+      allow(Hyrax::RequiredDataSeeders::FlexibleProfileSeeder)
+        .to receive(:generate_seeds).with(logger: logger)
       expect(Hyrax::RequiredDataSeeders::CollectionTypeSeeder)
         .to receive(:generate_seeds).with(logger: logger).once
       expect(Hyrax::RequiredDataSeeders::CollectionSeeder)

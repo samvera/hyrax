@@ -24,12 +24,12 @@ it:
           suppressed_bsi: Stato
           visibility_ssi: Visibilità
         show:
-          admin_set: 'In Impostazione amministrativa:'
+          admin_set: "In Impostazione amministrativa:"
           based_near_label: luogo
           contributor: Contributori
           keyword: Parola chiave
       filters:
-        title: 'Filtro per:'
+        title: "Filtro per:"
       start_over: Cancellare i filtri
   download:
     one: e 1 download
@@ -39,8 +39,15 @@ it:
       carrierwave_download_error: Impossibile scaricare l'immagine.
       carrierwave_integrity_error: Non un'immagine.
       carrierwave_processing_error: Impossibile ridimensionare l'immagine.
-      extension_blacklist_error: 'Non è consentito caricare file %{extension}, tipi proibiti: %{prohibited_types}'
-      extension_whitelist_error: 'Non è consentito caricare i file %{extension}, i tipi consentiti: %{allowed_types}'
+      extension_blacklist_error: "Non è consentito caricare file %{extension}, tipi proibiti: %{prohibited_types}"
+      extension_whitelist_error: "Non è consentito caricare i file %{extension}, i tipi consentiti: %{allowed_types}"
+      redirect:
+        already_taken: '"%{path}" è già utilizzato da un''altra opera o collezione.'
+        blank: Un percorso di reindirizzamento non può essere vuoto.
+        intra_record_duplicate: '"%{path}" è elencato più di una volta in questo record.'
+        invalid_format: '"%{path}" non è un percorso valido. I percorsi devono iniziare con "/" e non contenere spazi, "?" o "#".'
+        multiple_display_url: Al massimo una voce di reindirizzamento può essere contrassegnata come URL di visualizzazione.
+        reserved_prefix: '"%{path}" non può essere utilizzato. Il percorso è riservato dall''applicazione e non può essere usato come alias.'
   helpers:
     action:
       accept: Accettare
@@ -145,9 +152,9 @@ it:
             title: Gli spettatori
             type: Tipo
         form_participants:
-          add_group: 'Aggiungere gruppo:'
+          add_group: "Aggiungere gruppo:"
           add_participants: Aggiungi partecipanti
-          add_user: 'Aggiungi utente:'
+          add_user: "Aggiungi utente:"
           current_participants: Partecipanti attuali
         form_visibility:
           cancel: Annulla
@@ -160,16 +167,16 @@ it:
             varies:
               any: Consentire al depositante di decidere
               between: Tra "ora" e "
-              description: 'Varia - i depositanti possono impostare la data di rilascio per un lavoro individuale:'
+              description: "Varia - i depositanti possono impostare la data di rilascio per un lavoro individuale:"
               embargo:
                 1yr: 1 anno dopo il deposito
                 2yrs: 2 anni dopo il deposito
                 3yrs: 3 anni dopo il deposito
                 6mos: 6 mesi dopo il deposito
                 select: Seleziona il periodo di embargo ..
-              period: 'Depositor può scegliere il periodo di embargo fino a:'
+              period: "Depositor può scegliere il periodo di embargo fino a:"
           visibility:
-            description: 'Dopo la data di rilascio, i lavori in questo set possono essere scoperti e scaricati da:'
+            description: "Dopo la data di rilascio, i lavori in questo set possono essere scoperti e scaricati da:"
             everyone: Tutti - tutti i lavori in questo set saranno pubblici
             institution: Istituzione - tutte le opere saranno visibili solo agli utenti autenticati di questa istituzione
             restricted: Restricted - tutti i lavori saranno visibili solo ai responsabili del repository e ai manager e ai revisori di questo set di amministratori
@@ -258,41 +265,41 @@ it:
             message: Si è verificato un problema durante l'autenticazione con Google Analytics. Controlla le tue credenziali.
             title: Errore di autenticazione
             troubleshooting_steps:
-            - Assicurati che il file delle credenziali `google-analytics.json` (o equivalente) sia formattato correttamente e contenga informazioni valide.
-            - Verifica che l'account di servizio sia abilitato nel tuo progetto Google Cloud.
+              - Assicurati che il file delle credenziali `google-analytics.json` (o equivalente) sia formattato correttamente e contenga informazioni valide.
+              - Verifica che l'account di servizio sia abilitato nel tuo progetto Google Cloud.
           documentation_html: Per ulteriori informazioni, consultare la <a href='%{url}' target='_blank' rel='noopener noreferrer'>documentazione</a> .
           general:
             documentation_url: https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support
             message: Si è verificato un problema con la configurazione di Google Analytics che richiede l'intervento dell'amministratore.
             title: Problema di configurazione di Analytics
             troubleshooting_steps:
-            - Contatta l'amministratore di sistema per rivedere la configurazione di Google Analytics
-            - Verificare che le credenziali dell'account di servizio siano configurate correttamente
-            - Assicurati che la proprietà di Google Analytics sia impostata correttamente
+              - Contatta l'amministratore di sistema per rivedere la configurazione di Google Analytics
+              - Verificare che le credenziali dell'account di servizio siano configurate correttamente
+              - Assicurati che la proprietà di Google Analytics sia impostata correttamente
           invalid_property:
             documentation_url: https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support
             message: L'ID proprietà di Google Analytics non è valido. Per Google Analytics 4 è richiesto un ID proprietà numerico.
             title: ID proprietà non valido
             troubleshooting_steps:
-            - Controlla le impostazioni di Google Analytics 4 e assicurati di utilizzare l'ID proprietà numerico e non l'ID misurazione (che inizia con 'G-').
-            - Verificare che l'ID proprietà sia configurato correttamente nelle impostazioni dell'applicazione.
+              - Controlla le impostazioni di Google Analytics 4 e assicurati di utilizzare l'ID proprietà numerico e non l'ID misurazione (che inizia con 'G-').
+              - Verificare che l'ID proprietà sia configurato correttamente nelle impostazioni dell'applicazione.
           permission:
             documentation_url: https://samvera.atlassian.net/wiki/spaces/hyku/pages/3185147970/Google+Analytics+4+GA4+Support
             message: Il sistema non riesce ad accedere ai tuoi dati di Google Analytics. Di solito, questo significa che è necessario concedere all'account email di servizio l'accesso alla tua proprietà di Google Analytics.
             title: Accesso all'analisi richiesto
             troubleshooting_steps:
-            - Nel tuo account Google Analytics, vai su Amministrazione → Account → Gestione accesso account
-            - Fare clic sul pulsante '+' per aggiungere un nuovo utente
-            - 'Inserisci l''indirizzo email dell''account di servizio dal tuo file di credenziali (simile a: tuo-account-di-servizio@nome-progetto.iam.gserviceaccount.com)'
-            - Imposta il ruolo su "Visualizzatore" e fai clic su "Aggiungi"
-            - Attendi qualche minuto affinché le modifiche abbiano effetto, quindi aggiorna questa pagina
+              - Nel tuo account Google Analytics, vai su Amministrazione → Account → Gestione accesso account
+              - Fare clic sul pulsante '+' per aggiungere un nuovo utente
+              - "Inserisci l'indirizzo email dell'account di servizio dal tuo file di credenziali (simile a: tuo-account-di-servizio@nome-progetto.iam.gserviceaccount.com)"
+              - Imposta il ruolo su "Visualizzatore" e fai clic su "Aggiungi"
+              - Attendi qualche minuto affinché le modifiche abbiano effetto, quindi aggiorna questa pagina
           quota_exceeded:
             documentation_url: https://developers.google.com/analytics/devguides/reporting/data/v1/limits-quotas
             message: È stata superata la frequenza di richieste all'API di Google Analytics. Riprova più tardi.
             title: Quota superata
             troubleshooting_steps:
-            - Esamina i limiti delle quote dell'API di Google Analytics e il tuo utilizzo.
-            - Se si effettuano numerose richieste in un breve periodo di tempo, si consiglia di implementare strategie di backoff per le richieste API.
+              - Esamina i limiti delle quote dell'API di Google Analytics e il tuo utilizzo.
+              - Se si effettuano numerose richieste in un breve periodo di tempo, si consiglia di implementare strategie di backoff per le richieste API.
           troubleshooting_steps: Passaggi per la risoluzione dei problemi
         work_reports:
           custom_range:
@@ -416,7 +423,7 @@ it:
           update_notice: Aggiornamento dei partecipanti
         form_settings:
           instructions: Queste impostazioni determinano in che modo è possibile gestire e scoprire raccolte di questo tipo.
-          warning: 'Avvertenza: queste impostazioni non possono essere modificate dopo aver creato una collezione di questo tipo.'
+          warning: "Avvertenza: queste impostazioni non possono essere modificate dopo aver creato una collezione di questo tipo."
         index:
           breadcrumb: Tipi di raccolta
           create_new_button: Crea un nuovo tipo di raccolta
@@ -434,7 +441,7 @@ it:
             actions: Azioni
             name: Nome
         multiple_membership_checker:
-          error_preamble: 'Errore: hai specificato più di uno degli stessi tipi di raccolta a membro singolo'
+          error_preamble: "Errore: hai specificato più di uno degli stessi tipi di raccolta a membro singolo"
           error_type_and_collections: "(tipo: %{type}, collezioni: %{collections})"
         new:
           header: Crea un nuovo tipo di raccolta
@@ -478,7 +485,7 @@ it:
       stats:
         deposited_form:
           end_label: Fine [impostazione predefinita]
-          heading: 'Visualizza i file depositati:'
+          heading: "Visualizza i file depositati:"
           start_label: Inizio
         repository_objects:
           series:
@@ -489,14 +496,14 @@ it:
           end_label: Fine [impostazione predefinita]
           headers:
             main: Statistiche di lavoro
-            total: 'Opere totali:'
+            total: "Opere totali:"
             visibility: Totali per visibilità
           heading: Visualizza file depositati dagli utenti
           start_label: Di partenza
         works:
           headers:
             main: Statistiche di lavoro
-            total: 'Totale opere:'
+            total: "Totale opere:"
             visibility: Totale per visibilità
       users:
         index:
@@ -552,7 +559,7 @@ it:
         default: Devi essere autenticato per farlo!
       unprocessable_entity:
         default: La risorsa che hai tentato di modificare non può essere modificata in base alla tua richiesta.
-    background_attribution_html: ''
+    background_attribution_html: ""
     base:
       attributes:
         table_attribute_name: nome attributo
@@ -562,13 +569,14 @@ it:
       citations:
         citations: citazioni
         endnote: EndNote
-        header: 'citazioni:'
+        header: "citazioni:"
         mendeley: Mendeley
         zotero: Zotero
       currently_shared:
         currently_sharing: Attualmente condiviso con
         table_title_access: Livello di accesso
-        table_title_user: Persona / Gruppo
+        table_title_user: Utente/Gruppo
+        table_title_action: Azione
       file_manager:
         back_to: Torna alla
         toolbar: Barra degli strumenti
@@ -691,11 +699,13 @@ it:
         title: Titolo
         unauthorized: Non ci sono articoli disponibili pubblicamente in questo %{type}.
         visibility: Visibilità
+      member_of_collections:
+        header: Membro di collezioni
       relationships:
         empty: Questo %{type} non è in una raccolta.
         header: Le relazioni
       relationships_parent_row:
-        label: 'In %{type}:'
+        label: "In %{type}:"
       share_with:
         definition_heading: Definizioni di autorizzazione
         definitions_html: "<strong>Visualizza / Scarica:</strong> questo file (sia i contenuti che i metadati) è accessibile dall'interno di %{application_name}. <br /> <strong>Modifica:</strong> questo file (sia i contenuti che i metadati) può essere modificato. È possibile concedere questa autorizzazione solo agli utenti e / o ai gruppi %{institution_name}."
@@ -722,7 +732,7 @@ it:
         twitter: cinguettio
         twitter_share: Condividi su Twitter
       unauthorized:
-        id: 'ID: %{id}'
+        id: "ID: %{id}"
         is_private: Lo %{type} a cui hai provato ad accedere è privato
         page_is_private: La pagina a cui hai tentato di accedere è privata
         unauthorized: non autorizzato
@@ -757,11 +767,11 @@ it:
         button_label: Elimina Selezionato
         deleting_file_from: L'eliminazione di un file da %{application_name} è permanente. Fare clic su OK per eliminare questo file da %{application_name} o Annulla per annullare questa operazione
       edit:
-        apply_changes_to: 'Le modifiche verranno applicate a: (funziona %{x_number_of})'
+        apply_changes_to: "Le modifiche verranno applicate a: (funziona %{x_number_of})"
         batch_edit_descriptions: Descrizioni modifica batch & nbsp; & nbsp; & nbsp; <small> Fai clic sulle etichette sottostanti per modificare le descrizioni dei lavori. </small>
         clear_batch: Cancella batch
         descriptions: descrizioni
-        descriptions_title: 'descrizioni:'
+        descriptions_title: "descrizioni:"
         permissions: permessi
         sharing: compartecipazione
         visibility: Visibilità
@@ -831,7 +841,7 @@ it:
         create: Crea collezione
         create_new: Aggiungi alla nuova collezione
         no_collections: Non hai accesso a collezioni esistenti. Puoi creare una nuova collezione.
-        select_heading: 'Seleziona la raccolta per aggiungere i tuoi file a:'
+        select_heading: "Seleziona la raccolta per aggiungere i tuoi file a:"
         title: Aggiungere alla collezione
         update: Aggiorna Collezione
     collection_type:
@@ -842,6 +852,9 @@ it:
         admin_set_description: Un'aggregazione di opere che ha lo scopo di aiutare con il controllo amministrativo. I set di amministratori forniscono un modo per definire comportamenti e politiche attorno a un insieme di opere.
         default_description: Una User Collection può essere creata da qualsiasi utente per organizzare i propri lavori.
     collections:
+      collection_counts:
+        collections: Collezioni
+        works: Lavori
       search_form:
         button_label: Partire
         label: Cerca la raccolta %{title}
@@ -860,7 +873,7 @@ it:
         works_in_collection: Funziona in questa collezione
       sort_and_per_page:
         number_of_results_to_display_per_page: Numero di risultati da visualizzare per pagina
-        results_per_page: 'Risultati per la pagina:'
+        results_per_page: "Risultati per la pagina:"
         sort_by_html: "<span>Ordina per:</span>"
     contact_form:
       button_label: Inviare
@@ -891,6 +904,9 @@ it:
       contact: contatto
       help: Aiuto
       home: Casa
+    copy_permalink:
+      button: Copia permalink
+      success: Copiato!
     dashboard:
       additional_notifications: Vedere tutte le notifiche
       admin_sets:
@@ -914,7 +930,7 @@ it:
       collections:
         collection_title: Titolo della raccolta
         edit:
-          header: 'Modifica collezione: %{title}'
+          header: "Modifica collezione: %{title}"
         files: File
         form:
           permission_update_errors:
@@ -930,7 +946,7 @@ it:
             relationships: Le relazioni
             sharing: compartecipazione
         form_branding:
-          alt_text: 'Il Testo Alt:'
+          alt_text: "Il Testo Alt:"
           banner:
             description: Un'immagine da visualizzare nella parte superiore della pagina di raccolta. Per risultati ottimali, carica un'immagine (JPG, GIF o PNG) di almeno 120 pixel di altezza e 1200 pixel di larghezza.
             label: bandiera
@@ -938,7 +954,7 @@ it:
             description: Facoltativamente, puoi caricare un'immagine banner e / o immagini logo da associare a questa raccolta. Se caricate, queste immagini verranno visualizzate nella parte superiore della pagina di raccolta per fornire un marchio univoco per la raccolta.
             label: Branding
           choose_file: Scegliere File
-          link_url: 'URL del Link:'
+          link_url: "URL del Link:"
           logo:
             description: Una o più immagini da visualizzare nella parte superiore della pagina di raccolta. Per risultati ottimali, carica un'immagine (JPG, GIF o PNG) di altezza pari a 40 pixel. Le immagini più grandi verranno ridimensionate a 40 pixel in altezza.
             label: Logo
@@ -1038,12 +1054,12 @@ it:
         show_document_list_menu:
           select: Selezionare
         show_document_list_row:
-          creator: 'Creatore:'
-          depositor: 'Depositante:'
-          edit_access: 'Modifica accesso:'
+          creator: "Creatore:"
+          depositor: "Depositante:"
+          edit_access: "Modifica accesso:"
         sort_and_per_page:
           show_par_page_html: Mostra %{select} per pagina
-          sort_by: 'Ordina Per:'
+          sort_by: "Ordina Per:"
         title: Collezioni
         work_action_menu:
           delete_work: Elimina lavoro
@@ -1106,21 +1122,21 @@ it:
           view_collection: Guarda la collezione
           work_confirmation: La cancellazione di un lavoro da %{application_name} è permanente. Fare clic su OK per eliminare questo lavoro da %{application_name} oppure Annulla per annullare questa operazione
         collection_list:
-          description: 'Descrizione:'
-          edit_access: 'Modifica accesso:'
-          groups: 'gruppi:'
+          description: "Descrizione:"
+          edit_access: "Modifica accesso:"
+          groups: "gruppi:"
           managed_access:
             deposit: Depositare
             manage: Gestire
             view: vista
-          users: 'utenti:'
+          users: "utenti:"
         collections: Le tue collezioni
         collections_report: Report collezioni
         facet_label:
-          collections: 'Collezioni filtro:'
-          highlighted: 'Filtra i punti salienti:'
-          shared: 'Condivisione di filtri:'
-          works: 'Funzioni di filtro:'
+          collections: "Collezioni filtro:"
+          highlighted: "Filtra i punti salienti:"
+          shared: "Condivisione di filtri:"
+          works: "Funzioni di filtro:"
         heading:
           access: Accesso
           action: Azioni
@@ -1332,6 +1348,11 @@ it:
         cancel: Annulla
         save: Salvare
         title: Titolo
+      valkyrie_form:
+        attach_to: Allegare a %{parent}
+        cancel: Annulla
+        save: Salvare
+        title: Titolo
       groups_description:
         description_html: L'elenco dei gruppi nel menu a discesa contrassegnato con "Seleziona un gruppo" è un elenco di Gruppi gestiti utente di cui sei membro. È possibile selezionare un gruppo specifico e assegnare un livello di accesso per un file all'interno di %{application_name}, analogamente ad aggiungere livelli di accesso utente.
       permission:
@@ -1370,6 +1391,8 @@ it:
         file_details: Dettagli File
         fixity_check: Fissità Di Controllo
         not_yet_characterized: Non Ancora Caratterizzati
+      metadata:
+        metadata: Metadati
       versioning:
         choose_file: Scegli New Version File
         current: Versione attuale
@@ -1383,6 +1406,24 @@ it:
         save: Salva revisione
         save_your_note: Devi fare clic su "Salva revisione" per ripristinare una versione precedente di questo file
         upload: Carica nuova versione
+    flexible_schema_validators:
+      compound_validator:
+        errors:
+          unknown_parent: "la sottoproprietà `%{property}` del profilo m3 dichiara `available_on: { properties: [%{parent}] }`, ma `%{parent}` non è una proprietà composta `type: hash` dichiarata"
+          controlled_without_source: "la sottoproprietà composta `%{property}` del profilo m3 è `type: controlled` ma non dichiara né `authority` né `values`"
+          top_level_indexing: "la proprietà composta `%{property}` del profilo m3 non deve dichiarare `indexing` di primo livello; dichiarare `indexing` (o `index_keys`) su ogni sottoproprietà"
+          duplicate_subproperty_name: "il composto `%{parent}` del profilo m3 ha più sottoproprietà che si risolvono nello stesso nome interno `%{name}` (%{properties}); ogni sottoproprietà di un composto deve risolversi in un nome univoco (impostare un `name:` distinto)"
+      redirects_validator:
+        errors:
+          invalid_available_on: "la proprietà `redirects` del profilo m3 deve essere disponibile su almeno una classe di opera o raccolta dichiarata in questo profilo"
+          invalid_type: "la proprietà `redirects` del profilo m3 deve dichiarare `type: hash` (ricevuto `%{actual_type}`)"
+          property_required: "il profilo m3 deve dichiarare una proprietà `redirects` quando la funzionalità dei reindirizzamenti è abilitata"
+        warnings:
+          config_disabled: "il profilo m3 dichiara una proprietà `redirects` ma Hyrax.config.redirects_enabled? è false; la proprietà verrà ignorata"
+          flipflop_disabled: "il profilo m3 dichiara una proprietà `redirects` ma il feature flag :redirects è disattivato; la proprietà verrà ignorata"
+      sort_properties_validator:
+        warnings:
+          message: "%{property} deve essere definito su %{classes} per supportare l'ordinamento su tale proprietà, a meno che non sia stato indicizzato %{property}_ssi su un altro campo."
     help:
       header: Supporto utente
       override_text: Utilizza app / views / static / help.html.erb per ignorare questo file.
@@ -1420,8 +1461,8 @@ it:
         tab_label: Recentemente caricati
         title: Recentemente caricati
     icons:
-      collection: Fa fa-cubetti
-      default: Fa fa-cubo
+      collection: fa fa-cubes
+      default: fa fa-cube
     leases:
       edit:
         header:
@@ -1499,7 +1540,7 @@ it:
       change_tab_message: Sei sicuro di voler lasciare questa scheda? Tutti i dati non salvati andranno persi.
     notifications:
       batch_create_failure:
-        message: 'Il batch creato per %{user} non è riuscito: %{messages}'
+        message: "Il batch creato per %{user} non è riuscito: %{messages}"
         subject: Creazione batch fallita
       batch_create_success:
         message: Il batch creato per %{user} è passato.
@@ -1515,7 +1556,7 @@ it:
           subject: Richiesta di modifica della proprietà
           transfer_link_label: le richieste di trasferimento
         transfer_on_update:
-          comments: 'Commenti: %{receiver_comment}'
+          comments: "Commenti: %{receiver_comment}"
           message: La tua richiesta di trasferimento era %{status}.
           subject: Modifica proprietà %{status}
         validation:
@@ -1615,6 +1656,8 @@ it:
         link_expired_not_found: Link monouso scaduto o non trovato
         link_not_found: Link monouso non trovato
     sort_label: Ordina l'elenco degli articoli
+    sr:
+      thumbnail: immagine rappresentativa predefinita
     static:
       mendeley:
         contact_form: Modulo di Contatto
@@ -1710,9 +1753,9 @@ it:
         set_all_to_this_resource_type: Impostare tutto su questo tipo di risorsa
         start: Inizio
       js_templates_branding:
-        alt_text: 'Testo alternativo:'
+        alt_text: "Testo alternativo:"
         error: Errore
-        link_url: 'URL del link:'
+        link_url: "URL del link:"
         previous: precedente
         remove: Rimuovere
         remove_new_banner: Rimuovi nuovo banner
@@ -1790,7 +1833,7 @@ it:
       default:
         deposit: Depositare
       load:
-        state_error: 'Il flusso di lavoro: %{workflow_name} non è stato aggiornato. Stai rimuovendo uno stato: %{state_name} con entità / i %{entity_count}. Uno stato non può essere rimosso mentre ha entità attive!'
+        state_error: "Il flusso di lavoro: %{workflow_name} non è stato aggiornato. Stai rimuovendo uno stato: %{state_name} con entità / i %{entity_count}. Uno stato non può essere rimosso mentre ha entità attive!"
       unauthorized: Il lavoro non è attualmente disponibile perché non ha ancora completato il processo di approvazione
       unauthorized_parent: Il file non è attualmente disponibile perché il suo lavoro principale non ha ancora completato il processo di approvazione
     works:
@@ -1805,6 +1848,26 @@ it:
         in_collections: Collezioni
         in_other_works: Questo lavoro in altre opere
         in_this_work: Altri lavori in questo lavoro
+        redirects:
+          add_label: Aggiungi un altro alias
+          caption: Elenco degli alias URL per questa risorsa
+          display_url:
+            help_html: Facoltativamente, contrassegna un alias come <em>URL di visualizzazione</em>. Quando impostato, l'URL UUID permanente del record reindirizza all'alias scelto. Lascia "Nessuno" per mantenere l'URL UUID come destinazione.
+            none_label: Nessuno (usa l'URL UUID del record)
+            row_label: 'Usa "%{path}" come URL di visualizzazione'
+          errors_heading: Si prega di correggere i seguenti errori di alias
+          header:
+            actions: Azioni
+            display_url: URL di visualizzazione
+            path: Percorso
+          heading: Alias URL
+          help_html: 'Registra i vecchi percorsi URL che dovrebbero reindirizzare a questo record. Ogni percorso sarà risolto dalla radice di questo sito. I percorsi Hyrax riservati (ad esempio, <code>/concern</code>, <code>/dashboard</code>) non possono essere utilizzati.'
+          new_path_label: Nuovo percorso alias
+          path_label: Percorso alias
+          placeholder:
+            path: Inserisci un vecchio percorso...
+          remove_label: Rimuovi
+          remove_with_path_label: 'Rimuovi %{path}'
         tab:
           files: File
           metadata: descrizioni
@@ -1849,7 +1912,7 @@ it:
         require_membership: Un'opera deve appartenere ad almeno una raccolta di questo tipo
         sharable: Consenti agli utenti di assegnare gestori di collezioni, depositanti e spettatori per le raccolte che gestiscono
         share_applies_to_new_works: Quando vengono creati nuovi lavori direttamente nella raccolta, concedere la condivisione di autorizzazioni di utenti e gruppi per il nuovo lavoro in base ai rispettivi ruoli di raccolta.
-        title: ''
+        title: ""
       defaults:
         abstract: Un breve riassunto di un articolo di ricerca, tesi, revisione, atti del convegno o qualsiasi analisi approfondita di un particolare argomento.
         access_right: Contiene informazioni su chi può accedere alla risorsa o un'indicazione del suo stato di sicurezza.

@@ -10,8 +10,18 @@ module Hyrax
       'hyrax/base/iiif_viewers/' + work_presenter.iiif_viewer.to_s
     end
 
+    # For backwards compatibility
     def universal_viewer_base_url
-      "#{request&.base_url}/uv/uv.html"
+      iiif_viewer_base_url(:universal_viewer)
+    end
+
+    def iiif_viewer_base_url(viewer)
+      case viewer
+      when :universal_viewer
+        "#{request&.base_url}/uv/uv.html"
+      else
+        "#{request&.base_url}/#{viewer}/#{viewer}.html"
+      end
     end
 
     def universal_viewer_config_url

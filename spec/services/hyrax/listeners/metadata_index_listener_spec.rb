@@ -90,6 +90,43 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
           .not_to change { fake_adapter.saved_resources }
       end
     end
+
+    context 'when the object is a file set used as a work thumbnail',
+            :valkyrie_metadata_adapter, skip: !Hyrax.config.disable_wings do
+      let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+      let(:work)     { FactoryBot.valkyrie_create(:hyrax_work, thumbnail_id: file_set.id) }
+      let(:data)     { { object: file_set } }
+
+      before { work } # ensure work is persisted
+
+      it 'also reindexes the parent work' do
+        allow(Hyrax.custom_queries).to receive(:find_parent_work).with(resource: file_set).and_return(work)
+        count_before = fake_adapter.saved_resources.length
+        listener.on_object_metadata_updated(event)
+        newly_saved = fake_adapter.saved_resources.drop(count_before)
+        expect(newly_saved).to contain_exactly(file_set, work)
+      end
+
+      context 'when the file set is not the thumbnail' do
+        let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
+
+        it 'does not reindex the parent work' do
+          allow(Hyrax.custom_queries).to receive(:find_parent_work).with(resource: file_set).and_return(work)
+          count_before = fake_adapter.saved_resources.length
+          listener.on_object_metadata_updated(event)
+          newly_saved = fake_adapter.saved_resources.drop(count_before)
+          expect(newly_saved).to contain_exactly(file_set)
+        end
+      end
+
+      context 'when the parent work is not found' do
+        it 'does not raise' do
+          allow(Hyrax.custom_queries).to receive(:find_parent_work)
+            .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
+          expect { listener.on_object_metadata_updated(event) }.not_to raise_error
+        end
+      end
+    end
   end
 
   describe '#on_collection_deleted' do

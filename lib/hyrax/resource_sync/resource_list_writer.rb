@@ -6,9 +6,12 @@ module Hyrax
     # items, so if we require more than that, we must have multiple Resource
     # lists and add a Resource List Index to point to all of them.
     class ResourceListWriter
+      Hyrax.deprecator.deprecate_methods(self, write: "Use BlacklightDynamicSitemap instead.")
       attr_reader :resource_host, :capability_list_url
 
       def initialize(resource_host:, capability_list_url:)
+        Hyrax.deprecator.warn("Hyrax::ResourceSync::ResourceListWriter is deprecated. Use BlacklightDynamicSitemap instead.")
+
         @resource_host = resource_host
         @capability_list_url = capability_list_url
       end

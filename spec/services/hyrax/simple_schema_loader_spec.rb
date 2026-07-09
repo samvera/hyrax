@@ -125,6 +125,50 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
       end
     end
 
+    context 'with top-level visibility flags (admin_only / editor_only)' do
+      it 'promotes a top-level admin_only into the view options alongside the view block' do
+        prop = double('Property', name: :admin_field, meta: { 'admin_only' => true, 'view' => { 'html_dl' => true } })
+        result = schema_loader.view_definitions_for(schema: [prop])
+        expect(result['admin_field']).to include('admin_only' => true, 'html_dl' => true)
+      end
+
+      it 'promotes a top-level editor_only into the view options' do
+        prop = double('Property', name: :editor_field, meta: { 'editor_only' => true, 'view' => { 'html_dl' => true } })
+        result = schema_loader.view_definitions_for(schema: [prop])
+        expect(result['editor_field']).to include('editor_only' => true)
+      end
+
+      it 'honors the indexing: sentinel form (admin_only listed in indexing)' do
+        prop = double('Property', name: :idx_field, meta: { 'indexing' => ['idx_field_tesim', 'admin_only'], 'view' => { 'html_dl' => true } })
+        result = schema_loader.view_definitions_for(schema: [prop])
+        expect(result['idx_field']).to include('admin_only' => true)
+      end
+
+      it 'includes a field gated only by a top-level flag with no view block' do
+        prop = double('Property', name: :bare_admin, meta: { 'admin_only' => true })
+        result = schema_loader.view_definitions_for(schema: [prop])
+        expect(result['bare_admin']).to include('admin_only' => true)
+      end
+
+      it 'lets a top-level flag win over a conflicting nested one (matching M3)' do
+        prop = double('Property', name: :both, meta: { 'editor_only' => true, 'view' => { 'editor_only' => false } })
+        result = schema_loader.view_definitions_for(schema: [prop])
+        expect(result['both']).to include('editor_only' => true)
+      end
+
+      it 'preserves a nested flag when no top-level flag is set' do
+        prop = double('Property', name: :nested_only, meta: { 'view' => { 'admin_only' => true } })
+        result = schema_loader.view_definitions_for(schema: [prop])
+        expect(result['nested_only']).to include('admin_only' => true)
+      end
+
+      it 'still excludes a field with neither view options nor visibility flags' do
+        prop = double('Property', name: :plain, meta: { 'predicate' => 'http://example.com/x' })
+        result = schema_loader.view_definitions_for(schema: [prop])
+        expect(result).not_to have_key('plain')
+      end
+    end
+
     context 'with version and contexts parameters' do
       it 'ignores version and contexts parameters as documented' do
         mock_property = double('Property', name: :title, meta: {})
@@ -140,10 +184,68 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
     let(:permissive_schema) { schema_loader.permissive_schema_for_valkrie_adapter }
 
     it 'provides the expected hash' do
-      expect(permissive_schema.size).to eq(66)
+      expect(permissive_schema.size).to eq(72)
       expect(permissive_schema.values.all? { |v| v.is_a? RDF::URI }).to be_truthy
       expect(permissive_schema.values.all? { |v| v.value.present? }).to be_truthy
       expect(permissive_schema[:sample_attribute].value).to eq("http://hyrax-example.com/sample_attribute")
+    end
+
+    context 'when Hyrax.config.redirects_enabled? is true' do
+      before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true) }
+
+      it 'includes the redirects predicate in the permissive schema' do
+        expect(permissive_schema[:redirects].value).to eq('http://samvera.org/ns/hyku/redirects')
+      end
+    end
+
+    context 'when Hyrax.config.redirects_enabled? is false' do
+      before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(false) }
+
+      it 'does not include the redirects predicate' do
+        expect(permissive_schema.keys).not_to include(:redirects)
+      end
+    end
+  end
+
+  describe '#attributes_for with the :redirects schema' do
+    context 'when Hyrax.config.redirects_enabled? is true' do
+      before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(true) }
+
+      it 'returns the redirects attribute definitions' do
+        attributes = schema_loader.attributes_for(schema: :redirects)
+        expect(attributes.keys).to include(:redirects)
+      end
+
+      it "exposes the redirects schema's view options for use under flex-false" do
+        # Under flex-false, all view options live inside the view: block;
+        # SimpleSchemaLoader#view_definitions_for passes the block through
+        # verbatim. Flex-true structures editor_only differently (via the
+        # indexing: array or top-level editor_only: true), handled by
+        # M3SchemaLoader.
+        view = {
+          'editor_only' => true,
+          'render_term' => 'redirects_path',
+          'render_as' => 'redirects_label',
+          'html_dl' => true
+        }
+        mock_property = double('Property', name: :redirects, meta: { 'view' => view })
+        result = schema_loader.view_definitions_for(schema: [mock_property])
+        expect(result['redirects']).to include(
+          'editor_only' => true,
+          'render_term' => 'redirects_path',
+          'render_as' => 'redirects_label',
+          'html_dl' => true
+        )
+      end
+    end
+
+    context 'when Hyrax.config.redirects_enabled? is false' do
+      before { allow(Hyrax.config).to receive(:redirects_enabled?).and_return(false) }
+
+      it 'raises UndefinedSchemaError as if the YAML did not exist' do
+        expect { schema_loader.attributes_for(schema: :redirects) }
+          .to raise_error(Hyrax::SchemaLoader::UndefinedSchemaError, /No schema defined: redirects/)
+      end
     end
   end
 end

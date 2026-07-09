@@ -157,6 +157,41 @@ RSpec.describe ::SolrDocument, type: :model do
     its(:endnote_filename) { is_expected.to eq("1234.endnote") }
   end
 
+  describe '#alt_text_for_view' do
+    context 'when the document is a file set' do
+      let(:attributes) { { 'has_model_ssim' => 'FileSet', 'alt_text_tesim' => ['Custom alt'], 'title_tesim' => ['My File'] } }
+
+      it 'returns the alt_text when present' do
+        expect(document.alt_text_for_view).to eq('Custom alt')
+      end
+
+      context 'when alt_text is blank' do
+        let(:attributes) { { 'has_model_ssim' => 'FileSet', 'alt_text_tesim' => [], 'title_tesim' => ['My File'] } }
+
+        it 'falls back to title' do
+          expect(document.alt_text_for_view).to eq('My File')
+        end
+      end
+    end
+
+    context 'when the document is a work with thumbnail_alt_text' do
+      let(:attributes) { { 'has_model_ssim' => 'GenericWork', 'thumbnail_alt_text_tesim' => ['Thumbnail alt'], 'title_tesim' => ['My Work'] } }
+
+      it 'returns the thumbnail_alt_text' do
+        expect(document.alt_text_for_view).to eq('Thumbnail alt')
+      end
+    end
+
+    context 'when the document is a work without thumbnail_alt_text' do
+      let(:attributes) { { 'has_model_ssim' => 'GenericWork', 'thumbnail_alt_text_tesim' => [], 'title_tesim' => ['My Work'] } }
+
+      it 'returns the title concatenated with the thumbnail i18n label' do
+        expected = "My Work #{I18n.t('hyrax.homepage.admin_sets.thumbnail')}"
+        expect(document.alt_text_for_view).to eq(expected)
+      end
+    end
+  end
+
   describe "#admin_set?" do
     let(:attributes) { { 'has_model_ssim' => Hyrax.config.admin_set_model } }
 
@@ -194,6 +229,61 @@ RSpec.describe ::SolrDocument, type: :model do
 
     its(:collection_type_gid) do
       is_expected.to eq 'gid://internal/hyrax-collectiontype/5'
+    end
+  end
+
+  describe "#transcript_ids" do
+    let(:attributes) do
+      { 'transcript_ids_ssim' => ['foo'] }
+    end
+
+    its(:transcript_ids) do
+      is_expected.to eq ['foo']
+    end
+  end
+
+  describe "compound readers" do
+    # A compound (hierarchical) attribute is indexed as a `<name>_json_ss`
+    # blob. The document defines a reader per such field at construction, so an
+    # application's own compounds render without a per-app declaration and
+    # without depending on the (possibly stale) flexible schema. See
+    # documentation/compound_fields.md.
+    let(:attributes) do
+      { 'contributors_json_ss' =>
+          [%([{"given_name":"Grace","family_name":"Hopper"}])],
+        'funding_references_json_ss' =>
+          [%([{"funder_name":"NSF","award_number":"123"}])],
+        'empty_compound_json_ss' => [] }
+    end
+
+    it "defines a reader for each compound present on the document" do
+      expect(document).to respond_to(:contributors)
+      expect(document).to respond_to(:funding_references)
+    end
+
+    it "defines the reader as a real method (not via method_missing)" do
+      # A real method is required so the reader wins over a same-named dynamic
+      # field accessor that would otherwise shadow it and return nil.
+      expect(document.singleton_class.method_defined?(:contributors)).to be true
+      expect(document.method(:contributors).owner).to eq(document.singleton_class)
+    end
+
+    it "parses the stored rows back into an array of hashes" do
+      expect(document.contributors)
+        .to eq([{ 'given_name' => 'Grace', 'family_name' => 'Hopper' }])
+    end
+
+    it "handles multi-word compound names" do
+      expect(document.funding_references)
+        .to eq([{ 'funder_name' => 'NSF', 'award_number' => '123' }])
+    end
+
+    it "returns an empty array for a present-but-blank compound blob" do
+      expect(document.empty_compound).to eq([])
+    end
+
+    it "does not define a reader for a compound that is not on the document" do
+      expect(document).not_to respond_to(:nonexistent_compound)
     end
   end
 end

@@ -6,7 +6,7 @@
 # @see https://github.com/samvera/hyrax/wiki/Hyrax-Valkyrie-Usage-Guide#forms
 # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
 class GenericWorkResourceForm < Hyrax::Forms::ResourceForm(GenericWorkResource)
-  if Hyrax.config.collection_include_metadata?
+  if Hyrax.config.work_include_metadata?
     include Hyrax::FormFields(:basic_metadata)
     include Hyrax::FormFields(:generic_work_resource)
   end

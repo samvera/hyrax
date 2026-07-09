@@ -10,6 +10,7 @@ module Hyrax
     class WorkDestroy < Transaction
       DEFAULT_STEPS = ['work_resource.delete_all_file_sets',
                        'work_resource.delete_acl',
+                       'work_resource.remove_redirect_paths',
                        'work_resource.delete'].freeze
 
       ##

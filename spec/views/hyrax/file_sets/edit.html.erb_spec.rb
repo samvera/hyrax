@@ -18,7 +18,8 @@ RSpec.describe 'hyrax/file_sets/edit.html.erb', type: :view do
 
   before do
     allow(controller).to receive(:current_ability).and_return(ability)
-    allow(ability).to receive(:can?).with(:download, solr_doc).and_return(true)
+    allow(ability).to receive(:can?).with(:download, presenter).and_return(true)
+    allow(ability).to receive(:can?).with(:edit, parent_presenter).and_return(true)
     assign(:presenter, presenter)
     assign(:parent_presenter, parent_presenter)
     allow(presenter).to receive(:parent).and_return(parent_presenter)

@@ -41,7 +41,7 @@ module Hyrax
     # types from appearing in search results
     # @return [Array<Class>] the list of work types to include in searches
     def work_types
-      Hyrax::ModelRegistry.work_classes
+      Hyrax::ModelRegistry.work_classes - Hyrax::ModelRegistry.file_set_classes
     end
 
     def work_classes

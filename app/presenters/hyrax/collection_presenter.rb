@@ -40,15 +40,71 @@ module Hyrax
              :title_or_label, :collection_type_gid, :create_date, :modified_date, :visibility, :edit_groups, :edit_people,
              to: :solr_document
 
-    # Terms is the list of fields displayed by
-    # app/views/collections/_show_descriptions.html.erb
+    # The standard metadata terms displayed by
+    # app/views/collections/_show_descriptions.html.erb. Compound terms are
+    # appended per instance (see {#terms}); they can't be resolved at the class
+    # level because a flexible schema is per-resource (keyed by the indexed
+    # schema_version) and mutable at runtime.
+    DEFAULT_TERMS = [:total_items, :alternative_title, :size, :resource_type, :creator, :contributor,
+                     :keyword, :license, :publisher, :date_created, :subject, :language, :identifier,
+                     :based_near, :related_url].freeze
+
+    # The standard (non-compound) terms. Class-level so downstream apps can
+    # override the list (e.g. to remove a term); the instance {#terms} builds on
+    # this and appends the per-resource compound terms.
     def self.terms
-      [:total_items, :alternative_title, :size, :resource_type, :creator, :contributor, :keyword, :license, :publisher, :date_created, :subject,
-       :language, :identifier, :based_near, :related_url]
+      DEFAULT_TERMS.dup
+    end
+
+    # This collection's displayed terms: the class-level standard terms (honoring
+    # any downstream override) plus its inline compound terms, which are resolved
+    # from the backing document so they are correct in flexible mode.
+    def terms
+      self.class.terms + compound_terms
     end
 
     def terms_with_values
-      self.class.terms.select { |t| self[t].present? }
+      terms.select { |t| self[t].present? }
+    end
+
+    # Inline compound terms for this collection (card compounds render
+    # separately via `render_compound_cards`). Resolved from the backing
+    # document. See documentation/compound_fields.md.
+    def compound_terms
+      compound_schema.inline_compound_names
+    rescue StandardError
+      []
+    end
+
+    def compound_term?(term)
+      compound_terms.include?(term.to_sym)
+    end
+
+    # All compound names (inline + card) declared for this collection, used to
+    # delegate the readers to the solr document below.
+    def all_compound_names
+      compound_schema.compound_names
+    rescue StandardError
+      []
+    end
+
+    # Delegate compound readers to the solr document so the card display
+    # resolves on a collection as on a work. Via method_missing because the
+    # compound set is schema-driven, not known at class-definition time.
+    def respond_to_missing?(name, include_private = false)
+      all_compound_names.include?(name.to_sym) || super
+    end
+
+    def method_missing(name, *args, &block)
+      return solr_document.send(name, *args, &block) if all_compound_names.include?(name.to_sym)
+      super
+    end
+
+    # The compound schema for this collection, resolved from the backing Solr
+    # document (so it reflects the resource's own schema_version in flexible
+    # mode, rather than an empty or stale class-level schema). Memoized.
+    def compound_schema
+      @compound_schema ||= Hyrax::CompoundSchema.for_solr_document(solr_document)
     end
 
     ##
@@ -61,8 +117,17 @@ module Hyrax
       when :total_items
         total_items
       else
+        # A declared compound with no indexed `<name>_json_ss` blob has no reader
+        # defined on the document; treat it as empty rather than raising.
+        return compound_value(key) if compound_term?(key) && !solr_document.respond_to?(key)
         solr_document.send key
       end
+    end
+
+    # The rows for a declared-but-empty compound term, coerced from the absent
+    # blob exactly as the SolrDocument reader would (nil => []).
+    def compound_value(key)
+      Hyrax::SolrDocument::Metadata::Solr::CompoundEntries.coerce(solr_document["#{key}_json_ss"])
     end
 
     # @deprecated to be removed in 4.0.0; this feature was replaced with a
@@ -127,6 +192,10 @@ module Hyrax
 
     def user_can_nest_collection?
       current_ability.can?(:deposit, solr_document)
+    end
+
+    def editor?
+      current_ability.can?(:edit, self)
     end
 
     def user_can_create_new_nest_collection?

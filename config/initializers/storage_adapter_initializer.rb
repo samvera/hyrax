@@ -1,12 +1,18 @@
 # frozen_string_literal: true
 
-Valkyrie::StorageAdapter.register(
-  Valkyrie::Storage::Disk.new(base_path: Hyrax.config.branding_path,
-                              path_generator: Hyrax::ValkyrieSimplePathGenerator),
-  :branding_disk
-)
+Rails.application.config.after_initialize do
+  unless Valkyrie::StorageAdapter.storage_adapters.key?(:branding_disk)
+    Valkyrie::StorageAdapter.register(
+      Valkyrie::Storage::Disk.new(base_path: Hyrax.config.branding_path,
+                                  path_generator: Hyrax::ValkyrieSimplePathGenerator),
+      :branding_disk
+    )
+  end
 
-Valkyrie::StorageAdapter.register(
-  Valkyrie::Storage::Disk.new(base_path: Hyrax.config.derivatives_path, path_generator: Hyrax::DerivativeBucketedStorage),
-  :derivatives_disk
-)
+  unless Valkyrie::StorageAdapter.storage_adapters.key?(:derivatives_disk)
+    Valkyrie::StorageAdapter.register(
+      Valkyrie::Storage::Disk.new(base_path: Hyrax.config.derivatives_path, path_generator: Hyrax::DerivativeBucketedStorage),
+      :derivatives_disk
+    )
+  end
+end

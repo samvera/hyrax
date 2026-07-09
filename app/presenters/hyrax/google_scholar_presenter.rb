@@ -82,5 +82,44 @@ module Hyrax
     def title
       Array(object.try(:title)).sort.first || ""
     end
+
+    ##
+    # @return [String] a string representing the degree granting institution(s)
+    #   as a semicolon delimited list
+    def degree_grantor
+      Array(object.try(:degree_grantor)).join('; ')
+    end
+
+    ##
+    # @return [String] a string representing the journal title
+    def journal_title
+      Array(object.try(:journal_title)).first || ''
+    end
+
+    ##
+    # @return [String] a string representing the journal volume
+    def volume
+      Array(object.try(:journal_volume)).first || ''
+    end
+
+    ##
+    # @return [String] a string representing the journal issue
+    def issue
+      Array(object.try(:journal_issue)).first || ''
+    end
+
+    ##
+    # @return [String] a string representing the first page
+    def first_page
+      Array(object.try(:page_start)).first || ''
+    end
+    alias firstpage first_page
+
+    ##
+    # @return [String] a string representing the last page
+    def last_page
+      Array(object.try(:page_end)).first || ''
+    end
+    alias lastpage last_page
   end
 end

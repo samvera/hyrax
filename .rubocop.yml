@@ -11,6 +11,7 @@ AllCops:
   DisplayCopNames: true
   Exclude:
     - 'db/**/*'
+    - '.dassie/db/**/*'
     - 'script/**/*'
     - 'spec/test_app_templates/**/*'
     - 'vendor/**/*'
@@ -94,6 +95,7 @@ Rails/OutputSafety:
     - 'app/presenters/hyrax/fixity_status_presenter.rb'
     - 'app/presenters/hyrax/presents_attributes.rb'
     - 'app/renderers/hyrax/renderers/attribute_renderer.rb'
+    - 'app/renderers/hyrax/renderers/compound_attribute_renderer.rb'
     - 'spec/views/hyrax/my/works/_list_works.html.erb_spec.rb'
 
 RSpec/DescribeClass:

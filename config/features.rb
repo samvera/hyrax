@@ -11,6 +11,16 @@ Flipflop.configure do
             default: false,
             description: "Use Rails.cache to cache the JSON document for IIIF manifests"
 
+    feature :iiif_av,
+            title: "IIIF A/V Support",
+            default: false,
+            description: "Enable support for A/V content in IIIF v3 manifests."
+
+    feature :iiif_pdf,
+            title: "IIIF PDF Support",
+            default: false,
+            description: "Enable support for PDF content in IIIF v3 manifests."
+
     feature :hide_private_items,
             default: false,
             description: "Do not show the private items."
@@ -26,6 +36,10 @@ Flipflop.configure do
     feature :read_only,
             default: false,
             description: "Put the system into read-only mode. Deposits, edits, approvals and anything that makes a change to the data will be disabled."
+
+    feature :validate_local_controlled_vocabulary,
+            default: false,
+            description: "Validate local controlled vocabulary."
   end
 
   group :repository_management do
@@ -54,6 +68,19 @@ Flipflop.configure do
     feature :transfer_works,
             default: true,
             description: "Depositors may transfer their works to another user"
+  end
+
+  group :experimental_features do
+    # See documentation/redirects.md for the redirects feature.
+    if Hyrax.config.redirects_enabled?
+      feature :redirects,
+              default: false,
+              description: "Enable per-record URL redirects from legacy paths to the canonical Hyku URL."
+    end
+
+    feature :copy_permalink_button,
+            default: false,
+            description: "Show a 'Copy permalink' button on work and collection show pages that copies the record's canonical UUID-based URL to the clipboard."
   end
 
 rescue Flipflop::StrategyError, Flipflop::FeatureError => err

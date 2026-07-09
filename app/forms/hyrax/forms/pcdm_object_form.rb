@@ -14,6 +14,16 @@ module Hyrax
       include Hyrax::LeaseabilityBehavior
       include Hyrax::PermissionBehavior
 
+      # redirects is wired here (and on PcdmCollectionForm), not on the shared
+      # ResourceForm; see ResourceForm for why FileSetForm must not inherit it.
+      include RedirectsFieldBehavior
+      include Hyrax::FormFields(:redirects) if Hyrax.config.redirects_enabled? && Hyrax.config.work_include_metadata?
+      if Hyrax.config.redirects_enabled?
+        validation(name: :default, inherit: true) do
+          validates_with Hyrax::RedirectValidator, attributes: [:redirects]
+        end
+      end
+
       property :on_behalf_of
       property :proxy_depositor
 
@@ -35,7 +45,7 @@ module Hyrax
       private
 
       def admin_set_prepopulator
-        self.admin_set_id ||= Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s
+        self.admin_set_id = Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s if admin_set_id.to_s.blank?
       end
 
       def in_collections_populator(fragment:, **_options)

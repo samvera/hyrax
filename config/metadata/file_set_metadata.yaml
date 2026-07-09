@@ -32,6 +32,15 @@ attributes:
   #   primary: false
   # missing: access_right
   # missing: alternative_title
+  alt_text:
+    type: string
+    multiple: false
+    form:
+      primary: true
+    index_keys:
+      - "alt_text_sim"
+      - "alt_text_tesim"
+    predicate: https://schema.org/description
   based_near:
     type: string
     multiple: true
@@ -93,6 +102,8 @@ attributes:
     form:
       primary: false
     predicate: http://purl.org/dc/elements/1.1/language
+    index_keys:
+      - "language_tesim"
   # required: license
   publisher:
     type: string
@@ -149,3 +160,11 @@ attributes:
       - "subject_sim"
       - "subject_tesim"
     predicate: http://purl.org/dc/elements/1.1/subject
+  transcript_ids:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "transcript_ids_ssim"
+    predicate: http://vocabulary.samvera.org/ns#transcriptIds

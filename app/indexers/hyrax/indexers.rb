@@ -12,6 +12,7 @@ module Hyrax
       Class.new(Hyrax::Indexers::PcdmObjectIndexer) do
         @model_class = work_class
         include Hyrax::Indexer(:core_metadata) if work_class.ancestors.detect { |k| k.inspect == "Hyrax::Schema(core_metadata)" }
+        check_if_flexible(work_class)
 
         class << self
           attr_reader :model_class

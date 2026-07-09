@@ -11,6 +11,7 @@ module Hyrax
       # TODO: Add step that checks if collection is empty for collections of types that require it
       DEFAULT_STEPS = ['collection_resource.delete_acl',
                        'collection_resource.remove_from_membership',
+                       'collection_resource.remove_redirect_paths',
                        'collection_resource.delete',
                        'collection_resource.delete_permission_template'].freeze.freeze
 

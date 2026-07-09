@@ -4,7 +4,8 @@ module Hyrax
     ## Shows a list of all collections to the admins
     class CollectionsController < Hyrax::My::CollectionsController
       include Blacklight::AccessControls::Catalog
-      include Blacklight::Base
+      include Blacklight::Configurable
+      include Blacklight::SearchContext
       include Hyrax::FlexibleSchemaBehavior if Hyrax.config.collection_flexible?
       include Hyrax::EnsureMigratedBehavior
 
@@ -84,12 +85,12 @@ module Hyrax
       end
 
       def after_create
-        Deprecation.warn("Method `#after_create` will be removed in Hyrax 4.0.")
+        Hyrax.deprecator(4).warn("Method `#after_create` should have been removed in Hyrax 4.0 but still exists. It will be removed in Hyrax 6.0.")
         after_create_response # call private method for processing
       end
 
       def after_create_error
-        Deprecation.warn("Method `#after_create_error` will be removed in Hyrax 4.0.")
+        Hyrax.deprecator(4).warn("Method `#after_create_error` should have been removed in Hyrax 4.0 but still exists. It will be removed in Hyrax 6.0.")
         after_create_errors("") # call private method for processing
       end
 
@@ -109,12 +110,12 @@ module Hyrax
       end
 
       def after_update
-        Deprecation.warn("Method `#after_update` will be removed in Hyrax 4.0.")
+        Hyrax.deprecator(4).warn("Method `#after_update` should have been removed in Hyrax 4.0 but still exists. It will be removed in Hyrax 6.0.")
         after_update_response # call private method for processing
       end
 
       def after_update_error
-        Deprecation.warn("Method `#after_update_error` will be removed in Hyrax 4.0.")
+        Hyrax.deprecator(4).warn("Method `#after_update_error` should have been removed in Hyrax 4.0 but still exists. It will be removed in Hyrax 6.0.")
         after_update_errors(@collection.errors) # call private method for processing
       end
 
@@ -270,11 +271,11 @@ module Hyrax
       end
 
       def form_err_msg(form)
-        errmsg = []
-        form.errors.messages.each do |fld, err|
-          errmsg << "#{fld} #{err.to_sentence}"
-        end
-        errmsg.to_sentence
+        # Use ActiveModel's full_messages: it humanizes the attribute name
+        # ("collection_type_gid" -> "Collection type gid") and renders :base
+        # errors (e.g. the compound-required messages) verbatim, instead of the
+        # raw "#{field_key} #{message}" we'd otherwise emit ("base ...").
+        form.errors.full_messages.to_sentence
       end
 
       def default_collection_type
@@ -445,7 +446,7 @@ module Hyrax
         # TODO: REMOVE in 3.0 - part of deprecation of permission attributes
         permissions = attributes.delete("permissions_attributes")
         return [] unless permissions
-        Deprecation.warn(self, "Passing in permissions_attributes parameter with a new collection is deprecated and support will be removed from Hyrax 3.0. " \
+        Deprecation.warn("Passing in permissions_attributes parameter with a new collection is deprecated and support will be removed from Hyrax 3.0. " \
                                "Use Hyrax::PermissionTemplate instead to grant Manage, Deposit, or View access.")
         participants = []
         permissions.each do |p|
@@ -621,7 +622,10 @@ module Hyrax
       end
 
       def after_create_errors(errors) # for valkyrie
+        collection_type_id = params[:collection_type_id].presence || default_collection_type.id
+        @collection.collection_type_gid = CollectionType.find(collection_type_id).to_global_id
         return after_create_errors_for_active_fedora(errors) if @collection.is_a? ActiveFedora::Base
+
         respond_to do |wants|
           wants.html do
             flash[:error] = errors.to_s

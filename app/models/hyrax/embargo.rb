@@ -14,8 +14,10 @@ module Hyrax
     attribute :embargo_release_date,      Valkyrie::Types::DateTime
     attribute :embargo_history,           Valkyrie::Types::Array
 
+    # Fix releasing embargos on the day they are expired - this solves a 1 second bug around how
+    # midnights are calculated, which causes day of embargos to incorrectly set the permissions to private
     def active?
-      (embargo_release_date.present? && Hyrax::TimeService.time_in_utc < embargo_release_date)
+      (embargo_release_date.present? && Date.yesterday.end_of_day < embargo_release_date)
     end
   end
 end

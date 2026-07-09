@@ -6,6 +6,8 @@ module Hyrax
     include CharacterizationBehavior
     include WithEvents
     include DisplaysImage
+    include MissingMethodBehavior
+    include DisplaysTranscripts
 
     attr_accessor :solr_document, :current_ability, :request
 
@@ -16,25 +18,10 @@ module Hyrax
       @solr_document = solr_document
       @current_ability = current_ability
       @request = request
+      define_dynamic_methods if solr_document.try(:flexible?)
     end
 
-    # CurationConcern methods
-    delegate :stringify_keys, :human_readable_type, :collection?, :image?, :video?,
-             :audio?, :pdf?, :office_document?, :representative_id, :to_s,
-             :extensions_and_mime_types, to: :solr_document
-
-    # Methods used by blacklight helpers
-    delegate :has?, :first, :fetch, to: :solr_document
-
-    # Metadata Methods
-    delegate :title, :label, :description, :creator, :contributor, :subject,
-             :publisher, :language, :date_uploaded,
-             :embargo_release_date, :lease_expiration_date,
-             :depositor, :keyword, :title_or_label, :keyword,
-             :date_created, :date_modified, :itemtype,
-             :original_file_id,
-             to: :solr_document
-
+    delegate :to_s, to: :solr_document
     delegate :member_of_collection_ids, to: :parent
 
     def workflow
@@ -113,7 +100,7 @@ module Hyrax
     ##
     # @return [Array<String>]
     def show_partials
-      ['show_details']
+      %w[show_details metadata]
     end
 
     private
@@ -136,6 +123,36 @@ module Hyrax
       Hyrax::PresenterFactory.build_for(ids: ids,
                                         presenter_class: WorkShowPresenter,
                                         presenter_args: current_ability).first
+    end
+
+    # Define a reader for each flexible-profile property that carries indexing
+    # keys, reading the first present indexed value off the Solr document.
+    # Mirrors WorkShowPresenter#define_dynamic_methods, but defines the readers
+    # directly on the presenter because a FileSet's SolrDocument is not
+    # OrderedMembers-decorated. current_version is read once here (not per
+    # property), matching the work presenter.
+    def define_dynamic_methods # rubocop:disable Metrics/MethodLength
+      Hyrax::FlexibleSchema.current_version["properties"].each do |method_name, property_details|
+        index_keys = property_details["indexing"]
+        next unless index_keys
+        # Skip properties the presenter already defines, or that the SolrDocument
+        # responds to (e.g. contributor, creator) and MissingMethodBehavior
+        # already delegates - a direct-read method here would shadow that
+        # delegation. This reader only fills the gap for flexible properties the
+        # document has no method for. WorkShowPresenter guards the same way but can
+        # use `&&` because its generated method delegates to the document; this one
+        # reads the index directly, so either match must skip.
+        next if self.class.method_defined?(method_name) || solr_document.respond_to?(method_name)
+
+        multi_value = property_details["multiple"] || (property_details["data_type"] == "array")
+        self.class.send(:define_method, method_name) do |*_args|
+          index_keys.each do |index_key|
+            value = solr_document[index_key]
+            return(multi_value ? Array.wrap(value) : value) if value.present?
+          end
+          multi_value ? [] : ""
+        end
+      end
     end
   end
 end

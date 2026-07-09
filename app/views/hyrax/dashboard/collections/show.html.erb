@@ -33,6 +33,8 @@
 
             <% unless collection_search_parameters? %>
               <%= render 'show_descriptions' %>
+              <%# Compounds declared `view: { display: card }` render as their own cards. %>
+              <%= render_compound_cards(@presenter) %>
             <% end %>
           </div>
         </div>

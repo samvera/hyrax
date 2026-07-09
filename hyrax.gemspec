@@ -38,6 +38,7 @@ SUMMARY
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'blacklight', '~> 7.29'
+  spec.add_dependency 'blacklight_dynamic_sitemap', '~> 1.0'
   spec.add_dependency 'blacklight-gallery', '~> 4.6.4'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
   spec.add_dependency 'browse-everything', '>= 0.16', '< 2.0'
@@ -51,22 +52,25 @@ SUMMARY
   spec.add_dependency 'dry-events', '~> 1.0', '>= 1.0.1'
   spec.add_dependency 'dry-monads', '~> 1.6'
   spec.add_dependency 'dry-validation', '~> 1.10'
+  spec.add_dependency 'erb', '~> 4.0'
   spec.add_dependency 'flipflop', '~> 2.3'
   # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'flot-rails', '~> 0.0.6'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'google-analytics-data', '~> 0.6'
-  spec.add_dependency 'hydra-derivatives', '~> 4.0'
+  spec.add_dependency 'hydra-derivatives', '~> 4.1'
   spec.add_dependency 'hydra-editor', '~> 7.0'
   spec.add_dependency 'hydra-file_characterization', '~> 1.1'
   spec.add_dependency 'hydra-head', '~> 13.0'
   spec.add_dependency 'hydra-works', '>= 0.16'
   spec.add_dependency 'iiif_manifest', '>= 0.3', '< 2.0'
   spec.add_dependency 'json-schema' # for Arkivo
+  spec.add_dependency 'json_schemer' # Required for m3 schema validation
   spec.add_dependency 'legato', '~> 0.3'
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
   spec.add_dependency 'listen', '~> 3.9'
   spec.add_dependency 'mailboxer', '~> 0.12'
+  spec.add_dependency 'multi_json', '1.18.0' # Locked below 1.19.1 because undefined method `except' for an instance of JSON::Ext::Generator::State
   spec.add_dependency 'nest', '~> 3.1'
   spec.add_dependency 'noid-rails', '~> 3.0'
   spec.add_dependency 'oauth'
@@ -89,6 +93,7 @@ SUMMARY
   spec.add_dependency 'sprockets', '3.7.2' # 3.7.3 fails feature specs
   spec.add_dependency 'sass-rails', '~> 6.0'
   spec.add_dependency 'select2-rails', '~> 3.5'
+  spec.add_dependency 'language_list'
 
   spec.add_development_dependency "capybara", '~> 3.29'
   spec.add_development_dependency 'capybara-screenshot', '~> 1.0'
@@ -108,6 +113,7 @@ SUMMARY
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
   # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
   spec.add_development_dependency 'bixby', '~> 5.0', '>= 5.0.2' # bixby 5 briefly dropped Ruby 2.5
+  spec.add_development_dependency 'rubocop-ast', '>= 1.17.0', '< 1.30' # pin to range compatible with rubocop 1.28.2
   spec.add_development_dependency 'shoulda-callback-matchers'
   spec.add_development_dependency 'shoulda-matchers'
   spec.add_development_dependency 'webmock'

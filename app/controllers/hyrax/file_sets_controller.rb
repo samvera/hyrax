@@ -3,7 +3,8 @@ module Hyrax
   class FileSetsController < ApplicationController
     rescue_from WorkflowAuthorizationException, with: :render_unavailable
 
-    include Blacklight::Base
+    include Blacklight::Configurable
+    include Blacklight::SearchContext
     include Blacklight::AccessControls::Catalog
     include Hyrax::Breadcrumbs
     include Hyrax::FlexibleSchemaBehavior if Hyrax.config.file_set_flexible?

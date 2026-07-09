@@ -20,6 +20,7 @@ RSpec.describe Hyrax::Forms::FileSetForm do
     its(:fields) { is_expected.to have_key('subject') }
     its(:fields) { is_expected.to have_key('title') }
     its(:fields) { is_expected.to have_key('visibility') }
+    its(:fields) { is_expected.to have_key('transcript_ids') }
     # rubocop:enable RSpec/RepeatedDescription
   end
 
@@ -53,6 +54,23 @@ RSpec.describe Hyrax::Forms::FileSetForm do
   describe '#required' do
     it 'requires title' do
       expect(form.required?(:title)).to eq true
+    end
+  end
+
+  # redirects is a Work/Collection concern; FileSets have no `redirects`
+  # attribute. The redirects form property must therefore not be declared on the
+  # FileSet form — otherwise Reform reads `redirects` off the FileSet model while
+  # building the form twin (on validate/prepopulate) and raises NoMethodError.
+  # This regressed when the redirects property was declared on the base
+  # ResourceForm (which FileSetForm inherits) rather than on the work/collection
+  # forms. Requires HYRAX_REDIRECTS_ENABLED=true at load so the wiring is active.
+  context 'when the redirects feature is enabled', if: Hyrax.config.redirects_enabled? do
+    it 'does not declare a redirects property on the FileSet form' do
+      expect(described_class.definitions.keys).not_to include('redirects')
+    end
+
+    it 'validates without reading a redirects attribute off the FileSet' do
+      expect { form.validate(title: ['A file']) }.not_to raise_error
     end
   end
 

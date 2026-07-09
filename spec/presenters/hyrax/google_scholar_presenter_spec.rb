@@ -82,4 +82,58 @@ RSpec.describe Hyrax::GoogleScholarPresenter do
       expect(presenter.title).to eq 'On Moomins'
     end
   end
+
+  describe '#degree_grantor' do
+    context 'with a work that responds to degree_grantor' do
+      let(:work) { double('GenericWork', degree_grantor: ["University of Strasbourg", "University of Heidelberg"]) }
+
+      it 'gives the degree grantors as a semicolon delimited list' do
+        expect(presenter.degree_grantor).to eq("University of Strasbourg; University of Heidelberg")
+      end
+    end
+    context 'with a work that does not respond to degree_grantor' do
+      let(:work) { double('GenericWork') }
+
+      it 'returns a non-present value' do
+        expect(presenter.degree_grantor.present?).to be false
+      end
+    end
+  end
+
+  describe '#journal_title' do
+    let(:work) { double('GenericWork', resource_type: 'Journal', journal_title: "My cool journal") }
+    it 'gives the journal title' do
+      expect(presenter.journal_title).to eq('My cool journal')
+    end
+  end
+
+  describe '#volume' do
+    let(:work) { double('GenericWork', resource_type: 'Journal', journal_volume: 'III') }
+    it 'gives the volume' do
+      expect(presenter.volume).to eq('III')
+    end
+  end
+
+  describe '#issue' do
+    let(:work) { double('GenericWork', resource_type: 'Journal', journal_issue: '23') }
+    it 'gives the issue' do
+      expect(presenter.issue).to eq('23')
+    end
+  end
+
+  describe '#first_page' do
+    let(:work) { double('GenericWork', resource_type: 'Journal', page_start: '112') }
+    it 'gives the first page' do
+      expect(presenter.first_page).to eq('112')
+      expect(presenter.firstpage).to eq('112')
+    end
+  end
+
+  describe '#last_page' do
+    let(:work) { double('GenericWork', resource_type: 'Journal', page_end: '135') }
+    it 'gives the last page' do
+      expect(presenter.last_page).to eq('135')
+      expect(presenter.lastpage).to eq('135')
+    end
+  end
 end
