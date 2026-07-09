@@ -1,8 +1,10 @@
-<h2>Statistics By Date</h2>
+<h2><%= I18n.t("hyrax.admin.stats.stats_by_date.statistics_by_date", :default => "Statistics By Date") %></h2>
 <p>Statistics in this section are filtered by the dates entered in the form below.
-  The data is unfiltered unless the date form has been filled in. Start date is required and the default end is now.
+  <%= I18n.t("hyrax.admin.stats.stats_by_date.explanation", :default => "Statistics in this section are filtered by the dates entered in the form below.
+  The data is unfiltered unless the date form has been filled in. Start date is required and the default end is now.") %>
 </p>
 <%= render "date_form" %>
 <%= render "works" %>
 <%= render "new_users" %>
 <%= render "deposits" %>
+

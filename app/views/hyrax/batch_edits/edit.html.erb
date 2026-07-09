@@ -47,7 +47,7 @@
                     <%= hidden_field_tag "batch_document_ids[]", batch_id %>
                   <% end %>
                   <div>
-                    <%= f.submit "Save changes", class: 'btn btn-primary field-save', id: "#{term.to_s}_save" %>
+                    <%= f.submit I18n.t("hyrax.batch_edits.edit.save_changes", :default => "Save changes"), class: 'btn btn-primary field-save', id: "#{term.to_s}_save" %>
                     <a class="btn btn-secondary" data-toggle="collapse" data-parent="#row_<%= term.to_s %>" href="#collapse_<%= term.to_s %>"><%= t('helpers.action.cancel') %> </a>
                     <div class="status fleft"></div>
                   </div>
@@ -80,7 +80,7 @@
                   <%= hidden_field_tag "batch_document_ids[]", batch_id %>
                 <% end %>
                 <div>
-                  <%= f.submit "Save changes", class: 'btn btn-primary field-save', id: "permissions_visibility_save" %>
+                  <%= f.submit I18n.t("hyrax.batch_edits.edit.save_changes", :default => "Save changes"), class: 'btn btn-primary field-save', id: "permissions_visibility_save" %>
                   <a class="btn btn-secondary" data-toggle="collapse" data-parent="#row_permissions_visibility" href="#collapse_permissions_visibility"><%= t('helpers.action.cancel') %></a>
                   <div class="status fleft"></div>
                 </div>
@@ -110,7 +110,7 @@
                   <%= hidden_field_tag "batch_document_ids[]", batch_id %>
                 <% end %>
                 <div>
-                  <%= f.submit "Save changes", class: 'btn btn-primary field-save', id: "permissions_sharing_save" %>
+                  <%= f.submit I18n.t("hyrax.batch_edits.edit.save_changes", :default => "Save changes"), class: 'btn btn-primary field-save', id: "permissions_sharing_save" %>
                   <a class="btn btn-secondary" data-toggle="collapse" data-parent="#row_permissions_sharing" href="#collapse_permissions_sharing"><%= t('helpers.action.cancel') %></a>
                   <div class="status fleft"></div>
                 </div>

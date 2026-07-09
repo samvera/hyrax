@@ -23,7 +23,7 @@
         <%= simple_form_for ContentBlock.for(:announcement), url: hyrax.content_block_path(ContentBlock.for(:announcement)), html: {class: 'nav-safety'} do |f| %>
           <div class="card-body">
             <div class="field form-group">
-                <%= f.label :announcement %><br />
+                <%= f.label I18n.t("hyrax.content_blocks.form.announcement", :default => "announcement") %><br />
                 <%= f.text_area :announcement, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
             </div>
           </div>
@@ -39,7 +39,7 @@
         <%= simple_form_for ContentBlock.for(:marketing), url: hyrax.content_block_path(ContentBlock.for(:marketing)), html: {class: 'nav-safety'} do |f| %>
           <div class="card-body">
             <div class="field form-group">
-                <%= f.label :marketing %><br />
+                <%= f.label I18n.t("hyrax.content_blocks.form.marketing", :default => "marketing") %><br />
                 <%= f.text_area :marketing, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
             </div>
           </div>
@@ -55,7 +55,7 @@
         <%= simple_form_for ContentBlock.for(:researcher), url: hyrax.content_block_path(ContentBlock.for(:researcher)), html: {class: 'nav-safety'} do |f| %>
           <div class="card-body">
             <div class="field form-group">
-                <%= f.label :researcher %><br />
+                <%= f.label I18n.t("hyrax.content_blocks.form.researcher", :default => "researcher") %><br />
                 <%= f.text_area :researcher, value: f.object.value, class: 'form-control tinymce', rows: 20, cols: 120 %>
             </div>
           </div>

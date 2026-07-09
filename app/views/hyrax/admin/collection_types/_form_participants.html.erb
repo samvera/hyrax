@@ -21,7 +21,7 @@
               <%= f.text_field :agent_id,
                                placeholder: "Search for a group...",
                                class: 'form-control' %>
-              as
+              <%= I18n.t("hyrax.admin.collection_types.form_participants.as", :default => "as") %>
               <%= f.select :access,
                            access_options,
                            { prompt: "Select a role..." },
@@ -47,7 +47,7 @@
                 <%= f.hidden_field :agent_type, value: Hyrax::CollectionTypeParticipant::USER_TYPE %>
                 <%= f.text_field :agent_id,
                                  placeholder: "Search for a user..." %>
-                as
+                <%= I18n.t("hyrax.admin.collection_types.form_participants.as", :default => "as") %>
                 <%= f.select :access,
                              access_options,
                              { prompt: "Select a role..." },

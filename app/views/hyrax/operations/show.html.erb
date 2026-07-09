@@ -1,19 +1,19 @@
 <% provide :page_title, 'Operations' %>
 <% provide :page_header do %>
-  <h1><%= @operation.operation_type %> status</h1>
+  <h1><%= @operation.operation_type %> <%= I18n.t("hyrax.operations.show.status", :default => "status") %></h1>
 <% end %>
 
-<p><strong>Status:</strong> <span class="badge <%= @operation.status == 'failure' ? 'badge-danger' : 'badge-success' %>"><%= @operation.status %></span></p>
-<p><strong>Message:</strong> <span class="message"><%= @operation.message %></span></p>
+<p><strong><%= I18n.t("hyrax.operations.show.status_label", :default => "Status:") %></strong> <span class="badge <%= @operation.status == 'failure' ? 'badge-danger' : 'badge-success' %>"><%= @operation.status %></span></p>
+<p><strong><%= I18n.t("hyrax.operations.show.message_label", :default => "Message:") %></strong> <span class="message"><%= @operation.message %></span></p>
 
 <% if @operation.children.any? %>
   <div class="row">
     <div class="col-sm-4">
       <table class="table">
         <thead>
-          <th>Operation Type</th>
-          <th>Status</th>
-          <th>Message</th>
+          <th><%= I18n.t("hyrax.operations.show.operation_type_header", :default => "Operation Type") %></th>
+          <th><%= I18n.t("hyrax.operations.show.status_header", :default => "Status") %></th>
+          <th><%= I18n.t("hyrax.operations.show.message_header", :default => "Message") %></th>
         </thead>
         <tbody>
           <% @operation.children.each do |op| %>

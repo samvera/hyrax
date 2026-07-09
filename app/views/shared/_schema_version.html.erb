@@ -5,12 +5,12 @@
 <div class='pull-right'>
   <% if schema_version.present? %>
     <div class='schema-version text-center'>
-      <span>Created On Version</span>
+      <span><%= I18n.t("shared.schema_version.created_on_version", :default => "Created On Version") %></span>
       <h4><%= schema_version.to_f %></h4>
     </div>
   <% end %>
   <div class='schema-version text-center <%= updating %>'>
-    <span>Version After Save</span>
+    <span><%= I18n.t("shared.schema_version.version_after_save", :default => "Version After Save") %></span>
     <h4><%= @latest_schema_version %></h4>
   </div>
 </div>
