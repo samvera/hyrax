@@ -21,7 +21,7 @@ module Wings
       DEFAULT_CTYPE = 'application/octet-stream'
       FILES_PATH = 'files'
 
-      def initialize(connection: Ldp::Client.new(ActiveFedora.fedora.host), base_path: ActiveFedora.fedora.base_path, fedora_version: 4)
+      def initialize(connection: ActiveFedora.fedora.build_connection, base_path: ActiveFedora.fedora.base_path, fedora_version: 4)
         super
       end
 
