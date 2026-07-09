@@ -43,7 +43,9 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
     metadata:,
     file:,
     characterizer: Hydra::FileCharacterization,
-    parser_mapping: Hydra::Works::Characterization.mapper,
+    # Needed to display checksum on file set show
+    # https://github.com/samvera/hyrax/commit/41b65a656b862c06f111bf8cea408d2f09213348
+    parser_mapping: Hydra::Works::Characterization.mapper.merge(original_checksum: :checksum),
     parser: Hydra::Works::Characterization::FitsDocument.new,
     ch12n_tool: :fits
   )
