@@ -3,6 +3,7 @@
   padding-top: 1em;
   dt {
     color: $file-show-term-color;
+    break-inside: avoid;
   }
   dd {
     padding-bottom: .35em;

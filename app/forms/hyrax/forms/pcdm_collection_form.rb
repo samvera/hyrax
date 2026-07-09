@@ -7,6 +7,23 @@ module Hyrax
     # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
     class PcdmCollectionForm < Hyrax::Forms::ResourceForm # rubocop:disable Metrics/ClassLength
       include Hyrax::FormFields(:core_metadata) if Hyrax.config.collection_include_metadata?
+      # Wire the compound form properties (non-flexible mode), mirroring the
+      # work-side wiring in the PcdmObjectForm factory.
+      if !Hyrax.config.flexible? &&
+         Hyrax::PcdmCollection.ancestors.detect { |k| k.inspect == "Hyrax::Schema(compound_metadata)" }
+        include Hyrax::FormFields(:compound_metadata)
+      end
+
+      # redirects is wired here (and on PcdmObjectForm), not on the shared
+      # ResourceForm; see ResourceForm for why FileSetForm must not inherit it.
+      include RedirectsFieldBehavior
+      include Hyrax::FormFields(:redirects) if Hyrax.config.redirects_enabled? && Hyrax.config.collection_include_metadata?
+      if Hyrax.config.redirects_enabled?
+        validation(name: :default, inherit: true) do
+          validates_with Hyrax::RedirectValidator, attributes: [:redirects]
+        end
+      end
+
       check_if_flexible(Hyrax::PcdmCollection)
 
       BannerInfoPrepopulator = lambda do |**_options|
@@ -34,7 +51,7 @@ module Hyrax
         end
       end
 
-      property :depositor, required: true
+      property :depositor
       property :collection_type_gid, required: true
       property :visibility, default: VisibilityIntention::PRIVATE
 
@@ -65,7 +82,7 @@ module Hyrax
       def primary_terms
         terms = _form_field_definitions
                 .select { |_, definition| definition[:primary] }
-                .keys.map(&:to_sym)
+                .keys.map(&:to_sym) - compound_terms
 
         terms = [:schema_version] + terms if model.flexible?
         terms
@@ -76,7 +93,7 @@ module Hyrax
       def secondary_terms
         _form_field_definitions
           .select { |_, definition| definition[:display] && !definition[:primary] }
-          .keys.map(&:to_sym)
+          .keys.map(&:to_sym) - compound_terms
       end
 
       ##

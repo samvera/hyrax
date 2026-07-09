@@ -15,6 +15,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_show_document_list_row.html.erb', type: 
     allow(view).to receive(:render_visibility_link).and_return('')
 
     allow(work).to receive(:title_or_label).and_return("One Hundred Years of Solitude")
+    allow(work).to receive(:label).and_return("One Hundred Years of Solitude")
     allow(work).to receive(:edit_groups).and_return([user])
     allow(work).to receive(:edit_people).and_return([user])
     allow(work).to receive(:workflow_state).and_return('deposited')

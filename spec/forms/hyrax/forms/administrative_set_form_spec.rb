@@ -6,14 +6,23 @@ RSpec.describe Hyrax::Forms::AdministrativeSetForm do
 
   describe '.required_fields' do
     it 'lists required fields' do
-      expect(described_class.required_fields)
-        .to contain_exactly :title
+      if Hyrax.config.flexible?
+        # In flexible mode, required fields include title and creator from M3 profile
+        expect(described_class.required_fields).to include(:title)
+      else
+        expect(described_class.required_fields).to contain_exactly :title
+      end
     end
   end
 
   describe '#primary_terms' do
-    it 'gives "title" as a primary term' do
-      expect(form.primary_terms).to contain_exactly(:title, :description)
+    it 'gives primary terms' do
+      if Hyrax.config.flexible?
+        # M3 profile defines additional primary terms
+        expect(form.primary_terms).to include(:title)
+      else
+        expect(form.primary_terms).to contain_exactly(:title, :description)
+      end
     end
   end
 
@@ -21,15 +30,26 @@ RSpec.describe Hyrax::Forms::AdministrativeSetForm do
     it 'is a single value' do
       form.description = 'moomin'
 
-      expect { form.sync }
-        .to change { admin_set.description }
-        .to eq 'moomin'
+      if Hyrax.config.flexible?
+        # M3 profile defines description as data_type: array
+        expect { form.sync }
+          .to change { admin_set.description }
+          .to eq ['moomin']
+      else
+        expect { form.sync }
+          .to change { admin_set.description }
+          .to eq 'moomin'
+      end
     end
 
     it 'is a single value on repopulate' do
       admin_set.description = 'moomin'
 
-      expect(form).to have_attributes(description: 'moomin')
+      if Hyrax.config.flexible?
+        expect(form).to have_attributes(description: ['moomin'])
+      else
+        expect(form).to have_attributes(description: 'moomin')
+      end
     end
   end
 
@@ -43,7 +63,11 @@ RSpec.describe Hyrax::Forms::AdministrativeSetForm do
     describe '.validate' do
       context 'when all required fields are present' do
         let(:valid_params) do
-          { title: 'My title' }
+          if Hyrax.config.flexible?
+            { title: 'My title', creator: ['A creator'] }
+          else
+            { title: 'My title' }
+          end
         end
         it 'returns true' do
           expect(form.validate(valid_params)).to eq true
@@ -56,7 +80,8 @@ RSpec.describe Hyrax::Forms::AdministrativeSetForm do
         end
         it 'returns error messages for missing field' do
           expect(form.validate(params_missing_title)).to eq false
-          expect(form.errors.messages).to include(title: ["can't be blank"])
+          expect(form.errors.messages).to include(title: include("can't be blank"))
+          expect(form.errors.messages).to include(creator: ["can't be blank"]) if Hyrax.config.flexible?
         end
       end
     end

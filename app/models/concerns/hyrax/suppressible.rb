@@ -6,7 +6,7 @@ module Hyrax
 
     included do
       # This holds the workflow state
-      property :state, predicate: Vocab::FedoraResourceStatus.objState, multiple: false
+      property :state, predicate: Vocab::FedoraResourceStatus.objState, multiple: false if respond_to?(:property)
     end
 
     ##

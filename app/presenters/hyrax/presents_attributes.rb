@@ -13,16 +13,24 @@ module Hyrax
     # @option options [String] :label The default label for the field if no translation is found
     # @option options [TrueClass, FalseClass] :include_empty should we display a row if there are no values?
     # @option options [String] :work_type name of work type class (e.g., "GenericWork")
+    # @option options [TrueClass, FalseClass] :value_only render only the value
+    #   markup, without the field-label row — used by compound cards, which
+    #   already show the label as the card title.
     def attribute_to_html(field, options = {})
       unless respond_to?(field)
         Hyrax.logger.warn("#{self.class} attempted to render #{field}, but no method exists with that name.")
         return
       end
 
-      if options[:html_dl]
-        renderer_for(field, options).new(field, send(field), options).render_dl_row
+      options = options.merge(subproperties: compound_subproperties_for(field)) if options[:render_as].to_s == 'compound'
+      renderer = renderer_for(field, options).new(field, send(field), options)
+
+      if options[:value_only] && renderer.respond_to?(:render_value)
+        renderer.render_value
+      elsif options[:html_dl]
+        renderer.render_dl_row
       else
-        renderer_for(field, options).new(field, send(field), options).render
+        renderer.render
       end
     end
 
@@ -45,6 +53,21 @@ module Hyrax
     end
 
     private
+
+    # Normalized sub-property specs for a compound, so the renderer can translate
+    # controlled ids to their terms; nil if the resource class can't be
+    # resolved (the renderer then renders raw values).
+    def compound_subproperties_for(field)
+      return nil unless respond_to?(:solr_document) && solr_document.respond_to?(:hydra_model)
+      # Resolve from the backing document, not the class: in flexible mode the
+      # class carries no compounds, so a class lookup would drop the sub-property
+      # specs and the renderer would fall back to raw (unlinked, untranslated)
+      # values.
+      Hyrax::CompoundSchema.for_solr_document(solr_document).definition_for(field)&.fetch(:subproperties, nil)
+    rescue StandardError => e
+      Hyrax.logger.debug("compound_subproperties_for(#{field}): #{e.message}")
+      nil
+    end
 
     def find_renderer_class(name)
       renderer = nil

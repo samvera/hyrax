@@ -126,7 +126,7 @@ module Hyrax
     def valkyrie_update
       @admin_set = form.validate(admin_set_params) && transactions['admin_set_resource.update'].call(form).value_or do |_failure|
         setup_form # probably should do some real error handling here
-        render :edit
+        return render :edit
       end
       redirect_to update_referer, notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
     end
@@ -145,20 +145,28 @@ module Hyrax
     end
 
     def valkyrie_create
-      form.validate(admin_set_params) &&
-        @admin_set = transactions['change_set.create_admin_set']
-                     .with_step_args(
-                       'change_set.set_user_as_creator' => { user: current_user },
-                       'admin_set_resource.apply_collection_type_permissions' => { user: current_user }
-                     )
-                     .call(form).value_or do |_failure|
-                       setup_form # probably should do some real error handling here
-                       render :edit
-                     end
-      @admin_set = admin_set_create_service.call!(admin_set: @admin_set, creating_user: current_user)
-      after_create
+      form.creator = [current_user.user_key] if form.respond_to?(:creator=) && Array(form.try(:creator)).empty?
+      if form.validate(admin_set_params)
+        valkyrie_create_detail
+      else
+        after_create_error(err_msg: form.errors.full_messages.to_sentence)
+      end
     rescue RuntimeError => err
       after_create_error(err_msg: err.message)
+    end
+
+    def valkyrie_create_detail
+      @admin_set = transactions['change_set.create_admin_set']
+                   .with_step_args(
+                     'change_set.set_user_as_creator' => { user: current_user },
+                     'admin_set_resource.apply_collection_type_permissions' => { user: current_user }
+                   )
+                   .call(form).value_or do |_failure|
+                     setup_form # probably should do some real error handling here
+                     return render :edit
+                   end
+      @admin_set = admin_set_create_service.call!(admin_set: @admin_set, creating_user: current_user)
+      after_create
     end
 
     def active_fedora_create

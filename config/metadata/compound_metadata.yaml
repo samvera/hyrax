@@ -1,0 +1,202 @@
+# Sample compound (hierarchical) metadata that ships with Hyrax.
+#
+# A compound is a `type: hash, multiple: true` parent property. Its members are
+# declared as separate top-level properties that name the parent via
+# `available_on: { properties: [<parent>] }`. Sibling order follows document
+# order here; each subproperty optionally names a `group:` and sets its form
+# width via `form: { cols: }`. A member may name more than one parent, and
+# `name:` sets its key inside the compound.
+#
+# Such members are NOT registered as standalone resource attributes — their data
+# lives only as keys inside the parent compound's row hashes. Every key under
+# `attributes:` must be globally unique. See
+# `documentation/compound_fields.md`.
+#
+# These are intentionally generic examples demonstrating the supported
+# sub-property input types (open-entry `string` and `controlled` vocabulary).
+# Applications can add their own compounds the same way (in this file, an
+# app-level schema, or the m3 profile under HYRAX_FLEXIBLE=true) and may remove
+# or override these samples in their own schema.
+attributes:
+  # Participants associated with the work: a person or organization with a
+  # display title, a name, and a controlled role.
+  participants:
+    type: hash
+    multiple: true
+    predicate: http://id.loc.gov/vocabulary/relators/asn
+    form:
+      primary: true
+    # Group metadata (label) for the subproperties that declare `group: <key>`.
+    # Membership lives on each subproperty; this block only names the groups (no
+    # field lists). Sequencing follows document order — subproperties within a
+    # group by YAML position, groups by first-member appearance. Groups cluster
+    # fields on the form row and can drive structured show-page sections.
+    groups:
+      identity:
+        label: Identity
+    view:
+      render_as: compound
+      html_dl: true
+  # A subproperty declares its group membership inline (`group:`) and its data
+  # `type:`. Under `form:`, `cols` sets how wide the input is on the row using
+  # Bootstrap's 12-column grid: 4 fits three across a row, 6 two across, 12 the
+  # full width. `as` (optional) overrides the input widget (e.g. `as: text` for
+  # a textarea); without it the widget follows `type:`. (`participants` gets its
+  # `title` from the reused `shared_title` below.)
+  # Indexing is declared per sub-property via `index_keys:` (the literal Solr
+  # field names + suffixes), exactly like scalar fields. A sub-property with no
+  # `index_keys:` is display-only (rendered from the json blob, not its own
+  # searchable field). `display: false` would omit it from the blob.
+  participant_name:
+    type: string
+    name: name
+    available_on:
+      properties:
+        - participants
+    group: identity
+    required: true
+    form:
+      cols: 4
+  # A controlled sub-property can take its options from an inline list (below)
+  # or from an existing QA local authority (`authority: <name>`).
+  participant_role:
+    type: controlled
+    name: role
+    available_on:
+      properties:
+        - participants
+    group: identity
+    required: true
+    values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
+    form:
+      cols: 4
+
+  # A typed identifier: an open-entry value plus a controlled identifier type.
+  # Named `identifiers` (plural) to avoid colliding with the scalar `identifier`
+  # defined in basic_metadata / the default m3 profile.
+  identifiers:
+    type: hash
+    multiple: true
+    predicate: http://purl.org/dc/terms/identifier
+    form:
+      primary: false
+    view:
+      render_as: compound
+      html_dl: true
+  identifier_value:
+    type: string
+    name: value
+    available_on:
+      properties:
+        - identifiers
+    required: true
+    form:
+      cols: 6
+  identifier_type:
+    type: controlled
+    name: type
+    available_on:
+      properties:
+        - identifiers
+    required: true
+    values: [DOI, Handle, ISBN, ISSN, URL, URN, ARK, Other]
+    form:
+      cols: 6
+
+  # A rights grouping demonstrating controlled sub-properties backed by
+  # *existing* QA local authorities (rather than inline `values:`), alongside an
+  # open-ended note.
+  compound_rights:
+    type: hash
+    multiple: true
+    predicate: http://purl.org/dc/terms/rights
+    display_label:
+      default: Rights
+    form:
+      primary: false
+    view:
+      render_as: compound
+      html_dl: true
+  compound_rights_statement:
+    type: controlled
+    name: statement
+    available_on:
+      properties:
+        - compound_rights
+    authority: rights_statements
+    form:
+      cols: 6
+  compound_rights_license:
+    type: controlled
+    name: license
+    available_on:
+      properties:
+        - compound_rights
+    authority: licenses
+    form:
+      cols: 6
+  # Overriding the derived index keys: a `string` would derive both
+  # `compound_rights_notes_sim` (facet) and `_tesim` (full-text). A free-text
+  # notes field is worth searching but not faceting, so an explicit `index_keys:`
+  # narrows it to `_tesim` only. An explicit list replaces the derived set.
+  compound_rights_notes:
+    type: string
+    name: notes
+    available_on:
+      properties:
+        - compound_rights
+    index_keys: [compound_rights_notes_tesim]
+    form:
+      cols: 12
+
+  # A related-item grouping demonstrating the `work_or_url` sub-property: the
+  # user searches for an internal work (typeahead) OR types an external URL. The
+  # stored value is a work id or a URL; show pages link to the internal work (by
+  # title) or auto-link the external URL. Displayed as its own card
+  # (`view: { display: card }`).
+  relationships:
+    type: hash
+    multiple: true
+    predicate: http://purl.org/dc/terms/relation
+    form:
+      primary: true
+    view:
+      render_as: compound
+      html_dl: true
+      display: card
+  relationship_item:
+    type: work_or_url
+    name: item
+    available_on:
+      properties:
+        - relationships
+    required: true
+    form:
+      cols: 6
+  relationship_type:
+    type: controlled
+    name: type
+    available_on:
+      properties:
+        - relationships
+    required: true
+    values: [References, Is Referenced By, Is Part Of, Has Part, Is Version Of, Replaces, Requires, Other]
+    form:
+      cols: 6
+
+  # A single subproperty definition reused by two compounds. The top-level key
+  # (`shared_title`) is globally unique, while `name: title` sets the cleaner key
+  # inside each compound row (so both `participants` and `relationships` rows
+  # carry a `title`), and `available_on.properties` lists both parents. Its Solr
+  # fields are derived per parent (`participants_title_sim`/`_tesim` and
+  # `relationships_title_sim`/`_tesim`), so the reused field is searchable in
+  # each compound with no collision and no hand-written `index_keys:`.
+  shared_title:
+    type: string
+    name: title
+    available_on:
+      properties:
+        - participants
+        - relationships
+    form:
+      cols: 12

@@ -1,0 +1,23 @@
+<%# Rich-text edit field. Rendered for fields declared with
+    `form: { input_type: rich_text }`. Emits textareas carrying the `rich-text`
+    class; hyrax/rich_text_editor.js attaches a TinyMCE WYSIWYG editor to that
+    hook by default (tinymce-rails ships with Hyrax). The class is also a clean
+    override point: apps can attach a different editor, and with no JS the field
+    degrades to a plain textarea.
+
+    Multi-valued properties render the standard multi_value widget (with its
+    "Add another" control) using textareas; single-valued properties render one
+    textarea. The default initializer re-binds on `managed_field:add` so cloned
+    fields become editors too. %>
+<%# `rich-text-field` on the wrapper scopes hyrax/_tinymce.scss's flex-layout
+    rules to rich-text editors only, so other multi-value inputs keep their
+    default layout. %>
+<% if f.object.multiple?(key) %>
+  <%= f.input key, as: :multi_value, required: f.object.required?(key),
+        wrapper_html: { class: 'rich-text-field' },
+        input_html: { type: 'textarea', class: 'form-control rich-text', rows: '14' } %>
+<% else %>
+  <%= f.input key, as: :text, required: f.object.required?(key),
+        wrapper_html: { class: 'rich-text-field' },
+        input_html: { class: 'form-control rich-text', rows: '14' } %>
+<% end %>

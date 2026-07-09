@@ -63,7 +63,7 @@ module Hyrax
     ##
     # @return [Array<DisplayImagePresenter>]
     def file_set_presenters
-      member_presenters.select(&:file_set?)
+      member_presenters.select { |p| p.file_set? && (p.display_image || p.display_content) }
     end
 
     ##
@@ -119,14 +119,29 @@ module Hyrax
     ##
     # @return [Array<Hash{String => String}>]
     def sequence_rendering
-      Array(try(:rendering_ids)).map do |file_set_id|
-        rendering = file_set_presenters.find { |p| p.id == file_set_id }
+      Array(try(:rendering_ids)).filter_map do |file_set_id|
+        rendering = member_presenters.find { |p| p.file_set? && p.id == file_set_id }
         next unless rendering
 
         { '@id' => Hyrax::Engine.routes.url_helpers.download_url(rendering.id, host: hostname),
           'format' => rendering.mime_type.presence || I18n.t("hyrax.manifest.unknown_mime_text"),
           'label' => I18n.t("hyrax.manifest.download_text") + (rendering.label || '') }
-      end.flatten
+      end
+    end
+
+    ##
+    # Provides a link to the work page as the homepage for the object
+    # represented by the IIIF manifest (see
+    # https://iiif.io/api/cookbook/recipe/0047-homepage/).
+    # This can be helpful if the IIIF manifest is reused on an external site.
+    # @return [Array<Hash{String => String}>]
+    def homepage
+      [{
+        'id' => Rails.application.routes.url_helpers.polymorphic_url(model, host: hostname),
+        'type' => 'Text',
+        'format' => 'text/html',
+        'label' => { 'none' => [Array(title).first || ''] }
+      }]
     end
 
     ##
@@ -188,6 +203,8 @@ module Hyrax
       delegate_all
 
       include Hyrax::DisplaysImage
+      include Hyrax::DisplaysContent
+      include Hyrax::AnnotatesContent
 
       ##
       # @!attribute [w] ability
@@ -201,6 +218,7 @@ module Hyrax
       #
       # @return [IIIFManifest::DisplayImage] the display image required by the manifest builder.
       def display_image
+        return nil if Hyrax.config.iiif_manifest_factory == ::IIIFManifest::V3::ManifestFactory
         return nil unless model.image?
         return nil unless latest_file_id
 

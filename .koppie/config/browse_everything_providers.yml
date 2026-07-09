@@ -3,6 +3,8 @@
 # The file_system provider can be a path to any directory on the server where your application is running.
 #
 ---
+file_system:
+  home: <%= ENV.fetch('BROWSE_EVERYTHING_FS_PROVIDER_PATH', Rails.root.join('test_files')) %>
 # file_system:
 #  :home: "/tmp"
 # dropbox:

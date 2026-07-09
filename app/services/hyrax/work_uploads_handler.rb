@@ -110,7 +110,7 @@ module Hyrax
     ##
     # @api private
     def make_file_set_and_ingest(file, file_set_params = {})
-      file_set = @persister.save(resource: Hyrax::FileSet.new(file_set_args(file, file_set_params)))
+      file_set = @persister.save(resource: Hyrax.config.valkyrie_file_set_class.new(file_set_args(file, file_set_params)))
       Hyrax.publisher.publish('object.deposited', object: file_set, user: file.user)
       file.add_file_set!(file_set)
 
@@ -143,12 +143,13 @@ module Hyrax
     #
     # @return [Hash{Symbol => Object}]
     def file_set_args(file, file_set_params = {})
+      extra = file_set_params.respond_to?(:to_unsafe_h) ? file_set_params.to_unsafe_h : file_set_params.to_h
       { depositor: file.user.user_key,
-        creator: file.user.user_key,
+        creator: Array.wrap(file.user.user_key),
         date_uploaded: file.created_at,
         date_modified: Hyrax::TimeService.time_in_utc,
         label: file.uploader.filename,
-        title: file.uploader.filename }.merge(file_set_params)
+        title: Array.wrap(file.uploader.filename) }.merge(extra.symbolize_keys)
     end
 
     ##

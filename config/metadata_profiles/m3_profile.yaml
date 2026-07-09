@@ -10,7 +10,7 @@ classes:
   Hyrax::Work:
     display_label: Work
   AdministrativeSetResource:
-    diplay_label: AdministrativeSet
+    display_label: AdministrativeSet
   CollectionResource:
     display_label: PcdmCollection
   Hyrax::FileSet:
@@ -143,10 +143,38 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
       - Julie Allinson
-  creator:
+  # creator is needed on the class but is set in a transaction so no form input is needed.
+  # This allows for the creator to be set on an AdministrativeSet but not be required on the form.
+  creator_hidden:
+    name: creator
     available_on:
       class:
         - AdministrativeSetResource
+    cardinality:
+      minimum: 0
+    data_type: array
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+        - "null"
+    display_label:
+      default: blacklight.search.fields.show.creator_tesim
+    index_documentation: displayable, searchable
+    indexing:
+      - creator_sim
+      - creator_tesim
+    form:
+      display: false
+    property_uri: http://purl.org/dc/elements/1.1/creator
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+      - Julie Allinson
+    view:
+      render_as: faceted
+      html_dl: true
+  creator:
+    available_on:
+      class:
         - Hyrax::FileSet
         - CollectionResource
         - Hyrax::Work
@@ -262,6 +290,32 @@ properties:
     range: http://www.w3.org/2001/XMLSchema#string
     sample_values:
       - Open Access
+    view:
+      html_dl: true
+  alt_text:
+    available_on:
+      class:
+        - Hyrax::FileSet
+    cardinality:
+      minimum: 0
+      maximum: 1
+    data_type: array
+    controlled_values:
+      format: http://www.w3.org/2001/XMLSchema#string
+      sources:
+        - "null"
+    display_label:
+      default: Alt Text
+    index_documentation: displayable, searchable
+    indexing:
+      - alt_text_sim
+      - alt_text_tesim
+    form:
+      primary: true
+    property_uri: https://schema.org/description
+    range: http://www.w3.org/2001/XMLSchema#string
+    sample_values:
+      - A description of the file for accessibility purposes.
     view:
       html_dl: true
   alternative_title:
@@ -884,3 +938,205 @@ properties:
     view:
       render_as: faceted
       html_dl: true
+  transcript_ids:
+    available_on:
+      class:
+        - Hyrax::FileSet
+    indexing:
+      - transcript_ids_ssim
+    data_type: array
+    display_label:
+      default: Transcripts
+    form:
+      display: true
+      primary: false
+    range: http://www.w3.org/2001/XMLSchema#string
+    property_uri: http://vocabulary.samvera.org/ns#transcriptIds
+  # Sample compound (hierarchical) metadata shipped with Hyrax. A compound is a
+  # `type: hash, multiple: true` parent property; its members are declared as
+  # separate properties naming it via `available_on: { properties: [<parent>] }`,
+  # each carrying its own indexing and form placement. A member may name more
+  # than one parent, and `name:` sets its key inside the compound. Sibling order
+  # follows document order. Such members are not standalone resource attributes.
+  # See documentation/compound_fields.md.
+  participants:
+    available_on:
+      class:
+        - Hyrax::Work
+        - CollectionResource
+    data_type: array
+    type: hash
+    range: http://www.w3.org/2001/XMLSchema#string
+    display_label:
+      default: Participants
+    form:
+      primary: true
+    property_uri: http://id.loc.gov/vocabulary/relators/asn
+    # Group metadata (label) for subproperties declaring `group: <key>`.
+    groups:
+      identity:
+        label: Identity
+    view:
+      render_as: compound
+      html_dl: true
+  # Subproperties declare `available_on: { properties: [<parent>] }` (no
+  # `class:`/`range`/`display_label`): they inherit their parent compound's class
+  # scope and are folded into it by the schema loader. Solr fields are derived
+  # per sub-property (`<parent>_<name>_<suffix>`) unless an explicit `indexing:`
+  # overrides or `indexing: false` opts out. (`participants` gets its `title`
+  # from the reused `shared_title` below.)
+  participant_name:
+    type: string
+    name: name
+    available_on:
+      properties:
+        - participants
+    group: identity
+    required: true
+    form:
+      cols: 4
+  participant_role:
+    type: controlled
+    name: role
+    available_on:
+      properties:
+        - participants
+    group: identity
+    required: true
+    values: [Author, Editor, Contributor, Creator, Data Collector, Funder, Publisher, Other]
+    form:
+      cols: 4
+  identifiers:
+    available_on:
+      class:
+        - Hyrax::Work
+        - CollectionResource
+    data_type: array
+    type: hash
+    range: http://www.w3.org/2001/XMLSchema#string
+    display_label:
+      default: Identifiers
+    form:
+      primary: false
+    property_uri: http://purl.org/dc/terms/identifier
+    view:
+      render_as: compound
+      html_dl: true
+  identifier_value:
+    type: string
+    name: value
+    available_on:
+      properties:
+        - identifiers
+    required: true
+    form:
+      cols: 6
+  identifier_type:
+    type: controlled
+    name: type
+    available_on:
+      properties:
+        - identifiers
+    required: true
+    values: [DOI, Handle, ISBN, ISSN, URL, URN, ARK, Other]
+    form:
+      cols: 6
+  compound_rights:
+    available_on:
+      class:
+        - Hyrax::Work
+        - CollectionResource
+    data_type: array
+    type: hash
+    range: http://www.w3.org/2001/XMLSchema#string
+    display_label:
+      default: Rights
+    form:
+      primary: false
+    property_uri: http://purl.org/dc/terms/rights
+    view:
+      render_as: compound
+      html_dl: true
+  compound_rights_statement:
+    type: controlled
+    name: statement
+    available_on:
+      properties:
+        - compound_rights
+    authority: rights_statements
+    form:
+      cols: 6
+  compound_rights_license:
+    type: controlled
+    name: license
+    available_on:
+      properties:
+        - compound_rights
+    authority: licenses
+    form:
+      cols: 6
+  # Overriding the derived index keys: a `string` would derive both
+  # `compound_rights_notes_sim` (facet) and `_tesim` (full-text). A free-text
+  # notes field is worth searching but not faceting, so an explicit `indexing:`
+  # narrows it to `_tesim` only. An explicit list replaces the derived set.
+  compound_rights_notes:
+    type: string
+    name: notes
+    available_on:
+      properties:
+        - compound_rights
+    indexing: [compound_rights_notes_tesim]
+    form:
+      cols: 12
+  relationships:
+    available_on:
+      class:
+        - Hyrax::Work
+        - CollectionResource
+    data_type: array
+    type: hash
+    range: http://www.w3.org/2001/XMLSchema#string
+    display_label:
+      default: Relationships
+    form:
+      primary: true
+    property_uri: http://purl.org/dc/terms/relation
+    view:
+      render_as: compound
+      html_dl: true
+      display: card
+  relationship_item:
+    type: work_or_url
+    name: item
+    available_on:
+      properties:
+        - relationships
+    required: true
+    form:
+      cols: 6
+  relationship_type:
+    type: controlled
+    name: type
+    available_on:
+      properties:
+        - relationships
+    required: true
+    values: [References, Is Referenced By, Is Part Of, Has Part, Is Version Of, Replaces, Requires, Other]
+    form:
+      cols: 6
+  # A single subproperty definition reused by two compounds. The top-level key
+  # (`shared_title`) is globally unique, while `name: title` sets the cleaner key
+  # inside each compound row (so both `participants` and `relationships` rows
+  # carry a `title`), and `available_on.properties` lists both parents. Its Solr
+  # fields are derived per parent (`participants_title_sim`/`_tesim` and
+  # `relationships_title_sim`/`_tesim`), so the reused field is searchable in
+  # each compound with no collision and no hand-written `indexing:`.
+  shared_title:
+    type: string
+    name: title
+    available_on:
+      properties:
+        - participants
+        - relationships
+    form:
+      cols: 12

@@ -10,6 +10,10 @@ module Hyrax
       include Hyrax::LocationIndexer
       include Hyrax::ThumbnailIndexer
       include Hyrax::Indexer(:core_metadata) if Hyrax.config.collection_include_metadata?
+      include Hyrax::Indexers::RedirectsIndexer if Hyrax.config.redirects_enabled?
+      # Flatten compound (hierarchical) metadata sub-properties into Solr. No-op for
+      # collections without compounds. See documentation/compound_fields.md.
+      include Hyrax::Indexers::CompoundIndexer
       check_if_flexible(Hyrax::PcdmCollection)
 
       self.thumbnail_path_service = CollectionThumbnailPathService
@@ -21,7 +25,15 @@ module Hyrax
           index_document[:member_of_collection_ids_ssim] = resource.member_of_collection_ids.map(&:to_s)
           index_document[:depositor_ssim] = [resource.depositor]
           index_document[:depositor_tesim] = [resource.depositor]
+          index_document['thumbnail_alt_text_tesim'] = thumbnail_alt_text(resource.id.to_s)
         end
+      end
+
+      private
+
+      def thumbnail_alt_text(collection_id)
+        branding = CollectionBrandingInfo.where(collection_id: collection_id, role: "thumbnail").first
+        branding&.alt_text.presence
       end
     end
   end

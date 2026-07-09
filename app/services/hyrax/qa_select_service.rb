@@ -27,19 +27,22 @@ module Hyrax
     #
     # @raise [KeyError] when the key has no `active:` status
     def active?(id)
-      authority.find(id).fetch('active')
+      result = authority.find(id)
+      return false if result.empty?
+      result&.fetch('active')
     end
 
     ##
     # @param id [String]
     #
-    # @return [String] the label for the authority
+    # @return [String] the label for the authority, falling back to the id itself
+    #   when no matching term exists. Callers may pass a block to override the
+    #   fallback value.
     #
     # @yield when no 'term' value is present for the id
     # @yieldreturn [String] an alternate label to return
-    #
-    # @raise [KeyError] when no 'term' value is present for the id
     def label(id, &block)
+      block ||= ->(_key) { id }
       authority.find(id).fetch('term', &block)
     end
 
@@ -61,8 +64,9 @@ module Hyrax
     #   that this service knows about HTML rendering details. Maybe a factory
     #   is an appropriate next step?
     def include_current_value(value, _index, render_options, html_options)
+      force_select = html_options[:class].is_a?(Array) ? [' force-select'] : ' force-select'
       unless value.blank? || active?(value)
-        html_options[:class] += ' force-select'
+        html_options[:class] += force_select
         render_options += [[label(value) { value }, value]]
       end
       [render_options, html_options]

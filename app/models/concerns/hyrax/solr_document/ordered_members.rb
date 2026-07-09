@@ -30,6 +30,10 @@ module Hyrax
         @ordered_member_ids ||= valkyrie? ? member_ids : query_for_ordered_ids
       end
 
+      def flexible?
+        respond_to?(:schema_version) && schema_version.present?
+      end
+
       private
 
       def query_for_ordered_ids(limit: 10_000,

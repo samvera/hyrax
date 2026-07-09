@@ -5,6 +5,7 @@ module Hyrax
 
     require 'almond-rails'
     require 'awesome_nested_set'
+    require 'blacklight_dynamic_sitemap'
     require 'breadcrumbs_on_rails'
     require 'clipboard/rails'
     require 'draper'
@@ -21,10 +22,14 @@ module Hyrax
     require 'valkyrie'
     require 'cancancan'
     require 'blacklight'
+    require 'json_schemer'
 
     require 'hydra/derivatives'
     require 'hyrax/active_fedora_dummy_model'
     require 'hyrax/controller_resource'
+    # Preserve compound entry boundaries on the Postgres read path (any adapter
+    # routing through Valkyrie's ORMConverter). See the decorator for why.
+    require 'hyrax/valkyrie_persistence/postgres/orm_converter_decorator'
     require 'hyrax/form_fields'
     require 'hyrax/indexer'
     require 'hyrax/model_decorator'
@@ -95,6 +100,15 @@ module Hyrax
         require 'wings' unless Hyrax.config.disable_wings
         require 'freyja' unless Hyrax.config.disable_freyja
         require 'frigg' unless Hyrax.config.disable_frigg
+      end
+    end
+
+    # Teach the edit-field partial lookup to honor `form: { input_type: rich_text }`
+    # by rendering the shared rich-text editor partial. Prepended onto hydra-editor's
+    # helper so all render_edit_field_partial call sites are covered.
+    initializer 'hyrax.rich_text_edit_field' do
+      ActiveSupport::Reloader.to_prepare do
+        RecordsHelperBehavior.prepend(Hyrax::RichTextEditFieldBehavior) if defined?(RecordsHelperBehavior)
       end
     end
 

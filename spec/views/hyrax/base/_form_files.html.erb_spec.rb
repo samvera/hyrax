@@ -8,6 +8,8 @@ RSpec.describe 'hyrax/base/_form_files.html.erb', type: :view do
     stub_template 'hyrax/uploads/_js_templates.html.erb' => 'templates'
     # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
     allow(model).to receive(:new_record?).and_return(false)
+    # ResourceForm copies the model, so stub persisted? on the form itself
+    allow(form).to receive(:persisted?).and_return(true) if Hyrax.config.disable_wings
   end
 
   context "without browse_everything" do

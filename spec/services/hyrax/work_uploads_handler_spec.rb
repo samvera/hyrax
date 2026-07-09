@@ -97,6 +97,24 @@ RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
           end
         end
 
+        context 'that arrive as ActionController::Parameters' do
+          let(:file_set_params) do
+            [
+              ActionController::Parameters.new(alternate_ids: ['fs-1']).permit!,
+              ActionController::Parameters.new(alternate_ids: ['fs-2']).permit!,
+              ActionController::Parameters.new(alternate_ids: ['fs-3']).permit!
+            ]
+          end
+
+          it 'assigns the params to the FileSets' do
+            service.add(files: uploads, file_set_params: file_set_params)
+            service.attach
+            expect(work).to have_file_set_members(have_attributes(alternate_ids: ['fs-1']),
+                                                  have_attributes(alternate_ids: ['fs-2']),
+                                                  have_attributes(alternate_ids: ['fs-3']))
+          end
+        end
+
         context 'that are not in the schema' do
           let(:file_set_params) do
             [
