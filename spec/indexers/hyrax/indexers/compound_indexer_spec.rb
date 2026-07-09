@@ -129,4 +129,30 @@ RSpec.describe Hyrax::Indexers::CompoundIndexer do
       expect(doc['relationships_title_tesim']).to contain_exactly('Sequel')
     end
   end
+
+  context 'with a datepicker sub-property' do
+    # A datepicker stores an ISO YYYY-MM-DD string and indexes like a string
+    # (facetable _sim plus full-text _tesim), never as a _dtsi date field, which
+    # would reject the date-only value.
+    let(:date_class) do
+      Class.new(Hyrax::Resource) do
+        def self.name
+          'TestDatepickerCompoundResource'
+        end
+        attribute :dates,
+                  Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
+                    subproperties: { 'start_date' => { 'type' => 'datepicker' } }
+                  )
+      end
+    end
+    let(:resource) { date_class.new(dates: [{ 'start_date' => '2025-03-01' }]) }
+    let(:indexer) { host_indexer_class.new(resource: resource) }
+
+    it 'derives _sim and _tesim for a datepicker, not a _dtsi date field' do
+      doc = indexer.to_solr
+      expect(doc['dates_start_date_sim']).to contain_exactly('2025-03-01')
+      expect(doc['dates_start_date_tesim']).to contain_exactly('2025-03-01')
+      expect(doc.keys).not_to include('dates_start_date_dtsi')
+    end
+  end
 end

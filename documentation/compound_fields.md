@@ -135,6 +135,7 @@ textarea). Supported `type:` values:
 | `type:`      | Renders as          | Notes |
 |--------------|---------------------|-------|
 | `string`     | text input          | The default when `type:` is omitted. |
+| `datepicker` | native date picker (`<input type="date">`) | HTML5 date input. **Displays** in the user's locale (dd/mm/yyyy, mm/dd/yyyy) but always **stores** ISO-8601 `YYYY-MM-DD`, so the value is locale-independent. Stored as a plain string, **not** a `date`/`_dtsi` Solr field. |
 | `url`        | url input → auto-linked on show | The stored value is rendered as a clickable `<a href>` on show pages (matching the scalar `render_as: external_link` behavior). |
 | `work_or_url` | select2 typeahead → linked on show | Searches internal works (via the `compound_works` QA authority, backed by `Hyrax::CompoundWorkPickerBuilder`) **or** accepts a typed external URL. The stored value is a work id or a URL; on show, a work id links to the work's show page with its title (resolved by `Hyrax::CompoundWorkResolver`), a URL is auto-linked. |
 | `linked_record` | select2 typeahead → linked on show | A reference to a row in a database table (a person, organization, funder, place, …). The stored value is the row id; the picker searches that table and, optionally, lets a cataloger add a new record inline. On show, the id links to the record using the resolved label. The table and its procs are registered by the host application — see [`linked_record` sub-properties](#linked_record-sub-properties) below. |
@@ -357,9 +358,10 @@ chosen by its `type:`:
 | `type:`                  | Derived suffixes | Role |
 |--------------------------|------------------|------|
 | `string`                 | `_sim`, `_tesim` | facetable **and** full-text searchable |
+| `datepicker`             | `_sim`, `_tesim` | like a string; the ISO `YYYY-MM-DD` is text, **not** a `_dtsi` date field |
 | `controlled`             | `_sim`           | facetable only (a closed vocabulary needs no full-text) |
 | `url`, `work_or_url`, `linked_record`, `id` | `_ssim` | stored exact-match string (reverse-lookup id) |
-| `date_time`, `date`      | `_dtsi`          | date |
+| `date_time`, `date`      | `_dtsi`          | Solr date field; requires a full ISO-8601 datetime, so for a date input prefer `datepicker` |
 
 So `participants` with a `name`-aliased `title` (type `string`) is indexed to
 `participants_title_sim` and `participants_title_tesim` with no `indexing:`
