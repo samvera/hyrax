@@ -302,7 +302,7 @@ the fold for the full key table.
 | `display_label` | Human-readable label. A string, or a hash with `default` plus per-locale keys (`en`, `es`, …). May reference an i18n key. | ✅ Yes |
 | `property_uri` | RDF predicate URI. | Required for core properties; recommended for all |
 | `range` | XSD/RDF datatype URI (e.g. `http://www.w3.org/2001/XMLSchema#string`) | ✅ Yes |
-| `data_type` | `array` (multi-valued) or `string` (single). Defaults to `string`. | Optional (must be `array` for `title` and `creator`) |
+| `data_type` | `array` (holds a list of values) or `string` (holds a single value). This — not cardinality — is what decides list-vs-single, so **`array` is the usual choice even for one-value fields**; see [Cardinality](#cardinality-required--multiplicity). Defaults to `string`. | Optional (must be `array` for `title`/`creator`; most fields use `array`) |
 | `name` | Aliases the property to a different resource attribute (see [Renaming](#renaming--aliasing-a-property-name)) | Optional |
 
 </details>
@@ -310,10 +310,13 @@ the fold for the full key table.
 ### Cardinality (required & multiplicity)
 
 *How you make a property required and single- vs. multi-valued* — there is no separate "required" key; a
-minimum of 1+ is what marks it required.
+minimum of 1+ is what marks it required. **When in doubt, use `data_type: array`** — it's the safe default even
+for fields that hold one value (the fold explains why).
 
 <details>
-<summary>Key: <code>cardinality</code> (<code>minimum</code> / <code>maximum</code>)</summary>
+<summary>Key: <code>cardinality</code> (<code>minimum</code> / <code>maximum</code>), and why <code>data_type: array</code> is the usual choice</summary>
+
+`cardinality` sets two things — whether the field is **required**, and whether it holds **one value or many**:
 
 | Declaration | Meaning |
 |---|---|
@@ -322,7 +325,38 @@ minimum of 1+ is what marks it required.
 | `cardinality: { minimum: 1, maximum: 1 }` | Required, single-valued |
 | *(no cardinality)* | Optional, multi-valued |
 
-`data_type: array` also forces multi-valued. `title` **must** have `cardinality.minimum >= 1`.
+`title` **must** have `cardinality.minimum >= 1`.
+
+#### Why most fields use `data_type: array` (even ones that hold a single value)
+
+Think of it as two ways to store a value: a **list** (`array`) or a **single box** (`string`). Hyrax is built
+throughout to work with **lists** — the forms, the show pages, and the search index all expect a field to hand
+them a list of values, even when that list has just one item in it. A field stored as a single box takes a
+different, less-traveled path, and templates or code that expect a list can behave unexpectedly with it.
+
+So declaring `data_type: array` keeps a field on the normal, well-supported path. That's why the shipped profile
+uses `array` for almost every property, and why it's the recommended default — a "Title" that only ever has one
+value is still simplest to store as a one-item list.
+
+Two things to know:
+
+- **`data_type` is what actually decides list-vs-single — not cardinality.** If you write `data_type: array`
+  *and* `cardinality: { maximum: 1 }` (which reads like "single value"), the field is still stored as a list.
+  `data_type` wins. (The shipped profile's `alt_text` is exactly this — `array` even though only one value is
+  expected.)
+- **For core fields it's not optional.** `title` and `creator` are *required* to be `data_type: array`; setting
+  them to `string` fails validation on upload.
+
+**When to use `data_type: string` instead:** only when you specifically want a single value *and* you've
+confirmed that field's form input and show-page display work correctly with a non-list value. If you're not
+sure, use `array`.
+
+> **For developers:** under the hood, `data_type` selects the attribute's Dry type —
+> `Valkyrie::Types::Array` (always an Array, inputs coerced into one) vs. a single scalar (`Identity`). The
+> loader (`SchemaLoader::AttributeDefinition#type` / `FlexibleSchema#determine_multiplicity`) checks
+> `data_type` before falling back to `multi_value` and then `cardinality.maximum`, which is why `data_type`
+> overrides cardinality. `CoreMetadataValidator` enforces `array` for the core fields marked `multiple: true`
+> in `core_metadata.yaml`.
 
 </details>
 
