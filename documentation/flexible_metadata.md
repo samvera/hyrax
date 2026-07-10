@@ -107,9 +107,10 @@ These converge: `Hyrax::Resource.inherited` auto-applies flexibility to any subc
 
 You may choose whether to include the basic metadata always or to make them part of the flexible metadata profile. If you wish to use the default provided M3 profile, you must set `admin_set_include_metadata`, `collection_include_metadata`, `file_set_include_metadata`, or `work_include_metadata` to `false` so that basic metadata can instead be read from the flexible metadata profile. You can also set all of these from the ENV by setting the `HYRAX_DISABLE_INCLUDE_METADATA` environment variable to `true`.
 
-A flexible model must **not** also `include` the fixed `core_metadata` / `basic_metadata` schemas for the
-fields the profile now owns — the two definitions would collide. The sample app models use the flag to gate
-their fixed includes:
+A flexible model must **not** `include` a fixed `core_metadata` / `basic_metadata` schema for a field the
+profile *also* declares — the two definitions collide on that one attribute. Fields the profile does not
+declare can safely remain in a fixed include (see the rule of thumb below). The sample app models use the flag
+to gate their fixed includes:
 
 ```ruby
 class GenericWorkResource < Hyrax::Work
@@ -118,14 +119,24 @@ class GenericWorkResource < Hyrax::Work
     include Hyrax::Schema(:basic_metadata)        # fixed YAML: config/metadata/basic_metadata.yaml
     include Hyrax::Schema(:generic_work_resource) # fixed YAML: app-level schema
   end
-  # When the class is flexible (name in flexible_classes), the m3 schema is added instead.
+  # When the class is flexible (name in flexible_classes), the m3 schema is merged on top of whatever
+  # fixed schemas are still included — added, not swapped in.
 end
 ```
 
-> **Rule of thumb.** If a field is declared in your m3 profile, that field's model should have its
-> fixed-YAML schema turned off (via `HYRAX_DISABLE_INCLUDE_METADATA` or the matching per-class flag) so the
-> profile is the single source of truth. Leave include-metadata on only for classes you are *not* driving
-> from the profile.
+> **Rule of thumb.** Define any given field in exactly **one** place: declaring the *same* field in both a
+> fixed-YAML `include` and the m3 profile collides (two definitions for one attribute). But a single model may
+> freely **mix** the two mechanisms across *different* fields — the m3 schema is *merged onto* the class's fixed
+> schema, not a replacement (`acts_as_flexible_resource` adds the m3 `include`; at load time the singleton
+> schema layers m3 attributes on top of the included YAML ones). This is a deliberate, supported pattern: keep
+> fields you never want changed at runtime — the ones whose removal or rename would break the app — in a
+> fixed-YAML `include`, and put the fields catalogers should be able to reconfigure in the m3 profile.
+>
+> Note the granularity of the flags: `HYRAX_DISABLE_INCLUDE_METADATA` and the per-class `*_include_metadata`
+> flags toggle a model's fixed include as an all-or-nothing block (see the `if Hyrax.config.work_include_metadata?`
+> gate above). To split fields — some fixed, some in the profile — on the *same* model, leave the flag on and
+> gate the individual `include Hyrax::Schema(...)` calls yourself, making sure no field appears in both the
+> included schema and the profile.
 
 ### Koppie Flexible
 HYRAX_FLEXIBLE=true
@@ -188,8 +199,15 @@ classes:
     display_label: Generic Work
 ```
 
-Optional per-class keys: `schema_url` (a class URI) and `contexts` (a list restricting the class to certain
-contexts).
+The JSON schema also permits two optional per-class keys, but **Hyrax does not read either of them** — they are
+descriptive metadata only, carried in the profile for documentation/interoperability:
+
+- `schema_url` — a URI identifying the class in a local or shared ontology (e.g. `http://schema.org/Book`).
+  Purely informational.
+- `contexts` — a list of context names, described in the schema as "contexts in which this class may be used."
+  This class-level key is **not** how context scoping works in Hyrax. Real context filtering is driven at the
+  **property** level via `available_on.context` — see [Contexts](#contexts). Setting `contexts` on a *class*
+  has no effect.
 
 ---
 
