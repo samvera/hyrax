@@ -182,10 +182,13 @@ profile:
 
 ### `classes` section
 
-Each entry declares a model or Work Type. **Every class requires a `display_label` string.** Class names are
-pattern-matched against the models registered in the application — you can only list classes that exist. The
-AdminSet, Collection, and FileSet models must all be present; at least one Work Type must be present to create
-works. To remove an unused Work Type, omit it; adding a *new* Work Type requires a developer.
+Each entry declares a model or Work Type. **Every class requires a `display_label` string** (enforced by the
+JSON schema). Class names are pattern-matched, and every class you list must be a **registered curation concern**
+with the correct Valkyrie `...Resource` name — `ClassValidator` errors on an unregistered class or a
+name/Valkyrie mismatch. The **AdminSet, Collection, and FileSet models must all be present** (`REQUIRED_CLASSES`;
+a missing one is an error). Validation does **not** require any Work Type — a profile with none passes — but
+without a Work Type class there is nothing to deposit works into. To remove an unused Work Type, omit it; adding
+a *new* Work Type requires a developer (the profile cannot register a new curation concern).
 
 ```yaml
 classes:
@@ -300,7 +303,7 @@ indexing:
 
 **`view.render_as` values** (`render_as: <name>` → `Hyrax::Renderers::<Name>AttributeRenderer`). For the exact
 link each one produces on the show page vs. the catalog, see
-[Linking a field's values](#linking-a-fields-values-show-page-and-catalog--exactly-what-each-link-points-at):
+[Linking a field's values](#linking-a-fields-values-show-page-and-catalog--exactly-what-each-link-points-at).
 
 | `render_as` | Renders as |
 |---|---|
@@ -330,6 +333,9 @@ three kinds:
 
 Getting the wrong one is the usual cause of "the link goes somewhere I didn't expect." The tables below say
 precisely where each link lands.
+
+<details>
+<summary><strong>Per-surface link tables + worked example</strong> (show-page renderers, catalog helpers)</summary>
 
 #### Show-page links (attribute renderers, selected by `view: { render_as: ... }`)
 
@@ -395,6 +401,8 @@ searched field differs from the property name). For an **outward** link to the v
 > options** still come from the CatalogController — see
 > [Catalog search results & facets](#catalog-search-results--facets--profile-driven-in-flexible-mode-but-not-their-order).
 
+</details>
+
 ### Documentation-only keys (not rendered)
 
 `definition` (help text with `default` + per-locale keys), `usage_guidelines`, `sample_values`,
@@ -449,6 +457,9 @@ or a typeahead against a remote authority). The most important thing to understa
 
 The mechanisms below cover standalone properties (A–C shipped by field name, D your own) and compound members
 (E). Pick the row that matches what you're doing.
+
+<details>
+<summary><strong>The five mechanisms (A–E) + how "controlled" is detected</strong></summary>
 
 ### A. Built-in controlled fields (rendered as a `<select>` from an authority service)
 
@@ -545,6 +556,8 @@ This detection list is a conservative approximation, not the exact set of fields
 `subject` renders a controlled autocomplete but isn't in the list, and `access_right` is in the list but its
 shipped partial is a plain textarea. Use the tables in A–C above for what actually renders.
 
+</details>
+
 ---
 
 ## External-schema mappings (OAI-PMH, metatags, crosswalks)
@@ -559,6 +572,9 @@ crosswalk/export) uses to know that, say, `title` becomes `dc:title` in a Simple
 > actual OAI feed lives in the **downstream application** (e.g. Hyku). If you are building an OAI feed on top of
 > Hyrax, this section tells you where the mapping lives and how to read it; see your application's docs for the
 > provider itself.
+
+<details>
+<summary><strong>Declaring mappings, reading them (<code>mappings_data_for</code>), and limits</strong></summary>
 
 ### Declaring mappings
 
@@ -631,6 +647,8 @@ caller.
   the crosswalk; there is no upload-time error or warning.
 - **`metatags` is the same mechanism, not OAI.** The `metatags` mapping feeds HTML `<meta>` tags (Twitter/OG)
   rather than an OAI record, but it is declared and read the same way.
+
+</details>
 
 ---
 
@@ -786,7 +804,8 @@ columns/facets (that follows the CatalogController's declaration order, not prof
 (see [below](#the-big-one-sort-fields-use-different-solr-fields-than-the-profile-declares) — sort still
 requires `add_sort_field` and, for `_ssi` fields, an indexer).
 
-Sharp edges worth knowing:
+<details>
+<summary><strong>Sharp edges worth knowing</strong> (facet token, per-request deletion, empty shipped profile)</summary>
 
 - **Facets key on the literal `facetable` token in `indexing:`** — not on a `_sim` field being present, not on
   `data_type`, and **not** on `view: { render_as: faceted }`. (`render_as: faceted` is the show/index-page
@@ -801,6 +820,8 @@ Sharp edges worth knowing:
   properties register a sidebar facet, and any matching `<property>_sim` facet declared in the controller is
   stripped. To get a sidebar facet, add `facetable` to that property's `indexing:` — this is the intended
   workflow: facets are managed in the profile, not the controller.
+
+</details>
 
 > **Rule of thumb.** In flexible mode, catalog columns and facets *appear* from the profile automatically;
 > their *ordering* and *sort options* still live in the CatalogController. Form and show-page order live in the
@@ -947,6 +968,9 @@ partial, is beyond the profile's reach and can only be changed by overriding the
 
 ### Where to look when something breaks
 
+<details>
+<summary>Symptom → likely cause → where to check (troubleshooting table)</summary>
+
 | Symptom | Likely cause | Where to check |
 |---|---|---|
 | Sort option does nothing | sort targets an `_ssi`/`_dtsi` field the profile/indexer doesn't produce | `CatalogController` `add_sort_field` + the app's indexers |
@@ -958,6 +982,8 @@ partial, is beyond the profile's reach and can only be changed by overriding the
 | Reorder had no effect on the form/show page | that order *is* profile-driven — check you edited the active profile version and restarted | profile `properties:` order; reseed + restart |
 | Title/description won't move or hide on the show page | rendered by name outside the metadata loop | `base/_work_title.erb`, `base/_work_description.erb` (override the partial) |
 | A field can't be added as a form tab/section | tabs and non-metadata sections are fixed partials | `WorkFormHelper#form_tabs_for` + `_form_<tab>` partials (developer task) |
+
+</details>
 
 **Baseline reference:** base Hyrax generator template at
 `lib/generators/hyrax/templates/catalog_controller.rb`. Your own application's
@@ -1198,6 +1224,9 @@ Profiles UI.
 
 ### Key services & models
 
+<details>
+<summary>Concern → file reference table</summary>
+
 | Concern | File |
 |---|---|
 | Loader selection | `lib/hyrax/schema.rb` (`simple_schema_loader` / `m3_schema_loader`) |
@@ -1219,6 +1248,8 @@ Profiles UI.
 | Seeds the default profile (`db:seed`, `first_or_create`) | `app/utils/hyrax/required_data_seeders/flexible_profile_seeder.rb` |
 | DB table `hyrax_flexible_schemas` (`profile`, `contexts` text columns) | `db/migrate/*_create_hyrax_flexible_schemas.rb`, `*_add_contexts_to_hyrax_flexible_schemas.rb` |
 | Indexing (writes `schema_version_ssi`, applies index rules) | `lib/hyrax/indexer.rb` |
+
+</details>
 
 ### Which version rendered a work
 
