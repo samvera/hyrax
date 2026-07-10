@@ -27,6 +27,8 @@ Hyrax v5.3 and later includes flexible metadata functionality that allows admini
 - [Configuration](#configuration)
 - [Profile structure](#profile-structure)
 - [Property keys reference](#property-keys-reference)
+- [Controlled vocabularies & authorities](#controlled-vocabularies--authorities)
+- [External-schema mappings (OAI-PMH, metatags, crosswalks)](#external-schema-mappings-oai-pmh-metatags-crosswalks)
 - [What is required / what makes a profile invalid](#what-is-required--what-makes-a-profile-invalid)
 - [Property order — how sequence drives forms & show pages](#property-order--how-sequence-drives-forms--show-pages)
 - [What the profile cannot control — hardcoded couplings](#what-the-profile-cannot-control--hardcoded-couplings)
@@ -149,7 +151,7 @@ An M3 profile is a YAML document with these top-level sections:
 | `classes` | The models / Work Types the profile defines fields for | ✅ Yes |
 | `properties` | The metadata fields | ✅ Yes |
 | `contexts` | Admin-Set-scoped field variations (see [Contexts](#contexts)) | Optional |
-| `mappings` | Named mappings to external schemas (OAI-PMH, metatags, etc.) | Optional |
+| `mappings` | Named mappings to external schemas (OAI-PMH, metatags, etc.) — see [External-schema mappings](#external-schema-mappings-oai-pmh-metatags-crosswalks) | Optional |
 
 ### `profile` section
 
@@ -380,6 +382,10 @@ searched field differs from the property name). For an **outward** link to the v
 `definition` (help text with `default` + per-locale keys), `usage_guidelines`, `sample_values`,
 `index_documentation`, `requirement`, `controlled_values` (`format` + `sources`).
 
+> **`controlled_values` on a standalone property is documentation-only** — the loader does not read it to
+> build a dropdown or autocomplete. To actually attach a controlled vocabulary to a field, see
+> [Controlled vocabularies & authorities](#controlled-vocabularies--authorities).
+
 ### Example property
 
 ```yaml
@@ -408,6 +414,205 @@ title:
   view:
     html_dl: true
 ```
+
+---
+
+## Controlled vocabularies & authorities
+
+This is the single reference for making a field controlled (a dropdown, an autocomplete against a local list,
+or a typeahead against a remote authority). The most important thing to understand first:
+
+> **The profile's `controlled_values` key does NOT wire an authority.** On a standalone property it is
+> documentation-only — the schema loader never reads it to choose a form input (the loader only ever supplies a
+> hardcoded `controlled_values` default; it does not consume yours). The shipped profile sets
+> `controlled_values: { format: …#string, sources: ["null"] }` on many fields precisely because `"null"` means
+> "free text / no authority." Whether a **standalone** field is controlled is decided by its **field name**, not
+> by `controlled_values`. Compound sub-properties are the exception — they use a real `authority:` key (see D).
+
+The mechanisms below cover standalone properties (A–C shipped by field name, D your own) and compound members
+(E). Pick the row that matches what you're doing.
+
+### A. Built-in controlled fields (rendered as a `<select>` from an authority service)
+
+Three field **names** are wired to Hyrax authority *services* and always render as dropdowns, regardless of
+what the profile says:
+
+| Property name | Options come from | Renderer service |
+|---|---|---|
+| `license` | `Hyrax.config.license_service_class` (`config/authorities/licenses.yml`) | `records/edit_fields/_license` |
+| `rights_statement` | `Hyrax.config.rights_statement_service_class` (`config/authorities/rights_statements.yml`) | `records/edit_fields/_rights_statement` |
+| `resource_type` | `Hyrax::ResourceTypesService` (`config/authorities/resource_types.yml`) | `records/edit_fields/_resource_type` |
+
+To opt in, **name the property `license` / `rights_statement` / `resource_type`** in the profile. The stored
+value is the authority URI (or term); the dropdown preserves an existing value even if it's no longer offered
+(`include_current_value`). On the show page these render via `render_as: license` / `rights_statement`, linking
+the URI to its human label (see [Linking a field's values](#linking-a-fields-values-show-page-and-catalog--exactly-what-each-link-points-at)).
+
+These three ship as `config/authorities/*.yml` in the sample apps and can be edited there (a developer/app task,
+not a profile task).
+
+### B. Field-name autocomplete against a local authority
+
+A few more field **names** ship with dedicated edit-field partials that render an autocomplete pointed at a
+**local QA authority** endpoint:
+
+| Property name | Autocomplete endpoint | Input style |
+|---|---|---|
+| `subject` | `/authorities/search/local/subjects` | multi-value text with typeahead |
+| `language` | `/authorities/search/local/languages` | multi-value text with typeahead |
+
+To opt in, name the property `subject` or `language`. **Caveat:** the sample apps do **not** ship
+`config/authorities/subjects.yml` or `languages.yml`, so these autocompletes return nothing until the app adds
+those local authority files. The QA engine is mounted at `/authorities` (`mount Qa::Engine => '/authorities'`).
+
+### C. Field-name typeahead against a remote authority
+
+`based_near` (location) ships a partial that renders a `controlled_vocabulary` input with a typeahead against a
+**remote** authority — Geonames — at `/authorities/search/geonames`
+(`records/edit_fields/_based_near`). The stored value is a Geonames URI; on the show page the catalog uses the
+indexer-produced `based_near_label_*` field for the human label (see the location example in
+[Fields pre-declared in the CatalogController](#fields-pre-declared-in-the-catalogcontroller-must-match-exact-solr-field-names)).
+
+> **How A/B/C are actually chosen.** The edit form resolves each field to a partial named
+> `records/edit_fields/<field_name>` (hydra-editor convention, via `render_edit_field_partial`). If a partial
+> with that name exists, it wins; otherwise the field falls back to a plain text/multi-value input. So a
+> standalone field becomes controlled **only** when its name matches one of the shipped partials above (or one
+> your app adds). Renaming `subject` to `topic` in the profile silently drops the autocomplete — the `_subject`
+> partial no longer matches.
+
+### D. Adding your own standalone controlled field (developer task)
+
+Because A–C key on field name, giving a *new* standalone property a controlled input is a **developer task**,
+not a profile task: add a `records/edit_fields/_<field_name>.html.erb` partial (following `_subject` for a local
+authority or `_based_near` for a remote one), and, for a local authority, a `config/authorities/<name>.yml`
+file. The profile alone cannot point an arbitrary standalone property at an authority.
+
+### E. Controlled compound sub-properties (this one uses a real `authority:` key)
+
+Inside a compound (`type: hash`), a member declared `type: controlled` **is** driven by the profile — it uses
+an `authority:` key (or an inline `values:` list), unlike standalone properties:
+
+```yaml
+# inline list — no authority file needed
+identifier_type:
+  type: controlled
+  values:
+    - { label: DOI, value: doi }
+    - { label: ISBN, value: isbn }
+
+# or an existing QA local authority (config/authorities/<name>.yml)
+role:
+  type: controlled
+  authority: contributor_role
+```
+
+Compound members also support `work_or_url` (internal work picker or external URL) and `linked_record` (a
+reference to a row in a host-registered database table, with an inline search-or-create picker). These are the
+**internal-vocabulary** mechanisms. Full details — supported member types, the `authority:` / `values:` options,
+registering a `linked_record` source, and show-page rendering — are in
+[`documentation/compound_fields.md`](compound_fields.md).
+
+### How "controlled" is detected (for the rich-text warning)
+
+Because there is no single declarative "controlled" flag, `Hyrax::FlexibleSchemaValidators::RichTextValidator`
+treats a property as controlled when **any** of these holds, and warns if you also put `form: { input_type:
+rich_text }` on it:
+
+- `controlled_values.sources` names a real authority (anything other than the `"null"` sentinel), or
+- the property name is one of `rights_statement`, `license`, `resource_type`, `based_near`, `language`,
+  `access_right` (its `CONTROLLED_BY_CONVENTION` list), or
+- it is a compound sub-property declared `type: controlled`.
+
+This detection list is a conservative approximation, not the exact set of fields that render as dropdowns: e.g.
+`subject` renders a controlled autocomplete but isn't in the list, and `access_right` is in the list but its
+shipped partial is a plain textarea. Use the tables in A–C above for what actually renders.
+
+---
+
+## External-schema mappings (OAI-PMH, metatags, crosswalks)
+
+The profile can record, per property, how that field maps to an external target schema — Simple Dublin Core,
+Qualified Dublin Core, MODS, HTML metatags, and so on. This is the data an **OAI-PMH provider** (or any
+crosswalk/export) uses to know that, say, `title` becomes `dc:title` in a Simple DC record.
+
+> **Scope — read this first.** Hyrax stores and exposes the mapping *data*; it does **not** ship an OAI-PMH
+> provider that serves a feed. There is no OAI route, no OAI catalog configuration, and no OAI gem in Hyrax or
+> its sample apps (dassie/koppie). The profile is the *source of the crosswalk*; the code that turns it into an
+> actual OAI feed lives in the **downstream application** (e.g. Hyku). If you are building an OAI feed on top of
+> Hyrax, this section tells you where the mapping lives and how to read it; see your application's docs for the
+> provider itself.
+
+### Declaring mappings
+
+Two parts work together.
+
+**1. Register the target schemas** in the top-level `mappings:` section — each key is a mapping *name*, with a
+human `name:` label. The names are conventions chosen by the profile, not a fixed list; the shipped profile
+uses these:
+
+```yaml
+mappings:
+  blacklight:
+    name: Additional Blacklight Solr Mappings
+  metatags:
+    name: Metatags
+  mods_oai_pmh:
+    name: MODS OAI PMH
+  qualified_dc_pmh:
+    name: Qualified DC OAI PMH
+  simple_dc_pmh:
+    name: Simple DC OAI PMH
+```
+
+**2. Map each property** by adding a `mappings:` block to the property, keyed by those same mapping names. The
+value is the target element/expression in that schema:
+
+```yaml
+title:
+  # …
+  indexing:
+    - title_sim
+    - title_tesim
+  mappings:
+    metatags: twitter:title, og:title
+    mods_oai_pmh: mods:titleInfo/mods:title
+    qualified_dc_pmh: dcterms:title
+    simple_dc_pmh: dc:title
+  property_uri: http://purl.org/dc/terms/title
+```
+
+A property with no `mappings:` block is simply absent from every crosswalk. In the **shipped default profile,
+only `title` declares mappings** — every other property would need a `mappings:` block added before it appears
+in an OAI/crosswalk record.
+
+### Reading the mapping data
+
+`Hyrax::FlexibleSchema.mappings_data_for(mapping_name)` (default `'simple_dc_pmh'`) returns, for the current
+active profile, every property that declares that mapping, paired with its Solr index keys and the target:
+
+```ruby
+Hyrax::FlexibleSchema.mappings_data_for('simple_dc_pmh')
+# => { "title" => { "indexing" => ["title_sim", "title_tesim"],
+#                   "mappings" => { "simple_dc_pmh" => "dc:title" } } }
+```
+
+The `indexing` keys tell a provider **which Solr field to read the value from**; the `mappings` value tells it
+**which target element to emit**. An unknown mapping name, or no active profile, returns `{}`. This method is
+the intended integration point — a downstream OAI provider calls it to build each record. Hyrax itself has no
+caller.
+
+### Notes and limits
+
+- **Mapping names are free-form** (snake_case). `simple_dc_pmh` / `qualified_dc_pmh` / `mods_oai_pmh` /
+  `metatags` are just the shipped conventions; a profile may define others (the JSON schema's examples include
+  `dc`, `dpla`, `datacite`). A downstream provider must agree on the names it looks up.
+- **The mapping value is an opaque string** to Hyrax — `dc:title`, `mods:titleInfo/mods:title`,
+  `twitter:title, og:title`. Hyrax does not parse or validate it against the target schema; interpreting it is
+  the provider's job.
+- **No validator checks mappings.** A typo in a mapping name or target simply yields nothing for that field in
+  the crosswalk; there is no upload-time error or warning.
+- **`metatags` is the same mechanism, not OAI.** The `metatags` mapping feeds HTML `<meta>` tags (Twitter/OG)
+  rather than an OAI record, but it is declared and read the same way.
 
 ---
 
