@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 Hyrax.config do |config|
+
+  # Injected via `rails generate hyrax:iiif_viewer clover`
+  config.iiif_av_viewer = :clover
+
   # Injected via `rails g hyrax:work_resource Monograph`
   config.register_curation_concern :monograph
   # Injected via `rails g hyrax:work_resource GenericWork`
