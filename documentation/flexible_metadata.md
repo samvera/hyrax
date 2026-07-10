@@ -217,26 +217,38 @@ descriptive metadata only, carried in the profile for documentation/interoperabi
 ## Property keys reference
 
 Each entry under `properties:` defines one metadata field. **A standalone property requires `display_label`,
-`available_on`, and `range`.** (Compound subproperties are exempt — see
-[Related features](#related-features).)
+`available_on`, and `range`.** (Compound subproperties are exempt — see [Related features](#related-features).)
 
-### Structural keys
+Every other property key falls into one of six purpose groups below. Each group shows a one-line summary; open
+the fold for the full key table.
+
+### Identity & structure
+
+*What the field is, where it lives, and its value type.* Includes the three required keys.
+
+<details>
+<summary>Keys: <code>available_on</code>, <code>display_label</code>, <code>property_uri</code>, <code>range</code>, <code>data_type</code>, <code>name</code></summary>
 
 | Key | Purpose | Required? |
 |---|---|---|
 | `available_on` | Which classes and/or contexts the property applies to | ✅ Yes |
 | `available_on.class` | List of class names (must be defined in `classes:`) | ✅ Yes (unless a compound subproperty) |
-| `available_on.context` | List of context keys (must be defined in `contexts:`) | Optional |
+| `available_on.context` | List of context keys (should match a context in `contexts:`; not validated) | Optional |
 | `display_label` | Human-readable label. A string, or a hash with `default` plus per-locale keys (`en`, `es`, …). May reference an i18n key. | ✅ Yes |
-| `property_uri` | RDF predicate URI. Must be unique across properties. | Required for core properties; recommended for all |
+| `property_uri` | RDF predicate URI. | Required for core properties; recommended for all |
 | `range` | XSD/RDF datatype URI (e.g. `http://www.w3.org/2001/XMLSchema#string`) | ✅ Yes |
 | `data_type` | `array` (multi-valued) or `string` (single). Defaults to `string`. | Optional (must be `array` for `title` and `creator`) |
 | `name` | Aliases the property to a different resource attribute (see [Renaming](#renaming--aliasing-a-property-name)) | Optional |
 
-### Cardinality → required & multiplicity
+</details>
 
-`cardinality` is how you make a property required. There is no separate "required" key at the property level —
-a minimum of 1 or more is what marks it required.
+### Cardinality (required & multiplicity)
+
+*How you make a property required and single- vs. multi-valued* — there is no separate "required" key; a
+minimum of 1+ is what marks it required.
+
+<details>
+<summary>Key: <code>cardinality</code> (<code>minimum</code> / <code>maximum</code>)</summary>
 
 | Declaration | Meaning |
 |---|---|
@@ -247,9 +259,15 @@ a minimum of 1 or more is what marks it required.
 
 `data_type: array` also forces multi-valued. `title` **must** have `cardinality.minimum >= 1`.
 
-### `form:` — how the field renders on the deposit/edit form
+</details>
 
-At least one `form` value is needed for a field to appear on the form.
+### Form
+
+*How the field renders on the deposit/edit form.* At least one `form` value is needed for a field to appear on
+the form.
+
+<details>
+<summary>Keys: <code>form</code> (<code>display</code>, <code>required</code>, <code>primary</code>, <code>multiple</code>, <code>input_type</code>, <code>cols</code>), <code>group</code></summary>
 
 | Key | Effect |
 |---|---|
@@ -259,13 +277,23 @@ At least one `form` value is needed for a field to appear on the form.
 | `form.multiple` | Allows multiple inputs (add-another control). |
 | `form.input_type: rich_text` | WYSIWYG (TinyMCE) editor — see [Rich-text fields](#rich-text-fields). |
 | `form.cols` | (Compound subproperties) input width on the 12-column grid. |
+| `group` | (Compound subproperties) clusters the subproperty with its siblings; the parent's `groups:` supplies the label. |
 
 Required fields are enforced on submit by `Hyrax::FlexibleFormBehavior#validate_flexible_required_fields`,
 which adds a `:blank` error to any required field whose value is blank. Compound fields are skipped by that
 check — their per-row sub-property requiredness is owned by `Hyrax::CompoundEntryValidator` — so a required
 compound does not produce a duplicate "can't be blank" error.
 
-### `indexing:` — Solr fields and control flags
+</details>
+
+### Indexing
+
+*How the field goes into Solr* — literal field names (the suffix decides behavior) mixed with control-flag
+tokens. In flexible mode the tokens also drive catalog columns/facets (see
+[Catalog search results & facets](#catalog-search-results--facets--profile-driven-in-flexible-mode-but-not-their-order)).
+
+<details>
+<summary>Key: <code>indexing</code> (Solr field names + <code>facetable</code> / <code>stored_searchable</code> / <code>admin_only</code> / <code>editor_only</code>)</summary>
 
 The `indexing:` list mixes **literal Solr field names** (the suffix decides behavior — `_tesim` full-text,
 `_sim`/`_ssim` facet/exact string, `_dtsi` date) with **control-flag tokens**:
@@ -287,7 +315,15 @@ indexing:
   - facetable
 ```
 
-### `view:` — how the field renders on the show page
+</details>
+
+### View (show page & catalog)
+
+*How the field renders and links on the show page and in catalog results.* The `view:` block controls
+rendering; `render_as` selects a renderer and, on both surfaces, what each value links to.
+
+<details>
+<summary>Key: <code>view</code> (<code>html_dl</code>, <code>render_as</code>, <code>search_field</code>, <code>position</code>, <code>show_page</code>, <code>search_results</code>, …) + <code>render_as</code> values</summary>
 
 | Key | Effect |
 |---|---|
@@ -301,9 +337,7 @@ indexing:
 | `view.search_results: false` | Drops the field's catalog search-results column (still on the show page; still facetable). |
 | `view.display: card` | (Compound) render the compound as its own titled card. |
 
-**`view.render_as` values** (`render_as: <name>` → `Hyrax::Renderers::<Name>AttributeRenderer`). For the exact
-link each one produces on the show page vs. the catalog, see
-[Linking a field's values](#linking-a-fields-values-show-page-and-catalog--exactly-what-each-link-points-at).
+**`view.render_as` values** (`render_as: <name>` → `Hyrax::Renderers::<Name>AttributeRenderer`):
 
 | `render_as` | Renders as |
 |---|---|
@@ -317,7 +351,9 @@ link each one produces on the show page vs. the catalog, see
 | `compound` | hierarchical compound rendered as a definition list / card |
 | `redirects_label` | each redirect path linked to itself (text = full URL) |
 
-### Linking a field's values (show page and catalog) — exactly what each link points at
+</details>
+
+#### Linking a field's values — exactly what each link points at
 
 Field values can become links on **two independent surfaces** — the work/collection **show page** and the
 **catalog** search-results page. Both are driven from the m3 profile, but they run through *different code*
@@ -337,7 +373,7 @@ precisely where each link lands.
 <details>
 <summary><strong>Per-surface link tables + worked example</strong> (show-page renderers, catalog helpers)</summary>
 
-#### Show-page links (attribute renderers, selected by `view: { render_as: ... }`)
+##### Show-page links (attribute renderers, selected by `view: { render_as: ... }`)
 
 | `render_as` | Link kind | Points at |
 |---|---|---|
@@ -352,7 +388,7 @@ So on the show page: `faceted` → facet filter, `linked` → keyword query, and
 `external_link` / `rights_statement` / `license` / `redirects_label` link out to the value's own target.
 `search_field:` only affects `faceted` and `linked`.
 
-#### Catalog-column links (Blacklight helpers, auto-wired in flexible mode by `FlexibleCatalogBehavior`)
+##### Catalog-column links (Blacklight helpers, auto-wired in flexible mode by `FlexibleCatalogBehavior`)
 
 | Trigger | Link kind | Points at |
 |---|---|---|
@@ -370,7 +406,7 @@ Two couplings that trip people up:
 - **The catalog `linked` helper quotes the query** (`q="value"`), the show-page `linked` renderer does not
   (`q=value`). Same destination, slightly different query.
 
-#### Worked example — a subject that links to its facet on both surfaces
+##### Worked example — a subject that links to its facet on both surfaces
 
 ```yaml
 subject:
@@ -405,6 +441,11 @@ searched field differs from the property name). For an **outward** link to the v
 
 ### Documentation-only keys (not rendered)
 
+*Descriptive metadata Hyrax stores but never renders or consumes.*
+
+<details>
+<summary>Keys: <code>definition</code>, <code>usage_guidelines</code>, <code>sample_values</code>, <code>index_documentation</code>, <code>requirement</code>, <code>controlled_values</code></summary>
+
 `definition` (help text with `default` + per-locale keys), `usage_guidelines`, `sample_values`,
 `index_documentation`, `requirement`, `controlled_values` (`format` + `sources`).
 
@@ -412,7 +453,9 @@ searched field differs from the property name). For an **outward** link to the v
 > build a dropdown or autocomplete. To actually attach a controlled vocabulary to a field, see
 > [Controlled vocabularies & authorities](#controlled-vocabularies--authorities).
 
-### Example property
+</details>
+
+### Example property (all groups together)
 
 ```yaml
 title:
@@ -475,7 +518,7 @@ what the profile says:
 To opt in, **name the property `license` / `rights_statement` / `resource_type`** in the profile. The stored
 value is the authority URI (or term); the dropdown preserves an existing value even if it's no longer offered
 (`include_current_value`). On the show page these render via `render_as: license` / `rights_statement`, linking
-the URI to its human label (see [Linking a field's values](#linking-a-fields-values-show-page-and-catalog--exactly-what-each-link-points-at)).
+the URI to its human label (see [Linking a field's values](#linking-a-fields-values--exactly-what-each-link-points-at)).
 
 These three ship as `config/authorities/*.yml` in the sample apps and can be edited there (a developer/app task,
 not a profile task).
@@ -762,9 +805,13 @@ properties:
 
 The **order you list properties in the profile is significant** for forms and show pages. The schema loader
 iterates the profile's `properties:` hash in document (YAML) order and preserves that order there. The
-**catalog is different**: in flexible mode the profile controls which columns and facets *appear*, but their
-*order* follows the CatalogController, not the profile. This distinction is the source of a lot of "why didn't
-my reorder take effect?" confusion.
+**catalog is a hybrid**: in flexible mode `FlexibleCatalogBehavior` walks the profile in property order and, for
+each property, *either* updates a column/facet the CatalogController already declared (which keeps its
+controller position) *or* appends a new one (in profile order). So a field the controller pre-declares is fixed
+where the controller put it, but every other profile field's column/facet lands in **profile order**, after the
+pre-declared ones. Reordering the profile *does* move those. See
+[Catalog search results & facets](#catalog-search-results--facets--profile-driven-in-flexible-mode-but-not-their-order)
+below for the precise rule.
 
 ### Profile-driven order (deposit form, edit form, work show page)
 
@@ -799,10 +846,24 @@ active profile, automatically:
 - **Adds the field to the `qf` relevance list** (`all_fields` search) so it is full-text searchable.
 
 So adding a `facetable`, `stored_searchable` property to the profile makes its facet and column appear in the
-catalog **without editing the CatalogController**. What the profile does **not** control is the **order** of
-columns/facets (that follows the CatalogController's declaration order, not profile order) and **sort options**
-(see [below](#the-big-one-sort-fields-use-different-solr-fields-than-the-profile-declares) — sort still
-requires `add_sort_field` and, for `_ssi` fields, an indexer).
+catalog **without editing the CatalogController**.
+
+**Ordering is a hybrid, not purely controller-driven.** `load_flexible_schema` iterates the profile in property
+order and calls `add_index_field` / `add_facet_field` as it goes. Because Blacklight's config is
+insertion-ordered, this means:
+
+- A column/facet the CatalogController **pre-declares** keeps its position — the behavior *updates it in place*
+  (label, `link_to_facet`, helper) rather than re-adding it.
+- Every **other** profile property's column/facet is **appended in profile order**, after the pre-declared
+  ones. Reordering those properties in the profile **does** reorder them in the catalog.
+
+So the effective order is: controller-declared fields first (in controller order), then the remaining
+profile fields (in profile order). In the shipped setup the CatalogController template pre-declares a limited
+set, so most fields fall into the second, profile-ordered group.
+
+What the profile does **not** control at all is **sort options** (see
+[below](#the-big-one-sort-fields-use-different-solr-fields-than-the-profile-declares) — sort still requires
+`add_sort_field` and, for `_ssi` fields, an indexer).
 
 <details>
 <summary><strong>Sharp edges worth knowing</strong> (facet token, per-request deletion, empty shipped profile)</summary>
@@ -823,9 +884,11 @@ requires `add_sort_field` and, for `_ssi` fields, an indexer).
 
 </details>
 
-> **Rule of thumb.** In flexible mode, catalog columns and facets *appear* from the profile automatically;
-> their *ordering* and *sort options* still live in the CatalogController. Form and show-page order live in the
-> profile (property sequence). If a reorder "didn't work," remember only form/show-page order is profile-driven.
+> **Rule of thumb.** In flexible mode, catalog columns and facets *appear* from the profile automatically, and
+> profile order **does** order them — except for fields the CatalogController pre-declares (those keep their
+> controller position) and **sort options** (always controller + indexer). Form and show-page order are fully
+> profile-driven. If a profile reorder "didn't move" a catalog field, that field is almost certainly one the
+> CatalogController declares explicitly.
 
 ---
 
@@ -978,7 +1041,7 @@ partial, is beyond the profile's reach and can only be changed by overriding the
 | Facet missing / empty (pre-declared field) | a hand-declared `add_facet_field` names a `_sim`/`_ssim` (or `_label` variant) the profile doesn't produce | `CatalogController` `add_facet_field`; the property's `indexing:` and `render_term` |
 | Column not in search results | property has `view: { search_results: false }`, or lacks `stored_searchable` / a `_tesim` key | the property's `view:` and `indexing:` |
 | Field not searchable by fielded search | a pre-declared `add_search_field` targets a `_tesim` that's missing | `CatalogController` `add_search_field`; the property's `indexing:` |
-| Reorder had no effect on the catalog | catalog order is controller-driven, not profile-driven | `CatalogController` (not the profile) |
+| Profile reorder didn't move a catalog column/facet | that field is pre-declared in the CatalogController, so it keeps its controller position (only *non*-pre-declared fields follow profile order) | `CatalogController` `add_index_field`/`add_facet_field` for that field |
 | Reorder had no effect on the form/show page | that order *is* profile-driven — check you edited the active profile version and restarted | profile `properties:` order; reseed + restart |
 | Title/description won't move or hide on the show page | rendered by name outside the metadata loop | `base/_work_title.erb`, `base/_work_description.erb` (override the partial) |
 | A field can't be added as a form tab/section | tabs and non-metadata sections are fixed partials | `WorkFormHelper#form_tabs_for` + `_form_<tab>` partials (developer task) |
