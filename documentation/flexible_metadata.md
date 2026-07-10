@@ -78,7 +78,21 @@ There are **three independent layers** of configuration. Understanding how they 
 up flexible metadata correctly, especially when you want some classes flexible and others not, or you want the
 profile (rather than fixed YAML files) to own certain fields.
 
+| Layer | Question it answers | Set with |
+|---|---|---|
+| **1 — Feature** | Is flexibility *available* at all? | `HYRAX_FLEXIBLE=true` / `Hyrax.config.flexible` |
+| **2 — Classes** | *Which models* use the m3 profile? | `HYRAX_FLEXIBLE_CLASSES` / `flexible_classes` / `acts_as_flexible` |
+| **3 — Field source** | For a flexible model, does each field come from *fixed YAML* or the *profile*? | `HYRAX_DISABLE_INCLUDE_METADATA` / per-class `*_include_metadata` |
+
+They stack: Layer 1 must be on for Layer 2 to do anything, and Layer 3 only matters for classes made flexible
+in Layer 2. Expand each layer below for the details.
+
 ### Layer 1 — turn the feature on (global)
+
+*Makes flexibility available; does not make any model flexible by itself.*
+
+<details>
+<summary>How Layer 1 works (the loader pair)</summary>
 
 `HYRAX_FLEXIBLE=true` → `Hyrax.config.flexible?` enables the admin **Metadata Profiles** UI and makes
 flexibility *available*. `Hyrax::Schema` exposes two loaders — `Hyrax::Schema.simple_schema_loader`
@@ -87,7 +101,14 @@ profile). A schema include defaults to the simple loader; a flexible class gets 
 `Hyrax::Resource.inherited` applies `acts_as_flexible_resource` (Layer 2), which passes the m3 loader
 explicitly. Turning the feature on **does not, by itself, make any model flexible**.
 
+</details>
+
 ### Layer 2 — choose which classes are flexible (per-class)
+
+*Selects which models read the m3 profile; the rest keep their fixed schema. Mixed setups are supported.*
+
+<details>
+<summary>How Layer 2 works (<code>flexible_classes</code>, <code>acts_as_flexible</code>, mixed setups)</summary>
 
 There are two ways to make models flexible:
 
@@ -103,7 +124,15 @@ These converge: `Hyrax::Resource.inherited` auto-applies flexibility to any subc
 > collection class on the m3 profile while another work type keeps its hardcoded YAML schema. Hyrax resolves
 > each class independently (`admin_set_flexible?`, `collection_flexible?`, `file_set_flexible?`).
 
+</details>
+
 ### Layer 3 — decide where each field's definition comes from (fixed YAML vs. the profile)
+
+*For a flexible model, chooses whether basic/core metadata comes from fixed YAML includes or the m3 profile.
+A model may mix both — as long as no single field is declared in both places.*
+
+<details>
+<summary>How Layer 3 works (include-metadata flags, mixing, the collision rule)</summary>
 
 You may choose whether to include the basic metadata always or to make them part of the flexible metadata profile. If you wish to use the default provided M3 profile, you must set `admin_set_include_metadata`, `collection_include_metadata`, `file_set_include_metadata`, or `work_include_metadata` to `false` so that basic metadata can instead be read from the flexible metadata profile. You can also set all of these from the ENV by setting the `HYRAX_DISABLE_INCLUDE_METADATA` environment variable to `true`.
 
@@ -137,6 +166,8 @@ end
 > gate above). To split fields — some fixed, some in the profile — on the *same* model, leave the flag on and
 > gate the individual `include Hyrax::Schema(...)` calls yourself, making sure no field appears in both the
 > included schema and the profile.
+
+</details>
 
 ### Koppie Flexible
 HYRAX_FLEXIBLE=true
