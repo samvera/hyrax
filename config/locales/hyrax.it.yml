@@ -1576,6 +1576,9 @@ it:
         deposited:
           message: "%{title} (%{link}) è stato approvato da %{user}. %{comment}"
           subject: Il deposito è stato approvato
+        published:
+          message: "%{title} (%{link}) was published by %{user}. %{comment}"
+          subject: Draft has been published
         pending_review:
           message: "%{title} (%{link}) è stato depositato da %{user} ed è in attesa di approvazione %{comment}"
           subject: Il deposito richiede una revisione

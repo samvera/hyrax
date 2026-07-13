@@ -1570,6 +1570,9 @@ de:
         deposited:
           message: "%{title} (%{link}) wurde von %{user} genehmigt. %{comment}"
           subject: Einreichung wurde genehmigt
+        published:
+          message: "%{title} (%{link}) was published by %{user}. %{comment}"
+          subject: Draft has been published
         pending_review:
           message: "%{title} (%{link}) wurde von %{user} hinterlegt und wartet auf die Genehmigung von %{comment}"
           subject: Einreichung muss überprüft werden
