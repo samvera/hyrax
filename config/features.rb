@@ -81,6 +81,10 @@ Flipflop.configure do
     feature :copy_permalink_button,
             default: false,
             description: "Show a 'Copy permalink' button on work and collection show pages that copies the record's canonical UUID-based URL to the clipboard."
+
+    feature :draft_permission,
+            default: false,
+            description: "Enable the draft publication lifecycle: deposit works as unpublished drafts (depositor and admins only), then publish to a visibility that cascades through the whole membership tree."
   end
 
 rescue Flipflop::StrategyError, Flipflop::FeatureError => err
