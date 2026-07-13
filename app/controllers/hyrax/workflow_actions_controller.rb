@@ -35,7 +35,10 @@ module Hyrax
     end
 
     def workflow_action_params
-      params.require(:workflow_action).permit(:name, :comment)
+      # +:target_visibility+ lets an action (e.g. the draft workflow's activate)
+      # carry the active visibility chosen by the depositor/approver through to
+      # the workflow methods. It is additive and optional; other actions ignore it.
+      params.require(:workflow_action).permit(:name, :comment, :target_visibility)
     end
 
     def after_update_response

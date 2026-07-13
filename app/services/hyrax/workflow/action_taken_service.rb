@@ -6,14 +6,19 @@ module Hyrax
       # For the given target and :action
       # - Find the appropriate "function" to call
       # - Then call that function. If the function returns a truthy value, then save the target
-      def self.handle_action_taken(target:, action:, comment:, user:)
+      def self.handle_action_taken(target:, action:, comment:, user:, **extra_method_kwargs)
         new(target: target,
             action: action,
             comment: comment,
-            user: user).call
+            user: user,
+            **extra_method_kwargs).call
       end
 
-      def initialize(target:, action:, comment:, user:)
+      # @param extra_method_kwargs [Hash] additional keyword arguments forwarded
+      #   to each workflow method's +.call+ (e.g. +target_visibility:+). +nil+
+      #   values are dropped, so actions that supply none call methods with the
+      #   original +(target:, comment:, user:)+ signature and are unaffected.
+      def initialize(target:, action:, comment:, user:, **extra_method_kwargs)
         @target =
           case target
           when Valkyrie::Resource
@@ -25,9 +30,10 @@ module Hyrax
         @action = action
         @comment = comment
         @user = user
+        @extra_method_kwargs = extra_method_kwargs.compact
       end
 
-      attr_reader :action, :target, :comment, :user
+      attr_reader :action, :target, :comment, :user, :extra_method_kwargs
 
       # Calls all the workflow methods for this action. Stops calling methods if any return falsy
       # @return [Boolean] true if all methods returned a truthy result
@@ -52,7 +58,8 @@ module Hyrax
         return unless service
         result = service.call(target: target,
                               comment: comment,
-                              user: user)
+                              user: user,
+                              **extra_method_kwargs)
         yield(result) if block_given?
         result
       end

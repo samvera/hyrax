@@ -3,17 +3,21 @@ module Hyrax
   module Workflow
     # Responsible for coordinating the behavior of an action taken within a workflow
     class WorkflowActionService
-      def self.run(subject:, action:, comment: nil)
-        new(subject: subject, action: action, comment: comment).run
+      def self.run(subject:, action:, comment: nil, **extra_method_kwargs)
+        new(subject: subject, action: action, comment: comment, **extra_method_kwargs).run
       end
 
-      def initialize(subject:, action:, comment:)
+      # @param extra_method_kwargs [Hash] additional keyword arguments forwarded
+      #   verbatim to each workflow method's +.call+ (e.g. +target_visibility:+).
+      #   Empty by default, so existing actions are unaffected.
+      def initialize(subject:, action:, comment:, **extra_method_kwargs)
         @subject = subject
         @action = action
         @comment_text = comment
+        @extra_method_kwargs = extra_method_kwargs
       end
 
-      attr_reader :subject, :action, :comment_text
+      attr_reader :subject, :action, :comment_text, :extra_method_kwargs
 
       def run
         update_sipity_workflow_state
@@ -53,7 +57,8 @@ module Hyrax
           target: subject.work,
           comment: comment,
           action: action,
-          user: subject.user
+          user: subject.user,
+          **extra_method_kwargs
         )
       end
     end

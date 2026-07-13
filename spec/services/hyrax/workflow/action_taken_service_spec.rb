@@ -29,13 +29,15 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
           class_attribute :comment
           class_attribute :target
           class_attribute :user
+          class_attribute :extra_kwargs
 
-          def self.call(target:, user:, comment:, **)
+          def self.call(target:, user:, comment:, **extra)
             target.title = "Spy Action's Choice of Title" unless no_op
 
             self.target = target
             self.user = user
             self.comment = comment
+            self.extra_kwargs = extra
 
             !self.fail
           end
@@ -55,6 +57,43 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
           expect(SpyAction.comment).to eq "A pleasant read"
           expect(SpyAction.user).to eq user
           expect(SpyAction.target.model).to eq work
+        end
+      end
+
+      context "with extra method keyword arguments (e.g. target_visibility)" do
+        let(:instance) do
+          described_class.new(target: work,
+                              action: action,
+                              comment: "A pleasant read",
+                              user: user,
+                              target_visibility: 'open')
+        end
+
+        it "forwards the extra keywords to the workflow method" do
+          instance.call
+          expect(SpyAction.extra_kwargs).to eq(target_visibility: 'open')
+        end
+      end
+
+      context "when no extra keyword arguments are supplied" do
+        it "calls the method with only target/comment/user" do
+          instance.call
+          expect(SpyAction.extra_kwargs).to eq({})
+        end
+      end
+
+      context "when an extra keyword argument is nil" do
+        let(:instance) do
+          described_class.new(target: work,
+                              action: action,
+                              comment: "A pleasant read",
+                              user: user,
+                              target_visibility: nil)
+        end
+
+        it "drops the nil so the method signature is unchanged" do
+          instance.call
+          expect(SpyAction.extra_kwargs).to eq({})
         end
       end
 

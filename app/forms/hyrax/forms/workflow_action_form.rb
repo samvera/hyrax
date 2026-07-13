@@ -26,16 +26,18 @@ module Hyrax
         @work = work
         @name = attributes.fetch(:name, false)
         @comment = attributes.fetch(:comment, nil)
+        @target_visibility = attributes.fetch(:target_visibility, nil)
         convert_to_sipity_objects!
       end
 
-      attr_reader :current_ability, :work, :name, :comment
+      attr_reader :current_ability, :work, :name, :comment, :target_visibility
 
       def save
         return false unless valid?
         Workflow::WorkflowActionService.run(subject: subject,
                                             action: sipity_workflow_action,
-                                            comment: comment)
+                                            comment: comment,
+                                            target_visibility: target_visibility)
         true
       end
 
