@@ -1,0 +1,42 @@
+{
+    "workflows": [
+        {
+            "name": "draft",
+            "label": "Draft publication lifecycle",
+            "description": "Works are deposited as unpublished drafts, visible only to the depositor and admins, then promoted to an active visibility via a manual approve/activate action. The activate action cascades the chosen visibility selectively through the membership tree.",
+            "allows_access_grant": true,
+            "actions": [
+                {
+                    "name": "deposit",
+                    "from_states": [],
+                    "transition_to": "draft",
+                    "methods": [
+                        "Hyrax::Workflow::GrantEditToDepositor",
+                        "Hyrax::Workflow::DeactivateObject"
+                    ]
+                }, {
+                    "name": "activate",
+                    "from_states": [{"names": ["draft"], "roles": ["approving"]}],
+                    "transition_to": "active",
+                    "notifications": [
+                        {
+                            "notification_type": "email",
+                            "name": "Hyrax::Workflow::PublishedNotification",
+                            "to": ["approving"]
+                        }
+                    ],
+                    "methods": [
+                        "Hyrax::Workflow::GrantReadToDepositor",
+                        "Hyrax::Workflow::ActivateObject",
+                        "Hyrax::Workflow::ActivateDraftCascade"
+                    ]
+                }, {
+                    "name": "comment_only",
+                    "from_states": [
+                        { "names": ["draft", "active"], "roles": ["approving"] }
+                    ]
+                }
+            ]
+        }
+    ]
+}

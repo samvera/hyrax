@@ -104,6 +104,7 @@ module Hyrax
     def create_workflow
       template('workflow.json.erb', "config/workflows/default_workflow.json")
       template('mediated_deposit_workflow.json.erb', "config/workflows/mediated_deposit_workflow.json")
+      template('draft_workflow.json.erb', "config/workflows/draft_workflow.json")
     end
 
     def install_config
