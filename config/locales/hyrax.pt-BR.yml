@@ -1828,6 +1828,19 @@ pt-BR:
     workflow:
       default:
         deposit: Depósito
+      draft:
+        deposit: Save as draft
+        activate: Publish draft
+        comment_only: Comment only
+        target_visibility:
+          label: Visibility when published
+          help: Choose the visibility to apply when this draft is published. It cascades through the work's whole membership tree (child works and file sets).
+          open: Public
+          restricted: Private
+          authenticated: Authenticated
+      state:
+        draft: Draft
+        active: Active
       load:
         state_error: "O fluxo de trabalho: %{workflow_name} não foi atualizado. Você está tentando remover um estado: %{state_name} com %{entity_count} entidade(s). Um estado não pode ser removido enquanto ele possui entidades ativas!"
       unauthorized: A obra não está disponível no momento porque ainda não completou o processo de aprovação

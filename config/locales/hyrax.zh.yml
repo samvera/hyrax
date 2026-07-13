@@ -1833,6 +1833,19 @@ zh:
     workflow:
       default:
         deposit: 存储
+      draft:
+        deposit: Save as draft
+        activate: Publish draft
+        comment_only: Comment only
+        target_visibility:
+          label: Visibility when published
+          help: Choose the visibility to apply when this draft is published. It cascades through the work's whole membership tree (child works and file sets).
+          open: Public
+          restricted: Private
+          authenticated: Authenticated
+      state:
+        draft: Draft
+        active: Active
       load:
         state_error: "工作流程：%{workflow_name}尚未更新。 您在移除%{entity_count}条目的状况: %{state_name}。 在包含有效条目时，状况不能被移除!"
       unauthorized: 该作品目前还在审批中，目前不可用

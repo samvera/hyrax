@@ -1829,6 +1829,19 @@ de:
     workflow:
       default:
         deposit: Deponieren
+      draft:
+        deposit: Save as draft
+        activate: Publish draft
+        comment_only: Comment only
+        target_visibility:
+          label: Visibility when published
+          help: Choose the visibility to apply when this draft is published. It cascades through the work's whole membership tree (child works and file sets).
+          open: Public
+          restricted: Private
+          authenticated: Authenticated
+      state:
+        draft: Draft
+        active: Active
       load:
         state_error: "Der Workflow: %{workflow_name} wurde nicht aktualisiert. Sie entfernen einen Zustand: %{state_name} mit %{entity_count} Entität(en). Ein Zustand darf nicht entfernt werden, während er aktive Entitäten hat!"
       unauthorized: Die Arbeit ist derzeit nicht verfügbar, da der Begutachtungsprozess noch nicht abgeschlossen ist

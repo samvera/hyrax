@@ -1975,6 +1975,19 @@ en:
     workflow:
       default:
         deposit: Deposit
+      draft:
+        deposit: Save as draft
+        activate: Publish draft
+        comment_only: Comment only
+        target_visibility:
+          label: Visibility when published
+          help: Choose the visibility to apply when this draft is published. It cascades through the work's whole membership tree (child works and file sets).
+          open: Public
+          restricted: Private
+          authenticated: Authenticated
+      state:
+        draft: Draft
+        active: Active
       load:
         state_error: 'The workflow: %{workflow_name} has not been updated.  You are removing a state: %{state_name} with %{entity_count} entity/ies.  A state may not be removed while it has active entities!'
       unauthorized: The work is not currently available because it has not yet completed the approval process

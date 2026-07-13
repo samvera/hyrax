@@ -32,6 +32,30 @@ RSpec.describe Hyrax::WorkflowPresenter do
       end
       it { is_expected.to eq [] }
     end
+
+    context 'with a draft-workflow action' do
+      let(:draft_workflow) { create(:workflow, name: 'draft') }
+
+      before do
+        allow(Hyrax::Workflow::PermissionQuery).to receive(:scope_permitted_workflow_actions_available_for_current_state)
+          .and_return([Sipity::WorkflowAction.new(name: "activate", workflow: draft_workflow)])
+        allow(presenter).to receive(:sipity_entity).and_return(entity)
+      end
+
+      context 'when the draft_permission feature is disabled' do
+        before { allow(Flipflop).to receive(:draft_permission?).and_return(false) }
+
+        it { is_expected.to eq [] }
+      end
+
+      context 'when the draft_permission feature is enabled' do
+        before { allow(Flipflop).to receive(:draft_permission?).and_return(true) }
+
+        it 'includes the draft action' do
+          expect(subject.map(&:first)).to include('activate')
+        end
+      end
+    end
   end
 
   describe "#badge" do

@@ -20,6 +20,16 @@
           <% end %>
         </div>
         <div class="col-sm-9 workflow-comments">
+          <% if presenter.workflow.draft_activation_available? %>
+            <div class="form-group workflow-target-visibility">
+              <label for="workflow_action_target_visibility"><%= t('hyrax.workflow.draft.target_visibility.label') %>:</label>
+              <%= select_tag 'workflow_action[target_visibility]',
+                             options_for_select(presenter.workflow.target_visibility_options),
+                             class: 'form-control', id: 'workflow_action_target_visibility' %>
+              <small class="form-text text-muted"><%= t('hyrax.workflow.draft.target_visibility.help') %></small>
+            </div>
+          <% end %>
+
           <div class="form-group">
             <label for="workflow_action_comment"><%= t('.review_comment') %>:</label>
             <textarea class="form-control" name="workflow_action[comment]" id="workflow_action_comment"></textarea>
