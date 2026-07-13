@@ -22,11 +22,15 @@ signed in %>
 
 <title><%= content_for?(:page_title) ? yield(:page_title) : default_page_title %></title>
 
+<% if @presenter.respond_to?(:iiif_viewer?) && @presenter.iiif_viewer? %>
+  <link rel="preload" href="<%= iiif_viewer_base_url(@presenter.iiif_viewer) %>" as="document" />
+<% end %>
+
 <!-- application css -->
 <%= stylesheet_link_tag 'application' %>
 
 <!-- application js -->
-<%= javascript_include_tag 'application' %>
+<%= javascript_include_tag 'application', defer: true %>
 
 <%= render 'shared/appearance_styles' %>
 
