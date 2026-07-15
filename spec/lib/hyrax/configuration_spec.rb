@@ -47,6 +47,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:default_admin_set_id) }
   it { is_expected.to respond_to(:derivative_services) }
   it { is_expected.to respond_to(:derivative_services=) }
+  it { is_expected.to respond_to(:derivative_options) }
+  it { is_expected.to respond_to(:derivative_options=) }
   it { is_expected.to respond_to(:display_media_download_link=) }
   it { is_expected.to respond_to(:display_media_download_link?) }
   it { is_expected.to respond_to(:display_microdata?) }
@@ -129,6 +131,31 @@ RSpec.describe Hyrax::Configuration do
   describe "#registered_ingest_dirs" do
     it "provides the Rails tmp directory for temporary downloads for cloud files" do
       expect(configuration.registered_ingest_dirs).to include(Rails.root.join('tmp').to_s)
+    end
+  end
+
+  describe "#derivative_options" do
+    it "defaults to output specs for each derivative type" do
+      expect(described_class.new.derivative_options.keys)
+        .to contain_exactly(:pdf, :office, :audio, :video, :image)
+    end
+
+    it "resolves url to a destination name rather than a full url" do
+      expect(described_class.new.derivative_options[:image])
+        .to contain_exactly(hash_including(label: :thumbnail, url: 'thumbnail', layer: 0))
+    end
+
+    it "is overridable" do
+      config = described_class.new
+      config.derivative_options = { image: [{ label: :big, format: 'jpg', size: '999x999', url: 'big' }] }
+      expect(config.derivative_options[:image].first).to include(size: '999x999')
+    end
+
+    it "extracts text for pdf and office by default" do
+      %i[pdf office].each do |type|
+        expect(described_class.new.derivative_options[type])
+          .to include(hash_including(container: 'extracted_text'))
+      end
     end
   end
 
