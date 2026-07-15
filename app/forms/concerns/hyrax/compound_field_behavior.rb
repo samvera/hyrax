@@ -101,11 +101,14 @@ module Hyrax
     # still stored once.
     def expand_multiple_members(entry, multiple_keys)
       present = multiple_keys.select { |key| entry[key].is_a?(Array) && entry[key].any? }
-      return [entry.transform_values { |v| v.is_a?(Array) ? nil : v }] if present.empty?
+      # Only `multiple` members are collapsed (to nil), so a non-selected one
+      # never leaks a `[]` and other members keep whatever they came in as.
+      base = entry.merge((multiple_keys - present).index_with(nil))
+      return [base] if present.empty?
 
       value_lists = present.map { |key| entry[key] }
       value_lists.first.product(*value_lists[1..]).map do |combo|
-        entry.merge(present.zip(combo).to_h)
+        base.merge(present.zip(combo).to_h)
       end
     end
   end

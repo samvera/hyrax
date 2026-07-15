@@ -93,36 +93,32 @@
 // (Bootstrap border + fixed `.form-control-sm` height) while drawing its own
 // bordered inner box, so a bound control shows a "box within a box" and clips
 // its chosen pills. Flatten the inner box and let the frame grow to fit.
-.hyrax-compound-row {
-  .select2-container.form-control {
-    height: auto;
-    min-height: calc(1.5em + 0.5rem + 2px); // matches .form-control-sm
-    padding: 0;
+// (bindControlledSelects tags the container so this stays off other select2
+// controls in the row.)
+.hyrax-compound-controlled-select2.form-control {
+  height: auto;
+  min-height: calc(1.5em + 0.5rem + 2px); // matches .form-control-sm
+  padding: 0;
 
-    .select2-choices, // multi-select
-    .select2-choice {  // single-select
-      border: 0;
-      background: transparent;
-      box-shadow: none;
-      min-height: 0;
-    }
+  .select2-choice,  // single-select
+  .select2-choices { // multi-select
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    min-height: 0;
+  }
+}
+
+// Multi-select: match an empty control to a sibling .form-control-sm input so
+// fields line up, and keep pills tidy as they wrap.
+.select2-container-multi.hyrax-compound-controlled-select2 {
+  .select2-choices {
+    padding: 0 0.5rem;
   }
 
-  // Multi-select: match an empty control to a sibling .form-control-sm input so
-  // fields line up, and keep pills tidy as they wrap.
-  .select2-container-multi.form-control {
-    .select2-choices {
-      padding: 0 0.5rem;
-    }
-
-    .select2-search-field input.select2-input {
-      height: calc(1.5em + 0.5rem);
-      margin: 0;
-      line-height: 1.5;
-    }
-
-    .select2-search-choice {
-      margin: 2px 0 2px 5px;
-    }
+  .select2-search-field .select2-input {
+    height: calc(1.5em + 0.5rem);
+    line-height: 1.5;
+    margin: 0;
   }
 }

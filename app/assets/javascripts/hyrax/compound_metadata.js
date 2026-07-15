@@ -84,6 +84,9 @@
                 allowClear: !$el.prop('multiple'),
                 placeholder: $el.data('placeholder') || ''
             });
+            // Tag the generated container so the styling stays scoped to these
+            // selects and off other select2 controls in the row.
+            $el.select2('container').addClass('hyrax-compound-controlled-select2');
         });
     }
 
