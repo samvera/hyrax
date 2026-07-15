@@ -106,8 +106,7 @@ module Hyrax
       # stored value is itself a linkable URI (e.g. a rights-statement or license
       # URI), link the term to that URI — mirroring the ordinary rights/license
       # renderer. Non-URI controlled values (e.g. inline option ids) stay plain.
-      # An array value (a `multiple: true` member echoed back before fan-out)
-      # renders each term, comma-separated.
+      # An array can arrive when a `multiple` member is echoed back before fan-out.
       def controlled_markup(sub_property, value)
         return safe_join_terms(Array(value).map { |v| controlled_markup(sub_property, v) }) if value.is_a?(::Array)
 
@@ -119,8 +118,7 @@ module Hyrax
         end
       end
 
-      # Join already-escaped term fragments with a comma separator, preserving
-      # html_safe-ness.
+      # Fragments are already escaped, so joining and marking html_safe is safe.
       def safe_join_terms(fragments)
         fragments.map(&:to_s).join(', ').html_safe
       end

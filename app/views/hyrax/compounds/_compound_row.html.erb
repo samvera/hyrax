@@ -45,12 +45,9 @@
             <% end %>
             <% case spec[:type] %>
             <% when 'controlled' %>
-              <%# A controlled member is a single-select by default. `multiple:
-                  true` makes it a multi-select whose values submit as an array
-                  (`[]` name suffix) and fan out into one entry per value
-                  server-side. `autocomplete: true` tags the select so
-                  compound_metadata.js binds a select2 typeahead; the full option
-                  list is already in the DOM, so filtering is client-side. %>
+              <%# `multiple` submits values as an array (`[]` suffix) that fans out
+                  into one entry per value server-side; `autocomplete` tags the
+                  select for compound_metadata.js to bind a select2 typeahead. %>
               <% multiple = spec[:multiple] %>
               <% control_name = multiple ? "#{input_name}[]" : input_name %>
               <% select_classes = ['form-control', 'form-control-sm'] %>

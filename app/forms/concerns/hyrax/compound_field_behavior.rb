@@ -55,10 +55,8 @@ module Hyrax
     end
 
     # One populator serves every compound (Reform passes the property name as
-    # `as:`). Builds the replacement array of plain hashes — declared
-    # sub-property keys only, dropping `_destroy` and all-blank rows. A
-    # `multiple: true` member with several selected values fans its row out into
-    # one entry per value (see {#expand_multiple_members}).
+    # `as:`). A `multiple: true` member fans its row out into one entry per
+    # selected value (see {#expand_multiple_members}).
     def compound_attributes_populator(fragment:, as:, **_options)
       name = as.to_s.delete_suffix('_attributes')
       return unless respond_to?(name)
@@ -76,16 +74,11 @@ module Hyrax
         .compact
     end
 
-    # The sub-property keys declared `form: { multiple: true }` for this
-    # compound (empty when the definition is unavailable).
     def multiple_subproperty_keys(definition)
       return [] unless definition.is_a?(Hash)
       definition.fetch(:subproperties, {}).select { |_k, spec| spec[:multiple] }.keys
     end
 
-    # Returns nil for a row marked for destruction or whose declared
-    # sub-properties are all blank; otherwise an array of one or more persisted
-    # entry hashes — several when a `multiple` member carries multiple values.
     def compound_row_from(row, allowed_keys, multiple_keys = [])
       row = row_hash(row)
       return nil if %w[true 1].include?(row['_destroy'].to_s)
@@ -96,19 +89,16 @@ module Hyrax
       expand_multiple_members(entry, multiple_keys)
     end
 
-    # A `multiple` member is coerced to a compacted array of stripped, non-blank
-    # values; any other member keeps its scalar (stripped if a string).
     def normalize_row_value(value, multiple)
       return Array(value).map { |v| v.is_a?(String) ? v.strip : v }.reject(&:blank?) if multiple
 
       value.is_a?(String) ? value.strip : value
     end
 
-    # Fan `multiple` members out so each stored entry holds one scalar value per
-    # such member. With a single multiple member (the common case) this yields
-    # one entry per selected value; with several it yields their cartesian
-    # product. A multiple member with no values collapses to a single nil, so a
-    # row whose only content is its other members is still stored once.
+    # Fan `multiple` members out into one entry per value (their cartesian
+    # product when a row has more than one). A `multiple` member with no values
+    # collapses to a single nil so a row carrying only its other members is
+    # still stored once.
     def expand_multiple_members(entry, multiple_keys)
       present = multiple_keys.select { |key| entry[key].is_a?(Array) && entry[key].any? }
       return [entry.transform_values { |v| v.is_a?(Array) ? nil : v }] if present.empty?

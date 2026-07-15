@@ -65,11 +65,8 @@ module Hyrax
     end
 
     ##
-    # Options for a `controlled` sub-property's `<select>`: an inline `values:`
-    # list when present, otherwise the named QA authority. Any stored value not
-    # among the options is appended so it still renders. +current_value+ may be
-    # an array (a `multiple: true` member), in which case every stored value is
-    # ensured.
+    # Options for a `controlled` sub-property's `<select>`. Any stored value not
+    # among the offered options is appended so a forced/stale value still renders.
     #
     # @return [Array<Array(String, String)>] `[[label, id], ...]`
     def compound_subproperty_options(spec, current_value = nil)
@@ -78,11 +75,9 @@ module Hyrax
     end
 
     ##
-    # @return [Boolean] whether any present +current_value+ is not among the
-    #   sub-property's offered options — i.e. a forced/stale value. The select
-    #   gets the +force-select+ class in that case, matching the ordinary
-    #   controlled-field convention. Handles an array value (a `multiple: true`
-    #   member): forced when any selected value is off-list.
+    # @return [Boolean] whether any present +current_value+ is off the
+    #   sub-property's offered options. Such a value gets the +force-select+ class
+    #   so it still renders, matching the ordinary controlled-field convention.
     def compound_subproperty_forced?(spec, current_value = nil)
       values = Array(current_value).reject(&:blank?)
       return false if values.empty?

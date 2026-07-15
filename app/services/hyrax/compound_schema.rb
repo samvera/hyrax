@@ -263,10 +263,8 @@ module Hyrax
         group: opts['group']&.to_s,
         cols: (form['cols'] || DEFAULT_COLS).to_i,
         as: form['as']&.to_s,
-        # `controlled`-only form opt-ins: `autocomplete` binds a select2
-        # typeahead over the options; `multiple` allows several values, each
-        # fanned out into its own compound entry at submit time (see
-        # Hyrax::CompoundFieldBehavior). Both default false.
+        # `controlled`-only form opt-ins (both default false). `multiple` values
+        # fan out into one entry each at submit time (see Hyrax::CompoundFieldBehavior).
         autocomplete: truthy?(form['autocomplete']),
         multiple: truthy?(form['multiple']) }.merge(linked_record_keys(opts))
     end

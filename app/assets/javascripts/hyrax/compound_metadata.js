@@ -67,12 +67,9 @@
         });
     }
 
-    // Bind select2 to a `controlled` sub-property tagged
-    // `data-hyrax-compound-controlled` (see _compound_row.html.erb). Unlike the
-    // work_or_url / linked_record pickers, this binds a NATIVE <select> whose
-    // full option list is already in the DOM, so select2 filters client-side —
-    // no ajax. A `multiple` select becomes a tags-style multi picker; select2
-    // infers `multiple` from the element.
+    // Unlike the work_or_url / linked_record pickers (hidden input + ajax), this
+    // binds a native <select> whose full option list is already in the DOM, so
+    // select2 filters client-side.
     function bindControlledSelects(root) {
         if (typeof jQuery === 'undefined' || !jQuery.fn.select2) return;
         jQuery(root).find('[data-hyrax-compound-controlled]').each(function() {
@@ -287,8 +284,7 @@
         }
         var html = template.innerHTML.replace(/__INDEX__/g, nextIndex);
         rowsHost.insertAdjacentHTML('beforeend', html);
-        // Bind select2 on any work_or_url / linked_record inputs and controlled
-        // typeahead selects in the new row.
+        // Cloned rows are fresh DOM, so re-run the select2 bindings.
         bindWorkOrUrlInputs(rowsHost.lastElementChild || rowsHost);
         bindControlledSelects(rowsHost.lastElementChild || rowsHost);
         section.dataset.nextIndex = String(nextIndex + 1);

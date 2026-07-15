@@ -89,13 +89,10 @@
   }
 }
 
-// A `controlled` sub-property with `form: { autocomplete: true }` binds select2
-// v3 over the native <select>. select2 copies the control's `.form-control`
-// classes onto its own container (a Bootstrap border + the fixed
-// `.form-control-sm` height) while rendering its own bordered inner box (a
-// "box within a box"), and the fixed height clips a multi-select's chosen pills.
-// Flatten the inner box so only the form-control frame shows, and let that frame
-// grow to fit the selected values instead of overflowing into the next field.
+// select2 v3 copies the <select>'s `.form-control` classes onto its container
+// (Bootstrap border + fixed `.form-control-sm` height) while drawing its own
+// bordered inner box, so a bound control shows a "box within a box" and clips
+// its chosen pills. Flatten the inner box and let the frame grow to fit.
 .hyrax-compound-row {
   .select2-container.form-control {
     height: auto;
@@ -111,9 +108,8 @@
     }
   }
 
-  // Multi-select: size the empty control to match a sibling .form-control-sm
-  // input (so Name and Role line up), and keep the chosen pills tidy as they
-  // wrap and grow the box.
+  // Multi-select: match an empty control to a sibling .form-control-sm input so
+  // fields line up, and keep pills tidy as they wrap.
   .select2-container-multi.form-control {
     .select2-choices {
       padding: 0 0.5rem;
