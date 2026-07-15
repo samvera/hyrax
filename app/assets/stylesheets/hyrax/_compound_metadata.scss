@@ -89,13 +89,12 @@
   }
 }
 
-// select2 v3 copies the <select>'s `.form-control` classes onto its container
-// (Bootstrap border + fixed `.form-control-sm` height) while drawing its own
-// bordered inner box, so a bound control shows a "box within a box" and clips
-// its chosen pills. Flatten the inner box and let the frame grow to fit.
-// (bindControlledSelects tags the container so this stays off other select2
-// controls in the row.)
-.hyrax-compound-controlled-select2.form-control {
+// select2 v3 copies the control's `.form-control` classes onto its container
+// (Bootstrap border + fixed `.form-control-sm` height) and then draws its own
+// bordered inner box, so every select2 control in a compound row shows a
+// "box within a box". Flatten the inner box so only the form-control frame
+// shows and let the frame grow to fit its contents.
+.hyrax-compound-row .select2-container.form-control {
   height: auto;
   min-height: calc(1.5em + 0.5rem + 2px); // matches .form-control-sm
   padding: 0;
@@ -107,11 +106,17 @@
     box-shadow: none;
     min-height: 0;
   }
+
+  // The single-select dropdown arrow otherwise sits in its own bordered cell.
+  .select2-arrow {
+    background: transparent;
+    border-left: 0;
+  }
 }
 
 // Multi-select: match an empty control to a sibling .form-control-sm input so
 // fields line up, and keep pills tidy as they wrap.
-.select2-container-multi.hyrax-compound-controlled-select2 {
+.hyrax-compound-row .select2-container-multi.form-control {
   .select2-choices {
     padding: 0 0.5rem;
   }
