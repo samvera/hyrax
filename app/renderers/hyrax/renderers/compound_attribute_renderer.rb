@@ -106,13 +106,23 @@ module Hyrax
       # stored value is itself a linkable URI (e.g. a rights-statement or license
       # URI), link the term to that URI — mirroring the ordinary rights/license
       # renderer. Non-URI controlled values (e.g. inline option ids) stay plain.
+      # An array value (a `multiple: true` member echoed back before fan-out)
+      # renders each term, comma-separated.
       def controlled_markup(sub_property, value)
+        return safe_join_terms(Array(value).map { |v| controlled_markup(sub_property, v) }) if value.is_a?(::Array)
+
         label = display_value(sub_property, value)
         if Hyrax::AuthorityRenderingHelper.linkable_uri?(value)
           %(<a href="#{ERB::Util.h(value)}" target="_blank" rel="noopener noreferrer">#{ERB::Util.h(label)}</a>).html_safe
         else
           ERB::Util.h(label)
         end
+      end
+
+      # Join already-escaped term fragments with a comma separator, preserving
+      # html_safe-ness.
+      def safe_join_terms(fragments)
+        fragments.map(&:to_s).join(', ').html_safe
       end
 
       # Link a URL or a resolvable work; render anything else as plain text so

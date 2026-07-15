@@ -64,7 +64,10 @@ module Hyrax
           index_keys = solr_index_keys(compound_name, sub_property, spec)
           next if index_keys.empty?
 
-          values = rows.map { |row| compound_entry_value(row, sub_property) }.reject(&:blank?)
+          # `flatten` so a member whose stored value is itself an array (e.g. a
+          # `multiple: true` member echoed back before fan-out) contributes each
+          # term as its own facet value rather than a nested array.
+          values = rows.flat_map { |row| compound_entry_value(row, sub_property) }.reject(&:blank?)
           next if values.empty?
 
           index_keys.each { |index_key| document[index_key] = values }

@@ -67,6 +67,29 @@
         });
     }
 
+    // Bind select2 to a `controlled` sub-property tagged
+    // `data-hyrax-compound-controlled` (see _compound_row.html.erb). Unlike the
+    // work_or_url / linked_record pickers, this binds a NATIVE <select> whose
+    // full option list is already in the DOM, so select2 filters client-side —
+    // no ajax. A `multiple` select becomes a tags-style multi picker; select2
+    // infers `multiple` from the element.
+    function bindControlledSelects(root) {
+        if (typeof jQuery === 'undefined' || !jQuery.fn.select2) return;
+        jQuery(root).find('[data-hyrax-compound-controlled]').each(function() {
+            var $el = jQuery(this);
+            if ($el.hasClass('select2-offscreen') || $el.data('select2')) return; // already bound
+
+            $el.select2({
+                width: '100%',
+                // A single select carries a blank option (include_blank), so
+                // allowClear gives it an "x"; a multiple has none and needs a
+                // placeholder to prompt.
+                allowClear: !$el.prop('multiple'),
+                placeholder: $el.data('placeholder') || ''
+            });
+        });
+    }
+
     // Show/hide the "Add new" trigger for a creatable linked_record when a
     // search returned no matches; stash the typed term to prefill the form.
     // `wrapEl` is the [data-hyrax-linked-record] wrapper captured at bind time.
@@ -86,7 +109,7 @@
     // Bind saved rows once the DOM is ready (at script-eval time the form
     // inputs don't exist yet, so the select2 would never attach). Covers both a
     // fresh load and Turbolinks navigation.
-    function bindAll() { bindWorkOrUrlInputs(document); }
+    function bindAll() { bindWorkOrUrlInputs(document); bindControlledSelects(document); }
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', bindAll);
     } else {
@@ -264,8 +287,10 @@
         }
         var html = template.innerHTML.replace(/__INDEX__/g, nextIndex);
         rowsHost.insertAdjacentHTML('beforeend', html);
-        // Bind select2 on any work_or_url / linked_record inputs in the new row.
+        // Bind select2 on any work_or_url / linked_record inputs and controlled
+        // typeahead selects in the new row.
         bindWorkOrUrlInputs(rowsHost.lastElementChild || rowsHost);
+        bindControlledSelects(rowsHost.lastElementChild || rowsHost);
         section.dataset.nextIndex = String(nextIndex + 1);
     });
 })();

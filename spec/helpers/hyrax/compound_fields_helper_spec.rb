@@ -20,6 +20,18 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
     it 'returns an empty list for a controlled sub-property with neither values nor authority' do
       expect(helper.compound_subproperty_options({ type: 'controlled', authority: nil, values: nil })).to eq([])
     end
+
+    context 'with an array current value (a multiple: true member)' do
+      it 'appends every stored value not among the offered options' do
+        expect(helper.compound_subproperty_options(spec, %w[ed Legacy Extra]))
+          .to eq([%w[Author Author], %w[Editor ed], %w[Legacy Legacy], %w[Extra Extra]])
+      end
+
+      it 'leaves the list unchanged when every stored value is already offered' do
+        expect(helper.compound_subproperty_options(spec, %w[Author ed]))
+          .to eq([%w[Author Author], %w[Editor ed]])
+      end
+    end
   end
 
   describe '#compound_subproperty_forced?' do
@@ -35,6 +47,20 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
 
     it 'is true when the value is not among the offered options' do
       expect(helper.compound_subproperty_forced?(spec, 'Legacy')).to be true
+    end
+
+    context 'with an array value (a multiple: true member)' do
+      it 'is false when every selected value is offered' do
+        expect(helper.compound_subproperty_forced?(spec, ['Author'])).to be false
+      end
+
+      it 'is true when any selected value is off-list' do
+        expect(helper.compound_subproperty_forced?(spec, %w[Author Legacy])).to be true
+      end
+
+      it 'is false when the array is empty or all blank' do
+        expect(helper.compound_subproperty_forced?(spec, ['', nil])).to be false
+      end
     end
   end
 

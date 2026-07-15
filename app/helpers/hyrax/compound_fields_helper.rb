@@ -66,24 +66,28 @@ module Hyrax
 
     ##
     # Options for a `controlled` sub-property's `<select>`: an inline `values:`
-    # list when present, otherwise the named QA authority. A stored value not
-    # among the options is appended so it still renders (`include_current_value`).
+    # list when present, otherwise the named QA authority. Any stored value not
+    # among the options is appended so it still renders. +current_value+ may be
+    # an array (a `multiple: true` member), in which case every stored value is
+    # ensured.
     #
     # @return [Array<Array(String, String)>] `[[label, id], ...]`
     def compound_subproperty_options(spec, current_value = nil)
       options = spec[:values].presence || authority_options(spec[:authority])
-      ensure_current_value(options, current_value)
+      Array(current_value).reject(&:blank?).reduce(options) { |opts, value| ensure_current_value(opts, value) }
     end
 
     ##
-    # @return [Boolean] whether +current_value+ is present but not among the
+    # @return [Boolean] whether any present +current_value+ is not among the
     #   sub-property's offered options — i.e. a forced/stale value. The select
     #   gets the +force-select+ class in that case, matching the ordinary
-    #   controlled-field convention.
+    #   controlled-field convention. Handles an array value (a `multiple: true`
+    #   member): forced when any selected value is off-list.
     def compound_subproperty_forced?(spec, current_value = nil)
-      return false if current_value.blank?
+      values = Array(current_value).reject(&:blank?)
+      return false if values.empty?
       base = spec[:values].presence || authority_options(spec[:authority])
-      base.none? { |(_label, id)| id.to_s == current_value.to_s }
+      values.any? { |value| base.none? { |(_label, id)| id.to_s == value.to_s } }
     end
 
     ##
