@@ -18,6 +18,7 @@ RSpec.describe 'building a IIIF Manifest', :aggregate_failures do
     visit "/concern/generic_works/#{work.id}/manifest"
     manifest_json = JSON.parse(page.body)
 
+    expect(manifest_json['@id']).to match "http://.*/concern/monographs/#{work.id}/manifest"
     expect(manifest_json['label']).to eq 'Comet in Moominland'
     expect(manifest_json['description']).to eq 'a novel about moomins'
 
