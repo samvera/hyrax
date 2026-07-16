@@ -26,6 +26,51 @@ RSpec.describe Hyrax::ValkyriePersistDerivatives, valkyrie_adapter: :test_adapte
         .from(be_empty)
     end
 
+    context "when the derivative is an extracted text" do
+      let(:directives) do
+        { url: "file:///app/samvera/hyrax-webapp/derivatives/#{id}-extracted_text.txt",
+          container: 'extracted_text' }
+      end
+
+      context "and text was extracted" do
+        let(:stream) { StringIO.new('some extracted text') }
+
+        it "persists it as an extracted text file" do
+          described_class.call(stream, directives)
+          files = Hyrax.custom_queries.find_files(file_set: file_set)
+          expect(files.map(&:pcdm_use).flatten).to include(Hyrax::FileMetadata::Use::EXTRACTED_TEXT)
+        end
+      end
+
+      context "and the extraction found no text (e.g. a PDF with no text layer)" do
+        let(:stream) { StringIO.new('') }
+
+        it "skips it without raising, so the job is not retried into duplicate derivatives" do
+          expect { described_class.call(stream, directives) }.not_to raise_error
+        end
+
+        it "does not persist an empty extracted text file" do
+          described_class.call(stream, directives)
+          files = Hyrax.custom_queries.find_files(file_set: file_set)
+          expect(files.map(&:pcdm_use).flatten).not_to include(Hyrax::FileMetadata::Use::EXTRACTED_TEXT)
+        end
+      end
+    end
+
+    context "when the derivative is a thumbnail" do
+      let(:directives) do
+        { url: "file:///app/samvera/hyrax-webapp/derivatives/#{id}-thumbnail.jpeg" }
+      end
+
+      context "and the generated image came out empty" do
+        let(:stream) { StringIO.new('') }
+
+        it "raises, because an empty thumbnail indicates a failed derivative" do
+          expect { described_class.call(stream, directives) }.to raise_error('blank file detected')
+        end
+      end
+    end
+
     context "when given a mime_type directive" do
       let(:directives) do
         { url: "file:///app/samvera/hyrax-webapp/derivatives/#{id}-mp4.mp4",
