@@ -54,9 +54,6 @@ module Hyrax
       []
     end
 
-    # One populator serves every compound (Reform passes the property name as
-    # `as:`). A `multiple: true` member fans its row out into one entry per
-    # selected value (see {#expand_multiple_members}).
     def compound_attributes_populator(fragment:, as:, **_options)
       name = as.to_s.delete_suffix('_attributes')
       return unless respond_to?(name)
@@ -95,14 +92,11 @@ module Hyrax
       value.is_a?(String) ? value.strip : value
     end
 
-    # Fan `multiple` members out into one entry per value (their cartesian
-    # product when a row has more than one). A `multiple` member with no values
-    # collapses to a single nil so a row carrying only its other members is
-    # still stored once.
+    # A `multiple` member with no selection collapses to nil, not an empty array,
+    # so a row carrying only its other members is still stored once. Only
+    # `multiple` members are touched, so other members are never clobbered.
     def expand_multiple_members(entry, multiple_keys)
       present = multiple_keys.select { |key| entry[key].is_a?(Array) && entry[key].any? }
-      # Only `multiple` members are collapsed (to nil), so a non-selected one
-      # never leaks a `[]` and other members keep whatever they came in as.
       base = entry.merge((multiple_keys - present).index_with(nil))
       return [base] if present.empty?
 

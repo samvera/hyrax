@@ -65,8 +65,7 @@ module Hyrax
     end
 
     ##
-    # Options for a `controlled` sub-property's `<select>`. Any stored value not
-    # among the offered options is appended so a forced/stale value still renders.
+    # Off-list stored values are appended so a forced/stale value still renders.
     #
     # @return [Array<Array(String, String)>] `[[label, id], ...]`
     def compound_subproperty_options(spec, current_value = nil)
@@ -75,9 +74,8 @@ module Hyrax
     end
 
     ##
-    # @return [Boolean] whether any present +current_value+ is off the
-    #   sub-property's offered options. Such a value gets the +force-select+ class
-    #   so it still renders, matching the ordinary controlled-field convention.
+    # @return [Boolean] whether any present value is off-list (so it gets the
+    #   +force-select+ class and still renders).
     def compound_subproperty_forced?(spec, current_value = nil)
       values = Array(current_value).reject(&:blank?)
       return false if values.empty?

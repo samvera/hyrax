@@ -45,9 +45,8 @@
             <% end %>
             <% case spec[:type] %>
             <% when 'controlled' %>
-              <%# `multiple` submits values as an array (`[]` suffix) that fans out
-                  into one entry per value server-side; `autocomplete` tags the
-                  select for compound_metadata.js to bind a select2 typeahead. %>
+              <%# `multiple` submits an array (`[]` suffix) that fans out server-side;
+                  `autocomplete` tags the select for compound_metadata.js. %>
               <% multiple = spec[:multiple] %>
               <% control_name = multiple ? "#{input_name}[]" : input_name %>
               <% select_classes = ['form-control', 'form-control-sm'] %>

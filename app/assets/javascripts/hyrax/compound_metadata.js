@@ -67,9 +67,8 @@
         });
     }
 
-    // Unlike the work_or_url / linked_record pickers (hidden input + ajax), this
-    // binds a native <select> whose full option list is already in the DOM, so
-    // select2 filters client-side.
+    // The full option list is already in the DOM, so select2 filters
+    // client-side (no ajax, unlike the work_or_url / linked_record pickers).
     function bindControlledSelects(root) {
         if (typeof jQuery === 'undefined' || !jQuery.fn.select2) return;
         jQuery(root).find('[data-hyrax-compound-controlled]').each(function() {
@@ -78,9 +77,7 @@
 
             $el.select2({
                 width: '100%',
-                // A single select carries a blank option (include_blank), so
-                // allowClear gives it an "x"; a multiple has none and needs a
-                // placeholder to prompt.
+                // allowClear only on single-selects; a v3 multi warns without a placeholder.
                 allowClear: !$el.prop('multiple'),
                 placeholder: $el.data('placeholder') || ''
             });
