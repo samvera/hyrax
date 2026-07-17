@@ -77,7 +77,7 @@ attributes:
   identifiers:
     type: hash
     multiple: true
-    predicate: http://purl.org/dc/terms/identifier
+    predicate: http://id.loc.gov/ontologies/bibframe/identifiedBy
     form:
       primary: false
     view:

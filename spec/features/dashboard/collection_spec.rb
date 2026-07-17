@@ -727,6 +727,10 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
         click_on('Save')
 
+        # Wait for the deposit to land on the work show page before re-querying the
+        # collection; otherwise the listing races the still-in-flight save/index.
+        expect(page).to have_content("New Work for Collection")
+
         # verify new work was added to collection1
         visit "/dashboard/collections/#{collection1.id}"
         expect(page).to have_link("New Work for Collection")
