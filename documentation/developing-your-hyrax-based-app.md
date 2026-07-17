@@ -184,6 +184,17 @@ rails db:seed
 This creates the default administrative set -- into which all works will be deposited unless assigned to other administrative sets.
 This command also makes sure that Hyrax's built-in workflows are loaded for your application and available for the default administrative set.
 
+### Active Storage
+
+Hyrax's install generator runs `active_storage:install`, so the `active_storage_*` tables are created alongside Hyrax's own migrations. [Active Storage](https://guides.rubyonrails.org/active_storage_overview.html) is the Rails file attachment framework; Hyrax uses it for its non-ActiveFedora upload and storage paths. Which storage service backs those files (local disk, Amazon S3, etc.) is controlled entirely by standard Rails configuration: declare services in `config/storage.yml` and select one via `config.active_storage.service` per environment. Switching an application from disk-backed to S3-backed storage is that one configuration change; no Hyrax-specific storage settings are involved.
+
+If you are upgrading an existing application rather than generating a new one, run:
+
+```shell
+rails active_storage:install
+rails db:migrate
+```
+
 ### Generate a work type
 
 Using Hyrax requires generating at least one type of repository object, or "work type." Hyrax allows you to generate the work types required in your application by using a Rails generator-based tool. You may generate one or more of these work types.
