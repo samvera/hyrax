@@ -1741,6 +1741,7 @@ de:
       permissions_message: Aktualisieren von Dateiberechtigungen. Dieser Vorgang kann ein paar Minuten dauern. Sie können Ihren Browser aktualisieren oder später zu diesem Datensatz zurückkehren, um die aktualisierten Dateiberechtigungen zu sehen.
       processing: Datei wird verarbeitet. Sie können weiter bearbeiten, wenn dieser Vorgang abgeschlossen ist
     uploads:
+      ownership_error: "Hochgeladene Dateien konnten nicht angehängt werden, da sie einem anderen Benutzer gehören."
       js_templates:
         display_label: Beschriftung anzeigen
         error: Fehler

@@ -1748,6 +1748,7 @@ fr:
       permissions_message: Mise à jour des autorisations de fichier. Cela peut prendre quelques minutes. Vous pouvez actualiser votre navigateur ou revenir à cet enregistrement plus tard pour voir les autorisations de fichier mises à jour.
       processing: Le fichier est en cours de traitement; Vous pouvez modifier lorsque le traitement est terminé
     uploads:
+      ownership_error: "Les fichiers téléversés n'ont pas pu être joints car ils appartiennent à un autre utilisateur."
       js_templates:
         display_label: Étiquette d'affichage
         error: Erreur
