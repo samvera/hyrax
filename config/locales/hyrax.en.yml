@@ -930,6 +930,7 @@ en:
         default_description: A User Collection can be created by any user to organize their works.
     compound_fields:
       add_row: Add %{label}
+      search: Search
       remove_row: Remove
       remove_row_with_label: Remove %{label}
       errors:

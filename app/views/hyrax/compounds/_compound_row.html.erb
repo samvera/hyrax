@@ -45,13 +45,7 @@
             <% end %>
             <% case spec[:type] %>
             <% when 'controlled' %>
-              <% select_classes = ['form-control', 'form-control-sm'] %>
-              <% select_classes << 'force-select' if compound_subproperty_forced?(spec, value) %>
-              <%= select_tag input_name,
-                             options_for_select(compound_subproperty_options(spec, value), value),
-                             id: input_id,
-                             include_blank: true,
-                             class: select_classes.join(' ') %>
+              <%= compound_controlled_select(spec, value, input_name, input_id) %>
             <% when 'url' %>
               <%= url_field_tag input_name, value,
                                 id: input_id,

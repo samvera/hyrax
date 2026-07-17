@@ -67,6 +67,19 @@ RSpec.describe Hyrax::Indexers::CompoundIndexer do
       expect(indexer.to_solr.keys.grep(/affiliation/)).to be_empty
     end
 
+    context 'when a controlled member value is itself an array' do
+      let(:resource) do
+        resource_class.new(contributors: [
+                             { 'given_name' => 'Ada', 'role_label' => %w[author editor] },
+                             { 'given_name' => 'Alan', 'role_label' => 'author' }
+                           ])
+      end
+
+      it 'flattens each term into its own facet value rather than nesting the array' do
+        expect(indexer.to_solr['contributors_role_label_sim']).to contain_exactly('author', 'editor', 'author')
+      end
+    end
+
     it 'accepts symbol-keyed entries (JSONValueMapper reload shape)' do
       resource.contributors = [{ given_name: 'Grace', family_name: 'Hopper' }]
       doc = indexer.to_solr

@@ -3,7 +3,7 @@
 module Hyrax
   # View helpers for rendering compound (hierarchical) metadata fields on forms
   # and show pages. See documentation/compound_fields.md.
-  module CompoundFieldsHelper
+  module CompoundFieldsHelper # rubocop:disable Metrics/ModuleLength
     ##
     # Renders one compound section (a repeatable stack of sub-property rows) for the
     # given attribute via the `hyrax/compounds/*` partials.
@@ -65,25 +65,45 @@ module Hyrax
     end
 
     ##
-    # Options for a `controlled` sub-property's `<select>`: an inline `values:`
-    # list when present, otherwise the named QA authority. A stored value not
-    # among the options is appended so it still renders (`include_current_value`).
+    # Off-list stored values are appended so a forced/stale value still renders.
     #
     # @return [Array<Array(String, String)>] `[[label, id], ...]`
     def compound_subproperty_options(spec, current_value = nil)
       options = spec[:values].presence || authority_options(spec[:authority])
-      ensure_current_value(options, current_value)
+      Array(current_value).reject(&:blank?).reduce(options) { |opts, value| ensure_current_value(opts, value) }
     end
 
     ##
-    # @return [Boolean] whether +current_value+ is present but not among the
-    #   sub-property's offered options — i.e. a forced/stale value. The select
-    #   gets the +force-select+ class in that case, matching the ordinary
-    #   controlled-field convention.
+    # @return [Boolean] whether any present value is off-list (so it gets the
+    #   +force-select+ class and still renders).
     def compound_subproperty_forced?(spec, current_value = nil)
-      return false if current_value.blank?
+      values = Array(current_value).reject(&:blank?)
+      return false if values.empty?
       base = spec[:values].presence || authority_options(spec[:authority])
-      base.none? { |(_label, id)| id.to_s == current_value.to_s }
+      values.any? { |value| base.none? { |(_label, id)| id.to_s == value.to_s } }
+    end
+
+    # Renders the `<select>` for a `controlled` sub-property, applying the
+    # `multiple` (array name, no blank) and `autocomplete` (select2 typeahead) opt-ins.
+    def compound_controlled_select(spec, value, input_name, input_id)
+      multiple = spec[:multiple]
+      classes = ['form-control', 'form-control-sm']
+      classes << 'force-select' if compound_subproperty_forced?(spec, value)
+      select_tag(multiple ? "#{input_name}[]" : input_name,
+                 options_for_select(compound_subproperty_options(spec, value), value),
+                 id: input_id,
+                 include_blank: !multiple,
+                 multiple: multiple,
+                 data: compound_controlled_data(spec),
+                 class: classes.join(' '))
+    end
+
+    # select2 typeahead data attrs for an `autocomplete` sub-property, else empty.
+    def compound_controlled_data(spec)
+      return {} unless spec[:autocomplete]
+
+      { 'hyrax-compound-controlled' => true,
+        'placeholder' => t('hyrax.compound_fields.search', default: 'Search') }
     end
 
     ##
