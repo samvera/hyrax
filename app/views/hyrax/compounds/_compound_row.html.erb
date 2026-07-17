@@ -45,24 +45,7 @@
             <% end %>
             <% case spec[:type] %>
             <% when 'controlled' %>
-              <%# `multiple` submits an array (`[]` suffix) that fans out server-side;
-                  `autocomplete` tags the select for compound_metadata.js. %>
-              <% multiple = spec[:multiple] %>
-              <% control_name = multiple ? "#{input_name}[]" : input_name %>
-              <% select_classes = ['form-control', 'form-control-sm'] %>
-              <% select_classes << 'force-select' if compound_subproperty_forced?(spec, value) %>
-              <% control_data = {} %>
-              <% if spec[:autocomplete] %>
-                <% control_data['hyrax-compound-controlled'] = true %>
-                <% control_data['placeholder'] = t('hyrax.compound_fields.search', default: 'Search') %>
-              <% end %>
-              <%= select_tag control_name,
-                             options_for_select(compound_subproperty_options(spec, value), value),
-                             id: input_id,
-                             include_blank: !multiple,
-                             multiple: multiple,
-                             data: control_data,
-                             class: select_classes.join(' ') %>
+              <%= compound_controlled_select(spec, value, input_name, input_id) %>
             <% when 'url' %>
               <%= url_field_tag input_name, value,
                                 id: input_id,

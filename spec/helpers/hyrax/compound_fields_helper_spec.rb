@@ -64,6 +64,44 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
     end
   end
 
+  describe '#compound_controlled_select' do
+    let(:value) { nil }
+    let(:spec) { { type: 'controlled', authority: nil, values: [%w[Author Author], %w[Editor ed]] } }
+    subject(:node) { Capybara.string(helper.compound_controlled_select(spec, value, 'work[roles]', 'work_roles')) }
+
+    it 'renders a single-select with a blank option and no typeahead tag by default' do
+      expect(node).to have_selector("select[name='work[roles]'][id='work_roles']")
+      expect(node).not_to have_selector('select[multiple]')
+      expect(node).to have_selector("select option[value='']", visible: :all)
+      expect(node).not_to have_selector('select[data-hyrax-compound-controlled]')
+    end
+
+    context 'when multiple' do
+      let(:spec) { { type: 'controlled', authority: nil, values: [%w[Author Author]], multiple: true } }
+
+      it 'uses an array name, is multiple, and drops the blank option' do
+        expect(node).to have_selector("select[name='work[roles][]'][multiple]")
+        expect(node).not_to have_selector("select option[value='']", visible: :all)
+      end
+    end
+
+    context 'when autocomplete' do
+      let(:spec) { { type: 'controlled', authority: nil, values: [%w[Author Author]], autocomplete: true } }
+
+      it 'tags the select for the select2 typeahead with a placeholder' do
+        expect(node).to have_selector('select[data-hyrax-compound-controlled][data-placeholder]')
+      end
+    end
+
+    context 'with an off-list stored value' do
+      let(:value) { 'Legacy' }
+
+      it 'adds the force-select class' do
+        expect(node).to have_selector('select.force-select')
+      end
+    end
+  end
+
   describe '#compound_subproperty_label' do
     it 'falls back to a humanized sub-property key when no translation exists' do
       expect(helper.compound_subproperty_label(:nonexistent_compound, :some_field)).to eq('Some field')

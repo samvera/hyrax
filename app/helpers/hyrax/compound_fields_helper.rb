@@ -3,7 +3,7 @@
 module Hyrax
   # View helpers for rendering compound (hierarchical) metadata fields on forms
   # and show pages. See documentation/compound_fields.md.
-  module CompoundFieldsHelper
+  module CompoundFieldsHelper # rubocop:disable Metrics/ModuleLength
     ##
     # Renders one compound section (a repeatable stack of sub-property rows) for the
     # given attribute via the `hyrax/compounds/*` partials.
@@ -81,6 +81,29 @@ module Hyrax
       return false if values.empty?
       base = spec[:values].presence || authority_options(spec[:authority])
       values.any? { |value| base.none? { |(_label, id)| id.to_s == value.to_s } }
+    end
+
+    # Renders the `<select>` for a `controlled` sub-property, applying the
+    # `multiple` (array name, no blank) and `autocomplete` (select2 typeahead) opt-ins.
+    def compound_controlled_select(spec, value, input_name, input_id)
+      multiple = spec[:multiple]
+      classes = ['form-control', 'form-control-sm']
+      classes << 'force-select' if compound_subproperty_forced?(spec, value)
+      select_tag(multiple ? "#{input_name}[]" : input_name,
+                 options_for_select(compound_subproperty_options(spec, value), value),
+                 id: input_id,
+                 include_blank: !multiple,
+                 multiple: multiple,
+                 data: compound_controlled_data(spec),
+                 class: classes.join(' '))
+    end
+
+    # select2 typeahead data attrs for an `autocomplete` sub-property, else empty.
+    def compound_controlled_data(spec)
+      return {} unless spec[:autocomplete]
+
+      { 'hyrax-compound-controlled' => true,
+        'placeholder' => t('hyrax.compound_fields.search', default: 'Search') }
     end
 
     ##
