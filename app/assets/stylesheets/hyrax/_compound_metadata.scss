@@ -88,3 +88,37 @@
     margin-top: 0.25rem;
   }
 }
+
+// select2 v3 copies the control's `.form-control` classes onto its container and
+// then draws its own bordered inner box, so a bound control renders a "box within
+// a box". Flatten the inner box so only the form-control frame shows.
+.hyrax-compound-row .select2-container.form-control {
+  height: auto;
+  min-height: calc(1.5em + 0.5rem + 2px); // matches .form-control-sm
+  padding: 0;
+
+  .select2-choice,
+  .select2-choices {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    min-height: 0;
+  }
+
+  .select2-arrow {
+    background: transparent;
+    border-left: 0;
+  }
+}
+
+.hyrax-compound-row .select2-container-multi.form-control {
+  .select2-choices {
+    padding: 0 0.5rem;
+  }
+
+  .select2-search-field .select2-input {
+    height: calc(1.5em + 0.5rem); // matches .form-control-sm
+    line-height: 1.5;
+    margin: 0;
+  }
+}

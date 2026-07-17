@@ -193,12 +193,31 @@ RSpec.describe Hyrax::CompoundSchema do
       expect(definition[:subproperties]['role_label'])
         .to eq(type: 'controlled', authority: 'contributor_role', values: nil, index_keys: [],
                index: true, display: false, required: false, group: 'role', cols: 6, as: nil,
+               autocomplete: false, multiple: false,
                creatable: false, create_fields: [], label_field: nil)
       expect(definition[:subproperties]['given_name'])
         .to eq(type: 'string', authority: nil, values: nil,
                index_keys: %w[contributors_given_name_sim contributors_given_name_tesim],
                index: true, display: true, required: false, group: 'identity', cols: 6, as: nil,
+               autocomplete: false, multiple: false,
                creatable: false, create_fields: [], label_field: nil)
+    end
+
+    it 'reads controlled form opt-ins (autocomplete, multiple) from the sub-property form block' do
+      klass = Class.new(Hyrax::Resource) do
+        def self.name
+          'MultiControlledResource'
+        end
+        attribute :credits,
+                  Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
+                    subproperties: {
+                      'role' => { 'type' => 'controlled', 'authority' => 'roles',
+                                  'form' => { 'autocomplete' => true, 'multiple' => true } }
+                    }
+                  )
+      end
+      spec = described_class.for(klass).definition_for(:credits)[:subproperties]['role']
+      expect(spec).to include(autocomplete: true, multiple: true)
     end
 
     it 'reads per-sub-property index_keys (literal Solr field names)' do
