@@ -16,6 +16,30 @@ RSpec.describe Hyrax::Configuration do
     it { is_expected.to eq('default') }
   end
 
+  describe '#uploaded_file_storage_backend' do
+    it 'defaults to :carrierwave' do
+      expect(configuration.uploaded_file_storage_backend).to eq :carrierwave
+    end
+
+    it 'accepts :active_storage' do
+      expect { configuration.uploaded_file_storage_backend = :active_storage }
+        .to change { configuration.active_storage_uploads? }
+        .from(false)
+        .to(true)
+    end
+
+    it 'accepts a string' do
+      configuration.uploaded_file_storage_backend = 'active_storage'
+
+      expect(configuration.uploaded_file_storage_backend).to eq :active_storage
+    end
+
+    it 'rejects unknown backends' do
+      expect { configuration.uploaded_file_storage_backend = :shrine }
+        .to raise_error(ArgumentError, /uploaded_file_storage_backend/)
+    end
+  end
+
   it { is_expected.to respond_to(:active_deposit_agreement_acceptance=) }
   it { is_expected.to respond_to(:active_deposit_agreement_acceptance?) }
   it { is_expected.to respond_to(:activity_to_show_default_seconds_since_now) }
