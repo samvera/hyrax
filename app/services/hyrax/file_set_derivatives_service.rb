@@ -67,49 +67,39 @@ module Hyrax
     end
 
     def create_pdf_derivatives(filename)
-      Hydra::Derivatives::PdfDerivatives.create(filename,
-                                                outputs: [{
-                                                  label: :thumbnail,
-                                                  format: 'jpg',
-                                                  size: '338x493',
-                                                  url: derivative_url('thumbnail'),
-                                                  layer: 0
-                                                }])
-      extract_full_text(filename, derivative_url('extracted_text'))
+      create_derivatives_for(:pdf, filename, Hydra::Derivatives::PdfDerivatives)
     end
 
     def create_office_document_derivatives(filename)
-      Hydra::Derivatives::DocumentDerivatives.create(filename,
-                                                     outputs: [{
-                                                       label: :thumbnail, format: 'jpg',
-                                                       size: '200x150>',
-                                                       url: derivative_url('thumbnail'),
-                                                       layer: 0
-                                                     }])
-      extract_full_text(filename, derivative_url('extracted_text'))
+      create_derivatives_for(:office, filename, Hydra::Derivatives::DocumentDerivatives)
     end
 
     def create_audio_derivatives(filename)
-      Hydra::Derivatives::AudioDerivatives.create(filename,
-                                                  outputs: [{ label: 'mp3', format: 'mp3', url: derivative_url('mp3'), mime_type: 'audio/mpeg', container: 'service_file' },
-                                                            { label: 'ogg', format: 'ogg', url: derivative_url('ogg'), mime_type: 'audio/ogg', container: 'service_file' }])
+      create_derivatives_for(:audio, filename, Hydra::Derivatives::AudioDerivatives)
     end
 
     def create_video_derivatives(filename)
-      Hydra::Derivatives::VideoDerivatives.create(filename,
-                                                  outputs: [{ label: :thumbnail, format: 'jpg', url: derivative_url('thumbnail'), mime_type: 'image/jpeg' },
-                                                            { label: 'webm', format: 'webm', url: derivative_url('webm'), mime_type: 'video/webm', container: 'service_file' },
-                                                            { label: 'mp4', format: 'mp4', url: derivative_url('mp4'), mime_type: 'video/mp4', container: 'service_file' }])
+      create_derivatives_for(:video, filename, Hydra::Derivatives::VideoDerivatives)
     end
 
     def create_image_derivatives(filename)
-      # We're asking for layer 0, becauase otherwise pyramidal tiffs flatten all the layers together into the thumbnail
-      Hydra::Derivatives::ImageDerivatives.create(filename,
-                                                  outputs: [{ label: :thumbnail,
-                                                              format: 'jpg',
-                                                              size: '200x150>',
-                                                              url: derivative_url('thumbnail'),
-                                                              layer: 0 }])
+      create_derivatives_for(:image, filename, Hydra::Derivatives::ImageDerivatives)
+    end
+
+    # Routes +extracted_text+ outputs to full text extraction; the rest to +processor+.
+    def create_derivatives_for(type, filename, processor)
+      text_outputs, processor_outputs = derivative_outputs(type).partition { |output| output[:container] == 'extracted_text' }
+      processor.create(filename, outputs: processor_outputs) if processor_outputs.any?
+      extract_full_text(filename, text_outputs) if text_outputs.any?
+    end
+
+    # Resolves configured specs for +type+: callable values are invoked with the
+    # file set, and +:url+ destination names become real derivative URLs.
+    def derivative_outputs(type)
+      Hyrax.config.derivative_options.fetch(type).map do |output|
+        resolved = output.transform_values { |value| value.respond_to?(:call) ? value.call(file_set) : value }
+        resolved.merge(url: derivative_url(resolved[:url]))
+      end
     end
 
     def derivative_path_factory
@@ -119,12 +109,11 @@ module Hyrax
     # Calls the Hydra::Derivates::FulltextExtraction unless the extract_full_text
     # configuration option is set to false
     # @param [String] filename of the object to be used for full text extraction
-    # @param [String] uri to the file set (deligated to file_set)
-    def extract_full_text(filename, uri)
+    # @param [Array<Hash>] outputs the resolved extracted_text output specs
+    def extract_full_text(filename, outputs)
       return unless Hyrax.config.extract_full_text?
 
-      Hydra::Derivatives::FullTextExtract.create(filename,
-                                                 outputs: [{ url: uri, container: "extracted_text" }])
+      Hydra::Derivatives::FullTextExtract.create(filename, outputs: outputs)
     end
   end
 end
