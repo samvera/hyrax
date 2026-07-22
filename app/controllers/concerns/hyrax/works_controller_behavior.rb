@@ -176,7 +176,8 @@ module Hyrax
 
     def iiif_manifest_presenter
       IiifManifestPresenter.new(search_result_document(id: params[:id])).tap do |p|
-        p.hostname = request.base_url
+        # Have to force the encoding of base_url to UTF8 because Loofah will strip out ASCII-8BIT strings in Hyrax::ManifestBuilderService#deep_sanitize
+        p.hostname = request.base_url.force_encoding('UTF-8')
         p.ability = current_ability
       end
     end
