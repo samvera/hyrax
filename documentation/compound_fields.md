@@ -139,7 +139,7 @@ textarea). Supported `type:` values:
 | `url`        | url input → auto-linked on show | The stored value is rendered as a clickable `<a href>` on show pages (matching the scalar `render_as: external_link` behavior). |
 | `work_or_url` | select2 typeahead → linked on show | Searches internal works (via the `compound_works` QA authority, backed by `Hyrax::CompoundWorkPickerBuilder`) **or** accepts a typed external URL. The stored value is a work id or a URL; on show, a work id links to the work's show page with its title (resolved by `Hyrax::CompoundWorkResolver`), a URL is auto-linked. |
 | `linked_record` | select2 typeahead → linked on show | A reference to a row in a database table (a person, organization, funder, place, …). The stored value is the row id; the picker searches that table and, optionally, lets a cataloger add a new record inline. On show, the id links to the record using the resolved label. The table and its procs are registered by the host application — see [`linked_record` sub-properties](#linked_record-sub-properties) below. |
-| `controlled` | `<select>` dropdown | Options come from either an inline `values:` list or a QA local authority named by `authority:` (see below). The row's stored value is preserved even if it is no longer offered, matching the `include_current_value` convention of the ordinary controlled-field partials. |
+| `controlled` | `<select>` dropdown (optionally a select2 typeahead / multi-select) | Options come from either an inline `values:` list or a QA local authority named by `authority:` (see below). The row's stored value is preserved even if it is no longer offered, matching the `include_current_value` convention of the ordinary controlled-field partials. Two per-member `form:` opt-ins refine the input — see [Typeahead and multi-select](#typeahead-and-multi-select-for-controlled-members) below. |
 
 A `controlled` sub-property sources its options one of two ways:
 
@@ -169,6 +169,36 @@ the same `config/authorities/*.yml` files ordinary controlled fields use. When
 both are given, `values:` wins. Authority options are read through
 `Hyrax::TolerantSelectService`, so an authority file that omits the `active:`
 key behaves the same as it does for ordinary fields (terms default to active).
+
+#### Typeahead and multi-select for `controlled` members
+
+A `controlled` member is a single-select plain `<select>` by default. Two
+`form:` opt-ins, each defaulting off, refine it:
+
+```yaml
+participant_role:
+  type: controlled
+  available_on: { properties: [participants] }
+  authority: participant_role
+  form:
+    autocomplete: true   # bind a select2 typeahead over the options
+    multiple: true        # allow several values in one row
+```
+
+- **`autocomplete: true`** binds a select2 typeahead to the select so the
+  cataloger can filter the options by typing. The full option list is rendered
+  into the DOM, so filtering is client-side — no extra request. It works on both
+  single- and multi-select members.
+- **`multiple: true`** renders a multi-select (the values submit as an array).
+  At submit time each selected value **fans out into its own compound entry**,
+  sharing the row's other members — so a participant picked with three roles is
+  stored as three entries of one role each, not one entry holding an array. This
+  keeps the stored shape uniform (every member value is a scalar) and lets each
+  term index and facet independently. A row whose only multi-select member is
+  left empty is still stored once (with that member nil).
+
+Both are independent: a member may be a typeahead single-select, a plain
+multi-select, both, or neither.
 
 A `work_or_url` sub-property's work search is broader than the stock "my works"
 picker: `Hyrax::CompoundWorkPickerBuilder` matches a typed term against any

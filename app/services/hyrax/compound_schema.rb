@@ -262,7 +262,9 @@ module Hyrax
         required: truthy?(opts['required']),
         group: opts['group']&.to_s,
         cols: (form['cols'] || DEFAULT_COLS).to_i,
-        as: form['as']&.to_s }.merge(linked_record_keys(opts))
+        as: form['as']&.to_s,
+        autocomplete: truthy?(form['autocomplete']),
+        multiple: truthy?(form['multiple']) }.merge(linked_record_keys(opts))
     end
 
     # The `linked_record`-specific declarations: profile-driven lookup-or-create

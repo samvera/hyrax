@@ -80,6 +80,15 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
       markup = described_class.new(:agent, values, label: 'Agent', html_dl: true).render_dl_row
       expect(markup).to include('ed')
     end
+
+    context 'when a controlled value is an array (a multiple: true member)' do
+      let(:values) { [{ 'role' => %w[author ed], 'name' => 'Ada' }] }
+
+      it 'renders every term, comma-separated, translated to its label' do
+        markup = renderer.render_dl_row
+        expect(markup).to include('Author, Editor')
+      end
+    end
   end
 
   describe 'controlled sub-property with a linkable URI value' do

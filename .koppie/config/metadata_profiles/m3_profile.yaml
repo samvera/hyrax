@@ -994,7 +994,7 @@ properties:
       default: Identifiers
     form:
       primary: false
-    property_uri: http://purl.org/dc/terms/identifier
+    property_uri: http://id.loc.gov/ontologies/bibframe/identifiedBy
     view:
       render_as: compound
       html_dl: true

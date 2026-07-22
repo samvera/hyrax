@@ -20,6 +20,18 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
     it 'returns an empty list for a controlled sub-property with neither values nor authority' do
       expect(helper.compound_subproperty_options({ type: 'controlled', authority: nil, values: nil })).to eq([])
     end
+
+    context 'with an array current value (a multiple: true member)' do
+      it 'appends every stored value not among the offered options' do
+        expect(helper.compound_subproperty_options(spec, %w[ed Legacy Extra]))
+          .to eq([%w[Author Author], %w[Editor ed], %w[Legacy Legacy], %w[Extra Extra]])
+      end
+
+      it 'leaves the list unchanged when every stored value is already offered' do
+        expect(helper.compound_subproperty_options(spec, %w[Author ed]))
+          .to eq([%w[Author Author], %w[Editor ed]])
+      end
+    end
   end
 
   describe '#compound_subproperty_forced?' do
@@ -35,6 +47,58 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
 
     it 'is true when the value is not among the offered options' do
       expect(helper.compound_subproperty_forced?(spec, 'Legacy')).to be true
+    end
+
+    context 'with an array value (a multiple: true member)' do
+      it 'is false when every selected value is offered' do
+        expect(helper.compound_subproperty_forced?(spec, ['Author'])).to be false
+      end
+
+      it 'is true when any selected value is off-list' do
+        expect(helper.compound_subproperty_forced?(spec, %w[Author Legacy])).to be true
+      end
+
+      it 'is false when the array is empty or all blank' do
+        expect(helper.compound_subproperty_forced?(spec, ['', nil])).to be false
+      end
+    end
+  end
+
+  describe '#compound_controlled_select' do
+    let(:value) { nil }
+    let(:spec) { { type: 'controlled', authority: nil, values: [%w[Author Author], %w[Editor ed]] } }
+    subject(:node) { Capybara.string(helper.compound_controlled_select(spec, value, 'work[roles]', 'work_roles')) }
+
+    it 'renders a single-select with a blank option and no typeahead tag by default' do
+      expect(node).to have_selector("select[name='work[roles]'][id='work_roles']")
+      expect(node).not_to have_selector('select[multiple]')
+      expect(node).to have_selector("select option[value='']", visible: :all)
+      expect(node).not_to have_selector('select[data-hyrax-compound-controlled]')
+    end
+
+    context 'when multiple' do
+      let(:spec) { { type: 'controlled', authority: nil, values: [%w[Author Author]], multiple: true } }
+
+      it 'uses an array name, is multiple, and drops the blank option' do
+        expect(node).to have_selector("select[name='work[roles][]'][multiple]")
+        expect(node).not_to have_selector("select option[value='']", visible: :all)
+      end
+    end
+
+    context 'when autocomplete' do
+      let(:spec) { { type: 'controlled', authority: nil, values: [%w[Author Author]], autocomplete: true } }
+
+      it 'tags the select for the select2 typeahead with a placeholder' do
+        expect(node).to have_selector('select[data-hyrax-compound-controlled][data-placeholder]')
+      end
+    end
+
+    context 'with an off-list stored value' do
+      let(:value) { 'Legacy' }
+
+      it 'adds the force-select class' do
+        expect(node).to have_selector('select.force-select')
+      end
     end
   end
 
