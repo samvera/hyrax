@@ -8,6 +8,7 @@ module Hyrax
       include Blacklight::SearchContext
       include Hyrax::FlexibleSchemaBehavior if Hyrax.config.collection_flexible?
       include Hyrax::EnsureMigratedBehavior
+      include Hyrax::EnforcesStagedUploadOwnership
 
       configure_blacklight do |config|
         config.search_builder_class = Hyrax::Dashboard::CollectionsSearchBuilder
@@ -18,6 +19,7 @@ module Hyrax
 
       before_action :filter_docs_with_read_access!, except: [:show, :edit]
       before_action :remove_select_something_first_flash, except: :show
+      before_action :validate_branding_upload_ownership!, only: [:create, :update]
 
       include Hyrax::Collections::AcceptsBatches
 
@@ -306,6 +308,18 @@ module Hyrax
       def update_referer
         return edit_dashboard_collection_path(@collection) + (params[:referer_anchor] || '') if params[:stay_on_edit]
         dashboard_collection_path(@collection)
+      end
+
+      # Branding uploads arrive as staged Hyrax::UploadedFile ids in
+      # banner_files/logo_files (logo_files mixes new upload ids with local
+      # paths of already-attached logos). Both the ActiveFedora and the
+      # Valkyrie branding paths flow through this controller, so ownership is
+      # enforced here, at the parameter edge.
+      def validate_branding_upload_ownership!
+        Hyrax::UploadedFileResolver.call(params["banner_files"], user: current_user) unless
+          params["banner_unchanged"] == "true"
+        new_logo_ids = Array.wrap(params["logo_files"]).select { |ufi| ufi.to_s.match(/\D/).nil? }
+        Hyrax::UploadedFileResolver.call(new_logo_ids, user: current_user)
       end
 
       def process_banner_input

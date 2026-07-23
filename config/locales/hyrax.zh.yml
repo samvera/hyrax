@@ -1745,6 +1745,7 @@ zh:
       permissions_message: 文件许可正在更新中。稍等片刻。您可能需要刷新浏览器或稍后回访查询该文件访问许可是否更新
       processing: 文件正在处理。 等处理完毕，您可以开始编辑。
     uploads:
+      ownership_error: "无法附加上传的文件，因为它们属于其他用户。"
       js_templates:
         display_label: 显示标签
         error: 错误

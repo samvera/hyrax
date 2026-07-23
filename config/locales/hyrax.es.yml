@@ -1750,6 +1750,7 @@ es:
       permissions_message: Actualizando permisos de archivo. Esto puede tardar unos minutos. Quizás quiera actualizar su navegador o regresar a este registro posteriormente para ver los permisos actualizados.
       processing: El archivo se está procesando; se puede editar en cuanto termine el procesamiento
     uploads:
+      ownership_error: "Los archivos subidos no se pudieron adjuntar porque pertenecen a otro usuario."
       js_templates:
         display_label: Mostrar etiqueta
         error: Error

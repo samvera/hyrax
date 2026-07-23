@@ -1747,6 +1747,7 @@ it:
       permissions_message: Aggiornamento delle autorizzazioni di file. Questo potrebbe richiedere alcuni minuti. Potresti voler aggiornare il tuo browser o tornare a questo disco in seguito per vedere le autorizzazioni di file aggiornate.
       processing: Il file è in fase di elaborazione; Puoi modificare quando l'elaborazione è terminata
     uploads:
+      ownership_error: "I file caricati non possono essere allegati perché appartengono a un altro utente."
       js_templates:
         display_label: Etichetta di visualizzazione
         error: Errore
