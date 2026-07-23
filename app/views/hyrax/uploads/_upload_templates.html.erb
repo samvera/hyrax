@@ -1,0 +1,31 @@
+<%# Row template cloned by Hyrax.Uploader for each file on the work form.
+    The hidden input is authored without a name; the uploader assigns
+    data-upload-field-name and the record id when the upload completes. %>
+<template id="hyrax-upload-row">
+  <tr class="template-download">
+    <td>
+      <span class="preview"></span>
+    </td>
+    <td>
+      <p class="name" data-upload-name></p>
+      <strong class="error text-danger" data-upload-error></strong>
+      <input type="hidden" data-upload-id-input data-upload-field-name="uploaded_files[]" value="">
+      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%;" data-upload-progress></div>
+      </div>
+    </td>
+    <td>
+      <span class="size" data-upload-size></span>
+    </td>
+    <td class="text-right">
+      <button type="button" class="btn btn-sm btn-warning cancel" data-upload-cancel>
+        <span class="fa fa-ban"></span>
+        <span><%= t('helpers.action.cancel') %></span>
+      </button>
+      <button type="button" class="btn btn-sm btn-danger delete" data-upload-delete hidden>
+        <span class="fa fa-trash"></span>
+        <span><%= t('helpers.action.delete') %></span>
+      </button>
+    </td>
+  </tr>
+</template>

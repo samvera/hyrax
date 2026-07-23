@@ -1,0 +1,74 @@
+<%# Row template for batch upload: per-file title and resource type inputs.
+    Attribute values containing {{id}} are rewritten with the staged upload's
+    id when the upload completes. %>
+<template id="hyrax-upload-row-batch">
+  <tr class="template-download add-batch-work-file-wrapper">
+    <td>
+      <div class="row padding-bottom">
+        <div class="col-sm-6 name">
+          <span data-upload-name></span>
+          <input type="hidden" data-upload-id-input data-upload-field-name="uploaded_files[]" value="">
+        </div>
+        <div class="col-sm-6">
+          <div><strong class="error text-danger" data-upload-error></strong></div>
+          <span class="size" data-upload-size></span>
+          <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%;" data-upload-progress></div>
+          </div>
+          <button type="button" class="btn btn-sm btn-warning cancel float-right" data-upload-cancel>
+            <span class="fa fa-ban"></span>
+            <span><%= t('helpers.action.cancel') %></span>
+          </button>
+          <button type="button" class="btn btn-sm btn-danger delete float-right" data-upload-delete hidden>
+            <span class="fa fa-trash"></span>
+            <span><%= t('helpers.action.delete') %></span>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="form-group row">
+            <label for="title_{{id}}" class="col-sm-5 col-form-label"><%= t('hyrax.uploads.js_templates.display_label') %></label>
+            <div class="col-sm-7 padding-bottom">
+              <input type="text" class="form-control batch-title-input" name="title[{{id}}]" id="title_{{id}}" data-upload-name-value>
+            </div>
+            <label for="resource_type_{{id}}" class="col-sm-5 col-form-label">Resource Type</label>
+            <div class="col-sm-7 padding-bottom">
+              <select class="form-control resource_type_dropdown" multiple="multiple" size="6" name="resource_type[{{id}}][]" id="resource_type_{{id}}">
+                <%= options_for_select(Hyrax::ResourceTypesService.select_options) %>
+              </select>
+              <button type="button" class="btn btn-secondary float-right resource_type_button" data-file-id="{{id}}">
+                <%= t('hyrax.uploads.js_templates.set_all_to_this_resource_type') %>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</template>
+
+<script type="text/javascript">
+  // Copy one row's resource type selection to every row.
+  document.addEventListener('click', function(event) {
+    var button = event.target.closest ? event.target.closest('.resource_type_button') : null;
+    if (!button) { return; }
+    event.preventDefault();
+    var source = document.getElementById('resource_type_' + button.getAttribute('data-file-id'));
+    if (!source) { return; }
+    var selected = Array.prototype.filter.call(source.options, function(option) { return option.selected; })
+                        .map(function(option) { return option.value; });
+    document.querySelectorAll('.resource_type_dropdown').forEach(function(dropdown) {
+      Array.prototype.forEach.call(dropdown.options, function(option) {
+        option.selected = selected.indexOf(option.value) !== -1;
+      });
+    });
+  });
+
+  // The batch form uses the shared #fileupload widget with its own row
+  // template; the uploader initializes in hyrax/fileupload.js first.
+  Blacklight.onLoad(function() {
+    var widget = document.getElementById('fileupload');
+    if (widget && widget.hyraxUploader) { widget.hyraxUploader.setRowTemplate('hyrax-upload-row-batch'); }
+  });
+</script>
