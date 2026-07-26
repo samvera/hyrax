@@ -652,6 +652,51 @@ module Hyrax
       @upload_path ||= ->() { Pathname.new(ENV.fetch('HYRAX_UPLOAD_PATH') { Rails.root.join('tmp', 'uploads') }) }
     end
 
+    ##
+    # Storage backend for staged user uploads ({Hyrax::UploadedFile}).
+    #
+    # +:carrierwave+ (default) stores staged files on the local file system
+    # under {#upload_path} via CarrierWave. +:active_storage+ stores them
+    # through Rails Active Storage, so the configured Active Storage service
+    # (+config.active_storage.service+ / +config/storage.yml+) determines
+    # where staged bytes live; switching that service between local disk and
+    # S3 is a Rails configuration change only.
+    #
+    # @note reads are backend-agnostic: records carrying an Active Storage
+    #   attachment are read through Active Storage and records carrying a
+    #   CarrierWave file are read through CarrierWave, whatever this setting
+    #   is. The setting controls where newly uploaded content is written.
+    #
+    # @note the ActiveFedora ingest path reads staged files through the
+    #   CarrierWave interface; applications using ActiveFedora file sets
+    #   should stay on +:carrierwave+.
+    #
+    # @return [Symbol] +:carrierwave+ or +:active_storage+
+    def uploaded_file_storage_backend
+      @uploaded_file_storage_backend ||= :carrierwave
+    end
+
+    UPLOADED_FILE_STORAGE_BACKENDS = %i[carrierwave active_storage].freeze
+
+    def uploaded_file_storage_backend=(backend)
+      backend = backend.to_sym
+      unless UPLOADED_FILE_STORAGE_BACKENDS.include?(backend)
+        raise ArgumentError,
+              "unknown uploaded_file_storage_backend #{backend.inspect}; " \
+              "expected one of #{UPLOADED_FILE_STORAGE_BACKENDS.inspect}"
+      end
+      raise ArgumentError, "uploaded_file_storage_backend :active_storage requires the Active Storage framework to be loaded" if
+        backend == :active_storage && !defined?(::ActiveStorage)
+      @uploaded_file_storage_backend = backend
+    end
+
+    ##
+    # @return [Boolean] whether new staged uploads are written to Active
+    #   Storage
+    def active_storage_uploads?
+      uploaded_file_storage_backend == :active_storage
+    end
+
     attr_writer :cache_path
     def cache_path
       @cache_path ||= ->() { Pathname.new(ENV.fetch('HYRAX_CACHE_PATH') { Rails.root.join('tmp', 'cache') }) }
