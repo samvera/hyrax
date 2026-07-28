@@ -892,6 +892,13 @@ pt-BR:
         featured_researcher: Pesquisador em destaque
         marketing_text: Texto de marketing
       updated: Blocos de conteúdo atualizados.
+    compound_fields:
+      linked_record:
+        add_new: "Adicionar %{item}"
+        add_row: "Adicionar outro %{item}"
+        create_again_hint: "Pressione Criar novamente para adicionar como um novo registro."
+        similar_heading: "Já existem registros semelhantes:"
+        use_existing: "Usar este"
     controls:
       about: Sobre
       contact: Contato
