@@ -71,6 +71,11 @@
                 // escape every value ourselves in formatLinkedRecordResult.
                 options.formatResult = formatLinkedRecordResult;
                 options.escapeMarkup = function(m) { return m; };
+                // escapeMarkup is now a no-op for BOTH the dropdown and the
+                // selected value. formatResult escapes the dropdown; provide an
+                // explicit formatSelection so the selected label is escaped too —
+                // otherwise a label containing HTML would render unescaped (XSS).
+                options.formatSelection = function(data) { return escapeHtml(data && data.text); };
             }
 
             $el.select2(options);
@@ -107,7 +112,8 @@
     // HTML-escape a value for interpolation into a formatResult template (select2's
     // default escaping is off once we supply escapeMarkup).
     function escapeHtml(value) {
-        return String(value == null ? '' : value)
+        var str = (value === null || value === undefined) ? '' : value;
+        return String(str)
             .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
@@ -117,7 +123,7 @@
     // label when a source supplies no detail, so this stays source-agnostic.
     function formatLinkedRecordResult(item) {
         var label = escapeHtml(item.text);
-        if (item.detail == null || String(item.detail).trim() === '') return label;
+        if (item.detail === null || item.detail === undefined || String(item.detail).trim() === '') return label;
         return '<div class="linked-record-option">' + label +
                '<div class="linked-record-option-detail text-muted small">' +
                escapeHtml(item.detail) + '</div></div>';
