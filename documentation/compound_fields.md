@@ -237,24 +237,34 @@ Rails.application.config.to_prepare do
     finder: ->(id)    { Person.find_by(id:) },
     label:  ->(person) { person.display_name },
     path:   ->(person) { Rails.application.routes.url_helpers.person_path(person) },
-    # optional — enables the picker autocomplete:
+    # optional — enables the picker autocomplete. Each row may carry an optional
+    # `detail:` string, rendered as a muted second line under the label so
+    # same-named records are distinguishable:
     search: ->(q) { Person.where('display_name ILIKE ?', "%#{q}%").limit(20)
-                          .map { |p| { id: p.id.to_s, label: p.display_name, value: p.id.to_s } } },
+                          .map { |p| { id: p.id.to_s, label: p.display_name, value: p.id.to_s,
+                                       detail: p.orcid } } },
     # optional — enables inline "add new" (lookup-or-create):
-    create: ->(attrs) { Person.create(attrs.slice(:display_name, :orcid)) }
+    create: ->(attrs) { Person.create(attrs.slice(:display_name, :orcid)) },
+    # optional — enables the create form's fuzzy "did you mean" duplicate check.
+    # Same row shape as `search` (fuzzy, multi-row); the cataloger picks a match
+    # or creates anyway. Omit for a source with no duplicate check:
+    similar: ->(q) { Person.fuzzy_by_name(q).limit(10)
+                           .map { |p| { id: p.id.to_s, label: p.display_name, value: p.id.to_s,
+                                        detail: p.orcid } } }
   )
 end
 ```
 
-**What the table needs.** The source can wrap any object the four procs can
-operate on — typically an `ActiveRecord` model, but nothing about the type is
-prescribed. The only contract is what the procs imply:
+**What the table needs.** The source can wrap any object its procs can operate on
+— typically an `ActiveRecord` model, but nothing about the type is prescribed.
+The only contract is what the procs imply:
 
 - a stable identifier the `finder` can look up by and that is safe to persist as
   a string (an integer or UUID primary key is fine — it is stored as its string
   form);
 - a human-readable label (whatever `label:` / `view: { label_field: }` returns);
-- any other fields the `path:`, `search:`, or `create:` procs reference.
+- any other fields the `path:`, `search:`, `create:`, `similar:`, or `match:`
+  procs reference.
 
 There is **no base class to inherit, no required column names, no migration or
 schema Hyrax imposes, and no per-source authority or controller class to write** —
@@ -299,12 +309,20 @@ How the pieces fit together:
   `view: { label_field: }` when present, otherwise the source's `label:` proc.
   An id that no longer resolves renders as bare text, never a broken link.
 - **Inline lookup-or-create.** When the sub-property declares `creatable: true`
-  and the source registers a `create:` proc, a search that returns no matches
-  offers an "Add new" form built from `create_fields`. Submitting it POSTs to
+  and the source registers a `create:` proc, an "Add new" form built from
+  `create_fields` is available beside the picker (visible whether or not a search
+  matched, so results and create coexist). Submitting it POSTs to
   `/linked_records/:source`, which calls the source's `create:` proc and selects
   the new record in the picker. Each `create_fields` entry declares its own
   input: `as: string` (text input) or `as: select` (a dropdown of `values:`),
   and `required:`.
+- **Duplicate check ("did you mean").** When the source registers a `similar:`
+  proc, clicking Create first runs a fuzzy lookup on the typed name (via the
+  generic `linked_record_similar` QA authority) and, if near-matches exist, shows
+  them with a "Use this" action so the cataloger can reuse an existing record
+  instead of creating a duplicate. The primary Create button is the override:
+  press it again to create the new record anyway; editing the name re-checks. A
+  source without `similar:` skips the check and creates directly.
 - **Repeatable create-fields** (see `affiliations` and `identifiers` above). Mark
   any create-field `repeatable: true` and the "Add new" form renders add/remove
   rows for it. A repeatable **scalar** (`as: string`/`select`, no `fields:`)
@@ -753,7 +771,7 @@ optional procs on the source alongside `finder`/`label`/`path`:
 ```ruby
 Hyrax::CompoundLinkedRecordResolver.register(
   :people,
-  # …finder/label/path/search/create as above…
+  # …finder/label/path and the picker procs (search/create/similar) as above…
   # exact, single-row lookup on a natural key, for import resolution:
   match: ->(attrs) { Person.where('LOWER(display_name) = LOWER(?)', attrs[:display_name].to_s.strip).order(:id).first }
 )
