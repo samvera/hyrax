@@ -284,6 +284,43 @@ module Hyrax
           video: lookup_mimes(:video_mime_types) }
     end
 
+    attr_writer :derivative_options
+
+    ##
+    # The +outputs:+ specs passed to +Hydra::Derivatives+ per derivative type.
+    # +:url+ is a destination name resolved to a real URL at create time; a
+    # callable value is invoked with the file set. An +extracted_text+ container
+    # routes to full text extraction (gated also by {#extract_full_text?}) — its
+    # presence is the per-type toggle. Tune these instead of decorating
+    # +Hyrax::FileSetDerivativesService+:
+    #
+    #   Hyrax.config do |config|
+    #     config.derivative_options[:pdf].first[:size] = '676x986'                            # bigger thumbnail
+    #     config.derivative_options[:pdf].reject! { |o| o[:container] == 'extracted_text' }   # no PDF text
+    #
+    #     # transcode video to its source dimensions (falls back to 320x240)
+    #     sizer = ->(fs) { (w = Array(fs.width).first) && (h = Array(fs.height).first) ? "#{w}x#{h}" : '320x240' }
+    #     config.derivative_options[:video].each { |o| o[:size] = sizer }
+    #   end
+    #
+    # @return [Hash{Symbol => Array<Hash>}]
+    # @see Hyrax::FileSetDerivativesService
+    def derivative_options
+      @derivative_options ||= {
+        pdf: [{ label: :thumbnail, format: 'jpg', size: '338x493', url: 'thumbnail', layer: 0 },
+              { url: 'extracted_text', container: 'extracted_text' }],
+        office: [{ label: :thumbnail, format: 'jpg', size: '200x150>', url: 'thumbnail', layer: 0 },
+                 { url: 'extracted_text', container: 'extracted_text' }],
+        audio: [{ label: 'mp3', format: 'mp3', url: 'mp3', mime_type: 'audio/mpeg', container: 'service_file' },
+                { label: 'ogg', format: 'ogg', url: 'ogg', mime_type: 'audio/ogg', container: 'service_file' }],
+        video: [{ label: :thumbnail, format: 'jpg', url: 'thumbnail', mime_type: 'image/jpeg' },
+                { label: 'webm', format: 'webm', url: 'webm', mime_type: 'video/webm', container: 'service_file' },
+                { label: 'mp4', format: 'mp4', url: 'mp4', mime_type: 'video/mp4', container: 'service_file' }],
+        # image uses layer: 0 because otherwise pyramidal tiffs flatten all the layers together into the thumbnail
+        image: [{ label: :thumbnail, format: 'jpg', size: '200x150>', url: 'thumbnail', layer: 0 }]
+      }
+    end
+
     attr_writer :derivative_services
     # The registered candidate derivative services.  In the array, the first `valid?` candidate will
     # handle the derivative generation.
