@@ -893,6 +893,13 @@ de:
         featured_researcher: Ausgewählter Forscher
         marketing_text: Marketing Text
       updated: Inhaltsblöcke aktualisiert.
+    compound_fields:
+      linked_record:
+        add_new: "%{item} hinzufügen"
+        add_row: "Weitere(n) %{item} hinzufügen"
+        create_again_hint: "Erneut auf „Erstellen“ klicken, um als neuen Datensatz hinzuzufügen."
+        similar_heading: "Ähnliche Datensätze existieren bereits:"
+        use_existing: "Diesen verwenden"
     controls:
       about: Impressum
       contact: Kontakt

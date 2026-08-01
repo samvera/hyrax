@@ -899,6 +899,13 @@ es:
         featured_researcher: Investigador Destacado
         marketing_text: Texto de Marketing
       updated: Bloques de contenido actualizados.
+    compound_fields:
+      linked_record:
+        add_new: "Añadir %{item}"
+        add_row: "Añadir otro %{item}"
+        create_again_hint: "Pulse Crear de nuevo para añadirlo como un registro nuevo."
+        similar_heading: "Ya existen registros similares:"
+        use_existing: "Usar este"
     controls:
       about: Acerca de
       contact: Contacto

@@ -899,6 +899,13 @@ it:
         featured_researcher: Ricercatore in primo piano
         marketing_text: Testo di marketing
       updated: Blocchi di contenuto aggiornati.
+    compound_fields:
+      linked_record:
+        add_new: "Aggiungi %{item}"
+        add_row: "Aggiungi un altro %{item}"
+        create_again_hint: "Premi di nuovo Crea per aggiungere come nuovo record."
+        similar_heading: "Esistono già record simili:"
+        use_existing: "Usa questo"
     controls:
       about: Di
       contact: contatto
