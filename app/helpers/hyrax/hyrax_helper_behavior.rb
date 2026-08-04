@@ -52,11 +52,13 @@ module Hyrax
       indexed_ids = admin_sets_list.map(&:last)
       missing_ids = source_ids.map(&:to_s) - indexed_ids
 
-      admin_sets_list.concat(
-        Hyrax.query_service.find_many_by_ids(ids: missing_ids).map do |source|
-          [source.title.first, source.id.to_s]
-        end
-      )
+      if missing_ids.present?
+        admin_sets_list.concat(
+          Hyrax.query_service.find_many_by_ids(ids: missing_ids).map do |source|
+            [source.title.first, source.id.to_s]
+          end
+        )
+      end
 
       # Sorts the default admin set to be first, then the rest by title.
       admin_sets_list.sort do |a, b|
