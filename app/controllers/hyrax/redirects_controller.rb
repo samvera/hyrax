@@ -7,6 +7,8 @@ module Hyrax
   # (see the install generator). Serves any path not claimed by an earlier
   # route when the feature is active.
   class RedirectsController < ApplicationController
+    rescue_from ActionController::RoutingError, with: :render_not_found
+
     def show
       row = Hyrax::RedirectsLookup.find_row(params[:alias_path])
       raise ActionController::RoutingError, 'Not Found' if row.blank?
@@ -19,6 +21,12 @@ module Hyrax
     end
 
     private
+
+    # Branded error page for typos and removed aliases,
+    # that displays when the redirects feature is active.
+    def render_not_found
+      render 'redirect_error', layout: 'hyrax', status: :not_found
+    end
 
     # The visited path IS the display URL — render the resource's show
     # page in place at the visited path. Use `recognize_path` to find

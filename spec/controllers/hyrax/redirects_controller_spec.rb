@@ -25,9 +25,10 @@ RSpec.describe Hyrax::RedirectsController, type: :controller do
     end
 
     context 'when no row matches the visited path' do
-      it 'raises ActionController::RoutingError so Rails serves a 404' do
-        expect { get :show, params: { alias_path: 'no-such-path' } }
-          .to raise_error(ActionController::RoutingError)
+      it 'renders the branded not-found page with a 404 status' do
+        get :show, params: { alias_path: 'no-such-path' }
+        expect(response).to have_http_status(:not_found)
+        expect(response).to render_template('redirect_error')
       end
     end
 
