@@ -17,8 +17,8 @@ module Hyrax
     #
     # @example with an additional action
     #  Override this helper and ensure that it loads after Hyrax's helpers.
-    #  module WorksHelper
-    #    def show_actions_for(*)
+    #  module Hyrax::WorksHelper
+    #    def show_actions_for(presenter:)
     #      super + ["my_new_action"]
     #    end
     #  end
