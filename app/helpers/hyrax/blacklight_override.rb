@@ -7,8 +7,8 @@ module Hyrax
     end
 
     # rubocop:disable Metrics/MethodLength
-    def index_field_label(document, field)
-      field_config = index_fields(document)[field]
+    def index_field_label(_document, field)
+      field_config = blacklight_config.index_fields[field]
       return resolve_label(field_config) if field_config&.custom_label || field_config&.label&.respond_to?(:call)
 
       translate = I18n.t(field_config.label, default: field_config.label) if field_config&.label&.match(/\./)
