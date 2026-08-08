@@ -78,6 +78,16 @@ Valkyrie::StorageAdapter.register(
   :versioned_disk_storage
 )
 
+# Versioned storage through Rails Active Storage: the service configured in
+# config/storage.yml (+ config.active_storage.service) decides where file
+# bytes live, so switching this app's repository files from local disk to S3
+# is an Active Storage configuration change only. Select it with
+# VALKYRIE_STORAGE_ADAPTER=active_storage_storage.
+Valkyrie::StorageAdapter.register(
+  Hyrax::Storage::ActiveStorage.new,
+  :active_storage_storage
+)
+
 Valkyrie.config.storage_adapter  = ENV.fetch('VALKYRIE_STORAGE_ADAPTER') { :versioned_disk_storage }.to_sym
 
 Valkyrie.config.indexing_adapter = :solr_index
