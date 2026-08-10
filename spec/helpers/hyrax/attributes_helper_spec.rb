@@ -42,6 +42,29 @@ RSpec.describe Hyrax::AttributesHelper, type: :helper do
       result = helper.conform_options(:date_created, {}.with_indifferent_access)
       expect(result[:label]).to eq('Date created')
     end
+
+    it 'applies the semantic renderer for license' do
+      result = helper.conform_options(:license, {}.with_indifferent_access)
+      expect(result[:render_as]).to eq(:license)
+    end
+
+    it 'applies the semantic renderer for rights_statement' do
+      result = helper.conform_options(:rights_statement, {}.with_indifferent_access)
+      expect(result[:render_as]).to eq(:rights_statement)
+    end
+
+    it 'overrides a stored external_link for license' do
+      # Flexible schemas seeded from earlier profiles carry
+      # render_as: external_link for license; the authority label must win
+      # anyway - it still links to the URI, and a bare URI is strictly worse.
+      result = helper.conform_options(:license, { render_as: 'external_link' }.with_indifferent_access)
+      expect(result[:render_as]).to eq(:license)
+    end
+
+    it 'leaves fields without a semantic renderer alone' do
+      result = helper.conform_options(:related_url, { render_as: 'external_link' }.with_indifferent_access)
+      expect(result[:render_as]).to eq('external_link')
+    end
   end
 
   describe '#schema' do

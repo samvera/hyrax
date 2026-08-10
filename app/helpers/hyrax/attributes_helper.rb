@@ -63,6 +63,16 @@ module Hyrax
       options_hash&.with_indifferent_access&.fetch('render_term', nil) || field_name
     end
 
+    # Authority-backed fields whose values are URIs with human-readable
+    # labels. Their semantic renderers always win over a profile-supplied
+    # render_as: the label still links to the URI, so rendering the bare
+    # URI (e.g. as an external_link) is strictly worse, and profiles
+    # already stored in existing flexible schemas carry the old setting.
+    SEMANTIC_RENDERERS = {
+      license: :license,
+      rights_statement: :rights_statement
+    }.freeze
+
     # @param [String] field name
     # @param [Hash<Hash>] a nested hash of view options...
     #        {:label=>{"en"=>"Title", "es"=>"Título"}, :html_dl=>true}
@@ -88,6 +98,8 @@ module Hyrax
         )
       end
       view_options[:base_url] = request.base_url if respond_to?(:request) && request.respond_to?(:base_url)
+      semantic_renderer = SEMANTIC_RENDERERS[field_name.to_sym]
+      view_options[:render_as] = semantic_renderer if semantic_renderer
       view_options
     end
 
