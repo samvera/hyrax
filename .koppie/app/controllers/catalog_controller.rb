@@ -42,6 +42,8 @@ class CatalogController < ApplicationController
     config.index.title_field = "title_tesim"
     config.index.display_type_field = "has_model_ssim"
     config.index.thumbnail_field = 'thumbnail_path_ss'
+    config.index.thumbnail_presenter = Hyrax::ThumbnailPresenter # lazy load thumbnails
+    config.show.thumbnail_presenter = Blacklight::ThumbnailPresenter
 
     config.add_results_document_tool(:bookmark, partial: 'bookmark_control', if: :render_bookmarks_control?)
     config.add_results_collection_tool(:sort_widget)
