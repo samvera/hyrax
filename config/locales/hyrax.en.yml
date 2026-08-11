@@ -939,6 +939,9 @@ en:
       linked_record:
         add_new: Add a %{item}
         add_row: Add another %{item}
+        create_again_hint: Press Create again to add as a new record.
+        similar_heading: "Similar records already exist:"
+        use_existing: Use this
       participants:
         label: Participants
         title: Title

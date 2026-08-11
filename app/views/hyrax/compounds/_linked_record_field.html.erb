@@ -23,10 +23,17 @@
   <% record_item_label = t("hyrax.compound_fields.linked_record.item_label.#{source}",
                            default: source.to_s.singularize.humanize.downcase) %>
 
+  <%# data-similar-url (optional): when the source declares a `similar` proc, the
+      JS calls this before an inline create and shows near-matches so a curator
+      doesn't create a duplicate. Built from the QA `linked_record_similar`
+      authority, mirroring the autocomplete URL; a source with no `similar` proc
+      emits no attribute and the JS skips the check. %>
+  <% similar_url = Hyrax::CompoundLinkedRecordResolver.similar?(source) ? "#{Rails.application.routes.url_helpers.qa_path}/search/linked_record_similar/#{source}" : nil %>
   <div class="hyrax-linked-record" data-hyrax-linked-record
        data-source="<%= source %>"
        data-creatable="<%= spec[:creatable] ? 'true' : 'false' %>"
-       data-create-url="<%= Hyrax::Engine.routes.url_helpers.compound_linked_record_path(source: source) %>">
+       data-create-url="<%= Hyrax::Engine.routes.url_helpers.compound_linked_record_path(source: source) %>"
+       <% if similar_url %>data-similar-url="<%= similar_url %>"<% end %>>
     <%# Picker + "add new" trigger on one row, so the add button sits beside the
         search field rather than below it (where the select2 "no results"
         dropdown would cover it). %>
@@ -44,9 +51,11 @@
                                      'autocomplete-url': "#{Rails.application.routes.url_helpers.qa_path}/search/linked_record/#{source}" } %>
       </div>
       <% if creatable %>
-        <%# Shown by JS only when a search returns no results. %>
-        <button type="button" class="btn btn-link btn-sm text-nowrap ml-2 d-none"
-                data-hyrax-linked-record-add hidden>
+        <%# Always available beside the picker so results and create coexist — a
+            curator seeing partial/wrong matches can still create, and the result
+            rows' detail lines do the disambiguation. %>
+        <button type="button" class="btn btn-link btn-sm text-nowrap ml-2"
+                data-hyrax-linked-record-add>
           <span class="fa fa-plus"></span>
           <%= t('hyrax.compound_fields.linked_record.add_new', item: record_item_label, default: 'Add new') %>
         </button>
@@ -121,6 +130,23 @@
                      field: field, input_id: "#{input_id}_new_#{field[:name]}",
                      data_attr: 'create-field' %>
         <% end %>
+      <% end %>
+      <%# Fuzzy "did you mean" panel (populated by JS from data-similar-url when
+          Create is clicked and near-matches exist). Each row offers "Use this" to
+          select an existing record instead of creating a duplicate. Once shown,
+          pressing "Create" again proceeds with the new record (the primary button
+          is the override); editing the name re-checks. Hidden until matches are
+          found; only rendered when the source declares a `similar` proc. %>
+      <% if similar_url %>
+        <div class="hyrax-linked-record-similar alert alert-warning p-2 mt-1 mb-2 d-none"
+             data-hyrax-linked-record-similar hidden>
+          <div class="small font-weight-bold mb-1">
+            <%= t('hyrax.compound_fields.linked_record.similar_heading', default: 'Similar records already exist:') %>
+          </div>
+          <ul class="list-unstyled mb-1" data-hyrax-linked-record-similar-list
+              data-use-label="<%= t('hyrax.compound_fields.linked_record.use_existing', default: 'Use this') %>"></ul>
+          <div class="small text-muted"><%= t('hyrax.compound_fields.linked_record.create_again_hint', default: 'Press Create again to add as a new record.') %></div>
+        </div>
       <% end %>
       <div class="d-flex">
         <button type="button" class="btn btn-primary btn-sm mr-2" data-hyrax-linked-record-create-submit>

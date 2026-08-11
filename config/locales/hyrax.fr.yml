@@ -900,6 +900,13 @@ fr:
         featured_researcher: Chercheur en vedette
         marketing_text: Texte de marketing
       updated: Les blocs de contenu sont mis à jour.
+    compound_fields:
+      linked_record:
+        add_new: "Ajouter un %{item}"
+        add_row: "Ajouter un autre %{item}"
+        create_again_hint: "Cliquez à nouveau sur Créer pour ajouter comme nouvel enregistrement."
+        similar_heading: "Des enregistrements similaires existent déjà :"
+        use_existing: "Utiliser celui-ci"
     controls:
       about: Sur
       contact: Contact
