@@ -22,6 +22,9 @@
       <% # analytics graph will not show unless the page is refreshed. %>
       <%= link_to t('.analytics'), presenter.stats_path, id: 'stats', class: 'btn btn-secondary', data: { turbolinks: false } %>
     <% end %>
+    <% show_actions_for(presenter: presenter).each do |action| %>
+      <%= render "show_action_#{action}", presenter: presenter %>
+    <% end %>
   </div>
 
   <div class="col-sm-6 text-right">
