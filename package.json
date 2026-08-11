@@ -1,4 +1,7 @@
 {
+  "resolutions": {
+    "selenium-webdriver": "4.46.0"
+  },
   "devDependencies": {
     "dotenv": "^16.0.1",
     "jasmine-core": "^3.99",
