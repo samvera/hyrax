@@ -8,7 +8,10 @@
     <% if Hyrax.config.collection_flexible? %>
       <th><%= t("hyrax.dashboard.my.heading.profile_version") %></th>
     <% end %>
-    <th class="sorts-dash"><i id="<%= CatalogController.uploaded_field %>" class="<%= params[:sort] == "#{CatalogController.uploaded_field} desc" ? 'caret' : params[:sort] == "#{CatalogController.uploaded_field} asc" ? 'caret up' : '' %>"></i><%= t("hyrax.dashboard.my.heading.date_uploaded") %></th>
+    <th class="sorts-dash">
+      <%= t("hyrax.dashboard.my.heading.date_uploaded") %>
+      <%= params[:sort] == "#{CatalogController.uploaded_field} desc" ? '(newest first)' : params[:sort] == "#{CatalogController.uploaded_field} asc" ? '(oldest first)' : '' %>
+    </th>
     <th><%= t("hyrax.dashboard.my.heading.visibility") %></th>
     <th><%= t("hyrax.dashboard.my.heading.action") %></th>
   </tr>
