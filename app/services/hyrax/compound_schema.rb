@@ -229,7 +229,21 @@ module Hyrax
         display_mode: display_mode,
         required: compound_required?(config),
         primary: compound_primary?(config),
+        validations: normalize_validations(config['validations']),
         display_label: normalize_display_label(config) }
+    end
+
+    # Rules relating two sub-properties, which `required:` cannot express because it
+    # constrains one at a time. Shape only — an unrecognized `type` is carried through
+    # rather than rejected; see
+    # {Hyrax::FlexibleSchemaValidators::CompoundValidationsValidator}.
+    def normalize_validations(raw)
+      Array.wrap(raw).filter_map do |rule|
+        next unless rule.is_a?(Hash)
+
+        rule = rule.with_indifferent_access
+        { type: rule['type'].to_s, before: rule['before'].to_s, after: rule['after'].to_s }
+      end
     end
 
     # Whether the compound declares `form: { primary: true }` (renders in the
