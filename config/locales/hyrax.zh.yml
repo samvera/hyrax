@@ -904,6 +904,10 @@ zh:
         create_again_hint: "再次点击“创建”以添加为新记录。"
         similar_heading: "已存在相似的记录："
         use_existing: "使用此项"
+      work_or_url:
+        hint: "在上方搜索作品，或在此输入外部网址。"
+        url_placeholder: "https://example.org/…"
+        search_label: "搜索作品"
     controls:
       about: 关于
       contact: 联系

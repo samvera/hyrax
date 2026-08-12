@@ -107,6 +107,19 @@ module Hyrax
     end
 
     ##
+    # The `work_or_url` picker's autocomplete endpoint, carrying the id of the work
+    # being edited so the picker can leave it out of its own results.
+    #
+    # @param exclude_id [String, nil] the current work's id, when known
+    # @return [String]
+    def compound_works_autocomplete_url(exclude_id = nil)
+      base = "#{Rails.application.routes.url_helpers.qa_path}/search/compound_works"
+      return base if exclude_id.blank?
+
+      "#{base}?#{{ exclude_id: exclude_id }.to_query}"
+    end
+
+    ##
     # The pre-selected `[label, value]` option for a `work_or_url` sub-property's
     # select2, or nil when empty. An internal work id resolves to its title; an
     # external URL is shown as-is.
