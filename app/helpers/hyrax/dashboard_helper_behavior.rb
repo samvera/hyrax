@@ -20,11 +20,11 @@ module Hyrax
     def link_to_works(user = current_user)
       state = Blacklight::SearchState.new(params, CatalogController.blacklight_config)
       facet_type = if Hyrax.config.use_valkyrie?
-                     state.add_facet_params('generic_type_si', 'Work')
+                     state.filter('generic_type_si').add('Work').params
                    else
-                     state.add_facet_params('generic_type_sim', 'Work')
+                     state.filter('generic_type_sim').add('Work').params
                    end
-      facet_depositor = state.add_facet_params('depositor_ssim', user.to_s)
+      facet_depositor = state.filter('depositor_ssim').add(user.to_s).params
       state = Hash.new {}
       state["f"] = facet_type["f"].merge(facet_depositor["f"])
       link_to(t("hyrax.dashboard.stats.works"), main_app.search_catalog_path(state))
