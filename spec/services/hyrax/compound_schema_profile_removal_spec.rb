@@ -13,19 +13,20 @@
 # still carries the folded `subproperties:` in its Dry type meta - so the
 # compound keeps resolving.
 #
-# Scalars do NOT show this, which is why the bug reads as compound-specific:
-# `ResourceForm#initialize` prunes any Reform definition absent from
-# `form_definitions_for` at the current schema id, so a removed scalar stops
-# rendering even while a stale key lingers in the Dry schema. Compounds never
-# reach that prune - they render via `#compound_terms` (i.e. CompoundSchema),
-# not through Reform's displayed definitions. The scalar example below is the
-# control that pins this distinction.
+# An ordinary single-value property does NOT show this, which is why the bug
+# reads as compound-specific: `ResourceForm#initialize` prunes any Reform
+# definition absent from `form_definitions_for` at the current schema id, so a
+# removed property like `abstract` stops rendering even while a stale key
+# lingers in the Dry schema. Compounds never reach that prune - they render via
+# `#compound_terms` (i.e. CompoundSchema), not through Reform's displayed
+# definitions. The `abstract` example below is the control that pins this
+# distinction.
 RSpec.describe 'removing a compound from the m3 profile' do
   let(:base_profile) { YAML.safe_load_file(Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'm3_profile.yaml')) }
 
   # The boot-time profile: declares the `participants` compound (a `type: hash`
   # parent with two members naming it via `available_on: { properties: }`) plus a
-  # plain scalar to act as the control.
+  # ordinary single-value property (`abstract`) to act as the control.
   let(:profile_with_compound) do
     base_profile.deep_merge(YAML.safe_load(<<-YAML))
       classes:
@@ -63,7 +64,7 @@ RSpec.describe 'removing a compound from the m3 profile' do
   end
 
   # The replacement profile: same classes, but the compound parent, both of its
-  # subproperties, and the control scalar are all gone.
+  # subproperties, and the control property are all gone.
   let(:profile_without_compound) do
     base_profile.deep_merge(YAML.safe_load(<<-YAML))
       classes:
@@ -140,11 +141,11 @@ RSpec.describe 'removing a compound from the m3 profile' do
       expect(form.secondary_compound_terms).not_to include(:participants)
     end
 
-    # The control: a removed SCALAR already disappears from the form, via
-    # ResourceForm's prune of definitions absent from the current profile. If
-    # this example ever fails alongside the compound ones, the cause is broader
-    # than CompoundSchema's class-schema fallback.
-    it 'does not offer a removed scalar as a form term' do
+    # The control: an ordinary single-value property already disappears from the
+    # form, via ResourceForm's prune of definitions absent from the current
+    # profile. If this example ever fails alongside the compound ones, the cause
+    # is broader than how CompoundSchema resolves its sources.
+    it 'does not offer a removed single-value property as a form term' do
       expect(form.primary_terms + form.secondary_terms).not_to include(:abstract)
     end
   end

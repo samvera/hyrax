@@ -64,28 +64,55 @@ module Hyrax
     end
     private_class_method :flexible_attributes_for
 
-    # For a class, its own schema. For an instance, both the singleton schema
-    # (flexible mode) and the class schema (non-flexible mode), so {.for} works
-    # in both.
+    # A flexible instance resolves compounds from the loader's attribute map at
+    # the current profile version, NOT from its Dry schemas. Neither Dry schema
+    # can reflect a compound being removed from the profile:
+    # `Hyrax::Flexibility.attributes` merges attributes in with no way to express
+    # a deletion, and builds the singleton schema from the class schema
+    # (`schema_location = self.superclass`), so a compound present at class-load
+    # survives in both — still carrying its folded `subproperties:` — for the
+    # life of the process.
     #
-    # Order is load-bearing: the singleton schema must come first so it wins
-    # {#build_definitions}' first-source-per-name dedup. The class schema is
-    # frozen at class-load and not refreshed when the active FlexibleSchema
-    # version changes, so a flexible instance's singleton schema (rebuilt at the
-    # current version) is the authoritative source for a freshly-uploaded
-    # profile. In non-flexible mode the singleton has no extra schema, so order
-    # is moot.
+    # Falling back to those schemas is still right for a class, and for when the
+    # loader cannot answer (non-flexible installs, early boot, a missing profile
+    # row). The singleton comes first there so it wins {#build_definitions}'
+    # first-source-per-name dedup; in non-flexible mode it carries no extra
+    # schema, so order is moot.
     def self.schema_sources_for(resource)
       if resource.is_a?(Class)
-        [(resource.schema if resource.respond_to?(:schema))]
-      else
-        sources = []
-        sources << resource.singleton_class.schema if resource.respond_to?(:singleton_class) && resource.singleton_class.respond_to?(:schema)
-        sources << resource.class.schema if resource.class.respond_to?(:schema)
-        sources
-      end.compact
+        return [(resource.schema if resource.respond_to?(:schema))].compact
+      end
+
+      current = current_flexible_attributes_for(resource)
+      return [current] if current.present?
+
+      dry_schema_sources_for(resource)
     end
     private_class_method :schema_sources_for
+
+    # Honors the resource's own contexts so a context-filtered compound cannot
+    # leak in from another context. Nil unless the resource is flexible and the
+    # loader can answer.
+    def self.current_flexible_attributes_for(resource)
+      return nil unless resource.respond_to?(:flexible?) && resource.flexible?
+
+      loader = Hyrax::Schema.m3_schema_loader
+      loader.attributes_for(schema: resource.class.name,
+                            version: Hyrax::FlexibleSchema.current_schema_id,
+                            contexts: (resource.contexts if resource.respond_to?(:contexts)))
+    rescue StandardError => e
+      Hyrax.logger.debug("CompoundSchema: could not read the current profile: #{e.message}")
+      nil
+    end
+    private_class_method :current_flexible_attributes_for
+
+    def self.dry_schema_sources_for(resource)
+      sources = []
+      sources << resource.singleton_class.schema if resource.respond_to?(:singleton_class) && resource.singleton_class.respond_to?(:schema)
+      sources << resource.class.schema if resource.class.respond_to?(:schema)
+      sources.compact
+    end
+    private_class_method :dry_schema_sources_for
 
     attr_reader :schema_sources
 
