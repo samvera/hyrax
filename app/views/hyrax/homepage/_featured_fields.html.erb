@@ -3,7 +3,7 @@
     <span class="sr-only"><%= t('hyrax.homepage.featured_works.document.title_label') %></span>
     <h3>
       <%= link_to [main_app, featured] do %>
-        <%= render_thumbnail_tag(featured, {width: 90, alt: thumbnail_alt_text_for(featured.solr_document) }, {suppress_link: true})%><%= featured.title.first %>
+        <%= document_presenter(featured).thumbnail.thumbnail_tag({width: 90, alt: thumbnail_alt_text_for(featured.solr_document) }, {suppress_link: true})%><%= featured.title.first %>
       <% end %>
     </h3>
   </div>
