@@ -3,15 +3,17 @@
 # Removing a compound from the m3 profile must remove it from the form, without
 # an app restart.
 #
-# The failure needs a specific boot order: the compound has to be present in the
-# profile when the model class loads. `acts_as_flexible_resource` then bakes the
-# compound parent into the CLASS schema, where it stays for the life of the
-# process - `Hyrax::Flexibility.attributes` merges attributes in and has no way
-# to express a removal. A later profile that omits the compound produces an
-# attribute map without it, but `Hyrax::CompoundSchema.schema_sources_for`
-# consults `resource.class.schema` as a fallback source, and that stale entry
-# still carries the folded `subproperties:` in its Dry type meta - so the
-# compound keeps resolving.
+# The failure needs a specific boot order, which is why `before` builds the
+# resource against a profile that HAS the compound before swapping in one that
+# does not: the compound must be present when the model class loads.
+# `Hyrax::Flexibility.attributes` then leaves it in the class schema for the life
+# of the process (it merges attributes in with no way to express a removal), and
+# in the singleton schema too, since that is built from the class schema. Both
+# still carry the folded `subproperties:`, so resolving compounds from either one
+# outlives the profile that declared them.
+#
+# Starting from a profile with no compound, then adding and removing one, does
+# NOT reproduce it - there is no stale class-schema entry to fall back to.
 #
 # An ordinary single-value property does NOT show this, which is why the bug
 # reads as compound-specific: `ResourceForm#initialize` prunes any Reform

@@ -12,9 +12,10 @@ module Hyrax
   #
   # The schema loaders exclude subproperties from a resource's real attributes
   # (so they get no accessor of their own) but fold each compound's members into
-  # the parent's Dry type `meta` (`subproperties:`). This class reads that meta —
-  # off the resource's own schema — so resolution is identical in both flex
-  # modes and needs no knowledge of which schema file the resource used.
+  # the parent's Dry type `meta` (`subproperties:`). This class reads that meta,
+  # in the same shape whichever source supplies it, so it needs no knowledge of
+  # which schema file the resource used. Which source is authoritative does
+  # differ — see {.schema_sources_for}.
   class CompoundSchema # rubocop:disable Metrics/ClassLength
     ##
     # Build a CompoundSchema for a resource instance or class.
@@ -64,38 +65,53 @@ module Hyrax
     end
     private_class_method :flexible_attributes_for
 
-    # A flexible instance resolves compounds from the loader's attribute map at
-    # the current profile version, NOT from its Dry schemas. Neither Dry schema
-    # can reflect a compound being removed from the profile:
+    # When the profile governs the resource's class it is the only source read,
+    # because neither Dry schema can reflect a compound being REMOVED from it:
     # `Hyrax::Flexibility.attributes` merges attributes in with no way to express
     # a deletion, and builds the singleton schema from the class schema
     # (`schema_location = self.superclass`), so a compound present at class-load
-    # survives in both — still carrying its folded `subproperties:` — for the
-    # life of the process.
+    # survives in both — still carrying its folded `subproperties:` — for the life
+    # of the process.
     #
-    # Falling back to those schemas is still right for a class, and for when the
-    # loader cannot answer (non-flexible installs, early boot, a missing profile
-    # row). The singleton comes first there so it wins {#build_definitions}'
-    # first-source-per-name dedup; in non-flexible mode it carries no extra
-    # schema, so order is moot.
+    # Otherwise the Dry schemas are read: a class the profile does not govern can
+    # only have declared its compounds in the class body, as a plain `attribute`
+    # call. The loader cannot stand in for those — asked about a class it does not
+    # know, it answers with a fallback schema rather than nothing, which would
+    # silently drop the compound.
+    #
+    # In that fallback the singleton schema comes first, so it wins
+    # {#build_definitions}' first-source-per-name dedup; in non-flexible mode it
+    # carries no extra schema, so the order is moot.
     def self.schema_sources_for(resource)
       if resource.is_a?(Class)
         return [(resource.schema if resource.respond_to?(:schema))].compact
       end
 
-      current = current_flexible_attributes_for(resource)
+      current = current_flexible_attributes_for(resource) if profile_governs?(resource)
       return [current] if current.present?
 
       dry_schema_sources_for(resource)
     end
     private_class_method :schema_sources_for
 
-    # Honors the resource's own contexts so a context-filtered compound cannot
-    # leak in from another context. Nil unless the resource is flexible and the
-    # loader can answer.
-    def self.current_flexible_attributes_for(resource)
-      return nil unless resource.respond_to?(:flexible?) && resource.flexible?
+    # Whether the current profile declares this resource's class. Asked from the
+    # class list rather than by requesting attributes, which answers for an
+    # unknown class too.
+    def self.profile_governs?(resource)
+      return false unless resource.respond_to?(:flexible?) && resource.flexible?
 
+      classes = Hyrax::FlexibleSchema.current_version&.dig('classes')
+      classes.is_a?(::Hash) && classes.key?(resource.class.name)
+    rescue StandardError => e
+      Hyrax.logger.debug("CompoundSchema: could not read the profile's class list: #{e.message}")
+      false
+    end
+    private_class_method :profile_governs?
+
+    # Honors the resource's own contexts so a context-filtered compound cannot
+    # leak in from another context. Nil when the loader cannot answer. Only
+    # called for a resource {.profile_governs?} has already vetted.
+    def self.current_flexible_attributes_for(resource)
       loader = Hyrax::Schema.m3_schema_loader
       loader.attributes_for(schema: resource.class.name,
                             version: Hyrax::FlexibleSchema.current_schema_id,
