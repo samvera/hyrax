@@ -151,4 +151,22 @@ RSpec.describe 'removing a compound from the m3 profile' do
       expect(form.primary_terms + form.secondary_terms).not_to include(:abstract)
     end
   end
+
+  # An empty attribute map is a real answer, not a failure to answer: the profile
+  # governs the class and yields nothing for it (every field filtered out by the
+  # resource's contexts). Treating it as "no answer" would fall back to the Dry
+  # schemas and resurrect the very compound the profile dropped.
+  describe 'when the profile governs the class but yields no attributes' do
+    # `Hyrax::Schema.m3_schema_loader` builds a new loader per call, so pin one
+    # instance and empty its answer.
+    let(:empty_loader) do
+      Hyrax::M3SchemaLoader.new.tap { |loader| allow(loader).to receive(:attributes_for).and_return({}) }
+    end
+
+    before { allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(empty_loader) }
+
+    it 'does not fall back to the stale schemas' do
+      expect(Hyrax::CompoundSchema.for(work).compound_names).not_to include(:participants)
+    end
+  end
 end

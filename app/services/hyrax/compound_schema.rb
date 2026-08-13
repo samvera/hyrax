@@ -87,8 +87,11 @@ module Hyrax
         return [(resource.schema if resource.respond_to?(:schema))].compact
       end
 
+      # NOT `present?`: an empty map is a real answer (the profile governs the
+      # class and yields nothing for it), and falling back on it would resurrect
+      # the compounds the profile dropped. Only nil means "could not answer".
       current = current_flexible_attributes_for(resource) if profile_governs?(resource)
-      return [current] if current.present?
+      return [current] unless current.nil?
 
       dry_schema_sources_for(resource)
     end
