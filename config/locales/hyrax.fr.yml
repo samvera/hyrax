@@ -907,6 +907,10 @@ fr:
         create_again_hint: "Cliquez à nouveau sur Créer pour ajouter comme nouvel enregistrement."
         similar_heading: "Des enregistrements similaires existent déjà :"
         use_existing: "Utiliser celui-ci"
+      work_or_url:
+        hint: "Recherchez une œuvre ci-dessus ou saisissez ici une URL externe."
+        url_placeholder: "https://example.org/…"
+        search_label: "Rechercher une œuvre"
     controls:
       about: Sur
       contact: Contact

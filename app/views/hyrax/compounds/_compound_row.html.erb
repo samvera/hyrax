@@ -51,15 +51,11 @@
                                 id: input_id,
                                 class: 'form-control form-control-sm' %>
             <% when 'work_or_url' %>
-              <%# select2 v3 (bound in compound_metadata.js) binds to this
-                  hidden input; `data-label` pre-seeds the displayed text. %>
-              <% current_option = compound_work_or_url_option(value) %>
-              <%= hidden_field_tag input_name, value,
-                                   id: input_id,
-                                   class: 'form-control form-control-sm',
-                                   data: { 'hyrax-compound-work-input': true,
-                                           'label': current_option&.first,
-                                           'autocomplete-url': "#{Rails.application.routes.url_helpers.qa_path}/search/compound_works" } %>
+              <%# The work being edited is passed so the picker can leave it out of
+                  its own results: a work related to itself is meaningless. %>
+              <%= render 'hyrax/compounds/work_or_url_field',
+                         input_id: input_id, input_name: input_name, value: value,
+                         exclude_id: (f.object.id if f.object.respond_to?(:id)) %>
             <% when 'linked_record' %>
               <%# A reference to a row in a database table: a select2 picker over
                   the source's QA authority, plus an optional inline create form.

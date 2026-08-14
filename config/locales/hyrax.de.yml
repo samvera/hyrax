@@ -900,6 +900,10 @@ de:
         create_again_hint: "Erneut auf „Erstellen“ klicken, um als neuen Datensatz hinzuzufügen."
         similar_heading: "Ähnliche Datensätze existieren bereits:"
         use_existing: "Diesen verwenden"
+      work_or_url:
+        hint: "Oben nach einem Werk suchen oder hier eine externe URL eingeben."
+        url_placeholder: "https://example.org/…"
+        search_label: "Nach einem Werk suchen"
     controls:
       about: Impressum
       contact: Kontakt
