@@ -121,6 +121,15 @@ externalPostgresql: {}
 #  database:
 #  port:
 
+# ActiveRecord connection pool size, written into DATABASE_URL's ?pool=
+# param. Size this to the app's own thread concurrency (e.g. Puma's
+# RAILS_MAX_THREADS, or a job runner's own thread count) — a pool smaller
+# than the thread count causes threads to queue for a connection even
+# when the database itself has headroom, and a pool much larger than
+# needed can exhaust a shared database's max_connections faster than
+# expected across multiple replicas/consumers.
+dbPool: 5
+
 embargoRelease:
   enabled: true
   schedule: "0 0 * * *"
