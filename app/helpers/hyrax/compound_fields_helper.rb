@@ -133,6 +133,28 @@ module Hyrax
       [title, value.to_s]
     end
 
+    ##
+    # What the `work_or_url` field partial renders from.
+    #
+    # `work_selected` is true only for a value that resolves to an indexed work,
+    # which {#compound_work_or_url_option} signals by labeling it with a title
+    # that differs from the value. Anything unresolved — a URL, a scheme-less
+    # "www.example.org/x", an id whose work is gone — labels as itself and leaves
+    # the URL input visible. Testing "not a URL" instead would treat a scheme-less
+    # URL as a work, which it is not.
+    #
+    # @param value [String, nil] the stored sub-property value
+    # @param exclude_id [String, nil] the work being edited, kept out of the
+    #   picker's own results
+    # @return [Hash{Symbol => Object}] `{ option:, work_selected:, autocomplete_url: }`
+    def compound_work_or_url_state(value, exclude_id: nil)
+      option = compound_work_or_url_option(value)
+
+      { option: option,
+        work_selected: option.present? && option.first != value.to_s,
+        autocomplete_url: compound_works_autocomplete_url(exclude_id.presence) }
+    end
+
     # The pre-selected `[label, value]` option for a `linked_record`
     # sub-property's select2, or nil when empty. The stored id resolves to its
     # label via the registered `source`; an unresolvable id falls back to the id
