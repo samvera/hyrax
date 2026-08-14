@@ -943,6 +943,10 @@ en:
         create_again_hint: Press Create again to add as a new record.
         similar_heading: "Similar records already exist:"
         use_existing: Use this
+      work_or_url:
+        hint: Search for a work above, or enter an external URL here.
+        search_label: Search for a work
+        url_placeholder: https://example.org/…
       participants:
         label: Participants
         title: Title

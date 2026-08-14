@@ -137,7 +137,7 @@ textarea). Supported `type:` values:
 | `string`     | text input          | The default when `type:` is omitted. |
 | `datepicker` | native date picker (`<input type="date">`) | HTML5 date input. **Displays** in the user's locale (dd/mm/yyyy, mm/dd/yyyy) but always **stores** ISO-8601 `YYYY-MM-DD`, so the value is locale-independent. Stored as a plain string, **not** a `date`/`_dtsi` Solr field. |
 | `url`        | url input → auto-linked on show | The stored value is rendered as a clickable `<a href>` on show pages (matching the scalar `render_as: external_link` behavior). |
-| `work_or_url` | select2 typeahead → linked on show | Searches internal works (via the `compound_works` QA authority, backed by `Hyrax::CompoundWorkPickerBuilder`) **or** accepts a typed external URL. The stored value is a work id or a URL; on show, a work id links to the work's show page with its title (resolved by `Hyrax::CompoundWorkResolver`), a URL is auto-linked. |
+| `work_or_url` | text input + select2 search → linked on show | A visible field the user types a URL into directly, beside a select2 picker that searches internal works (via the `compound_works` QA authority, backed by `Hyrax::CompoundWorkPickerBuilder`) and writes the chosen id into that field. The stored value is a work id or a URL; on show, a work id links to the work's show page with its title (resolved by `Hyrax::CompoundWorkResolver`), a URL is auto-linked. |
 | `linked_record` | select2 typeahead → linked on show | A reference to a row in a database table (a person, organization, funder, place, …). The stored value is the row id; the picker searches that table and, optionally, lets a cataloger add a new record inline. On show, the id links to the record using the resolved label. The table and its procs are registered by the host application — see [`linked_record` sub-properties](#linked_record-sub-properties) below. |
 | `controlled` | `<select>` dropdown (optionally a select2 typeahead / multi-select) | Options come from either an inline `values:` list or a QA local authority named by `authority:` (see below). The row's stored value is preserved even if it is no longer offered, matching the `include_current_value` convention of the ordinary controlled-field partials. Two per-member `form:` opt-ins refine the input — see [Typeahead and multi-select](#typeahead-and-multi-select-for-controlled-members) below. |
 
@@ -206,7 +206,16 @@ indexed query field **or** a partial/prefix title (so "jour" matches "Journal
 of …"), restricted to works. It subclasses `Hyrax::SearchBuilder`, so the
 catalog's read-permission filtering is retained — a user only sees works they
 can read. The picker is mounted as the `compound_works` QA authority at
-`/authorities/search/compound_works`.
+`/authorities/search/compound_works`. It also matches an id exactly, so a pasted
+work id resolves to that work and shows its title; and it leaves out the work being
+edited, since relating a work to itself is meaningless.
+
+The picker carries no `name` and never submits; selecting a work copies its id
+into the visible field, which is the control the form posts. So a typed URL needs
+no dropdown interaction at all, and the field stays editable and submittable
+without JavaScript — with select2 absent it degrades to a plain text input. This
+replaced an earlier hidden input that only select2 could write, where a typed URL
+was silently discarded on blur (samvera/hyrax#7572).
 
 `geocode` (a Geonames/coordinate lookup) is a planned additional sub-property
 type; the form's row partial has an explicit extension point for it. `geocode`
@@ -543,9 +552,8 @@ demonstrating the supported sub-property types:
   `identifier_type` (inline `values:`).
 - **`compound_rights`** — controlled `rights_statement` and `license` backed by
   *existing* QA local authorities (`authority:`), plus an open `rights_notes`.
-- **`relationships`** — a `work_or_url` `related_item` (search an internal work
-  or enter an external URL; linked on show) plus a controlled
-  `relationship_type`.
+- **`relationships`** — a `work_or_url` `item` (search an internal work or type an
+  external URL; linked on show) plus a controlled `relationship_type`.
 
 They are declared in `config/metadata/compound_metadata.yaml` (non-flexible
 mode) and in the default m3 profile (`config/metadata_profiles/m3_profile.yaml`,
