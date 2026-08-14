@@ -122,13 +122,24 @@ externalPostgresql: {}
 #  port:
 
 # ActiveRecord connection pool size, written into DATABASE_URL's ?pool=
-# param. Size this to the app's own thread concurrency (e.g. Puma's
-# RAILS_MAX_THREADS, or a job runner's own thread count) — a pool smaller
-# than the thread count causes threads to queue for a connection even
-# when the database itself has headroom, and a pool much larger than
-# needed can exhaust a shared database's max_connections faster than
-# expected across multiple replicas/consumers.
+# param when dbPoolInUrl is true. Size this to the app's own thread
+# concurrency (e.g. Puma's RAILS_MAX_THREADS, or a job runner's own
+# thread count) — a pool smaller than the thread count causes threads to
+# queue for a connection even when the database itself has headroom, and
+# a pool much larger than needed can exhaust a shared database's
+# max_connections faster than expected across multiple replicas/consumers.
 dbPool: 5
+
+# Whether DATABASE_URL includes a ?pool= param at all. Defaults to true
+# to preserve existing behavior on upgrade. DATABASE_URL's ?pool= (when
+# present) is treated by ActiveRecord as authoritative, silently
+# overriding whatever pool: a consuming app's own database.yml computes
+# (e.g. from its own RAILS_MAX_THREADS) — which is surprising if you
+# don't know to look for it. If your app already sizes its own pool via
+# database.yml and you want that to be the single source of truth, set
+# this false so DATABASE_URL omits the param entirely and your app's own
+# config takes over unmodified. dbPool is ignored when this is false.
+dbPoolInUrl: true
 
 embargoRelease:
   enabled: true
