@@ -6,7 +6,7 @@
         </legend>
         <div class="form-group">
           <span class="form-text"><%= t("hyrax.base.form_thumbnail.help_html") %></span>
-          <%= f.select :thumbnail_id, form_file_set_select_for(parent: @form), {}, { class: 'form-control' } %>
+          <%= f.select :thumbnail_id, form_file_set_select_for(parent: @form), { include_blank: true }, { class: 'form-control' } %>
         </div>
       </fieldset>
     </div>
