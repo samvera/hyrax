@@ -74,11 +74,12 @@ module Hyrax
     # @return [String] the label for the authority entry, falling back to the
     #   id itself when no matching term is found.
     #
-    # @yield when no 'term' value is present for the id
+    # @yield when no 'term' or 'label' value is present for the id
     # @yieldreturn [String] an alternate label to return
     def label(id, &block)
       block ||= ->(_key) { id }
-      authority.find(id).fetch('term', &block)
+      result = authority.find(id)
+      result.fetch('term') { result.fetch('label', &block) }
     end
 
     # @return [Boolean] whether the id is an active entry. Returns false for
