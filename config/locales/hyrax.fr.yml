@@ -1456,6 +1456,7 @@ fr:
           keyword_label: Mots clés
           keyword_missing: aucun mot-clé spécifié
           title_label: Titre
+        confirm_unfeature: Retirer des travaux en vedette ?
         drag: Traîne
         no_works: Aucun travail n'a été présenté
         tab_label: Travaux en vedette

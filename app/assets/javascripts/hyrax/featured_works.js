@@ -48,6 +48,9 @@ Blacklight.onLoad(function() {
   $('a[data-behavior="unfeature"]').on('click', function(evt) {
     evt.preventDefault();
     anchor = $(this);
+    var confirmText = anchor.data('confirmText');
+    if (confirmText && !confirm(confirmText)) { return; }
+
     $.ajax({
        url: anchor.attr('href'),
        type: "post",

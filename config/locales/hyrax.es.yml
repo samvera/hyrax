@@ -1458,6 +1458,7 @@ es:
           keyword_label: Palabras clave
           keyword_missing: no palabras clave especificadas
           title_label: Título
+        confirm_unfeature: ¿Eliminar de los trabajos destacados?
         drag: Arrastrar
         no_works: No hay trabajos destacados
         tab_label: Trabajos destacados
