@@ -18,12 +18,25 @@ ol#featured_works {
   h3 {
     font-size: 1.1em;
     margin-top: 0;
+
+    &.float-right {
+      padding-left: 1em;
+
+      a {
+        color: $danger;
+      }
+    }
   }
 
   img {
     width: 90px;
     float: left;
     padding-right: 1em;
+  }
+
+  .featured-item-title-text {
+    display: block;
+    overflow: hidden;
   }
 
   .main {
