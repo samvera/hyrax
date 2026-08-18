@@ -2,6 +2,8 @@ ol#featured_works {
   list-style: none;
   margin-left: 0;
   padding-left: 0;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
 }
 
 /* don't nest .featured-item in the ol, because it's detached from the list when being dragged */
@@ -63,4 +65,8 @@ ol#featured_works {
   top: 13px;
   bottom: 13px;
   height: auto;
+}
+
+.dd-dragel > .featured-item > .dd3-content {
+  margin: 5px 0;
 }
