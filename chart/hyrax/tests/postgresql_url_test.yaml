@@ -1,0 +1,65 @@
+suite: DATABASE_URL pool rendering (secrets.yaml / hyrax.postgresql.url)
+templates:
+  - templates/secrets.yaml
+tests:
+  - it: defaults to pool=5 in the URL
+    asserts:
+      - matchRegex:
+          path: data.DATABASE_URL
+          pattern: \?pool=5$
+          decodeBase64: true
+
+  - it: postgresql.pool overrides the pool size
+    set:
+      postgresql.pool: 20
+    asserts:
+      - matchRegex:
+          path: data.DATABASE_URL
+          pattern: \?pool=20$
+          decodeBase64: true
+
+  - it: postgresql.pool of 0 is a valid pool size, not "unset"
+    set:
+      postgresql.pool: 0
+    asserts:
+      - matchRegex:
+          path: data.DATABASE_URL
+          pattern: \?pool=0$
+          decodeBase64: true
+
+  - it: blank postgresql.pool omits the param entirely
+    set:
+      postgresql.pool: ""
+    asserts:
+      - notMatchRegex:
+          path: data.DATABASE_URL
+          pattern: pool=
+          decodeBase64: true
+
+  - it: non-numeric postgresql.pool omits the param entirely
+    set:
+      postgresql.pool: "-"
+    asserts:
+      - notMatchRegex:
+          path: data.DATABASE_URL
+          pattern: pool=
+          decodeBase64: true
+
+  - it: null postgresql.pool omits the param entirely
+    set:
+      postgresql.pool: null
+    asserts:
+      - notMatchRegex:
+          path: data.DATABASE_URL
+          pattern: pool=
+          decodeBase64: true
+
+  - it: applies to externalPostgresql deployments too
+    set:
+      postgresql.enabled: false
+      externalPostgresql.host: dbhost
+    asserts:
+      - matchRegex:
+          path: data.DATABASE_URL
+          pattern: \?pool=5$
+          decodeBase64: true

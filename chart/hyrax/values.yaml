@@ -269,10 +269,9 @@ minio:
 
 postgresql:
   enabled: true
-  # ActiveRecord pool size, written into DATABASE_URL's ?pool= (ignored if poolInUrl is false). Applies to externalPostgresql too.
+  # ActiveRecord pool size in DATABASE_URL's ?pool= (also applies to externalPostgresql).
+  # Blank/non-numeric omits it, letting database.yml's pool: win instead.
   pool: 5
-  # DATABASE_URL's ?pool= overrides a consuming app's own database.yml. Set false to let that be authoritative instead.
-  poolInUrl: true
   image:
     repository: bitnamilegacy/postgresql
     tag: 12.11.0-debian-11-r12
