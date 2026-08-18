@@ -69,5 +69,23 @@ RSpec.describe 'DATABASE_URL vs database.yml pool precedence' do
         expect(resolved_pool_size).to eq(13)
       end
     end
+
+    context 'and DATABASE_URL is also set' do
+      before do
+        allow(ENV).to receive(:[]).with('DATABASE_URL').and_return('definitely-not-a-real-adapter://envhost/envdb?pool=77')
+      end
+      let(:config_hash) do
+        { env_name => { 'adapter' => 'definitely-not-a-real-adapter', 'database' => 'db', 'pool' => 13, 'url' => 'a-different-adapter://yamlhost/yamldb?pool=55' } }
+      end
+
+      it "uses database.yml's url:, ignoring DATABASE_URL entirely" do
+        configurations = ActiveRecord::DatabaseConfigurations.new(config_hash)
+        db_config = configurations.configs_for(env_name: env_name, name: 'primary')
+
+        expect(db_config.pool).to eq(55)
+        expect(db_config.host).to eq('yamlhost')
+        expect(db_config.database).to eq('yamldb')
+      end
+    end
   end
 end
