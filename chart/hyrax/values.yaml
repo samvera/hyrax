@@ -269,6 +269,9 @@ minio:
 
 postgresql:
   enabled: true
+  # ActiveRecord pool size in DATABASE_URL's ?pool= (also applies to externalPostgresql).
+  # Blank/non-numeric omits it, letting database.yml's pool: win instead.
+  pool: 5
   image:
     repository: bitnamilegacy/postgresql
     tag: 12.11.0-debian-11-r12

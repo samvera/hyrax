@@ -79,8 +79,8 @@ RSpec.describe Hyrax::WorkFormHelper do
       let(:form) { Valkyrie::ChangeSet.new(work) }
       let(:work) { FactoryBot.build(:hyrax_work) }
 
-      it 'gives an empty hash' do
-        expect(form_file_set_select_for(parent: form)).to eq({})
+      it 'gives no options' do
+        expect(form_file_set_select_for(parent: form)).to be_empty
       end
     end
 
@@ -88,8 +88,8 @@ RSpec.describe Hyrax::WorkFormHelper do
       let(:form) { Hyrax::Forms::ResourceForm.for(resource: work) }
       let(:work) { FactoryBot.build(:hyrax_work) }
 
-      it 'gives an empty hash' do
-        expect(form_file_set_select_for(parent: form)).to eq({})
+      it 'gives no options' do
+        expect(form_file_set_select_for(parent: form)).to be_empty
       end
 
       context 'with file_set members', index_adapter: :solr_index, valkyrie_adapter: :test_adapter do
@@ -102,10 +102,10 @@ RSpec.describe Hyrax::WorkFormHelper do
 
         before { file_sets.each { |fs| Hyrax.index_adapter.save(resource: fs) } }
 
-        it 'gives labels => ids' do
+        it 'gives label/id pairs' do
           expect(form_file_set_select_for(parent: form))
-            .to include('moominpapa.jpg' => an_instance_of(String),
-                        'snorkmaiden.jpg' => an_instance_of(String))
+            .to include(['moominpapa.jpg', an_instance_of(String)],
+                        ['snorkmaiden.jpg', an_instance_of(String)])
         end
 
         context 'and work members' do
@@ -113,9 +113,46 @@ RSpec.describe Hyrax::WorkFormHelper do
           let(:member_ids) { file_sets.map(&:id) + [member_work.id] }
           let(:member_work) { FactoryBot.build(:hyrax_work) }
 
-          it 'gives labels => ids for file_sets only' do
-            expect(form_file_set_select_for(parent: form).values)
+          it 'gives label/id pairs for file_sets only' do
+            expect(form_file_set_select_for(parent: form).map(&:last))
               .not_to include member_work.id.to_s
+          end
+
+          context 'and the child works have file sets' do
+            let(:member_work) do
+              FactoryBot.valkyrie_create(:hyrax_work, title: ['Child Work'], member_ids: [child_file_set.id])
+            end
+            let(:child_file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, title: 'moomintroll.jpg') }
+
+            before do
+              Hyrax.index_adapter.save(resource: child_file_set)
+              Hyrax.index_adapter.save(resource: member_work)
+            end
+
+            it 'includes file sets from child works, labels qualified by the owning work' do
+              expect(form_file_set_select_for(parent: form))
+                .to include(['moominpapa.jpg', an_instance_of(String)],
+                            ['moomintroll.jpg (Child Work)', child_file_set.id.to_s])
+            end
+
+            context 'and membership contains a cycle' do
+              let(:work) { FactoryBot.valkyrie_create(:hyrax_work, member_ids: member_ids) }
+              let(:member_work) do
+                FactoryBot.valkyrie_create(:hyrax_work, title: ['Child Work'], member_ids: [child_file_set.id])
+              end
+
+              before do
+                member_work.member_ids += [work.id]
+                Hyrax.persister.save(resource: member_work)
+                Hyrax.index_adapter.save(resource: member_work)
+                Hyrax.index_adapter.save(resource: work)
+              end
+
+              it 'terminates and still lists the descendant file sets' do
+                expect(form_file_set_select_for(parent: form))
+                  .to include(['moomintroll.jpg (Child Work)', child_file_set.id.to_s])
+              end
+            end
           end
         end
       end
