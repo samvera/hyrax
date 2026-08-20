@@ -84,21 +84,31 @@ module Hyrax
     end
 
     ##
-    # Constructs a hash for a form `select`.
+    # Constructs options for a form `select`.
     #
     # @param form [Object]
     #
-    # @return [Array<Hash{String => String}>] a map from file set labels to ids for
-    #   the parent object
+    # @return [Array<Array(String, String)>] label/id pairs for the work's own
+    #   file sets and all descendant works' file sets (legacy forms return their
+    #   own label => id Hash via #select_files)
     def form_file_set_select_for(parent:)
       return parent.select_files if parent.respond_to?(:select_files)
       return {} unless parent.respond_to?(:member_ids)
 
-      file_sets =
-        Hyrax::PcdmMemberPresenterFactory.new(parent, nil).file_set_presenters
+      @form_file_set_select_for ||= begin
+        factory = Hyrax::PcdmMemberPresenterFactory.new(parent, nil)
 
-      file_sets.each_with_object({}) do |presenter, hash|
-        hash[presenter.title_or_label] = presenter.id
+        factory.file_set_presenters.map { |fsp| [fsp.title_or_label, fsp.id] } +
+          descendant_file_set_options(factory.work_presenters)
+      end
+    end
+
+    def descendant_file_set_options(work_presenters, seen: Set.new)
+      work_presenters.flat_map do |presenter|
+        next [] unless seen.add?(presenter.id.to_s)
+
+        presenter.file_set_presenters.map { |fsp| ["#{fsp.title_or_label} (#{presenter})", fsp.id] } +
+          descendant_file_set_options(presenter.work_presenters, seen: seen)
       end
     end
   end
