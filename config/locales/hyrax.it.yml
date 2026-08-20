@@ -1455,6 +1455,7 @@ it:
           keyword_label: parole
           keyword_missing: nessuna parola chiave specificata
           title_label: Titolo
+        confirm_unfeature: Rimuovere dalle opere in primo piano?
         drag: Trascinare
         no_works: Nessun lavoro è stato descritto
         tab_label: Opere in primo piano

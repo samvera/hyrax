@@ -1448,6 +1448,7 @@ pt-BR:
           keyword_label: Palavras-chave
           keyword_missing: sem palavras-chave especificadas
           title_label: Título
+        confirm_unfeature: Remover das obras em destaque?
         drag: Arrastar
         no_works: Nenhuma obra foi destacada
         tab_label: Obras em destaque

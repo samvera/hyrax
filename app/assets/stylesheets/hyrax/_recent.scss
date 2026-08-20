@@ -21,6 +21,11 @@
     padding-right: 1em;
   }
 
+  .recent-item-title-text {
+    display: block;
+    overflow: hidden;
+  }
+
   .recent-label {
     color: $gray;
     font-weight: bold;
@@ -28,5 +33,6 @@
 
   .recent-field {
     padding-left: 90px;
+    margin-bottom: 0;
   }
 }

@@ -1449,6 +1449,7 @@ de:
           keyword_label: Schlüsselwörter
           keyword_missing: keine Schlüsselwörter angegeben
           title_label: Titel
+        confirm_unfeature: Aus den ausgewählten Arbeiten entfernen?
         drag: Ziehen
         no_works: Es wurden keine Arbeiten vorgestellt
         tab_label: Ausgewählte Arbeiten

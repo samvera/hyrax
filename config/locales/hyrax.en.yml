@@ -1550,6 +1550,7 @@ en:
           keyword_label: Keywords
           keyword_missing: no keywords specified
           title_label: Title
+        confirm_unfeature: Remove from featured works?
         drag: Drag
         no_works: No works have been featured
         tab_label: Featured Works

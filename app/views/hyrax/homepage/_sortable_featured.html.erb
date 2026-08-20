@@ -10,7 +10,7 @@
           <h3 class="float-right">
             <%= link_to hyrax.featured_work_path(presenter, format: :json),
               title: "Remove work from feature section",
-              data: {behavior: 'unfeature'} do %>
+              data: {behavior: 'unfeature', confirm_text: t('hyrax.homepage.featured_works.confirm_unfeature')} do %>
               <i class='fa fa-times'></i>
             <% end %>
             <p class="sr-only"><%= t 'helpers.action.remove' %></p>
