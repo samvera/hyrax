@@ -906,6 +906,10 @@ it:
         create_again_hint: "Premi di nuovo Crea per aggiungere come nuovo record."
         similar_heading: "Esistono già record simili:"
         use_existing: "Usa questo"
+      work_or_url:
+        hint: "Cerca un'opera sopra oppure inserisci qui un URL esterno."
+        url_placeholder: "https://example.org/…"
+        search_label: "Cerca un'opera"
     controls:
       about: Di
       contact: contatto

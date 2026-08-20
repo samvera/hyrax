@@ -30,20 +30,57 @@ RSpec.describe Hyrax::CompoundWorkPickerBuilder do
     end
   end
 
+  describe "#exclude_current_work" do
+    subject { builder.exclude_current_work(solr_params) }
+
+    let(:q) { "journal" }
+
+    context "with the current work's id supplied" do
+      let(:params) do
+        ActionController::Parameters.new(q: q, exclude_id: "abc123", user: user.email,
+                                         controller: "qa/terms", action: "search", vocab: "compound_works")
+      end
+
+      it "filters the work out of its own results" do
+        subject
+        expect(solr_params[:fq].join).to start_with("-").and include("abc123")
+      end
+    end
+
+    context "with no id supplied" do
+      it "adds no filter" do
+        subject
+        expect(solr_params[:fq]).to be_blank
+      end
+    end
+  end
+
   describe "#filter_on_any_term_or_partial_title" do
     subject { builder.filter_on_any_term_or_partial_title(solr_params) }
 
     context "with a single-token term" do
       let(:q) { "journal" }
 
-      it "ORs a multi-field match with a prefix-title match and uses the lucene parser" do
+      it "ORs a multi-field match, a prefix-title match and an id match, using the lucene parser" do
         subject
         expect(solr_params[:q]).to eq(
           "title_tesim:(journal) OR description_tesim:(journal) OR " \
           "creator_tesim:(journal) OR keyword_tesim:(journal) OR " \
-          "title_tesim:(journal*)"
+          "title_tesim:(journal*) OR id:\"journal\""
         )
         expect(solr_params[:defType]).to eq("lucene")
+      end
+    end
+
+    # A pasted work id has to resolve, or the picker cannot offer the work whose id
+    # it already holds — and the only alternative is accepting the id unresolved,
+    # which shows the user an id instead of a title.
+    context "with a work id" do
+      let(:q) { "abc123def" }
+
+      it "matches the id exactly" do
+        subject
+        expect(solr_params[:q]).to include('id:"abc123def"')
       end
     end
 
@@ -52,7 +89,7 @@ RSpec.describe Hyrax::CompoundWorkPickerBuilder do
 
       it "ANDs prefix wildcards across the title tokens" do
         subject
-        expect(solr_params[:q]).to end_with("title_tesim:(journal* AND studies*)")
+        expect(solr_params[:q]).to include("title_tesim:(journal* AND studies*)")
       end
     end
 
@@ -72,6 +109,20 @@ RSpec.describe Hyrax::CompoundWorkPickerBuilder do
       it "escapes the special characters" do
         subject
         expect(solr_params[:q]).to include('title_tesim:(a\\:b)')
+      end
+
+      it "escapes them in the id clause too, so the query cannot be broken" do
+        subject
+        expect(solr_params[:q]).to include('id:"a\\:b"')
+      end
+    end
+
+    context "with a backslash in the term" do
+      let(:q) { 'a\\b' }
+
+      it "escapes it in the id clause" do
+        subject
+        expect(solr_params[:q]).to include('id:"a\\\\b"')
       end
     end
   end

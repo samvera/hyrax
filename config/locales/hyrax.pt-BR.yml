@@ -899,6 +899,10 @@ pt-BR:
         create_again_hint: "Pressione Criar novamente para adicionar como um novo registro."
         similar_heading: "Já existem registros semelhantes:"
         use_existing: "Usar este"
+      work_or_url:
+        hint: "Pesquise um trabalho acima ou insira aqui uma URL externa."
+        url_placeholder: "https://example.org/…"
+        search_label: "Pesquisar um trabalho"
     controls:
       about: Sobre
       contact: Contato

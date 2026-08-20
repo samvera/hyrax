@@ -58,9 +58,21 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  # Any example that stubs m3_schema_loader and then calls the real `.for` must use a
+  # throwaway work class. `.for` runs check_if_flexible, which `include`s form fields
+  # built from the stubbed loader — an include the mock reset cannot undo. Pointed at
+  # a shared class like Monograph it strips that form's real definitions for the rest
+  # of the process, so unrelated later specs fail with fields missing from the page.
   describe '.for' do
     context 'with admin_set_id for a flexible resource' do
-      let(:work) { build(:monograph) }
+      let(:work_class) do
+        Class.new(Hyrax::Work) do
+          def self.name
+            'AdminSetContextTestWork'
+          end
+        end
+      end
+      let(:work) { work_class.new }
       let(:admin_set) { double('AdminSet', contexts: ['special_context']) }
       let(:work_contexts) { [] }
       let(:schema_loader) { instance_double(Hyrax::M3SchemaLoader, form_definitions_for: { title: { required: true, primary: true } }, attributes_for: {}) }
@@ -103,6 +115,16 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
       it 'builds the form without raising' do
         expect { described_class.for(resource: work, admin_set_id: 'gone') }.not_to raise_error
+      end
+    end
+
+    # Fails if an example above starts building a real app form class under a stubbed
+    # loader again. Ordered after them deliberately: the leak is only observable once
+    # they have run, and it surfaces far away (a later spec finds fields missing from
+    # a rendered form) rather than here.
+    context 'when the examples above have run', unless: Hyrax.config.flexible? do
+      it 'leaves MonographForm definitions intact' do
+        expect(MonographForm.definitions.keys).to include('record_info')
       end
     end
   end
@@ -168,7 +190,14 @@ RSpec.describe Hyrax::Forms::ResourceForm do
   end
 
   describe 'flexible form with contexts' do
-    let(:work) { build(:monograph) }
+    let(:work_class) do
+      Class.new(Hyrax::Work) do
+        def self.name
+          'FlexibleContextTestWork'
+        end
+      end
+    end
+    let(:work) { work_class.new }
     let(:schema_loader) { instance_double(Hyrax::M3SchemaLoader, form_definitions_for: { title: { required: true, primary: true } }, attributes_for: {}) }
 
     before do
