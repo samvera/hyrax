@@ -26,4 +26,35 @@ RSpec.describe Hyrax::CachingIiifManifestBuilder, :clean_repo do
 
     builder.manifest_for(presenter: presenter)
   end
+
+  it 'defaults to the configured manifest factory' do
+    allow(Hyrax.config).to receive(:iiif_manifest_factory).and_return(::IIIFManifest::V3::ManifestFactory)
+
+    expect(builder.manifest_factory).to eq ::IIIFManifest::V3::ManifestFactory
+  end
+
+  context 'with a real cache store' do
+    subject(:builder) { described_class.new(iiif_manifest_factory: factory) }
+    let(:factory) { double('manifest factory') }
+    let(:manifest) { double('manifest', to_h: { 'label' => 'moomin' }) }
+
+    before do
+      allow(Rails).to receive(:cache).and_return(ActiveSupport::Cache::MemoryStore.new)
+      allow(factory).to receive(:new).and_return(manifest)
+    end
+
+    it 'builds the manifest only once for repeated calls' do
+      2.times { builder.manifest_for(presenter: presenter) }
+
+      expect(factory).to have_received(:new).once
+    end
+
+    it 'rebuilds when the presenter version changes' do
+      builder.manifest_for(presenter: presenter)
+      allow(presenter).to receive(:version).and_return('changed_etag')
+      builder.manifest_for(presenter: presenter)
+
+      expect(factory).to have_received(:new).twice
+    end
+  end
 end
