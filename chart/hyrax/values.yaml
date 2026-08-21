@@ -474,6 +474,8 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 global:
+  # Set to match nameOverride/fullnameOverride so nginx's uploads mount stays in sync (it can't reach hyrax.fullname).
+  hyraxFullnameOverride: ""
   # These global postgresql values are used by the fcrepo chart
   postgresql:
     auth:

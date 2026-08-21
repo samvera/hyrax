@@ -25,6 +25,14 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
+The fullname to use for resources shared with subcharts (e.g. the uploads PVC),
+honoring global.hyraxFullnameOverride since subcharts can't reach hyrax.fullname.
+*/}}
+{{- define "hyrax.effectiveFullname" -}}
+{{- .Values.global.hyraxFullnameOverride | default (include "hyrax.fullname" .) -}}
+{{- end }}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "hyrax.chart" -}}
