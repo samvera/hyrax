@@ -308,25 +308,25 @@ nginx:
   service:
     type: ClusterIP
     port: 80
-  # The set up below does malicious bot / ip blocking and mounts
-  # volumes to allow nginx to server assets and other public directory items
-  # extraVolumes:
-  #   - name: "uploads"
-  #     persistentVolumeClaim:
-  #       claimName: {{ .Values.global.hyraxHostName }}-uploads
-  # extraVolumeMounts:
-  #   - name: uploads
-  #     mountPath: /app/samvera/hyrax-webapp/public/system
-  #     subPath: public-system
-  #   - name: uploads
-  #     mountPath: /app/samvera/hyrax-webapp/public/uploads
-  #     subPath: public-uploads
-  #   - name: uploads
-  #     mountPath: /app/samvera/hyrax-webapp/public/uv
-  #     subPath: public-uv
-  #   - name: uploads
-  #     mountPath: /app/samvera/hyrax-webapp/public/assets
-  #     subPath: public-assets
+  # Mounts volumes to allow nginx to serve assets and other public directory items
+  extraVolumes:
+    - name: "uploads"
+      persistentVolumeClaim:
+        # inlined hyrax.fullname (.Chart.Name is "nginx" here, not "hyrax"); set global.hyraxFullnameOverride to match nameOverride/fullnameOverride.
+        claimName: '{{ .Values.global.hyraxFullnameOverride | default (ternary .Release.Name (printf "%s-hyrax" .Release.Name) (contains "hyrax" .Release.Name)) }}-uploads'
+  extraVolumeMounts:
+    - name: uploads
+      mountPath: /app/samvera/hyrax-webapp/public/system
+      subPath: public-system
+    - name: uploads
+      mountPath: /app/samvera/hyrax-webapp/public/uploads
+      subPath: public-uploads
+    - name: uploads
+      mountPath: /app/samvera/hyrax-webapp/public/uv
+      subPath: public-uv
+    - name: uploads
+      mountPath: /app/samvera/hyrax-webapp/public/assets
+      subPath: public-assets
   # serverBlock: |-
   #   upstream rails_app {
   #     server {{ .Values.global.hyraxHostName }};
