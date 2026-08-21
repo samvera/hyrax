@@ -26,6 +26,20 @@ env:
   COMPOSE_DOCKER_CLI_BUILD: 1
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      nginx: ${{ steps.filter.outputs.nginx }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            nginx:
+              - 'Dockerfile'
+              - 'docker/**'
+
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -98,7 +112,8 @@ jobs:
           path: ${{runner.temp}}/hyrax-dev-${{ github.sha }}.tar
 
   build-nginx:
-    needs: lint
+    needs: [lint, changes]
+    if: needs.changes.outputs.nginx == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -110,9 +125,12 @@ jobs:
         with:
           context: .
           target: hyrax-nginx
-          push: false
+          load: true
+          tags: hyrax-nginx:ci-test
           cache-from: type=gha
           cache-to: type=gha, mode=max
+      - name: nginx -t
+        run: docker run --rm hyrax-nginx:ci-test nginx -t
 
   test:
     needs: build
