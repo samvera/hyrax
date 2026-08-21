@@ -295,8 +295,11 @@ postgresql:
 nginx:
   enabled: false
   image:
-    repository: bitnamilegacy/nginx
-    tag: 1.23.0-debian-11-r1
+    registry: ghcr.io
+    repository: samvera/hyrax/hyrax-nginx
+    pullPolicy: IfNotPresent
+    # no Chart.AppVersion fallback here (unlike image.tag above); keep in sync with appVersion.
+    tag: "5.2.0"
   # this needs to be set since templates/ingress.yaml tries to
   # evaluate .Values.nginx.service.port, and it needs to at least evaluate to
   # nil, rather than throw an error (which it does if `service` itself is nil).
