@@ -228,7 +228,7 @@ properties:
     sample_values:
       - http://creativecommons.org/licenses/by/3.0/us/
     view:
-      render_as: external_link
+      render_as: license
       html_dl: true
   abstract:
     available_on:

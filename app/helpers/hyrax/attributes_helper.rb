@@ -63,6 +63,16 @@ module Hyrax
       options_hash&.with_indifferent_access&.fetch('render_term', nil) || field_name
     end
 
+    # These override any stored render_as: the semantic label still links
+    # to the URI, so a bare external_link rendering is strictly worse.
+    # @return [Hash{Symbol => Symbol}] field name mapped to its renderer
+    def semantic_renderers
+      {
+        license: :license,
+        rights_statement: :rights_statement
+      }
+    end
+
     # @param [String] field name
     # @param [Hash<Hash>] a nested hash of view options...
     #        {:label=>{"en"=>"Title", "es"=>"Título"}, :html_dl=>true}
@@ -88,6 +98,8 @@ module Hyrax
         )
       end
       view_options[:base_url] = request.base_url if respond_to?(:request) && request.respond_to?(:base_url)
+      semantic_renderer = semantic_renderers[field_name.to_sym]
+      view_options[:render_as] = semantic_renderer if semantic_renderer
       view_options
     end
 
