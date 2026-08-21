@@ -53,6 +53,16 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/hyrax-worker-base:${{ env.TAG }}
             ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/hyrax-worker-base:${{ github.ref_name }}
+      - name: Build and push nginx
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          target: hyrax-nginx
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/hyrax-nginx:${{ env.TAG }}
+            ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/hyrax-nginx:${{ github.ref_name }}
       - name: Build and push dassie
         uses: docker/build-push-action@v7
         with:

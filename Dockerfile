@@ -1,5 +1,6 @@
 ARG DEBIAN_VERSION=trixie
 ARG RUBY_VERSION=3.3
+ARG NGINX_VERSION=1.29-alpine
 
 FROM ruby:$RUBY_VERSION-$DEBIAN_VERSION AS hyrax-base
 
@@ -153,3 +154,16 @@ ARG BUILD_GITSHA
 ARG BUILD_TIMESTAMP
 ENV BUILD_GITSHA=$BUILD_GITSHA \
     BUILD_TIMESTAMP=$BUILD_TIMESTAMP
+
+FROM nginxinc/nginx-unprivileged:$NGINX_VERSION AS hyrax-nginx
+# root
+USER 0
+# Owned by nginx user and group (101:101)
+COPY --chown=101:101 docker/nginx/nginx.conf /etc/nginx/nginx.conf
+# Make backwards compatible with Bitnami image, which is no longer being updated
+RUN mkdir -p /opt/bitnami/nginx/logs && \
+    ln -sf /dev/stdout /opt/bitnami/nginx/logs/access.log && \
+    ln -sf /dev/stderr /opt/bitnami/nginx/logs/error.log && \
+    chown -R 101:101 /opt/bitnami
+# nginx user
+USER 101
