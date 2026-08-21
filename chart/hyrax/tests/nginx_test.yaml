@@ -1,0 +1,20 @@
+suite: nginx sane defaults (values.yaml nginx block)
+templates:
+  - charts/nginx/templates/deployment.yaml
+tests:
+  - it: nginx's uploads claimName matches the actual uploads PVC name (hyrax.fullname-uploads)
+    set:
+      nginx.enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[0].persistentVolumeClaim.claimName
+          value: RELEASE-NAME-hyrax-uploads
+
+  - it: stays in sync with the uploads PVC when global.hyraxFullnameOverride is set
+    set:
+      nginx.enabled: true
+      global.hyraxFullnameOverride: custom-name
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[0].persistentVolumeClaim.claimName
+          value: custom-name-uploads
