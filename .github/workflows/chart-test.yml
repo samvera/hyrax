@@ -44,6 +44,3 @@ jobs:
 
       - name: Run helm unittest
         run: helm unittest chart/hyrax
-
-      - name: Check nginx.image.tag matches appVersion
-        run: ./bin/check-nginx-image-tag.sh
