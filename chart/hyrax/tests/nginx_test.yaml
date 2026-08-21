@@ -1,0 +1,11 @@
+suite: nginx sane defaults (values.yaml nginx block)
+templates:
+  - charts/nginx/templates/deployment.yaml
+tests:
+  - it: renders a resolvable image reference (no blank tag)
+    set:
+      nginx.enabled: true
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: ^ghcr\.io/samvera/hyrax/hyrax-nginx:.+$
