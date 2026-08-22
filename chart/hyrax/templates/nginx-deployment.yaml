@@ -47,21 +47,17 @@ spec:
             tcpSocket:
               port: http
           volumeMounts:
-            {{- if .Values.nginx.serverBlock }}
             - name: server-block
               mountPath: /etc/nginx/conf.d
-            {{- end }}
             {{- if .Values.nginx.extraVolumeMounts }}
             {{- include "hyrax.tplvalues.render" (dict "value" .Values.nginx.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
           resources:
             {{- toYaml .Values.nginx.resources | nindent 12 }}
       volumes:
-        {{- if .Values.nginx.serverBlock }}
         - name: server-block
           configMap:
             name: {{ include "hyrax.nginx.host" . }}-server-block
-        {{- end }}
         {{- if .Values.nginx.extraVolumes }}
         {{- include "hyrax.tplvalues.render" (dict "value" .Values.nginx.extraVolumes "context" $) | nindent 8 }}
         {{- end }}

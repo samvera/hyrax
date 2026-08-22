@@ -16,6 +16,9 @@ tests:
     set:
       nginx.enabled: true
     asserts:
-      - equal:
-          path: spec.template.spec.volumes[0].persistentVolumeClaim.claimName
-          value: RELEASE-NAME-hyrax-uploads
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: uploads
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-hyrax-uploads
