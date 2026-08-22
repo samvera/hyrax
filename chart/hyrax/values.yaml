@@ -326,8 +326,10 @@ nginx:
     - name: uploads
       mountPath: /app/samvera/hyrax-webapp/public/assets
       subPath: public-assets
-  # custom nginx server block override
+  # overrides the sane default in files/nginx/server-block.conf
   serverBlock: ""
+  # inserted into the default server block, before its own location blocks; ignored if serverBlock is set
+  extraServerBlockConfig: ""
 
 redis:
   enabled: true
