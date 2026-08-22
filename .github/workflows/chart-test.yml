@@ -1,0 +1,46 @@
+name: Chart Test
+run-name: Chart Test of ${{ github.ref_name }} by @${{ github.actor }}
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "chart/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "chart/**"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: azure/setup-helm@v5
+
+      - uses: helm/chart-testing-action@v2.8.0
+
+      # fits is a plain HTTP chart repo (the others are oci://, which don't need this); helm's dependency resolution requires all non-OCI deps pre-registered.
+      - name: Add fits chart repo
+        run: helm repo add fits https://samvera-labs.github.io/fits-charts
+
+      - name: Build chart dependencies
+        run: helm dependency update chart/hyrax
+
+      - name: Run ct lint
+        run: ct lint --chart-dirs chart --target-branch ${{ github.event.repository.default_branch }} --validate-maintainers=false
+
+      - name: Install helm-unittest plugin
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest --verify=false
+
+      - name: Run helm unittest
+        run: helm unittest chart/hyrax
