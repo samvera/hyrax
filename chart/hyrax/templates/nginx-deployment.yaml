@@ -32,7 +32,7 @@ spec:
       {{- end }}
       containers:
         - name: nginx
-          image: "{{ .Values.nginx.image.registry }}/{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
           imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
           securityContext:
             {{- toYaml .Values.nginx.securityContext | nindent 12 }}

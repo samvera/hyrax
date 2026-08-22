@@ -295,11 +295,9 @@ postgresql:
 nginx:
   enabled: false
   image:
-    registry: ghcr.io
-    repository: samvera/hyrax/hyrax-nginx
+    repository: nginxinc/nginx-unprivileged
     pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: 1.29-alpine
   # must stay set even when disabled - templates/ingress.yaml evaluates .Values.nginx.service.port unconditionally.
   service:
     type: ClusterIP
