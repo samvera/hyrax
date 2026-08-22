@@ -1,0 +1,68 @@
+{{- if .Values.nginx.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hyrax.nginx.host" . }}
+  labels:
+    {{- include "hyrax.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "hyrax.nginxSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "hyrax.nginxSelectorLabels" . | nindent 8 }}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        {{- toYaml .Values.nginx.podSecurityContext | nindent 8 }}
+      {{- with .Values.nginx.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nginx.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nginx.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: nginx
+          image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
+          imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.nginx.securityContext | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            tcpSocket:
+              port: http
+          volumeMounts:
+            {{- if .Values.nginx.serverBlock }}
+            - name: server-block
+              mountPath: /etc/nginx/conf.d
+            {{- end }}
+            {{- if .Values.nginx.extraVolumeMounts }}
+            {{- include "hyrax.tplvalues.render" (dict "value" .Values.nginx.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.nginx.resources | nindent 12 }}
+      volumes:
+        {{- if .Values.nginx.serverBlock }}
+        - name: server-block
+          configMap:
+            name: {{ include "hyrax.nginx.host" . }}-server-block
+        {{- end }}
+        {{- if .Values.nginx.extraVolumes }}
+        {{- include "hyrax.tplvalues.render" (dict "value" .Values.nginx.extraVolumes "context" $) | nindent 8 }}
+        {{- end }}
+{{- end }}
