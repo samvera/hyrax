@@ -18,3 +18,22 @@ tests:
       - equal:
           path: data["server-block.conf"]
           value: "server { listen 8080; }"
+
+  - it: extraServerBlockConfig is inserted into the default, before its location blocks
+    set:
+      nginx.enabled: true
+      nginx.extraServerBlockConfig: "location = /healthz { return 200; }"
+    asserts:
+      - matchRegex:
+          path: data["server-block.conf"]
+          pattern: "location = /healthz \\{ return 200; \\}\\n\\n    location ~ \\(\\\\.php"
+
+  - it: extraServerBlockConfig is ignored when serverBlock is set
+    set:
+      nginx.enabled: true
+      nginx.serverBlock: "server { listen 8080; }"
+      nginx.extraServerBlockConfig: "location = /healthz { return 200; }"
+    asserts:
+      - notMatchRegex:
+          path: data["server-block.conf"]
+          pattern: "healthz"
