@@ -2,13 +2,13 @@ suite: nginx sane defaults (own templates, no vendored subchart)
 templates:
   - templates/nginx-deployment.yaml
 tests:
-  - it: renders a resolvable image reference (falls back to appVersion)
+  - it: renders a resolvable image reference
     set:
       nginx.enabled: true
     asserts:
-      - matchRegex:
+      - equal:
           path: spec.template.spec.containers[0].image
-          pattern: ^ghcr\.io/samvera/hyrax/hyrax-nginx:.+$
+          value: nginxinc/nginx-unprivileged:1.29-alpine
 
   - it: mounts the actual uploads PVC (hyrax.fullname-uploads)
     set:

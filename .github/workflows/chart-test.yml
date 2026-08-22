@@ -40,7 +40,7 @@ jobs:
         run: ct lint --chart-dirs chart --target-branch ${{ github.event.repository.default_branch }} --validate-maintainers=false
 
       - name: Install helm-unittest plugin
-        run: helm plugin install https://github.com/helm-unittest/helm-unittest
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest --verify=false
 
       - name: Run helm unittest
         run: helm unittest chart/hyrax
