@@ -1,0 +1,17 @@
+suite: uploads PVC naming
+templates:
+  - templates/uploads-pvc.yaml
+tests:
+  - it: names the claim after hyrax.fullname
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-hyrax-uploads
+
+  - it: honors global.hyraxFullnameOverride
+    set:
+      global.hyraxFullnameOverride: custom-name
+    asserts:
+      - equal:
+          path: metadata.name
+          value: custom-name-uploads
