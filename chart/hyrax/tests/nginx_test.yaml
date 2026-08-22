@@ -2,13 +2,15 @@ suite: nginx sane defaults (own templates, no vendored subchart)
 templates:
   - templates/nginx-deployment.yaml
 tests:
-  - it: renders a resolvable image reference
+  - it: builds the image reference from repository and tag
     set:
       nginx.enabled: true
+      nginx.image.repository: test-repo
+      nginx.image.tag: test-tag
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: nginxinc/nginx-unprivileged:1.29-alpine
+          value: test-repo:test-tag
 
   - it: mounts the actual uploads PVC (hyrax.fullname-uploads)
     set:
