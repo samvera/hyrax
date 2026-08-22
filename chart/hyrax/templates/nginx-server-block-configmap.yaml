@@ -1,0 +1,11 @@
+{{- if and .Values.nginx.enabled .Values.nginx.serverBlock }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hyrax.nginx.host" . }}-server-block
+  labels:
+    {{- include "hyrax.labels" . | nindent 4 }}
+data:
+  server-block.conf: |-
+    {{- tpl .Values.nginx.serverBlock . | nindent 4 }}
+{{- end }}

@@ -1,11 +1,19 @@
-suite: nginx sane defaults (values.yaml nginx block)
+suite: nginx sane defaults (own templates, no vendored subchart)
 templates:
-  - charts/nginx/templates/deployment.yaml
+  - templates/nginx-deployment.yaml
 tests:
-  - it: renders a resolvable image reference (no blank tag)
+  - it: renders a resolvable image reference (falls back to appVersion)
     set:
       nginx.enabled: true
     asserts:
       - matchRegex:
           path: spec.template.spec.containers[0].image
           pattern: ^ghcr\.io/samvera/hyrax/hyrax-nginx:.+$
+
+  - it: mounts the actual uploads PVC (hyrax.fullname-uploads)
+    set:
+      nginx.enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[0].persistentVolumeClaim.claimName
+          value: RELEASE-NAME-hyrax-uploads
