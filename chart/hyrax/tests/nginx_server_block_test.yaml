@@ -1,0 +1,20 @@
+suite: nginx server block (sane default vs override)
+templates:
+  - templates/nginx-server-block-configmap.yaml
+tests:
+  - it: falls back to the checked-in default, with the real upstream hostname
+    set:
+      nginx.enabled: true
+    asserts:
+      - matchRegex:
+          path: data["server-block.conf"]
+          pattern: "upstream rails_app \\{\\n  server RELEASE-NAME-hyrax;"
+
+  - it: a custom serverBlock takes priority over the default
+    set:
+      nginx.enabled: true
+      nginx.serverBlock: "server { listen 8080; }"
+    asserts:
+      - equal:
+          path: data["server-block.conf"]
+          value: "server { listen 8080; }"
