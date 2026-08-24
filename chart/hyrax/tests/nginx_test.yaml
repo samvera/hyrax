@@ -22,3 +22,20 @@ tests:
             name: uploads
             persistentVolumeClaim:
               claimName: RELEASE-NAME-hyrax-uploads
+
+  - it: mounts the rendered nginx.conf ConfigMap at /etc/nginx/nginx.conf
+    set:
+      nginx.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: nginx-conf
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: nginx-conf
+            configMap:
+              name: RELEASE-NAME-nginx-conf

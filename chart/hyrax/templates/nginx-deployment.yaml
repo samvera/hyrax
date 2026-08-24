@@ -47,6 +47,9 @@ spec:
             tcpSocket:
               port: http
           volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
             - name: server-block
               mountPath: /etc/nginx/conf.d
             {{- if .Values.nginx.extraVolumeMounts }}
@@ -55,6 +58,9 @@ spec:
           resources:
             {{- toYaml .Values.nginx.resources | nindent 12 }}
       volumes:
+        - name: nginx-conf
+          configMap:
+            name: {{ include "hyrax.nginx.host" . }}-conf
         - name: server-block
           configMap:
             name: {{ include "hyrax.nginx.host" . }}-server-block

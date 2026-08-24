@@ -330,6 +330,8 @@ nginx:
   serverBlock: ""
   # inserted into the default server block, before its own location blocks; ignored if serverBlock is set
   extraServerBlockConfig: ""
+  # inserted into the http {} block, e.g. for a custom log_format; unlike serverBlock, nginx.conf itself has no full-override option
+  extraHttpConfig: ""
 
 redis:
   enabled: true
