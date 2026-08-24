@@ -44,3 +44,27 @@ jobs:
 
       - name: Run helm unittest
         run: helm unittest chart/hyrax
+
+      - uses: docker/setup-buildx-action@v4
+
+      - name: Build hyrax-nginx
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          target: hyrax-nginx
+          load: true
+          tags: hyrax-nginx:ci-test
+          cache-from: type=gha
+          cache-to: type=gha, mode=max
+
+      # Render the real server block ConfigMap (fullnameOverride gives the upstream a resolvable
+      # host) and validate it with a real nginx binary, mounted the same way the chart mounts it.
+      - name: nginx -t (nginx.conf + server block)
+        run: |
+          mkdir -p /tmp/server_blocks
+          helm template myrelease chart/hyrax --set nginx.enabled=true --set fullnameOverride=localhost \
+            --show-only templates/nginx-server-block-configmap.yaml \
+            | yq '.data."server-block.conf"' > /tmp/server_blocks/server-block.conf
+          docker run --rm \
+            -v /tmp/server_blocks/server-block.conf:/opt/bitnami/nginx/conf/server_blocks/server-block.conf:ro \
+            hyrax-nginx:ci-test nginx -t
