@@ -23,7 +23,7 @@ tests:
             persistentVolumeClaim:
               claimName: RELEASE-NAME-hyrax-uploads
 
-  - it: mounts the rendered nginx.conf ConfigMap at /etc/nginx/nginx.conf
+  - it: mounts nginx.conf and the server block from the one merged ConfigMap
     set:
       nginx.enabled: true
     asserts:
@@ -33,6 +33,12 @@ tests:
             name: nginx-conf
             mountPath: /etc/nginx/nginx.conf
             subPath: nginx.conf
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: nginx-conf
+            mountPath: /etc/nginx/conf.d/default.conf
+            subPath: server-block.conf
       - contains:
           path: spec.template.spec.volumes
           content:

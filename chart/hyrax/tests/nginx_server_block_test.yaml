@@ -1,6 +1,6 @@
 suite: nginx server block (sane default vs override)
 templates:
-  - templates/nginx-server-block-configmap.yaml
+  - templates/nginx-conf-configmap.yaml
 tests:
   - it: falls back to the checked-in default, with the real upstream hostname
     set:
