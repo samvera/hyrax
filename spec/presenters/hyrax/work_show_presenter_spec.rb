@@ -82,7 +82,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:iiif_enabled) { true }
     let(:file_set_presenter) { double(Hyrax::FileSetPresenter, id: '888888', image?: true) }
     let(:file_set_presenters) { [file_set_presenter] }
-    let(:member_presenter_factory) { instance_double(Hyrax::MemberPresenterFactory) }
+    let(:member_presenter_factory) { instance_double(Hyrax::MemberPresenterFactory, work_presenters: []) }
     let(:read_permission) { true }
     let(:representative_present) { false }
 
@@ -118,6 +118,29 @@ RSpec.describe Hyrax::WorkShowPresenter do
       let(:representative_id) { 'representative-123' }
 
       it { is_expected.to be false }
+    end
+
+    context 'with no representative but viewable child works' do
+      let(:representative_id) { nil }
+      let(:child_presenter) { double('child work presenter', id: 'child-1', iiif_viewer?: true) }
+
+      before do
+        allow(member_presenter_factory).to receive(:work_presenters).and_return([child_presenter])
+      end
+
+      it { is_expected.to be true }
+
+      context 'and no child work is viewable' do
+        let(:child_presenter) { double('child work presenter', id: 'child-1', iiif_viewer?: false) }
+
+        it { is_expected.to be false }
+
+        it 'memoizes the result, even a false one' do
+          2.times { presenter.iiif_viewer? }
+
+          expect(member_presenter_factory).to have_received(:work_presenters).once
+        end
+      end
     end
 
     context 'with non-image representative_presenter' do
@@ -201,7 +224,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       let(:representative_presenter) do
         double('representative', present?: true, image?: false, audio?: false, video?: false, pdf?: true)
       end
-      let(:member_presenter_factory) { instance_double(Hyrax::MemberPresenterFactory) }
+      let(:member_presenter_factory) { instance_double(Hyrax::MemberPresenterFactory, work_presenters: []) }
 
       before do
         presenter.member_presenter_factory = member_presenter_factory
@@ -220,6 +243,24 @@ RSpec.describe Hyrax::WorkShowPresenter do
         end
 
         it { is_expected.to be false }
+      end
+    end
+  end
+
+  describe '#iiif_viewer?', :clean_repo do
+    context 'when a parent work and child work are members of each other' do
+      let(:ability) { double(Ability, can?: true) }
+      let(:child_work) { FactoryBot.valkyrie_create(:monograph, title: ['Child']) }
+      let(:work) do
+        FactoryBot.valkyrie_create(:monograph, title: ['Parent'], members: [child_work]).tap do |parent|
+          child_work.member_ids += [parent.id]
+          Hyrax.index_adapter.save(resource: Hyrax.persister.save(resource: child_work))
+        end
+      end
+      let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
+
+      it 'terminates and is false when neither work has viewable content' do
+        expect(presenter.iiif_viewer?).to be false
       end
     end
   end

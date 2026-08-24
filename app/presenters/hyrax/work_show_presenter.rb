@@ -85,10 +85,12 @@ module Hyrax
     end
 
     # @return [Boolean] render a IIIF viewer
-    def iiif_viewer?
-      representative_id.present? &&
-        representative_presenter.present? &&
-        (av_viewable? || image_viewable? || pdf_viewable?)
+    def iiif_viewer?(seen: Set.new)
+      return @iiif_viewer if defined?(@iiif_viewer)
+      @iiif_viewer = (representative_id.present? &&
+                     representative_presenter.present? &&
+                     (av_viewable? || image_viewable? || pdf_viewable?)) ||
+                     child_works_viewable?(seen)
     end
 
     alias universal_viewer? iiif_viewer?
@@ -363,6 +365,13 @@ module Hyrax
     def pdf_viewable?
       return false unless Flipflop.iiif_pdf?
       representative_presenter.pdf?
+    end
+
+    def child_works_viewable?(seen)
+      work_presenters.any? do |presenter|
+        next unless seen.add?(presenter.id)
+        presenter.iiif_viewer?(seen: seen)
+      end
     end
   end
 end
