@@ -2,8 +2,8 @@
 module Hyrax
   # Shared behavior for authority-backed services. Module-level services
   # (such as {Hyrax::ResourceTypesService}) `extend` this module to gain a
-  # tolerant `label` / `active?` / `include_current_value` API plus the
-  # declarative macros described below.
+  # tolerant `label` / `active?` / `select_active_options` /
+  # `include_current_value` API plus the declarative macros described below.
   #
   # The tolerant methods are intentionally forgiving of off-authority values:
   # `label` falls back to the id itself, `active?` returns false for ids that
@@ -79,6 +79,18 @@ module Hyrax
     def label(id, &block)
       block ||= ->(_key) { id }
       authority.find(id).fetch('term', &block)
+    end
+
+    # @return [Array<Array(String, #to_s)>] the active entries as
+    #   `[label, id]` pairs, for a select input's `collection:`.
+    #
+    # An entry stating no `active` flag is treated as active, matching
+    # {#active?}. Note {Hyrax::QaSelectService} raises `KeyError` on such an
+    # entry instead.
+    def select_active_options
+      authority.all
+               .select { |element| element.fetch('active', true) }
+               .map { |element| [element[:label], element[:id]] }
     end
 
     # @return [Boolean] whether the id is an active entry. Returns false for
