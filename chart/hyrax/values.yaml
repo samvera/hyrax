@@ -61,7 +61,7 @@ extraEnvFrom: []
 # Example: (enabling pry debugging for local development)
 # Note: with this enabled, one can `kubectl attach` to a running container with a binding.pry breakpoint
 #
-#extraContainerConfiguration:
+# extraContainerConfiguration:
 # stdin: true
 # tty: true
 extraContainerConfiguration: []
@@ -242,7 +242,7 @@ fcrepo:
 #   ignored if `fits.enabled` is true
 externalFits:
   enabled: false
-  url: "" # existing FITS servlet endpoint
+  url: ""  # existing FITS servlet endpoint
 
 fits:
   enabled: true
