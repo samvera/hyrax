@@ -1070,14 +1070,6 @@ zh:
           show_par_page_html: 显示%{select}每页
           sort_by: 排序：
         title: 收藏
-        work_action_menu:
-          delete_work: 删除工作
-          deleting_from_work: 从%{application_name}删除作品是永久性的。单击“确定”从%{application_name}中删除此工作，或单击“取消”取消此操作
-          edit_work: 编辑工作
-          press_to: 按到
-          remove_from_collection: 从收藏中删除
-          select_an_action: 选择一个动作
-          transfer_ownership_of_work: 转移工作所有权
         works: 作品
       create_work: 创建作品
       current_proxies: 目前代理

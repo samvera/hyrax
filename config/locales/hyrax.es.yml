@@ -1072,14 +1072,6 @@ es:
           show_par_page_html: "%{select} Por página"
           sort_by: "Ordenar Por:"
         title: Colecciones
-        work_action_menu:
-          delete_work: Eliminar trabajo
-          deleting_from_work: Eliminar un trabajo de %{application_name} es permanente. Haga clic en Aceptar para eliminar este trabajo de %{application_name}, o en Cancelar para cancelar esta operación
-          edit_work: Editar trabajo
-          press_to: Presione para
-          remove_from_collection: Eliminar de la colección
-          select_an_action: Selecciona una acción
-          transfer_ownership_of_work: Transferencia de propiedad del trabajo
         works: Obras
       create_work: Crear Trabajo
       current_proxies: Proxies actuales

@@ -1066,14 +1066,6 @@ de:
           show_par_page_html: Zeige %{select} pro Seite
           sort_by: "Sortieren nach:"
         title: Kollektionen
-        work_action_menu:
-          delete_work: Arbeit löschen
-          deleting_from_work: Das Löschen einer Arbeit aus %{application_name} ist dauerhaft. Klicken Sie auf OK, um diese Arbeit von %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
-          edit_work: Arbeit bearbeiten
-          press_to: drücke um zu
-          remove_from_collection: Aus der Sammlung entfernen
-          select_an_action: Wählen Sie eine Aktion aus
-          transfer_ownership_of_work: Übertragen Sie das Eigentum an der Arbeit
         works: Arbeiten
       create_work: Arbeiten erstellen
       current_proxies: Aktuelle Vertreter
