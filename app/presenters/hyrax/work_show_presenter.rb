@@ -11,11 +11,16 @@ module Hyrax
     attr_writer :member_presenter_factory
     attr_accessor :solr_document, :current_ability, :request
 
-    class_attribute :collection_presenter_class, :presenter_factory_class
+    class_attribute :collection_presenter_class, :presenter_factory_class, :iiif_viewer_max_child_depth
 
     # modify this attribute to use an alternate presenter class for the collections
     self.collection_presenter_class = CollectionPresenter
     self.presenter_factory_class = MemberPresenterFactory
+
+    # how many member levels #iiif_viewer? descends into when a work has no
+    # representative of its own; bounds the number of Solr queries an empty, deeply
+    # nested collection can trigger to one per direct child
+    self.iiif_viewer_max_child_depth = 1
 
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
@@ -85,12 +90,9 @@ module Hyrax
     end
 
     # @return [Boolean] render a IIIF viewer
-    def iiif_viewer?(seen: Set.new)
+    def iiif_viewer?
       return @iiif_viewer if defined?(@iiif_viewer)
-      @iiif_viewer = (representative_id.present? &&
-                     representative_presenter.present? &&
-                     (av_viewable? || image_viewable? || pdf_viewable?)) ||
-                     child_works_viewable?(seen)
+      @iiif_viewer = representative_viewable? || child_works_viewable?
     end
 
     alias universal_viewer? iiif_viewer?
@@ -367,11 +369,21 @@ module Hyrax
       representative_presenter.pdf?
     end
 
-    def child_works_viewable?(seen)
-      work_presenters.any? do |presenter|
-        next unless seen.add?(presenter.id)
-        presenter.iiif_viewer?(seen: seen)
-      end
+    def representative_viewable?
+      representative_id.present? &&
+        representative_presenter.present? &&
+        (av_viewable? || image_viewable? || pdf_viewable?)
+    end
+
+    # depth lives in Thread.current, not an ivar, since each recursive call
+    # builds a new presenter instance
+    def child_works_viewable?
+      depth = Thread.current[:hyrax_iiif_viewer_child_depth] ||= 0
+      return false if depth >= iiif_viewer_max_child_depth
+      Thread.current[:hyrax_iiif_viewer_child_depth] = depth + 1
+      work_presenters.any?(&:iiif_viewer?)
+    ensure
+      Thread.current[:hyrax_iiif_viewer_child_depth] = depth
     end
   end
 end
