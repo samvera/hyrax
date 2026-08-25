@@ -141,6 +141,26 @@ RSpec.describe Hyrax::WorkShowPresenter do
           expect(member_presenter_factory).to have_received(:work_presenters).once
         end
       end
+
+      context 'and the child presenter overrides #iiif_viewer? with the legacy zero-arg signature' do
+        # e.g. Hyrax::IiifAv::DisplaysIiifAv from the hyrax-iiif_av gem
+        let(:child_presenter_class) do
+          Class.new do
+            def id
+              'child-1'
+            end
+
+            def iiif_viewer?
+              true
+            end
+          end
+        end
+        let(:child_presenter) { child_presenter_class.new }
+
+        it 'does not raise ArgumentError' do
+          expect { presenter.iiif_viewer? }.not_to raise_error
+        end
+      end
     end
 
     context 'with non-image representative_presenter' do
@@ -261,6 +281,26 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
       it 'terminates and is false when neither work has viewable content' do
         expect(presenter.iiif_viewer?).to be false
+      end
+    end
+
+    context 'when a parent has several children with no viewable content of their own' do
+      let(:ability) { double(Ability, can?: true) }
+      let(:children) { Array.new(3) { |i| FactoryBot.valkyrie_create(:monograph, title: ["Child #{i}"]) } }
+      let(:work) { FactoryBot.valkyrie_create(:monograph, title: ['Parent'], members: children) }
+      let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
+
+      it 'issues a single Solr query naming every child work, not one per child' do
+        queries = []
+        allow(Hyrax::SolrService).to receive(:post).and_wrap_original do |original, query, **opts|
+          queries << query
+          original.call(query, **opts)
+        end
+
+        presenter.iiif_viewer?
+
+        expect(queries.size).to eq(1)
+        children.each { |child| expect(queries.first).to include(child.id) }
       end
     end
   end
