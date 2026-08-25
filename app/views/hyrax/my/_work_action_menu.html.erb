@@ -28,11 +28,11 @@
       <% end %>
     <% end %>
 
-    <%= display_trophy_link(current_user, document.id, role: 'menuitem' ) do |text| %>
-      <li class="dropdown-item" tabindex="-1">
+    <li role="presentation">
+      <%= display_trophy_link(current_user, document.id, class: 'dropdown-item', role: 'menuitem', tabindex: -1) do |text| %>
         <%= text %>
-      </li>
-    <% end %>
+      <% end %>
+    </li>
 
     <% if can? :transfer, document.id %>
       <%= link_to(hyrax.new_work_transfer_path(document.id), id: 'action-transfer-work', role: 'menuitem',

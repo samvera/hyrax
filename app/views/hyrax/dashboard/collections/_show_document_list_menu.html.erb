@@ -13,10 +13,10 @@
         </li>
       <% end %>
     <% end %>
-    <%= display_trophy_link(current_user, document.id, role: 'menuitem') do |text| %>
-      <li class="dropdown-item">
+    <li role="presentation">
+      <%= display_trophy_link(current_user, document.id, class: 'dropdown-item', role: 'menuitem', tabindex: -1) do |text| %>
         <i class="fa fa-star" aria-hidden="true"></i> <%= text %>
-      </li>
-    <% end %>
+      <% end %>
+    </li>
   </ul>
 </div>
