@@ -734,14 +734,6 @@ zh:
         is_private: 您尝试访问的%{type}是私有的
         page_is_private: 您尝试访问的页面是私有的
         unauthorized: 擅自
-      work_button_row:
-        analytics: Analytics（分析）
-        attach: 附上%{type}
-        delete: 删除
-        delete_type: 删除这个%{type}？
-        edit: 编辑
-        feature: 特征
-        unfeature: Unfeature
       workflow_actions:
         actions: 操作
         previous_comments: 以前的评论
@@ -1829,8 +1821,6 @@ zh:
       restricted_title_attr: 更改此资源的公开度
       unknown:
         text: 未知
-    work_button_row:
-      attach_child: 附上孩子
     workflow:
       default:
         deposit: 存储

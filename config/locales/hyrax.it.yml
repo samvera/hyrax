@@ -736,14 +736,6 @@ it:
         is_private: Lo %{type} a cui hai provato ad accedere è privato
         page_is_private: La pagina a cui hai tentato di accedere è privata
         unauthorized: non autorizzato
-      work_button_row:
-        analytics: analitica
-        attach: Allega %{type}
-        delete: Elimina
-        delete_type: Eliminare questo %{type}?
-        edit: modificare
-        feature: caratteristica
-        unfeature: Unfeature
       workflow_actions:
         actions: Azioni
         previous_comments: Commenti precedenti
@@ -1831,8 +1823,6 @@ it:
       restricted_title_attr: Cambiare la visibilità di questa risorsa
       unknown:
         text: Sconosciuto
-    work_button_row:
-      attach_child: Allega bambino
     workflow:
       default:
         deposit: Depositare

@@ -730,14 +730,6 @@ de:
         is_private: Das %{type}, auf das Sie zugreifen wollten, ist privat
         page_is_private: Die Seite, auf die Sie zugreifen wollten, ist privat
         unauthorized: Nicht autorisiert
-      work_button_row:
-        analytics: Analytics
-        attach: Fügen Sie %{type} hinzu
-        delete: Löschen
-        delete_type: Diesen %{type} löschen?
-        edit: Bearbeiten
-        feature: Merkmal
-        unfeature: Unfeature
       workflow_actions:
         actions: Aktionen
         previous_comments: Vorherige Kommentare
@@ -1825,8 +1817,6 @@ de:
       restricted_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
       unknown:
         text: Unbekannt
-    work_button_row:
-      attach_child: Unterarbeit anhängen
     workflow:
       default:
         deposit: Deponieren

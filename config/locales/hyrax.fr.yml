@@ -737,14 +737,6 @@ fr:
         is_private: Le %{type} auquel vous avez essayé d'accéder est privé
         page_is_private: La page à laquelle vous avez essayé d'accéder est privée
         unauthorized: Non autorisé
-      work_button_row:
-        analytics: Analytique
-        attach: Joindre %{type}
-        delete: Effacer
-        delete_type: Supprimer ce %{type}?
-        edit: modifier
-        feature: Fonctionnalité
-        unfeature: Manque de fonctionnalité
       workflow_actions:
         actions: actes
         previous_comments: Commentaires précédents
@@ -1832,8 +1824,6 @@ fr:
       restricted_title_attr: Modifier la visibilité de cette ressource
       unknown:
         text: Inconnu
-    work_button_row:
-      attach_child: Attacher l'enfant
     workflow:
       default:
         deposit: Dépôt

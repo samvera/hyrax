@@ -736,14 +736,6 @@ es:
         is_private: El %{type} al que ha intentado acceder es privado.
         page_is_private: La página a la que ha intentado acceder es privada.
         unauthorized: No autorizado
-      work_button_row:
-        analytics: Analítica
-        attach: Adjuntar %{type}
-        delete: Borrar
-        delete_type: "¿Eliminar este %{type}?"
-        edit: Editar
-        feature: Característica
-        unfeature: Inseguro
       workflow_actions:
         actions: Comportamiento
         previous_comments: Comentarios anteriores
@@ -1834,8 +1826,6 @@ es:
       restricted_title_attr: Cambiar la visibilidad de este recurso
       unknown:
         text: Desconocido
-    work_button_row:
-      attach_child: Adjuntar niño
     workflow:
       default:
         deposit: Depositar

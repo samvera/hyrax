@@ -778,14 +778,6 @@ en:
         is_private: The %{type} you have tried to access is private
         page_is_private: The page you have tried to access is private
         unauthorized: Unauthorized
-      work_button_row:
-        analytics: Analytics
-        attach: Attach %{type}
-        delete: Delete
-        delete_type: Delete this %{type}?
-        edit: Edit
-        feature: Feature
-        unfeature: Unfeature
       workflow_actions:
         actions: Actions
         previous_comments: Previous Comments
@@ -1968,8 +1960,6 @@ en:
       restricted_title_attr: Change the visibility of this resource
       unknown:
         text: Unknown
-    work_button_row:
-      attach_child: Attach Child
     workflow:
       default:
         deposit: Deposit

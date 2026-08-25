@@ -729,14 +729,6 @@ pt-BR:
         is_private: O %{type} que você tentou acessar é privado
         page_is_private: A página que você tentou acessar é privada
         unauthorized: Não autorizado
-      work_button_row:
-        analytics: Google Analytics
-        attach: Anexar %{type}
-        delete: Excluir
-        delete_type: Excluir este %{type}?
-        edit: Editar
-        feature: Característica
-        unfeature: Unfeature
       workflow_actions:
         actions: Ações
         previous_comments: Comentários anteriores
@@ -1824,8 +1816,6 @@ pt-BR:
       restricted_title_attr: Altere a permissão de acesso deste recurso
       unknown:
         text: Desconhecido
-    work_button_row:
-      attach_child: Anexar criança
     workflow:
       default:
         deposit: Depósito
