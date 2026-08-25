@@ -3,15 +3,16 @@
   </button>
   <ul class="dropdown-menu dropdown-menu-right" role="menu">
     <% if can?( :edit, document ) && !workflow_restriction?(@presenter) %>
-      <%= link_to [main_app, :edit, document],
-                  class: "itemicon itemedit",
-                  role: 'menuitem',
-                  title: t('hyrax.collection.document_list.edit'),
-                  id: "edit_work_link_#{document.id}" do %>
-        <li class="dropdown-item">
+      <li role="presentation">
+        <%= link_to [main_app, :edit, document],
+                    class: "dropdown-item itemicon itemedit",
+                    role: 'menuitem',
+                    tabindex: -1,
+                    title: t('hyrax.collection.document_list.edit'),
+                    id: "edit_work_link_#{document.id}" do %>
           <i class="fa fa-pencil" aria-hidden="true"></i> <%= t('hyrax.collection.document_list.edit') %>
-        </li>
-      <% end %>
+        <% end %>
+      </li>
     <% end %>
     <li role="presentation">
       <%= display_trophy_link(current_user, document.id, class: 'dropdown-item', role: 'menuitem', tabindex: -1) do |text| %>
