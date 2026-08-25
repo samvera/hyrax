@@ -31,10 +31,6 @@ en:
       filters:
         title: 'Filtering by:'
       start_over: Start Over
-  catalog:
-    edit_partials:
-      default_details:
-        title: 'Title:'
   download:
     one: and 1 download
     other: and %{count} downloads
