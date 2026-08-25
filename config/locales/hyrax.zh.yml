@@ -1319,10 +1319,6 @@ zh:
         versions_title: 显示以前的版本
       asset_deleted_flash:
         message: 该文件已经被删除。
-      asset_saved_flash:
-        message:
-          one: 该文件%{saved_files}已经保存。
-          other: 该文件%{saved_files}已经保存。
       asset_updated_flash:
         message: 该文件%{link_to_file}已经更新。
       descriptions:

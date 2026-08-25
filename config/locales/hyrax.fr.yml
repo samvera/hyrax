@@ -1322,10 +1322,6 @@ fr:
         versions_title: Afficher les versions précédentes
       asset_deleted_flash:
         message: Le fichier a été supprimé.
-      asset_saved_flash:
-        message:
-          one: Le fichier %{saved_files} a été enregistré.
-          other: Les fichiers %{saved_files} ont été enregistrés.
       asset_updated_flash:
         message: Le fichier %{link_to_file} a été mis à jour.
       descriptions:
