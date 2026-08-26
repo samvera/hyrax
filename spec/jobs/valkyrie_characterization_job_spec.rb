@@ -15,5 +15,10 @@ RSpec.describe ValkyrieCharacterizationJob, valkyrie_adapter: :test_adapter do
       expect(Hyrax.config.characterization_service).to receive(:run).with(metadata: file_metadata, file: file, **Hyrax.config.characterization_options)
       described_class.perform_now(file_metadata.id)
     end
+
+    it 'discards, without raising, on a characterization error' do
+      allow(Hyrax.config.characterization_service).to receive(:run).and_raise(Hyrax::CharacterizationError, 'file too large')
+      expect { described_class.perform_now(file_metadata.id) }.not_to raise_error
+    end
   end
 end

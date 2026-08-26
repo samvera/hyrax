@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<error>
+  <statusCode>500</statusCode>
+  <message>the request was rejected because its size (5238729944) exceeds the configured maximum
+    (2097152000)</message>
+  <request>http://fits:8080/fits/examine</request>
+  <support>[toString version]Processing halted.</support>
+</error>
