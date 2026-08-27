@@ -11,16 +11,11 @@ module Hyrax
     attr_writer :member_presenter_factory
     attr_accessor :solr_document, :current_ability, :request
 
-    class_attribute :collection_presenter_class, :presenter_factory_class, :iiif_viewer_max_child_depth
+    class_attribute :collection_presenter_class, :presenter_factory_class
 
     # modify this attribute to use an alternate presenter class for the collections
     self.collection_presenter_class = CollectionPresenter
     self.presenter_factory_class = MemberPresenterFactory
-
-    # how many member levels #iiif_viewer? descends into when a work has no
-    # representative of its own; bounds the number of Solr queries an empty, deeply
-    # nested collection can trigger to one per direct child
-    self.iiif_viewer_max_child_depth = 1
 
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
@@ -375,15 +370,8 @@ module Hyrax
         (av_viewable? || image_viewable? || pdf_viewable?)
     end
 
-    # depth lives in Thread.current, not an ivar, since each recursive call
-    # builds a new presenter instance
     def child_works_viewable?
-      depth = Thread.current[:hyrax_iiif_viewer_child_depth] ||= 0
-      return false if depth >= iiif_viewer_max_child_depth
-      Thread.current[:hyrax_iiif_viewer_child_depth] = depth + 1
-      work_presenters.any?(&:iiif_viewer?)
-    ensure
-      Thread.current[:hyrax_iiif_viewer_child_depth] = depth
+      Hyrax::ViewableChildWorksService.viewable?(solr_document: solr_document, ability: current_ability)
     end
   end
 end

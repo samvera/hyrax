@@ -82,7 +82,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:iiif_enabled) { true }
     let(:file_set_presenter) { double(Hyrax::FileSetPresenter, id: '888888', image?: true) }
     let(:file_set_presenters) { [file_set_presenter] }
-    let(:member_presenter_factory) { instance_double(Hyrax::MemberPresenterFactory, work_presenters: []) }
+    let(:member_presenter_factory) { instance_double(Hyrax::MemberPresenterFactory) }
     let(:read_permission) { true }
     let(:representative_present) { false }
 
@@ -122,43 +122,26 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
     context 'with no representative but viewable child works' do
       let(:representative_id) { nil }
-      let(:child_presenter) { double('child work presenter', id: 'child-1', iiif_viewer?: true) }
+      let(:ability) { Ability.new(nil) }
+      let(:attributes) { super().merge('member_ids_ssim' => ['child-1']) }
+      let(:viewable_count) { 1 }
 
       before do
-        allow(member_presenter_factory).to receive(:work_presenters).and_return([child_presenter])
+        allow(Hyrax::SolrService).to receive(:query_result)
+          .and_return('response' => { 'numFound' => viewable_count })
       end
 
       it { is_expected.to be true }
 
       context 'and no child work is viewable' do
-        let(:child_presenter) { double('child work presenter', id: 'child-1', iiif_viewer?: false) }
+        let(:viewable_count) { 0 }
 
         it { is_expected.to be false }
 
         it 'memoizes the result, even a false one' do
           2.times { presenter.iiif_viewer? }
 
-          expect(member_presenter_factory).to have_received(:work_presenters).once
-        end
-      end
-
-      context 'and the child presenter overrides #iiif_viewer? with the legacy zero-arg signature' do
-        # e.g. Hyrax::IiifAv::DisplaysIiifAv from the hyrax-iiif_av gem
-        let(:child_presenter_class) do
-          Class.new do
-            def id
-              'child-1'
-            end
-
-            def iiif_viewer?
-              true
-            end
-          end
-        end
-        let(:child_presenter) { child_presenter_class.new }
-
-        it 'does not raise ArgumentError' do
-          expect { presenter.iiif_viewer? }.not_to raise_error
+          expect(Hyrax::SolrService).to have_received(:query_result).once
         end
       end
     end
@@ -244,7 +227,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       let(:representative_presenter) do
         double('representative', present?: true, image?: false, audio?: false, video?: false, pdf?: true)
       end
-      let(:member_presenter_factory) { instance_double(Hyrax::MemberPresenterFactory, work_presenters: []) }
+      let(:member_presenter_factory) { instance_double(Hyrax::MemberPresenterFactory) }
 
       before do
         presenter.member_presenter_factory = member_presenter_factory
@@ -269,7 +252,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
   describe '#iiif_viewer?', :clean_repo do
     context 'when a parent work and child work are members of each other' do
-      let(:ability) { double(Ability, can?: true) }
+      let(:ability) { Ability.new(nil) }
       let(:child_work) { FactoryBot.valkyrie_create(:monograph, title: ['Child']) }
       let(:work) do
         FactoryBot.valkyrie_create(:monograph, title: ['Parent'], members: [child_work]).tap do |parent|
@@ -285,22 +268,22 @@ RSpec.describe Hyrax::WorkShowPresenter do
     end
 
     context 'when a parent has several children with no viewable content of their own' do
-      let(:ability) { double(Ability, can?: true) }
+      let(:ability) { Ability.new(nil) }
       let(:children) { Array.new(3) { |i| FactoryBot.valkyrie_create(:monograph, title: ["Child #{i}"]) } }
       let(:work) { FactoryBot.valkyrie_create(:monograph, title: ['Parent'], members: children) }
       let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
 
       it 'issues a single Solr query naming every child work, not one per child' do
         queries = []
-        allow(Hyrax::SolrService).to receive(:post).and_wrap_original do |original, query, **opts|
-          queries << query
+        allow(Hyrax::SolrService).to receive(:query_result).and_wrap_original do |original, query, **opts|
+          queries << opts.merge(q: query)
           original.call(query, **opts)
         end
 
         presenter.iiif_viewer?
 
         expect(queries.size).to eq(1)
-        children.each { |child| expect(queries.first).to include(child.id) }
+        children.each { |child| expect(queries.first[:q]).to include(child.id.to_s) }
       end
     end
   end
