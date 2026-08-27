@@ -127,8 +127,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       let(:viewable_count) { 1 }
 
       before do
-        allow(Hyrax::SolrService).to receive(:query_result)
-          .and_return('response' => { 'numFound' => viewable_count })
+        allow(Hyrax::SolrService).to receive(:count).and_return(viewable_count)
       end
 
       it { is_expected.to be true }
@@ -141,7 +140,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
         it 'memoizes the result, even a false one' do
           2.times { presenter.iiif_viewer? }
 
-          expect(Hyrax::SolrService).to have_received(:query_result).once
+          expect(Hyrax::SolrService).to have_received(:count).once
         end
       end
     end
@@ -275,15 +274,15 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
       it 'issues a single Solr query naming every child work, not one per child' do
         queries = []
-        allow(Hyrax::SolrService).to receive(:query_result).and_wrap_original do |original, query, **opts|
-          queries << opts.merge(q: query)
-          original.call(query, **opts)
+        allow(Hyrax::SolrService).to receive(:count).and_wrap_original do |original, query|
+          queries << query
+          original.call(query)
         end
 
         presenter.iiif_viewer?
 
         expect(queries.size).to eq(1)
-        children.each { |child| expect(queries.first[:q]).to include(child.id.to_s) }
+        children.each { |child| expect(queries.first).to include(child.id.to_s) }
       end
     end
   end

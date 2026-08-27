@@ -25,30 +25,18 @@ module Hyrax
     def viewable?
       return false if viewable_mime_filter.empty? || member_ids.empty?
 
-      viewable_member_count.positive?
+      Hyrax::SolrQueryService.new(query: ["(#{viewable_mime_filter})"], solr_service: solr_service)
+                             .with_join(from: 'hasRelatedMediaFragment_ssim', to: 'id',
+                                        query: Hyrax::SolrQueryService.new.with_ids(ids: member_ids))
+                             .accessible_by(ability: ability)
+                             .count
+                             .positive?
     end
 
     private
 
     def member_ids
       @member_ids ||= Array(solr_document.member_ids)
-    end
-
-    def viewable_member_count
-      solr_service.query_result(join_query, fq: filter_queries, rows: 0)
-                  .dig('response', 'numFound')
-    end
-
-    def join_query
-      "{!join from=hasRelatedMediaFragment_ssim to=id cache=false}{!terms f=id}#{member_ids.join(',')}"
-    end
-
-    def filter_queries
-      [viewable_mime_filter, access_query]
-    end
-
-    def access_query
-      Hyrax::SolrQueryService.new(query: ['*:*']).accessible_by(ability: ability).build
     end
 
     def viewable_mime_filter
