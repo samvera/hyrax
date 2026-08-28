@@ -12,6 +12,16 @@ tests:
           path: spec.template.spec.containers[0].image
           value: test-repo:test-tag
 
+  - it: selector matches the Bitnami nginx subchart's own selector, so an existing nginx.enabled release can upgrade in place (Deployment selectors are immutable)
+    set:
+      nginx.enabled: true
+    asserts:
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/name: nginx
+            app.kubernetes.io/instance: RELEASE-NAME
+
   - it: mounts the actual uploads PVC (hyrax.fullname-uploads)
     set:
       nginx.enabled: true
