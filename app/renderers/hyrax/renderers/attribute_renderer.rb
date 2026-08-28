@@ -19,6 +19,9 @@ module Hyrax
       # @option options [String] :include_empty Do we render if if the values are empty?
       # @option options [String] :work_type Used for some I18n logic
       # @option options [Boolean] :sort sort the values with +Array#sort+ if truthy
+      # @option options [Hash] :labels controlled vocabulary term labels, keyed
+      #   by the value they belong to. The value is still what renders as a
+      #   link's href; only the displayed text becomes the label.
       def initialize(field, values, options = {})
         @field = field
         @values = values
@@ -101,7 +104,24 @@ module Hyrax
       end
 
       def li_value(value)
-        auto_link(ERB::Util.h(value))
+        term_label = controlled_label_for(value)
+        return auto_link(ERB::Util.h(value)) if term_label.nil?
+
+        if Hyrax::AuthorityRenderingHelper.linkable_uri?(value)
+          %(<a href="#{ERB::Util.h(value)}">#{ERB::Util.h(term_label)}</a>).html_safe
+        else
+          ERB::Util.h(term_label)
+        end
+      end
+
+      def controlled_label_for(value)
+        labels = options[:labels]
+        return unless labels.is_a?(Hash)
+
+        label = labels[value.to_s]
+        return if label.blank? || label.to_s == value.to_s
+
+        label
       end
 
       def work_type_label_key
