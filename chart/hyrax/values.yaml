@@ -328,6 +328,8 @@ nginx:
       subPath: public-assets
   # overrides the sane default in files/nginx/server-block.conf
   serverBlock: ""
+  # log_format name for the default access_log line; can't be set via extraServerBlockConfig since access_log's "off" doesn't cancel-then-allow-redeclare within the same context
+  accessLogFormat: ""
   # inserted into the default server block, before its own location blocks; ignored if serverBlock is set
   extraServerBlockConfig: ""
   # inserted into the http {} block, e.g. for a custom log_format; unlike serverBlock, nginx.conf itself has no full-override option

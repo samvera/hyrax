@@ -37,3 +37,20 @@ tests:
       - notMatchRegex:
           path: data["server-block.conf"]
           pattern: "healthz"
+
+  - it: accessLogFormat is appended to the default access_log line
+    set:
+      nginx.enabled: true
+      nginx.accessLogFormat: loki
+    asserts:
+      - matchRegex:
+          path: data["server-block.conf"]
+          pattern: "access_log /var/log/nginx/access.log loki;"
+
+  - it: access_log has no format by default
+    set:
+      nginx.enabled: true
+    asserts:
+      - matchRegex:
+          path: data["server-block.conf"]
+          pattern: "access_log /var/log/nginx/access.log;"
