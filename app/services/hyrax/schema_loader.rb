@@ -54,6 +54,25 @@ module Hyrax
     end
 
     ##
+    # @param [Symbol] schema
+    #
+    # @return [{Symbol => String}] a map from attribute names to the name of the
+    #   controlled vocabulary backing them. Only attributes declaring a real
+    #   `controlled_values.sources` entry appear; the `"null"` sentinel the
+    #   profile uses to mean "free text" is not an authority.
+    #
+    # Read through the definitions, not the profile hash: only they apply
+    # `available_on` and collapse a `name:` surrogate, so a property standing in
+    # for another on a particular class resolves to the authority its own entry
+    # declares rather than the one the shared name declares.
+    def authority_rules_for(schema:, version: 1, contexts: nil)
+      definitions(schema, version, contexts).each_with_object({}) do |definition, hash|
+        source = definition.authority_source
+        hash[definition.name] = source if source
+      end
+    end
+
+    ##
     # The raw per-attribute configs for a schema, INCLUDING compound
     # subproperties (entries declaring `available_on: { properties: [...] }`). Unlike
     # {#attributes_for} et al. — which exclude subproperties so they never become
@@ -135,6 +154,20 @@ module Hyrax
       # @return [Enumerable<Symbol>]
       def index_keys
         (config.fetch('indexing', nil) || config.fetch('index_keys', []))&.reject { |k| ['facetable', 'stored_searchable', 'admin_only', 'editor_only'].include?(k) }&.map(&:to_sym) || []
+      end
+
+      ##
+      # The first real source wins, matching how the deposit form picks which
+      # authority to offer when a property lists several.
+      #
+      # @return [String, nil] nil when the attribute is free text.
+      def authority_source
+        sources = config.fetch('controlled_values', nil)
+        return unless sources.is_a?(Hash)
+
+        Array(sources['sources'])
+          .map { |source| source.to_s.strip }
+          .find { |source| source.present? && !source.casecmp('null').zero? }
       end
 
       ##
