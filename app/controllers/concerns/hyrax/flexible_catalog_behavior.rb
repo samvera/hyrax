@@ -12,6 +12,7 @@ module Hyrax
         current_profile = previous_profile if current_profile.nil?
         remove_old_properties!(previous_profile['properties'], current_profile['properties'].keys) if current_profile != previous_profile
         properties_hash = current_profile['properties']
+        resolvable = {}
         properties_hash.each do |itemprop, prop|
           label = display_label_for(itemprop, prop)
 
@@ -28,10 +29,19 @@ module Hyrax
             # Only the surrogate's own keys. Passing its `indexing:` array would
             # fold in any field names it declares — which for a surrogate are
             # the target attribute's — and delete the target's registration.
-            blacklight_config.facet_fields.delete("#{itemprop}_sim")
-            blacklight_config.index_fields.delete("#{itemprop}_tesim")
+            solr_field_names_for(itemprop, nil).each do |name|
+              blacklight_config.facet_fields.delete(name)
+              blacklight_config.index_fields.delete(name)
+            end
             itemprop = indexed_name
           end
+
+          # Only when the indexer will actually write label fields. `facetable`
+          # and `stored_searchable` are directives that AttributeDefinition
+          # strips, so a property declaring only those has no index keys and no
+          # label companions — treating it as controlled would hide a working id
+          # facet behind an empty label one.
+          controlled_source = (controlled_source_for(prop, resolvable) if indexed?(indexing))
 
           # prevents all restricted fields from being added to blacklight config
           # to prevent them from being exposed in catalog search results.
@@ -50,7 +60,7 @@ module Hyrax
             index_args = { itemprop:, label: }
 
             if facetable?(indexing, itemprop)
-              index_args[:link_to_facet] = "#{itemprop}_sim"
+              index_args[:link_to_facet] = facet_name_for(itemprop, controlled_source)
             end
 
             name = blacklight_config.index_fields.keys.detect { |key| key.start_with?(itemprop) }
@@ -96,26 +106,137 @@ module Hyrax
               blacklight_config.index_fields[name].search_results_truncate = view_options['search_results_truncate']
             end
 
-            qf = blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
-            unless qf.include?(name)
-              qf << " #{name}"
+            field = blacklight_config.index_fields[name]
+            if controlled_source
+              field.values = Hyrax::ControlledVocabularyFieldValues.to_proc
+              field.reads_labels = true
+            elsif field.reads_labels
+              # Only one we set: an application's own `values:` has to stand.
+              field.values = nil
+              field.reads_labels = false
             end
+
+            # The label field too, so a free-text search for a term's label
+            # finds the work. Without it only the opaque id matches.
+            names = [name]
+            names << Hyrax::ControlledVocabularyFieldValues.label_key(name) if controlled_source
+            append_query_fields!(names)
           end
 
           if facetable?(indexing, itemprop)
-            name = "#{itemprop}_sim"
-            unless blacklight_config.facet_fields[name].present?
-              blacklight_config.add_facet_field(name, label: label)
-            end
+            register_facet_field(itemprop, label, controlled_source, indexing)
           else
             # if the property does not have facetable in the indexing section of the metadata profile, remove the facet field from the blacklight config
-            name = "#{itemprop}_sim"
-            blacklight_config.facet_fields.delete(name)
+            blacklight_config.facet_fields.delete("#{itemprop}_sim")
+            blacklight_config.facet_fields.delete("#{itemprop}_label_sim")
           end
         end
       end
 
       private
+
+      # A controlled property facets on its labels, because Blacklight queries a
+      # facet with whatever the row displayed — so row and facet move together.
+      #
+      # Runs once per request against a class-level config that persists, so
+      # both the swap and the add have to be safe to repeat; Blacklight raises
+      # when a facet is added twice.
+      def register_facet_field(itemprop, label, controlled_source, indexing)
+        id_name = "#{itemprop}_sim"
+        id_facet = blacklight_config.facet_fields[id_name]
+        id_facet = blacklight_config.add_facet_field(id_name, label: label) if id_facet.blank?
+
+        # Restore a facet an earlier pass hid, for a property that has since
+        # stopped being controlled. Only one we hid ourselves: a `show: false`
+        # an application set in its own CatalogController has to stand.
+        unless swap_facet_to_labels?(itemprop, controlled_source, indexing)
+          id_facet.show = true if id_facet.hidden_for_labels
+          id_facet.hidden_for_labels = false
+          return
+        end
+
+        name = facet_name_for(itemprop, controlled_source)
+        unless blacklight_config.facet_fields[name].present?
+          # Resolved rather than copied: a facet declared in a CatalogController
+          # without a label stores the titleized solr key ("Keyword Sim"), which
+          # normally stays hidden only because display_label finds the
+          # `…fields.facet.<key>` translation first — and the renamed key has no
+          # such translation.
+          blacklight_config.add_facet_field(name, label: id_facet.display_label('facet'))
+        end
+
+        # The id facet stays configured but drops out of the sidebar: listing
+        # both would show the same label twice, one over the opaque ids this
+        # feature exists to hide. Keeping it configured is what lets
+        # `f[<prop>_sim][]` from a saved search or bookmark still resolve, and
+        # keeps its constraint chip rendering.
+        id_facet.show = false
+        id_facet.hidden_for_labels = true
+      end
+
+      # The facet swap needs `<itemprop>_sim` specifically, not merely some
+      # literal key: that is the field the indexer writes label companions for.
+      # A property declaring only `<itemprop>_tesim` gets label values in rows
+      # but none in a facet, so swapping would hide a working id facet behind an
+      # empty label one.
+      def swap_facet_to_labels?(itemprop, controlled_source, indexing)
+        controlled_source.present? && Array(indexing).include?("#{itemprop}_sim")
+      end
+
+      def facet_name_for(itemprop, controlled_source)
+        controlled_source ? "#{itemprop}_label_sim" : "#{itemprop}_sim"
+      end
+
+      # An installation with no label service registered gets nil for every
+      # property, and so keeps the catalog it has today.
+      def controlled_source_for(config, resolvable = {})
+        return unless config.is_a?(Hash)
+
+        # Not `config.dig`: a profile is editable data, and a scalar here would
+        # raise TypeError while building the catalog config.
+        controlled = config['controlled_values']
+        return unless controlled.is_a?(Hash)
+
+        Array(controlled['sources'])
+          .map { |source| source.to_s.strip }
+          .reject { |source| source.empty? || source.casecmp('null').zero? }
+          .find { |source| resolvable?(source, resolvable) }
+      rescue StandardError => e
+        Hyrax.logger.debug("controlled_source_for: #{e.message}")
+        nil
+      end
+
+      # Memoized for the duration of one load: this runs per property, and a
+      # service backed by a vocabulary table would otherwise query once per
+      # property per request.
+      def resolvable?(source, memo)
+        memo.fetch(source) do
+          memo[source] = Hyrax.config.controlled_vocabulary_label_service.resolvable?(source)
+        end
+      end
+
+      # Split on whitespace rather than substring-matching:
+      # `qf.include?("type_tesim")` is true once `resource_type_tesim` is
+      # listed, so a substring check would silently drop the shorter field.
+      def append_query_fields!(names)
+        qf = blacklight_config.search_fields['all_fields']&.solr_parameters&.dig(:qf)
+        return if qf.nil?
+
+        listed = qf.split
+        names.each do |field|
+          next if listed.include?(field)
+
+          qf << " #{field}"
+          listed << field
+        end
+      end
+
+      # Whether `indexing:` names any literal solr field, as opposed to only the
+      # directives (`stored_searchable`, `facetable`, the role flags) that carry
+      # no field name of their own.
+      def indexed?(indexing)
+        (Array(indexing) - INDEXING_DIRECTIVES).any?
+      end
 
       def indexed_name_for(itemprop, config)
         return itemprop unless config.is_a?(Hash)
@@ -217,7 +338,11 @@ module Hyrax
       def solr_field_names_for(itemprop, indexing)
         default_fields = ["#{itemprop}_tesim", "#{itemprop}_sim"]
         declared_fields = (indexing || []) - INDEXING_DIRECTIVES
-        (default_fields + declared_fields).uniq
+        fields = (default_fields + declared_fields).uniq
+        # blacklight_config is class-level and persists between requests, so a
+        # property that leaves the profile or becomes restricted would otherwise
+        # keep a live label facet pointing at a field nothing writes to.
+        (fields + fields.map { |field| Hyrax::ControlledVocabularyFieldValues.label_key(field) }).uniq
       end
     end
 
