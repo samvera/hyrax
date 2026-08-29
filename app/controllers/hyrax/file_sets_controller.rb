@@ -241,8 +241,10 @@ module Hyrax
     end
 
     def uploaded_file_from_path
-      uploaded_file = CarrierWave::SanitizedFile.new(params[:file_set][:files].first)
-      Hyrax::UploadedFile.create(user_id: current_user.id, file: uploaded_file, file_set_uri: @file_set.id.to_s)
+      # both storage backends accept the raw multipart upload object
+      Hyrax::UploadedFile.create(user_id: current_user.id,
+                                 file: params[:file_set][:files].first,
+                                 file_set_uri: @file_set.id.to_s)
     end
 
     def after_update_response

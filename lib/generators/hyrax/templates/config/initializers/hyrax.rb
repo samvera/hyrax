@@ -44,6 +44,18 @@ Hyrax.config do |config|
   #   maxFileSize: 500.megabytes
   # }
 
+  # Where staged user uploads (Hyrax::UploadedFile) are stored.
+  #
+  # :carrierwave (the default) stores staged files on the local file system
+  # under config.upload_path. :active_storage stores them through Rails
+  # Active Storage, so your config/storage.yml service selection (local disk,
+  # S3, ...) controls where they live.
+  #
+  # NOTE: applications using ActiveFedora file sets should stay on
+  # :carrierwave; the ActiveFedora ingest path reads staged files through
+  # CarrierWave.
+  # config.uploaded_file_storage_backend = :active_storage
+
   # Enables a link to the citations page for a work
   # Default is false
   # config.citations = false
