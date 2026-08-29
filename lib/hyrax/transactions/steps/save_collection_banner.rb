@@ -39,14 +39,16 @@ module Hyrax
 
         def add_new_banner(collection_id:, uploaded_file_ids:)
           f = uploaded_files(uploaded_file_ids).first
-          banner_info = CollectionBrandingInfo.new(
-            collection_id: collection_id,
-            filename: File.split(f.file_url).last,
-            role: "banner",
-            alt_txt: "",
-            target_url: ""
-          )
-          banner_info.save f.file_url
+          f.with_local_path do |path|
+            banner_info = CollectionBrandingInfo.new(
+              collection_id: collection_id,
+              filename: File.basename(path),
+              role: "banner",
+              alt_txt: "",
+              target_url: ""
+            )
+            banner_info.save path
+          end
         end
 
         def uploaded_files(uploaded_file_ids)
