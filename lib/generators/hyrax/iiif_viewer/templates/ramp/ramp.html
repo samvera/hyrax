@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" href="ramp.css" />
+    </head>
+    <body>
+      <noscript>
+        You need to enable JavaScript to run this app.
+      </noscript>
+      <script src="ramp.standalone.umd.js"></script>
+      <div id="root"></div>
+      <script>
+	// Import components and React
+	const { IIIFPlayer, MediaPlayer, StructuredNavigation, React, ReactDOM } = RampIIIF;
+	// Parse Manifest URL
+	const manifestUrl = new URLSearchParams(window.location.search).get('manifest');
+
+	if (!manifestUrl) {
+	  alert('No manifest URL provided. Add ?manifest=<url> to the page URL.');
+	} else {
+	  let parsed;
+	  try {
+	    parsed = new URL(manifestUrl);
+	  } catch {
+	    alert('Invalid URL in iiif-content parameter.');
+	    parsed = null;
+	  }
+
+	  if (parsed) {
+	    const root = document.getElementById('root');
+	    const playerTree = React.createElement(
+	      IIIFPlayer,
+	      { manifestUrl },
+	      React.createElement(
+		'div', { className: 'iiif-player-demo' },
+		React.createElement(MediaPlayer),
+		React.createElement(StructuredNavigation)
+	      )
+	    );
+
+	    ReactDOM.createRoot(root).render(playerTree);
+	  }
+	}
+      </script>
+    </body>
+</html>

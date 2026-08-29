@@ -1,0 +1,7 @@
+<div class="viewer-wrapper">
+  <iframe title="image view"
+          src="<%= iiif_viewer_base_url(presenter.iiif_viewer) %>?manifest=<%= main_app.polymorphic_url [main_app, :manifest, presenter], { locale: nil } %>"
+          allowfullscreen="true"
+          frameborder="0"
+  ></iframe>
+</div>
