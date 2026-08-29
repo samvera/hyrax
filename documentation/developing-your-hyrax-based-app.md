@@ -184,6 +184,57 @@ rails db:seed
 This creates the default administrative set -- into which all works will be deposited unless assigned to other administrative sets.
 This command also makes sure that Hyrax's built-in workflows are loaded for your application and available for the default administrative set.
 
+### Active Storage
+
+Hyrax's install generator runs `active_storage:install`, so the `active_storage_*` tables are created alongside Hyrax's own migrations, and installs a default `config/storage.yml` (local disk services plus commented S3/GCS/Azure examples) when the application does not already have one. [Active Storage](https://guides.rubyonrails.org/active_storage_overview.html) is the Rails file attachment framework; Hyrax uses it for its non-ActiveFedora upload and storage paths. Which storage service backs those files (local disk, Amazon S3, etc.) is controlled entirely by standard Rails configuration: declare services in `config/storage.yml` and select one via `config.active_storage.service` per environment. Switching an application from disk-backed to S3-backed storage is that one configuration change; no Hyrax-specific storage settings are involved.
+
+If you are upgrading an existing application rather than generating a new one, run:
+
+```shell
+rails active_storage:install
+rails db:migrate
+```
+
+#### Active Storage as the Valkyrie storage adapter
+
+Applications using Valkyrie resources can store repository files (the PCDM
+files belonging to file sets, including versions) through Active Storage by
+registering `Hyrax::Storage::ActiveStorage` as their Valkyrie storage
+adapter:
+
+```ruby
+# config/initializers/1_valkyrie.rb
+Valkyrie::StorageAdapter.register(
+  Hyrax::Storage::ActiveStorage.new, :active_storage_storage
+)
+Valkyrie.config.storage_adapter = :active_storage_storage
+```
+
+The adapter supports versioning (the file set "Versions" tab works as with
+`Valkyrie::Storage::VersionedDisk`) and stores each version as an
+`ActiveStorage::Blob`. With the `local` Disk service configured the bytes
+live under the service root on the local file system; point the environment
+at an S3 service instead and they live in your bucket:
+
+```yaml
+# config/storage.yml
+amazon:
+  service: S3
+  access_key_id: <%= Rails.application.credentials.dig(:aws, :access_key_id) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
+  region: us-east-1
+  bucket: my-repository-files
+```
+
+```ruby
+# config/environments/production.rb
+config.active_storage.service = :amazon
+```
+
+Separate adapter instances can target different key namespaces or services
+(for example derivatives), see the `Hyrax::Storage::ActiveStorage` API
+documentation.
+
 ### Generate a work type
 
 Using Hyrax requires generating at least one type of repository object, or "work type." Hyrax allows you to generate the work types required in your application by using a Rails generator-based tool. You may generate one or more of these work types.
