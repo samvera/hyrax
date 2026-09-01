@@ -127,6 +127,17 @@ module Hyrax
     end
 
     ##
+    # @param from [String] field on the documents matched by +query+
+    # @param to [String] field on the documents to return
+    # @param query [String, #build] the query selecting the documents to join from
+    # @return [SolrQueryService] the existing service with a join query appended
+    def with_join(from:, to:, query:)
+      inner_query = query.respond_to?(:build) ? query.build : query
+      @query += ["_query_:\"{!join from=#{from} to=#{to} v='#{inner_query}'}\""]
+      self
+    end
+
+    ##
     # @param ability [???] the user's abilities
     # @param action [Symbol] the action the user is taking (e.g. :index, :edit, :show, etc.) (default: :index)
     # @return [SolrQueryService] the existing service with access filters query appended
