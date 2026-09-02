@@ -1,0 +1,57 @@
+suite: nginx sane defaults (own templates, no vendored subchart)
+templates:
+  - templates/nginx-deployment.yaml
+tests:
+  - it: builds the image reference from repository and tag
+    set:
+      nginx.enabled: true
+      nginx.image.repository: test-repo
+      nginx.image.tag: test-tag
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: test-repo:test-tag
+
+  - it: selector matches the Bitnami nginx subchart's own selector, so an existing nginx.enabled release can upgrade in place (Deployment selectors are immutable)
+    set:
+      nginx.enabled: true
+    asserts:
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/name: nginx
+            app.kubernetes.io/instance: RELEASE-NAME
+
+  - it: mounts the actual uploads PVC (hyrax.fullname-uploads)
+    set:
+      nginx.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: uploads
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-hyrax-uploads
+
+  - it: mounts nginx.conf and the server block from the one merged ConfigMap
+    set:
+      nginx.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: nginx-conf
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: nginx-conf
+            mountPath: /etc/nginx/conf.d/default.conf
+            subPath: server-block.conf
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: nginx-conf
+            configMap:
+              name: RELEASE-NAME-nginx-conf

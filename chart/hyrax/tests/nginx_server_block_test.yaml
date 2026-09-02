@@ -1,0 +1,64 @@
+suite: nginx server block (sane default vs override)
+templates:
+  - templates/nginx-conf-configmap.yaml
+tests:
+  - it: falls back to the checked-in default, with the real upstream hostname
+    set:
+      nginx.enabled: true
+    asserts:
+      - matchRegex:
+          path: data["server-block.conf"]
+          pattern: "upstream rails_app \\{\\n  server RELEASE-NAME-hyrax;"
+
+  - it: a custom serverBlock takes priority over the default
+    set:
+      nginx.enabled: true
+      nginx.serverBlock: "server { listen 8080; }"
+    asserts:
+      - equal:
+          path: data["server-block.conf"]
+          value: "server { listen 8080; }"
+
+  - it: extraServerBlockConfig is inserted into the default, before its location blocks
+    set:
+      nginx.enabled: true
+      nginx.extraServerBlockConfig: "location = /healthz { return 200; }"
+    asserts:
+      - matchRegex:
+          path: data["server-block.conf"]
+          pattern: "location = /healthz \\{ return 200; \\}\\n\\n    location ~ \\(\\\\.php"
+
+  - it: extraServerBlockConfig is ignored when serverBlock is set
+    set:
+      nginx.enabled: true
+      nginx.serverBlock: "server { listen 8080; }"
+      nginx.extraServerBlockConfig: "location = /healthz { return 200; }"
+    asserts:
+      - notMatchRegex:
+          path: data["server-block.conf"]
+          pattern: "healthz"
+
+  - it: accessLogFormat is appended to the default access_log line
+    set:
+      nginx.enabled: true
+      nginx.accessLogFormat: loki
+    asserts:
+      - matchRegex:
+          path: data["server-block.conf"]
+          pattern: "access_log /var/log/nginx/access.log loki;"
+
+  - it: access_log has no format by default
+    set:
+      nginx.enabled: true
+    asserts:
+      - matchRegex:
+          path: data["server-block.conf"]
+          pattern: "access_log /var/log/nginx/access.log;"
+
+  - it: concern and catalog pages get an extended proxy timeout
+    set:
+      nginx.enabled: true
+    asserts:
+      - matchRegex:
+          path: data["server-block.conf"]
+          pattern: "location ~ \\^/\\(concern\\|catalog\\)\\(/\\|\\$\\) \\{\\n        proxy_connect_timeout 180s;"

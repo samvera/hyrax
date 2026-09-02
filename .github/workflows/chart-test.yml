@@ -44,3 +44,18 @@ jobs:
 
       - name: Run helm unittest
         run: helm unittest chart/hyrax
+
+      # Render the real ConfigMap (fullnameOverride gives the upstream a resolvable host) and validate the
+      # actual output with a real nginx binary, mounted the same way the chart mounts it.
+      - name: nginx -t (nginx.conf + server block)
+        run: |
+          image="$(yq '.nginx.image.repository' chart/hyrax/values.yaml):$(yq '.nginx.image.tag' chart/hyrax/values.yaml)"
+          mkdir -p /tmp/conf.d
+          rendered="$(helm template myrelease chart/hyrax --set nginx.enabled=true --set fullnameOverride=localhost \
+            --show-only templates/nginx-conf-configmap.yaml)"
+          echo "$rendered" | yq '.data."nginx.conf"' > /tmp/nginx.conf
+          echo "$rendered" | yq '.data."server-block.conf"' > /tmp/conf.d/default.conf
+          docker run --rm \
+            -v /tmp/nginx.conf:/etc/nginx/nginx.conf:ro \
+            -v /tmp/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro \
+            "$image" nginx -t
