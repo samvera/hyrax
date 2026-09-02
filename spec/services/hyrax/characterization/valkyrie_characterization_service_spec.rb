@@ -39,4 +39,18 @@ RSpec.describe Hyrax::Characterization::ValkyrieCharacterizationService do
       end
     end
   end
+
+  describe "run with a FITS error response" do
+    let(:characterizer) { double(characterize: fits_error_response) }
+    let(:fits_error_response) { IO.read('spec/fixtures/fits_error_response.xml') }
+
+    let(:file_set)      { FactoryBot.valkyrie_create(:hyrax_file_set, files: [file_metadata], original_file: file_metadata) }
+    let(:file_metadata) { valkyrie_create(:file_metadata, :original_file, :with_file, file: file, mime_type: 'image/png') }
+    let(:file)          { create(:uploaded_file, file: File.open('spec/fixtures/world.png')) }
+
+    it 'raises instead of silently applying empty metadata' do
+      expect { described_class.run(metadata: file_metadata, file: file_set.original_file.file, characterizer: characterizer) }
+        .to raise_error(Hyrax::CharacterizationError, /the request was rejected because its size/)
+    end
+  end
 end
