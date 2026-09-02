@@ -19,6 +19,20 @@ module Hyrax
           indexing = prop['indexing']
           next if indexing.nil?
 
+          # A property may declare `name:` to stand in for another on a
+          # particular class. The named attribute is what gets indexed, so it is
+          # the name every solr field derives from — registering under the
+          # surrogate's own key produces a facet nothing is indexed into.
+          indexed_name = indexed_name_for(itemprop, prop)
+          if indexed_name != itemprop
+            # Only the surrogate's own keys. Passing its `indexing:` array would
+            # fold in any field names it declares — which for a surrogate are
+            # the target attribute's — and delete the target's registration.
+            blacklight_config.facet_fields.delete("#{itemprop}_sim")
+            blacklight_config.index_fields.delete("#{itemprop}_tesim")
+            itemprop = indexed_name
+          end
+
           # prevents all restricted fields from being added to blacklight config
           # to prevent them from being exposed in catalog search results.
           # They remain available on show pages, based on visibility.
@@ -102,6 +116,12 @@ module Hyrax
       end
 
       private
+
+      def indexed_name_for(itemprop, config)
+        return itemprop unless config.is_a?(Hash)
+
+        config['name'].presence || itemprop
+      end
 
       # Returns true if the view options require a helper method to render the linked field correctly in the index view
       # @param view_options [Hash] the view options ex: {"render_as"=>"linked", "html_dl"=>true}
