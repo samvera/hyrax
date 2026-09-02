@@ -708,6 +708,38 @@ Sub-property format and controlled-vocabulary correctness belong in an
 in the populator, whose only job is shape conversion. This mirrors the
 `field_behaviors.md` guidance.
 
+### Rules spanning two sub-properties (`validations:`, optional)
+
+`required:` constrains one sub-property at a time. A rule relating two of them is
+declared on the compound instead:
+
+```yaml
+dates:
+  data_type: array
+  type: hash
+  validations:
+    - { type: ordered, before: start_date, after: end_date }
+```
+
+`ordered` compares dates: it requires `after` to fall on or after `before` in every
+row supplying both, so an entry ending before it starts is refused. A blank `after`
+(the usual case for an optional end date) is allowed, as is a pair of equal values.
+Values that do not parse as dates — a partial or free-text date the profile permits
+— are skipped rather than treated as an error.
+
+One message is added per broken rule, not per offending row, and a row still
+missing a `required:` sub-property reports only that, so a half-filled entry does
+not raise two complaints at once.
+
+`Hyrax::CompoundEntryValidation` owns the rules and
+`Hyrax::CompoundEntryValidator` renders them, keyed on
+`hyrax.compound_fields.errors.out_of_order`.
+
+An unrecognized `type:` is carried through rather than rejected, so a profile
+written against a newer Hyrax still loads — but profile validation warns about it,
+which is what stops a misspelled rule from silently doing nothing. A rule missing
+`before:` or `after:` warns the same way.
+
 ## Bulkrax
 
 A compound round-trips through Bulkrax import and export with no additional

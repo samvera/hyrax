@@ -187,6 +187,33 @@ RSpec.describe Hyrax::CompoundSchema do
     end
   end
 
+  describe '#definition_for validations' do
+    let(:klass) do
+      Class.new(Hyrax::Resource) do
+        def self.name
+          'OrderedRuleResource'
+        end
+        attribute :dates,
+                  Valkyrie::Types::Array.of(Dry::Types['hash']).meta(
+                    subproperties: { 'start_date' => { 'type' => 'string' },
+                                     'end_date' => { 'type' => 'string' } },
+                    validations: [{ 'type' => 'ordered', 'before' => 'start_date', 'after' => 'end_date' }]
+                  )
+      end
+    end
+
+    it 'carries a declared rule through to the definition' do
+      definition = described_class.for(klass.new).definition_for(:dates)
+
+      expect(definition[:validations])
+        .to eq([{ type: 'ordered', before: 'start_date', after: 'end_date' }])
+    end
+
+    it 'defaults to no rules when none are declared' do
+      expect(schema.definition_for(:contributors)[:validations]).to eq([])
+    end
+  end
+
   describe '#definition_for' do
     it 'normalizes subproperties with type, authority, index_keys, display, group, cols and as' do
       definition = schema.definition_for(:contributors)
