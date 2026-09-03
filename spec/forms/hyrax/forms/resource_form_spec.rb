@@ -285,6 +285,69 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe 'flexible form with a field the profile never declared' do
+    # `redirects` is the shipped case: installed from config/metadata whenever
+    # `Hyrax.config.redirects_enabled?`, never from the profile. Stated without
+    # it so the example runs regardless of HYRAX_REDIRECTS_ENABLED.
+
+    let(:current_form_defs) do
+      { 'title' => { required: true, primary: true, display: true } }
+    end
+
+    let(:schema_loader) do
+      loader = instance_double(Hyrax::M3SchemaLoader)
+      allow(loader).to receive(:current_version).and_return(1)
+      allow(loader).to receive(:attributes_for).and_return({})
+      allow(loader).to receive(:form_definitions_for) { current_form_defs }
+      allow(loader).to receive(:index_rules_for).and_return({})
+      loader
+    end
+
+    let(:work_class) do
+      klass = Class.new(Hyrax::Work) do
+        def self.name
+          'TestUndeclaredFieldWork'
+        end
+      end
+      klass.acts_as_flexible_resource
+      klass
+    end
+
+    # `display: false` mirrors redirects.yaml, and is why the old prune could
+    # not reach it.
+    let(:form_class) do
+      Class.new(Hyrax::Forms::ResourceForm(work_class)) do
+        property :wired_from_static_config, display: false
+      end
+    end
+
+    let(:work) { work_class.new }
+
+    before do
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
+      allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
+      allow(Hyrax::FlexibleSchema).to receive(:current_schema_id).and_return(1)
+    end
+
+    after do
+      Hyrax.config.flexible_classes.delete('TestUndeclaredFieldWork')
+    end
+
+    it 'builds the form instead of raising' do
+      expect { form_class.new(resource: work) }.not_to raise_error
+    end
+
+    it 'drops the undeclared field from the instance schema' do
+      form = form_class.new(resource: work)
+      expect(form.singleton_class.definitions.keys).not_to include('wired_from_static_config')
+    end
+
+    it 'keeps fields the resource can answer' do
+      form = form_class.new(resource: work)
+      expect(form.singleton_class.definitions.keys).to include('title')
+    end
+  end
+
   describe 'flexible form after M3 profile update adds a compound field' do
     # Regression: a work created on an older schema version, edited after a
     # compound (e.g. :participants) is added to the M3 profile, raised

@@ -93,12 +93,7 @@ module Hyrax
         if resource.nil?
           if !deprecated_resource.nil?
             Deprecation.warn "Initializing Valkyrie forms without an explicit resource parameter is deprecated. Pass the resource with `resource:` instead."
-            # Remove form definitions for attributes the model doesn't support,
-            # mirroring the cleanup in the resource: keyword path below.
-            if deprecated_resource.respond_to?(:flexible?) && deprecated_resource.flexible?
-              to_remove = singleton_class.definitions.select { |k, v| !deprecated_resource.respond_to?(k) && v.instance_variable_get("@options")[:display] }
-              to_remove.keys.each { |removed_field| singleton_class.definitions.delete(removed_field) }
-            end
+            prune_unbacked_definitions!(deprecated_resource, current_schema_fields.keys.map(&:to_s)) if deprecated_resource.respond_to?(:flexible?) && deprecated_resource.flexible?
             super(deprecated_resource)
           else
             super()
@@ -109,12 +104,7 @@ module Hyrax
             hash = resource.attributes.dup
             hash[:schema_version] = Hyrax::FlexibleSchema.current_schema_id
             resource = resource.class.new(hash)
-            # find any fields removed by the current schema
-            current_field_keys = current_schema_fields.keys.map(&:to_s)
-            to_remove = singleton_class.definitions.select { |k, v| !current_field_keys.include?(k.to_s) && v.instance_variable_get("@options")[:display] }
-            to_remove.keys.each do |removed_field|
-              singleton_class.definitions.delete(removed_field)
-            end
+            prune_unbacked_definitions!(resource, current_schema_fields.keys.map(&:to_s))
           end
 
           super(resource)
@@ -301,6 +291,20 @@ module Hyrax
       delegate :flexible?, to: :model
 
       private
+
+      # Only metadata-schema definitions carry a `:display` option. The form's
+      # own structural properties (`permissions`, `embargo`, the
+      # `<name>_attributes` writers) do not, and must survive even though the
+      # resource has no matching attribute.
+      def prune_unbacked_definitions!(resource, current_field_keys)
+        removable = singleton_class.definitions.select do |name, definition|
+          next false if current_field_keys.include?(name.to_s)
+          options = definition.instance_variable_get("@options")
+          next false unless options.key?(:display)
+          options[:display] || !resource.respond_to?(name)
+        end
+        removable.each_key { |name| singleton_class.definitions.delete(name) }
+      end
 
       # A copy of the resource loaded at the current schema version, so its
       # singleton schema reflects the live profile (including compounds added
