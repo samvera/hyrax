@@ -48,9 +48,9 @@ module Hyrax
     def file_set_ids
       return @file_set_ids ||= [] if ordered_ids.empty?
       query = Hyrax::SolrQueryService.new
-                                      .with_ids(ids: ordered_ids)
-                                      .with_field_pairs(field_pairs: { "has_model_ssim" => file_set_models }, join_with: 'OR')
-                                      .build
+                                     .with_ids(ids: ordered_ids)
+                                     .with_field_pairs(field_pairs: { "has_model_ssim" => file_set_models }, join_with: 'OR')
+                                     .build
       @file_set_ids ||= Hyrax::SolrService.query(query,
                                                    rows: ordered_ids.length,
                                                    fl: Hyrax.config.id_field)
