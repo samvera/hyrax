@@ -1,6 +1,5 @@
-<% model = document.hydra_model %>
 <div class="col-md-3">
-  <% if model == Hyrax::PcdmCollection || model < Hyrax::PcdmCollection %>
+  <% if document.collection? %>
     <%= document_presenter(document)&.thumbnail&.thumbnail_tag({ alt: thumbnail_alt_text_for(document, block_name: 'default_collection_image_text') }, { suppress_link: true }) %>
   <% else %>
     <div class="list-thumbnail">
