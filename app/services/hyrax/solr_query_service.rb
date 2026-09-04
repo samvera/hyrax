@@ -133,7 +133,7 @@ module Hyrax
     # @return [SolrQueryService] the existing service with a join query appended
     def with_join(from:, to:, query:)
       inner_query = query.respond_to?(:build) ? query.build : query
-      @query += ["_query_:\"{!join from=#{from} to=#{to} v='#{inner_query}'}\""]
+      @query += ["{!join from=#{from} to=#{to} v='#{inner_query}'}"]
       self
     end
 
