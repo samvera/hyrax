@@ -138,6 +138,33 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ClassValidator do
           expect(errors).to include('Invalid classes: InvalidWork.')
         end
       end
+
+      context 'with collection and admin set classes beyond the configured ones' do
+        let(:required_classes) { ['ConfiguredAdminSet', 'ConfiguredCollection', 'Hyrax::FileSet'] }
+
+        let(:profile) do
+          {
+            'classes' => {
+              'ConfiguredAdminSet' => { 'display_label' => 'Configured Admin Set' },
+              'ConfiguredCollection' => { 'display_label' => 'Configured Collection' },
+              'SupersededAdminSet' => { 'display_label' => 'Superseded Admin Set' },
+              'SupersededCollection' => { 'display_label' => 'Superseded Collection' }
+            }
+          }
+        end
+
+        before do
+          stub_const('ConfiguredAdminSet', Class.new(Hyrax::AdministrativeSet))
+          stub_const('ConfiguredCollection', Class.new(Hyrax::PcdmCollection))
+          stub_const('SupersededAdminSet', Class.new(Hyrax::AdministrativeSet))
+          stub_const('SupersededCollection', Class.new(Hyrax::PcdmCollection))
+        end
+
+        it 'does not report the non-configured collection and admin set classes as invalid' do
+          validator.validate_availability!
+          expect(errors).to be_empty
+        end
+      end
     end
   end
 

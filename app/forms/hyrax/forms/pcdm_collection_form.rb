@@ -10,7 +10,7 @@ module Hyrax
       # Wire the compound form properties (non-flexible mode), mirroring the
       # work-side wiring in the PcdmObjectForm factory.
       if !Hyrax.config.flexible? &&
-         Hyrax::PcdmCollection.ancestors.detect { |k| k.inspect == "Hyrax::Schema(compound_metadata)" }
+         Hyrax.config.collection_class.ancestors.detect { |k| k.inspect == "Hyrax::Schema(compound_metadata)" }
         include Hyrax::FormFields(:compound_metadata)
       end
 
@@ -24,7 +24,7 @@ module Hyrax
         end
       end
 
-      check_if_flexible(Hyrax::PcdmCollection)
+      check_if_flexible(Hyrax.config.collection_class)
 
       BannerInfoPrepopulator = lambda do |**_options|
         self.banner_info ||= begin

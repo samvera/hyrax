@@ -6,7 +6,7 @@ module Hyrax
     # @api public
     # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
     class AdministrativeSetForm < Hyrax::Forms::ResourceForm
-      check_if_flexible(Hyrax::AdministrativeSet)
+      check_if_flexible(Hyrax.config.admin_set_class)
 
       ##
       # @api private
