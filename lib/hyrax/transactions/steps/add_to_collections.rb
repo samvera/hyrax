@@ -36,11 +36,19 @@ module Hyrax
         private
 
         def check_multi_membership(change_set, collection_ids)
-          return if change_set.is_a? Hyrax::Forms::PcdmCollectionForm
+          # Collections-in-collections have no multi-membership limit. Keyed on
+          # the model, not the form class: an app may configure a
+          # `pcdm_collection_form` outside the PcdmCollectionForm hierarchy.
+          return if collection?(change_set)
 
           Hyrax::MultipleMembershipChecker
             .new(item: change_set)
             .check(collection_ids: [collection_ids], include_current_members: true)
+        end
+
+        def collection?(change_set)
+          model = change_set.try(:model) || change_set
+          Hyrax::ModelRegistry.collection_classes.any? { |klass| model.is_a?(klass) }
         end
       end
     end
