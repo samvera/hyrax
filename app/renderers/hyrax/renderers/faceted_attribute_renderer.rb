@@ -5,7 +5,7 @@ module Hyrax
       private
 
       def li_value(value)
-        link_to(ERB::Util.h(value), search_path(value))
+        link_to(ERB::Util.h(controlled_label_for(value) || value), search_path(value))
       end
 
       def search_path(value)
