@@ -47,6 +47,32 @@ RSpec.describe Hyrax::SolrQueryService, :clean_repo do
     end
   end
 
+  describe '#pluck' do
+    subject(:solr_query_service) { described_class.new }
+
+    include_context 'with works with creator metadata'
+
+    it 'reads the field off each matching document, without joining' do
+      expect(solr_query_service.pluck('creator_tesim')).to contain_exactly('Mark', 'Mark')
+    end
+
+    it 'accepts an exact rows count to fetch everything in a single request' do
+      expect(solr_query_service.pluck('creator_tesim', rows: 2)).to contain_exactly('Mark', 'Mark')
+    end
+
+    context 'when there are more matches than Hyrax.config.solr_max_results' do
+      before do
+        allow(Hyrax.config).to receive(:solr_max_results).and_return(1)
+        allow(Hyrax.logger).to receive(:warn)
+      end
+
+      it 'truncates to the cap and warns' do
+        expect(solr_query_service.pluck('creator_tesim').count).to eq 1
+        expect(Hyrax.logger).to have_received(:warn).with(a_string_including('truncated'))
+      end
+    end
+  end
+
   describe '#get_objects' do
     subject(:solr_query_service) { described_class.new }
 
