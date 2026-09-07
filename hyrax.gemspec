@@ -64,6 +64,7 @@ SUMMARY
   spec.add_dependency 'hydra-head', '~> 13.0'
   spec.add_dependency 'hydra-works', '>= 0.16'
   spec.add_dependency 'iiif_manifest', '>= 0.3', '< 2.0'
+  spec.add_dependency 'json', '< 3.0' # 3.0 dropped the quirks_mode kwarg ActiveSupport::JSON still passes
   spec.add_dependency 'json-schema' # for Arkivo
   spec.add_dependency 'json_schemer' # Required for m3 schema validation
   spec.add_dependency 'legato', '~> 0.3'
