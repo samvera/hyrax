@@ -163,7 +163,8 @@ module Hyrax
     #
     # @return [String] a string tag suitable for cache keys for this manifiest
     def version
-      object.try(:modified_date)&.to_s || ''
+      timestamp = model['system_modified_dtsi'] if model.is_a?(::SolrDocument)
+      timestamp || object.try(:modified_date)&.to_s || object.try(:updated_at)&.to_s || ''
     end
 
     ##

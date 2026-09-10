@@ -17,7 +17,7 @@ module Hyrax
     #        object and returns an object that responds to `#to_h`
     # @param expires_in [Integer] the number of seconds until the cache expires
     # @see Hyrax::Configuration#iiif_manifest_cache_duration
-    def initialize(iiif_manifest_factory: ::IIIFManifest::ManifestFactory, expires_in: Hyrax.config.iiif_manifest_cache_duration)
+    def initialize(iiif_manifest_factory: Hyrax.config.iiif_manifest_factory, expires_in: Hyrax.config.iiif_manifest_cache_duration)
       self.expires_in = expires_in
 
       super(iiif_manifest_factory: iiif_manifest_factory)
