@@ -84,7 +84,7 @@ properties:
       display: false
     indexing:
       - editor_only
-    predicate: http://samvera.org/ns/hyku/redirects
+    property_uri: http://samvera.org/ns/hyku/redirects
     range: http://www.w3.org/2001/XMLSchema#string
     view:
       render_term: redirects_path

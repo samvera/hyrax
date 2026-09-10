@@ -9,8 +9,7 @@ RSpec.describe Hyrax::ViewableChildWorksService do
 
   before do
     allow(Hyrax.config).to receive(:iiif_image_server?).and_return(true)
-    allow(Hyrax::SolrService).to receive(:query_result)
-      .and_return('response' => { 'numFound' => num_found })
+    allow(Hyrax::SolrService).to receive(:count).and_return(num_found)
   end
 
   describe '#viewable?' do
@@ -19,9 +18,9 @@ RSpec.describe Hyrax::ViewableChildWorksService do
     it 'asks Solr once, naming every member in one query' do
       service.viewable?
 
-      expect(Hyrax::SolrService).to have_received(:query_result)
+      expect(Hyrax::SolrService).to have_received(:count)
         .once
-        .with(a_string_including('{!terms f=id}child-1,child-2'), hash_including(rows: 0))
+        .with(a_string_including('{!terms f=id}child-1,child-2'))
     end
 
     context 'when no member has a viewable representative' do
@@ -35,7 +34,7 @@ RSpec.describe Hyrax::ViewableChildWorksService do
 
       it 'is false without querying Solr' do
         expect(service.viewable?).to be false
-        expect(Hyrax::SolrService).not_to have_received(:query_result)
+        expect(Hyrax::SolrService).not_to have_received(:count)
       end
     end
 
@@ -48,7 +47,7 @@ RSpec.describe Hyrax::ViewableChildWorksService do
 
       it 'is false without querying Solr' do
         expect(service.viewable?).to be false
-        expect(Hyrax::SolrService).not_to have_received(:query_result)
+        expect(Hyrax::SolrService).not_to have_received(:count)
       end
     end
   end
