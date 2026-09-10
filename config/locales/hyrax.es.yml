@@ -736,14 +736,6 @@ es:
         is_private: El %{type} al que ha intentado acceder es privado.
         page_is_private: La página a la que ha intentado acceder es privada.
         unauthorized: No autorizado
-      work_button_row:
-        analytics: Analítica
-        attach: Adjuntar %{type}
-        delete: Borrar
-        delete_type: "¿Eliminar este %{type}?"
-        edit: Editar
-        feature: Característica
-        unfeature: Inseguro
       workflow_actions:
         actions: Comportamiento
         previous_comments: Comentarios anteriores
@@ -1072,14 +1064,6 @@ es:
           show_par_page_html: "%{select} Por página"
           sort_by: "Ordenar Por:"
         title: Colecciones
-        work_action_menu:
-          delete_work: Eliminar trabajo
-          deleting_from_work: Eliminar un trabajo de %{application_name} es permanente. Haga clic en Aceptar para eliminar este trabajo de %{application_name}, o en Cancelar para cancelar esta operación
-          edit_work: Editar trabajo
-          press_to: Presione para
-          remove_from_collection: Eliminar de la colección
-          select_an_action: Selecciona una acción
-          transfer_ownership_of_work: Transferencia de propiedad del trabajo
         works: Obras
       create_work: Crear Trabajo
       current_proxies: Proxies actuales
@@ -1337,10 +1321,6 @@ es:
         versions_title: Mostrar versiones anteriores
       asset_deleted_flash:
         message: El archivo ha sido eliminado.
-      asset_saved_flash:
-        message:
-          one: El archivo %{saved_files} ha sido guardado.
-          other: Los archivos %{saved_files} se han salvado.
       asset_updated_flash:
         message: El archivo %{link_to_file} ha sido actualizado.
       descriptions:
@@ -1842,8 +1822,6 @@ es:
       restricted_title_attr: Cambiar la visibilidad de este recurso
       unknown:
         text: Desconocido
-    work_button_row:
-      attach_child: Adjuntar niño
     workflow:
       default:
         deposit: Depositar

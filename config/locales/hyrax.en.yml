@@ -31,10 +31,6 @@ en:
       filters:
         title: 'Filtering by:'
       start_over: Start Over
-  catalog:
-    edit_partials:
-      default_details:
-        title: 'Title:'
   download:
     one: and 1 download
     other: and %{count} downloads
@@ -778,14 +774,6 @@ en:
         is_private: The %{type} you have tried to access is private
         page_is_private: The page you have tried to access is private
         unauthorized: Unauthorized
-      work_button_row:
-        analytics: Analytics
-        attach: Attach %{type}
-        delete: Delete
-        delete_type: Delete this %{type}?
-        edit: Edit
-        feature: Feature
-        unfeature: Unfeature
       workflow_actions:
         actions: Actions
         previous_comments: Previous Comments
@@ -1157,14 +1145,6 @@ en:
           show_par_page_html: Show %{select} per page
           sort_by: 'Sort By:'
         title: Collections
-        work_action_menu:
-          delete_work: Delete work
-          deleting_from_work: Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation
-          edit_work: Edit work
-          press_to: Press to
-          remove_from_collection: Remove from collection
-          select_an_action: Select an action
-          transfer_ownership_of_work: Transfer ownership of work
         works: Works
       create_work: Create Work
       current_proxies: Current Proxies
@@ -1418,12 +1398,6 @@ en:
         versions_title: Display previous versions
       asset_deleted_flash:
         message: The file has been deleted.
-      asset_permissions_denial_flash:
-        message: The file(s) %{files} could not be updated.  You do not have sufficient privileges to edit it."
-      asset_saved_flash:
-        message:
-          one: The file %{saved_files} has been saved.
-          other: The files %{saved_files} have been saved.
       asset_updated_flash:
         message: The file %{link_to_file} has been updated.
       descriptions:
@@ -1976,8 +1950,6 @@ en:
       restricted_title_attr: Change the visibility of this resource
       unknown:
         text: Unknown
-    work_button_row:
-      attach_child: Attach Child
     workflow:
       default:
         deposit: Deposit
