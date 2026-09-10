@@ -136,7 +136,7 @@ module Hyrax
         end
 
         def check_if_flexible(model)
-          return unless model.flexible?
+          return unless model.respond_to?(:flexible?) && model.flexible?
           include FlexibleFormBehavior
           include Hyrax::FormFields(model.to_s, definition_loader: Hyrax::Schema.m3_schema_loader)
         end

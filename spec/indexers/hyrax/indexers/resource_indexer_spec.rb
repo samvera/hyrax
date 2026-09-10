@@ -9,6 +9,18 @@ RSpec.describe Hyrax::Indexers::ResourceIndexer do
 
   it_behaves_like 'a Hyrax::Resource indexer'
 
+  describe '.check_if_flexible' do
+    it 'treats a model that does not respond to flexible? as not flexible' do
+      model = Class.new do
+        def self.to_s
+          'ModelWithoutFlexibleSupport'
+        end
+      end
+
+      expect { Class.new(described_class) { check_if_flexible(model) } }.not_to raise_error
+    end
+  end
+
   describe '.for' do
     it 'gives an instance of itself as the default indexer class' do
       expect(described_class.for(resource: Valkyrie::Resource.new).class)

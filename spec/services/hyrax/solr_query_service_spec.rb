@@ -81,6 +81,26 @@ RSpec.describe Hyrax::SolrQueryService, :clean_repo do
     end
   end
 
+  describe '#with_join' do
+    subject(:solr_query_service) { described_class.new }
+
+    let!(:child_work) { FactoryBot.valkyrie_create(:monograph, title: ['Child']) }
+    let!(:work) { FactoryBot.valkyrie_create(:monograph, title: ['Parent'], members: [child_work]) }
+
+    it 'matches documents joined to from those matching the given query service' do
+      ids = solr_query_service.with_join(from: 'member_ids_ssim', to: 'id',
+                                         query: described_class.new.with_ids(ids: [work.id])).get_ids
+
+      expect(ids).to contain_exactly(child_work.id.to_s)
+    end
+
+    it 'accepts a raw query string' do
+      ids = solr_query_service.with_join(from: 'member_ids_ssim', to: 'id', query: "id:#{work.id}").get_ids
+
+      expect(ids).to contain_exactly(child_work.id.to_s)
+    end
+  end
+
   describe '#build' do
     context 'when no query clauses have been constructed' do
       subject(:solr_query_service) { described_class.new }
