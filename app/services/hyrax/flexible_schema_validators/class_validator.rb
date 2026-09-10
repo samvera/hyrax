@@ -19,7 +19,7 @@ module Hyrax
       #
       # @return [void]
       def validate_availability!
-        classes_to_validate = all_profile_classes - @required_classes
+        classes_to_validate = all_profile_classes - @required_classes - non_work_classes
         invalid_classes = []
         mismatched_valkyrie_classes = []
 
@@ -52,6 +52,29 @@ module Hyrax
 
       private
 
+      # `validate_class` holds every class it is given to the curation concern
+      # check, so these must be excluded. `@required_classes` covers only the
+      # configured collection/admin set/file set; a profile may legitimately name
+      # others, since one migrating between collection classes carries both.
+      #
+      # @return [Array<String>]
+      def non_work_classes
+        clean_class_names(Hyrax::ModelRegistry.collection_class_names +
+                          Hyrax::ModelRegistry.admin_set_class_names +
+                          Hyrax::ModelRegistry.file_set_class_names)
+      end
+
+      # @param klass [String]
+      # @return [Boolean] whether the named class resolves to a collection,
+      #   admin set, or file set model rather than a work type.
+      def non_work_model?(klass)
+        constant = klass.safe_constantize
+        return false if constant.nil?
+
+        constant.respond_to?(:pcdm_collection?) && constant.pcdm_collection? ||
+          constant.respond_to?(:file_set?) && constant.file_set?
+      end
+
       # Gathers all unique class names from both the top-level `classes`
       # definition and all `available_on` property references.
       #
@@ -78,6 +101,11 @@ module Hyrax
       # @param mismatched_valkyrie_classes [Array<Hash>] an array to append Valkyrie mismatch errors to
       # @return [void]
       def validate_class(klass, invalid_classes, mismatched_valkyrie_classes)
+        # Catches a collection or admin set class that is in neither
+        # `@required_classes` nor the registry, which `non_work_classes` cannot
+        # exclude by name.
+        return if non_work_model?(klass)
+
         base_class_name = klass.gsub(/(?<=.)Resource$/, '')
         unless Hyrax.config.registered_curation_concern_types.include?(base_class_name)
           invalid_classes << klass

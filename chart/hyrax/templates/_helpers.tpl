@@ -60,6 +60,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Nginx Selector labels
+*/}}
+{{- define "hyrax.nginxSelectorLabels" -}}
+app.kubernetes.io/name: nginx
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "hyrax.serviceAccountName" -}}
