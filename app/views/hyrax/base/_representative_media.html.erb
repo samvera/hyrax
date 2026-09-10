@@ -1,9 +1,7 @@
-<% if presenter.representative_id.present? && presenter.representative_presenter.present? %>
-  <% if defined?(viewer) && viewer %>
-    <%= iiif_viewer_display presenter %>
-  <% else %>
-    <%= render media_display_partial(presenter.representative_presenter), file_set: presenter.representative_presenter  %>
-  <% end %>
+<% if defined?(viewer) && viewer %>
+  <%= iiif_viewer_display presenter %>
+<% elsif presenter.representative_id.present? && presenter.representative_presenter.present? %>
+  <%= render media_display_partial(presenter.representative_presenter), file_set: presenter.representative_presenter %>
 <% else %>
   <%= image_tag 'default.png', class: "canonical-image", alt: 'default representative image' %>
 <% end %>

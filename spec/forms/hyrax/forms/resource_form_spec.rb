@@ -9,6 +9,18 @@ RSpec.describe Hyrax::Forms::ResourceForm do
   let(:default_admin_set) { instance_double(Hyrax::AdministrativeSet, title: "DEFAULT_ADMINSET", id: "DEFAULT_ADMINSET_ID") }
   before { allow(Hyrax::AdminSetCreateService).to receive(:find_or_create_default_admin_set).and_return(default_admin_set) }
 
+  describe '.check_if_flexible' do
+    it 'treats a model that does not respond to flexible? as not flexible' do
+      model = Class.new do
+        def self.to_s
+          'ModelWithoutFlexibleSupport'
+        end
+      end
+
+      expect { Class.new(described_class) { check_if_flexible(model) } }.not_to raise_error
+    end
+  end
+
   # Redirects is a Work/Collection concern, never a FileSet one. The FileSet
   # form must not declare the property (its model has no `redirects` attribute) —
   # guarding the regression where declaring redirects on the shared base
