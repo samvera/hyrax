@@ -76,6 +76,7 @@ module Hyrax
         r = resource || deprecated_resource
         if r.flexible?
           self.class.deserializer_class = nil # need to reload this on first use after schema is loaded
+          reset_flexible_definitions!
           singleton_class.schema_definitions = self.class.definitions
           contexts = r.respond_to?(:contexts) ? r.contexts : nil
           current_schema_fields = Hyrax::Schema.m3_schema_loader.form_definitions_for(schema: r.class.name, version: Hyrax::FlexibleSchema.current_schema_id, contexts: contexts)
@@ -199,6 +200,14 @@ module Hyrax
           required_fields
         end
 
+        ##
+        # The form's own properties. Memoized on the first call, which
+        # {ResourceForm#reset_flexible_definitions!} makes before any profile
+        # field has been added, so the snapshot excludes them.
+        def static_schema_definitions
+          @static_schema_definitions ||= definitions.dup
+        end
+
         def schema_definitions
           @definitions
         end
@@ -211,7 +220,7 @@ module Hyrax
           @expose_class = Class.new(Disposable::Expose).from(schema_definitions.values)
         end
 
-        public :expose_class, :required_fields, :required_fields=, :schema_definitions, :schema_definitions=
+        public :expose_class, :required_fields, :required_fields=, :schema_definitions, :schema_definitions=, :static_schema_definitions
       end
       ##
       # @param [#to_s] attr
@@ -301,6 +310,18 @@ module Hyrax
       delegate :flexible?, to: :model
 
       private
+
+      # The flexible schema is declared on the singleton, but +Declarative+
+      # resolves +definitions+ as <tt>@definitions ||= ...</tt> on whichever
+      # object receives it, so the singleton and the class share one container
+      # and each build writes its profile's fields onto the class. Without this
+      # reset, a form built for one profile inherits the fields of whichever
+      # profile was built before it.
+      def reset_flexible_definitions!
+        baseline = self.class.static_schema_definitions
+        definitions = self.class.definitions
+        (definitions.keys - baseline.keys).each { |name| definitions.delete(name) }
+      end
 
       # A copy of the resource loaded at the current schema version, so its
       # singleton schema reflects the live profile (including compounds added

@@ -124,7 +124,7 @@ RSpec.describe Hyrax::SolrQueryService, :clean_repo do
       end
       it "returns the concatenated solr query clauses" do
         expect(solr_query_service.build).to eq '_query_:"{!field f=subject_ssim:Science" AND ' \
-                                               '{!terms f=id}id1,id2 AND ' \
+                                               '_query_:"{!terms f=id}id1,id2" AND ' \
                                                '_query_:"{!field f=has_model_ssim}Monograph"'
       end
     end
@@ -141,7 +141,20 @@ RSpec.describe Hyrax::SolrQueryService, :clean_repo do
   describe '#with_ids' do
     it "generates and appends a query clause" do
       expect(solr_query_service.with_ids(ids: ["an123id", "an456id", "an789id"]).query)
-        .to match_array [initial_query, '{!terms f=id}an123id,an456id,an789id']
+        .to match_array [initial_query, '_query_:"{!terms f=id}an123id,an456id,an789id"']
+    end
+
+    context 'when AND-combined with another clause', :clean_repo do
+      subject(:solr_query_service) { described_class.new }
+
+      let!(:work1) { FactoryBot.valkyrie_create(:monograph) }
+      let!(:work2) { FactoryBot.valkyrie_create(:monograph) }
+      let!(:work3) { FactoryBot.valkyrie_create(:monograph) }
+
+      it "matches every given id, including the last one in the list" do
+        ids = solr_query_service.with_ids(ids: [work1.id, work2.id, work3.id]).with_model(model: Monograph).get_ids
+        expect(ids).to contain_exactly(work1.id, work2.id, work3.id)
+      end
     end
   end
 
