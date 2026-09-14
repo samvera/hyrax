@@ -8,7 +8,7 @@
   </td>
   <td>
     <div class="media">
-      <%= link_to [main_app, document], "class" => "media-left", "aria-hidden" => "true" do %>
+      <%= link_to [main_app, document], "class" => "media-left mr-3", "aria-hidden" => "true" do %>
         <%= document_presenter(document)&.thumbnail&.thumbnail_tag({ class: "d-none d-md-block file_listing_thumbnail", alt: thumbnail_alt_text_for(document) }, { suppress_link: true }) %>
       <% end %>
       <div class="media-body">
@@ -22,6 +22,9 @@
   </td>
   <td class="text-center date"><%= document.date_uploaded %> </td>
   <td class="text-center">
+    <span class="fa <%= current_user&.trophies&.where(work_id: id)&.exists? ? 'fa-star highlighted-work' : 'fa-star-o trophy-off' %>" aria-hidden="true"></span>
+  </td>
+  <td class="text-center">
     <%= render_visibility_link(document) %>
   </td>
   <td class="text-center">
@@ -32,7 +35,7 @@
   </td>
 </tr>
 <tr id="detail_<%= id %>"> <!--  document detail"> -->
-  <td colspan="6">
+  <td colspan="7">
     <dl class="expanded-details row">
       <dt class="col-3 col-lg-2"><%= I18n.t("hyrax.admin.admin_sets.show_document_list_row.creator", :default => "Creator:") %></dt>
       <dd class="col-9 col-lg-4"><%= document.creator.to_a.to_sentence %></dd>
