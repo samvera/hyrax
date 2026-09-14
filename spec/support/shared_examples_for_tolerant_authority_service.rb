@@ -13,6 +13,10 @@
 # treats an entry with no `active:` flag — the mixin defaults to true; the
 # base class raises) stay asserted in each individual spec, not here.
 #
+# `#label` resolves in precedence order `term` → `label` → block (or the id when
+# no block is given), so that both file-based authorities (which emit `term`) and
+# table-based ones (which emit only `label`) produce a human-readable label.
+#
 # Hosts must provide:
 #   - `service` — the object under test, responding to label/include_current_value
 #   - `service_authority` — the FakeAuthority instance backing the service, so
@@ -24,12 +28,24 @@ RSpec.shared_examples "a tolerant authority service" do
       expect(service.label('active-id')).to eq 'Active Label'
     end
 
-    it "falls back to the id when the entry has no term" do
-      expect(service.label('active-no-term-id')).to eq 'active-no-term-id'
+    it "falls back to the label when the entry has no term" do
+      expect(service.label('active-no-term-id')).to eq 'Active No Term'
+    end
+
+    it "falls back to the id when the entry has neither term nor label" do
+      allow(service_authority).to receive(:find).with('bare-id').and_return({ id: 'bare-id' }.with_indifferent_access)
+      expect(service.label('bare-id')).to eq 'bare-id'
     end
 
     it "accepts a block to override the fallback" do
-      expect(service.label('active-no-term-id') { :backup }).to eq :backup
+      allow(service_authority).to receive(:find).with('bare-id').and_return({ id: 'bare-id' }.with_indifferent_access)
+      expect(service.label('bare-id') { :backup }).to eq :backup
+    end
+
+    it "prefers the term over the label when both are present" do
+      allow(service_authority).to receive(:find).with('both-id')
+                                                .and_return({ id: 'both-id', term: 'Term Wins', label: 'Label Loses' }.with_indifferent_access)
+      expect(service.label('both-id')).to eq 'Term Wins'
     end
   end
 

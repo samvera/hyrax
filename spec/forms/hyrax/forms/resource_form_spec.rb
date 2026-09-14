@@ -9,6 +9,18 @@ RSpec.describe Hyrax::Forms::ResourceForm do
   let(:default_admin_set) { instance_double(Hyrax::AdministrativeSet, title: "DEFAULT_ADMINSET", id: "DEFAULT_ADMINSET_ID") }
   before { allow(Hyrax::AdminSetCreateService).to receive(:find_or_create_default_admin_set).and_return(default_admin_set) }
 
+  describe '.check_if_flexible' do
+    it 'treats a model that does not respond to flexible? as not flexible' do
+      model = Class.new do
+        def self.to_s
+          'ModelWithoutFlexibleSupport'
+        end
+      end
+
+      expect { Class.new(described_class) { check_if_flexible(model) } }.not_to raise_error
+    end
+  end
+
   # Redirects is a Work/Collection concern, never a FileSet one. The FileSet
   # form must not declare the property (its model has no `redirects` attribute) —
   # guarding the regression where declaring redirects on the shared base
@@ -282,6 +294,84 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
       form = described_class.for(resource: work)
       expect(form.secondary_terms).not_to include(:video_embed)
+    end
+  end
+
+  describe 'flexible form definitions and the shared form class' do
+    let(:profile_fields) do
+      { 'title' => { required: true, primary: true, display: true } }
+    end
+
+    # `attributes_for` is driven from the same profile hash as the form fields:
+    # in a real install the model answers whatever the profile declares, and
+    # stubbing only the form side creates a divergence that cannot occur.
+    let(:schema_loader) do
+      loader = instance_double(Hyrax::M3SchemaLoader)
+      allow(loader).to receive(:current_version).and_return(1)
+      allow(loader).to receive(:index_rules_for).and_return({})
+      allow(loader).to receive(:form_definitions_for) { profile_fields }
+      allow(loader).to receive(:attributes_for) do
+        profile_fields.keys.each_with_object({}) do |name, attrs|
+          attrs[name.to_sym] = Valkyrie::Types::Array.of(Valkyrie::Types::String)
+        end
+      end
+      loader
+    end
+
+    let(:work_class) do
+      klass = Class.new(Hyrax::Work) do
+        def self.name
+          'TestSharedDefinitionsWork'
+        end
+      end
+      klass.acts_as_flexible_resource
+      klass
+    end
+
+    let(:form_class) { Class.new(Hyrax::Forms::ResourceForm(work_class)) }
+    let(:work) { work_class.new }
+
+    before do
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
+      allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
+      allow(Hyrax::FlexibleSchema).to receive(:current_schema_id).and_return(1)
+    end
+
+    after do
+      Hyrax.config.flexible_classes.delete('TestSharedDefinitionsWork')
+    end
+
+    # `display: false` is load-bearing: the pre-existing prune drops only fields
+    # marked for display, so these examples pass without the fix if the field is
+    # visible. `redirects` is the shipped hidden field.
+    let(:hidden_field) { { required: false, primary: false, display: false } }
+
+    it "does not carry a previous profile's hidden field into the next form" do
+      profile_fields['extra_profile_field'] = hidden_field
+      form_class.new(resource: work)
+
+      profile_fields.delete('extra_profile_field')
+      form = form_class.new(resource: work)
+
+      expect(form.singleton_class.definitions.keys).not_to include('extra_profile_field')
+    end
+
+    it "clears a previous profile's hidden field from the form class" do
+      profile_fields['extra_profile_field'] = hidden_field
+      form_class.new(resource: work)
+      expect(form_class.definitions.keys).to include('extra_profile_field')
+
+      profile_fields.delete('extra_profile_field')
+      form_class.new(resource: work)
+
+      expect(form_class.definitions.keys).not_to include('extra_profile_field')
+    end
+
+    it 'still exposes the profile fields on the instance' do
+      form = form_class.new(resource: work)
+
+      expect(form.singleton_class.definitions.keys).to include('title')
+      expect(form.title).to eq []
     end
   end
 
