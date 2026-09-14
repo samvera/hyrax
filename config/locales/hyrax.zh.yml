@@ -734,14 +734,6 @@ zh:
         is_private: 您尝试访问的%{type}是私有的
         page_is_private: 您尝试访问的页面是私有的
         unauthorized: 擅自
-      work_button_row:
-        analytics: Analytics（分析）
-        attach: 附上%{type}
-        delete: 删除
-        delete_type: 删除这个%{type}？
-        edit: 编辑
-        feature: 特征
-        unfeature: Unfeature
       workflow_actions:
         actions: 操作
         previous_comments: 以前的评论
@@ -1070,14 +1062,6 @@ zh:
           show_par_page_html: 显示%{select}每页
           sort_by: 排序：
         title: 收藏
-        work_action_menu:
-          delete_work: 删除工作
-          deleting_from_work: 从%{application_name}删除作品是永久性的。单击“确定”从%{application_name}中删除此工作，或单击“取消”取消此操作
-          edit_work: 编辑工作
-          press_to: 按到
-          remove_from_collection: 从收藏中删除
-          select_an_action: 选择一个动作
-          transfer_ownership_of_work: 转移工作所有权
         works: 作品
       create_work: 创建作品
       current_proxies: 目前代理
@@ -1335,10 +1319,6 @@ zh:
         versions_title: 显示以前的版本
       asset_deleted_flash:
         message: 该文件已经被删除。
-      asset_saved_flash:
-        message:
-          one: 该文件%{saved_files}已经保存。
-          other: 该文件%{saved_files}已经保存。
       asset_updated_flash:
         message: 该文件%{link_to_file}已经更新。
       descriptions:
@@ -1837,8 +1817,6 @@ zh:
       restricted_title_attr: 更改此资源的公开度
       unknown:
         text: 未知
-    work_button_row:
-      attach_child: 附上孩子
     workflow:
       default:
         deposit: 存储

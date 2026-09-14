@@ -729,14 +729,6 @@ pt-BR:
         is_private: O %{type} que você tentou acessar é privado
         page_is_private: A página que você tentou acessar é privada
         unauthorized: Não autorizado
-      work_button_row:
-        analytics: Google Analytics
-        attach: Anexar %{type}
-        delete: Excluir
-        delete_type: Excluir este %{type}?
-        edit: Editar
-        feature: Característica
-        unfeature: Unfeature
       workflow_actions:
         actions: Ações
         previous_comments: Comentários anteriores
@@ -1065,14 +1057,6 @@ pt-BR:
           show_par_page_html: Mostrar %{select} por página
           sort_by: "Ordenar Por:"
         title: Coleções
-        work_action_menu:
-          delete_work: Excluir trabalho
-          deleting_from_work: A exclusão de um trabalho de %{application_name} é permanente. Clique em OK para excluir este trabalho de %{application_name} ou em Cancelar para cancelar esta operação
-          edit_work: Editar Trabalho
-          press_to: Pressione para
-          remove_from_collection: Remover da coleção
-          select_an_action: Selecione uma ação
-          transfer_ownership_of_work: Transferir propriedade do trabalho
         works: Trabalho
       create_work: Criar obra
       current_proxies: Suplentes correntes
@@ -1330,10 +1314,6 @@ pt-BR:
         versions_title: Exibir versões anteriores
       asset_deleted_flash:
         message: O arquivo foi excluído.
-      asset_saved_flash:
-        message:
-          one: O arquivo %{saved_files} tiver sido salvo.
-          other: Os arquivos %{saved_files} ter sido salvo.
       asset_updated_flash:
         message: O arquivo %{link_to_file} foi atualizado.
       descriptions:
@@ -1832,8 +1812,6 @@ pt-BR:
       restricted_title_attr: Altere a permissão de acesso deste recurso
       unknown:
         text: Desconhecido
-    work_button_row:
-      attach_child: Anexar criança
     workflow:
       default:
         deposit: Depósito
