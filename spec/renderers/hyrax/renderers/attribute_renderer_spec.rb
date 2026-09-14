@@ -87,7 +87,7 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
         "<tr><th>Description</th>\n" \
          "<td><ul class='tabular'><li class=\"attribute attribute-description\">" \
          "<span itemprop=\"description\">Foo &lt; Bar " \
-         "<a href=\"http://www.example.com\">http://www.example.com</a>. &amp; More Text</span></li>\n" \
+         "<a href=\"http://www.example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://www.example.com</a>. &amp; More Text</span></li>\n" \
          "</ul></td></tr>"
       end
 
