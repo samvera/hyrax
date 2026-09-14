@@ -61,7 +61,8 @@ module Hyrax
 
       class << self
         def check_if_flexible(model)
-          include Hyrax::Indexer(model.to_s, index_loader: Hyrax::Schema.m3_schema_loader) if model.flexible?
+          return unless model.respond_to?(:flexible?) && model.flexible?
+          include Hyrax::Indexer(model.to_s, index_loader: Hyrax::Schema.m3_schema_loader)
         end
 
         ##
