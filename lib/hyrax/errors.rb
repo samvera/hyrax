@@ -17,4 +17,8 @@ module Hyrax
   class ObjectNotFoundError < ActiveFedora::ObjectNotFoundError; end
 
   class ModelMismatchError < HyraxError; end
+
+  # Raised when a characterization tool (e.g. FITS) returns an error response
+  # instead of characterization output
+  class CharacterizationError < HyraxError; end
 end
