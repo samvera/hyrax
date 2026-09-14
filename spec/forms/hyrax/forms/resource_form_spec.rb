@@ -27,7 +27,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
   describe '.check_if_flexible' do
     it 'treats a model that does not respond to flexible? as not flexible' do
-      model = Class.new do
+      model = Class.new do # rubocop:disable Lint/UselessAssignment
         def self.to_s
           'ModelWithoutFlexibleSupport'
         end
