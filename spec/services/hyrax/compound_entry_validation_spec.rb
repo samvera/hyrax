@@ -69,6 +69,62 @@ RSpec.describe Hyrax::CompoundEntryValidation do
     end
   end
 
+  describe 'a compound declaring an ordered rule' do
+    let(:definition) do
+      build_definition(subproperties: { 'start' => sub, 'finish' => sub })
+        .merge(validations: [{ type: 'ordered', before: 'start', after: 'finish' }])
+    end
+
+    def violations_for(rows)
+      described_class.new(definition, rows).violations
+    end
+
+    it 'is valid when the fields are in order' do
+      expect(violations_for([{ 'start' => '2026-01-01', 'finish' => '2026-06-30' }])).to be_empty
+    end
+
+    it 'is valid when the two values are equal' do
+      expect(violations_for([{ 'start' => '2026-01-01', 'finish' => '2026-01-01' }])).to be_empty
+    end
+
+    it 'is valid when the later field is blank' do
+      expect(violations_for([{ 'start' => '2026-01-01' }])).to be_empty
+    end
+
+    it 'flags a row whose values are reversed' do
+      expect(violations_for([{ 'start' => '2026-06-30', 'finish' => '2026-01-01' }]))
+        .to contain_exactly(type: :out_of_order, missing: ['finish'])
+    end
+
+    # One message however many rows are wrong, as with missing_required_subproperties.
+    it 'reports the rule once when several rows are reversed' do
+      rows = [{ 'start' => '2026-06-30', 'finish' => '2026-01-01' },
+              { 'start' => '2025-06-30', 'finish' => '2025-01-01' }]
+
+      expect(violations_for(rows).count { |v| v[:type] == :out_of_order }).to eq(1)
+    end
+
+    it 'ignores values it cannot compare' do
+      expect(violations_for([{ 'start' => 'circa 1920', 'finish' => 'later' }])).to be_empty
+    end
+
+    it 'defers to a missing required sub-property rather than reporting both' do
+      required = build_definition(subproperties: { 'start' => sub(required: true), 'finish' => sub })
+                 .merge(validations: [{ type: 'ordered', before: 'start', after: 'finish' }])
+
+      expect(described_class.new(required, [{ 'finish' => '2026-01-01' }]).violations)
+        .to contain_exactly(type: :missing_required_subproperties, missing: ['start'])
+    end
+  end
+
+  describe 'a compound with no validations declared' do
+    it 'applies no ordering rule' do
+      definition = build_definition(subproperties: { 'start' => sub, 'finish' => sub })
+
+      expect(described_class.new(definition, [{ 'start' => 'z', 'finish' => 'a' }]).violations).to be_empty
+    end
+  end
+
   describe '#valid?' do
     it 'is true when there are no violations' do
       expect(described_class.new(build_definition(subproperties: { 'a' => sub }), []).valid?).to be true

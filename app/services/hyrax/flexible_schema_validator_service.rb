@@ -40,6 +40,7 @@ module Hyrax
       validate_sort_properties
       validate_redirects
       validate_compound
+      validate_compound_validations
       validate_rich_text
       validate_search_results_truncate
     end
@@ -142,6 +143,14 @@ module Hyrax
     # @return [void]
     def validate_compound
       FlexibleSchemaValidators::CompoundValidator.new(profile: profile, errors: @errors).validate!
+    end
+
+    # Warns (does not block) when a compound declares a `validations:` rule of an
+    # unknown type, or one missing the fields it compares, where the rule never fires.
+    #
+    # @return [void]
+    def validate_compound_validations
+      FlexibleSchemaValidators::CompoundValidationsValidator.new(profile, @warnings).validate!
     end
 
     # Warns (does not block) when a property declares
