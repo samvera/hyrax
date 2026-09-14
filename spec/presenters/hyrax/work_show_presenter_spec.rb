@@ -120,6 +120,31 @@ RSpec.describe Hyrax::WorkShowPresenter do
       it { is_expected.to be false }
     end
 
+    context 'with no representative but viewable child works' do
+      let(:representative_id) { nil }
+      let(:ability) { Ability.new(nil) }
+      let(:attributes) { super().merge('member_ids_ssim' => ['child-1']) }
+      let(:viewable_count) { 1 }
+
+      before do
+        allow(Hyrax::SolrService).to receive(:count).and_return(viewable_count)
+      end
+
+      it { is_expected.to be true }
+
+      context 'and no child work is viewable' do
+        let(:viewable_count) { 0 }
+
+        it { is_expected.to be false }
+
+        it 'memoizes the result, even a false one' do
+          2.times { presenter.iiif_viewer? }
+
+          expect(Hyrax::SolrService).to have_received(:count).once
+        end
+      end
+    end
+
     context 'with non-image representative_presenter' do
       let(:representative_id) { 'representative-123' }
       let(:representative_present) { true }
@@ -220,6 +245,44 @@ RSpec.describe Hyrax::WorkShowPresenter do
         end
 
         it { is_expected.to be false }
+      end
+    end
+  end
+
+  describe '#iiif_viewer?', :clean_repo do
+    context 'when a parent work and child work are members of each other' do
+      let(:ability) { Ability.new(nil) }
+      let(:child_work) { FactoryBot.valkyrie_create(:monograph, title: ['Child']) }
+      let(:work) do
+        FactoryBot.valkyrie_create(:monograph, title: ['Parent'], members: [child_work]).tap do |parent|
+          child_work.member_ids += [parent.id]
+          Hyrax.index_adapter.save(resource: Hyrax.persister.save(resource: child_work))
+        end
+      end
+      let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
+
+      it 'terminates and is false when neither work has viewable content' do
+        expect(presenter.iiif_viewer?).to be false
+      end
+    end
+
+    context 'when a parent has several children with no viewable content of their own' do
+      let(:ability) { Ability.new(nil) }
+      let(:children) { Array.new(3) { |i| FactoryBot.valkyrie_create(:monograph, title: ["Child #{i}"]) } }
+      let(:work) { FactoryBot.valkyrie_create(:monograph, title: ['Parent'], members: children) }
+      let(:solr_document) { SolrDocument.new(Hyrax::ValkyrieIndexer.for(resource: work).to_solr) }
+
+      it 'issues a single Solr query naming every child work, not one per child' do
+        queries = []
+        allow(Hyrax::SolrService).to receive(:count).and_wrap_original do |original, query|
+          queries << query
+          original.call(query)
+        end
+
+        presenter.iiif_viewer?
+
+        expect(queries.size).to eq(1)
+        children.each { |child| expect(queries.first).to include(child.id.to_s) }
       end
     end
   end

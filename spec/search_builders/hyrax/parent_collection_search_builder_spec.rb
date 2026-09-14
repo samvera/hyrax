@@ -10,7 +10,7 @@ RSpec.describe Hyrax::ParentCollectionSearchBuilder do
 
     it 'updates solr_parameters[:fq]' do
       subject
-      expect(solr_params[:fq]).to include("{!terms f=id}col1")
+      expect(solr_params[:fq]).to include('_query_:"{!terms f=id}col1"')
     end
   end
 end

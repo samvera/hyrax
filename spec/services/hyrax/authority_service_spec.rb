@@ -23,6 +23,23 @@ RSpec.describe Hyrax::AuthorityService do
 
   include_examples "a tolerant authority service"
 
+  describe "#select_active_options" do
+    it "omits the inactive terms" do
+      expect(service.select_active_options)
+        .to contain_exactly(['Active Label', 'active-id'],
+                            ['Active No Term', 'active-no-term-id'],
+                            ['No Active Flag Label', 'no-active-flag-id'])
+    end
+
+    it "keeps a term that states no status" do
+      expect(service.select_active_options).to include ['No Active Flag Label', 'no-active-flag-id']
+    end
+
+    it "is available without the authority_name macro" do
+      expect(service).to respond_to(:select_active_options)
+    end
+  end
+
   describe ".authority_name" do
     let(:service) do
       fake_authority = service_authority

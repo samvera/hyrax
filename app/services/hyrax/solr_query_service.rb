@@ -127,6 +127,17 @@ module Hyrax
     end
 
     ##
+    # @param from [String] field on the documents matched by +query+
+    # @param to [String] field on the documents to return
+    # @param query [String, #build] the query selecting the documents to join from
+    # @return [SolrQueryService] the existing service with a join query appended
+    def with_join(from:, to:, query:)
+      inner_query = query.respond_to?(:build) ? query.build : query
+      @query += ["{!join from=#{from} to=#{to} v='#{inner_query}'}"]
+      self
+    end
+
+    ##
     # @param ability [???] the user's abilities
     # @param action [Symbol] the action the user is taking (e.g. :index, :edit, :show, etc.) (default: :index)
     # @return [SolrQueryService] the existing service with access filters query appended
@@ -143,9 +154,9 @@ module Hyrax
     # @return [String] a solr query
     # @example
     #   construct_query_for_ids(['id1', 'id2'])
-    #   # => "{!terms f=id}id1,id2"
+    #   # => "_query_:\"{!terms f=id}id1,id2\""
     def construct_query_for_ids(ids)
-      "{!terms f=#{Hyrax.config.id_field}}#{ids.join(',')}"
+      "_query_:\"{!terms f=#{Hyrax.config.id_field}}#{ids.join(',')}\""
     end
 
     # Construct a solr query from a list of pairs (e.g. { field1: values, field2: values })
