@@ -101,7 +101,7 @@ module Hyrax
       end
 
       def li_value(value)
-        auto_link(ERB::Util.h(value))
+        auto_link(ERB::Util.h(value), html: { target: "_blank", rel: "noopener noreferrer" })
       end
 
       def work_type_label_key
