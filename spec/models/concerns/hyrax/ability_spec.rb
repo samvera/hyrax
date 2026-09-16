@@ -145,9 +145,11 @@ RSpec.describe Hyrax::Ability do
     Hyrax.logger.level = original_level
   end
 
+  # ability_class's fixture doesn't include Hydra::Ability (the usual source of these field-name methods), so stub them directly.
   describe '#download_groups' do
     it "doesn't build debug strings when the logger's level is above debug" do
-      doc = { ability_class.read_group_field => [unspeakable_entry], ability_class.edit_group_field => [] }
+      allow(ability_class).to receive_messages(read_group_field: 'read_access_group_ssim', edit_group_field: 'edit_access_group_ssim')
+      doc = { 'read_access_group_ssim' => [unspeakable_entry], 'edit_access_group_ssim' => [] }
       allow(ability).to receive(:permissions_doc).and_return(doc)
 
       expect { ability.download_groups('my_solr_doc_id') }.not_to raise_error
@@ -156,7 +158,8 @@ RSpec.describe Hyrax::Ability do
 
   describe '#download_users' do
     it "doesn't build debug strings when the logger's level is above debug" do
-      doc = { ability_class.read_user_field => [unspeakable_entry], ability_class.edit_user_field => [] }
+      allow(ability_class).to receive_messages(read_user_field: 'read_access_person_ssim', edit_user_field: 'edit_access_person_ssim')
+      doc = { 'read_access_person_ssim' => [unspeakable_entry], 'edit_access_person_ssim' => [] }
       allow(ability).to receive(:permissions_doc).and_return(doc)
 
       expect { ability.download_users('my_solr_doc_id') }.not_to raise_error
