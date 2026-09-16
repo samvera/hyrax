@@ -103,7 +103,10 @@ RSpec.describe Hyrax::FlexibleSchema, :clean_repo, type: :model do
   end
 
   describe '.current_version' do
-    before { subject }
+    # save(validate: false), not `subject` -- the m3 fixture doesn't validate
+    # against every work-type registry in Hyrax's own CI dummy apps, and
+    # what's under test here is the memoization, not profile validity.
+    before { described_class.new(profile: profile_data).save(validate: false) }
 
     it 'memoizes the latest record per-request instead of re-querying every call' do
       expect(described_class).to receive(:order).once.and_call_original
