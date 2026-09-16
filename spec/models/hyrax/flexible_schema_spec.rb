@@ -102,6 +102,23 @@ RSpec.describe Hyrax::FlexibleSchema, :clean_repo, type: :model do
     end
   end
 
+  describe '.current_version' do
+    before { subject }
+
+    it 'memoizes the latest record per-request instead of re-querying every call' do
+      expect(described_class).to receive(:order).once.and_call_original
+      2.times { described_class.current_version }
+      described_class.current_schema_id
+    end
+
+    it 'does not leak across requests' do
+      described_class.current_version
+      RequestStore.clear!
+      expect(described_class).to receive(:order).once.and_call_original
+      described_class.current_version
+    end
+  end
+
   describe 'property name resolution' do
     let(:profile_with_names) do
       {

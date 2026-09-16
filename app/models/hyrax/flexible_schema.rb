@@ -14,11 +14,16 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   end
 
   def self.current_version
-    order("created_at asc").last&.profile
+    current_record&.profile
   end
 
   def self.current_schema_id
-    order("created_at asc").last&.id
+    current_record&.id
+  end
+
+  # Per-request memoized -- called dozens of times in a single page render (once per profile/class_names lookup), and each call otherwise re-queries and re-parses the YAML profile column from scratch.
+  def self.current_record
+    RequestStore.store[:hyrax_flexible_schema_current] ||= order("created_at asc").last
   end
 
   def self.create_default_schema
