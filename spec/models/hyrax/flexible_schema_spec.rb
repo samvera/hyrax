@@ -113,7 +113,7 @@ RSpec.describe Hyrax::FlexibleSchema, :clean_repo, type: :model do
 
     it 'does not leak across requests' do
       described_class.current_version
-      RequestStore.clear!
+      Hyrax::Current.reset
       expect(described_class).to receive(:order).once.and_call_original
       described_class.current_version
     end
