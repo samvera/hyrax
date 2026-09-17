@@ -229,6 +229,14 @@ worker:
     # failureThreshold: 10
     # successThreshold: 2
 
+  # Scaled independently from the top-level autoscaling block, which covers web only.
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
 fcrepo:
   enabled: true
   servicePort: 8080
