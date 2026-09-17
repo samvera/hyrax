@@ -9,6 +9,22 @@ RSpec.describe Hyrax::Forms::ResourceForm do
   let(:default_admin_set) { instance_double(Hyrax::AdministrativeSet, title: "DEFAULT_ADMINSET", id: "DEFAULT_ADMINSET_ID") }
   before { allow(Hyrax::AdminSetCreateService).to receive(:find_or_create_default_admin_set).and_return(default_admin_set) }
 
+  describe 'thumbnail_id and representative_id' do
+    it 'coerces blank submissions to nil' do
+      form.validate(thumbnail_id: '', representative_id: '')
+
+      expect(form.thumbnail_id).to be_nil
+      expect(form.representative_id).to be_nil
+    end
+
+    it 'casts present values to ids' do
+      form.validate(thumbnail_id: 'fake_id', representative_id: 'fake_id')
+
+      expect(form.thumbnail_id.to_s).to eq 'fake_id'
+      expect(form.representative_id.to_s).to eq 'fake_id'
+    end
+  end
+
   describe '.check_if_flexible' do
     it 'treats a model that does not respond to flexible? as not flexible' do
       model = Class.new do
