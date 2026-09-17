@@ -2,7 +2,7 @@ apiVersion: v2
 name: hyrax
 description: An open-source, Samvera-powered digital repository system
 type: application
-version: 4.0.1
+version: 4.1.0
 appVersion: 5.2.0
 dependencies:
   - name: fcrepo
