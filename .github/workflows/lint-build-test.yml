@@ -4,17 +4,18 @@ on:
   push:
     branches:
       - main
-    paths-ignore: &non-code-paths
+    # No paths-ignore here: every main push must still build+push an image
+    # and trigger the Nurax deploy, even for chart-only changes.
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
       - "chart/**"
       - "documentation/**"
       - "**.md"
       - "LICENSE"
       - "samvera-fall-TM3.svg"
       - ".circleci/**"
-  pull_request:
-    branches:
-      - main
-    paths-ignore: *non-code-paths
   workflow_dispatch:
     inputs:
       debug_enabled:
