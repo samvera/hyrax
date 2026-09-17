@@ -4,9 +4,17 @@ on:
   push:
     branches:
       - main
+    paths-ignore: &non-code-paths
+      - "chart/**"
+      - "documentation/**"
+      - "**.md"
+      - "LICENSE"
+      - "samvera-fall-TM3.svg"
+      - ".circleci/**"
   pull_request:
     branches:
       - main
+    paths-ignore: *non-code-paths
   workflow_dispatch:
     inputs:
       debug_enabled:
