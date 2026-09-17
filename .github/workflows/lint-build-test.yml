@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    # No paths-ignore here: every main push must still build+push an image
-    # and trigger the Nurax deploy, even for chart-only changes.
   pull_request:
     branches:
       - main
