@@ -1276,6 +1276,14 @@ module Hyrax
       @file_set_indexer ||= Hyrax::Indexers::FileSetIndexer
     end
 
+    attr_writer :index_file_metadata_as_document
+    ##
+    # @return [Boolean] whether FileMetadata resources are indexed as their own Solr document
+    def index_file_metadata_as_document?
+      return @index_file_metadata_as_document unless @index_file_metadata_as_document.nil?
+      ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_INDEX_FILE_METADATA_AS_DOCUMENT', true))
+    end
+
     attr_writer :pcdm_collection_indexer
     ##
     # @return [Class]

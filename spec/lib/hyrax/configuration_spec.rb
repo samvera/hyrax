@@ -102,6 +102,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:permission_levels) }
   it { is_expected.to respond_to(:permission_options) }
   it { is_expected.to respond_to(:persistent_hostpath) }
+  it { is_expected.to respond_to(:index_file_metadata_as_document?) }
+  it { is_expected.to respond_to(:index_file_metadata_as_document=) }
   it { is_expected.to respond_to(:realtime_notifications?) }
   it { is_expected.to respond_to(:realtime_notifications=) }
   it { is_expected.to respond_to(:redirects_enabled) }
@@ -179,6 +181,27 @@ RSpec.describe Hyrax::Configuration do
       it "is true" do
         expect(described_class.new.redirects_enabled?).to be true
       end
+    end
+  end
+
+  describe "#index_file_metadata_as_document?" do
+    context "with the env var unset" do
+      before { stub_const("ENV", {}) }
+      it "defaults to true" do
+        expect(described_class.new.index_file_metadata_as_document?).to be true
+      end
+    end
+
+    context "with HYRAX_INDEX_FILE_METADATA_AS_DOCUMENT=false" do
+      before { stub_const("ENV", "HYRAX_INDEX_FILE_METADATA_AS_DOCUMENT" => "false") }
+      it "is false" do
+        expect(described_class.new.index_file_metadata_as_document?).to be false
+      end
+    end
+
+    it "is overridable directly, regardless of the env var" do
+      configuration.index_file_metadata_as_document = false
+      expect(configuration.index_file_metadata_as_document?).to be false
     end
   end
 
