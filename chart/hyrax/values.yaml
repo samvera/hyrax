@@ -229,6 +229,14 @@ worker:
     # failureThreshold: 10
     # successThreshold: 2
 
+  # Scaled independently from the top-level autoscaling block, which covers web only.
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    # targetMemoryUtilizationPercentage: 80
+
 fcrepo:
   enabled: true
   servicePort: 8080
@@ -370,9 +378,9 @@ solr:
 
 autoscaling:
   enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
   # targetMemoryUtilizationPercentage: 80
 
 global:

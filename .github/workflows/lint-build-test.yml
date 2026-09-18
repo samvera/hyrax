@@ -7,6 +7,13 @@ on:
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - "chart/**"
+      - "documentation/**"
+      - "**.md"
+      - "LICENSE"
+      - "samvera-fall-TM3.svg"
+      - ".circleci/**"
   workflow_dispatch:
     inputs:
       debug_enabled:

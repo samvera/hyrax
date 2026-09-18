@@ -67,11 +67,25 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
   #
   # @return [void]
   def characterize
-    terms = parse_metadata(extract_metadata(content))
-    apply_metadata(terms)
+    raw_metadata = extract_metadata(content)
+    raise_on_characterization_error(raw_metadata)
+    apply_metadata(parse_metadata(raw_metadata))
   end
 
   protected
+
+  # FITS (and fits-servlet) reports failures, e.g. a file exceeding its
+  # configured upload size limit, as a 200-shaped XML <error> document
+  # rather than a request failure. Parsed as normal FITS output it just
+  # yields no terms, so characterization silently no-ops instead of erroring.
+  def raise_on_characterization_error(raw_metadata)
+    doc = Nokogiri::XML(raw_metadata.to_s)
+    status_code = doc.at_xpath('//statusCode')&.text
+    return unless status_code
+
+    message = doc.at_xpath('//message')&.text || raw_metadata
+    raise Hyrax::CharacterizationError, "characterization failed for #{file_name} (status #{status_code}): #{message}"
+  end
 
   def content
     source.rewind

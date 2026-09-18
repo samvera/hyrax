@@ -56,13 +56,34 @@ module Hyrax
         stats = stat_cache_info[:cached_stats]
         if stat_cache_info[:ga_start_date] < Time.zone.today
           page_stats = Hyrax::Analytics.page_statistics(stat_cache_info[:ga_start_date], object)
+          latest_zero_date = nil
           page_stats.each do |stat|
-            lstat = build_for(object, date: stat[:date], object_method => stat[ga_key], user_id: user_id)
-            lstat.save unless stat[:date].to_date == Time.zone.today
+            lstat, zero_date = record_stat(object, stat, object_method, ga_key, user_id)
             stats << lstat
+            latest_zero_date = [latest_zero_date, zero_date].compact.max
           end
+          advance_zero_marker(object, object_method, latest_zero_date, user_id) if latest_zero_date
         end
         stats
+      end
+
+      # @return [Array(Hyrax::Statistic, Date?)] the built stat, and its date if zero-count
+      def record_stat(object, stat, object_method, ga_key, user_id)
+        lstat = build_for(object, date: stat[:date], object_method => stat[ga_key], user_id: user_id)
+        return [lstat, nil] if stat[:date].to_date == Time.zone.today
+        return [lstat, stat[:date].to_date] unless stat[ga_key].to_i.positive?
+
+        lstat.save
+        [lstat, nil]
+      end
+
+      def advance_zero_marker(object, object_method, date, user_id)
+        marker = statistics_for(object).where(object_method => 0).order(date: :asc).last
+        if marker
+          marker.update(date: date) if date > marker.date
+        else
+          build_for(object, date: date, object_method => 0, user_id: user_id).save
+        end
       end
     end
 
