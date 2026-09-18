@@ -102,6 +102,54 @@ admin_note:
 
 Use `admin_only` in place of `editor_only` to restrict visibility to admins only.
 
+## Controlled-vocabulary labels
+
+A controlled vocabulary term has two parts: an **id** — the value works store — and a **label**. Where the two differ, an id alone reads as opaque: a term whose id is `local_auth_123` and whose label is "Opaque Term" would otherwise display as `local_auth_123` on work pages, in search results, and in facets.
+
+A property is treated as controlled when its `controlled_values.sources` names an authority (anything other than the `"null"` free-text sentinel), the configured label service can resolve that authority, and its `indexing:` array names the Solr fields the labels ride beside.
+
+The `indexing:` array must name the Solr fields themselves. `stored_searchable` and `facetable` are directives that carry no field name, and a property declaring only those has no index keys for the indexer to write label companions beside — such a property is left exactly as it is today.
+
+```yaml
+resource_type:
+  controlled_values:
+    format: http://www.w3.org/2001/XMLSchema#string
+    sources:
+      - resource_types
+  indexing:
+    - resource_type_tesim   # required for labels in rows and on show pages
+    - resource_type_sim     # required for the label facet
+    - facetable
+```
+
+Given that, Hyrax:
+
+- **indexes** the labels beside the stored ids, as `<index_key>_label` — `resource_type_tesim` gains `resource_type_label_tesim`. The ids are left in place: they are the link target for a URI-valued authority and what OAI harvests. Labels are positionally parallel to the values, repeating the id where a term does not resolve.
+- **renders** the label on the show page, linking it to the id where the id is an `http`/`https` URI.
+- **facets and links** on `<property>_label_sim`, and shows the label in the search-result row, falling back to the id for works indexed before the label fields existed. The id facet stays configured alongside the label facet — hidden from the sidebar, so the ids are not listed beside the labels, but still resolving `f[<property>_sim][]` from saved searches and bookmarks.
+
+Reindex after registering a service. Until then the label fields are empty: search-result rows fall back to showing the id, while the row's facet link points at the label facet, so clicking a value returns nothing. Both agree once the corpus is reindexed.
+
+Because this is driven by the profile, a property or vocabulary added to an m3 profile is covered with no `CatalogController` change.
+
+### Registering a label service
+
+Hyrax has no vocabulary store of its own, so resolution is injectable. The default resolves nothing, which leaves indexing and rendering byte-identical to an installation without this feature. An application registers its own resolver:
+
+```ruby
+# config/initializers/hyrax.rb
+Hyrax.config.controlled_vocabulary_label_service = MyLabelService.new
+```
+
+A service need only implement the two methods on `Hyrax::ControlledVocabularyLabelService`:
+
+| method | returns |
+| --- | --- |
+| `resolvable?(source)` | whether labels can be resolved for the named vocabulary |
+| `labels_for(source, values)` | one label per value, in order, the id where unresolved |
+
+`labels_for` must stay positional — the renderer pairs values to labels, so an unresolved value has to hold its place. `resolvable?` should answer `false` for remote authorities: resolving one means a network call per value, which has no place in an indexing run.
+
 ## Rich-text fields
 
 A string property can be edited with a rich-text (WYSIWYG) editor and rendered as sanitized HTML. This works in both flexible and non-flexible mode and is driven by two independent directives:
