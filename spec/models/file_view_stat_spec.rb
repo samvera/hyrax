@@ -112,6 +112,17 @@ RSpec.describe FileViewStat, type: :model do
         expect(zero_rows.first.id).to eq(marker.id)
         expect(zero_rows.first.date.to_date).to eq(dates[1])
       end
+
+      it "marks the latest zero day even when GA returns zero-count entries out of date order" do
+        out_of_order_zero_statistics = [SpecStatistic.new(date: date_strs[2], pageviews: 0), SpecStatistic.new(date: date_strs[0], pageviews: 0)]
+        expect(Hyrax::Analytics).to receive(:page_statistics).and_return(out_of_order_zero_statistics)
+
+        described_class.statistics(file, Time.zone.today - 4.days, user_id)
+
+        zero_rows = described_class.where(file_id: file_id, views: 0)
+        expect(zero_rows.count).to eq(1)
+        expect(zero_rows.first.date.to_date).to eq(dates[2])
+      end
     end
   end
 end

@@ -60,7 +60,7 @@ module Hyrax
           page_stats.each do |stat|
             lstat, zero_date = record_stat(object, stat, object_method, ga_key, user_id)
             stats << lstat
-            latest_zero_date = zero_date if zero_date
+            latest_zero_date = [latest_zero_date, zero_date].compact.max
           end
           advance_zero_marker(object, object_method, latest_zero_date, user_id) if latest_zero_date
         end
