@@ -22,6 +22,14 @@ module Hyrax
       stats.map(&:to_flot)
     end
 
+    # Zero-count days share a single cached marker row (Hyrax::Statistic#advance_zero_marker), so gaps are filled in here for display.
+    def zero_fill(stats)
+      by_date = stats.index_by { |stat| stat.date.to_date }
+      (created.to_date..Time.zone.today).map do |date|
+        by_date[date]&.to_flot || [Hyrax::Statistic.convert_date(date), 0]
+      end
+    end
+
     # model.date_uploaded reflects the date the object was uploaded by the user
     # and therefore (if available) the date that we want to use for the stats
     # model.create_date reflects the date the file was added to Fedora. On data
