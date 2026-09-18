@@ -936,6 +936,7 @@ en:
       errors:
         required_but_empty: "%{compound} requires at least one entry"
         missing_required_subproperties: "Each %{compound} entry requires: %{fields}"
+        out_of_order: "Each %{compound} entry must be in order: %{fields} cannot come first"
       linked_record:
         add_new: Add a %{item}
         add_row: Add another %{item}
@@ -1511,6 +1512,10 @@ en:
           linked_record_without_source: "m3 profile compound subproperty `%{property}` is `type: linked_record` but declares no `authority` naming a registered linked-record source"
           top_level_indexing: "m3 profile compound property `%{property}` must not declare top-level `indexing`; declare `indexing` (or `index_keys`) on each subproperty instead"
           duplicate_subproperty_name: "m3 profile compound `%{parent}` has multiple sub-properties resolving to the in-compound name `%{name}` (%{properties}); each sub-property in a compound must resolve to a unique name (set a distinct `name:`)"
+      compound_validations_validator:
+        warnings:
+          unknown_type: "m3 profile compound `%{compound}` declares a validation of unknown type `%{type}`; the rule will be ignored. Known types: ordered."
+          incomplete_rule: "m3 profile compound `%{compound}` declares a `%{type}` validation without both `before` and `after`; the rule will be ignored."
       redirects_validator:
         errors:
           invalid_available_on: "m3 profile `redirects` property must be available on at least one work or collection class declared in this profile"
