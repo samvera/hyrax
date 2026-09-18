@@ -1,0 +1,58 @@
+suite: hpa uses the stable autoscaling/v2 API (v2beta1/v2beta2 were removed in Kubernetes 1.26)
+templates:
+  - templates/hpa-web.yaml
+tests:
+  - it: renders nothing when disabled
+    set:
+      autoscaling.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: targets the hyrax Deployment on autoscaling/v2
+    set:
+      autoscaling.enabled: true
+    asserts:
+      - equal:
+          path: apiVersion
+          value: autoscaling/v2
+      - equal:
+          path: spec.scaleTargetRef
+          value:
+            apiVersion: apps/v1
+            kind: Deployment
+            name: RELEASE-NAME-hyrax
+
+  - it: sets a CPU utilization target using the v2 nested target schema
+    set:
+      autoscaling.enabled: true
+      autoscaling.targetCPUUtilizationPercentage: 70
+    asserts:
+      - contains:
+          path: spec.metrics
+          content:
+            type: Resource
+            resource:
+              name: cpu
+              target:
+                type: Utilization
+                averageUtilization: 70
+
+  - it: also sets a memory utilization target when configured
+    set:
+      autoscaling.enabled: true
+      autoscaling.targetCPUUtilizationPercentage: 70
+      autoscaling.targetMemoryUtilizationPercentage: 80
+    asserts:
+      - contains:
+          path: spec.metrics
+          content:
+            type: Resource
+            resource:
+              name: memory
+              target:
+                type: Utilization
+                averageUtilization: 80
+      - lengthEqual:
+          path: spec.metrics
+          count: 2
