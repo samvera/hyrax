@@ -71,7 +71,7 @@ module Hyrax
 
         case subproperty_spec(sub_property)&.dig(:type).to_s
         when 'url'
-          auto_link(ERB::Util.h(value.to_s))
+          auto_link(ERB::Util.h(value.to_s), html: { target: "_blank", rel: "noopener noreferrer" })
         when 'work_or_url'
           work_or_url_markup(value)
         when 'linked_record'
@@ -126,7 +126,7 @@ module Hyrax
       # Link a URL or a resolvable work; render anything else as plain text so
       # we never emit a broken link to a non-existent work.
       def work_or_url_markup(value)
-        return auto_link(ERB::Util.h(value.to_s)) if Hyrax::CompoundWorkResolver.url?(value)
+        return auto_link(ERB::Util.h(value.to_s), html: { target: "_blank", rel: "noopener noreferrer" }) if Hyrax::CompoundWorkResolver.url?(value)
 
         title, path = Hyrax::CompoundWorkResolver.resolve(value)
         return ERB::Util.h(value.to_s) if title.nil?
