@@ -1063,6 +1063,23 @@ module Hyrax
     end
     attr_writer :controlled_vocabulary_label_service
 
+    ##
+    # Authorities for attributes whose schema cannot name one itself:
+    # `controlled_values` is an m3 profile key, so a `config/metadata/*.yaml`
+    # schema has no way to declare a property controlled.
+    #
+    # @return [Hash{Symbol => String}] authority name by attribute name
+    def controlled_vocabulary_authorities
+      @controlled_vocabulary_authorities ||= {}
+    end
+
+    # Symbolized because keys are matched against attribute names: a
+    # string-keyed hash would otherwise register nothing, and raise nothing.
+    def controlled_vocabulary_authorities=(authorities)
+      @controlled_vocabulary_authorities =
+        authorities.to_h { |attribute, source| [attribute.to_sym, source] }
+    end
+
     attr_writer :active_deposit_agreement_acceptance
     def active_deposit_agreement_acceptance?
       return true if @active_deposit_agreement_acceptance.nil?

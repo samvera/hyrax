@@ -47,6 +47,44 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
     end
   end
 
+  describe '#authority_rules_for' do
+    # Hyrax.config is process-global: without this, a later example sees
+    # controlled properties its schema never declared.
+    after { Hyrax.config.controlled_vocabulary_authorities = {} }
+
+    it 'is empty for a schema that declares no authority' do
+      expect(schema_loader.authority_rules_for(schema: :basic_metadata)).to eq({})
+    end
+
+    context 'when the application registers an authority' do
+      before { Hyrax.config.controlled_vocabulary_authorities = { license: 'licenses' } }
+
+      it 'maps the attribute to that authority' do
+        expect(schema_loader.authority_rules_for(schema: :basic_metadata))
+          .to include(license: 'licenses')
+      end
+
+      it 'leaves the schema other attributes free text' do
+        expect(schema_loader.authority_rules_for(schema: :basic_metadata))
+          .not_to have_key(:keyword)
+      end
+    end
+
+    it 'accepts a string-keyed hash, which is how an application is likely to write one' do
+      Hyrax.config.controlled_vocabulary_authorities = { 'license' => 'licenses' }
+
+      expect(schema_loader.authority_rules_for(schema: :basic_metadata))
+        .to include(license: 'licenses')
+    end
+
+    it 'registers nothing for a name the schema does not define' do
+      Hyrax.config.controlled_vocabulary_authorities = { not_an_attribute: 'licenses' }
+
+      expect(schema_loader.authority_rules_for(schema: :basic_metadata))
+        .not_to have_key(:not_an_attribute)
+    end
+  end
+
   describe '#view_definitions_for' do
     context 'when schema has no attributes with view options' do
       it 'returns empty hash' do

@@ -54,20 +54,25 @@ module Hyrax
     end
 
     ##
-    # @param [Symbol] schema
+    # @param [Symbol, String] schema a schema name, or the model name a profile
+    #   describes
     #
     # @return [{Symbol => String}] a map from attribute names to the name of the
-    #   controlled vocabulary backing them. Only attributes declaring a real
-    #   `controlled_values.sources` entry appear; the `"null"` sentinel the
-    #   profile uses to mean "free text" is not an authority.
+    #   controlled vocabulary backing them. An attribute appears when it declares
+    #   a real `controlled_values.sources` entry — the `"null"` sentinel the
+    #   profile uses to mean "free text" is not an authority — or when the
+    #   application registers one in
+    #   {Hyrax::Configuration#controlled_vocabulary_authorities}.
     #
     # Read through the definitions, not the profile hash: only they apply
     # `available_on` and collapse a `name:` surrogate, so a property standing in
     # for another on a particular class resolves to the authority its own entry
     # declares rather than the one the shared name declares.
     def authority_rules_for(schema:, version: 1, contexts: nil)
+      configured = Hyrax.config.controlled_vocabulary_authorities
+
       definitions(schema, version, contexts).each_with_object({}) do |definition, hash|
-        source = definition.authority_source
+        source = definition.authority_source || configured[definition.name]
         hash[definition.name] = source if source
       end
     end

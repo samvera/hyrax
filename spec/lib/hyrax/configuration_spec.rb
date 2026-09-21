@@ -93,6 +93,20 @@ RSpec.describe Hyrax::Configuration do
       expect(subject.controlled_vocabulary_label_service).to be_a(Hyrax::ControlledVocabularyLabelService)
     end
   end
+  it { is_expected.to respond_to(:controlled_vocabulary_authorities) }
+  it { is_expected.to respond_to(:controlled_vocabulary_authorities=) }
+
+  describe '#controlled_vocabulary_authorities' do
+    it 'defaults to none, leaving every property to its schema' do
+      expect(subject.controlled_vocabulary_authorities).to eq({})
+    end
+
+    it 'symbolizes the keys it is given, since attribute names are symbols' do
+      subject.controlled_vocabulary_authorities = { 'license' => 'licenses' }
+
+      expect(subject.controlled_vocabulary_authorities).to eq(license: 'licenses')
+    end
+  end
   it { is_expected.to respond_to(:logger) }
   it { is_expected.to respond_to(:logger=) }
   it { is_expected.to respond_to(:max_days_between_fixity_checks) }

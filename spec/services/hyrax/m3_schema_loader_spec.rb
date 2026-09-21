@@ -163,6 +163,24 @@ RSpec.describe Hyrax::M3SchemaLoader do
       expect(rules).to have_key(:resource_type)
       expect(rules).not_to have_key(:monograph_resource_type)
     end
+
+    context 'when the application also registers authorities' do
+      after { Hyrax.config.controlled_vocabulary_authorities = {} }
+
+      it 'fills in an attribute the profile leaves free text' do
+        Hyrax.config.controlled_vocabulary_authorities = { free_text_note: 'notes' }
+
+        expect(schema_loader.authority_rules_for(schema: 'GenericWork'))
+          .to include(free_text_note: 'notes')
+      end
+
+      it 'keeps the source the profile declares' do
+        Hyrax.config.controlled_vocabulary_authorities = { resource_type: 'ignored_types' }
+
+        expect(schema_loader.authority_rules_for(schema: 'GenericWork'))
+          .to include(resource_type: 'resource_types')
+      end
+    end
   end
 
   describe '#form_definitions_for' do
