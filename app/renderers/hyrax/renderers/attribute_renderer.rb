@@ -105,10 +105,10 @@ module Hyrax
 
       def li_value(value)
         term_label = controlled_label_for(value)
-        return auto_link(ERB::Util.h(value)) if term_label.nil?
+        return auto_link(ERB::Util.h(value), html: { target: "_blank", rel: "noopener noreferrer" }) if term_label.nil?
 
         if Hyrax::AuthorityRenderingHelper.linkable_uri?(value)
-          %(<a href="#{ERB::Util.h(value)}">#{ERB::Util.h(term_label)}</a>).html_safe
+          %(<a href="#{ERB::Util.h(value)}" target="_blank" rel="noopener noreferrer">#{ERB::Util.h(term_label)}</a>).html_safe
         else
           ERB::Util.h(term_label)
         end

@@ -5,7 +5,7 @@ module Hyrax
       private
 
       def li_value(value)
-        auto_link(value) do |link|
+        auto_link(value, html: { target: "_blank", rel: "noopener noreferrer" }) do |link|
           "<span class='fa fa-external-link'></span>&nbsp;#{link}"
         end
       end
