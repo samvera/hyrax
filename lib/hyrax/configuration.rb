@@ -1049,6 +1049,20 @@ module Hyrax
     end
     attr_writer :location_service
 
+    # A configuration point for resolving controlled vocabulary term ids to
+    # their labels, used when indexing and rendering controlled properties.
+    #
+    # Defaults to a no-op that returns values unchanged, because Hyrax has no
+    # vocabulary store of its own. Register an application's own resolver to
+    # have labels indexed and displayed.
+    #
+    # @!attribute [w] controlled_vocabulary_label_service
+    #   @see Hyrax::ControlledVocabularyLabelService for the expected interface
+    def controlled_vocabulary_label_service
+      @controlled_vocabulary_label_service ||= Hyrax::ControlledVocabularyLabelService.new
+    end
+    attr_writer :controlled_vocabulary_label_service
+
     attr_writer :active_deposit_agreement_acceptance
     def active_deposit_agreement_acceptance?
       return true if @active_deposit_agreement_acceptance.nil?
