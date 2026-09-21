@@ -134,10 +134,22 @@ Because this is driven by the profile, a property or vocabulary added to an m3 p
 
 ### Registering a label service
 
-Hyrax has no vocabulary store of its own, so resolution is injectable. The default resolves nothing, which leaves indexing and rendering byte-identical to an installation without this feature. An application registers its own resolver:
+Hyrax has no vocabulary store of its own, so resolution is injectable. The default resolves nothing, which leaves indexing and rendering byte-identical to an installation without this feature.
+
+Hyrax ships a resolver backed by the local [Questioning Authority](https://github.com/samvera/questioning_authority) vocabularies in `config/authorities/`. It is **not** installed by default; register it to turn the feature on:
 
 ```ruby
 # config/initializers/hyrax.rb
+Hyrax.config.controlled_vocabulary_label_service = Hyrax::QaControlledVocabularyLabelService.new
+```
+
+A property's `controlled_values.sources` entry is matched to a local subauthority of the same name, so a property citing `licenses` resolves against `config/authorities/licenses.yml`. Remote authorities (Geonames, LOC) are never resolved — doing so would mean a network request per value during indexing.
+
+**Reindex after registering.** The show page and catalog read the label fields the indexer writes, so an existing corpus keeps displaying ids until it has been reindexed.
+
+An application with its own vocabulary store registers its own resolver instead:
+
+```ruby
 Hyrax.config.controlled_vocabulary_label_service = MyLabelService.new
 ```
 
