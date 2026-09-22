@@ -147,10 +147,10 @@ module Hyrax
         id_facet = blacklight_config.add_facet_field(id_name, label: label) if id_facet.blank?
 
         # Restore a facet an earlier pass hid, for a property that has since
-        # stopped being controlled. Only one we hid ourselves: a `show: false`
-        # an application set in its own CatalogController has to stand.
+        # stopped being controlled. Only one we hid ourselves: an `if` an
+        # application set in its own CatalogController has to stand.
         unless swap_facet_to_labels?(itemprop, controlled_source, indexing)
-          id_facet.show = true if id_facet.hidden_for_labels
+          id_facet.if = nil if id_facet.hidden_for_labels
           id_facet.hidden_for_labels = false
           return
         end
@@ -170,7 +170,7 @@ module Hyrax
         # feature exists to hide. Keeping it configured is what lets
         # `f[<prop>_sim][]` from a saved search or bookmark still resolve, and
         # keeps its constraint chip rendering.
-        id_facet.show = false
+        id_facet.if = false
         id_facet.hidden_for_labels = true
       end
 

@@ -118,6 +118,14 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
     controller.blacklight_config
   end
 
+  def would_render?(facet_name)
+    field = blacklight_config.facet_fields[facet_name]
+    return false if field.blank?
+
+    Blacklight::Configuration::Context.new(controller)
+                                      .evaluate_if_unless_configuration(field, nil)
+  end
+
   describe 'a facetable controlled property' do
     it 'facets on the label field' do
       expect(blacklight_config.facet_fields).to have_key('resource_type_label_sim')
@@ -165,11 +173,11 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
     end
 
     it 'is not listed in the sidebar, so the ids are not shown beside the labels' do
-      expect(blacklight_config.facet_fields['resource_type_sim'].show).to be false
+      expect(would_render?('resource_type_sim')).to be false
     end
 
     it 'leaves the label facet listed' do
-      expect(blacklight_config.facet_fields['resource_type_label_sim'].show).not_to be false
+      expect(would_render?('resource_type_label_sim')).to be true
     end
   end
 
@@ -241,13 +249,13 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
     let(:config) { controller.class.blacklight_config }
 
     it 'restores the id facet to the sidebar' do
-      expect(config.facet_fields['resource_type_sim'].show).to be false
+      expect(config.facet_fields['resource_type_sim'].if).to be false
 
       allow(Hyrax.config).to receive(:controlled_vocabulary_label_service)
         .and_return(Hyrax::ControlledVocabularyLabelService.new)
       controller.class.load_flexible_schema
 
-      expect(config.facet_fields['resource_type_sim'].show).not_to be false
+      expect(config.facet_fields['resource_type_sim'].if).not_to be false
     end
   end
 
