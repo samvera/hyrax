@@ -72,6 +72,8 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
       config.add_search_field('all_fields') do |field|
         field.solr_parameters = { qf: String.new('') }
       end
+
+      config.add_index_field 'app_helper_type_tesim', helper_method: :an_application_helper
     end
 
     def index
@@ -242,6 +244,37 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
 
     it 'leaves the id facet listed' do
       expect(blacklight_config.facet_fields['mixed_type_sim'].show).not_to be false
+    end
+  end
+
+  describe 'a property the application already configured a helper for' do
+    let(:custom_properties) do
+      YAML.safe_load(<<-YAML)
+        properties:
+          app_helper_type:
+            available_on:
+              class:
+                - GenericWork
+            controlled_values:
+              sources:
+                - resource_types
+            display_label:
+              default: App Helper Type
+            indexing:
+              - app_helper_type_sim
+              - app_helper_type_tesim
+            view:
+              render_as: external_link
+      YAML
+    end
+
+    it 'keeps the helper the application declared' do
+      expect(blacklight_config.index_fields['app_helper_type_tesim'].helper_method)
+        .to eq :an_application_helper
+    end
+
+    it 'leaves the stored id for that helper to render' do
+      expect(blacklight_config.index_fields['app_helper_type_tesim'].values).to be_nil
     end
   end
 

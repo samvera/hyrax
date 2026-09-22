@@ -76,11 +76,12 @@ module Hyrax
 
               blacklight_config.index_fields[name].link_to_facet = index_args[:link_to_facet]
 
-              if require_view_helper_method?(view_options)
-                # add or update the helper method so linked fields will render correctly in the index view
+              if require_view_helper_method?(view_options) && !application_helper?(blacklight_config.index_fields[name])
+                # add the helper method so linked fields will render correctly in the index view
                 blacklight_config.index_fields[name].helper_method = view_option_for_helper_method(view_options)
                 # the helper method for index_field_link needs the field name
                 blacklight_config.index_fields[name].field_name = itemprop
+                blacklight_config.index_fields[name].profile_helper = true
               end
             else
               # for properties that DO NOT exist in the catalog controller
@@ -107,7 +108,10 @@ module Hyrax
             end
 
             field = blacklight_config.index_fields[name]
-            if controlled_source
+            # An application's own helper renders the field from the stored id,
+            # resolving any label itself, so substituting the label here would
+            # leave it nothing to resolve or link.
+            if controlled_source && !application_helper?(field)
               field.values = Hyrax::ControlledVocabularyFieldValues.to_proc
               field.reads_labels = true
             elsif field.reads_labels
@@ -134,6 +138,12 @@ module Hyrax
       end
 
       private
+
+      # True for a helper the application set in its own CatalogController, as
+      # opposed to one this concern derived from `render_as`.
+      def application_helper?(field)
+        field.helper_method.present? && !field.profile_helper
+      end
 
       # A controlled property facets on its labels, because Blacklight queries a
       # facet with whatever the row displayed — so row and facet move together.
