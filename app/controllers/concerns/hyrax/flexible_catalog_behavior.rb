@@ -82,6 +82,14 @@ module Hyrax
                 # the helper method for index_field_link needs the field name
                 blacklight_config.index_fields[name].field_name = itemprop
                 blacklight_config.index_fields[name].profile_helper = true
+              elsif blacklight_config.index_fields[name].profile_helper
+                # A helper an earlier profile set, for a property that has since
+                # stopped asking for one. It would otherwise short-circuit
+                # Blacklight's pipeline ahead of `link_to_facet` for the life of
+                # the process, since this config is class-level.
+                blacklight_config.index_fields[name].helper_method = nil
+                blacklight_config.index_fields[name].field_name = nil
+                blacklight_config.index_fields[name].profile_helper = false
               end
             else
               # for properties that DO NOT exist in the catalog controller

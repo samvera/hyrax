@@ -471,4 +471,49 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
       expect(blacklight_config.index_fields['resource_type_tesim'].values).to be_nil
     end
   end
+
+  describe 'a property whose render_as changes between profiles' do
+    # blacklight_config is class-level and only rebuilt for properties that left
+    # the profile, so a property that merely changed keeps the previous
+    # profile's registration until the process restarts.
+    def load_with_render_as(render_as)
+      profile = base_profile.deep_merge(custom_properties)
+      property = profile['properties']['monograph_resource_type']
+      property['view'] = render_as ? { 'render_as' => render_as, 'html_dl' => true } : { 'html_dl' => true }
+
+      allow(Hyrax::FlexibleSchema)
+        .to receive_message_chain(:order, :last)
+        .with("created_at asc")
+        .with(2)
+        .and_return([double('FlexibleSchema', profile:)])
+
+      controller.class.load_flexible_schema
+    end
+
+    it 'clears the helper when the new profile declares no render_as' do
+      load_with_render_as('linked')
+      expect(controller.class.blacklight_config.index_fields['resource_type_tesim'].helper_method)
+        .to eq :index_field_link
+
+      load_with_render_as(nil)
+
+      expect(controller.class.blacklight_config.index_fields['resource_type_tesim'].helper_method).to be_nil
+    end
+
+    it 'replaces the helper when the new profile declares a different render_as' do
+      load_with_render_as('linked')
+      load_with_render_as('external_link')
+
+      expect(controller.class.blacklight_config.index_fields['resource_type_tesim'].helper_method)
+        .to eq :iconify_auto_link
+    end
+
+    it 'leaves an application-configured helper alone' do
+      load_with_render_as('linked')
+      load_with_render_as(nil)
+
+      expect(controller.class.blacklight_config.index_fields['app_helper_type_tesim'].helper_method)
+        .to eq :an_application_helper
+    end
+  end
 end
