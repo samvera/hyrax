@@ -379,6 +379,44 @@ module Hyrax
     end
     alias flexible? flexible
 
+    # Validators run in the order listed, which is the order their messages are
+    # reported in: structural problems before per-property ones. No validator
+    # depends on another having run, so an app may reorder this list freely.
+    DEFAULT_FLEXIBLE_SCHEMA_VALIDATORS = %w[
+      Hyrax::FlexibleSchemaValidators::RequiredClassesValidator
+      Hyrax::FlexibleSchemaValidators::ClassAvailabilityValidator
+      Hyrax::FlexibleSchemaValidators::ClassReferenceValidator
+      Hyrax::FlexibleSchemaValidators::ExistingRecordsValidator
+      Hyrax::FlexibleSchemaValidators::SchemaValidator
+      Hyrax::FlexibleSchemaValidators::LabelPropertyValidator
+      Hyrax::FlexibleSchemaValidators::CoreMetadataValidator
+      Hyrax::FlexibleSchemaValidators::SortPropertiesValidator
+      Hyrax::FlexibleSchemaValidators::RedirectsValidator
+      Hyrax::FlexibleSchemaValidators::CompoundValidator
+      Hyrax::FlexibleSchemaValidators::RichTextValidator
+      Hyrax::FlexibleSchemaValidators::SearchResultsTruncateValidator
+      Hyrax::FlexibleSchemaValidators::RenderAsValidator
+    ].freeze
+
+    attr_writer :flexible_schema_validators
+    ##
+    # The ordered list of validators {Hyrax::FlexibleSchemaValidatorService} runs
+    # against an m3 profile when one is saved.
+    #
+    # Entries may be classes or class-name strings; names are resolved when the
+    # profile is validated, so an app may register a validator that is not yet
+    # loaded at configuration time. Each must respond to `.new(context)`, and the
+    # instance to `#validate!` and `#violations`.
+    #
+    # @example Adding one without dropping Hyrax's own
+    #   Hyrax.config.flexible_schema_validators += ['MyApp::MyProfileValidator']
+    #
+    # @return [Array<String, Class>]
+    # @see Hyrax::FlexibleSchemaValidators::BaseValidator
+    def flexible_schema_validators
+      @flexible_schema_validators ||= DEFAULT_FLEXIBLE_SCHEMA_VALIDATORS.dup
+    end
+
     # See documentation/redirects.md for the redirects feature.
     attr_writer :redirects_enabled
     def redirects_enabled?
