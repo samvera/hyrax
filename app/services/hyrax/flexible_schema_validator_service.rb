@@ -42,6 +42,7 @@ module Hyrax
       validate_compound
       validate_rich_text
       validate_search_results_truncate
+      validate_render_as
     end
 
     # The default JSON schema used when no custom schema is provided.
@@ -161,6 +162,15 @@ module Hyrax
     # @return [void]
     def validate_search_results_truncate
       FlexibleSchemaValidators::SearchResultsTruncateValidator.new(profile, @warnings).validate!
+    end
+
+    # Warns (does not block) when a property's `view: { render_as: ... }` needs
+    # indexing the property does not declare, or conflicts with the vocabulary
+    # behind it.
+    #
+    # @return [void]
+    def validate_render_as
+      FlexibleSchemaValidators::RenderAsValidator.new(profile, @warnings).validate!
     end
 
     # Validates that a `label` property exists and that it is available on

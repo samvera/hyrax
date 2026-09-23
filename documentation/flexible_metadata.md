@@ -162,6 +162,80 @@ A service need only implement the two methods on `Hyrax::ControlledVocabularyLab
 
 `labels_for` must stay positional — the renderer pairs values to labels, so an unresolved value has to hold its place. `resolvable?` should answer `false` for remote authorities: resolving one means a network call per value, which has no place in an indexing run.
 
+## Linking values back into the catalog
+
+A property's values can be rendered as links that run a new catalog query. There are three places this can happen, and a different directive governs each:
+
+| where | what it is | governed by |
+| --- | --- | --- |
+| Sidebar | the facet list in "Limit your search" | `facetable` in `indexing:` |
+| Search-results rows | the property's values in a result row | `facetable` in `indexing:` |
+| Show page | the property's values on the work page | `view: { render_as: ... }` |
+
+So `facetable` governs the first two and `render_as` the third. A property that wants its values clickable in results *and* on the show page declares both; neither directive substitutes for the other.
+
+### What each link queries
+
+| `render_as` | link is | queries | requires in `indexing:` |
+| --- | --- | --- | --- |
+| `linked` | a search | `<name>_tesim` for the **displayed** value | `<name>_tesim` |
+| `faceted` | a facet filter | `<name>_sim` for the **stored** value | `<name>_sim` |
+
+Neither raises when its field is missing. The link still renders and simply returns an empty result page, so the mistake surfaces only when someone clicks it.
+
+`faceted` applies to the show page alone. `linked` also replaces the property's search-results links, which matters below.
+
+### `linked` is for free-text properties
+
+`linked` places the displayed value into `q` as a quoted phrase:
+
+    /catalog?q="Ada Lovelace"&search_field=creator
+
+That works when the stored value and the displayed value are the same string — `creator`, `publisher`, `keyword`, `subject`, `date_created`. There is nothing to reconcile, so the search returns the records that share the value.
+
+### Use `faceted`, not `linked`, on a controlled property
+
+A controlled property stores a term **id** and displays that term's **label**. `linked` then searches for the label in the field holding the id, and finds nothing whenever the two differ:
+
+| stored in `resource_type_tesim` | displayed | link searches for | result |
+| --- | --- | --- | --- |
+| `oer` | `OER` | `"OER"` | no matches |
+
+It is not enough that a vocabulary's ids and labels match today. An authority edited later can introduce a mismatch, and links that relied on the coincidence break with no change to the profile.
+
+A facet link filters on the indexed value, so it is correct either way. It is also exact-match: a search for `Health Science - Nursing` can also match `Health Science - Radiology` on the shared words, while a facet filter cannot.
+
+A controlled property that should be filterable everywhere declares all three:
+
+```yaml
+education_level:
+  indexing:
+    - education_level_tesim
+    - education_level_sim
+    - facetable          # sidebar facet, and facet links in results rows
+  view:
+    render_as: faceted   # show-page values link to that facet
+    html_dl: true
+```
+
+Dropping `render_as` from that example leaves the sidebar facet and the results links intact; only the show-page values become plain text.
+
+### Never declare `linked` with `facetable`
+
+Blacklight's rendering pipeline runs `HelperMethod` before `LinkToFacet`, and a helper short-circuits the remaining steps. `render_as: linked` installs such a helper, so on a `facetable` property the facet link for results values is computed and then thrown away in favor of the search link. The sidebar facet still works; the results values quietly stop filtering.
+
+### `external_link` and `rights_statement` are unaffected
+
+Both resolve the label from the authority and link to the stored id, so a label differing from its id is expected rather than a defect. Neither needs a facet.
+
+### Validation
+
+`Hyrax::FlexibleSchemaValidators::RenderAsValidator` warns on each of these cases when a profile is saved. They are warnings, not errors — the profile is structurally valid, and only a generated link is affected.
+
+### Changing an existing property
+
+Adding `<name>_sim` to `indexing:` creates a new Solr field. Existing records must be reindexed before the facet is populated; until then it is empty.
+
 ## Rich-text fields
 
 A string property can be edited with a rich-text (WYSIWYG) editor and rendered as sanitized HTML. This works in both flexible and non-flexible mode and is driven by two independent directives:
