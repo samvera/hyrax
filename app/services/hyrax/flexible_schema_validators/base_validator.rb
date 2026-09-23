@@ -86,6 +86,10 @@ module Hyrax
 
         I18n.t("#{self.class.i18n_scope}.#{severity}s.#{key}", **opts)
       end
+
+      # Prepended so it sees the arguments before {#initialize} does. Delete the
+      # module and this line together.
+      prepend LegacyValidatorCompatibility
     end
   end
 end
