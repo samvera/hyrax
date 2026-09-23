@@ -232,9 +232,8 @@ RSpec.describe Hyrax::FlexibleSchemaValidatorService, :clean_repo do
     end
 
     it 'finds the same problems whatever order the validators run in' do
-      defaults = Hyrax::Configuration::DEFAULT_FLEXIBLE_SCHEMA_VALIDATORS
-      forward_errors, forward_warnings = messages_running(defaults)
-      reversed_errors, reversed_warnings = messages_running(defaults.reverse)
+      forward_errors, forward_warnings = messages_running(Hyrax.config.flexible_schema_validators)
+      reversed_errors, reversed_warnings = messages_running(Hyrax.config.flexible_schema_validators.reverse)
 
       expect(forward_errors).not_to be_empty
       expect(forward_warnings).not_to be_empty
