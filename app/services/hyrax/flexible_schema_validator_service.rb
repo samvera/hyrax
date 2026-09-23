@@ -117,7 +117,7 @@ module Hyrax
     #
     # @return [void]
     def validate_class_availability
-      FlexibleSchemaValidators::ClassValidator.new(profile, required_classes, @errors).validate_availability!
+      run_validator(FlexibleSchemaValidators::ClassAvailabilityValidator)
     end
 
     # Validates that every class referenced under `available_on.class` is also
@@ -125,7 +125,7 @@ module Hyrax
     #
     # @return [void]
     def validate_available_on_classes_defined
-      FlexibleSchemaValidators::ClassValidator.new(profile, required_classes, @errors).validate_references!
+      run_validator(FlexibleSchemaValidators::ClassReferenceValidator)
     end
 
     # Delegates to {ExistingRecordsValidator} to ensure that no classes with

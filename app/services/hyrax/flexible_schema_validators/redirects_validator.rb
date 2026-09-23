@@ -83,7 +83,7 @@ module Hyrax
       # exclusion guards against e.g. a FileSet being registered alongside
       # works and slipping through as a "work" type for redirects.
       # Each registered name is also paired with its `Resource`-suffixed
-      # Valkyrie equivalent — `class_validator` accepts both forms.
+      # Valkyrie equivalent — {ClassAvailabilityValidator} accepts both forms.
       def registered_work_names
         @registered_work_names ||= begin
           works = clean(Hyrax::ModelRegistry.work_class_names)
