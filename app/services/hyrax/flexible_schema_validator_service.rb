@@ -102,14 +102,7 @@ module Hyrax
     #
     # @return [void]
     def validate_required_classes
-      missing_classes = clean_class_names(required_classes) - clean_class_names(profile['classes'].keys)
-      return if missing_classes.empty?
-
-      @errors << "Missing required classes: #{missing_classes.join(', ')}."
-    end
-
-    def clean_class_names(names)
-      names.map { |name| name.to_s.strip.gsub(/^::/, '') }
+      run_validator(FlexibleSchemaValidators::RequiredClassesValidator)
     end
 
     # Checks that any class referenced in the profile is a registered
@@ -195,17 +188,7 @@ module Hyrax
     #
     # @return [void]
     def validate_label_prop
-      label_prop = profile.dig('properties', 'label')
-      unless label_prop
-        @errors << "A `label` property is required."
-        return
-      end
-
-      available_on_classes = label_prop.dig('available_on', 'class')
-      file_set_model_name = Hyrax.config.file_set_model.gsub(/^::/, '')
-      return if available_on_classes&.include?(file_set_model_name)
-
-      @errors << "Label must be available on #{file_set_model_name}."
+      run_validator(FlexibleSchemaValidators::LabelPropertyValidator)
     end
   end
 end
