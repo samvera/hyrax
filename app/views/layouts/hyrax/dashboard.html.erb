@@ -28,9 +28,14 @@
           document.body.style.paddingTop = h + 'px';
         };
         update();
-        var observer = new ResizeObserver(update);
-        observer.observe(masthead);
-        if (collapse) observer.observe(collapse);
+        if (typeof ResizeObserver !== 'undefined') {
+          var observer = new ResizeObserver(update);
+          observer.observe(masthead);
+          if (collapse) observer.observe(collapse);
+        } else {
+          window.addEventListener('resize', update);
+          window.addEventListener('load', update);
+        }
       })();
     </script>
     <div id="content-wrapper" role="main">
