@@ -19,6 +19,10 @@ module Hyrax
     #     partials / authority services), or
     #   * a compound subproperty declared `type: controlled`.
     class RichTextValidator < BaseValidator
+      def self.legacy_positional_severity
+        :warning
+      end
+
       # Built-in properties Hyrax renders with a controlled widget by field-name
       # convention, even when their profile entry leaves
       # `controlled_values.sources` as the `"null"` sentinel.

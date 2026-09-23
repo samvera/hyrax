@@ -13,6 +13,10 @@ module Hyrax
     #
     # Neither raises when the field is absent; the link simply returns nothing.
     class RenderAsValidator < BaseValidator
+      def self.legacy_positional_severity
+        :warning
+      end
+
       def validate!
         properties.each do |name, config|
           view = config['view']

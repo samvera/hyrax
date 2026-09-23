@@ -54,6 +54,17 @@ module Hyrax
         @i18n_scope ||= "hyrax.flexible_schema_validators.#{name.demodulize.underscore}"
       end
 
+      ##
+      # Which array a deprecated `new(profile, array)` call was handing over.
+      # `new(profile, errors)` and `new(profile, warnings)` are the same shape,
+      # so the ones that took warnings declare it. Only
+      # {LegacyValidatorCompatibility} reads this; it goes when that module does.
+      #
+      # @return [Symbol] `:error` or `:warning`
+      def self.legacy_positional_severity
+        :error
+      end
+
       private
 
       attr_reader :context

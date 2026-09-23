@@ -8,6 +8,10 @@ module Hyrax
     # fields, so on any other field the setting is carried but never read - a
     # silent no-op.
     class SearchResultsTruncateValidator < BaseValidator
+      def self.legacy_positional_severity
+        :warning
+      end
+
       def validate!
         properties.each do |name, config|
           view = config['view']

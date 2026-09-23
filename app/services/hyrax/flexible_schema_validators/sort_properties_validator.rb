@@ -3,6 +3,10 @@
 module Hyrax
   module FlexibleSchemaValidators
     class SortPropertiesValidator < BaseValidator
+      def self.legacy_positional_severity
+        :warning
+      end
+
       def validate!
         sort_properties.each do |property|
           properties_without_sort_properties = work_types_from_profile - (profile.dig('properties', property, 'available_on', 'class') || [])

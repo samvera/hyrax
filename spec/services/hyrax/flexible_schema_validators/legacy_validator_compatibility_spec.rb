@@ -39,6 +39,26 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::LegacyValidatorCompatibility do
       end
     end
 
+    context 'with the profile and a warnings array, on a warning-only validator' do
+      subject(:validator) { Hyrax::FlexibleSchemaValidators::RenderAsValidator.new(profile, warnings) }
+
+      let(:profile) do
+        { 'properties' => { 'title' => { 'view' => { 'render_as' => 'faceted' }, 'indexing' => [] } } }
+      end
+
+      it 'fills the array it was handed rather than treating it as errors' do
+        validator.validate!
+
+        expect(warnings).not_to be_empty
+      end
+
+      it 'records the warning as a warning' do
+        validator.validate!
+
+        expect(validator.violations).to all(be_warning)
+      end
+    end
+
     context 'with the profile, required classes, and an errors array' do
       subject(:validator) { validator_class.new(profile, ['AdminSet'], errors) }
 

@@ -71,11 +71,29 @@ module Hyrax
 
         profile = kwargs[:profile] || args.shift
         required_classes = args.first.is_a?(Array) && args.size > 1 ? args.shift : nil
-        errors = kwargs.fetch(:errors, args.shift) || []
-        warnings = kwargs.fetch(:warnings, args.shift) || []
+        errors, warnings = legacy_message_arrays(args, kwargs)
 
         [ValidationContext.new(profile: profile, schemer: schemer, required_classes: required_classes),
          errors, warnings]
+      end
+
+      # Sorts whatever message arrays were passed into the errors and warnings
+      # pair. Keywords name their own array. A lone positional array is
+      # ambiguous, since `new(profile, errors)` and `new(profile, warnings)`
+      # look alike, so the validator declares which one it took.
+      #
+      # An array that was never passed stays nil, so nothing is mirrored into an
+      # array the caller cannot read.
+      #
+      # @return [Array(Array, Array)] errors, warnings
+      def legacy_message_arrays(args, kwargs)
+        return [kwargs[:errors], kwargs[:warnings]] if kwargs.any?
+
+        errors, warnings = args.shift(2)
+        return [errors, warnings] if warnings
+        return [nil, errors] if self.class.legacy_positional_severity == :warning
+
+        [errors, nil]
       end
 
       ##
