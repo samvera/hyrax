@@ -70,6 +70,8 @@ module Hyrax
         raise RuntimeError, "[#{self}.new] #{e.class}: #{e.message}", e.backtrace
       end
 
+      PDF_VIEWER_DEFAULTS = { show_pdf_viewer: true, show_pdf_download_button: true }.freeze
+
       ## Read the schema from the database and load the correct schemas for the instance in to the class
       def load(attributes, safe = false)
         attributes[:schema_version] ||=  Hyrax::FlexibleSchema.order('id DESC').pick(:id)
@@ -80,7 +82,15 @@ module Hyrax
         attributes = normalize_compound_attributes(struct, attributes)
         clean_attributes = safe ? struct.singleton_class.schema.call_safe(attributes) { |output = attributes| return yield output } : struct.singleton_class.schema.call_unsafe(attributes)
         struct.__send__(:initialize, clean_attributes)
+        apply_pdf_viewer_defaults(struct)
         struct
+      end
+
+      def apply_pdf_viewer_defaults(struct)
+        PDF_VIEWER_DEFAULTS.each do |key, default|
+          next unless struct.respond_to?(key) && struct.respond_to?(:set_value)
+          struct.set_value(key, default) if struct.send(key).nil?
+        end
       end
 
       # Put compound entries back together before the schema coerces them.

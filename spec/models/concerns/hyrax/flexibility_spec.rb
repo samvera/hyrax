@@ -27,6 +27,24 @@ RSpec.describe 'Hyrax::Flexibility' do
           available_on:
             class:
             - Hyrax::Test::Flexibility::TestWork
+        show_pdf_viewer:
+          type: bool
+          available_on:
+            class:
+            - Hyrax::Test::Flexibility::TestWork
+          display_label:
+            default: Show PDF Viewer
+          indexing:
+          - show_pdf_viewer_bsi
+        show_pdf_download_button:
+          type: bool
+          available_on:
+            class:
+            - Hyrax::Test::Flexibility::TestWork
+          display_label:
+            default: Show PDF Download Button
+          indexing:
+          - show_pdf_download_button_bsi
         participants:
           type: hash
           data_type: array
@@ -123,6 +141,43 @@ RSpec.describe 'Hyrax::Flexibility' do
                                                         { 'name' => 'Grace', 'role' => 'Editor' }])
         expect(instance.participants).to eq([{ 'name' => 'Ada', 'role' => 'Author' },
                                              { 'name' => 'Grace', 'role' => 'Editor' }])
+      end
+    end
+  end
+
+  describe '.apply_pdf_viewer_defaults' do
+    context 'when show_pdf_viewer is not set' do
+      it 'defaults to true' do
+        instance = flexibility_class.new
+        expect(instance.show_pdf_viewer).to be true
+      end
+    end
+
+    context 'when show_pdf_viewer is explicitly true' do
+      it 'returns true' do
+        instance = flexibility_class.new(show_pdf_viewer: true)
+        expect(instance.show_pdf_viewer).to be true
+      end
+    end
+
+    context 'when show_pdf_viewer is explicitly false' do
+      it 'preserves false' do
+        instance = flexibility_class.new(show_pdf_viewer: false)
+        expect(instance.show_pdf_viewer).to be false
+      end
+    end
+
+    context 'when show_pdf_download_button is not set' do
+      it 'defaults to true' do
+        instance = flexibility_class.new
+        expect(instance.show_pdf_download_button).to be true
+      end
+    end
+
+    context 'when show_pdf_download_button is explicitly false' do
+      it 'preserves false' do
+        instance = flexibility_class.new(show_pdf_download_button: false)
+        expect(instance.show_pdf_download_button).to be false
       end
     end
   end
