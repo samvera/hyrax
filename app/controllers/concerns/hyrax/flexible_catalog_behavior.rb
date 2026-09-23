@@ -101,6 +101,9 @@ module Hyrax
               end
               # if a property in the metadata profile doesn't exist in the CatalogController, add it
               blacklight_config.add_index_field(name, index_args)
+              # Marks the helper as ours wherever it was set, so a later profile
+              # can clear it by the same rule that governs preconfigured fields.
+              blacklight_config.index_fields[name].profile_helper = index_args.key?(:helper_method)
 
               # all index fields get this property so an admin can hide a property from the catalog search results
               # by adding the name of the property via admin dashboard > Settings > Accounts > Hidden index fields
@@ -166,9 +169,13 @@ module Hyrax
 
         # Restore a facet an earlier pass hid, for a property that has since
         # stopped being controlled. Only one we hid ourselves: an `if` an
-        # application set in its own CatalogController has to stand.
+        # application set in its own CatalogController has to stand, so the
+        # predicate we displaced is put back rather than cleared to nil.
         unless swap_facet_to_labels?(itemprop, controlled_source, indexing)
-          id_facet.if = nil if id_facet.hidden_for_labels
+          if id_facet.hidden_for_labels
+            id_facet.if = id_facet.if_before_labels
+            id_facet.if_before_labels = nil
+          end
           id_facet.hidden_for_labels = false
           return
         end
@@ -188,6 +195,7 @@ module Hyrax
         # feature exists to hide. Keeping it configured is what lets
         # `f[<prop>_sim][]` from a saved search or bookmark still resolve, and
         # keeps its constraint chip rendering.
+        id_facet.if_before_labels = id_facet.if unless id_facet.hidden_for_labels
         id_facet.if = false
         id_facet.hidden_for_labels = true
       end

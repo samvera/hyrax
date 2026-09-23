@@ -42,6 +42,22 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
             - facetable
           property_uri: http://purl.org/dc/terms/type
           range: http://www.w3.org/2001/XMLSchema#string
+        profile_only:
+          available_on:
+            class:
+              - GenericWork
+          controlled_values:
+            format: http://www.w3.org/2001/XMLSchema#string
+            sources:
+              - resource_types
+          display_label:
+            default: Profile Only
+          indexing:
+            - profile_only_sim
+            - profile_only_tesim
+            - facetable
+          property_uri: http://example.org/profile_only
+          range: http://www.w3.org/2001/XMLSchema#string
         free_text_note:
           available_on:
             class:
@@ -476,9 +492,9 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
     # blacklight_config is class-level and only rebuilt for properties that left
     # the profile, so a property that merely changed keeps the previous
     # profile's registration until the process restarts.
-    def load_with_render_as(render_as)
+    def load_with_render_as(render_as, property: 'monograph_resource_type')
       profile = base_profile.deep_merge(custom_properties)
-      property = profile['properties']['monograph_resource_type']
+      property = profile['properties'][property]
       property['view'] = render_as ? { 'render_as' => render_as, 'html_dl' => true } : { 'html_dl' => true }
 
       allow(Hyrax::FlexibleSchema)
@@ -514,6 +530,52 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
 
       expect(controller.class.blacklight_config.index_fields['app_helper_type_tesim'].helper_method)
         .to eq :an_application_helper
+    end
+
+    it 'clears the helper on a field the profile itself created' do
+      load_with_render_as('linked', property: 'profile_only')
+      expect(controller.class.blacklight_config.index_fields['profile_only_tesim'].helper_method)
+        .to eq :index_field_link
+
+      load_with_render_as(nil, property: 'profile_only')
+
+      expect(controller.class.blacklight_config.index_fields['profile_only_tesim'].helper_method).to be_nil
+    end
+  end
+
+  describe 'a facet the application already conditioned' do
+    before do
+      controller.class.blacklight_config.add_facet_field('conditioned_sim', label: 'Conditioned', if: :render_optionally?)
+    end
+
+    def load_conditioned(controlled:)
+      profile = base_profile.deep_merge(custom_properties)
+      profile['properties']['conditioned'] = {
+        'available_on' => { 'class' => ['GenericWork'] },
+        'controlled_values' => { 'format' => 'http://www.w3.org/2001/XMLSchema#string',
+                                 'sources' => [controlled ? 'resource_types' : 'null'] },
+        'display_label' => { 'default' => 'Conditioned' },
+        'indexing' => ['conditioned_sim', 'conditioned_tesim', 'facetable'],
+        'property_uri' => 'http://example.org/conditioned',
+        'range' => 'http://www.w3.org/2001/XMLSchema#string'
+      }
+
+      allow(Hyrax::FlexibleSchema)
+        .to receive_message_chain(:order, :last)
+        .with("created_at asc")
+        .with(2)
+        .and_return([double('FlexibleSchema', profile:)])
+
+      controller.class.load_flexible_schema
+    end
+
+    it "restores the application's own predicate when the property stops being controlled" do
+      load_conditioned(controlled: true)
+      expect(controller.class.blacklight_config.facet_fields['conditioned_sim'].if).to be false
+
+      load_conditioned(controlled: false)
+
+      expect(controller.class.blacklight_config.facet_fields['conditioned_sim'].if).to eq :render_optionally?
     end
   end
 end
