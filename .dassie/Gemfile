@@ -8,6 +8,7 @@ else
 end
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
+gem 'blacklight', '< 7.43' # remove once dassie moves off Rails 6.1 - Blacklight 7.43.0's RuntimeRegistry.stats uses ActiveSupport::IsolatedExecutionState, added in Rails 7.0, so every controller action raises
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'bootstrap', '~> 4.0'
 gem 'bulkrax', github: 'samvera/bulkrax', branch: 'grounded'
