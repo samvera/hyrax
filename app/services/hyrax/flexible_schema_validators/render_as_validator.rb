@@ -40,7 +40,7 @@ module Hyrax
       end
 
       def validate_faceted(name, config)
-        add_warning(:requires_facetable, property: name) unless indexes?(config, name, 'sim')
+        add_warning(:requires_sim_field, property: name) unless indexes?(config, name, 'sim')
       end
 
       # The indexed field is named for the attribute the property stands in for,

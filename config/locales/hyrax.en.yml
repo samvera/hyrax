@@ -1522,7 +1522,7 @@ en:
       render_as_validator:
         warnings:
           requires_searchable: "m3 profile property `%{property}` declares `view: { render_as: linked }` but does not index a `_tesim` field; the generated link searches that field, so it has nothing to query. Add the property's `_tesim` field to `indexing:`, or drop `render_as: linked`."
-          requires_facetable: "m3 profile property `%{property}` declares `view: { render_as: faceted }` but does not index a `_sim` field; the generated link filters on that facet, so it returns nothing. Add the property's `_sim` field to `indexing:`, or drop `render_as: faceted`."
+          requires_sim_field: "m3 profile property `%{property}` declares `view: { render_as: faceted }` but does not index a `_sim` field; the generated link filters on that facet, so it returns nothing. Add the property's `_sim` field to `indexing:`, or drop `render_as: faceted`."
           searches_label_for_id: "m3 profile property `%{property}` declares `view: { render_as: linked }` on a controlled vocabulary; the link searches for the displayed label while the property indexes the term id, so it finds nothing whenever the two differ. Index the property's `_sim` field with `facetable` and omit `render_as` to link to the label facet instead."
           discards_facet_link: "m3 profile property `%{property}` declares `view: { render_as: linked }` alongside `facetable`; the facet link is built and then replaced by a search for the displayed label, which finds nothing whenever a term's label differs from its id. Omit `render_as` to keep the facet link."
       rich_text_validator:
