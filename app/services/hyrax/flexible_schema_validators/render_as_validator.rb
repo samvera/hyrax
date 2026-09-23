@@ -12,16 +12,9 @@ module Hyrax
     # * `faceted` filters `<name>_sim` on the *stored* value
     #
     # Neither raises when the field is absent; the link simply returns nothing.
-    class RenderAsValidator
-      def initialize(profile, warnings)
-        @profile = profile
-        @warnings = warnings
-      end
-
+    class RenderAsValidator < BaseValidator
       def validate!
-        (@profile['properties'] || {}).each do |name, config|
-          next unless config.is_a?(Hash)
-
+        properties.each do |name, config|
           view = config['view']
           next unless view.is_a?(Hash)
 
@@ -35,19 +28,15 @@ module Hyrax
       private
 
       def validate_linked(name, config)
-        return warn(name, :requires_searchable) unless indexes?(config, name, 'tesim')
+        return add_warning(:requires_searchable, property: name) unless indexes?(config, name, 'tesim')
 
         return unless controlled?(config)
 
-        warn(name, facetable?(config) ? :discards_facet_link : :searches_label_for_id)
+        add_warning(facetable?(config) ? :discards_facet_link : :searches_label_for_id, property: name)
       end
 
       def validate_faceted(name, config)
-        warn(name, :requires_facetable) unless indexes?(config, name, 'sim')
-      end
-
-      def warn(property, key)
-        @warnings << I18n.t("hyrax.flexible_schema_validators.render_as_validator.warnings.#{key}", property:)
+        add_warning(:requires_facetable, property: name) unless indexes?(config, name, 'sim')
       end
 
       # The indexed field is named for the attribute the property stands in for,

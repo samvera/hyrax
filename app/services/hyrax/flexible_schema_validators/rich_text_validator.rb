@@ -18,7 +18,7 @@ module Hyrax
     #     convention regardless of declared sources (dedicated edit-field
     #     partials / authority services), or
     #   * a compound subproperty declared `type: controlled`.
-    class RichTextValidator
+    class RichTextValidator < BaseValidator
       # Built-in properties Hyrax renders with a controlled widget by field-name
       # convention, even when their profile entry leaves
       # `controlled_values.sources` as the `"null"` sentinel.
@@ -26,19 +26,14 @@ module Hyrax
         rights_statement license resource_type based_near language access_right
       ].freeze
 
-      def initialize(profile, warnings)
-        @profile = profile
-        @warnings = warnings
-      end
-
       def validate!
-        (@profile['properties'] || {}).each do |name, config|
-          next unless config.is_a?(Hash) && rich_text?(config)
+        properties.each do |name, config|
+          next unless rich_text?(config)
 
           key, options = conflict_for(name, config)
           next unless key
 
-          @warnings << I18n.t("hyrax.flexible_schema_validators.rich_text_validator.warnings.#{key}", **options)
+          add_warning(key, **options)
         end
       end
 

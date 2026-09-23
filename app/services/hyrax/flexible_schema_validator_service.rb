@@ -61,6 +61,25 @@ module Hyrax
 
     private
 
+    # @param validator_class [Class]
+    # @return [void]
+    def run_validator(validator_class)
+      violations = validator_class.new(validation_context).tap(&:validate!).violations
+
+      @errors.concat(violations.select(&:error?).map(&:message))
+      @warnings.concat(violations.select(&:warning?).map(&:message))
+    end
+
+    # Built on first use rather than in the constructor, so that a
+    # {#required_classes} override applied after construction is still picked up.
+    #
+    # @return [FlexibleSchemaValidators::ValidationContext]
+    def validation_context
+      @validation_context ||= FlexibleSchemaValidators::ValidationContext.new(
+        profile: profile, schemer: schemer, required_classes: required_classes
+      )
+    end
+
     # Validates core metadata requirements using the CoreMetadataValidator.
     #
     # This delegates to CoreMetadataValidator to check that essential metadata
@@ -68,7 +87,7 @@ module Hyrax
     #
     # @return [void]
     def validate_core_metadata
-      FlexibleSchemaValidators::CoreMetadataValidator.new(profile: profile, errors: @errors).validate!
+      run_validator(FlexibleSchemaValidators::CoreMetadataValidator)
     end
 
     # Runs JSON schema validation and translates resulting errors into
@@ -76,7 +95,7 @@ module Hyrax
     #
     # @return [void]
     def validate_schema
-      FlexibleSchemaValidators::SchemaValidator.new(schemer, profile, @errors).validate!
+      run_validator(FlexibleSchemaValidators::SchemaValidator)
     end
 
     # Ensures that all required classes are defined in the profile.
@@ -114,14 +133,14 @@ module Hyrax
     #
     # @return [void]
     def validate_existing_records_classes_defined
-      FlexibleSchemaValidators::ExistingRecordsValidator.new(profile, required_classes, @errors).validate!
+      run_validator(FlexibleSchemaValidators::ExistingRecordsValidator)
     end
 
     # Validates that any properties needed to support sorting catalog search results.
     #
     # @return [void]
     def validate_sort_properties
-      FlexibleSchemaValidators::SortPropertiesValidator.new(profile, @warnings).validate!
+      run_validator(FlexibleSchemaValidators::SortPropertiesValidator)
     end
 
     # Validates that the `redirects` property is declared on every work and
@@ -131,9 +150,7 @@ module Hyrax
     #
     # @return [void]
     def validate_redirects
-      FlexibleSchemaValidators::RedirectsValidator.new(
-        profile: profile, errors: @errors, warnings: @warnings
-      ).validate!
+      run_validator(FlexibleSchemaValidators::RedirectsValidator)
     end
 
     # Validates compound (hierarchical) metadata properties — those declaring
@@ -142,7 +159,7 @@ module Hyrax
     #
     # @return [void]
     def validate_compound
-      FlexibleSchemaValidators::CompoundValidator.new(profile: profile, errors: @errors).validate!
+      run_validator(FlexibleSchemaValidators::CompoundValidator)
     end
 
     # Warns (does not block) when a property declares
@@ -152,7 +169,7 @@ module Hyrax
     #
     # @return [void]
     def validate_rich_text
-      FlexibleSchemaValidators::RichTextValidator.new(profile, @warnings).validate!
+      run_validator(FlexibleSchemaValidators::RichTextValidator)
     end
 
     # Warns (does not block) when `view: { search_results_truncate: N }` is
@@ -161,7 +178,7 @@ module Hyrax
     #
     # @return [void]
     def validate_search_results_truncate
-      FlexibleSchemaValidators::SearchResultsTruncateValidator.new(profile, @warnings).validate!
+      run_validator(FlexibleSchemaValidators::SearchResultsTruncateValidator)
     end
 
     # Warns (does not block) when a property's `view: { render_as: ... }` needs
@@ -170,7 +187,7 @@ module Hyrax
     #
     # @return [void]
     def validate_render_as
-      FlexibleSchemaValidators::RenderAsValidator.new(profile, @warnings).validate!
+      run_validator(FlexibleSchemaValidators::RenderAsValidator)
     end
 
     # Validates that a `label` property exists and that it is available on

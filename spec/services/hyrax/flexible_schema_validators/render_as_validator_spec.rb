@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::FlexibleSchemaValidators::RenderAsValidator do
-  subject(:validator) { described_class.new(profile, warnings) }
-  let(:warnings) { [] }
+  subject(:validator) { described_class.new(context) }
+  let(:context) { Hyrax::FlexibleSchemaValidators::ValidationContext.new(profile: profile) }
+  let(:warnings) { validator.violations.map(&:message) }
 
   describe 'render_as: linked' do
     context 'on a searchable, uncontrolled property' do
