@@ -76,11 +76,20 @@ module Hyrax
 
               blacklight_config.index_fields[name].link_to_facet = index_args[:link_to_facet]
 
-              if require_view_helper_method?(view_options)
-                # add or update the helper method so linked fields will render correctly in the index view
+              if require_view_helper_method?(view_options) && !application_helper?(blacklight_config.index_fields[name])
+                # add the helper method so linked fields will render correctly in the index view
                 blacklight_config.index_fields[name].helper_method = view_option_for_helper_method(view_options)
                 # the helper method for index_field_link needs the field name
                 blacklight_config.index_fields[name].field_name = itemprop
+                blacklight_config.index_fields[name].profile_helper = true
+              elsif blacklight_config.index_fields[name].profile_helper
+                # A helper an earlier profile set, for a property that has since
+                # stopped asking for one. It would otherwise short-circuit
+                # Blacklight's pipeline ahead of `link_to_facet` for the life of
+                # the process, since this config is class-level.
+                blacklight_config.index_fields[name].helper_method = nil
+                blacklight_config.index_fields[name].field_name = nil
+                blacklight_config.index_fields[name].profile_helper = false
               end
             else
               # for properties that DO NOT exist in the catalog controller
@@ -92,6 +101,9 @@ module Hyrax
               end
               # if a property in the metadata profile doesn't exist in the CatalogController, add it
               blacklight_config.add_index_field(name, index_args)
+              # Marks the helper as ours wherever it was set, so a later profile
+              # can clear it by the same rule that governs preconfigured fields.
+              blacklight_config.index_fields[name].profile_helper = index_args.key?(:helper_method)
 
               # all index fields get this property so an admin can hide a property from the catalog search results
               # by adding the name of the property via admin dashboard > Settings > Accounts > Hidden index fields
@@ -107,7 +119,10 @@ module Hyrax
             end
 
             field = blacklight_config.index_fields[name]
-            if controlled_source
+            # An application's own helper renders the field from the stored id,
+            # resolving any label itself, so substituting the label here would
+            # leave it nothing to resolve or link.
+            if controlled_source && !application_helper?(field)
               field.values = Hyrax::ControlledVocabularyFieldValues.to_proc
               field.reads_labels = true
             elsif field.reads_labels
@@ -135,6 +150,12 @@ module Hyrax
 
       private
 
+      # True for a helper the application set in its own CatalogController, as
+      # opposed to one this concern derived from `render_as`.
+      def application_helper?(field)
+        field.helper_method.present? && !field.profile_helper
+      end
+
       # A controlled property facets on its labels, because Blacklight queries a
       # facet with whatever the row displayed — so row and facet move together.
       #
@@ -147,10 +168,14 @@ module Hyrax
         id_facet = blacklight_config.add_facet_field(id_name, label: label) if id_facet.blank?
 
         # Restore a facet an earlier pass hid, for a property that has since
-        # stopped being controlled. Only one we hid ourselves: a `show: false`
-        # an application set in its own CatalogController has to stand.
+        # stopped being controlled. Only one we hid ourselves: an `if` an
+        # application set in its own CatalogController has to stand, so the
+        # predicate we displaced is put back rather than cleared to nil.
         unless swap_facet_to_labels?(itemprop, controlled_source, indexing)
-          id_facet.show = true if id_facet.hidden_for_labels
+          if id_facet.hidden_for_labels
+            id_facet.if = id_facet.if_before_labels
+            id_facet.if_before_labels = nil
+          end
           id_facet.hidden_for_labels = false
           return
         end
@@ -170,7 +195,8 @@ module Hyrax
         # feature exists to hide. Keeping it configured is what lets
         # `f[<prop>_sim][]` from a saved search or bookmark still resolve, and
         # keeps its constraint chip rendering.
-        id_facet.show = false
+        id_facet.if_before_labels = id_facet.if unless id_facet.hidden_for_labels
+        id_facet.if = false
         id_facet.hidden_for_labels = true
       end
 
