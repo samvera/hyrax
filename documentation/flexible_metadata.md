@@ -304,6 +304,47 @@ Host applications that override `hyrax/base/show.html.erb` (or ship custom show 
 
 This is intentionally **not** covered by an m3 profile validator: the profile cannot know what an app's templates render.
 
+## Profile validation
+
+Saving a `Hyrax::FlexibleSchema` runs every validator in
+`Hyrax.config.flexible_schema_validators`, in order. Each one inspects the profile and reports
+what it finds as **errors**, which block the save, or **warnings**, which do not — a warning
+means the profile is structurally valid but something in it will not behave as written.
+
+A validator takes a validation context and records what it finds:
+
+```ruby
+module MyApp
+  class MyProfileValidator < Hyrax::FlexibleSchemaValidators::BaseValidator
+    def validate!
+      properties.each do |name, config|
+        add_warning(:my_message_key, property: name) if config['something_suspect']
+      end
+    end
+  end
+end
+```
+
+The context exposes `profile` (the raw hash), `properties` (its property definitions, with
+malformed non-hash entries already dropped), `class_names`, `required_classes`, and `schemer`.
+Pass `add_error`/`add_warning` a symbol to look the message up under
+`hyrax.flexible_schema_validators.<validator_name>.<errors|warnings>.<key>`, or a string to use
+it verbatim.
+
+Register it in `config/initializers/hyrax.rb`, appending so Hyrax's own validators are kept:
+
+```ruby
+config.flexible_schema_validators += ['MyApp::MyProfileValidator']
+```
+
+Entries may be classes or class-name strings; names are resolved when a profile is validated,
+so a validator does not need to be loaded at configuration time. Removing a validator is the
+same operation in reverse (`-=`).
+
+Validators are independent — none depends on another having run, and each reports every problem
+it finds rather than stopping at the first. The list order is the order messages are reported
+in, so an app may reorder it freely.
+
 ## Related features
 
 - **Compound (hierarchical) metadata**: an m3 profile (or YAML schema) can declare a `type: hash` property whose members are separate properties naming it via `available_on: { properties: [...] }` — repeatable groups of sub-fields such as `contributors`, `titles`, or `relationships`. Member sub-property types include `string`, `controlled`, `url`, `work_or_url`, and `linked_record` (a reference to a row in a database table, with an inline search-or-create picker). See [`documentation/compound_fields.md`](compound_fields.md) for declaring compounds, the supported sub-property types, indexing, and show-page rendering.

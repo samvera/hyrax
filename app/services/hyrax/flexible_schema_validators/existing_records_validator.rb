@@ -3,22 +3,13 @@
 module Hyrax
   module FlexibleSchemaValidators
     # Validates that classes with existing records in the repository are not removed from the profile.
-    class ExistingRecordsValidator
-      # @param profile [Hash] M3 profile data
-      # @param required_classes [Array<String>] Foundational classes that must be present
-      # @param errors [Array<String>] Array to append validation errors to
-      def initialize(profile, required_classes, errors)
-        @profile = profile
-        @required_classes = required_classes
-        @errors = errors
-      end
-
+    class ExistingRecordsValidator < BaseValidator
       # Validates that no classes with existing records in the repository have been
       # removed from the profile.
       #
       # @return [void]
       def validate!
-        profile_classes_set = Set.new(@profile.fetch('classes', {}).keys)
+        profile_classes_set = Set.new(class_names)
         classes_with_records = []
         potential_existing_classes.each do |model_class|
           model_identifier = model_class.to_s
@@ -33,7 +24,7 @@ module Hyrax
 
         return if classes_with_records.empty?
 
-        @errors << "Classes with existing records cannot be removed from the profile: #{classes_with_records.uniq.join(', ')}."
+        add_error "Classes with existing records cannot be removed from the profile: #{classes_with_records.uniq.join(', ')}."
       end
 
       private
@@ -64,7 +55,7 @@ module Hyrax
       # @return [Array<Class>]
       def potential_existing_classes
         return @models if @models.present?
-        @models = @required_classes.clone.map(&:safe_constantize)
+        @models = required_classes.clone.map(&:safe_constantize)
         Hyrax.config.registered_curation_concern_types.each do |concern_type|
           resource = concern_type.match?(/Resource$/) ? concern_type : "#{concern_type}Resource"
           resource.safe_constantize

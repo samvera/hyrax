@@ -18,21 +18,7 @@ module Hyrax
     # | on     | on       | present  | check available_on.class lists at   |
     # |        |          |          | least one work or collection class  |
     # |        |          |          | declared in this profile's classes  |
-    class RedirectsValidator
-      ##
-      # @param profile [Hash] the flexible metadata profile
-      # @param errors [Array<String>] an array to append errors to
-      # @param warnings [Array<String>] an array to append warnings to
-      def initialize(profile:, errors:, warnings: [])
-        @profile = profile
-        @errors = errors
-        @warnings = warnings
-      end
-
-      # Validate the profile against the redirects requirements and append
-      # any human-readable error messages to {#errors} (or warnings to
-      # {#warnings} for the dead-property cases).
-      #
+    class RedirectsValidator < BaseValidator
       # @return [void]
       def validate!
         return validate_when_config_off unless Hyrax.config.redirects_enabled?
@@ -44,31 +30,31 @@ module Hyrax
       private
 
       def redirects_property
-        @redirects_property ||= @profile&.dig('properties', 'redirects')
+        @redirects_property ||= profile&.dig('properties', 'redirects')
       end
 
       def validate_when_config_off
         return if redirects_property.blank?
-        @warnings << I18n.t('hyrax.flexible_schema_validators.redirects_validator.warnings.config_disabled')
+        add_warning(:config_disabled)
       end
 
       def validate_when_flipflop_off
         return if redirects_property.blank?
-        @warnings << I18n.t('hyrax.flexible_schema_validators.redirects_validator.warnings.flipflop_disabled')
+        add_warning(:flipflop_disabled)
       end
 
       def validate_when_enabled
         if redirects_property.blank?
-          @errors << I18n.t('hyrax.flexible_schema_validators.redirects_validator.errors.property_required')
+          add_error(:property_required)
           return
         end
 
-        @errors << I18n.t('hyrax.flexible_schema_validators.redirects_validator.errors.invalid_type', actual_type: redirects_property['type'].inspect) unless redirects_property['type'].to_s == 'hash'
+        add_error(:invalid_type, actual_type: redirects_property['type'].inspect) unless redirects_property['type'].to_s == 'hash'
 
         available_on = clean(Array(redirects_property.dig('available_on', 'class')))
         return if (available_on & profile_work_or_collection_classes).any?
 
-        @errors << I18n.t('hyrax.flexible_schema_validators.redirects_validator.errors.invalid_available_on')
+        add_error(:invalid_available_on)
       end
 
       # Class names declared in this m3 profile's top-level `classes:` block,
@@ -77,7 +63,7 @@ module Hyrax
       # excluded — redirects only apply to works and collections.
       def profile_work_or_collection_classes
         @profile_work_or_collection_classes ||= begin
-          declared = clean(Array(@profile&.dig('classes')&.keys))
+          declared = clean(class_names)
           declared.select { |name| work_or_collection?(name) }
         end
       end
@@ -97,7 +83,7 @@ module Hyrax
       # exclusion guards against e.g. a FileSet being registered alongside
       # works and slipping through as a "work" type for redirects.
       # Each registered name is also paired with its `Resource`-suffixed
-      # Valkyrie equivalent — `class_validator` accepts both forms.
+      # Valkyrie equivalent — {ClassAvailabilityValidator} accepts both forms.
       def registered_work_names
         @registered_work_names ||= begin
           works = clean(Hyrax::ModelRegistry.work_class_names)

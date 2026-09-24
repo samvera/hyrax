@@ -63,6 +63,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:file_set_file_service=) }
   it { is_expected.to respond_to(:file_set_indexer) }
   it { is_expected.to respond_to(:file_set_indexer=) }
+  it { is_expected.to respond_to(:flexible_schema_validators) }
+  it { is_expected.to respond_to(:flexible_schema_validators=) }
   it { is_expected.to respond_to(:identifier_registrars) }
   it { is_expected.to respond_to(:iiif_av_viewer) }
   it { is_expected.to respond_to(:iiif_av_viewer=) }
@@ -141,6 +143,32 @@ RSpec.describe Hyrax::Configuration do
   describe "#registered_ingest_dirs" do
     it "provides the Rails tmp directory for temporary downloads for cloud files" do
       expect(configuration.registered_ingest_dirs).to include(Rails.root.join('tmp').to_s)
+    end
+  end
+
+  describe "#flexible_schema_validators" do
+    it "defaults to Hyrax's own validators, required classes first" do
+      expect(configuration.flexible_schema_validators.first)
+        .to eq 'Hyrax::FlexibleSchemaValidators::RequiredClassesValidator'
+    end
+
+    it "can be appended to without dropping Hyrax's own" do
+      configuration.flexible_schema_validators += ['MyApp::MyValidator']
+
+      expect(configuration.flexible_schema_validators)
+        .to include('Hyrax::FlexibleSchemaValidators::RenderAsValidator', 'MyApp::MyValidator')
+    end
+
+    it "can be replaced outright" do
+      configuration.flexible_schema_validators = ['MyApp::MyValidator']
+
+      expect(configuration.flexible_schema_validators).to eq ['MyApp::MyValidator']
+    end
+
+    it "does not let an append mutate the default for the next configuration" do
+      configuration.flexible_schema_validators << 'MyApp::MyValidator'
+
+      expect(described_class.new.flexible_schema_validators).not_to include('MyApp::MyValidator')
     end
   end
 
