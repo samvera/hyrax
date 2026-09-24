@@ -348,12 +348,12 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
 
   describe '.facetable?' do
     it 'returns true when indexing includes facetable' do
-      result = controller.class.send(:facetable?, ['facetable'], 'test_field')
+      result = controller.class.send(:facetable?, ['facetable'])
       expect(result).to be true
     end
 
     it 'returns false when indexing does not include facetable' do
-      result = controller.class.send(:facetable?, ['stored_searchable'], 'test_field')
+      result = controller.class.send(:facetable?, ['stored_searchable'])
       expect(result).to be false
     end
   end

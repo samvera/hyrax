@@ -169,10 +169,10 @@ A property's values can be rendered as links that run a new catalog query. There
 | where | what it is | governed by |
 | --- | --- | --- |
 | Sidebar | the facet list in "Limit your search" | `facetable` in `indexing:` |
-| Search-results rows | the property's values in a result row | `facetable` in `indexing:` |
+| Search-results rows | the property's values in a result row | `facetable`, or `view: { render_as: ... }` |
 | Show page | the property's values on the work page | `view: { render_as: ... }` |
 
-So `facetable` governs the first two and `render_as` the third. A property that wants its values clickable in results *and* on the show page declares both; neither directive substitutes for the other.
+So `facetable` governs the sidebar and `render_as` governs where a value is rendered — the show page and the results row alike. A property declaring only `render_as: faceted` links its values in both places without appearing in the sidebar; one declaring only `facetable` gets the sidebar facet and results links, but plain text on the show page.
 
 ### What each link queries
 
@@ -183,7 +183,7 @@ So `facetable` governs the first two and `render_as` the third. A property that 
 
 Neither raises when its field is missing. The link still renders and simply returns an empty result page, so the mistake surfaces only when someone clicks it.
 
-`faceted` applies to the show page alone. `linked` also replaces the property's search-results links, which matters below.
+Both apply to the show page and the search-results row. A `faceted` property's facet is registered even when it is not `facetable`, so the link resolves into a filter; Blacklight discards an `f[...]` parameter naming a facet it has no configuration for, which would otherwise leave the link returning unfiltered results.
 
 ### `linked` is for free-text properties
 
@@ -212,13 +212,13 @@ education_level:
   indexing:
     - education_level_tesim
     - education_level_sim
-    - facetable          # sidebar facet, and facet links in results rows
+    - facetable          # sidebar facet
   view:
-    render_as: faceted   # show-page values link to that facet
+    render_as: faceted   # values link to that facet, in results rows and on the show page
     html_dl: true
 ```
 
-Dropping `render_as` from that example leaves the sidebar facet and the results links intact; only the show-page values become plain text.
+Dropping `facetable` leaves both sets of links intact and removes only the sidebar facet — useful for a property with too many distinct values to browse. Dropping `render_as` instead leaves the sidebar facet and turns both sets of values into plain text.
 
 ### Never declare `linked` with `facetable`
 
@@ -235,6 +235,8 @@ Both resolve the label from the authority and link to the stored id, so a label 
 ### Changing an existing property
 
 Adding `<name>_sim` to `indexing:` creates a new Solr field. Existing records must be reindexed before the facet is populated; until then it is empty.
+
+Adding `render_as: faceted` to a property that already indexes `<name>_sim` needs no reindex — it links to a field that is already populated. A **controlled** property is the exception: its values link to `<name>_label_sim`, which the indexer writes only for records processed since its vocabulary became resolvable. A property whose links return nothing on every value is the sign that its corpus predates that.
 
 ## Rich-text fields
 

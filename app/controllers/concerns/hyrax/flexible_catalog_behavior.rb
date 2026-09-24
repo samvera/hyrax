@@ -59,7 +59,7 @@ module Hyrax
           if catalog_indexable?(view_options) && stored_searchable?(indexing, itemprop)
             index_args = { itemprop:, label: }
 
-            if facetable?(indexing, itemprop)
+            if links_to_facet?(indexing, view_options)
               index_args[:link_to_facet] = facet_name_for(itemprop, controlled_source)
             end
 
@@ -138,8 +138,15 @@ module Hyrax
             append_query_fields!(names)
           end
 
-          if facetable?(indexing, itemprop)
+          if facetable?(indexing)
             register_facet_field(itemprop, label, controlled_source, indexing)
+          elsif render_as_faceted?(view_options)
+            # `render_as: faceted` links a value to a facet query without asking
+            # for the sidebar listing that `facetable` declares. The facet still
+            # has to be registered: Blacklight discards an `f[...]` parameter
+            # naming a facet it has no configuration for, so the link would
+            # navigate and silently return unfiltered results.
+            register_hidden_facet_field(facet_name_for(itemprop, controlled_source), label)
           else
             # if the property does not have facetable in the indexing section of the metadata profile, remove the facet field from the blacklight config
             blacklight_config.facet_fields.delete("#{itemprop}_sim")
@@ -166,6 +173,12 @@ module Hyrax
         id_name = "#{itemprop}_sim"
         id_facet = blacklight_config.facet_fields[id_name]
         id_facet = blacklight_config.add_facet_field(id_name, label: label) if id_facet.blank?
+
+        # A property can gain `facetable` while keeping the `render_as: faceted`
+        # that hid its facet to resolve a link. `facetable` asks for the sidebar
+        # listing, so that hiding has to be lifted before anything below decides
+        # which facet to hide for labels.
+        reveal_link_facet(facet_name_for(itemprop, controlled_source))
 
         # Restore a facet an earlier pass hid, for a property that has since
         # stopped being controlled. Only one we hid ourselves: an `if` an
@@ -198,6 +211,54 @@ module Hyrax
         id_facet.if_before_labels = id_facet.if unless id_facet.hidden_for_labels
         id_facet.if = false
         id_facet.hidden_for_labels = true
+      end
+
+      # Register a facet purely so a `render_as: faceted` link resolves, without
+      # listing it in the sidebar.
+      #
+      # Runs per request against a class-level config that persists, so this has
+      # to be safe to repeat; Blacklight raises when a facet is added twice.
+      # Only ever hides a facet this method created: an application that
+      # declared the facet in its own CatalogController asked for the sidebar
+      # listing, and `render_as` does not override that.
+      def register_hidden_facet_field(name, label)
+        # Whether a controlled property resolves its authority decides which of
+        # the two names it links to, and that can change between loads. Dropping
+        # the other one keeps a facet nothing links to any more from outliving
+        # the profile that asked for it.
+        drop_unlinked_counterpart(name)
+
+        facet = blacklight_config.facet_fields[name]
+        return if facet.present? && !facet.hidden_for_link
+
+        facet ||= blacklight_config.add_facet_field(name, label: label)
+        facet.if = false
+        facet.hidden_for_link = true
+      end
+
+      # Undo `register_hidden_facet_field`. Only a facet it hid: an `if` an
+      # application set in its own CatalogController has to stand.
+      def reveal_link_facet(name)
+        facet = blacklight_config.facet_fields[name]
+        return if facet.blank? || !facet.hidden_for_link
+
+        facet.if = nil
+        facet.hidden_for_link = false
+      end
+
+      # The id facet for a label name and vice versa. Only removes one this
+      # concern hid: an application's own facet has to stand however the
+      # property's authority resolves.
+      def drop_unlinked_counterpart(name)
+        counterpart = if name.end_with?('_label_sim')
+                        name.sub(/_label_sim\z/, '_sim')
+                      else
+                        Hyrax::ControlledVocabularyFieldValues.label_key(name)
+                      end
+        return if counterpart.blank? || counterpart == name
+
+        facet = blacklight_config.facet_fields[counterpart]
+        blacklight_config.facet_fields.delete(counterpart) if facet&.hidden_for_link
       end
 
       # The facet swap needs `<itemprop>_sim` specifically, not merely some
@@ -326,8 +387,23 @@ module Hyrax
         view_options['search_results'] != false
       end
 
-      def facetable?(indexing, itemprop)
+      def facetable?(indexing)
         indexing.include?('facetable')
+      end
+
+      # Whether a search-results value links to a facet query. `facetable`
+      # declares the sidebar listing and `render_as: faceted` declares that the
+      # values link, so either one is enough on its own — a property can link
+      # its values without offering a sidebar facet, which is what `faceted`
+      # already means on the show page.
+      def links_to_facet?(indexing, view_options)
+        facetable?(indexing) || render_as_faceted?(view_options)
+      end
+
+      def render_as_faceted?(view_options)
+        return false unless view_options.is_a?(Hash)
+
+        view_options['render_as'].to_s == 'faceted'
       end
 
       def remove_old_properties!(previous_profile_properties, current_property_keys)

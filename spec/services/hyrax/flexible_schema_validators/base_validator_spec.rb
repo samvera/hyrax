@@ -47,7 +47,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::BaseValidator do
         end
 
         def validate!
-          add_warning(:requires_facetable, property: 'subject')
+          add_warning(:requires_sim_field, property: 'subject')
         end
       end
     end
@@ -56,7 +56,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::BaseValidator do
       validator.validate!
 
       expect(validator.violations.first.message)
-        .to eq I18n.t('hyrax.flexible_schema_validators.render_as_validator.warnings.requires_facetable',
+        .to eq I18n.t('hyrax.flexible_schema_validators.render_as_validator.warnings.requires_sim_field',
                       property: 'subject')
     end
   end
