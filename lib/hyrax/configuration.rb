@@ -424,6 +424,18 @@ module Hyrax
     end
     alias redirects_enabled redirects_enabled?
 
+    # Set true by an application for which enabling the config is already the
+    # decision to use the feature, so the Flipflop starts on rather than
+    # waiting to be switched. Inert while `redirects_enabled?` is false: the
+    # Flipflop is not registered then, so nothing reads this.
+    #
+    # @return [Boolean] false unless an application says otherwise
+    attr_writer :redirects_default
+    def redirects_default
+      return @redirects_default if defined?(@redirects_default) && !@redirects_default.nil?
+      @redirects_default = ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_REDIRECTS_DEFAULT', false))
+    end
+
     # @return [Boolean] true when both feature gates are open. Single
     #   source of truth for "is the redirects feature actively in use
     #   right now?". Short-circuits on the config so the Flipflop call

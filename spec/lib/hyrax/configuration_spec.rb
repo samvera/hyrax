@@ -116,6 +116,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:index_file_metadata_as_document=) }
   it { is_expected.to respond_to(:realtime_notifications?) }
   it { is_expected.to respond_to(:realtime_notifications=) }
+  it { is_expected.to respond_to(:redirects_default) }
+  it { is_expected.to respond_to(:redirects_default=) }
   it { is_expected.to respond_to(:redirects_enabled) }
   it { is_expected.to respond_to(:redirects_enabled=) }
   it { is_expected.to respond_to(:redirects_enabled?) }
@@ -217,6 +219,27 @@ RSpec.describe Hyrax::Configuration do
       it "is true" do
         expect(described_class.new.redirects_enabled?).to be true
       end
+    end
+  end
+
+  describe "#redirects_default" do
+    context "with the env var unset" do
+      before { stub_const("ENV", {}) }
+      it "defaults to false, so the Flipflop stays opt-in" do
+        expect(described_class.new.redirects_default).to be false
+      end
+    end
+
+    context "with HYRAX_REDIRECTS_DEFAULT=true" do
+      before { stub_const("ENV", "HYRAX_REDIRECTS_DEFAULT" => "true") }
+      it "is true" do
+        expect(described_class.new.redirects_default).to be true
+      end
+    end
+
+    it "is overridable directly, regardless of the env var" do
+      configuration.redirects_default = true
+      expect(configuration.redirects_default).to be true
     end
   end
 
