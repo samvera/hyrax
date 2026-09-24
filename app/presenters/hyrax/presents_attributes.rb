@@ -53,6 +53,24 @@ module Hyrax
       " itemscope itemtype=\"#{value}\"".html_safe
     end
 
+    ##
+    # Exists alongside `attribute_to_html` because {Hyrax::PresenterRenderer}
+    # renders a presenter's values into a partial directly, never reaching the
+    # label resolution that one does on its way to a renderer.
+    #
+    # @param field [Symbol]
+    # @return [Array] one entry per stored value, in the order held, each the
+    #   term's indexed label where there is one and the stored value otherwise
+    def display_values_for(field)
+      return [] unless respond_to?(field)
+
+      values = Array(send(field))
+      labels = controlled_labels_for(field, values)
+      return values if labels.blank?
+
+      values.map { |value| labels[value.to_s].presence || value }
+    end
+
     private
 
     def renderer_options_for(field, values, options)
