@@ -115,7 +115,7 @@ RSpec.describe 'collection', type: :feature do
 
       expect(page).to have_css(".pagination")
 
-      select('date modified ▲', from: 'Sort')
+      select(I18n.t('hyrax.sort.modified.desc'), from: 'Sort')
       click_button 'Refresh'
 
       expect(page).to have_text(/Test Resource 0.+1.+2.+3.+4.+5.+6.+7.+8.+9/m)
