@@ -63,6 +63,9 @@ module Hyrax
     def self.normalize_compound(value)
       return value if value.nil?
       arr = value.is_a?(::Array) ? value : [value]
+      # Parse Fedora's JSON entry strings first, so two of them aren't mistaken
+      # for a flat [key, value] pair below.
+      arr = arr.map { |entry| Hyrax::SchemaLoader::AttributeDefinition::JsonHash.call(entry) }
       arr = collapse_pair_array(arr) || collapse_flat_pair(arr) || arr
       arr.map { |entry| entry.is_a?(::Hash) ? entry.transform_keys(&:to_s) : entry }
     end
