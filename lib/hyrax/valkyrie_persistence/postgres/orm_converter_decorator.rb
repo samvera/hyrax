@@ -47,10 +47,16 @@ module Hyrax
         # column rather than `#resource_klass`: the latter reads through
         # `#attributes` -> `#rdf_metadata`, which this module overrides, so
         # calling it here would recurse.
+        #
+        # Cached per request: in flexible mode the lookup reads the profile at
+        # the record's schema version, which would otherwise repeat for every row.
         def hash_attribute_names
-          klass = Valkyrie.config.resource_class_resolver.call(orm_object.internal_resource)
-          Hyrax::CompoundSchema.for_stored_record(klass, orm_object.metadata['schema_version'])
-                               .hash_attribute_names.map(&:to_s)
+          version = Array.wrap(orm_object.metadata['schema_version']).first
+          cache = (Hyrax::Current.stored_hash_attribute_names ||= {})
+          cache[[orm_object.internal_resource, version]] ||= begin
+            klass = Valkyrie.config.resource_class_resolver.call(orm_object.internal_resource)
+            Hyrax::CompoundSchema.for_stored_record(klass, version).hash_attribute_names.map(&:to_s)
+          end
         rescue StandardError
           []
         end
