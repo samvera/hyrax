@@ -20,6 +20,12 @@ RSpec.describe 'Persisting a hash-typed schema attribute through the configured 
     expect(round_trip(entries)).to contain_exactly(*entries)
   end
 
+  it 'reloads single-key entries as separate entries' do
+    entries = [{ 'name' => 'Ada' }, { 'role' => 'Editor' }]
+
+    expect(round_trip(entries)).to contain_exactly(*entries)
+  end
+
   it 'reloads an empty list as empty' do
     expect(round_trip([])).to eq []
   end

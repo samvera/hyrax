@@ -38,6 +38,24 @@ module Hyrax
       new(*solr_document_schema_sources(document))
     end
 
+    ##
+    # Build a CompoundSchema for a stored record, before a resource exists (e.g.
+    # while a persister converts a row). A flexible class carries its
+    # profile-declared attributes only per instance, so read them from the
+    # profile at the record's stored schema version, alongside the class schema.
+    #
+    # @param [Class] klass the record's resource class
+    # @param [String, Array<String>, nil] schema_version the stored schema version
+    def self.for_stored_record(klass, schema_version)
+      version = Array.wrap(schema_version).first
+      if version.present? && klass.respond_to?(:flexible?) && klass.flexible?
+        attrs = flexible_attributes_for(klass, version)
+        return new(attrs, *schema_sources_for(klass)) if attrs.present?
+      end
+
+      self.for(klass)
+    end
+
     def self.solr_document_schema_sources(document)
       klass = document.hydra_model if document.respond_to?(:hydra_model)
       version = document['schema_version_ssi'] if document.respond_to?(:[])
@@ -154,6 +172,16 @@ module Hyrax
     #   resource
     def compound_names
       definitions.keys
+    end
+
+    ##
+    # @return [Array<Symbol>] every `type: hash` attribute: the compounds plus
+    #   plain hash attributes without subproperties (e.g. redirects)
+    def hash_attribute_names
+      plain = schema_sources.flat_map { |schema| name_meta_pairs(schema) }
+                            .select { |_name, meta| meta.is_a?(::Hash) && meta.with_indifferent_access['type'].to_s == 'hash' }
+                            .map(&:first)
+      (compound_names + plain).uniq
     end
 
     ##
