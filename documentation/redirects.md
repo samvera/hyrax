@@ -146,7 +146,7 @@ Each entry is a plain hash with `path` and `is_display_url` keys, stored on the 
 
 - **Postgres** stores the entries as JSONB.
 - **Fedora** stores each entry as one JSON literal, since an RDF literal cannot hold a hash: typed `valkyrie_hash` through the Valkyrie Fedora adapter, a plain string through Wings. The `type: hash` attribute type parses the JSON back into a hash on read, so every consumer sees the same shape on either backend.
-- Fedora does not preserve the order of multi-valued literals, so entries can reload in a different order there. Each entry still carries its own `is_display_url`, so which alias is the display URL never changes.
+- Fedora does not preserve the order of multi-valued literals, so `type: hash` attributes are marked `ordered` for Valkyrie: the Valkyrie Fedora adapter stores the entries as an ordered list, and Wings records each entry's position and restores the order on read. Entries reload in the order they were saved.
 
 `Hyrax::Redirect` is retained as a thin Ruby presenter the form view consumes; non-form code (validator, indexer, sync step) reads the persisted hash directly.
 
