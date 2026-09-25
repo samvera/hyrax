@@ -52,7 +52,7 @@ module Wings
 
       mint_id unless pcdm_object.id
 
-      attrs = attributes.tap { |hash| hash[:new_record] = pcdm_object.new_record? }
+      attrs = OrderedAttributes.decode(attributes, klass).tap { |hash| hash[:new_record] = pcdm_object.new_record? }
       attrs[:alternate_ids] = [::Valkyrie::ID.new(pcdm_object.id)] if pcdm_object.id
 
       klass.new(**attrs).tap do |resource|

@@ -202,8 +202,12 @@ module Hyrax
       # @return [Dry::Types::Type]
       def type
         member_type = type_for(config['type'])
-        wrapper_type = multiple? ? Valkyrie::Types::Array.constructor(&Coerce) : Identity
-        wrapper_type.of(member_type)
+        return Identity.of(member_type) unless multiple?
+
+        array_type = Valkyrie::Types::Array.constructor(&Coerce).of(member_type)
+        # Fedora keeps a property's values unordered; Valkyrie's `ordered` meta
+        # tells its adapters to keep the entries in the order they were saved.
+        config['type'] == 'hash' ? array_type.meta(ordered: true) : array_type
       end
 
       # Cleans up the input before the type system sees it: drops the
