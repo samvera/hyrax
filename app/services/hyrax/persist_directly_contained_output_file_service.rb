@@ -47,7 +47,7 @@ module Hyrax
                .match(/^(.*)-\w*(\.\w+)*$/) { |m| m[1] }
       raise "Could not extract fileset id from path #{path}" unless id
 
-      Hyrax.metadata_adapter.query_service.find_by(id: id)
+      Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: id, use_valkyrie: false)
     end
     private_class_method :fileset_for_directives
 
