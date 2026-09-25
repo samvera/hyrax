@@ -1,0 +1,90 @@
+<%# Row templates for collection branding.
+
+    The banner widget (#fileupload) holds a single file submitted as
+    banner_files[]; uploading clears the currently-attached banner markup
+    (and its banner_unchanged input) via data-upload-clear="#banner".
+    The logo widget (#fileuploadlogo) appends rows submitted as
+    logo_files[] with per-logo linkurl[]/alttext[] inputs. %>
+<template id="hyrax-upload-row">
+  <span class="template-download">
+    <div class="row branding-banner-row">
+      <div class="col-sm-4">
+        <span class="name">
+          <span data-upload-name></span>
+          <input type="hidden" data-upload-id-input data-upload-field-name="banner_files[]" value="">
+        </span>
+        <span><strong class="error text-danger" data-upload-error></strong></span>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%;" data-upload-progress></div>
+        </div>
+      </div>
+
+      <div class="col-sm-2">
+        <button type="button" class="btn btn-link remove branding-banner-remove" data-upload-cancel>
+          <span class="fa fa-times"></span>
+          <span class="controls-remove-text"><%= t('hyrax.uploads.js_templates_branding.remove') %></span>
+          <span class="sr-only">
+            <%= t('hyrax.uploads.js_templates_branding.previous') %>
+            <span class="controls-field-name-text"><%= t('hyrax.uploads.js_templates_branding.remove_new_banner') %></span>
+          </span>
+        </button>
+        <button type="button" class="btn btn-link remove branding-banner-remove" data-upload-delete hidden>
+          <span class="fa fa-times"></span>
+          <span class="controls-remove-text"><%= t('hyrax.uploads.js_templates_branding.remove') %></span>
+          <span class="sr-only">
+            <%= t('hyrax.uploads.js_templates_branding.previous') %>
+            <span class="controls-field-name-text"><%= t('hyrax.uploads.js_templates_branding.remove_new_banner') %></span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </span>
+</template>
+
+<template id="hyrax-upload-row-logo">
+  <span class="template-download">
+    <div class="row branding-logo-row">
+      <div class="col-sm-3">
+        <span class="name">
+          <span data-upload-name></span>
+          <input type="hidden" data-upload-id-input data-upload-field-name="logo_files[]" value="">
+        </span>
+        <span><strong class="error text-danger" data-upload-error></strong></span>
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%;" data-upload-progress></div>
+        </div>
+      </div>
+
+      <div class="col-sm-4 branding-logo-input">
+        <label><%= t('hyrax.uploads.js_templates_branding.link_url') %>
+          <input class="branding-logo-input" type="text" data-upload-field-name="linkurl[]" value="">
+        </label>
+        <label><%= t('hyrax.uploads.js_templates_branding.alt_text') %>
+          <input class="branding-logo-input" type="text" data-upload-field-name="alttext[]" value="">
+        </label>
+      </div>
+
+      <div class="col-sm-2">
+        <button type="button" class="btn btn-link remove branding-logo-remove" data-upload-cancel>
+          <span class="fa fa-times"></span>
+          <span class="controls-remove-text"><%= t('hyrax.uploads.js_templates_branding.remove') %></span>
+          <span class="sr-only">
+            <%= t('hyrax.uploads.js_templates_branding.previous') %>
+            <span class="controls-field-name-text"><%= t('hyrax.uploads.js_templates_branding.remove_new_logo') %></span>
+          </span>
+        </button>
+        <button type="button" class="btn btn-link remove branding-logo-remove" data-upload-delete hidden>
+          <span class="fa fa-times"></span>
+          <span class="controls-remove-text"><%= t('hyrax.uploads.js_templates_branding.remove') %></span>
+          <span class="sr-only">
+            <%= t('hyrax.uploads.js_templates_branding.previous') %>
+            <span class="controls-field-name-text"><%= t('hyrax.uploads.js_templates_branding.remove_new_logo') %></span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </span>
+</template>

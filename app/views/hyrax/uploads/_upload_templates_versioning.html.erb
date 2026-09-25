@@ -1,0 +1,58 @@
+<%# Row template for the file set Versions tab: a single staged file whose
+    id is submitted as files_files[] with the update_versioning form. %>
+<template id="hyrax-upload-row-versioning">
+  <span class="template-download">
+    <div class="row versioning-files-row">
+      <div class="col-sm-6">
+        <span class="name">
+          <span data-upload-name></span>
+          <input type="hidden" data-upload-id-input data-upload-field-name="files_files[]" value="">
+        </span>
+        <span><strong class="error text-danger" data-upload-error></strong></span>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%;" data-upload-progress></div>
+        </div>
+      </div>
+
+      <div class="col-sm-2">
+        <button type="button" class="btn btn-link remove versioning-files-remove" data-upload-cancel>
+          <span class="fa fa-times"></span>
+          <span class="controls-remove-text"><%= t('hyrax.uploads.js_templates_versioning.remove') %></span>
+          <span class="sr-only">
+            <%= t('hyrax.uploads.js_templates_versioning.previous') %>
+            <span class="controls-field-name-text"><%= t('hyrax.uploads.js_templates_versioning.remove_new_version') %></span>
+          </span>
+        </button>
+        <button type="button" class="btn btn-link remove versioning-files-remove" data-upload-delete hidden>
+          <span class="fa fa-times"></span>
+          <span class="controls-remove-text"><%= t('hyrax.uploads.js_templates_versioning.remove') %></span>
+          <span class="sr-only">
+            <%= t('hyrax.uploads.js_templates_versioning.previous') %>
+            <span class="controls-field-name-text"><%= t('hyrax.uploads.js_templates_versioning.remove_new_version') %></span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </span>
+</template>
+
+<script type="text/javascript">
+  Blacklight.onLoad(function() {
+    var widget = document.getElementById('fileuploadVersioning');
+    if (widget && !widget.hyraxUploader) {
+      new Hyrax.Uploader(widget, {
+        rowTemplate: 'hyrax-upload-row-versioning',
+        maxFileSize: <%= Hyrax.config.uploader[:maxFileSize] %>,
+        messages: {
+          acceptFileTypes: '<%= t("hyrax.uploads.js_templates_versioning.options.messages.accept_file_types") %>',
+          maxFileSize: '<%= t("hyrax.uploads.js_templates_versioning.options.messages.max_file_size") %>',
+          maxNumberOfFiles: '<%= t("hyrax.uploads.js_templates_versioning.options.messages.max_number_of_files") %>',
+          minFileSize: '<%= t("hyrax.uploads.js_templates_versioning.options.messages.min_file_size") %>'
+        }
+      });
+    }
+  });
+</script>

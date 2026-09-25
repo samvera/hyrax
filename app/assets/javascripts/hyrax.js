@@ -22,9 +22,12 @@
 //= require action_cable
 
 //= require hyrax/monkey_patch_turbolinks
-//= require hyrax/fileupload
+// blueimp's standalone micro-templating helper, used by the permissions and
+// relationships editors (formerly loaded via the old upload widget)
+//= require fileupload/tmpl
 // Provide AMD module support
 //= require almond
+//= require hyrax/fileupload
 //= require hyrax/notification
 //= require hyrax/app
 //= require hyrax/config

@@ -14,8 +14,4 @@
   <%= f.hidden_field :payload_concern, value: @form.payload_concern %>
 <% end %>
 
-<script type="text/javascript">
-  Blacklight.onLoad(function() {
-    $("#fileupload").fileupload('option', 'downloadTemplateId', 'batch-template-download')
-  });
-</script>
+<%= render 'hyrax/uploads/upload_templates_batch' %>
