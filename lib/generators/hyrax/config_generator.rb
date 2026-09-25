@@ -13,6 +13,7 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
     * TinyMCE
     * i18n
     * Valkyrie index
+    * Active Storage services (config/storage.yml, when the application has none)
        """
 
   source_root File.expand_path('../templates', __FILE__)
@@ -40,6 +41,15 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
 
   def configure_valkyrie
     copy_file 'config/initializers/1_valkyrie.rb'
+  end
+
+  # Hyrax's non-ActiveFedora upload and storage paths store files through
+  # Active Storage, whose backing service (local disk, S3, ...) is declared
+  # in config/storage.yml. Rails generates that file for new applications;
+  # this guarantees it exists (with the default disk services and commented
+  # cloud examples) without overwriting an application's own configuration.
+  def active_storage_config
+    copy_file 'config/storage.yml', 'config/storage.yml', skip: true
   end
 
   def configure_valkyrie_index
