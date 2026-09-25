@@ -495,9 +495,12 @@ stores the rows as JSONB; the Valkyrie Fedora adapter stores each row as a neste
 graph (through Hyrax overrides until samvera/valkyrie#1005 is released); Wings
 stores each row as one JSON string, which the `type: hash` attribute type parses
 back into a hash on read. Fedora does not preserve the order of multi-valued
-properties, so rows can reload in a different order there. (Use this plain-hash
-shape rather than nesting a `Valkyrie::Resource`; nested resources round-trip
-poorly and lack form-layer support — see [`field_behaviors.md`](field_behaviors.md).)
+properties, so `type: hash` attributes are marked `ordered` for Valkyrie: the
+Valkyrie Fedora adapter stores the rows as an ordered list, and Wings records each
+row's position and restores the order on read. Rows reload in the order they were
+saved. (Use this plain-hash shape rather than nesting a `Valkyrie::Resource`;
+nested resources round-trip poorly and lack form-layer support — see
+[`field_behaviors.md`](field_behaviors.md).)
 
 ## What the foundation provides
 
