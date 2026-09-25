@@ -37,6 +37,8 @@ $admin-panel-border-color: #dedede !default;
 
 body.dashboard {
   background-color: $body-background-color;
+  // Fallback for pre-JS render; overridden at runtime by the ResizeObserver
+  // in dashboard.html.erb that sets padding to the actual masthead height.
   padding-top: 3.5rem;
 }
 
