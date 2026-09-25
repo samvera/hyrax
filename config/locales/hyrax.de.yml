@@ -730,14 +730,6 @@ de:
         is_private: Das %{type}, auf das Sie zugreifen wollten, ist privat
         page_is_private: Die Seite, auf die Sie zugreifen wollten, ist privat
         unauthorized: Nicht autorisiert
-      work_button_row:
-        analytics: Analytics
-        attach: Fügen Sie %{type} hinzu
-        delete: Löschen
-        delete_type: Diesen %{type} löschen?
-        edit: Bearbeiten
-        feature: Merkmal
-        unfeature: Unfeature
       workflow_actions:
         actions: Aktionen
         previous_comments: Vorherige Kommentare
@@ -1066,14 +1058,6 @@ de:
           show_par_page_html: Zeige %{select} pro Seite
           sort_by: "Sortieren nach:"
         title: Kollektionen
-        work_action_menu:
-          delete_work: Arbeit löschen
-          deleting_from_work: Das Löschen einer Arbeit aus %{application_name} ist dauerhaft. Klicken Sie auf OK, um diese Arbeit von %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
-          edit_work: Arbeit bearbeiten
-          press_to: drücke um zu
-          remove_from_collection: Aus der Sammlung entfernen
-          select_an_action: Wählen Sie eine Aktion aus
-          transfer_ownership_of_work: Übertragen Sie das Eigentum an der Arbeit
         works: Arbeiten
       create_work: Arbeiten erstellen
       current_proxies: Aktuelle Vertreter
@@ -1331,10 +1315,6 @@ de:
         versions_title: Vorherige Versionen anzeigen
       asset_deleted_flash:
         message: Die Datei wurde gelöscht.
-      asset_saved_flash:
-        message:
-          one: Die Datei %{saved_files} gespeichert wurden.
-          other: Die Dateien %{saved_files} gespeichert wurden.
       asset_updated_flash:
         message: Die Datei %{link_to_file} wurde aktualisiert.
       descriptions:
@@ -1833,8 +1813,6 @@ de:
       restricted_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
       unknown:
         text: Unbekannt
-    work_button_row:
-      attach_child: Unterarbeit anhängen
     workflow:
       default:
         deposit: Deponieren
