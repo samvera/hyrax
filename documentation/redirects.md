@@ -94,11 +94,11 @@ properties:
 
 The `form:` block is required in m3. Without it, the m3 form-definition loader skips the property (its filter drops attributes with empty `form_options`), and the Aliases tab errors when the partial reads `f.object.redirects`. The Aliases UI is rendered by `_form_redirects.html.erb`, not by the auto-generated form, so `display: false` is the right value here.
 
-The `display_label` and `range` entries are required for profile validation. `display_label.default` controls the label that appears next to the redirects field on show pages.
+The `display_label` and `range` entries are required for profile validation. For a `type: hash` property, the `range` describes the entries' values; the attribute still loads as a hash. `display_label.default` controls the label that appears next to the redirects field on show pages.
 
 The `indexing: [editor_only]` entry and the `view:` block together opt the redirects field into the show-page display described below in [Displaying redirect aliases on show pages](#displaying-redirect-aliases-on-show-pages). Both are required for that display to appear with editor-or-admin visibility. Note the placement: `editor_only` is an entry in the `indexing:` array (read by `Hyrax::SchemaLoader::AttributeDefinition#editor_only?`); `render_term`, `render_as`, and `html_dl` are inside the `view:` block. Non-flexible mode structures `editor_only` differently — see [Schema details](#schema-details-flexible-false-mode) below.
 
-Each redirect entry is a plain hash with `path` and `is_display_url` keys, persisted as JSONB on the parent resource. The `type: hash` token resolves to `Dry::Types['hash']`, which round-trips entries through Postgres without the sub-field stripping a nested `Valkyrie::Resource` would suffer. `available_on.class` must include at least one work or collection class declared in this profile's top-level `classes:` block; substitute the class names your profile declares (`Image`, `Etd`, `Oer`, etc.) as appropriate.
+Each redirect entry is a plain hash with `path` and `is_display_url` keys, stored on the parent resource (see [Schema details](#schema-details-flexible-false-mode) for how each metadata backend stores it). The `type: hash` token resolves to a `Dry::Types['hash']` type, which round-trips entries without the sub-field stripping a nested `Valkyrie::Resource` would suffer. `available_on.class` must include at least one work or collection class declared in this profile's top-level `classes:` block; substitute the class names your profile declares (`Image`, `Etd`, `Oer`, etc.) as appropriate.
 
 Validation matrix on profile save (with the config on):
 
@@ -142,7 +142,13 @@ When the config is on, this schema is loaded and `Hyrax::Work` / `Hyrax::PcdmCol
 attribute :redirects, Valkyrie::Types::Array.of(Dry::Types['hash'])
 ```
 
-Each entry is a plain hash with `path` and `is_display_url` keys. Entries persist as JSONB on the parent resource, so sub-fields round-trip cleanly without an intermediate nested-resource schema mangling them. `Hyrax::Redirect` is retained as a thin Ruby presenter the form view consumes; non-form code (validator, indexer, sync step) reads the persisted hash directly.
+Each entry is a plain hash with `path` and `is_display_url` keys, stored on the parent resource without an intermediate nested-resource schema mangling its sub-fields:
+
+- **Postgres** stores the entries as JSONB.
+- **Fedora** stores each entry as one JSON literal, since an RDF literal cannot hold a hash: typed `valkyrie_hash` through the Valkyrie Fedora adapter, a plain string through Wings. The `type: hash` attribute type parses the JSON back into a hash on read, so every consumer sees the same shape on either backend.
+- Fedora does not preserve the order of multi-valued literals, so entries can reload in a different order there. Each entry still carries its own `is_display_url`, so which alias is the display URL never changes.
+
+`Hyrax::Redirect` is retained as a thin Ruby presenter the form view consumes; non-form code (validator, indexer, sync step) reads the persisted hash directly.
 
 When the config is off, the loader filters `redirects.yaml` out of the schema set entirely. The file is on disk but invisible to `permissive_schema_for_valkrie_adapter`, `Hyrax::Schema(:redirects)`, and any other consumer of the simple schema loader.
 
