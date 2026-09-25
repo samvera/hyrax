@@ -228,9 +228,9 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
     context 'when type is hash' do
       # The `hash` shortcut lets a YAML schema declare a nested-attribute
       # property whose entries are plain hashes (e.g. `redirects` with
-      # `path`, `canonical`, `sequence` sub-fields). Persisted as JSONB
-      # without a nested Valkyrie::Resource schema in between, so round-trips
-      # don't strip sub-fields. See documentation/redirects.md.
+      # `path`, `canonical`, `sequence` sub-fields). Stored without a nested
+      # Valkyrie::Resource schema in between, so round-trips don't strip
+      # sub-fields. See documentation/redirects.md.
       let(:config) { { 'type' => 'hash', 'multiple' => true } }
 
       it 'returns an array-of-hash typed constructor that round-trips hash entries' do
@@ -245,11 +245,24 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
     context 'when type is hash with multiple: false' do
       let(:config) { { 'type' => 'hash', 'multiple' => false } }
 
-      it 'returns a constructor wrapping Dry::Types["hash"] that passes hashes through' do
+      it 'returns a constructor that passes hashes through' do
         expect(attribute_definition.type).to be_a(Dry::Types::Constructor)
-        expect(attribute_definition.type.type).to eq(Dry::Types['hash'])
         input = { 'path' => '/foo', 'canonical' => true }
         expect(attribute_definition.type.call(input)).to eq(input)
+      end
+    end
+
+    context 'when type is hash and a value arrives as a JSON object string' do
+      let(:config) { { 'type' => 'hash', 'multiple' => true } }
+
+      it 'parses each JSON object string into a hash' do
+        input = ['{"path":"/foo","is_display_url":true}', { 'path' => '/bar' }]
+        expect(attribute_definition.type.call(input))
+          .to eq([{ 'path' => '/foo', 'is_display_url' => true }, { 'path' => '/bar' }])
+      end
+
+      it 'rejects a string that is not a JSON object' do
+        expect { attribute_definition.type.call(['["path", "/foo"]']) }.to raise_error(Dry::Types::ConstraintError)
       end
     end
 

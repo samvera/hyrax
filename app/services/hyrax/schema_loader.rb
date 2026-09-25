@@ -218,6 +218,15 @@ module Hyrax
         wrapped.reject { |v| v.equal?(Dry::Types::Undefined) }.select(&:present?)
       end
 
+      # Fedora (directly or through Wings) stores each hash entry as a JSON
+      # string, since an RDF literal cannot hold a Hash; parse it back here.
+      JsonHash = lambda do |value|
+        next value unless value.is_a?(String) && value.start_with?('{')
+        JSON.parse(value)
+      rescue JSON::ParserError
+        value
+      end
+
       # Determine whether this attribute allows multiple values.
       def multiple?
         return config['multiple'] if config.key?('multiple')
@@ -273,7 +282,7 @@ module Hyrax
         when 'date_time'
           Valkyrie::Types::DateTime
         when 'hash'
-          Dry::Types['hash']
+          Dry::Types['hash'].constructor(&JsonHash)
         when 'linked_record'
           Valkyrie::Types::String
         else
