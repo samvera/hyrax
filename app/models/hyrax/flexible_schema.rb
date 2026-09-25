@@ -210,8 +210,9 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   def values_map(values)
     # Derive the Dry type from the XSD `range` when present; otherwise keep the
     # declared `type:` (compound subproperties declare `type:` directly and have
-    # no `range` of their own).
-    values['type'] = lookup_type(values['range']) if values['range'].present?
+    # no `range` of their own). For `type: hash`, the `range` describes the
+    # entries' values, not the attribute's shape.
+    values['type'] = lookup_type(values['range']) if values['range'].present? && values['type'] != 'hash'
     values['predicate'] = values['property_uri']
     values['index_keys'] = values['indexing']
     values['context'] = values.dig('available_on', 'context')
