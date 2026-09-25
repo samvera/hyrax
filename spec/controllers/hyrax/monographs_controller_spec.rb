@@ -9,6 +9,22 @@ RSpec.describe Hyrax::MonographsController do
   before { sign_in user }
 
   describe "#update" do
+    context "with uploaded files owned by another user" do
+      let(:work) { FactoryBot.valkyrie_create(:comet_in_moominland, edit_users: [user]) }
+      let(:other_user) { FactoryBot.create(:user) }
+      let(:foreign_upload) { FactoryBot.create(:uploaded_file, user: other_user) }
+
+      it "refuses to attach them" do
+        expect(Hyrax::WorkUploadsHandler).not_to receive(:new)
+
+        patch :update, params: { id: work.id,
+                                 monograph: { title: ['comet in moominland'] },
+                                 uploaded_files: [foreign_upload.id.to_s] }
+
+        expect(response).to be_redirect
+        expect(flash[:alert]).to eq I18n.t('hyrax.uploads.ownership_error')
+      end
+    end
     context "when updating work members" do
       let(:work) { FactoryBot.valkyrie_create(:comet_in_moominland, :with_member_works) }
       let(:child1) { Hyrax.query_service.find_by(id: work.member_ids.first) }

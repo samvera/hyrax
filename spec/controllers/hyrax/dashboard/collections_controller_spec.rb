@@ -503,7 +503,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         end
 
         context "updating a collections branding metadata" do
-          let(:uploaded) { FactoryBot.create(:uploaded_file) }
+          let(:uploaded) { FactoryBot.create(:uploaded_file, user: user) }
 
           it "saves banner metadata" do
             put :update, params: { id: collection,
@@ -532,8 +532,21 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
               .to exist
           end
 
+          it "refuses branding files owned by another user" do
+            foreign = FactoryBot.create(:uploaded_file)
+
+            put :update, params: { id: collection,
+                                   banner_files: [foreign.id],
+                                   collection: { creator: ['Emily'] } }
+
+            expect(response).to be_redirect
+            expect(flash[:alert]).to eq I18n.t('hyrax.uploads.ownership_error')
+            expect(CollectionBrandingInfo.where(collection_id: collection.id.to_s, role: "banner"))
+              .not_to exist
+          end
+
           context 'where the linkurl is not a valid http|http link' do
-            let(:uploaded) { FactoryBot.create(:uploaded_file) }
+            let(:uploaded) { FactoryBot.create(:uploaded_file, user: user) }
 
             it "does not save linkurl containing html; target_url is empty" do
               put :update, params: { id: collection,

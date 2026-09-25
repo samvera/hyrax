@@ -663,6 +663,44 @@ RSpec.describe Hyrax::FileSetsController do
           end
         end
 
+        context "when the staged file is submitted under the canonical uploaded_files parameter" do
+          it "ingests it like the legacy files_files parameter" do
+            new_file = FactoryBot.create(:uploaded_file, user: user, file: File.open("spec/fixtures/4-20.png"))
+            expect(ValkyrieIngestJob).to receive(:perform_later).with(new_file)
+
+            post :update, params: { id: file_set, uploaded_files: [new_file.id.to_s] }
+
+            expect(new_file.reload.file_set_uri).to eq file_set.id.to_s
+          end
+        end
+
+        context "when the staged file is submitted under the legacy files_files parameter" do
+          it "warns that the parameter is deprecated" do
+            allow(Deprecation).to receive(:warn)
+            new_file = FactoryBot.create(:uploaded_file, user: user, file: File.open("spec/fixtures/4-20.png"))
+
+            post :update, params: { id: file_set, files_files: [new_file.id.to_s] }
+
+            expect(Deprecation).to have_received(:warn).with(a_string_including('files_files'))
+          end
+        end
+
+        context "when the staged file belongs to another user" do
+          let(:other_user) { create(:user) }
+
+          it "refuses to ingest it" do
+            foreign = FactoryBot.create(:uploaded_file, user: other_user, file: File.open("spec/fixtures/4-20.png"))
+            expect(ValkyrieIngestJob).not_to receive(:perform_later)
+
+            post :update, params: { id: file_set, files_files: [foreign.id.to_s] }
+
+            # this context stubs redirect_to (see the containing before block),
+            # so assert the ownership handler issued the redirect through it
+            expect(controller).to have_received(:redirect_to)
+              .with(anything, hash_including(alert: I18n.t('hyrax.uploads.ownership_error')))
+          end
+        end
+
         context "with two existing versions from different users", :perform_enqueued do
           let(:second_user) { create(:user) }
           let(:second_file) { FactoryBot.create(:uploaded_file, user: second_user, file: File.open('spec/fixtures/4-20.png'), file_set_uri: file_set.id.to_s) }
