@@ -64,12 +64,15 @@ module Hyrax
         # For each hash attribute present in the raw JSONB, rebuild the value as
         # an array of whole entry hashes with symbolized keys — the shape the
         # schema coercion expects — instead of the splayed pairs `super` produced.
+        # Some rows already hold splayed pairs on disk, written back by
+        # flexible-mode saves that loaded a hash attribute as strings; the
+        # compound pair repair rebuilds those entries too.
         def unsplayed_hash_metadata(names)
           raw = orm_object.metadata
           names.each_with_object({}) do |name, acc|
             next unless raw.key?(name)
 
-            entries = Array.wrap(raw[name]).map do |entry|
+            entries = Hyrax::CompoundNormalization.normalize_compound(Array.wrap(raw[name])).map do |entry|
               entry.is_a?(::Hash) ? entry.symbolize_keys : entry
             end
             acc[name] = entries
