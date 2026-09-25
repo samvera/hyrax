@@ -80,6 +80,45 @@ RSpec.describe Hyrax::CompoundSchema do
     end
   end
 
+  describe '#hash_attribute_names' do
+    subject(:schema_with_plain_hash) do
+      described_class.new(resource_class.schema,
+                          { redirects: Valkyrie::Types::Array.of(Dry::Types['hash']).meta('type' => 'hash', 'multiple' => true) })
+    end
+
+    it 'returns compounds and plain hash attributes alike' do
+      expect(schema_with_plain_hash.hash_attribute_names).to include(:contributors, :identifiers, :redirects)
+    end
+
+    it 'does not return a scalar attribute' do
+      expect(schema_with_plain_hash.hash_attribute_names).not_to include(:title)
+    end
+  end
+
+  describe '.for_stored_record' do
+    let(:profile_attributes) do
+      { redirects: Valkyrie::Types::Array.of(Dry::Types['hash']).meta('type' => 'hash', 'multiple' => true) }
+    end
+
+    before do
+      allow(Hyrax::Schema).to receive(:m3_schema_loader)
+        .and_return(instance_double(Hyrax::M3SchemaLoader, attributes_for: profile_attributes))
+    end
+
+    it 'reads a flexible class from the profile at the stored schema version' do
+      allow(resource_class).to receive(:flexible?).and_return(true)
+
+      expect(described_class.for_stored_record(resource_class, ['3']).hash_attribute_names).to include(:redirects, :contributors)
+      expect(Hyrax::Schema.m3_schema_loader).to have_received(:attributes_for).with(hash_including(version: '3'))
+    end
+
+    it 'reads a non-flexible class from its own schema only' do
+      allow(resource_class).to receive(:flexible?).and_return(false)
+
+      expect(described_class.for_stored_record(resource_class, ['3']).hash_attribute_names).not_to include(:redirects)
+    end
+  end
+
   describe 'display mode (view: { display: card })' do
     describe '#inline_compound_names' do
       it 'excludes compounds declared as cards' do
