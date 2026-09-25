@@ -22,5 +22,22 @@ RSpec.describe Wings::ConverterValueMapper do
 
     context 'with a NestedResourceArray value'
     context 'with a NestedResource value'
+
+    context 'with an array of plain hashes' do
+      let(:value) { [:aliases, [{ 'path' => '/one', 'is_display_url' => true }, { path: '/two' }]] }
+
+      it 'converts each hash to one JSON string' do
+        expect(mapper.result)
+          .to eq [:aliases, ['{"path":"/one","is_display_url":true}', '{"path":"/two"}']]
+      end
+    end
+
+    context 'with a hash that names an internal resource' do
+      let(:value) { [:nested, { internal_resource: 'Hyrax::Permission' }] }
+
+      it 'leaves the hash unchanged' do
+        expect(mapper.result).to eq value
+      end
+    end
   end
 end

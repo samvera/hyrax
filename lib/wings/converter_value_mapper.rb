@@ -242,6 +242,22 @@ module Wings
     end
   end
 
+  # ActiveTriples cannot store a Hash, so a plain hash entry (e.g. a `type: hash`
+  # schema attribute) is written as one JSON string; the attribute type parses
+  # it back on read.
+  class HashValue < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    def self.handles?(value)
+      value.is_a?(Array) && value.last.is_a?(Hash) &&
+        !(value.last.key?(:internal_resource) || value.last.key?('internal_resource'))
+    end
+
+    def result
+      [value.first, value.last.to_json]
+    end
+  end
+
   class ActiveFedoraAttributes
     attr_reader :attributes
 
