@@ -25,8 +25,13 @@ RSpec.describe Hyrax::Forms::FileSetForm do
   end
 
   describe '.required_fields' do
-    it 'lists the fields tagged required' do
+    it 'lists the fields tagged required', unless: Hyrax.config.flexible? do
       expect(described_class.required_fields)
+        .to contain_exactly(:title, :creator)
+    end
+
+    it "lists the profile's required fields on a flexible form", if: Hyrax.config.flexible? do
+      expect(form.singleton_class.required_fields)
         .to contain_exactly(:title, :creator)
     end
   end
