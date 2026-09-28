@@ -20,6 +20,76 @@ RSpec.describe Hyrax::UploadsController do
         expect(assigns(:upload).user).to eq user
       end
 
+      context "upload size enforcement" do
+        let(:file_size) { File.size(fixture_path + '/world.png') }
+
+        it "accepts when under the limit" do
+          allow(Hyrax.config).to receive(:uploader).and_return(maxFileSize: file_size + 1)
+          expect { post :create, params: { files: [file], format: 'json' } }
+            .to change(Hyrax::UploadedFile, :count).by(1)
+          expect(response).to be_successful
+        end
+
+        it "rejects with 413 when over the limit" do
+          allow(Hyrax.config).to receive(:uploader).and_return(maxFileSize: file_size - 1)
+          post :create, params: { files: [file], format: 'json' }
+
+          expect(response).to have_http_status(:payload_too_large)
+          expect(JSON.parse(response.body)['files'].first['error']).to match(/upload limit/)
+        end
+
+        it "creates no record when over the limit" do
+          allow(Hyrax.config).to receive(:uploader).and_return(maxFileSize: file_size - 1)
+          expect { post :create, params: { files: [file], format: 'json' } }
+            .not_to change(Hyrax::UploadedFile, :count)
+        end
+
+        it "skips the check when maxFileSize is zero" do
+          allow(Hyrax.config).to receive(:uploader).and_return(maxFileSize: 0)
+          post :create, params: { files: [file], format: 'json' }
+          expect(response).not_to have_http_status(:payload_too_large)
+        end
+
+        it "skips the check when maxFileSize is nil" do
+          allow(Hyrax.config).to receive(:uploader).and_return(maxFileSize: nil)
+          post :create, params: { files: [file], format: 'json' }
+          expect(response).not_to have_http_status(:payload_too_large)
+        end
+
+        it "skips the check when maxFileSize is an empty string" do
+          allow(Hyrax.config).to receive(:uploader).and_return(maxFileSize: "")
+          post :create, params: { files: [file], format: 'json' }
+          expect(response).not_to have_http_status(:payload_too_large)
+        end
+
+        context "chunked append" do
+          it "refuses when assembled size exceeds the limit" do
+            original_file = fixture_file_upload('/world.png', 'image/png')
+            post :create, params: { files: [original_file], format: 'json' }
+            upload = assigns(:upload)
+            on_disk = upload.file.size
+
+            allow(Hyrax.config).to receive(:uploader).and_return(maxFileSize: on_disk + file_size - 1)
+            request.headers['CONTENT-RANGE'] = "bytes #{on_disk}-#{on_disk + file_size - 1}/#{on_disk + file_size}"
+            post :create, params: { id: upload.id, files: [fixture_file_upload('/world.png', 'image/png')], format: 'json' }
+
+            expect(response).to have_http_status(:payload_too_large)
+          end
+
+          it "does not count existing bytes on a replace (mismatched range)" do
+            original_file = fixture_file_upload('/world.png', 'image/png')
+            post :create, params: { files: [original_file], format: 'json' }
+            upload = assigns(:upload)
+
+            allow(Hyrax.config).to receive(:uploader).and_return(maxFileSize: file_size + 1)
+            request.headers['CONTENT-RANGE'] = "bytes 0-#{file_size - 1}/#{file_size}"
+            post :create, params: { id: upload.id, files: [fixture_file_upload('/world.png', 'image/png')], format: 'json' }
+
+            expect(response).not_to have_http_status(:payload_too_large)
+          end
+        end
+      end
+
       context "when uploading in chunks" do
         it "appends chunks in correct sequence" do
           original_file = fixture_file_upload('/world.png', 'image/png')
