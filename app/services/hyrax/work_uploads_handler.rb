@@ -148,8 +148,8 @@ module Hyrax
         creator: Array.wrap(file.user.user_key),
         date_uploaded: file.created_at,
         date_modified: Hyrax::TimeService.time_in_utc,
-        label: file.uploader.filename,
-        title: Array.wrap(file.uploader.filename) }.merge(extra.symbolize_keys)
+        label: file.filename,
+        title: Array.wrap(file.filename) }.merge(extra.symbolize_keys)
     end
 
     ##

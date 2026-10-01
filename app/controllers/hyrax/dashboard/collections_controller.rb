@@ -322,14 +322,16 @@ module Hyrax
 
       def add_new_banner(uploaded_file_ids)
         f = uploaded_files(uploaded_file_ids).first
-        banner_info = CollectionBrandingInfo.new(
-          collection_id: @collection.id,
-          filename: File.split(f.file_url).last,
-          role: "banner",
-          alt_txt: "",
-          target_url: ""
-        )
-        banner_info.save f.file_url
+        f.with_local_path do |path|
+          banner_info = CollectionBrandingInfo.new(
+            collection_id: @collection.id,
+            filename: File.basename(path),
+            role: "banner",
+            alt_txt: "",
+            target_url: ""
+          )
+          banner_info.save path
+        end
       end
 
       def remove_banner
@@ -347,15 +349,17 @@ module Hyrax
 
       def create_logo_info(uploaded_file_id, alttext, linkurl)
         file = uploaded_files(uploaded_file_id)
-        logo_info = CollectionBrandingInfo.new(
-          collection_id: @collection.id,
-          filename: File.split(file.file_url).last,
-          role: "logo",
-          alt_txt: alttext,
-          target_url: linkurl
-        )
-        logo_info.save file.file_url
-        logo_info
+        file.with_local_path do |path|
+          logo_info = CollectionBrandingInfo.new(
+            collection_id: @collection.id,
+            filename: File.basename(path),
+            role: "logo",
+            alt_txt: alttext,
+            target_url: linkurl
+          )
+          logo_info.save path
+          logo_info
+        end
       end
 
       def remove_redundant_files(public_files)
