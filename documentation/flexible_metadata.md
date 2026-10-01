@@ -174,6 +174,8 @@ A property's values can be rendered as links that run a new catalog query. There
 
 So `facetable` governs the sidebar and `render_as` governs where a value is rendered — the show page and the results row alike. A property declaring only `render_as: faceted` links its values in both places without appearing in the sidebar; one declaring only `facetable` gets the sidebar facet and results links, but plain text on the show page.
 
+A `facetable` property's sidebar facet lists `config.default_facet_limit` values (Blacklight's default is 10), then a "more" link that pages through the rest. A facet the application already declares in its `CatalogController` keeps the `limit:` declared there, and a controlled property's label facet takes the limit of its id facet.
+
 ### What each link queries
 
 | `render_as` | link is | queries | requires in `indexing:` |
