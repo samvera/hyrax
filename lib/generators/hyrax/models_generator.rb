@@ -16,6 +16,7 @@ class Hyrax::ModelsGenerator < Rails::Generators::Base
   def copy_migrations
     rake 'hyrax:install:migrations'
     rake 'valkyrie_engine:install:migrations'
+    rake 'active_storage:install'
   end
 
   # Add behaviors to the user model

@@ -97,6 +97,99 @@ RSpec.describe Hyrax::UploadsController do
         expect(response.status).to eq 401
       end
     end
+
+    context "with the :active_storage backend" do
+      render_views
+
+      around do |example|
+        original = Hyrax.config.uploaded_file_storage_backend
+        Hyrax.config.uploaded_file_storage_backend = :active_storage
+        example.run
+        Hyrax.config.uploaded_file_storage_backend = original
+      end
+
+      before { sign_in user }
+
+      let(:fixture_bytes) { File.binread(fixture_path + '/world.png') }
+
+      def precreate_upload(name = 'world.png')
+        post :create, params: { files: [name], format: 'json' }
+        assigns(:upload)
+      end
+
+      def chunk_upload(upload, bytes, first_byte, total)
+        chunk_path = File.join(Dir.mktmpdir, 'chunk')
+        File.binwrite(chunk_path, bytes)
+        request.headers['CONTENT-RANGE'] = "bytes #{first_byte}-#{first_byte + bytes.bytesize - 1}/#{total}"
+        post :create,
+             params: { files: [Rack::Test::UploadedFile.new(chunk_path, 'image/png')],
+                       id: upload.id, format: 'json' }
+      end
+
+      it "creates a record from a filename ahead of the content" do
+        upload = precreate_upload
+
+        expect(response).to be_successful
+        expect(upload).to be_persisted
+        expect(upload.filename).to eq 'world.png'
+        expect(upload).not_to be_stored
+        expect(JSON.parse(response.body)['files'].first['name']).to eq 'world.png'
+      end
+
+      it "attaches content sent in a single request" do
+        upload = precreate_upload
+
+        post :create, params: { files: [fixture_file_upload('/world.png', 'image/png')],
+                                id: upload.id, format: 'json' }
+
+        expect(response).to be_successful
+        upload.reload
+        expect(upload).to be_stored
+        expect(upload.byte_size).to eq fixture_bytes.bytesize
+        expect(upload.with_io(&:read)).to eq fixture_bytes
+      end
+
+      it "assembles sequential chunks and attaches the completed file" do
+        upload = precreate_upload
+        midpoint = fixture_bytes.bytesize / 2
+        total = fixture_bytes.bytesize
+
+        chunk_upload(upload, fixture_bytes[0...midpoint], 0, total)
+        expect(response).to be_successful
+        expect(upload.reload).not_to be_stored
+
+        chunk_upload(upload, fixture_bytes[midpoint..], midpoint, total)
+        expect(response).to be_successful
+
+        upload.reload
+        expect(upload).to be_stored
+        expect(upload.filename).to eq 'world.png'
+        expect(upload.with_io(&:read)).to eq fixture_bytes
+      end
+
+      it "removes the assembly staging file after attaching" do
+        upload = precreate_upload
+        staging_file = File.join(Hyrax.config.cache_path.call.to_s, 'chunked_uploads', "#{upload.id}.part")
+
+        chunk_upload(upload, fixture_bytes, 0, fixture_bytes.bytesize)
+
+        expect(upload.reload).to be_stored
+        expect(File).not_to exist(staging_file)
+      end
+
+      it "restarts assembly when a chunk does not continue the pending data" do
+        upload = precreate_upload
+        total = fixture_bytes.bytesize + 1000
+
+        chunk_upload(upload, fixture_bytes[0...100], 0, total)
+        # out-of-order chunk: restarts the assembly rather than appending
+        chunk_upload(upload, fixture_bytes[0...50], 500, total)
+
+        staging_file = File.join(Hyrax.config.cache_path.call.to_s, 'chunked_uploads', "#{upload.id}.part")
+        expect(File.size(staging_file)).to eq 50
+        expect(upload.reload).not_to be_stored
+      end
+    end
   end
 
   describe "#destroy" do
@@ -129,6 +222,26 @@ RSpec.describe Hyrax::UploadsController do
       it "is redirected to sign in" do
         delete :destroy, params: { id: uploaded_file }
         expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
+      end
+    end
+
+    context "with the :active_storage backend" do
+      around do |example|
+        original = Hyrax.config.uploaded_file_storage_backend
+        Hyrax.config.uploaded_file_storage_backend = :active_storage
+        example.run
+        Hyrax.config.uploaded_file_storage_backend = original
+      end
+
+      before { sign_in user }
+
+      it "destroys the record and purges the attachment" do
+        uploaded_file = Hyrax::UploadedFile.create(file: file, user: user)
+
+        expect { delete :destroy, params: { id: uploaded_file } }
+          .to have_enqueued_job(ActiveStorage::PurgeJob)
+        expect(response.status).to eq 204
+        expect(assigns[:upload]).to be_destroyed
       end
     end
   end

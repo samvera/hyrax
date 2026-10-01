@@ -43,17 +43,14 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
   #
   # @return [Hyrax::FileMetadata] the metadata representing the uploaded file
   def upload_file(file:, file_set:, pcdm_use:, user: nil)
-    carrier_wave_sanitized_file = file.uploader.file
-    # Pull file, since carrierwave files don't respond to a proper IO #read. See
-    # https://github.com/carrierwaveuploader/carrierwave/issues/1959
-    file_io = carrier_wave_sanitized_file.to_file
-
-    ::Hyrax::ValkyrieUpload.file(
-      io: file_io,
-      filename: carrier_wave_sanitized_file.original_filename,
-      file_set: file_set,
-      use: pcdm_use,
-      user: user
-    )
+    file.with_io do |io|
+      ::Hyrax::ValkyrieUpload.file(
+        io: io,
+        filename: file.filename,
+        file_set: file_set,
+        use: pcdm_use,
+        user: user
+      )
+    end
   end
 end
