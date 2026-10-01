@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::StatsController do
   let(:user) { create(:user) }
-  let(:usage) { double }
+  let(:usage) { double(to_flot: []) }
 
   before do
     allow_any_instance_of(User).to receive(:groups).and_return([])
