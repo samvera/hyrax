@@ -12,6 +12,11 @@ export class UploadedFiles {
       this.uploadsInProgress -= 1
       callback(e, data)
     })
+    // canceled or errored uploads no longer count as in progress
+    this.element.on('fileuploadfail', (e, data) => {
+      this.uploadsInProgress -= 1
+      callback(e, data)
+    })
     this.element.on('fileuploaddestroyed', callback)
   }
 
