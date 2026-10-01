@@ -73,7 +73,7 @@ module Hyrax
 
       # rubocop:disable Lint/DuplicateMethods
       def uploaded_files
-        UploadedFile.find(params.fetch(:uploaded_files, []))
+        Hyrax::UploadedFileResolver.call(params.fetch(:uploaded_files, []), user: user)
       end
       # rubocop:enable Lint/DuplicateMethods
     end

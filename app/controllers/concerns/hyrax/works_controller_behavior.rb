@@ -10,6 +10,7 @@ module Hyrax
     include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
     include Hyrax::EnsureMigratedBehavior
     include Hyrax::RedirectToDisplayUrl
+    include Hyrax::EnforcesStagedUploadOwnership
 
     included do
       with_themed_layout :decide_layout
@@ -551,7 +552,7 @@ module Hyrax
     end
 
     def uploaded_files
-      UploadedFile.find(params.fetch(:uploaded_files, []))
+      Hyrax::UploadedFileResolver.call(params.fetch(:uploaded_files, []), user: current_user)
     end
 
     def available_admin_sets
