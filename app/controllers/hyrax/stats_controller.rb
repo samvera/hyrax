@@ -1,8 +1,12 @@
 # frozen_string_literal: true
+require 'google/cloud/errors'
+
 module Hyrax
   class StatsController < ApplicationController
     include Hyrax::SingularSubresourceController
     include Hyrax::Breadcrumbs
+
+    rescue_from Google::Cloud::Error, with: :analytics_unavailable
 
     before_action :build_breadcrumbs, only: [:work, :file]
 
@@ -14,9 +18,33 @@ module Hyrax
 
     def file
       @stats = Hyrax::FileUsage.new(params[:id])
+      @stats.to_flot # load now so a Google failure is rescued here, not mid-render
     end
 
     private
+
+    # Show zeroed stats and a notice instead of a 500 when Google rejects the request.
+    def analytics_unavailable(exception)
+      Rails.logger.error "Analytics error: #{exception.message}"
+      @analytics_error = analytics_error_details(exception)
+      if action_name == 'file'
+        @stats = Hyrax::FileUsage.new(params[:id]).tap(&:without_analytics)
+      else
+        @document ||= ::SolrDocument.find(params[:id])
+        @pageviews = @downloads = Hyrax::Analytics::Results.new([])
+      end
+      render action_name
+    end
+
+    def analytics_error_details(exception)
+      type = exception.is_a?(Google::Cloud::PermissionDeniedError) ? 'permission' : 'general'
+      scope = "hyrax.admin.analytics.errors.#{type}"
+      { title: I18n.t('title', scope: scope),
+        message: I18n.t('message', scope: scope),
+        troubleshooting_steps: Array.wrap(I18n.t('troubleshooting_steps', scope: scope)),
+        documentation_url: I18n.t('documentation_url', scope: scope),
+        details: exception.message }
+    end
 
     def add_breadcrumb_for_controller
       add_breadcrumb I18n.t('hyrax.dashboard.my.works'), hyrax.my_works_path
