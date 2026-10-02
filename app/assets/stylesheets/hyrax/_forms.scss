@@ -640,6 +640,33 @@ form.button-to {
   }
 }
 
+// Files tab – equal-width upload buttons spanning the text width
+#fileupload .fileupload-buttonbar .col-12 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  .fileinput-button {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+
+    .btn {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+
+  > .btn {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  > .fileupload-process {
+    display: none;
+  }
+}
+
 .search-form {
   .form-group {
     margin: 0;
