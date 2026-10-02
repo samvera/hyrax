@@ -879,7 +879,7 @@ en:
         manage_items: Manage Items in this Collection
       edit_view: Edit View
       form:
-        additional_fields: Additional fields
+        additional_fields: Additional Fields
         description: Descriptions
       is_part_of: Is part of
       select_form:
@@ -1999,7 +1999,7 @@ en:
       edit:
         breadcrumb: Edit
       form:
-        additional_fields: Additional fields
+        additional_fields: Additional Fields
         in_collections: Collections
         in_other_works: This Work in Other Works
         in_this_work: Other Works in this Work

@@ -329,6 +329,143 @@ form.button-to {
   }
 }
 
+// Multi-value / controlled-vocabulary field inputs: consistent full width
+// Overrides hydra-editor gem defaults (max-width: 40em on .listing,
+// width: 83.333% on li:first-of-type, display: none on first Remove button)
+.multi_value .listing,
+.controlled_vocabulary .listing {
+  max-width: none !important;
+}
+
+.multi_value .listing li:first-of-type,
+.controlled_vocabulary .listing li:first-of-type {
+  width: 100% !important;
+}
+
+.multi_value .listing li:first-of-type .field-controls .remove,
+.controlled_vocabulary .listing li:first-of-type .field-controls .remove {
+  display: inline-block !important;
+  visibility: hidden;
+}
+
+.controlled_vocabulary .listing li:not(:first-of-type) .field-controls .remove {
+  display: inline-block !important;
+}
+
+// Hide the "+" and "−" icons on controlled vocabulary buttons to match multi-value links
+.controlled_vocabulary .add .fa-plus,
+.controlled_vocabulary .remove .fa-minus {
+  display: none;
+}
+
+// Select2 in controlled vocabulary fields: match regular input appearance
+.controlled_vocabulary .select2-container.form-control {
+  border: none;
+  padding: 0;
+  height: calc(1.5em + 0.75rem + 2px);
+
+  .select2-choice {
+    height: 100%;
+    border: 1px solid #ced4da;
+    border-radius: 4.5px;
+    padding: 0.375rem 0.75rem;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    background-image: none;
+
+    .select2-arrow {
+      background: none !important;
+      border: none !important;
+      display: flex !important;
+      align-items: center !important;
+      height: 100% !important;
+      top: 0 !important;
+
+      b {
+        background: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        border-left: 5px solid transparent !important;
+        border-right: 5px solid transparent !important;
+        border-top: 5px solid #888 !important;
+      }
+    }
+  }
+}
+
+// Consistent border-radius on all form inputs and dropdowns
+.form-tab-content {
+  .form-control,
+  .select2-container .select2-choice {
+    border-radius: 4.5px !important;
+  }
+}
+
+// Title-case field labels and "Add another …" link text
+.form-tab-content .control-label,
+.form-tab-content .controls-add-text {
+  text-transform: capitalize;
+}
+
+// Non-managed selects (Representative Media, Thumbnail, Rendering, Resource type):
+// match width of managed inputs by reserving the same space as the Remove button column
+.form-tab-content .form-group:not(.managed) select.form-control {
+  max-width: calc(100% - 9em);
+}
+
+// Compound field cards (Participants, Relationships, etc.)
+.hyrax-compound-row .card-body {
+  // 2/3 + 1/3 split for paired fields (Name+Role, Item+Type)
+  .form-row > .form-group:first-child:not(:only-child) {
+    flex: 0 0 66.6667%;
+    max-width: 66.6667%;
+  }
+
+  .form-row > .form-group:nth-child(2) {
+    flex: 0 0 33.3333%;
+    max-width: 33.3333%;
+  }
+
+  // Override the non-managed select max-width rule inside compound cards
+  select.form-control {
+    max-width: none !important;
+    width: 100%;
+  }
+
+  // URL input in work_or_url fields: span full row width to match Title
+  [data-hyrax-compound-work-url-wrap] {
+    width: calc(150% + 5px);
+  }
+
+  .form-control-sm {
+    font-size: 1rem;
+    padding: 0.375rem 0.75rem;
+    height: calc(1.5em + 0.75rem + 2px);
+    margin-top: 0.7rem;
+    margin-bottom: 0.7rem;
+  }
+
+  // Select2 (Item "Search for a work"): match height and center content
+  .select2-container.form-control {
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0;
+
+    .select2-choice {
+      height: 100%;
+      line-height: calc(1.5em + 0.75rem);
+      padding: 0 0 0 0.75rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .select2-arrow {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
 .search-form {
   .form-group {
     margin: 0;
