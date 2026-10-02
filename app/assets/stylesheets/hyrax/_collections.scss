@@ -711,6 +711,19 @@ button.branding-banner-remove:hover {
 
 }
 
+// Edit Collection – Branding tab: hide the native file input behind the styled button
+#collection-edit-controls .fileinput-button input[type="file"] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  font-size: 200px;
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+}
+
 // Edit Collection form – border-radius and title-case fixes
 #collection-edit-controls {
   // Title-case field labels, tab headings, links, and buttons
