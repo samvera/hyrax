@@ -211,20 +211,24 @@ form.button-to {
 .permission-add-group {
   margin-bottom: 1em;
   margin-left: 0;
+  flex-wrap: wrap;
 
   legend {
     font-size: 0.95rem;
     padding-top: 0;
+    flex: 0 0 100%;
+    max-width: 100%;
   }
 
-  // Flex layout for the controls row. Bootstrap .form-inline sets
-  // `display: inline-block; width: auto` on .form-control children,
-  // so we need enough specificity to override.
+  // Full-width controls row matching the Permissions banner width
   .col-sm-9.form-inline {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.5rem;
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding-left: 0;
 
     // Hide <br> tags that break the flex layout
     br {
@@ -287,7 +291,7 @@ form.button-to {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ced4da;
-  border-radius: 0.25rem;
+  border-radius: 4.5px;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
   &:focus {
@@ -305,15 +309,96 @@ form.button-to {
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 0;
-  padding: 7px 15px;
+  padding: 7px 0;
 }
 
-// Currently Shared With table – consistent spacing
+// Sharing tab – title case and consistent styling
+#share {
+  label,
+  legend,
+  .table th,
+  .btn {
+    text-transform: capitalize;
+  }
+
+  .form-control,
+  .select2-container .select2-choice {
+    border-radius: 4.5px !important;
+  }
+
+  // Select2 (Search for a user): match input appearance
+  .select2-container {
+    height: calc(1.5em + 0.75rem + 2px);
+
+    .select2-choice {
+      height: 100%;
+      border: 1px solid #ced4da;
+      padding: 0.375rem 0.75rem;
+      display: flex;
+      align-items: center;
+      background: #fff;
+      background-image: none;
+
+      .select2-arrow {
+        background: none !important;
+        border: none !important;
+        display: flex !important;
+        align-items: center !important;
+        height: 100% !important;
+        top: 0 !important;
+
+        b {
+          background: none !important;
+          width: 0 !important;
+          height: 0 !important;
+          border-left: 5px solid transparent !important;
+          border-right: 5px solid transparent !important;
+          border-top: 5px solid #888 !important;
+        }
+      }
+    }
+  }
+}
+
+// Visibility sidebar – remove bottom margin on the "Please note" paragraph
+#collapsePublic > p {
+  margin-bottom: 0;
+}
+
+// Currently Shared With table – consistent spacing and column widths
 #share .table {
   margin-top: 1rem;
 
   td {
     vertical-align: middle;
+  }
+
+  // Action column (3rd): center content horizontally
+  th:nth-child(3),
+  td:nth-child(3) {
+    text-align: center;
+  }
+
+  // Access Level cell: make the col-sm wrapper inline so select + × sit on one line
+  td > .col-sm-10 {
+    display: inline-block;
+    width: calc(100% - 1.5rem);
+    padding: 0;
+    max-width: none;
+    vertical-align: middle;
+
+    select.form-control {
+      width: 100%;
+    }
+  }
+
+  td > .remove_perm {
+    display: inline-block;
+    float: none !important;
+    vertical-align: middle;
+    margin-left: 0.25rem;
+    font-size: 1.25rem;
+    line-height: 1;
   }
 }
 
