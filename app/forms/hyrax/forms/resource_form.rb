@@ -27,7 +27,8 @@ module Hyrax
       end
 
       include BasedNearFieldBehavior
-      include CompoundFieldBehavior
+      # Remove until compound fields are merged
+      # include CompoundFieldBehavior
       class_attribute :model_class
 
       property :human_readable_type, writable: false
