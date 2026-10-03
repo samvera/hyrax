@@ -172,7 +172,7 @@ module Hyrax
       def register_facet_field(itemprop, label, controlled_source, indexing)
         id_name = "#{itemprop}_sim"
         id_facet = blacklight_config.facet_fields[id_name]
-        id_facet = blacklight_config.add_facet_field(id_name, label: label) if id_facet.blank?
+        id_facet = blacklight_config.add_facet_field(id_name, label: label, limit: true) if id_facet.blank?
 
         # A property can gain `facetable` while keeping the `render_as: faceted`
         # that hid its facet to resolve a link. `facetable` asks for the sidebar
@@ -200,7 +200,7 @@ module Hyrax
           # normally stays hidden only because display_label finds the
           # `…fields.facet.<key>` translation first — and the renamed key has no
           # such translation.
-          blacklight_config.add_facet_field(name, label: id_facet.display_label('facet'))
+          blacklight_config.add_facet_field(name, label: id_facet.display_label('facet'), limit: id_facet.limit)
         end
 
         # The id facet stays configured but drops out of the sidebar: listing
