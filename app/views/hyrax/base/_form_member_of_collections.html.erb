@@ -15,7 +15,7 @@ HTML Properties:
 
   <div class="form-inline mb-3">
       <%= f.label :member_of_collection_ids %>
-      <select name="member_of_collection_ids" class="form-control collection-select2" style="width: 12rem;" data-placeholder="<%= t('hyrax.dashboard.my.action.select') %>">
+      <select name="member_of_collection_ids" id="<%= f.object.model_name.param_key %>_member_of_collection_ids" class="form-control collection-select2" style="width: 12rem;" data-placeholder="<%= t('hyrax.dashboard.my.action.select') %>">
         <option value=""></option>
         <% available_collections(work: @curation_concern).each do |coll| %>
           <option value="<%= coll.id %>"><%= coll.title.first %></option>
