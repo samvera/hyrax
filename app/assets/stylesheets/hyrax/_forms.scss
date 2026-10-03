@@ -373,28 +373,35 @@ form.button-to {
 }
 
 #share .table {
-  min-width: 500px;
+  min-width: 750px;
 
   td {
     vertical-align: middle;
+  }
+
+  // Access Level column: wide enough for "View/Download" dropdown
+  th:nth-child(2),
+  td:nth-child(2) {
+    min-width: 240px;
   }
 
   // Action column (3rd): center content horizontally
   th:nth-child(3),
   td:nth-child(3) {
     text-align: center;
+    width: 60px;
   }
 
   // Access Level cell: make the col-sm wrapper inline so select + × sit on one line
   td > .col-sm-10 {
     display: inline-block;
-    width: calc(100% - 1.5rem);
+    width: auto;
     padding: 0;
     max-width: none;
     vertical-align: middle;
 
     select.form-control {
-      width: 100%;
+      min-width: 170px;
     }
   }
 
