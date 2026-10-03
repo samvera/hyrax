@@ -373,35 +373,45 @@ form.button-to {
 }
 
 #share .table {
-  min-width: 750px;
+  min-width: 700px;
+  table-layout: fixed;
+
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 45%;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 35%;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    width: 20%;
+  }
 
   td {
     vertical-align: middle;
-  }
-
-  // Access Level column: wide enough for "View/Download" dropdown
-  th:nth-child(2),
-  td:nth-child(2) {
-    min-width: 240px;
   }
 
   // Action column (3rd): center content horizontally
   th:nth-child(3),
   td:nth-child(3) {
     text-align: center;
-    width: 60px;
   }
 
   // Access Level cell: make the col-sm wrapper inline so select + × sit on one line
   td > .col-sm-10 {
     display: inline-block;
-    width: auto;
+    width: calc(100% - 1.5rem);
     padding: 0;
     max-width: none;
     vertical-align: middle;
 
     select.form-control {
-      min-width: 170px;
+      width: 100%;
+      min-width: 10em;
     }
   }
 

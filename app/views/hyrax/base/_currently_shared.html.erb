@@ -24,6 +24,7 @@
       <%= Hyrax.config.owner_permission_levels.keys[0] %>
     </div>
     </td>
+    <td></td>
   </tr>
   <%= f.fields_for :permissions do |permission_fields| %>
     <% permission_service.with_applicable_permission(permission_hash: permission_fields.object.to_hash) do |permission| %>
@@ -46,6 +47,7 @@
           <button class="btn close remove_perm" data-index="<%= permission_fields.index %>" aria-label="<%= t('helpers.action.remove') %> <%= permission.name %>">&times;</button>
         <% end %>
       </td>
+      <td></td>
     </tr>
     <% end %>
   <% end %>
