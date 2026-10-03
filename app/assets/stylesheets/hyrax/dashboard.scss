@@ -194,8 +194,188 @@ body.dashboard {
   margin-right: 0.5rem;
 }
 
-div.main-content.maximized.admin-stats {
+div.main-content.admin-stats {
   background-color: white;
+
+  .admin-stats-content {
+    max-width: 960px;
+  }
+
+  // Top-level section cards (Stats By Date, Top Data)
+  .stats-card {
+    border: none;
+    box-shadow: none;
+    margin-bottom: 1rem;
+
+    > .card-body {
+      padding: 0.5rem 0;
+    }
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  // Description text below h2 headings
+  .stats-card > .card-body > p {
+    color: #595f64;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #495057;
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h4 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #595f64;
+    margin-bottom: 0.5rem;
+  }
+
+  // Date filter form
+  form {
+    background: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    label {
+      font-weight: 500;
+      font-size: 0.875rem;
+      margin-bottom: 0;
+      white-space: nowrap;
+    }
+
+    input[type="date"] {
+      border: 1px solid #ced4da;
+      border-radius: 4.5px;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    input[type="submit"] {
+      background-color: #5b7a91;
+      color: white;
+      border: none;
+      border-radius: 4.5px;
+      padding: 0.4rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #4a6577;
+      }
+    }
+  }
+
+  // Section card grid
+  .stats-section-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .stats-section-grid-2col {
+    grid-template-columns: 1fr 1fr;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .stats-section-card {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+
+    > .card-body {
+      padding: 1.25rem;
+    }
+
+    h3 {
+      margin-top: 0;
+    }
+
+    h3:first-child {
+      margin-top: 0;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: 0.5rem 0.5rem;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 0.875rem;
+
+      &:first-child {
+        border-top: 1px solid #f0f0f0;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      a {
+        font-weight: 500;
+      }
+    }
+  }
+
+  .count {
+    color: #595f64;
+  }
+
+  .date {
+    color: #595f64;
+    font-size: 0.8rem;
+  }
+
+  // Responsive adjustments
+  @media (max-width: 576px) {
+    .admin-stats-content {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+
+    form {
+      flex-direction: column;
+      align-items: stretch;
+
+      input[type="date"] {
+        width: 100%;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+      }
+    }
+
+    .stats-section-card > .card-body {
+      padding: 1rem;
+    }
+  }
 }
 
 // Schema version badges on flexible-schema edit forms

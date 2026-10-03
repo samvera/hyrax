@@ -1,8 +1,8 @@
-<%= form_for "stats_filters", url: hyrax.admin_stats_path, method: "GET" do |f| %>
+<%= form_for "stats_filters", url: hyrax.admin_stats_path, method: "GET", html: { role: "search", "aria-label" => t("hyrax.admin.stats.date_form.filter_label", default: "Filter statistics by date") } do |f| %>
   <input type='hidden' name='locale' value="<%= params[:locale] %>" />
-  <%= f.label "Start *" %>
-  <input type="date" name="stats_filters[start_date]" value="<%= @presenter.stats_filters[:start_date] %>" placeholder="yyyy-mm-dd"></input>
-  <%= f.label "end [defaults to now]" %>
-  <input type="date" name="stats_filters[end_date]" value="<%= @presenter.stats_filters[:end_date] %>" placeholder="yyyy-mm-dd"></input>
-  <%= f.submit I18n.t("hyrax.admin.stats.date_form.load_stats", :default => "Load Stats") %>
+  <%= f.label :start_date, t("hyrax.admin.stats.date_form.start_label", default: "Start *") %>
+  <input type="date" id="stats_filters_start_date" name="stats_filters[start_date]" value="<%= @presenter.stats_filters[:start_date] %>" aria-required="true" />
+  <%= f.label :end_date, t("hyrax.admin.stats.date_form.end_label", default: "End [defaults to now]") %>
+  <input type="date" id="stats_filters_end_date" name="stats_filters[end_date]" value="<%= @presenter.stats_filters[:end_date] %>" />
+  <%= f.submit t("hyrax.admin.stats.date_form.load_stats", default: "Load Stats") %>
 <%- end %>
