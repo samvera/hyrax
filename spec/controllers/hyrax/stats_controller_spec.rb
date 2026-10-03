@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::StatsController do
   let(:user) { create(:user) }
-  let(:usage) { double }
+  let(:usage) { double(to_flot: []) }
 
   before do
     allow_any_instance_of(User).to receive(:groups).and_return([])
@@ -83,6 +83,56 @@ RSpec.describe Hyrax::StatsController do
         get :work, params: { id: work }
         expect(response).to be_successful
         expect(response).to render_template('stats/work')
+      end
+    end
+  end
+
+  context 'when Google Analytics raises an error' do
+    let(:denied) { Google::Cloud::PermissionDeniedError.new('User does not have sufficient permissions for this property.') }
+
+    render_views
+
+    include_context 'with user signed in and http referer set'
+
+    describe '#file' do
+      let(:file_set) { valkyrie_create(:hyrax_file_set, depositor: user.user_key, edit_users: [user.user_key], date_uploaded: 3.days.ago) }
+
+      before { allow(Hyrax::Analytics).to receive(:page_statistics).and_raise(denied) }
+
+      it 'renders the stats view with zeroed data and an analytics notice' do
+        get :file, params: { id: file_set }
+        expect(response).to be_successful
+        expect(response).to render_template('stats/file')
+        expect(assigns(:analytics_error)).to be_present
+        expect(response.body).to include(I18n.t('hyrax.admin.analytics.errors.permission.message'))
+        expect(assigns(:stats).total_pageviews).to eq 0
+        expect(assigns(:stats).total_downloads).to eq 0
+      end
+    end
+
+    describe '#work' do
+      let(:work) { valkyrie_create(:monograph, depositor: user.user_key, edit_users: [user.user_key]) }
+
+      before { allow(Hyrax::Analytics).to receive(:daily_events_for_id).and_raise(denied) }
+
+      it 'renders the stats view with zeroed data and an analytics notice' do
+        get :work, params: { id: work }
+        expect(response).to be_successful
+        expect(response).to render_template('stats/work')
+        expect(assigns(:analytics_error)).to be_present
+        expect(response.body).to include(I18n.t('hyrax.admin.analytics.errors.permission.message'))
+        expect(assigns(:pageviews).all).to eq 0
+        expect(assigns(:downloads).all).to eq 0
+      end
+
+      context 'with a non-permission Google error' do
+        let(:denied) { Google::Cloud::InvalidArgumentError.new('Invalid property') }
+
+        it 'renders the stats view with the general notice' do
+          get :work, params: { id: work }
+          expect(response).to be_successful
+          expect(response.body).to include(CGI.escapeHTML(I18n.t('hyrax.admin.analytics.errors.general.message')))
+        end
       end
     end
   end
