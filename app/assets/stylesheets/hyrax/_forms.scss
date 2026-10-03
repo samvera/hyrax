@@ -584,14 +584,18 @@ form.button-to {
   display: flex;
   align-items: center;
 
-  // Select2 dropdown fills available space to match Administrative Set width
+  // Form controls and Select2 dropdown fill available space
+  .form-control,
   .select2-container {
     flex: 1 1 auto !important;
     width: auto !important;
     margin-left: 18px;
+    height: calc(1.5em + 0.75rem + 2px);
+  }
+
+  .select2-container {
     border: none;
     padding: 0;
-    height: calc(1.5em + 0.75rem + 2px);
 
     .select2-choice {
       height: 100%;
