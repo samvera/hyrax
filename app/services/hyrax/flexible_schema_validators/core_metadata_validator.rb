@@ -6,18 +6,7 @@ module Hyrax
     # @api private
     #
     # Validates the core metadata properties of a flexible metadata profile.
-    class CoreMetadataValidator
-      ##
-      # @param profile [Hash] the flexible metadata profile
-      # @param errors [Array<String>] an array to append errors to
-      def initialize(profile:, errors:)
-        @profile = profile
-        @errors = errors
-      end
-
-      # Validate the profile against the core metadata requirements and append
-      # any human-readable error messages to {#errors}.
-      #
+    class CoreMetadataValidator < BaseValidator
       # @return [void]
       def validate!
         core_metadata['attributes'].each do |property, config|
@@ -33,8 +22,6 @@ module Hyrax
       end
 
       private
-
-      attr_reader :profile, :errors
 
       # Load and memoize the core metadata definition from
       # `config/metadata/core_metadata.yaml`.
@@ -77,7 +64,7 @@ module Hyrax
       def validate_property_exists(property)
         return true if profile['properties'][property].present?
 
-        errors << "Missing required property: #{property}."
+        add_error "Missing required property: #{property}."
         false
       end
 
@@ -98,7 +85,7 @@ module Hyrax
 
         return if actual_data_type == required_data_type
 
-        errors << "Property '#{property}' must have data_type set to '#{required_data_type}'."
+        add_error "Property '#{property}' must have data_type set to '#{required_data_type}'."
       end
 
       # Determine the property's effective data type from its configuration.
@@ -129,7 +116,7 @@ module Hyrax
 
         return if missing_keys.empty?
 
-        errors << "Property '#{property}' is missing required indexing: #{missing_keys.join(', ')}."
+        add_error "Property '#{property}' is missing required indexing: #{missing_keys.join(', ')}."
       end
 
       # Ensures that the property's predicate matches the core metadata definition.
@@ -141,7 +128,7 @@ module Hyrax
         return unless config.key?('predicate')
         return if profile.dig('properties', property, 'property_uri') == config['predicate']
 
-        errors << "Property '#{property}' must have property_uri set to #{config['predicate']}."
+        add_error "Property '#{property}' must have property_uri set to #{config['predicate']}."
       end
 
       # Validates that if the `keyword` property is present, it is correctly
@@ -154,7 +141,7 @@ module Hyrax
 
         return if keyword_prop['data_type'] == 'array'
 
-        errors << "Property 'keyword' must have data_type set to 'array'."
+        add_error "Property 'keyword' must have data_type set to 'array'."
       end
 
       # Checks that the property is available on all classes defined in the profile.
@@ -168,7 +155,7 @@ module Hyrax
         missing_classes = defined_classes - available_on_classes
 
         return if missing_classes.empty?
-        errors << "Property '#{property}' must be available on all classes, but is missing from: #{missing_classes.join(', ')}."
+        add_error "Property '#{property}' must be available on all classes, but is missing from: #{missing_classes.join(', ')}."
       end
 
       # Returns all classes covered by any profile property whose resolved name
@@ -204,7 +191,7 @@ module Hyrax
         required = minimum.to_i.positive?
         return if required
 
-        errors << "Property 'title' must have a cardinality minimum of at least 1."
+        add_error "Property 'title' must have a cardinality minimum of at least 1."
       end
     end
   end

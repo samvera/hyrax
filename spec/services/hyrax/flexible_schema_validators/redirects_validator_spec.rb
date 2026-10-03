@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::FlexibleSchemaValidators::RedirectsValidator do
-  subject(:validator) { described_class.new(profile: profile, errors: errors, warnings: warnings) }
-  let(:errors) { [] }
-  let(:warnings) { [] }
+  subject(:validator) { described_class.new(context) }
+  let(:context) { Hyrax::FlexibleSchemaValidators::ValidationContext.new(profile: profile) }
+  let(:violations) { validator.violations }
+  let(:errors) { violations.select(&:error?).map(&:message) }
+  let(:warnings) { violations.select(&:warning?).map(&:message) }
 
   let(:profile_with_redirects) do
     {

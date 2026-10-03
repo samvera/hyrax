@@ -1,4 +1,4 @@
-<% record.publisher.each do |pub| %>
+<% record.display_values_for(:publisher).each do |pub| %>
   <span itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <span itemprop="name"><%= link_to_facet(pub, "publisher_sim") %></span>
         </span>

@@ -137,4 +137,44 @@ RSpec.describe Hyrax::PresentsAttributes, 'controlled vocabulary labels' do
       expect(html).to include('Known Label', 'unknown_id')
     end
   end
+
+  describe '#display_values_for' do
+    context 'when the document carries indexed labels' do
+      let(:fields) do
+        { 'resource_type_tesim' => ['local_auth_123'],
+          'resource_type_label_tesim' => ['Opaque Term'] }
+      end
+
+      it 'returns the label in place of the id' do
+        expect(presenter.display_values_for(:resource_type)).to eq ['Opaque Term']
+      end
+    end
+
+    context 'when the document carries no labels' do
+      let(:fields) { { 'resource_type_tesim' => ['local_auth_123'] } }
+
+      it 'returns the stored ids' do
+        expect(presenter.display_values_for(:resource_type)).to eq ['local_auth_123']
+      end
+    end
+
+    context 'when a value has no label indexed for it' do
+      let(:fields) do
+        { 'resource_type_tesim' => ['known_id', 'unknown_id'],
+          'resource_type_label_tesim' => ['Known Label', 'unknown_id'] }
+      end
+
+      it 'returns the label for the resolved value and the id for the other' do
+        expect(presenter.display_values_for(:resource_type)).to eq ['Known Label', 'unknown_id']
+      end
+    end
+
+    context 'when the presenter does not respond to the field' do
+      let(:fields) { {} }
+
+      it 'returns an empty array rather than raising' do
+        expect(presenter.display_values_for(:nonexistent_field)).to eq []
+      end
+    end
+  end
 end

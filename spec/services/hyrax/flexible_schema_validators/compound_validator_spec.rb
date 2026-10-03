@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
-  subject(:validator) { described_class.new(profile: profile, errors: errors) }
-  let(:errors) { [] }
+  subject(:validator) { described_class.new(context) }
+  let(:context) { Hyrax::FlexibleSchemaValidators::ValidationContext.new(profile: profile) }
+  let(:errors) { validator.violations.map(&:message) }
 
   def t(key, **opts)
     I18n.t("hyrax.flexible_schema_validators.compound_validator.errors.#{key}", **opts)

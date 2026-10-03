@@ -12,15 +12,7 @@ module Hyrax
     # `available_on: { properties: [<parent>] }` (see {Hyrax::CompoundSchema}); a
     # subproperty may name more than one parent. See
     # documentation/compound_fields.md for the rules.
-    class CompoundValidator
-      ##
-      # @param profile [Hash] the flexible metadata profile
-      # @param errors [Array<String>] an array to append errors to
-      def initialize(profile:, errors:)
-        @profile = profile
-        @errors = errors
-      end
-
+    class CompoundValidator < BaseValidator
       # @return [void]
       def validate!
         subproperties.each { |name, config| validate_subproperty(name, config) }
@@ -29,10 +21,6 @@ module Hyrax
       end
 
       private
-
-      def properties
-        @properties ||= (@profile&.dig('properties') || {})
-      end
 
       # Entries that name parent compound(s) via `available_on: { properties:
       # [...] }` — the compound members.
@@ -57,7 +45,7 @@ module Hyrax
           parent = properties[parent_name]
           next if parent.is_a?(Hash) && parent['type'].to_s == 'hash'
 
-          @errors << t('unknown_parent', property: name, parent: parent_name)
+          add_error(:unknown_parent, property: name, parent: parent_name)
         end
 
         validate_option_source(name, config)
@@ -71,11 +59,11 @@ module Hyrax
         when 'controlled'
           return if config['authority'].present? || config['values'].present?
 
-          @errors << t('controlled_without_source', property: name)
+          add_error(:controlled_without_source, property: name)
         when 'linked_record'
           return if config['authority'].present?
 
-          @errors << t('linked_record_without_source', property: name)
+          add_error(:linked_record_without_source, property: name)
         end
       end
 
@@ -84,7 +72,7 @@ module Hyrax
       # per subproperty.
       def validate_no_top_level_indexing(name, config)
         return if config['indexing'].blank?
-        @errors << t('top_level_indexing', property: name)
+        add_error(:top_level_indexing, property: name)
       end
 
       # Within one compound, two sub-properties cannot resolve to the same
@@ -102,13 +90,9 @@ module Hyrax
         names_by_parent.each do |parent, by_name|
           by_name.each do |in_compound_name, keys|
             next if keys.size < 2
-            @errors << t('duplicate_subproperty_name', parent: parent, name: in_compound_name, properties: keys.sort.join(', '))
+            add_error(:duplicate_subproperty_name, parent: parent, name: in_compound_name, properties: keys.sort.join(', '))
           end
         end
-      end
-
-      def t(key, **opts)
-        I18n.t("hyrax.flexible_schema_validators.compound_validator.errors.#{key}", **opts)
       end
     end
   end

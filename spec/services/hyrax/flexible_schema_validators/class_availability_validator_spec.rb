@@ -1,21 +1,18 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::FlexibleSchemaValidators::ClassValidator do
-  subject(:validator) { described_class.new(profile, required_classes, errors) }
+RSpec.describe Hyrax::FlexibleSchemaValidators::ClassAvailabilityValidator do
+  subject(:validator) { described_class.new(context) }
+  let(:context) do
+    Hyrax::FlexibleSchemaValidators::ValidationContext.new(
+      profile: profile, required_classes: required_classes
+    )
+  end
 
   let(:profile) { {} }
   let(:required_classes) { ['AdminSetResource', 'CollectionResource', 'Hyrax::FileSet'] }
-  let(:errors) { [] }
+  let(:errors) { validator.violations.map(&:message) }
 
-  describe '#initialize' do
-    it 'sets instance variables' do
-      expect(validator.instance_variable_get(:@profile)).to eq(profile)
-      expect(validator.instance_variable_get(:@required_classes)).to eq(required_classes)
-      expect(validator.instance_variable_get(:@errors)).to eq(errors)
-    end
-  end
-
-  describe '#validate_availability!' do
+  describe '#validate!' do
     before do
       allow(Hyrax.config).to receive(:registered_curation_concern_types).and_return(['GenericWork', 'Image', 'ScholarlyWork'])
     end
@@ -34,7 +31,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ClassValidator do
       end
 
       it 'adds an error for all invalid classes' do
-        validator.validate_availability!
+        validator.validate!
         expect(errors).to include('Invalid classes: InvalidWorkType, AnotherInvalidWorkType.')
         expect(errors).to include(a_string_starting_with("Mismatched Valkyrie classes found: 'GenericWorkResource' should be 'GenericWork'"))
       end
@@ -46,12 +43,11 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ClassValidator do
       end
 
       it 'does not add an error' do
-        # Mock the Valkyrie resolver to return GenericWorkResource for GenericWork
         stub_const('GenericWorkResource', Class.new)
         resolver = ->(_name) { GenericWorkResource }
         allow(Valkyrie.config).to receive(:resource_class_resolver).and_return(resolver)
 
-        validator.validate_availability!
+        validator.validate!
         expect(errors).to be_empty
       end
     end
@@ -60,12 +56,11 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ClassValidator do
       let(:profile) { { 'classes' => { 'GenericWorkResource' => {} } } }
 
       it 'handles nil properties without error' do
-        # Mock the Valkyrie resolver to return GenericWorkResource for GenericWork
         stub_const('GenericWorkResource', Class.new)
         resolver = ->(_name) { GenericWorkResource }
         allow(Valkyrie.config).to receive(:resource_class_resolver).and_return(resolver)
 
-        validator.validate_availability!
+        validator.validate!
         expect(errors).to be_empty
       end
     end
@@ -74,7 +69,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ClassValidator do
       let(:profile) { { 'classes' => { 'AdminSetResource' => {} } } }
 
       it 'excludes required classes from validation' do
-        validator.validate_availability!
+        validator.validate!
         expect(errors).to be_empty
       end
     end
@@ -85,7 +80,6 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ClassValidator do
         stub_const('ScholarlyWork', Class.new)
         hide_const('ScholarlyWorkResource') # Ensure this is not defined for the test
 
-        # Mock the resolver to simulate production behavior for our test cases
         resolver = lambda do |class_name|
           resource_name = "#{class_name}Resource"
           begin
@@ -98,26 +92,30 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ClassValidator do
       end
 
       context 'when a ...Resource model exists' do
-        it 'adds an error if the profile uses the non-resource name' do
-          profile = { 'classes' => { 'Image' => {} } }
-          validator = described_class.new(profile, required_classes, errors)
-          validator.validate_availability!
-          expect(errors).to include(a_string_starting_with("Mismatched Valkyrie classes found: 'Image' should be 'ImageResource'"))
+        context 'and the profile uses the non-resource name' do
+          let(:profile) { { 'classes' => { 'Image' => {} } } }
+
+          it 'adds an error' do
+            validator.validate!
+            expect(errors).to include(a_string_starting_with("Mismatched Valkyrie classes found: 'Image' should be 'ImageResource'"))
+          end
         end
 
-        it 'does not add an error if the profile uses the correct ...Resource name' do
-          profile = { 'classes' => { 'ImageResource' => {} } }
-          validator = described_class.new(profile, required_classes, errors)
-          validator.validate_availability!
-          expect(errors).to be_empty
+        context 'and the profile uses the correct ...Resource name' do
+          let(:profile) { { 'classes' => { 'ImageResource' => {} } } }
+
+          it 'does not add an error' do
+            validator.validate!
+            expect(errors).to be_empty
+          end
         end
       end
 
       context "when a Valkyrie model exists without a 'Resource' suffix" do
+        let(:profile) { { 'classes' => { 'ScholarlyWork' => {} } } }
+
         it 'does not add an error' do
-          profile = { 'classes' => { 'ScholarlyWork' => {} } }
-          validator = described_class.new(profile, required_classes, errors)
-          validator.validate_availability!
+          validator.validate!
           expect(errors).to be_empty
         end
       end
@@ -133,7 +131,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ClassValidator do
         end
 
         it 'reports both errors' do
-          validator.validate_availability!
+          validator.validate!
           expect(errors).to include(a_string_starting_with("Mismatched Valkyrie classes found"))
           expect(errors).to include('Invalid classes: InvalidWork.')
         end
@@ -161,59 +159,10 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::ClassValidator do
         end
 
         it 'does not report the non-configured collection and admin set classes as invalid' do
-          validator.validate_availability!
+          validator.validate!
           expect(errors).to be_empty
         end
       end
-    end
-  end
-
-  describe '#validate_references!' do
-    let(:profile) do
-      {
-        'classes' => {
-          'GenericWorkResource' => { 'display_label' => 'Generic Work' }
-        },
-        'properties' => {
-          'title' => {
-            'available_on' => {
-              'class' => ['GenericWorkResource', 'UndefinedClass']
-            }
-          },
-          'creator' => {
-            'available_on' => {
-              'class' => ['AnotherUndefinedClass']
-            }
-          }
-        }
-      }
-    end
-
-    it 'adds error for undefined classes' do
-      validator.validate_references!
-      expect(errors).to include('Classes referenced in `available_on` but not defined in `classes`: UndefinedClass, AnotherUndefinedClass.')
-    end
-
-    it 'does not add error when all referenced classes are defined' do
-      profile['classes']['UndefinedClass'] = { 'display_label' => 'Undefined' }
-      profile['classes']['AnotherUndefinedClass'] = { 'display_label' => 'Another Undefined' }
-
-      validator.validate_references!
-      expect(errors).to be_empty
-    end
-
-    it 'handles empty properties' do
-      profile['properties'] = {}
-
-      validator.validate_references!
-      expect(errors).to be_empty
-    end
-
-    it 'handles nil properties' do
-      profile['properties'] = nil
-
-      validator.validate_references!
-      expect(errors).to be_empty
     end
   end
 end

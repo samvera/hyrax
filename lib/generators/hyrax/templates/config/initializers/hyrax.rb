@@ -172,6 +172,13 @@ Hyrax.config do |config|
   # handle the derivative generation.
   # config.derivative_services = [Hyrax::FileSetDerivativesService]
 
+  # The ordered list of validators run against an m3 metadata profile when it is
+  # saved. Order determines the order problems are reported in. Each entry must
+  # respond to `.new(context)` and the instance to `#validate!` / `#violations`;
+  # see Hyrax::FlexibleSchemaValidators::BaseValidator. Append rather than assign
+  # to keep Hyrax's own validators.
+  # config.flexible_schema_validators += ['MyApp::MyProfileValidator']
+
   # Location on local file system where derivatives will be stored
   # If you use a multi-server architecture, this MUST be a shared volume
   # config.derivatives_path = Rails.root.join('tmp', 'derivatives')

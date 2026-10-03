@@ -42,6 +42,22 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
             - facetable
           property_uri: http://purl.org/dc/terms/type
           range: http://www.w3.org/2001/XMLSchema#string
+        profile_only:
+          available_on:
+            class:
+              - GenericWork
+          controlled_values:
+            format: http://www.w3.org/2001/XMLSchema#string
+            sources:
+              - resource_types
+          display_label:
+            default: Profile Only
+          indexing:
+            - profile_only_sim
+            - profile_only_tesim
+            - facetable
+          property_uri: http://example.org/profile_only
+          range: http://www.w3.org/2001/XMLSchema#string
         free_text_note:
           available_on:
             class:
@@ -57,6 +73,42 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
             - facetable
           property_uri: http://example.org/free_text_note
           range: http://www.w3.org/2001/XMLSchema#string
+        education_level:
+          available_on:
+            class:
+              - GenericWork
+          controlled_values:
+            format: http://www.w3.org/2001/XMLSchema#string
+            sources:
+              - resource_types
+          display_label:
+            default: Education Level
+          indexing:
+            - education_level_sim
+            - education_level_tesim
+            - stored_searchable
+          property_uri: http://example.org/education_level
+          range: http://www.w3.org/2001/XMLSchema#string
+          view:
+            render_as: faceted
+        plain_topic:
+          available_on:
+            class:
+              - GenericWork
+          controlled_values:
+            format: http://www.w3.org/2001/XMLSchema#string
+            sources:
+              - "null"
+          display_label:
+            default: Plain Topic
+          indexing:
+            - plain_topic_sim
+            - plain_topic_tesim
+            - stored_searchable
+          property_uri: http://example.org/plain_topic
+          range: http://www.w3.org/2001/XMLSchema#string
+          view:
+            render_as: faceted
     YAML
   end
 
@@ -72,6 +124,8 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
       config.add_search_field('all_fields') do |field|
         field.solr_parameters = { qf: String.new('') }
       end
+
+      config.add_index_field 'app_helper_type_tesim', helper_method: :an_application_helper
     end
 
     def index
@@ -118,6 +172,14 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
     controller.blacklight_config
   end
 
+  def would_render?(facet_name, config = blacklight_config)
+    field = config.facet_fields[facet_name]
+    return false if field.blank?
+
+    Blacklight::Configuration::Context.new(controller)
+                                      .evaluate_if_unless_configuration(field, nil)
+  end
+
   describe 'a facetable controlled property' do
     it 'facets on the label field' do
       expect(blacklight_config.facet_fields).to have_key('resource_type_label_sim')
@@ -148,6 +210,139 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
     end
   end
 
+  describe 'a controlled property declaring render_as: faceted without facetable' do
+    it 'links the search-result row to the label facet' do
+      expect(blacklight_config.index_fields['education_level_tesim'].link_to_facet)
+        .to eq('education_level_label_sim')
+    end
+
+    it 'registers the facet it links to, so the generated link resolves' do
+      expect(blacklight_config.facet_fields).to have_key('education_level_label_sim')
+    end
+
+    it 'keeps the facet out of the sidebar' do
+      expect(would_render?('education_level_label_sim')).to be false
+    end
+  end
+
+  describe 'an uncontrolled property declaring render_as: faceted without facetable' do
+    it 'links the search-result row to the id facet' do
+      expect(blacklight_config.index_fields['plain_topic_tesim'].link_to_facet)
+        .to eq('plain_topic_sim')
+    end
+
+    it 'registers the facet it links to, so the generated link resolves' do
+      expect(blacklight_config.facet_fields).to have_key('plain_topic_sim')
+    end
+
+    it 'keeps the facet out of the sidebar' do
+      expect(would_render?('plain_topic_sim')).to be false
+    end
+  end
+
+  describe 'a property that stops declaring render_as: faceted' do
+    # blacklight_config is class-level and outlives the request, so a profile
+    # edit has to take effect without restarting the application.
+    def reload_without_render_as!
+      stripped = custom_properties.deep_dup
+      stripped['properties']['plain_topic'].delete('view')
+      stripped['properties']['education_level'].delete('view')
+
+      allow(Hyrax::FlexibleSchema)
+        .to receive_message_chain(:order, :last)
+        .with("created_at asc")
+        .with(2)
+        .and_return([double('FlexibleSchema', profile: base_profile.deep_merge(stripped))])
+
+      controller.class.load_flexible_schema
+    end
+
+    it 'drops the facet it registered only to resolve the link' do
+      expect(controller.class.blacklight_config.facet_fields).to have_key('plain_topic_sim')
+
+      reload_without_render_as!
+
+      expect(controller.class.blacklight_config.facet_fields).not_to have_key('plain_topic_sim')
+    end
+
+    it 'drops the label facet of a controlled property' do
+      expect(controller.class.blacklight_config.facet_fields).to have_key('education_level_label_sim')
+
+      reload_without_render_as!
+
+      expect(controller.class.blacklight_config.facet_fields).not_to have_key('education_level_label_sim')
+    end
+
+    it 'stops linking the search-result row' do
+      expect(controller.class.blacklight_config.index_fields['plain_topic_tesim'].link_to_facet).to be_present
+
+      reload_without_render_as!
+
+      expect(controller.class.blacklight_config.index_fields['plain_topic_tesim'].link_to_facet).to be_blank
+    end
+  end
+
+  describe 'a controlled property whose authority stops resolving' do
+    # A vocabulary deleted from the dashboard, a typo introduced in `sources`,
+    # or qa tables not yet loaded: the property keeps `render_as: faceted` but
+    # its link moves from the label facet back to the id facet.
+    it 'drops the label facet it no longer links to' do
+      expect(controller.class.blacklight_config.facet_fields).to have_key('education_level_label_sim')
+
+      allow(label_service).to receive(:resolvable?).and_return(false)
+      controller.class.load_flexible_schema
+
+      config = controller.class.blacklight_config
+      expect(config.index_fields['education_level_tesim'].link_to_facet).to eq('education_level_sim')
+      expect(config.facet_fields).not_to have_key('education_level_label_sim')
+    end
+  end
+
+  describe 'a property that gains facetable while keeping render_as: faceted' do
+    def reload_as_facetable!
+      promoted = custom_properties.deep_dup
+      promoted['properties']['plain_topic']['indexing'] << 'facetable'
+      promoted['properties']['education_level']['indexing'] << 'facetable'
+
+      allow(Hyrax::FlexibleSchema)
+        .to receive_message_chain(:order, :last)
+        .with("created_at asc")
+        .with(2)
+        .and_return([double('FlexibleSchema', profile: base_profile.deep_merge(promoted))])
+
+      controller.class.load_flexible_schema
+    end
+
+    it 'lists the uncontrolled property in the sidebar it was previously hidden from' do
+      expect(would_render?('plain_topic_sim')).to be false
+
+      reload_as_facetable!
+
+      expect(would_render?('plain_topic_sim', controller.class.blacklight_config)).to be true
+    end
+
+    it 'lists the controlled property label facet in the sidebar' do
+      expect(would_render?('education_level_label_sim')).to be false
+
+      reload_as_facetable!
+
+      expect(would_render?('education_level_label_sim', controller.class.blacklight_config)).to be true
+    end
+  end
+
+  describe 'a facet an application declared in its own CatalogController' do
+    it 'keeps its predicate rather than being hidden to resolve a link' do
+      klass = controller.class
+      facet = klass.blacklight_config.facet_fields['plain_topic_sim']
+      facet.if = :an_application_predicate
+      facet.hidden_for_link = false
+
+      klass.send(:register_hidden_facet_field, 'plain_topic_sim', 'Plain Topic')
+
+      expect(facet.if).to eq(:an_application_predicate)
+    end
+  end
+
   describe 'the id facet' do
     it 'stays registered so an un-reindexed corpus keeps its facet' do
       expect(blacklight_config.facet_fields).to have_key('resource_type_sim')
@@ -165,11 +360,11 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
     end
 
     it 'is not listed in the sidebar, so the ids are not shown beside the labels' do
-      expect(blacklight_config.facet_fields['resource_type_sim'].show).to be false
+      expect(would_render?('resource_type_sim')).to be false
     end
 
     it 'leaves the label facet listed' do
-      expect(blacklight_config.facet_fields['resource_type_label_sim'].show).not_to be false
+      expect(would_render?('resource_type_label_sim')).to be true
     end
   end
 
@@ -237,17 +432,48 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
     end
   end
 
+  describe 'a property the application already configured a helper for' do
+    let(:custom_properties) do
+      YAML.safe_load(<<-YAML)
+        properties:
+          app_helper_type:
+            available_on:
+              class:
+                - GenericWork
+            controlled_values:
+              sources:
+                - resource_types
+            display_label:
+              default: App Helper Type
+            indexing:
+              - app_helper_type_sim
+              - app_helper_type_tesim
+            view:
+              render_as: external_link
+      YAML
+    end
+
+    it 'keeps the helper the application declared' do
+      expect(blacklight_config.index_fields['app_helper_type_tesim'].helper_method)
+        .to eq :an_application_helper
+    end
+
+    it 'leaves the stored id for that helper to render' do
+      expect(blacklight_config.index_fields['app_helper_type_tesim'].values).to be_nil
+    end
+  end
+
   describe 'a property that stops being controlled' do
     let(:config) { controller.class.blacklight_config }
 
     it 'restores the id facet to the sidebar' do
-      expect(config.facet_fields['resource_type_sim'].show).to be false
+      expect(config.facet_fields['resource_type_sim'].if).to be false
 
       allow(Hyrax.config).to receive(:controlled_vocabulary_label_service)
         .and_return(Hyrax::ControlledVocabularyLabelService.new)
       controller.class.load_flexible_schema
 
-      expect(config.facet_fields['resource_type_sim'].show).not_to be false
+      expect(config.facet_fields['resource_type_sim'].if).not_to be false
     end
   end
 
@@ -428,6 +654,97 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
       expect(blacklight_config.facet_fields).to have_key('resource_type_sim')
       expect(blacklight_config.facet_fields).not_to have_key('resource_type_label_sim')
       expect(blacklight_config.index_fields['resource_type_tesim'].values).to be_nil
+    end
+  end
+
+  describe 'a property whose render_as changes between profiles' do
+    # blacklight_config is class-level and only rebuilt for properties that left
+    # the profile, so a property that merely changed keeps the previous
+    # profile's registration until the process restarts.
+    def load_with_render_as(render_as, property: 'monograph_resource_type')
+      profile = base_profile.deep_merge(custom_properties)
+      property = profile['properties'][property]
+      property['view'] = render_as ? { 'render_as' => render_as, 'html_dl' => true } : { 'html_dl' => true }
+
+      allow(Hyrax::FlexibleSchema)
+        .to receive_message_chain(:order, :last)
+        .with("created_at asc")
+        .with(2)
+        .and_return([double('FlexibleSchema', profile:)])
+
+      controller.class.load_flexible_schema
+    end
+
+    it 'clears the helper when the new profile declares no render_as' do
+      load_with_render_as('linked')
+      expect(controller.class.blacklight_config.index_fields['resource_type_tesim'].helper_method)
+        .to eq :index_field_link
+
+      load_with_render_as(nil)
+
+      expect(controller.class.blacklight_config.index_fields['resource_type_tesim'].helper_method).to be_nil
+    end
+
+    it 'replaces the helper when the new profile declares a different render_as' do
+      load_with_render_as('linked')
+      load_with_render_as('external_link')
+
+      expect(controller.class.blacklight_config.index_fields['resource_type_tesim'].helper_method)
+        .to eq :iconify_auto_link
+    end
+
+    it 'leaves an application-configured helper alone' do
+      load_with_render_as('linked')
+      load_with_render_as(nil)
+
+      expect(controller.class.blacklight_config.index_fields['app_helper_type_tesim'].helper_method)
+        .to eq :an_application_helper
+    end
+
+    it 'clears the helper on a field the profile itself created' do
+      load_with_render_as('linked', property: 'profile_only')
+      expect(controller.class.blacklight_config.index_fields['profile_only_tesim'].helper_method)
+        .to eq :index_field_link
+
+      load_with_render_as(nil, property: 'profile_only')
+
+      expect(controller.class.blacklight_config.index_fields['profile_only_tesim'].helper_method).to be_nil
+    end
+  end
+
+  describe 'a facet the application already conditioned' do
+    before do
+      controller.class.blacklight_config.add_facet_field('conditioned_sim', label: 'Conditioned', if: :render_optionally?)
+    end
+
+    def load_conditioned(controlled:)
+      profile = base_profile.deep_merge(custom_properties)
+      profile['properties']['conditioned'] = {
+        'available_on' => { 'class' => ['GenericWork'] },
+        'controlled_values' => { 'format' => 'http://www.w3.org/2001/XMLSchema#string',
+                                 'sources' => [controlled ? 'resource_types' : 'null'] },
+        'display_label' => { 'default' => 'Conditioned' },
+        'indexing' => ['conditioned_sim', 'conditioned_tesim', 'facetable'],
+        'property_uri' => 'http://example.org/conditioned',
+        'range' => 'http://www.w3.org/2001/XMLSchema#string'
+      }
+
+      allow(Hyrax::FlexibleSchema)
+        .to receive_message_chain(:order, :last)
+        .with("created_at asc")
+        .with(2)
+        .and_return([double('FlexibleSchema', profile:)])
+
+      controller.class.load_flexible_schema
+    end
+
+    it "restores the application's own predicate when the property stops being controlled" do
+      load_conditioned(controlled: true)
+      expect(controller.class.blacklight_config.facet_fields['conditioned_sim'].if).to be false
+
+      load_conditioned(controlled: false)
+
+      expect(controller.class.blacklight_config.facet_fields['conditioned_sim'].if).to eq :render_optionally?
     end
   end
 end
