@@ -31,7 +31,9 @@ module Hyrax
         end
 
         def results
-          @results ||= Hyrax::Analytics.client.run_report(report).rows
+          # config.valid? guards credentials the client assumes are present; without it,
+          # run_report raises deep inside the GA4 client instead of degrading gracefully.
+          @results ||= Hyrax::Analytics.config.valid? ? Hyrax::Analytics.client.run_report(report).rows : []
         end
 
         def report
