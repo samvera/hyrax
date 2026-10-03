@@ -61,6 +61,8 @@ export class FieldManager {
         if (!this._hasAddControl()) {
           this._createAddControl()
         }
+
+        $(this.removeSelector, this.element).attr('title', 'Remove')
     }
 
     _createRemoveWrapper() {

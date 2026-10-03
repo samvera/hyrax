@@ -427,14 +427,75 @@ form.button-to {
   width: 100% !important;
 }
 
-.multi_value .listing li:first-of-type .field-controls .remove,
-.controlled_vocabulary .listing li:first-of-type .field-controls .remove {
-  display: inline-block !important;
-  visibility: hidden;
+// First item: hide controls entirely so input fills full width
+.multi_value .listing li:first-of-type .field-controls,
+.controlled_vocabulary .listing li:first-of-type .field-controls {
+  display: none !important;
+}
+
+// Subsequent items: input stretches, Remove sits tight at the right edge
+.multi_value .listing li:not(:first-of-type),
+.controlled_vocabulary .listing li:not(:first-of-type) {
+  display: flex;
+  align-items: center;
+
+  .form-control,
+  .select2-container {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 100% !important;
+  }
+
+  .field-controls {
+    flex: 0 0 auto;
+    padding: 0;
+    margin-left: 0;
+    border: none;
+    background: none;
+
+    .remove {
+      display: inline-block !important;
+      padding: 0 0 0 0.5rem;
+      margin: 0;
+      text-align: right;
+      max-width: fit-content;
+      font-size: 0;
+      text-decoration: none !important;
+
+      &::before {
+        font-family: "FontAwesome";
+        content: "\f00d";
+        font-size: 1rem;
+        color: #d33a35;
+        text-decoration: none;
+      }
+
+      &:hover::before {
+        color: #a82a26;
+      }
+    }
+  }
 }
 
 .controlled_vocabulary .listing li:not(:first-of-type) .field-controls .remove {
   display: inline-block !important;
+}
+
+// All form selects and inputs: full width to match multi-value inputs
+.form-tab-content .form-group .form-control,
+#extended-terms .form-control {
+  width: 100% !important;
+  max-width: none;
+}
+
+#extended-terms .row {
+  margin-left: 0;
+  margin-right: 0;
+
+  > [class*="col-"] {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 // Hide the "+" and "−" icons on controlled vocabulary buttons to match multi-value links
