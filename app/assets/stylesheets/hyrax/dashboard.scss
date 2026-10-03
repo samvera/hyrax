@@ -126,6 +126,10 @@ body.dashboard {
     margin-bottom: 20px;
     padding: $card-spacer-y $card-spacer-x;
 
+    .btn-group .btn.dropdown-toggle {
+      border-radius: 4.5px;
+    }
+
     .dropdown-item {
       display: flex;
       align-items: center;
