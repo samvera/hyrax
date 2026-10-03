@@ -10,12 +10,12 @@ The redirects feature is gated by **two** independent switches:
 
 1. **`Hyrax.config.redirects_enabled?`** — application-level config. Controls whether the schema and properties exist in this Hyrax application at all. Set in `config/initializers/hyrax.rb` or via the `HYRAX_REDIRECTS_ENABLED` environment variable. Default: `false`.
 
-2. **`Flipflop.redirects?`** — runtime feature flag. Controls whether the redirects feature is active. Only registered when the config is on. Default when registered: `false`. Toggleable via the Flipflop admin UI. Multi-tenant host apps (e.g. Hyku) can resolve this flag per tenant via Flipflop's strategy chain.
+2. **`Flipflop.redirects?`** — runtime feature flag. Controls whether the redirects feature is active. Only registered when the config is on. Default when registered: `false`, or whatever `Hyrax.config.redirects_default` says (see [Starting the Flipflop on](#starting-the-flipflop-on)). Toggleable via the Flipflop admin UI. Multi-tenant host apps (e.g. Hyku) can resolve this flag per tenant via Flipflop's strategy chain.
 
 | Config | Flipflop | What's true |
 |---|---|---|
 | off | n/a (unregistered) | The schema is not loaded. The Flipflop feature is not registered. No `redirects` attribute on any resource. No indexer. No route. No controller. m3 profile does not require a `redirects` property. The feature is wholly absent. |
-| on | registered, off (default) | The schema is loaded. The `redirects` attribute exists on `Hyrax::Work` and `Hyrax::PcdmCollection`. The indexer is included on resource indexers but writes no Solr field. Routes/controllers/UI gates check Flipflop and stay silent. m3 profile may declare `redirects` (loaded but unused — a warning is logged on profile validation). |
+| on | registered, off | The schema is loaded. The `redirects` attribute exists on `Hyrax::Work` and `Hyrax::PcdmCollection`. The indexer is included on resource indexers but writes no Solr field. Routes/controllers/UI gates check Flipflop and stay silent. m3 profile may declare `redirects` (loaded but unused — a warning is logged on profile validation). |
 | on | on | All of the above, plus: the indexer writes `redirects_path_tesim` to the Solr document for show-page rendering. The route/controller/UI engage. m3 profile validation **requires** the `redirects` property to be declared with `type: hash` and available on at least one work or collection class declared in the profile. |
 
 The two-layer split is deliberate: the application-level config controls *availability* (the schema is structural — toggling it after data is written would orphan persisted entries), and the Flipflop controls *use* at request time.
@@ -53,15 +53,34 @@ This is appropriate when an adopter wants the feature unconditionally without de
 
 - None of the above happens. Hyrax behaves as if the redirects feature didn't exist.
 
-## Enabling the Flipflop
+## The Flipflop
 
-Once the config is on, the `:redirects` feature appears in the experimental_features group of the Hyrax Flipflop admin UI. Toggling it on:
+Once the config is on, the `:redirects` feature appears in the repository_management group of the Hyrax Flipflop admin UI, already on. While it is on:
 
-- Causes `Hyrax::Indexers::RedirectsIndexer` to write the `redirects_path_tesim` field to the Solr document for resources with `redirects` entries (used by show-page rendering).
-- Activates the catch-all redirect route and `Hyrax::RedirectsController`.
-- Causes the m3 profile validator to **require** a `redirects` property in the flexible metadata profile (when `flexible: true` mode is also active).
+- `Hyrax::Indexers::RedirectsIndexer` writes the `redirects_path_tesim` field to the Solr document for resources with `redirects` entries (used by show-page rendering).
+- The catch-all redirect route and `Hyrax::RedirectsController` are active.
+- The m3 profile validator **requires** a `redirects` property in the flexible metadata profile (when `flexible: true` mode is also active).
 
-If the Flipflop is on but the m3 profile is missing the `redirects` property, the profile fails validation with a clear error message. Adopters running flexible metadata must add a `redirects` property to their m3 profile before enabling the Flipflop.
+That last point is why an adopter running flexible metadata adds the property to the m3 profile before turning the config on: with both gates open and the property missing, the profile fails validation with a clear error message. Turning the Flipflop off is the way to keep the schema available while suspending the feature.
+
+### Starting the Flipflop on
+
+The Flipflop starts off, so it is switched on through the admin UI. An application that treats enabling the config as the decision to use the feature can have it start on instead:
+
+```sh
+export HYRAX_REDIRECTS_DEFAULT=true
+```
+
+```ruby
+# config/initializers/hyrax.rb
+Hyrax.config do |config|
+  config.redirects_default = true
+end
+```
+
+This only sets the default the Flipflop starts from; it remains toggleable, and turning it off is still how to suspend the feature without unloading its schema. It has no effect while the config is off, because the feature is not registered at all then.
+
+Set it only alongside an m3 profile that already declares the `redirects` property: with both gates open, a profile missing the property fails validation rather than warning.
 
 ## m3 profile requirements (`flexible: true` mode)
 

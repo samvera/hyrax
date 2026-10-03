@@ -74,8 +74,8 @@ Flipflop.configure do
     # See documentation/redirects.md for the redirects feature.
     if Hyrax.config.redirects_enabled?
       feature :redirects,
-              default: false,
-              description: "Enable per-record URL redirects from legacy paths to the canonical Hyku URL."
+              default: Hyrax.config.redirects_default,
+              description: "Enable per-record URL redirects from legacy paths to the record's canonical URL."
     end
 
     feature :copy_permalink_button,
