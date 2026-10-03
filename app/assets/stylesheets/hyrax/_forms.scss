@@ -365,25 +365,15 @@ form.button-to {
   margin-bottom: 0;
 }
 
-// Currently Shared With table – consistent spacing and column widths
-#share .table {
+// Currently Shared With table – horizontally scrollable when squeezed
+#share .table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   margin-top: 1rem;
-  table-layout: fixed;
+}
 
-  th:nth-child(1),
-  td:nth-child(1) {
-    width: 45%;
-  }
-
-  th:nth-child(2),
-  td:nth-child(2) {
-    width: 35%;
-  }
-
-  th:nth-child(3),
-  td:nth-child(3) {
-    width: 20%;
-  }
+#share .table {
+  min-width: 500px;
 
   td {
     vertical-align: middle;
@@ -415,21 +405,6 @@ form.button-to {
     margin-left: 0.25rem;
     font-size: 1.25rem;
     line-height: 1;
-  }
-
-  // Compact table when sidebar squeezes the content (992px–1200px)
-  @media (min-width: 992px) and (max-width: 1200px) {
-    font-size: 0.85rem;
-
-    th, td {
-      padding: 0.4rem 0.5rem;
-    }
-
-    td > .col-sm-10 select.form-control {
-      font-size: 0.85rem;
-      padding: 0.25rem 0.4rem;
-      height: auto;
-    }
   }
 }
 
