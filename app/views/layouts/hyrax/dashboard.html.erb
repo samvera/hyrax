@@ -11,6 +11,43 @@
     </div>
     <%= render '/masthead', placement_class: 'fixed-top' %>
     <%= content_for(:navbar) %>
+    <%# The fixed-top nav is outside normal flow, so body needs padding-top to
+        prevent content from hiding behind it. A static CSS value can't adapt to
+        variable nav heights (tall logos, mobile collapse), so we measure the
+        actual masthead and update on every resize. On mobile the collapse is
+        positioned absolutely below the nav (see _header.scss), so we add its
+        height separately. %>
+    <script>
+      (function() {
+        var masthead = document.getElementById('masthead');
+        if (!masthead) return;
+        var collapse = document.getElementById('top-navbar-collapse');
+        var update = function() {
+          var h = masthead.offsetHeight;
+          if (collapse && window.innerWidth < 992) h += collapse.offsetHeight;
+          document.body.style.paddingTop = h + 'px';
+        };
+        update();
+        window.addEventListener('resize', update);
+        if (typeof ResizeObserver !== 'undefined') {
+          var observer = new ResizeObserver(update);
+          observer.observe(masthead);
+          if (collapse) observer.observe(collapse);
+        } else {
+          window.addEventListener('load', update);
+          if (collapse) {
+            // Bootstrap 4 fires via jQuery; Bootstrap 5 fires native events
+            if (typeof jQuery !== 'undefined') jQuery(collapse).on('shown.bs.collapse hidden.bs.collapse', update);
+            collapse.addEventListener('shown.bs.collapse', update);
+            collapse.addEventListener('hidden.bs.collapse', update);
+          }
+        }
+        document.addEventListener('turbolinks:before-cache', function() {
+          window.removeEventListener('resize', update);
+          if (typeof observer !== 'undefined') observer.disconnect();
+        }, { once: true });
+      })();
+    </script>
     <div id="content-wrapper" role="main">
       <div class="sidebar maximized">
         <%= render 'hyrax/dashboard/sidebar' %>
