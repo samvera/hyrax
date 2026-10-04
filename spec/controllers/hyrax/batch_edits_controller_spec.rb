@@ -360,6 +360,158 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
           expect { Hyrax.query_service.find_by(id: collection3.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
         end
       end
+
+      context 'when the batch holds a work and a collection' do
+        let(:work_with_files) do
+          valkyrie_create(:monograph, :with_member_file_sets, depositor: user.user_key, edit_users: [user.user_key])
+        end
+
+        before do
+          controller.batch = [work_with_files.id, collection2.id]
+          allow(controller).to receive(:can?).and_return(true)
+        end
+
+        it "deletes the work with its file sets, and the collection" do
+          file_set_ids = work_with_files.member_ids
+
+          delete :destroy_collection, params: { update_type: "delete_all" }
+
+          [work_with_files.id, *file_set_ids, collection2.id].each do |id|
+            expect { Hyrax.query_service.find_by(id: id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+          end
+        end
+      end
+
+      context 'when the batch holds an empty admin set' do
+        let(:admin_set) { valkyrie_create(:hyrax_admin_set, with_permission_template: true) }
+
+        before do
+          controller.batch = [admin_set.id]
+          allow(controller).to receive(:can?).and_return(true)
+        end
+
+        it "deletes the admin set and its permission template" do
+          delete :destroy_collection, params: { update_type: "delete_all" }
+
+          expect { Hyrax.query_service.find_by(id: admin_set.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+          expect(Hyrax::PermissionTemplate.find_by(source_id: admin_set.id.to_s)).to be_nil
+        end
+      end
+
+      context 'when the batch holds a file set' do
+        let(:work_with_files) { valkyrie_create(:monograph, :with_member_file_sets, depositor: user.user_key) }
+        let(:file_set_id) { work_with_files.member_ids.first }
+
+        before do
+          controller.batch = [file_set_id]
+          allow(controller).to receive(:can?).and_return(true)
+        end
+
+        it "deletes the file set and removes it from its work" do
+          delete :destroy_collection, params: { update_type: "delete_all" }
+
+          expect { Hyrax.query_service.find_by(id: file_set_id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+          expect(Hyrax.query_service.find_by(id: work_with_files.id).member_ids).not_to include(file_set_id)
+        end
+      end
+
+      context 'when the batch holds a resource that cannot be bulk deleted' do
+        let(:file_metadata) { valkyrie_create(:hyrax_file_metadata) }
+
+        before do
+          controller.batch = [file_metadata.id, collection2.id]
+          allow(controller).to receive(:can?).and_return(true)
+        end
+
+        it "leaves it in place and deletes the rest" do
+          allow(Hyrax.logger).to receive(:error)
+
+          delete :destroy_collection, params: { update_type: "delete_all" }
+
+          expect(Hyrax.logger).to have_received(:error).with(/Hyrax::FileMetadata cannot be bulk deleted/)
+
+          expect(Hyrax.query_service.find_by(id: file_metadata.id)).to be_present
+          expect { Hyrax.query_service.find_by(id: collection2.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+          expect(flash[:alert]).to eq "1 item could not be deleted."
+        end
+      end
+
+      context 'when one item cannot be deleted' do
+        let(:work) { valkyrie_create(:monograph, depositor: user.user_key, edit_users: [user.user_key]) }
+
+        before do
+          controller.batch = [work.id, collection2.id]
+          allow(controller).to receive(:can?).and_return(true)
+        end
+
+        shared_examples 'it deletes the rest of the batch' do
+          it "deletes the other items and alerts the user" do
+            delete :destroy_collection, params: { update_type: "delete_all" }
+
+            expect { Hyrax.query_service.find_by(id: collection2.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+            expect(flash[:alert]).to eq "1 item could not be deleted."
+          end
+
+          it "reports the failed ids to JSON clients" do
+            delete :destroy_collection, params: { update_type: "delete_all" }, format: :json
+
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.parsed_body).to eq("failed_ids" => [work.id.to_s])
+          end
+        end
+
+        context 'because a step fails' do
+          before do
+            allow_any_instance_of(Hyrax::Transactions::Steps::DeleteAllFileSets)
+              .to receive(:call).and_return(Dry::Monads::Failure(:failed_to_delete_file_set))
+          end
+
+          it_behaves_like 'it deletes the rest of the batch'
+        end
+
+        context 'because a step raises' do
+          before do
+            allow_any_instance_of(Hyrax::Transactions::Steps::DeleteAllFileSets)
+              .to receive(:call).and_raise(Valkyrie::Persistence::StaleObjectError)
+          end
+
+          it_behaves_like 'it deletes the rest of the batch'
+        end
+
+        context 'because it no longer exists' do
+          before { Hyrax.persister.delete(resource: work) }
+
+          it_behaves_like 'it deletes the rest of the batch'
+        end
+      end
+
+      context 'when an admin set in the batch holds a work' do
+        let(:admin_set) { valkyrie_create(:hyrax_admin_set, with_permission_template: true) }
+
+        before do
+          valkyrie_create(:monograph, admin_set_id: admin_set.id)
+          controller.batch = [admin_set.id, collection2.id]
+          allow(controller).to receive(:can?).and_return(true)
+        end
+
+        it "keeps the admin set and its permission template, and deletes the rest" do
+          delete :destroy_collection, params: { update_type: "delete_all" }
+
+          expect(Hyrax.query_service.find_by(id: admin_set.id)).to be_present
+          expect(Hyrax::PermissionTemplate.find_by(source_id: admin_set.id.to_s)).to be_present
+          expect { Hyrax.query_service.find_by(id: collection2.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+          expect(flash[:alert]).to eq "1 item could not be deleted."
+        end
+
+        it "logs the reason without the admin set's members" do
+          allow(Hyrax.logger).to receive(:error)
+
+          delete :destroy_collection, params: { update_type: "delete_all" }
+
+          expect(Hyrax.logger).to have_received(:error)
+            .with("Batch delete failed for #{admin_set.id}: \"Administrative set cannot be deleted as it is not empty\"")
+        end
+      end
     end
   end
 end

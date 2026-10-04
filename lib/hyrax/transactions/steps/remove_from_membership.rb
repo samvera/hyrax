@@ -31,10 +31,11 @@ module Hyrax
 
           @query_service.find_members_of(collection: collection).each do |member|
             member.member_of_collection_ids -= [collection.id]
-            @persister.save(resource: member)
+            saved = @persister.save(resource: member)
+            @publisher.publish('object.membership.updated', object: saved, user: user)
             @publisher.publish('collection.membership.updated', collection: collection, user: user)
-          rescue StandardError
-            nil
+          rescue StandardError => e
+            Hyrax.logger.error("Could not remove #{member.id} from collection #{collection.id}: #{e.class}: #{e.message}")
           end
 
           Success(collection)
