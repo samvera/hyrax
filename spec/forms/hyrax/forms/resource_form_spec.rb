@@ -402,6 +402,43 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       expect(in_flight.errors[:profile_only_field]).to include "can't be blank"
     end
 
+    it 'keeps profile-only validation after a second thread resets its form' do
+      profile_fields['profile_only_field'] = { required: true, primary: false, display: true }
+      flexible_form_class = Class.new(Hyrax::Forms::ResourceForm(work_class)) { include Hyrax::FlexibleFormBehavior }
+      in_flight = flexible_form_class.new(resource: work)
+      other_work = work_class.new
+
+      # Join establishes the failing interleaving without timing-dependent sleeps.
+      # Thread#value also propagates failures from the second worker.
+      Thread.new do
+        other = flexible_form_class.new(resource: other_work)
+        other.send(:reset_flexible_definitions!)
+      end.value
+      in_flight.validate(title: ['First row'], profile_only_field: [])
+
+      expect(in_flight.title).to eq ['First row']
+      expect(in_flight.errors[:profile_only_field]).to include "can't be blank"
+      expect(flexible_form_class.definitions.keys).not_to include('profile_only_field')
+    end
+
+    it 'does not replace the required fields of an in-flight form after a profile update' do
+      profile_fields['first_only_field'] = { required: true, primary: false, display: true }
+      flexible_form_class = Class.new(Hyrax::Forms::ResourceForm(work_class)) { include Hyrax::FlexibleFormBehavior }
+      first = flexible_form_class.new(resource: work)
+      first_definition = first.singleton_class.schema_definitions['first_only_field']
+
+      profile_fields['first_only_field'] = { required: false, primary: false, display: true }
+      second = flexible_form_class.new(resource: work_class.new)
+
+      first.validate(title: ['First row'], first_only_field: [])
+      second.validate(title: ['Second row'], first_only_field: [])
+
+      expect(first.errors[:first_only_field]).to include "can't be blank"
+      expect(second.errors[:first_only_field]).to be_empty
+      expect(first_definition[:required]).to be true
+      expect(second.singleton_class.schema_definitions['first_only_field'][:required]).to be false
+    end
+
     it 'builds the form from a subclass that reads as the form class' do
       stub_const('TestSharedDefinitionsForm', form_class)
       form = form_class.new(resource: work)
