@@ -759,6 +759,10 @@ pt-BR:
       delete_selected:
         button_label: Excluir Selecionado
         deleting_file_from: A exclusão de um arquivo de %{application_name} é permanente. Clique em OK para excluir este arquivo de %{application_name} ou em Cancelar para cancelar esta operação
+      destroy_collection:
+        failed:
+          one: Não foi possível excluir 1 item.
+          other: Não foi possível excluir %{count} itens.
       edit:
         apply_changes_to: "As alterações serão aplicadas a: (%{x_number_of} funciona)"
         batch_edit_descriptions: Descrições de edição em lote & nbsp; & nbsp; & nbsp; <small> Clique nos rótulos abaixo para editar as descrições de trabalho. </small>
