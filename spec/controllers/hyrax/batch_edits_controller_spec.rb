@@ -360,6 +360,60 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
           expect { Hyrax.query_service.find_by(id: collection3.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
         end
       end
+
+      context 'when the batch holds a work and a collection' do
+        let(:work_with_files) do
+          valkyrie_create(:monograph, :with_member_file_sets, depositor: user.user_key, edit_users: [user.user_key])
+        end
+
+        before do
+          controller.batch = [work_with_files.id, collection2.id]
+          allow(controller).to receive(:can?).and_return(true)
+        end
+
+        it "deletes the work with its file sets, and the collection" do
+          file_set_ids = work_with_files.member_ids
+
+          delete :destroy_collection, params: { update_type: "delete_all" }
+
+          [work_with_files.id, *file_set_ids, collection2.id].each do |id|
+            expect { Hyrax.query_service.find_by(id: id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+          end
+        end
+      end
+
+      context 'when the batch holds an empty admin set' do
+        let(:admin_set) { valkyrie_create(:hyrax_admin_set, with_permission_template: true) }
+
+        before do
+          controller.batch = [admin_set.id]
+          allow(controller).to receive(:can?).and_return(true)
+        end
+
+        it "deletes the admin set and its permission template" do
+          delete :destroy_collection, params: { update_type: "delete_all" }
+
+          expect { Hyrax.query_service.find_by(id: admin_set.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+          expect(Hyrax::PermissionTemplate.find_by(source_id: admin_set.id.to_s)).to be_nil
+        end
+      end
+
+      context 'when the batch holds a file set' do
+        let(:work_with_files) { valkyrie_create(:monograph, :with_member_file_sets, depositor: user.user_key) }
+        let(:file_set_id) { work_with_files.member_ids.first }
+
+        before do
+          controller.batch = [file_set_id]
+          allow(controller).to receive(:can?).and_return(true)
+        end
+
+        it "deletes the file set and removes it from its work" do
+          delete :destroy_collection, params: { update_type: "delete_all" }
+
+          expect { Hyrax.query_service.find_by(id: file_set_id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+          expect(Hyrax.query_service.find_by(id: work_with_files.id).member_ids).not_to include(file_set_id)
+        end
+      end
     end
   end
 end
