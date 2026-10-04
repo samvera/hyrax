@@ -38,10 +38,9 @@ module Hyrax
     end
 
     def destroy_collection
-      batch.each do |doc_id|
-        resource = Hyrax.query_service.find_by(id: Valkyrie::ID.new(doc_id))
-        destroy_transaction_for(resource).call(resource).value!
-      end
+      failed_ids = batch.reject { |id| destroy_resource(id) }.map(&:to_s)
+      return after_destroy_collection_failure(failed_ids) if failed_ids.any?
+
       flash[:notice] = "Batch delete complete"
       after_destroy_collection
     end
@@ -110,6 +109,26 @@ module Hyrax
           .call(resource).value!
       end
       after_update
+    end
+
+    def destroy_resource(id)
+      resource = Hyrax.query_service.find_by(id: Valkyrie::ID.new(id))
+      result = destroy_transaction_for(resource).call(resource)
+      Hyrax.logger.error("Batch delete failed for #{id}: #{Array(result.failure).first.inspect}") if result.failure?
+      result.success?
+    rescue StandardError => e
+      Hyrax.logger.error("Batch delete failed for #{id}: #{e.class}: #{e.message}")
+      false
+    end
+
+    def after_destroy_collection_failure(failed_ids)
+      respond_to do |format|
+        format.json { render json: { failed_ids: failed_ids }, status: :unprocessable_entity }
+        format.html do
+          flash[:alert] = t('hyrax.batch_edits.destroy_collection.failed', count: failed_ids.count)
+          after_destroy_collection
+        end
+      end
     end
 
     DESTROY_STEPS_NEEDING_USER = {
