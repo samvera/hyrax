@@ -183,6 +183,8 @@ A `facetable` property's sidebar facet lists `config.default_facet_limit` values
 | `linked` | a search | `<name>_tesim` for the **displayed** value | `<name>_tesim` |
 | `faceted` | a facet filter | `<name>_sim` for the **stored** value | `<name>_sim` |
 
+A controlled property whose label facet is registered queries that instead: `<name>_label_sim` for the label, so the link lands on the same filter the sidebar offers rather than a second one the sidebar cannot match. Where no label facet exists, the link keeps using `<name>_sim` and the stored value.
+
 Neither raises when its field is missing. The link still renders and simply returns an empty result page, so the mistake surfaces only when someone clicks it.
 
 Both apply to the show page and the search-results row. A `faceted` property's facet is registered even when it is not `facetable`, so the link resolves into a filter; Blacklight discards an `f[...]` parameter naming a facet it has no configuration for, which would otherwise leave the link returning unfiltered results.
