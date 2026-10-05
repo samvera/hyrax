@@ -223,7 +223,8 @@ module Hyrax
       JsonHash = lambda do |value|
         next value unless value.is_a?(String) && value.start_with?('{')
         JSON.parse(value)
-      rescue JSON::ParserError
+      rescue JSON::ParserError => e
+        Hyrax.logger.warn { "JsonHash parsing error: #{e.message}" }
         value
       end
 
