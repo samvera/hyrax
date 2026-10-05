@@ -30,6 +30,8 @@ module Hyrax
     # Preserve compound entry boundaries on the Postgres read path (any adapter
     # routing through Valkyrie's ORMConverter). See the decorator for why.
     require 'hyrax/valkyrie_persistence/postgres/orm_converter_decorator'
+    # Store plain Hash values on Fedora until Valkyrie releases samvera/valkyrie#1005.
+    require 'hyrax/valkyrie_persistence/fedora/hash_support'
     require 'hyrax/form_fields'
     require 'hyrax/indexer'
     require 'hyrax/model_decorator'
