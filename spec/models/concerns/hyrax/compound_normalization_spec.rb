@@ -53,6 +53,11 @@ RSpec.describe Hyrax::CompoundNormalization do
       expect(Hyrax::CompoundNormalization.normalize_compound({ 'given_name' => 'Ada' }))
         .to eq([{ 'given_name' => 'Ada' }])
     end
+
+    it 'parses two JSON entry strings as two entries rather than a key/value pair' do
+      expect(Hyrax::CompoundNormalization.normalize_compound(['{"name":"A","role":"Editor"}', '{"name":"B"}']))
+        .to eq([{ 'name' => 'A', 'role' => 'Editor' }, { 'name' => 'B' }])
+    end
   end
 
   # These pin behavior that is a deliberate consequence of an information limit,
