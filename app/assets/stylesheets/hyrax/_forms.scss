@@ -312,15 +312,8 @@ form.button-to {
   padding: 7px 0;
 }
 
-// Sharing tab – title case and consistent styling
+// Sharing tab – consistent styling
 #share {
-  label,
-  legend,
-  .table th,
-  .btn {
-    text-transform: capitalize;
-  }
-
   .form-control,
   .select2-container .select2-choice {
     border-radius: 4.5px !important;
@@ -578,14 +571,8 @@ form.button-to {
   max-width: none !important;
 }
 
-// Relationships tab – title-case labels, table headings, and buttons
+// Relationships tab
 #relationships {
-  label,
-  .table th,
-  .btn {
-    text-transform: capitalize;
-  }
-
   // 2/3 + 1/3 column widths for both tables (Collection title/Action, Work title/Action)
   .table th:first-child,
   .table td:first-child {
@@ -649,12 +636,6 @@ form.button-to {
       }
     }
   }
-}
-
-// Title-case field labels and "Add another …" link text
-.form-tab-content .control-label,
-.form-tab-content .controls-add-text {
-  text-transform: capitalize;
 }
 
 // Non-managed selects (Representative Media, Thumbnail, Rendering, Resource type):

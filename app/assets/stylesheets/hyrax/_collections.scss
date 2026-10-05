@@ -799,18 +799,8 @@ button.branding-banner-remove:hover {
   width: 100%;
 }
 
-// Edit Collection form – border-radius and title-case fixes
+// Edit Collection form – border-radius fixes
 #collection-edit-controls {
-  // Title-case field labels, tab headings, links, and buttons
-  label,
-  legend,
-  .control-label,
-  .controls-add-text,
-  .nav-tabs .nav-link,
-  .btn {
-    text-transform: capitalize;
-  }
-
   // Restore border-radius on multi-value inputs (Bootstrap input-group zeroes the right side)
   .input-group .form-control {
     border-radius: 4.5px !important;
