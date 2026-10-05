@@ -174,12 +174,16 @@ A property's values can be rendered as links that run a new catalog query. There
 
 So `facetable` governs the sidebar and `render_as` governs where a value is rendered — the show page and the results row alike. A property declaring only `render_as: faceted` links its values in both places without appearing in the sidebar; one declaring only `facetable` gets the sidebar facet and results links, but plain text on the show page.
 
+A `facetable` property's sidebar facet lists `config.default_facet_limit` values (Blacklight's default is 10), then a "more" link that pages through the rest. A facet the application already declares in its `CatalogController` keeps the `limit:` declared there, and a controlled property's label facet takes the limit of its id facet.
+
 ### What each link queries
 
 | `render_as` | link is | queries | requires in `indexing:` |
 | --- | --- | --- | --- |
 | `linked` | a search | `<name>_tesim` for the **displayed** value | `<name>_tesim` |
 | `faceted` | a facet filter | `<name>_sim` for the **stored** value | `<name>_sim` |
+
+A controlled property whose label facet is registered queries that instead: `<name>_label_sim` for the label, so the link lands on the same filter the sidebar offers rather than a second one the sidebar cannot match. Where no label facet exists, the link keeps using `<name>_sim` and the stored value.
 
 Neither raises when its field is missing. The link still renders and simply returns an empty result page, so the mistake surfaces only when someone clicks it.
 
