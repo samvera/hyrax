@@ -147,7 +147,7 @@ Each entry is a plain hash with `path` and `is_display_url` keys, stored on the 
 - **Postgres** stores the entries as JSONB.
 - **Fedora** through the Valkyrie Fedora adapter stores each entry as a nested graph, with each key as its own triple. Hyrax carries overrides for this until Valkyrie releases the same support (samvera/valkyrie#1005).
 - **Fedora through Wings** stores each entry as one JSON string, since ActiveFedora cannot hold a hash; the `type: hash` attribute type parses it back into a hash on read.
-- Fedora does not preserve the order of multi-valued properties, so entries can reload in a different order there. Each entry still carries its own `is_display_url`, so which alias is the display URL never changes.
+- **Order:** entries reload in the order they were saved. Fedora itself keeps a field's values in no particular order, so Hyrax marks `type: hash` attributes `ordered` (Valkyrie's `ordered: true`). The Valkyrie Fedora adapter then stores the entries as an ordered list. Wings, the bridge to ActiveFedora, does not support that setting, so Hyrax handles order itself there: it adds a position number to each entry when saving, then sorts the entries by that number and removes it when loading.
 
 `Hyrax::Redirect` is retained as a thin Ruby presenter the form view consumes; non-form code (validator, indexer, sync step) reads the persisted hash directly.
 
