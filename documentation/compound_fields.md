@@ -490,10 +490,14 @@ work.contributors
 #     { "given_name" => "Alan", "family_name" => "Turing",  "role_label" => "author" }]
 ```
 
-This shape round-trips cleanly through Postgres JSONB in both flex modes. (Use
-this plain-hash shape rather than nesting a `Valkyrie::Resource`; nested
-resources round-trip poorly and lack form-layer support — see
-[`field_behaviors.md`](field_behaviors.md).)
+This shape round-trips in both flex modes on every metadata backend. Postgres
+stores the rows as JSONB; the Valkyrie Fedora adapter stores each row as a nested
+graph (through Hyrax overrides until samvera/valkyrie#1005 is released); Wings
+stores each row as one JSON string, which the `type: hash` attribute type parses
+back into a hash on read. Fedora does not preserve the order of multi-valued
+properties, so rows can reload in a different order there. (Use this plain-hash
+shape rather than nesting a `Valkyrie::Resource`; nested resources round-trip
+poorly and lack form-layer support — see [`field_behaviors.md`](field_behaviors.md).)
 
 ## What the foundation provides
 
