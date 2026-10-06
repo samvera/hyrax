@@ -115,13 +115,22 @@ module Wings
           return pcdm_files
         end
 
-        pcdm_files.map(&:valkyrie_resource)
+        pcdm_files.map(&:valkyrie_resource) + find_file_metadata_nodes_by_use(resource: resource, use: use)
       end
 
       private
 
       def warn_about_deprecation
         Deprecation.warn("use_valkyrie: is deprecated for valkyrie/wings queries")
+      end
+
+      # Finds metadata for files stored outside Fedora (e.g. derivatives on
+      # disk). These are not contained by the file set, so they never appear
+      # in its +file_ids+; they are looked up by their +file_set_id+ instead.
+      def find_file_metadata_nodes_by_use(resource:, use:)
+        ActiveFedora::Base.where(file_set_id_ssim: resource.id.to_s)
+                          .map(&:valkyrie_resource)
+                          .select { |file_metadata| file_metadata.pcdm_use.map(&:to_s).include?(use.to_s) }
       end
     end
   end
