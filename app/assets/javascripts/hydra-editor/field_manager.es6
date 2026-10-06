@@ -62,7 +62,8 @@ export class FieldManager {
           this._createAddControl()
         }
 
-        $(this.removeSelector, this.element).attr('title', 'Remove')
+        const removeTitle = this.element.closest('form').data('removeText') || this.options.removeText
+        $(this.removeSelector, this.element).attr('title', removeTitle)
     }
 
     _createRemoveWrapper() {
