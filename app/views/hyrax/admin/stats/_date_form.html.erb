@@ -1,7 +1,7 @@
 <%= form_for "stats_filters", url: hyrax.admin_stats_path, method: "GET", html: { role: "search", "aria-label" => t("hyrax.admin.stats.date_form.filter_label", default: "Filter statistics by date") } do |f| %>
   <input type='hidden' name='locale' value="<%= params[:locale] %>" />
   <%= f.label :start_date, t("hyrax.admin.stats.date_form.start_label", default: "Start *") %>
-  <input type="date" id="stats_filters_start_date" name="stats_filters[start_date]" value="<%= @presenter.stats_filters[:start_date] %>" aria-required="true" />
+  <input type="date" id="stats_filters_start_date" name="stats_filters[start_date]" value="<%= @presenter.stats_filters[:start_date] %>" />
   <%= f.label :end_date, t("hyrax.admin.stats.date_form.end_label", default: "End [defaults to now]") %>
   <input type="date" id="stats_filters_end_date" name="stats_filters[end_date]" value="<%= @presenter.stats_filters[:end_date] %>" />
   <%= f.submit t("hyrax.admin.stats.date_form.load_stats", default: "Load Stats") %>

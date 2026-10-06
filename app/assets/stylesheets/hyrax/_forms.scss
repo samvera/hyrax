@@ -443,15 +443,17 @@ form.button-to {
   width: 100% !important;
 }
 
-// First item: hide controls entirely so input fills full width
-.multi_value .listing li:first-of-type .field-controls,
-.controlled_vocabulary .listing li:first-of-type .field-controls {
+// First item: hide controls entirely so input fills full width, unless it holds
+// a saved controlled-vocabulary value, which must stay removable
+.multi_value .listing li:first-of-type .field-controls:not(:has(.has-existing-value)),
+.controlled_vocabulary .listing li:first-of-type .field-controls:not(:has(.has-existing-value)) {
   display: none !important;
 }
 
 // Subsequent items: input stretches, Remove sits tight at the right edge
 .multi_value .listing li:not(:first-of-type),
-.controlled_vocabulary .listing li:not(:first-of-type) {
+.controlled_vocabulary .listing li:not(:first-of-type),
+.controlled_vocabulary .listing li:has(.has-existing-value) {
   display: flex;
   align-items: center;
 
@@ -493,7 +495,8 @@ form.button-to {
   }
 }
 
-.controlled_vocabulary .listing li:not(:first-of-type) .field-controls .remove {
+.controlled_vocabulary .listing li:not(:first-of-type) .field-controls .remove,
+.controlled_vocabulary .listing li:has(.has-existing-value) .field-controls .remove {
   display: inline-block !important;
 }
 
