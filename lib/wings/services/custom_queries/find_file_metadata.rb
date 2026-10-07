@@ -128,9 +128,11 @@ module Wings
       # disk). These are not contained by the file set, so they never appear
       # in its +file_ids+; they are looked up by their +file_set_id+ instead.
       def find_file_metadata_nodes_by_use(resource:, use:)
+        return [] if resource.id.blank?
+
         ActiveFedora::Base.where(file_set_id_ssim: resource.id.to_s)
                           .map(&:valkyrie_resource)
-                          .select { |file_metadata| file_metadata.pcdm_use.map(&:to_s).include?(use.to_s) }
+                          .select { |res| res.is_a?(Hyrax::FileMetadata) && res.pcdm_use.map(&:to_s).include?(use.to_s) }
       end
     end
   end
