@@ -12,7 +12,7 @@
       <div id="root"></div>
       <script>
 	// Import components and React
-	const { IIIFPlayer, MediaPlayer, StructuredNavigation, React, ReactDOM } = RampIIIF;
+	const { IIIFPlayer, MediaPlayer, React, ReactDOM } = RampIIIF;
 	// Parse Manifest URL
 	const manifestUrl = new URLSearchParams(window.location.search).get('manifest');
 
@@ -34,8 +34,7 @@
 	      { manifestUrl },
 	      React.createElement(
 		'div', { className: 'iiif-player-demo' },
-		React.createElement(MediaPlayer),
-		React.createElement(StructuredNavigation)
+		React.createElement(MediaPlayer)
 	      )
 	    );
 
