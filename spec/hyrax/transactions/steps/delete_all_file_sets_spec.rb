@@ -24,6 +24,21 @@ RSpec.describe Hyrax::Transactions::Steps::DeleteAllFileSets, valkyrie_adapter: 
       end
     end
 
+    context 'when the container shares one file_set.destroy transaction' do
+      let(:shared_destroy) { Hyrax::Transactions::FileSetDestroy.new }
+
+      before do
+        allow(Hyrax::Transactions::Container).to receive(:[]).and_call_original
+        allow(Hyrax::Transactions::Container).to receive(:[]).with('file_set.destroy').and_return(shared_destroy)
+      end
+
+      it 'leaves standalone file set destroys removing the file set from its work' do
+        step.call(work, user: user)
+
+        expect(shared_destroy.steps).to include('file_set.remove_from_work')
+      end
+    end
+
     context 'with a resource that is not saved' do
       let(:work) { FactoryBot.build(:hyrax_work) }
 
