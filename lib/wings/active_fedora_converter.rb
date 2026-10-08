@@ -58,7 +58,7 @@ module Wings
     #
     # @return [Hash] attributes with values mapped for building an ActiveFedora model
     def attributes
-      @attributes ||= attributes_class.mapped_attributes(attributes: resource.attributes).select do |attr|
+      @attributes ||= attributes_class.mapped_attributes(attributes: OrderedAttributes.encode(resource.attributes, resource.class)).select do |attr|
         active_fedora_class.supports_property?(attr)
       end
     end
