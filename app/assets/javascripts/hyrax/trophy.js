@@ -25,10 +25,12 @@ function trophyOff(anchor) {
     } else {
         setAnchorAttrs(anchor, 'Highlight work', 'add-text');
     }
+    $('#document_' + gid + ' .highlighted-work').removeClass('fa-star highlighted-work').addClass('fa-star-o trophy-off');
 }
 
 function trophyOn(anchor) {
     setAnchorAttrs(anchor, 'Unhighlight work', 'remove-text');
+    $('#document_' + gid + ' .fa-star-o').removeClass('fa-star-o trophy-off').addClass('fa-star highlighted-work');
 }
 
 function setAnchorAttrs(anchor, title, data) {

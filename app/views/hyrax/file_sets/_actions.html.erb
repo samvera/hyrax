@@ -16,40 +16,43 @@
 
     <ul role="menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu_<%= file_set.id %>">
     <% if can?(:edit, file_set.id) %>
-      <li class="dropdown-item" role="menuitem" tabindex="-1">
+      <li role="presentation">
         <%= link_to t('.edit'), edit_polymorphic_path([main_app, file_set]),
-          { title: t('.edit_title', file_set: file_set) } %>
+          { class: 'dropdown-item', role: 'menuitem', tabindex: -1, title: t('.edit_title', file_set: file_set) } %>
       </li>
 
-      <li class="dropdown-item" role="menuitem" tabindex="-1">
+      <li role="presentation">
         <%= link_to t('.versions'),  edit_polymorphic_path([main_app, file_set], anchor: 'versioning_display'),
-          { title: t('.versions_title') } %>
+          { class: 'dropdown-item', role: 'menuitem', tabindex: -1, title: t('.versions_title') } %>
       </li>
     <% end %>
 
     <% if can?(:destroy, file_set.id) %>
-      <li class="dropdown-item" role="menuitem" tabindex="-1">
+      <li role="presentation">
         <%= link_to t('.delete'), polymorphic_path([main_app, file_set]),
-          method: :delete, title: t('.delete_title', file_set: file_set),
+          method: :delete, class: 'dropdown-item', role: 'menuitem', tabindex: -1,
+          title: t('.delete_title', file_set: file_set),
           data: { confirm: t('.delete_confirm', file_set: file_set, application_name: application_name) } %>
       </li>
     <% end %>
 
     <% if can?(:download, file_set.id) %>
-      <li class="dropdown-item" role="menuitem" tabindex="-1">
+      <li role="presentation">
         <%= link_to t('.download'),
                     hyrax.download_path(file_set),
                     title: t('.download_title', file_set: file_set),
                     target: "_blank",
                     id: "file_download",
-                    class: "download",
+                    class: "dropdown-item download",
+                    role: 'menuitem',
+                    tabindex: -1,
                     data: { label: file_set.id, work_id: @presenter.id, collection_ids: @presenter.member_of_collection_ids } %>
       </li>
 
       <% file_set.extensions_and_mime_types&.each do |hash| %>
         <% next unless hash[:name] %>
-        <li class ="dropdown-item" role="menuitem" tabindex="-1">
-          <a href="<%= download_url(id: file_set.id, locale: 'en', file: hash[:name], mime_type: hash[:mime_type]) %>" download>
+        <li role="presentation">
+          <a class="dropdown-item" role="menuitem" tabindex="-1" href="<%= download_url(id: file_set.id, locale: 'en', file: hash[:name], mime_type: hash[:mime_type]) %>" download>
             Download <em>(as <%= hash[:name] %>)</em>
           </a>
         </li>

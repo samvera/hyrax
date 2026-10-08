@@ -7,10 +7,10 @@
       <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <%= t('.header') %>
       </button>
-      <ul class="dropdown-menu">
-        <li class="dropdown-item"><%= link_to t('.endnote'), polymorphic_path([main_app, presenter], format: 'endnote') %></li>
-        <li class="dropdown-item"><%= link_to t('.zotero'), hyrax.zotero_path, id: 'zoteroLink', name: 'zotero' %></li>
-        <li class="dropdown-item"><%= link_to t('.mendeley'), hyrax.mendeley_path, id: 'mendeleyLink', name: 'mendeley' %></li>
-      </ul>
+      <div class="dropdown-menu">
+        <%= link_to t('.endnote'), polymorphic_path([main_app, presenter], format: 'endnote'), class: 'dropdown-item' %>
+        <%= link_to t('.zotero'), hyrax.zotero_path, id: 'zoteroLink', name: 'zotero', class: 'dropdown-item' %>
+        <%= link_to t('.mendeley'), hyrax.mendeley_path, id: 'mendeleyLink', name: 'mendeley', class: 'dropdown-item' %>
+      </div>
     </div>
 </div>
