@@ -32,9 +32,32 @@ module Hyrax
       return [] unless ability
 
       source_ids = Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability:, source_type: 'admin_set')
+      return [] if source_ids.blank?
 
-      admin_sets_list = Hyrax.query_service.find_many_by_ids(ids: source_ids).map do |source|
-        [source.title.first, source.id]
+      # This helper only needs indexed display data. Use Solr first to avoid per-id repository fetches,
+      # but fall back for admin sets that have not been indexed yet.
+      admin_sets_list = Hyrax::SolrQueryService.new
+                              .with_ids(ids: source_ids)
+                              .with_field_pairs(
+                                field_pairs: {
+                                  has_model_ssim: Hyrax::ModelRegistry.admin_set_rdf_representations.join(',')
+                                },
+                                type: 'terms'
+                              )
+                              .solr_documents(rows: source_ids.length, fl: 'id,title_tesim')
+                              .map do |doc|
+                                [Array(doc['title_tesim']).first.to_s, doc['id']]
+                              end
+
+      indexed_ids = admin_sets_list.map(&:last)
+      missing_ids = source_ids.map(&:to_s) - indexed_ids
+
+      if missing_ids.present?
+        admin_sets_list.concat(
+          Hyrax.query_service.find_many_by_ids(ids: missing_ids).map do |source|
+            [source.title.first, source.id.to_s]
+          end
+        )
       end
 
       # Sorts the default admin set to be first, then the rest by title.
