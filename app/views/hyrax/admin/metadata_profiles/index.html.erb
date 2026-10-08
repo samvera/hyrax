@@ -17,7 +17,7 @@
         <table class="table table-striped datatable">
           <thead>
             <tr>
-              <th scope="col">Schema Version</th>
+                <th scope="col">M3 Version</th>
               <th scope="col">Profile Version</th>
               <th scope="col">Profile Type</th>
               <th scope="col">Created At</th>
@@ -29,8 +29,8 @@
               <tr>
 
                 <!-- TODO: fix show pgs -->
-                <td><%= hyrax_metadata_profile.schema_version %></td>
-                <td><%= hyrax_metadata_profile.id.to_f %></td>
+                <td><%= hyrax_metadata_profile.m3_version %></td>
+                <td><%= hyrax_metadata_profile.profile_version %></td>
                 <td><%= hyrax_metadata_profile.metadata_profile_type %></td>
                 <td><%= hyrax_metadata_profile.created_at.strftime("%b %d, %Y") %></td>
                 <th><%= link_to raw('<span class="fa fa-download"></span>'), hyrax.admin_metadata_profile_export_path(hyrax_metadata_profile), target: "_blank" %></th>
