@@ -6,6 +6,7 @@
       </legend>
       <div class="form-group">
         <span class="form-text"><%= t("hyrax.base.form_rendering.help_html") %></span>
+        <%= f.label :rendering_ids, t("hyrax.base.form_rendering.legend_html"), class: 'sr-only' %>
         <%= f.select :rendering_ids,
                     form_file_set_select_for(parent: f.object),
                     { include_blank: true },

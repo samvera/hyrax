@@ -19,14 +19,14 @@
     <div class="row">
       <div class="col-12">
           <div class="fileinput-button" id="add-files">
-            <input id="addfiles" type="file" style="display:none;"  name="files[]" multiple />
+            <input id="addfiles" type="file" style="display:none;" aria-label="<%= t('.add_files') %>" name="files[]" multiple />
             <button type="button" class="btn btn-success" onclick="document.getElementById('addfiles').click();">
               <span class="fa fa-plus"></span>
               <span><%=  t(".add_files") %></span>
             </button>
           </div>
           <div class="fileinput-button">
-            <input id="addfolder" type="file" style="display:none;"  name="files[]" multiple directory webkitdirectory />
+            <input id="addfolder" type="file" style="display:none;" aria-label="<%= t('.add_folder') %>" name="files[]" multiple directory webkitdirectory />
             <button type="button" class="btn btn-success" onclick="document.getElementById('addfolder').click();">
               <span class="fa fa-plus"></span>
               <span><%=  t(".add_folder") %></span>
