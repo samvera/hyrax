@@ -2,6 +2,7 @@ name: Build and push docker image
 on:
   workflow_dispatch:
   release:
+    types: [released]
   push:
     branches:
       - build_images_on_release
@@ -65,15 +66,3 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/dassie:${{ env.TAG }}
             ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/dassie:${{ github.ref_name }}
-      - name: Build and push dassie worker
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          target: hyrax-engine-dev-worker
-          cache-from: |
-            ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/dassie:${TAG}
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/dassie-worker:${{ env.TAG }}
-            ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/dassie-worker:${{ github.ref_name }}
