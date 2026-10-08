@@ -136,6 +136,36 @@ module Hyrax
           super
         end
 
+        ##
+        # A flexible form declares its profile's fields at build time (see
+        # {#initialize}) into definitions its class shares with every other
+        # instance, so two forms built at once (concurrent jobs, Puma threads)
+        # can strip each other's fields mid-validation. Each flexible form is
+        # therefore built from a throwaway subclass that owns its definitions.
+        def new(*args, **kwargs, &block)
+          resource = kwargs.fetch(:resource) { args.first }
+          return super if per_build_class? || !resource.try(:flexible?)
+
+          base = self
+          Class.new(self) do
+            # Start from the form class's current definitions rather than
+            # Declarative's replay of its `property` calls, which would drop
+            # anything set on them since, such as `required_fields=`.
+            @definitions = base.definitions.dup
+            define_singleton_method(:name) { base.name }
+            define_singleton_method(:to_s) { base.to_s }
+            define_singleton_method(:inspect) { base.inspect }
+            define_singleton_method(:per_build_class?) { true }
+          end.new(*args, **kwargs, &block)
+        end
+
+        ##
+        # @return [Boolean] whether this class is the throwaway subclass {.new}
+        #   builds a single flexible form from
+        def per_build_class?
+          false
+        end
+
         def check_if_flexible(model)
           return unless model.respond_to?(:flexible?) && model.flexible?
           include FlexibleFormBehavior

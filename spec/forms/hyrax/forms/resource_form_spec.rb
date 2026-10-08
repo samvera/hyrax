@@ -372,15 +372,82 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       expect(form.singleton_class.definitions.keys).not_to include('extra_profile_field')
     end
 
-    it "clears a previous profile's hidden field from the form class" do
+    it "leaves a profile's field off the form class" do
       profile_fields['extra_profile_field'] = hidden_field
-      form_class.new(resource: work)
-      expect(form_class.definitions.keys).to include('extra_profile_field')
-
-      profile_fields.delete('extra_profile_field')
       form_class.new(resource: work)
 
       expect(form_class.definitions.keys).not_to include('extra_profile_field')
+    end
+
+    it "keeps a form's profile fields when another form is built while it is in flight" do
+      in_flight = form_class.new(resource: work)
+      form_class.new(resource: work).send(:reset_flexible_definitions!)
+
+      in_flight.validate(title: ['A title'])
+
+      expect(in_flight.title).to eq ['A title']
+    end
+
+    it "keeps a form's required fields when another form is built while it is in flight" do
+      # A field only the profile requires, checked by FlexibleFormBehavior;
+      # `title` would also be caught by core_metadata's static validator
+      # wherever flexible is off at boot, hiding the race.
+      profile_fields['profile_only_field'] = { required: true, primary: false, display: true }
+      flexible_form_class = Class.new(Hyrax::Forms::ResourceForm(work_class)) { include Hyrax::FlexibleFormBehavior }
+      in_flight = flexible_form_class.new(resource: work)
+      flexible_form_class.new(resource: work).send(:reset_flexible_definitions!)
+
+      in_flight.validate(profile_only_field: [])
+
+      expect(in_flight.errors[:profile_only_field]).to include "can't be blank"
+    end
+
+    it 'keeps profile-only validation after a second thread resets its form' do
+      profile_fields['profile_only_field'] = { required: true, primary: false, display: true }
+      flexible_form_class = Class.new(Hyrax::Forms::ResourceForm(work_class)) { include Hyrax::FlexibleFormBehavior }
+      in_flight = flexible_form_class.new(resource: work)
+      other_work = work_class.new
+
+      # Join establishes the failing interleaving without timing-dependent sleeps.
+      # Thread#value also propagates failures from the second worker.
+      Thread.new do
+        other = flexible_form_class.new(resource: other_work)
+        other.send(:reset_flexible_definitions!)
+      end.value
+      in_flight.validate(title: ['First row'], profile_only_field: [])
+
+      expect(in_flight.title).to eq ['First row']
+      expect(in_flight.errors[:profile_only_field]).to include "can't be blank"
+      expect(flexible_form_class.definitions.keys).not_to include('profile_only_field')
+    end
+
+    it 'does not replace the required fields of an in-flight form after a profile update' do
+      profile_fields['first_only_field'] = { required: true, primary: false, display: true }
+      flexible_form_class = Class.new(Hyrax::Forms::ResourceForm(work_class)) { include Hyrax::FlexibleFormBehavior }
+      first = flexible_form_class.new(resource: work)
+      first_definition = first.singleton_class.schema_definitions['first_only_field']
+
+      profile_fields['first_only_field'] = { required: false, primary: false, display: true }
+      second = flexible_form_class.new(resource: work_class.new)
+
+      first.validate(title: ['First row'], first_only_field: [])
+      second.validate(title: ['Second row'], first_only_field: [])
+
+      expect(first.errors[:first_only_field]).to include "can't be blank"
+      expect(second.errors[:first_only_field]).to be_empty
+      expect(first_definition[:required]).to be true
+      expect(second.singleton_class.schema_definitions['first_only_field'][:required]).to be false
+    end
+
+    it 'builds the form from a subclass that reads as the form class' do
+      stub_const('TestSharedDefinitionsForm', form_class)
+      form = form_class.new(resource: work)
+
+      expect(form).to be_a form_class
+      expect(form.class).not_to eq form_class
+      expect(form.class.name).to eq 'TestSharedDefinitionsForm'
+      expect(form.class.inspect).to eq 'TestSharedDefinitionsForm'
+      expect(form.class.to_s).to eq 'TestSharedDefinitionsForm'
     end
 
     it 'still exposes the profile fields on the instance' do
