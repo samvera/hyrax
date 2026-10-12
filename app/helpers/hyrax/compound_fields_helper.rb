@@ -83,11 +83,31 @@ module Hyrax
       values.any? { |value| base.none? { |(_label, id)| id.to_s == value.to_s } }
     end
 
+    # Splits a compound group's sub-properties into the lines Bootstrap's grid
+    # wraps them onto, using each one's `cols` (default 6), and picks its column
+    # class. The first field of a line that doesn't reach 12 columns gets `col-md`,
+    # so it fills the leftover width instead of leaving a gap at the end.
+    #
+    # @param fields [Array<String>] the group's sub-property names, in order
+    # @param subproperties [Hash] sub-property specs keyed by name
+    # @return [Array<Array<Hash>>] lines of `{ sub_property:, spec:, cols:, col_class: }`
+    def compound_field_lines(fields, subproperties)
+      lines = fields.each_with_object([]) do |sub_property, acc|
+        spec = subproperties[sub_property] || { type: 'string' }
+        cols = (spec[:cols] || 6).to_i
+        acc << [] if acc.empty? || acc.last.sum { |field| field[:cols] } + cols > 12
+        acc.last << { sub_property:, spec:, cols:, col_class: "col-md-#{cols}" }
+      end
+      lines.each do |line|
+        line.first[:col_class] = 'col-md' if line.size > 1 && line.sum { |field| field[:cols] } < 12
+      end
+    end
+
     # Renders the `<select>` for a `controlled` sub-property, applying the
     # `multiple` (array name, no blank) and `autocomplete` (select2 typeahead) opt-ins.
     def compound_controlled_select(spec, value, input_name, input_id)
       multiple = spec[:multiple]
-      classes = ['form-control', 'form-control-sm']
+      classes = ['form-control']
       classes << 'force-select' if compound_subproperty_forced?(spec, value)
       select_tag(multiple ? "#{input_name}[]" : input_name,
                  options_for_select(compound_subproperty_options(spec, value), value),

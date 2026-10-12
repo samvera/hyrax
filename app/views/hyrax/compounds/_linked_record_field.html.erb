@@ -14,7 +14,7 @@
   <%# No registered/searchable source: the select2 picker would have nothing to
       search and (createSearchChoice is off for linked_record) no way to enter a
       value, so fall back to a plain text input holding the stored reference. %>
-  <%= text_field_tag input_name, value, id: input_id, class: 'form-control form-control-sm' %>
+  <%= text_field_tag input_name, value, id: input_id, class: 'form-control' %>
 <% else %>
   <% current_option = compound_linked_record_option(value, source) %>
   <% placeholder = t("hyrax.compound_fields.linked_record.#{source}.placeholder",
@@ -43,7 +43,7 @@
         <%# The select2 picker (same hidden-input binding as work_or_url). %>
         <%= hidden_field_tag input_name, value,
                              id: input_id,
-                             class: 'form-control form-control-sm',
+                             class: 'form-control',
                              data: { 'hyrax-compound-work-input': true,
                                      'hyrax-linked-record-input': true,
                                      'label': current_option&.first,

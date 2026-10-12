@@ -994,7 +994,7 @@ properties:
     group: identity
     required: true
     form:
-      cols: 4
+      cols: 8
   participant_role:
     type: controlled
     name: role
@@ -1030,7 +1030,7 @@ properties:
         - identifiers
     required: true
     form:
-      cols: 6
+      cols: 8
   identifier_type:
     type: controlled
     name: type
@@ -1040,7 +1040,7 @@ properties:
     required: true
     values: [DOI, Handle, ISBN, ISSN, URL, URN, ARK, Other]
     form:
-      cols: 6
+      cols: 4
   compound_rights:
     available_on:
       class:
@@ -1065,7 +1065,7 @@ properties:
         - compound_rights
     authority: rights_statements
     form:
-      cols: 6
+      cols: 8
   compound_rights_license:
     type: controlled
     name: license
@@ -1074,7 +1074,7 @@ properties:
         - compound_rights
     authority: licenses
     form:
-      cols: 6
+      cols: 4
   # Overriding the derived index keys: a `string` would derive both
   # `compound_rights_notes_sim` (facet) and `_tesim` (full-text). A free-text
   # notes field is worth searching but not faceting, so an explicit `indexing:`
@@ -1113,7 +1113,7 @@ properties:
         - relationships
     required: true
     form:
-      cols: 6
+      cols: 8
   relationship_type:
     type: controlled
     name: type
@@ -1123,7 +1123,7 @@ properties:
     required: true
     values: [References, Is Referenced By, Is Part Of, Has Part, Is Version Of, Replaces, Requires, Other]
     form:
-      cols: 6
+      cols: 4
   # A single subproperty definition reused by two compounds. The top-level key
   # (`shared_title`) is globally unique, while `name: title` sets the cleaner key
   # inside each compound row (so both `participants` and `relationships` rows
