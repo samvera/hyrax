@@ -5,5 +5,8 @@ require 'rails_helper'
 RSpec.describe <%= class_name %> do
   it "has tests" do
     skip "Add your tests here"
+
+    # Uncomment the following line if this model implements OrderAlready behavior, and replace :creator, :contributor with the properties for which which this model implements the behavior
+    #it { is_expected.to have_already_ordered_attributes(:creator, :contributor) }
   end
 end

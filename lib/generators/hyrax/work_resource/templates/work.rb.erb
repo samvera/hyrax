@@ -7,5 +7,9 @@ class <%= class_name %> < Hyrax::Work
     include Hyrax::Schema(:core_metadata) unless Hyrax.config.work_default_metadata?
     include Hyrax::Schema(:basic_metadata)
     include Hyrax::Schema(:<%= file_name %>)
+
+    # Uncomment the line of code below to enable persistent ordering on string-valued (non-compound) fields, if not using flexible metadata: https://github.com/samvera-labs/order_already/tree/main
+    # Include the symbols for any properties to which you wish to apply ordering as arguments to the for() method
+    # prepend OrderAlready.for(:creator, :contributor)
   end
 end
