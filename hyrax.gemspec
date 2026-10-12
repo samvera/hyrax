@@ -96,7 +96,6 @@ SUMMARY
   spec.add_dependency 'language_list'
   spec.add_dependency 'order_already', '~> 0.3.2'
 
-
   spec.add_development_dependency "capybara", '~> 3.29'
   spec.add_development_dependency 'capybara-screenshot', '~> 1.0'
   spec.add_development_dependency 'database_cleaner', '>= 1.3'
