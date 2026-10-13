@@ -6,9 +6,18 @@
     <thead>
         <tr>
             <th><%= t('.avatar') %></th>
-            <th class="sorts"><i id="name" class="<%= params[:sort].blank? ? 'caret up' : params[:sort] == "name desc" ? 'caret' : params[:sort] == "name" ? 'caret up' : '' %>"></i> <%= t('.user_name') %></th>
-            <th class="sorts"><i id="login" class="<%= params[:sort] == "login desc" ? 'caret' : params[:sort] == "login" ? 'caret up' : '' %>"></i> <%= t('.user_id') %></th>
-            <th class="sorts"><i id="department" class="<%= params[:sort] == "department desc" ? 'caret' : params[:sort] == "department" ? 'caret up' : '' %>"></i> <%= t('.department') %></th>
+            <th class="sorts">
+              <%= t('.user_name') %>
+              <%= params[:sort] == "name desc" ? '(Z-A)' : '(A-Z)' %>
+            </th>
+            <th class="sorts">
+              <%= t('.user_id') %>
+              <%= params[:sort] == "login desc" ? '(Z-A)' : params[:sort] == "login" ? '(A-Z)' : '' %>
+            </th>
+            <th class="sorts">
+              <%= t('.department') %>
+              <%= params[:sort] == "department desc" ? '(Z-A)' : params[:sort] == "department" ? '(A-Z)' : '' %>
+            </th>
             <th><%= t('.works_created') %></th>
         </tr>
     </thead>
