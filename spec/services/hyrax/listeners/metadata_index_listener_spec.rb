@@ -33,6 +33,16 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
           .not_to change { fake_adapter.deleted_resources }
       end
     end
+
+    context 'when the payload has only an id' do
+      let(:event) { Dry::Events::Event.new(event_type, id: 'deleted-id') }
+
+      it 'warns that the index entry was not removed' do
+        expect(Hyrax.logger).to receive(:warn).with(/deleted-id/)
+        expect { listener.on_object_deleted(event) }
+          .not_to change { fake_adapter.deleted_resources }
+      end
+    end
   end
 
   describe '#on_object_membership_updated' do

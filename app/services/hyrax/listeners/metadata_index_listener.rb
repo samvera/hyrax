@@ -72,6 +72,8 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_object_deleted(event)
+        return Hyrax.logger.warn("Skipping index removal for object #{event.payload[:id]}; the event has no :object") if
+          event.payload[:object].nil?
         return unless resource?(event.payload[:object])
         Hyrax.index_adapter.delete(resource: event[:object])
       end

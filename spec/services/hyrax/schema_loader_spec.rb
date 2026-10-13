@@ -264,6 +264,10 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
       it 'rejects a string that is not a JSON object' do
         expect { attribute_definition.type.call(['["path", "/foo"]']) }.to raise_error(Dry::Types::ConstraintError)
       end
+
+      it 'marks the attribute ordered for Valkyrie' do
+        expect(attribute_definition.type.meta[:ordered]).to be true
+      end
     end
 
     context 'when type is not recognized' do

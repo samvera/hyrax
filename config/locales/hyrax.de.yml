@@ -760,6 +760,10 @@ de:
       delete_selected:
         button_label: Ausgewählte Löschen
         deleting_file_from: Das Löschen einer Datei aus %{application_name} ist permanent. Klicken Sie auf OK, um diese Datei von %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
+      destroy_collection:
+        failed:
+          one: 1 Element konnte nicht gelöscht werden.
+          other: "%{count} Elemente konnten nicht gelöscht werden."
       edit:
         apply_changes_to: "Änderungen werden angewendet auf: (%{x_number_of} Arbeiten)"
         batch_edit_descriptions: Stapelbearbeitung von Beschreibungen & nbsp; & nbsp; & nbsp; <small> Klicken Sie unten auf die Beschriftungen, um die Arbeitsbeschreibungen zu bearbeiten. </ Small>

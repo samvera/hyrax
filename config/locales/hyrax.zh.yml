@@ -764,6 +764,10 @@ zh:
       delete_selected:
         button_label: 删除选择
         deleting_file_from: 从%{application_name}删除文件是永久性的。单击“确定”从%{application_name}中删除此文件，或单击“取消”以取消此操作
+      destroy_collection:
+        failed:
+          one: 1 个项目无法删除。
+          other: "%{count} 个项目无法删除。"
       edit:
         apply_changes_to: 更改将应用于：（%{x_number_of}有效）
         batch_edit_descriptions: 批量修改说明＆nbsp;＆nbsp;＆nbsp; <small>点击下面的标签编辑工作说明。</ small>

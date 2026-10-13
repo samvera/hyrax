@@ -26,6 +26,12 @@ RSpec.describe 'Persisting a hash-typed schema attribute through the configured 
     expect(round_trip(entries)).to contain_exactly(*entries)
   end
 
+  it 'reloads entries in the order they were saved' do
+    entries = (1..6).map { |i| { 'name' => "person-#{i}", 'role' => 'Author' } }
+
+    expect(round_trip(entries)).to eq entries
+  end
+
   it 'reloads an empty list as empty' do
     expect(round_trip([])).to eq []
   end
