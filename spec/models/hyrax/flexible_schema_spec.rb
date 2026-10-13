@@ -45,6 +45,14 @@ RSpec.describe Hyrax::FlexibleSchema, :clean_repo, type: :model do
         expect(attributes['abstract']['type']).to eq('uri')
       end
     end
+
+    context 'when a property declares type: hash alongside an xsd:string range' do
+      it "keeps the type as 'hash'" do
+        profile_data['properties']['abstract'].merge!('type' => 'hash', 'range' => 'http://www.w3.org/2001/XMLSchema#string')
+        attributes = subject.attributes_for('GenericWork')
+        expect(attributes['abstract']['type']).to eq('hash')
+      end
+    end
   end
 
   describe '#mappings_data_for' do

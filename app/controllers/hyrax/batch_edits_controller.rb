@@ -38,13 +38,9 @@ module Hyrax
     end
 
     def destroy_collection
-      batch.each do |doc_id|
-        resource = Hyrax.query_service.find_by(id: Valkyrie::ID.new(doc_id))
-        transactions['collection_resource.destroy']
-          .with_step_args('collection_resource.delete' => { user: current_user },
-                          'collection_resource.remove_from_membership' => { user: current_user })
-          .call(resource).value!
-      end
+      failed_ids = batch.reject { |id| destroy_resource(id) }.map(&:to_s)
+      return after_destroy_collection_failure(failed_ids) if failed_ids.any?
+
       flash[:notice] = "Batch delete complete"
       after_destroy_collection
     end
@@ -113,6 +109,53 @@ module Hyrax
           .call(resource).value!
       end
       after_update
+    end
+
+    def destroy_resource(id)
+      resource = Hyrax.query_service.find_by(id: Valkyrie::ID.new(id))
+      result = destroy_transaction_for(resource).call(resource)
+      Hyrax.logger.error("Batch delete failed for #{id}: #{Array(result.failure).first.inspect}") if result.failure?
+      result.success?
+    rescue StandardError => e
+      Hyrax.logger.error("Batch delete failed for #{id}: #{e.class}: #{e.message}")
+      false
+    end
+
+    def after_destroy_collection_failure(failed_ids)
+      respond_to do |format|
+        format.json { render json: { failed_ids: failed_ids }, status: :unprocessable_entity }
+        format.html do
+          flash[:alert] = t('hyrax.batch_edits.destroy_collection.failed', count: failed_ids.count)
+          after_destroy_collection
+        end
+      end
+    end
+
+    DESTROY_STEPS_NEEDING_USER = {
+      'admin_set_resource.destroy' => [],
+      'collection_resource.destroy' => ['collection_resource.delete', 'collection_resource.remove_from_membership'],
+      'file_set.destroy' => ['file_set.remove_from_work', 'file_set.delete'],
+      'work_resource.destroy' => ['work_resource.delete', 'work_resource.delete_all_file_sets']
+    }.freeze
+
+    def destroy_transaction_for(resource)
+      name = destroy_transaction_name(resource)
+      transactions[name].with_step_args(**DESTROY_STEPS_NEEDING_USER[name].index_with { { user: current_user } })
+    end
+
+    # Admin sets also answer true to #collection?, so they are matched first.
+    def destroy_transaction_name(resource)
+      if Hyrax::ModelRegistry.admin_set_classes.any? { |klass| resource.is_a?(klass) }
+        'admin_set_resource.destroy'
+      elsif resource.try(:collection?)
+        'collection_resource.destroy'
+      elsif resource.try(:file_set?)
+        'file_set.destroy'
+      elsif resource.try(:work?)
+        'work_resource.destroy'
+      else
+        raise ArgumentError, "#{resource.class} cannot be bulk deleted"
+      end
     end
 
     def form_class

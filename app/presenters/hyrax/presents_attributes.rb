@@ -71,6 +71,28 @@ module Hyrax
       values.map { |value| labels[value.to_s].presence || value }
     end
 
+    ##
+    # The indexed label for each of a field's stored values, keyed by value rather
+    # than position: AttributeRenderer sorts the values when `options[:sort]` is
+    # set, so index-based pairing attaches the wrong label.
+    #
+    # The counts must match exactly. A label service is contracted to return one
+    # entry per value, but nothing enforces it, and zipping a short list shifts
+    # every later label onto the wrong value. Showing one term's label under
+    # another term's id is worse than showing the id.
+    #
+    # @param field [Symbol]
+    # @param values [Array] the field's stored values
+    # @return [Hash{String => String}, nil] stored value => indexed label; nil
+    #   for an uncontrolled field, a work indexed before the label fields
+    #   existed, or when the label count doesn't match the values
+    def controlled_labels_for(field, values)
+      @controlled_labels ||= {}
+      return @controlled_labels[field] if @controlled_labels.key?(field)
+
+      @controlled_labels[field] = compute_controlled_labels(field, values)
+    end
+
     private
 
     def renderer_options_for(field, values, options)
@@ -78,22 +100,6 @@ module Hyrax
       labels = controlled_labels_for(field, values)
       options = options.merge(labels: labels) if labels.present?
       options
-    end
-
-    # Keyed by value rather than position: AttributeRenderer sorts the values
-    # when `options[:sort]` is set, so index-based pairing attaches the wrong
-    # label. nil for an uncontrolled property, or a work indexed before the
-    # label fields existed — the renderer then falls back to the ids.
-    #
-    # The counts must match exactly. A label service is contracted to return one
-    # entry per value, but nothing enforces it, and zipping a short list shifts
-    # every later label onto the wrong value — showing one term's label under
-    # another term's id, which is worse than showing the id.
-    def controlled_labels_for(field, values)
-      @controlled_labels ||= {}
-      return @controlled_labels[field] if @controlled_labels.key?(field)
-
-      @controlled_labels[field] = compute_controlled_labels(field, values)
     end
 
     # Scans the document's keys, so it is memoized per field above: a show page

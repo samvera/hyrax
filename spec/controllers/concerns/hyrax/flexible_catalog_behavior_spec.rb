@@ -242,6 +242,12 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
         end
       end
 
+      it 'paginate at the default facet limit, with a "more" link' do
+        %w[publication_date department].each do |field|
+          expect(blacklight_config.facet_fields[field + '_sim'].limit).to be true
+        end
+      end
+
       it 'have a link_to_facet property added to the blacklight config' do
         # if the property has render_as: linked ensure the link_to_facet has the _sim field name
         %w[keyword publication_date department].each do |field|

@@ -124,6 +124,13 @@ module Hyrax
         label
       end
 
+      # A controlled term searches its label, so a link from a show page lands
+      # on the same filter the catalog sidebar offers. Anything else searches
+      # itself.
+      def search_term(value)
+        controlled_label_for(value) || value
+      end
+
       def work_type_label_key
         options[:work_type] ? options[:work_type].underscore : nil
       end

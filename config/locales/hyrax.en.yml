@@ -808,6 +808,10 @@ en:
       delete_selected:
         button_label: Delete Selected
         deleting_file_from: Deleting a file from %{application_name} is permanent. Click OK to delete this file from %{application_name}, or Cancel to cancel this operation
+      destroy_collection:
+        failed:
+          one: 1 item could not be deleted.
+          other: "%{count} items could not be deleted."
       edit:
         apply_changes_to: 'Changes will be applied to: (%{x_number_of} works)'
         batch_edit_descriptions: Batch Edit Descriptions &nbsp;&nbsp;&nbsp;<small>Click on labels below to edit work descriptions.</small>

@@ -766,6 +766,10 @@ es:
       delete_selected:
         button_label: Eliminar Seleccionados
         deleting_file_from: Eliminar un archivo de %{application_name} es permanente. Haga clic en Aceptar para eliminar este archivo de %{application_name}, o en Cancelar para cancelar esta operación
+      destroy_collection:
+        failed:
+          one: No se pudo eliminar 1 elemento.
+          other: No se pudieron eliminar %{count} elementos.
       edit:
         apply_changes_to: "Los cambios se aplicarán a: (%{x_number_of} funciona)"
         batch_edit_descriptions: Descripciones de edición por lotes & nbsp; & nbsp; & nbsp; <small> Haga clic en las etiquetas a continuación para editar las descripciones de trabajo. </small>

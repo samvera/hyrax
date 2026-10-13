@@ -88,7 +88,24 @@ module Hyrax
         )
       end
       view_options[:base_url] = request.base_url if respond_to?(:request) && request.respond_to?(:base_url)
+      # The renderer derives its facet from `search_field` or its own field, and
+      # `conform_field` may hand it a `render_term` instead of this name.
+      facet_base = view_options[:search_field] || view_options[:render_term] || field_name
+      view_options[:label_facet_registered] = label_facet_registered?(facet_base)
       view_options
+    end
+
+    # Whether the catalog registered a label facet for this field. A renderer
+    # cannot see blacklight_config, and a document can carry label fields that
+    # the catalog has no facet for; Blacklight discards an `f[...]` naming an
+    # unconfigured facet, which would turn a link into an unfiltered search.
+    def label_facet_registered?(field_name)
+      return false unless respond_to?(:blacklight_config) && blacklight_config.respond_to?(:facet_fields)
+
+      prefix = Hyrax::ControlledVocabularyFieldValues.label_prefix(field_name)
+      blacklight_config.facet_fields.key?("#{prefix}_sim")
+    rescue StandardError
+      false
     end
 
     # Returns true when the field should render in the work show page's

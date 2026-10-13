@@ -13,8 +13,9 @@ RSpec.describe 'controlled vocabulary labels in linking renderers' do
       expect(renderer.render).to include('Opaque Term')
     end
 
-    it 'still searches on the stored id' do
-      expect(renderer.render).to include('local_auth_123')
+    it 'searches on the label, matching what the catalog sidebar offers' do
+      expect(renderer.render).to include(CGI.escape('Opaque Term'))
+      expect(renderer.render).not_to include('local_auth_123')
     end
 
     context 'with no labels' do
@@ -33,8 +34,9 @@ RSpec.describe 'controlled vocabulary labels in linking renderers' do
       expect(renderer.render).to include('Opaque Term')
     end
 
-    it 'still searches on the stored id' do
-      expect(renderer.render).to include('local_auth_123')
+    it 'searches on the label, matching what the catalog sidebar offers' do
+      expect(renderer.render).to include(CGI.escape('Opaque Term'))
+      expect(renderer.render).not_to include('local_auth_123')
     end
   end
 end
