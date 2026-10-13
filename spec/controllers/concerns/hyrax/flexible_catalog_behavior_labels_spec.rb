@@ -343,6 +343,33 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
     end
   end
 
+  describe 'the facet limit' do
+    let(:config) { controller.class.blacklight_config }
+
+    def redeclare_facet(name, **options)
+      config.facet_fields.delete(name)
+      config.add_facet_field(name, **options)
+      controller.class.load_flexible_schema
+    end
+
+    it 'paginates a label facet at the default limit when the profile registered its id facet' do
+      expect(blacklight_config.facet_fields['profile_only_label_sim'].limit).to be true
+    end
+
+    it 'carries the limit an application declared on the id facet to the label facet' do
+      config.facet_fields.delete('resource_type_label_sim')
+      redeclare_facet('resource_type_sim', label: 'Resource Type', limit: 3)
+
+      expect(config.facet_fields['resource_type_label_sim'].limit).to eq 3
+    end
+
+    it 'keeps the limit an application declared on an uncontrolled facet' do
+      redeclare_facet('free_text_note_sim', label: 'Free Text Note', limit: 3)
+
+      expect(config.facet_fields['free_text_note_sim'].limit).to eq 3
+    end
+  end
+
   describe 'the id facet' do
     it 'stays registered so an un-reindexed corpus keeps its facet' do
       expect(blacklight_config.facet_fields).to have_key('resource_type_sim')

@@ -240,6 +240,9 @@ RSpec.configure do |config|
     # that render views (e.g. "Translation missing: fr...."). Starting each
     # example from the default keeps that leak from crossing example boundaries.
     I18n.locale = I18n.default_locale
+    # Rails resets this per-request state between requests and jobs, but not
+    # between examples, so a cached profile would otherwise leak into the next one.
+    Hyrax::Current.reset
 
     if example.metadata[:type] == :feature && Capybara.current_driver != :rack_test
       # Preserve the flexible_schemas table across feature specs. The

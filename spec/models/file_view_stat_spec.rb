@@ -113,6 +113,32 @@ RSpec.describe FileViewStat, type: :model do
         expect(zero_rows.first.date.to_date).to eq(dates[1])
       end
 
+      context "when Date#<=> refuses non-Date operands, as the edtf gem makes it" do
+        before do
+          allow_any_instance_of(Date).to receive(:<=>).and_wrap_original do |original, other|
+            other.is_a?(Date) ? original.call(other) : nil
+          end
+        end
+
+        it "advances an existing zero-marker row to a later zero day" do
+          marker = described_class.create(date: (Time.zone.today - 10.days).to_datetime, file_id: file_id, views: 0)
+          expect(Hyrax::Analytics).to receive(:page_statistics).and_return([SpecStatistic.new(date: date_strs[1], pageviews: 0)])
+
+          described_class.statistics(file, Time.zone.today - 4.days, user_id)
+
+          expect(marker.reload.date.to_date).to eq(dates[1])
+        end
+
+        it "leaves a zero-marker row that is already later than the zero day" do
+          marker = described_class.create(date: dates[2].to_datetime, file_id: file_id, views: 0)
+          expect(Hyrax::Analytics).to receive(:page_statistics).and_return([SpecStatistic.new(date: date_strs[1], pageviews: 0)])
+
+          described_class.statistics(file, Time.zone.today - 4.days, user_id)
+
+          expect(marker.reload.date.to_date).to eq(dates[2])
+        end
+      end
+
       it "marks the latest zero day even when GA returns zero-count entries out of date order" do
         out_of_order_zero_statistics = [SpecStatistic.new(date: date_strs[2], pageviews: 0), SpecStatistic.new(date: date_strs[0], pageviews: 0)]
         expect(Hyrax::Analytics).to receive(:page_statistics).and_return(out_of_order_zero_statistics)

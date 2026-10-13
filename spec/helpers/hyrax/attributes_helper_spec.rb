@@ -44,6 +44,33 @@ RSpec.describe Hyrax::AttributesHelper, type: :helper do
     end
   end
 
+  describe '#label_facet_registered?' do
+    let(:config) { Blacklight::Configuration.new }
+
+    before do
+      allow(helper).to receive(:blacklight_config).and_return(config)
+    end
+
+    it 'is true when the catalog registered the label facet' do
+      config.add_facet_field('subject_label_sim', label: 'Subject')
+
+      expect(helper.label_facet_registered?(:subject)).to be true
+    end
+
+    it 'is false when only the id facet is registered' do
+      config.add_facet_field('subject_sim', label: 'Subject')
+
+      expect(helper.label_facet_registered?(:subject)).to be false
+    end
+
+    it 'is false when the helper has no blacklight config' do
+      allow(helper).to receive(:respond_to?).and_call_original
+      allow(helper).to receive(:respond_to?).with(:blacklight_config).and_return(false)
+
+      expect(helper.label_facet_registered?(:subject)).to be false
+    end
+  end
+
   describe '#schema' do
     it 'returns nil for a nil model' do
       expect(helper.schema(nil)).to be_nil

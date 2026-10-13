@@ -5,12 +5,12 @@ module Hyrax
       private
 
       def li_value(value)
-        link_to(ERB::Util.h(controlled_label_for(value) || value), search_path(value))
+        link_to(ERB::Util.h(search_term(value)), search_path(value))
       end
 
       def search_path(value)
         Rails.application.routes.url_helpers.search_catalog_path(
-          search_field: search_field, q: ERB::Util.h(value), locale: I18n.locale
+          search_field: search_field, q: ERB::Util.h(search_term(value)), locale: I18n.locale
         )
       end
 

@@ -177,4 +177,37 @@ RSpec.describe Hyrax::PresentsAttributes, 'controlled vocabulary labels' do
       end
     end
   end
+
+  describe '#controlled_labels_for' do
+    context 'when the document carries indexed labels' do
+      let(:fields) do
+        { 'resource_type_tesim' => ['zebra_id', 'apple_id'],
+          'resource_type_label_tesim' => ['Zebra Label', 'Apple Label'] }
+      end
+
+      it 'returns each label keyed by its stored value' do
+        expect(presenter.controlled_labels_for(:resource_type, ['zebra_id', 'apple_id']))
+          .to eq('zebra_id' => 'Zebra Label', 'apple_id' => 'Apple Label')
+      end
+    end
+
+    context 'when the document carries no labels' do
+      let(:fields) { { 'resource_type_tesim' => ['local_auth_123'] } }
+
+      it 'returns nil' do
+        expect(presenter.controlled_labels_for(:resource_type, ['local_auth_123'])).to be_nil
+      end
+    end
+
+    context 'when the label count does not match the value count' do
+      let(:fields) do
+        { 'resource_type_tesim' => ['a', 'b', 'c'],
+          'resource_type_label_tesim' => ['Label A', 'Label C'] }
+      end
+
+      it 'returns nil rather than pairing labels by position' do
+        expect(presenter.controlled_labels_for(:resource_type, ['a', 'b', 'c'])).to be_nil
+      end
+    end
+  end
 end

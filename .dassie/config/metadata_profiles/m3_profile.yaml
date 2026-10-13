@@ -382,7 +382,7 @@ properties:
       sources:
         - "null"
     display_label:
-      default: blacklight.search.fields.show.based_near_label
+      default: blacklight.search.fields.show.based_near_label_tesim
     index_documentation: displayable, searchable
     indexing:
       - based_near_sim
@@ -394,7 +394,7 @@ properties:
     sample_values:
       - San Diego, California, United States
     view:
-      render_term: based_near_label_tesim
+      render_term: based_near_label
       html_dl: true
   bibliographic_citation:
     available_on:
