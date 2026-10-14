@@ -454,6 +454,11 @@ zh:
           description: 描述
           feature: 特征
           header: 特征
+      metadata_profiles:
+        import:
+          more_warnings:
+            one: 及另外 1 条警告
+            other: 及另外 %{count} 条警告
       sidebar:
         activity: 活动
         analytics: 分析
