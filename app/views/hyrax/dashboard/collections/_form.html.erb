@@ -38,7 +38,7 @@
     <% end %>
   </ul>
 
-  <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor nav-safety', data: { behavior: 'collection-form', 'param-key' => @form.model_name.param_key } } do |f| %>
+  <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor nav-safety', data: { behavior: 'collection-form', 'param-key' => @form.model_name.param_key, 'remove-text' => t('helpers.action.remove') } } do |f| %>
     <div class="tab-content card" id="dashboard-collection-tab-content">
       <div id="description" class="tab-pane show active">
         <div class="labels">
