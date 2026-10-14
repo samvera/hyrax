@@ -25,15 +25,13 @@ module Hyrax
         begin
           @flexible_schema = Hyrax::FlexibleSchema.create(profile: YAML.safe_load_file(uploaded_io.path))
 
-          if @flexible_schema.persisted?
-            warning_messages = @flexible_schema.warnings.full_messages.join(', ')
-            flash_options = { notice: 'Flexible Metadata Profile was successfully created.' }
-            flash_options[:alert] = warning_messages if @flexible_schema.warnings.any?
-            redirect_to admin_metadata_profiles_path, flash: flash_options
-          else
-            error_message = @flexible_schema.errors.messages.values.flatten.join(', ')
-            redirect_to admin_metadata_profiles_path, flash: { error: error_message }
-          end
+          flash_options = if @flexible_schema.persisted?
+                            { notice: 'Flexible Metadata Profile was successfully created.' }
+                          else
+                            { error: @flexible_schema.errors.messages.values.flatten }
+                          end
+          flash_options[:alert] = @flexible_schema.warnings.messages.values.flatten if @flexible_schema.warnings.any?
+          redirect_to admin_metadata_profiles_path, flash: flash_options
         rescue => e
           redirect_to admin_metadata_profiles_path, flash: { error: e.message }
           nil
