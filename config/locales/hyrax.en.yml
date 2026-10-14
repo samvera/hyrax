@@ -476,6 +476,11 @@ en:
           feature: Feature
           header: Features
           status: Status
+      metadata_profiles:
+        import:
+          more_warnings:
+            one: and 1 more warning
+            other: and %{count} more warnings
       sidebar:
         activity: Activity
         analytics: Analytics
