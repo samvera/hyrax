@@ -71,6 +71,13 @@ RSpec.describe Hyrax::SchemaLoader do
   end
 end
 
+RSpec.describe Hyrax::SchemaLoader, '.invalid_hash_keys' do
+  it 'returns the keys Valkyrie reserves and keys that are not ASCII letters, digits, underscores, or hyphens' do
+    expect(described_class.invalid_hash_keys(['path', 'is_display_url', '_position', 'given-name', 'id', :created_at, 'first name', 'née']))
+      .to eq ['id', 'created_at', 'first name', 'née']
+  end
+end
+
 RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
   subject(:attribute_definition) { described_class.new(name, config) }
 

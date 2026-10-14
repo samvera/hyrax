@@ -28,6 +28,30 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
       end
     end
 
+    it 'raises an error for a compound subproperty named after a key Valkyrie reserves' do
+      allow(schema_loader).to receive(:schema_config).with(:bad_compound).and_return(
+        'attributes' => {
+          'people' => { 'type' => 'hash' },
+          'person_id' => { 'type' => 'string', 'name' => 'id', 'available_on' => { 'properties' => ['people'] } }
+        }
+      )
+
+      expect { schema_loader.attributes_for(schema: :bad_compound) }
+        .to raise_error(ArgumentError, /bad_compound.*reserved or invalid subproperty name "id"/)
+    end
+
+    it 'raises an error for a compound subproperty name that is not ASCII letters, digits, underscores, or hyphens' do
+      allow(schema_loader).to receive(:schema_config).with(:bad_compound).and_return(
+        'attributes' => {
+          'people' => { 'type' => 'hash' },
+          'person_first_name' => { 'type' => 'string', 'name' => 'first name', 'available_on' => { 'properties' => ['people'] } }
+        }
+      )
+
+      expect { schema_loader.attributes_for(schema: :bad_compound) }
+        .to raise_error(ArgumentError, /reserved or invalid subproperty name "first name"/)
+    end
+
     it 'raises an error for an undefined schema' do
       expect { schema_loader.attributes_for(schema: :NOT_A_SCHEMA) }
         .to raise_error described_class::UndefinedSchemaError

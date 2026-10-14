@@ -31,6 +31,8 @@ module Hyrax
     require 'hyrax/valkyrie_persistence/shared/plain_hash_support'
     # Store plain Hash values on Fedora until Valkyrie releases samvera/valkyrie#1005.
     require 'hyrax/valkyrie_persistence/fedora/hash_support'
+    # Define Valkyrie's Hash key rules until Valkyrie releases samvera/valkyrie#1005.
+    require 'hyrax/valkyrie_persistence/hash_key_rules'
     require 'hyrax/form_fields'
     require 'hyrax/indexer'
     require 'hyrax/model_decorator'

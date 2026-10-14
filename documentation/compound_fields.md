@@ -42,7 +42,11 @@ they belong to via `available_on: { properties: [<parent>] }` — the same
 `available_on` block a standalone property uses to declare its class scope, but
 with a `properties:` list (the parent compounds) instead of `class:`. Every
 property key is globally unique, so subproperty keys are conventionally prefixed;
-the field's key *inside* the compound is its `name:` (falling back to the key):
+the field's key *inside* the compound is its `name:` (falling back to the key).
+That in-compound name may contain only ASCII letters, digits, underscores, and hyphens,
+and cannot be one of the keys Valkyrie reserves in a hash (`id`,
+`internal_resource`, `new_record`, `member_ids`, `created_at`, `updated_at`). The
+m3 profile validator and the metadata YAML loader both reject such a name:
 
 ```yaml
 contributors:

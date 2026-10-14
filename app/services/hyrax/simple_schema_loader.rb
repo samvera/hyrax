@@ -8,6 +8,16 @@ module Hyrax
   #
   # @see config/metadata/basic_metadata.yaml for an example configuration
   class SimpleSchemaLoader < Hyrax::SchemaLoader
+    # @raise [ArgumentError] if a compound subproperty is named after a key that
+    #   a hash entry may not use. The m3 profile gets the same check from
+    #   {Hyrax::FlexibleSchemaValidators::CompoundValidator} when it is saved.
+    def attributes_for(schema:, version: 1, contexts: nil)
+      names = subproperties_by_parent(schema, version, contexts).values.flat_map(&:keys)
+      invalid = Hyrax::SchemaLoader.invalid_hash_keys(names)
+      raise ArgumentError, "#{schema} has a reserved or invalid subproperty name #{invalid.first.inspect}" if invalid.any?
+      super
+    end
+
     def view_definitions_for(schema:, version: 1, contexts: nil) # rubocop:disable Lint/UnusedMethodArgument
       schema.each_with_object({}) do |property, metadata|
         config = property.meta || {}

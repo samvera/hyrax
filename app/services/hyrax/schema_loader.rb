@@ -10,6 +10,17 @@ module Hyrax
   class SchemaLoader
     class UndefinedSchemaError < ArgumentError; end
 
+    # The keys Valkyrie does not allow in a Hash value. A compound subproperty
+    # name among them would lose its value on save, or fail to save on Fedora,
+    # so the schema loaders and profile validator reject it.
+    #
+    # @param [Enumerable<#to_s>] keys
+    # @return [Array<String>] the keys a hash entry may not use
+    def self.invalid_hash_keys(keys)
+      rules = Valkyrie::Types::HashValue
+      keys.map(&:to_s).select { |key| rules::RESERVED_KEYS.include?(key.to_sym) || !key.match?(rules::KEY_FORMAT) }
+    end
+
     ##
     # @param [Symbol] schema
     #
