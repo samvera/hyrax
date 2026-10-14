@@ -225,6 +225,38 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
       end
     end
 
+    context 'with a sub-property resolving to a key Valkyrie reserves' do
+      let(:profile) do
+        {
+          'properties' => {
+            'participants' => { 'type' => 'hash' },
+            'participant_id' => { 'type' => 'string', 'name' => 'id', **member_of('participants') }
+          }
+        }
+      end
+
+      it 'records a reserved-name error' do
+        validator.validate!
+        expect(errors).to include(t('invalid_subproperty_name', parent: 'participants', name: 'id', property: 'participant_id'))
+      end
+    end
+
+    context 'with a sub-property name that is not ASCII letters, digits, underscores, or hyphens' do
+      let(:profile) do
+        {
+          'properties' => {
+            'participants' => { 'type' => 'hash' },
+            'participant_first_name' => { 'type' => 'string', 'name' => 'first name', **member_of('participants') }
+          }
+        }
+      end
+
+      it 'records an invalid-name error' do
+        validator.validate!
+        expect(errors).to include(t('invalid_subproperty_name', parent: 'participants', name: 'first name', property: 'participant_first_name'))
+      end
+    end
+
     context 'with distinct in-compound names (no collision)' do
       let(:profile) do
         {
