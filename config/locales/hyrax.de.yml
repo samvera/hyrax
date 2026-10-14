@@ -454,6 +454,11 @@ de:
           description: Beschreibung
           feature: Funktion
           header: Funktionen
+      metadata_profiles:
+        import:
+          more_warnings:
+            one: und 1 weitere Warnung
+            other: und %{count} weitere Warnungen
       sidebar:
         activity: Aktivität
         analytics: Analytik
