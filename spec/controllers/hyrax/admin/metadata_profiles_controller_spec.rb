@@ -59,9 +59,10 @@ RSpec.describe Hyrax::Admin::MetadataProfilesController, type: :controller do
         allow(Hyrax::FlexibleSchema).to receive(:create).and_return(schema)
       end
 
-      it 'redirects with one error entry per error' do
+      it 'renders the profile list with one error entry per error' do
         post :import, params: { file: uploaded_file }
-        expect(response).to redirect_to(admin_metadata_profiles_path)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to render_template(:index)
         expect(flash[:error]).to eq(['is invalid', 'name, label conflict'])
       end
     end
@@ -74,9 +75,9 @@ RSpec.describe Hyrax::Admin::MetadataProfilesController, type: :controller do
         allow(Hyrax::FlexibleSchema).to receive(:create).and_return(schema)
       end
 
-      it 'redirects with both the errors and the warnings' do
+      it 'renders the profile list with both the errors and the warnings' do
         post :import, params: { file: uploaded_file }
-        expect(response).to redirect_to(admin_metadata_profiles_path)
+        expect(response).to have_http_status(:unprocessable_entity)
         expect(flash[:error]).to eq(['is invalid'])
         expect(flash[:alert]).to eq(['Warning: sort property foo is not indexed'])
       end
