@@ -53,6 +53,7 @@ module Hyrax
       missing_ids = source_ids.map(&:to_s) - indexed_ids
 
       if missing_ids.present?
+        Hyrax.logger.warn { "AdminSets not found in solr index: #{missing_ids}. Falling back to repository query." }
         admin_sets_list.concat(
           Hyrax.query_service.find_many_by_ids(ids: missing_ids).map do |source|
             [source.title.first, source.id.to_s]
