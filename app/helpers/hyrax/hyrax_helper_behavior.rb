@@ -32,10 +32,13 @@ module Hyrax
       return [] unless ability
 
       source_ids = Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability:, source_type: 'admin_set')
+      return [] if source_ids.blank?
 
-      admin_sets_list = Hyrax.query_service.find_many_by_ids(ids: source_ids).map do |source|
-        [source.title.first, source.id]
-      end
+      admin_sets_list = if Hyrax.metadata_adapter.is_a?(Valkyrie::Persistence::Postgres::MetadataAdapter)
+                          admin_sets_from_query_service(source_ids)
+                        else
+                          admin_sets_from_solr(source_ids)
+                        end
 
       # Sorts the default admin set to be first, then the rest by title.
       admin_sets_list.sort do |a, b|
@@ -48,6 +51,45 @@ module Hyrax
         end
       end
     end
+
+    def admin_sets_from_query_service(source_ids)
+      Hyrax.query_service.find_many_by_ids(ids: source_ids).map do |source|
+        [source.title.first, source.id]
+      end
+    end
+
+    # This helper only needs indexed display data. Use Solr first to avoid per-id repository fetches,
+    # but fall back for admin sets that have not been indexed yet.
+    def admin_sets_from_solr(source_ids)
+      admin_sets_list = Hyrax::SolrQueryService.new
+                              .with_ids(ids: source_ids)
+                              .with_field_pairs(
+                                field_pairs: {
+                                  has_model_ssim: Hyrax::ModelRegistry.admin_set_rdf_representations.join(',')
+                                },
+                                type: 'terms'
+                              )
+                              .solr_documents(rows: source_ids.length, fl: 'id,title_tesim')
+                              .map do |doc|
+                                [Array(doc['title_tesim']).first.to_s, doc['id']]
+                              end
+
+      indexed_ids = admin_sets_list.map(&:last)
+      missing_ids = source_ids.map(&:to_s) - indexed_ids
+
+      if missing_ids.present?
+        Hyrax.logger.warn { "AdminSets not found in solr index: #{missing_ids}. Falling back to repository query." }
+        admin_sets_list.concat(
+          Hyrax.query_service.find_many_by_ids(ids: missing_ids).map do |source|
+            [source.title.first, source.id.to_s]
+          end
+        )
+      end
+
+      admin_sets_list
+    end
+
+    private :admin_sets_from_query_service, :admin_sets_from_solr
 
     ##
     # @return [Array<String>] the list of all user groups
