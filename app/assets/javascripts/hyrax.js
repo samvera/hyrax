@@ -49,6 +49,7 @@
 //= require hyrax/compound_metadata
 //= require hyrax/rich_text_editor
 //= require hyrax/dashboard_actions
+//= require hyrax/dashboard_masthead_offset
 //= require hyrax/batch
 //= require hyrax/flot_stats
 //= require hyrax/admin/admin_set_controls

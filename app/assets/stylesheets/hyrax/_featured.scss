@@ -2,6 +2,8 @@ ol#featured_works {
   list-style: none;
   margin-left: 0;
   padding-left: 0;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
 }
 
 /* don't nest .featured-item in the ol, because it's detached from the list when being dragged */
@@ -18,12 +20,25 @@ ol#featured_works {
   h3 {
     font-size: 1.1em;
     margin-top: 0;
+
+    &.float-right {
+      padding-left: 1em;
+
+      a {
+        color: $danger;
+      }
+    }
   }
 
   img {
     width: 90px;
     float: left;
     padding-right: 1em;
+  }
+
+  .featured-item-title-text {
+    display: block;
+    overflow: hidden;
   }
 
   .main {
@@ -47,4 +62,11 @@ ol#featured_works {
 
 .dd-handle.dd3-handle {
   z-index: 1;
+  top: 13px;
+  bottom: 13px;
+  height: auto;
+}
+
+.dd-dragel > .featured-item > .dd3-content {
+  margin: 5px 0;
 }

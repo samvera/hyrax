@@ -76,6 +76,7 @@ module Hyrax
         r = resource || deprecated_resource
         if r.flexible?
           self.class.deserializer_class = nil # need to reload this on first use after schema is loaded
+          reset_flexible_definitions!
           singleton_class.schema_definitions = self.class.definitions
           contexts = r.respond_to?(:contexts) ? r.contexts : nil
           current_schema_fields = Hyrax::Schema.m3_schema_loader.form_definitions_for(schema: r.class.name, version: Hyrax::FlexibleSchema.current_schema_id, contexts: contexts)
@@ -135,8 +136,38 @@ module Hyrax
           super
         end
 
+        ##
+        # A flexible form declares its profile's fields at build time (see
+        # {#initialize}) into definitions its class shares with every other
+        # instance, so two forms built at once (concurrent jobs, Puma threads)
+        # can strip each other's fields mid-validation. Each flexible form is
+        # therefore built from a throwaway subclass that owns its definitions.
+        def new(*args, **kwargs, &block)
+          resource = kwargs.fetch(:resource) { args.first }
+          return super if per_build_class? || !resource.try(:flexible?)
+
+          base = self
+          Class.new(self) do
+            # Start from the form class's current definitions rather than
+            # Declarative's replay of its `property` calls, which would drop
+            # anything set on them since, such as `required_fields=`.
+            @definitions = base.definitions.dup
+            define_singleton_method(:name) { base.name }
+            define_singleton_method(:to_s) { base.to_s }
+            define_singleton_method(:inspect) { base.inspect }
+            define_singleton_method(:per_build_class?) { true }
+          end.new(*args, **kwargs, &block)
+        end
+
+        ##
+        # @return [Boolean] whether this class is the throwaway subclass {.new}
+        #   builds a single flexible form from
+        def per_build_class?
+          false
+        end
+
         def check_if_flexible(model)
-          return unless model.flexible?
+          return unless model.respond_to?(:flexible?) && model.flexible?
           include FlexibleFormBehavior
           include Hyrax::FormFields(model.to_s, definition_loader: Hyrax::Schema.m3_schema_loader)
         end
@@ -199,6 +230,14 @@ module Hyrax
           required_fields
         end
 
+        ##
+        # The form's own properties. Memoized on the first call, which
+        # {ResourceForm#reset_flexible_definitions!} makes before any profile
+        # field has been added, so the snapshot excludes them.
+        def static_schema_definitions
+          @static_schema_definitions ||= definitions.dup
+        end
+
         def schema_definitions
           @definitions
         end
@@ -211,7 +250,7 @@ module Hyrax
           @expose_class = Class.new(Disposable::Expose).from(schema_definitions.values)
         end
 
-        public :expose_class, :required_fields, :required_fields=, :schema_definitions, :schema_definitions=
+        public :expose_class, :required_fields, :required_fields=, :schema_definitions, :schema_definitions=, :static_schema_definitions
       end
       ##
       # @param [#to_s] attr
@@ -301,6 +340,18 @@ module Hyrax
       delegate :flexible?, to: :model
 
       private
+
+      # The flexible schema is declared on the singleton, but +Declarative+
+      # resolves +definitions+ as <tt>@definitions ||= ...</tt> on whichever
+      # object receives it, so the singleton and the class share one container
+      # and each build writes its profile's fields onto the class. Without this
+      # reset, a form built for one profile inherits the fields of whichever
+      # profile was built before it.
+      def reset_flexible_definitions!
+        baseline = self.class.static_schema_definitions
+        definitions = self.class.definitions
+        (definitions.keys - baseline.keys).each { |name| definitions.delete(name) }
+      end
 
       # A copy of the resource loaded at the current schema version, so its
       # singleton schema reflects the live profile (including compounds added

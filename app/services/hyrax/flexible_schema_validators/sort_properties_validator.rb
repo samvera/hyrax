@@ -2,13 +2,9 @@
 
 module Hyrax
   module FlexibleSchemaValidators
-    class SortPropertiesValidator
-      attr_reader :profile, :sort_properties
-
-      def initialize(profile, warnings)
-        @profile = profile
-        @warnings = warnings
-        @sort_properties = find_sort_properties
+    class SortPropertiesValidator < BaseValidator
+      def self.legacy_positional_severity
+        :warning
       end
 
       def validate!
@@ -16,16 +12,19 @@ module Hyrax
           properties_without_sort_properties = work_types_from_profile - (profile.dig('properties', property, 'available_on', 'class') || [])
           next if properties_without_sort_properties.empty?
 
-          msg = I18n.t(
-            'hyrax.flexible_schema_validators.sort_properties_validator.warnings.message',
-            property: property,
-            classes: properties_without_sort_properties.join(', ')
-          )
-          @warnings << msg
+          add_warning(:message,
+                      property: property,
+                      classes: properties_without_sort_properties.join(', '))
         end
       end
 
       private
+
+      # Resolved on demand rather than in a constructor: building a validator
+      # should not reach into Blacklight's configuration.
+      def sort_properties
+        @sort_properties ||= find_sort_properties
+      end
 
       def find_sort_properties
         CatalogController.blacklight_config.sort_fields.keys.filter_map do |sort_key|

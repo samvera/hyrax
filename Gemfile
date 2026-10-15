@@ -15,6 +15,7 @@ group :development, :test do
   gem 'benchmark-ips'
   gem 'easy_translate'
   gem 'i18n-tasks'
+  gem 'json', '< 3.0' # remove once Hyrax allows rails >= 8.0 - ActiveSupport::JSON only stops passing the quirks_mode kwarg that json 3.0 dropped as of Rails 8
   gem 'okcomputer'
   gem 'pry' unless ENV['CI']
   gem 'pry-byebug' unless ENV['CI']

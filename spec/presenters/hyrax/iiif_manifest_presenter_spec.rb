@@ -680,5 +680,13 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
 
       it('is still a string') { expect(presenter.version).to be_a String }
     end
+
+    context 'with a solr document' do
+      let(:work) { SolrDocument.new(id: 'moomin', system_modified_dtsi: '2026-08-20T01:02:03Z') }
+
+      it 'uses the full solr timestamp, so same-day changes still bust caches' do
+        expect(presenter.version).to eq '2026-08-20T01:02:03Z'
+      end
+    end
   end
 end

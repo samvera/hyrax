@@ -15,3 +15,5 @@ Disallow: /leases
 Disallow: /admin
 # Tell them where they should look!
 Sitemap: <%= "#{request.base_url}/sitemap" %>
+# Don't allow bots to look at every locale for the same page
+Disallow: /*locale=

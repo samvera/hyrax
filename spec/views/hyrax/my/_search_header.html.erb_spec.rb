@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/my/_search_header.html.erb', type: :view do
   before do
-    stub_template 'hyrax/my/_did_you_mean.html.erb' => ''
+    stub_template 'catalog/_did_you_mean.html.erb' => ''
     stub_template 'hyrax/my/_sort_and_per_page.html.erb' => ''
     stub_template 'hyrax/my/_facets.html.erb' => ''
     stub_template 'catalog/_search_form.html.erb' => ''

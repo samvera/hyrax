@@ -766,6 +766,10 @@ it:
       delete_selected:
         button_label: Elimina Selezionato
         deleting_file_from: L'eliminazione di un file da %{application_name} è permanente. Fare clic su OK per eliminare questo file da %{application_name} o Annulla per annullare questa operazione
+      destroy_collection:
+        failed:
+          one: Non è stato possibile eliminare 1 elemento.
+          other: Non è stato possibile eliminare %{count} elementi.
       edit:
         apply_changes_to: "Le modifiche verranno applicate a: (funziona %{x_number_of})"
         batch_edit_descriptions: Descrizioni modifica batch & nbsp; & nbsp; & nbsp; <small> Fai clic sulle etichette sottostanti per modificare le descrizioni dei lavori. </small>
@@ -906,6 +910,10 @@ it:
         create_again_hint: "Premi di nuovo Crea per aggiungere come nuovo record."
         similar_heading: "Esistono già record simili:"
         use_existing: "Usa questo"
+      work_or_url:
+        hint: "Cerca un'opera sopra oppure inserisci qui un URL esterno."
+        url_placeholder: "https://example.org/…"
+        search_label: "Cerca un'opera"
     controls:
       about: Di
       contact: contatto
@@ -1451,6 +1459,7 @@ it:
           keyword_label: parole
           keyword_missing: nessuna parola chiave specificata
           title_label: Titolo
+        confirm_unfeature: Rimuovere dalle opere in primo piano?
         drag: Trascinare
         no_works: Nessun lavoro è stato descritto
         tab_label: Opere in primo piano

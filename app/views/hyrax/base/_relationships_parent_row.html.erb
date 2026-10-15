@@ -6,7 +6,7 @@
       <ul class="tabular">
         <% items.each do |item| %>
           <li class='attribute attribute-title'>
-            <%= link_to item.title.first, url_for_document(item) %>
+            <%= link_to item.title.first, search_state.url_for_document(item) %>
           </li>
         <% end %>
       </ul>

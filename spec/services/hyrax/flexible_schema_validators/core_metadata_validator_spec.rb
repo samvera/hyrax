@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::FlexibleSchemaValidators::CoreMetadataValidator do
-  subject(:service) { described_class.new(profile: profile, errors: errors) }
+  subject(:service) { described_class.new(context) }
+  let(:context) { Hyrax::FlexibleSchemaValidators::ValidationContext.new(profile: profile) }
   let(:profile) { YAML.safe_load_file(yaml) }
   let(:yaml) { Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'm3_profile.yaml').to_s }
-  let(:errors) { [] }
+  let(:errors) { service.violations.map(&:message) }
 
   describe '#validate!' do
     context 'with a valid schema' do

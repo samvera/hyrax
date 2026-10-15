@@ -1,0 +1,41 @@
+<%# A `work_or_url` sub-property stores either an internal work id (chosen from the
+    typeahead) or a typed external URL. Both submit through the text input below;
+    the select2 picker only writes into it. A single select2-owned hidden input
+    discarded typed URLs, because select2 v3 drops search text on blur
+    (samvera/hyrax#7572). Picker above field rather than beside it: a sub-property
+    is typically col-md-6, too narrow to split.
+
+    Locals: input_id, input_name, value, and optionally exclude_id (the work being
+    edited, kept out of the picker's own results). %>
+<% state = compound_work_or_url_state(value, exclude_id: local_assigns[:exclude_id]) %>
+<%# Seeded with the value so select2's initSelection has something to label; given
+    nil it renders the placeholder and the work's title never appears. `name: nil`
+    keeps it unsubmittable. %>
+<%= hidden_field_tag nil, (state[:work_selected] ? value : nil),
+                     name: nil,
+                     id: "#{input_id}_search",
+                     class: 'form-control form-control-sm mb-1',
+                     aria: { label: t('hyrax.compound_fields.work_or_url.search_label',
+                                      default: 'Search for a work') },
+                     data: { 'hyrax-compound-work-search': true,
+                             'target': input_id,
+                             'label': state[:option]&.first,
+                             'placeholder': t('hyrax.compound_fields.work_or_url.search_label',
+                                              default: 'Search for a work'),
+                             'autocomplete-url': state[:autocomplete_url] } %>
+<div data-hyrax-compound-work-url-wrap <%= 'hidden' if state[:work_selected] %>>
+  <%# text_field_tag, not url_field_tag: the stored value is legitimately either a
+      URL or a bare work id, and `type=url` would fail browser constraint
+      validation on the id and block the save. %>
+  <%= text_field_tag input_name, value,
+                     id: input_id,
+                     class: 'form-control form-control-sm',
+                     inputmode: 'url',
+                     placeholder: t('hyrax.compound_fields.work_or_url.url_placeholder',
+                                    default: 'https://example.org/…'),
+                     data: { 'hyrax-compound-work-value': true } %>
+  <small class="form-text text-muted">
+    <%= t('hyrax.compound_fields.work_or_url.hint',
+          default: 'Search for a work above, or enter an external URL here.') %>
+  </small>
+</div>

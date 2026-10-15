@@ -30,14 +30,14 @@ module Hyrax
     def file_set_presenters
       return enum_for(:file_set_presenters).to_a unless block_given?
 
-      results = query_docs(generic_type: "FileSet")
+      results = member_docs.select(&:file_set?)
 
       object.member_ids.each do |id|
         id = id.to_s
         indx = results.index { |doc| id == doc['id'] }
         next if indx.nil?
-        hash = results.delete_at(indx)
-        yield presenter_for(document: ::SolrDocument.new(hash), ability: ability)
+        document = results.delete_at(indx)
+        yield presenter_for(document: document, ability: ability)
       end
     end
 
@@ -79,14 +79,14 @@ module Hyrax
     def work_presenters
       return enum_for(:work_presenters) unless block_given?
 
-      results = query_docs(generic_type: "Work")
+      results = member_docs.reject(&:file_set?)
 
       object.member_ids.each do |id|
         id = id.to_s
         indx = results.index { |doc| id == doc['id'] }
         next if indx.nil?
-        hash = results.delete_at(indx)
-        yield presenter_for(document: ::SolrDocument.new(hash), ability: ability)
+        document = results.delete_at(indx)
+        yield presenter_for(document: document, ability: ability)
       end
     end
 
@@ -96,7 +96,7 @@ module Hyrax
     #
     # @return
     def presenter_for(document:, ability:)
-      case document['has_model_ssim'].first
+      case Array(document['has_model_ssim']).first
       when *Hyrax::ModelRegistry.file_set_rdf_representations
         file_presenter_class.new(document, ability)
       else
@@ -105,6 +105,10 @@ module Hyrax
     end
 
     private
+
+    def member_docs
+      @member_docs ||= query_docs.map { |hash| ::SolrDocument.new(hash) }
+    end
 
     def query_docs(generic_type: nil, ids: object.member_ids)
       query = "{!terms f=id}#{ids.join(',')}"

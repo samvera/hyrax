@@ -1,0 +1,20 @@
+suite: nginx.conf (extraHttpConfig)
+templates:
+  - templates/nginx-conf-configmap.yaml
+tests:
+  - it: renders the stock http block with no extras by default
+    set:
+      nginx.enabled: true
+    asserts:
+      - matchRegex:
+          path: data["nginx.conf"]
+          pattern: "include /etc/nginx/conf.d/\\*\\.conf;"
+
+  - it: inserts extraHttpConfig before the conf.d include
+    set:
+      nginx.enabled: true
+      nginx.extraHttpConfig: "log_format loki 'host=$host';"
+    asserts:
+      - matchRegex:
+          path: data["nginx.conf"]
+          pattern: "log_format loki 'host=\\$host';\\n\\n    include /etc/nginx/conf.d/\\*\\.conf;"

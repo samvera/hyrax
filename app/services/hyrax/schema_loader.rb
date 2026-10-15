@@ -54,6 +54,25 @@ module Hyrax
     end
 
     ##
+    # @param [Symbol] schema
+    #
+    # @return [{Symbol => String}] a map from attribute names to the name of the
+    #   controlled vocabulary backing them. Only attributes declaring a real
+    #   `controlled_values.sources` entry appear; the `"null"` sentinel the
+    #   profile uses to mean "free text" is not an authority.
+    #
+    # Read through the definitions, not the profile hash: only they apply
+    # `available_on` and collapse a `name:` surrogate, so a property standing in
+    # for another on a particular class resolves to the authority its own entry
+    # declares rather than the one the shared name declares.
+    def authority_rules_for(schema:, version: 1, contexts: nil)
+      definitions(schema, version, contexts).each_with_object({}) do |definition, hash|
+        source = definition.authority_source
+        hash[definition.name] = source if source
+      end
+    end
+
+    ##
     # The raw per-attribute configs for a schema, INCLUDING compound
     # subproperties (entries declaring `available_on: { properties: [...] }`). Unlike
     # {#attributes_for} et al. — which exclude subproperties so they never become
@@ -138,6 +157,20 @@ module Hyrax
       end
 
       ##
+      # The first real source wins, matching how the deposit form picks which
+      # authority to offer when a property lists several.
+      #
+      # @return [String, nil] nil when the attribute is free text.
+      def authority_source
+        sources = config.fetch('controlled_values', nil)
+        return unless sources.is_a?(Hash)
+
+        Array(sources['sources'])
+          .map { |source| source.to_s.strip }
+          .find { |source| source.present? && !source.casecmp('null').zero? }
+      end
+
+      ##
       # @return [Hash{Symbol => Object}]
       def view_options
         # prefer display_label over view:label for labels, make available in the view
@@ -169,8 +202,12 @@ module Hyrax
       # @return [Dry::Types::Type]
       def type
         member_type = type_for(config['type'])
-        wrapper_type = multiple? ? Valkyrie::Types::Array.constructor(&Coerce) : Identity
-        wrapper_type.of(member_type)
+        return Identity.of(member_type) unless multiple?
+
+        array_type = Valkyrie::Types::Array.constructor(&Coerce).of(member_type)
+        # Fedora keeps a property's values unordered; Valkyrie's `ordered` meta
+        # tells its adapters to keep the entries in the order they were saved.
+        config['type'] == 'hash' ? array_type.meta(ordered: true) : array_type
       end
 
       # Cleans up the input before the type system sees it: drops the
@@ -183,6 +220,16 @@ module Hyrax
         return [] if value.equal?(Dry::Types::Undefined)
         wrapped = value.is_a?(::Hash) ? [value] : Array(value)
         wrapped.reject { |v| v.equal?(Dry::Types::Undefined) }.select(&:present?)
+      end
+
+      # Wings stores each hash entry as a JSON string, since ActiveFedora
+      # cannot hold a Hash; parse it back here.
+      JsonHash = lambda do |value|
+        next value unless value.is_a?(String) && value.start_with?('{')
+        JSON.parse(value)
+      rescue JSON::ParserError => e
+        Hyrax.logger.warn { "JsonHash parsing error: #{e.message}" }
+        value
       end
 
       # Determine whether this attribute allows multiple values.
@@ -240,7 +287,7 @@ module Hyrax
         when 'date_time'
           Valkyrie::Types::DateTime
         when 'hash'
-          Dry::Types['hash']
+          Dry::Types['hash'].constructor(&JsonHash)
         when 'linked_record'
           Valkyrie::Types::String
         else

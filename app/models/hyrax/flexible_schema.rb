@@ -14,11 +14,16 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   end
 
   def self.current_version
-    order("created_at asc").last&.profile
+    current_record&.profile
   end
 
   def self.current_schema_id
-    order("created_at asc").last&.id
+    current_record&.id
+  end
+
+  # Per-request memoized -- called dozens of times in a single page render (once per profile/class_names lookup), and each call otherwise re-queries and re-parses the YAML profile column from scratch.
+  def self.current_record
+    Hyrax::Current.flexible_schema ||= order("created_at asc").last
   end
 
   def self.create_default_schema
@@ -205,8 +210,9 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   def values_map(values)
     # Derive the Dry type from the XSD `range` when present; otherwise keep the
     # declared `type:` (compound subproperties declare `type:` directly and have
-    # no `range` of their own).
-    values['type'] = lookup_type(values['range']) if values['range'].present?
+    # no `range` of their own). For `type: hash`, the `range` describes the
+    # entries' values, not the attribute's shape.
+    values['type'] = lookup_type(values['range']) if values['range'].present? && values['type'] != 'hash'
     values['predicate'] = values['property_uri']
     values['index_keys'] = values['indexing']
     values['context'] = values.dig('available_on', 'context')

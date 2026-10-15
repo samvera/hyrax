@@ -49,6 +49,13 @@ RSpec.describe Hyrax::PcdmMemberPresenterFactory do
         it 'gives members in order' do
           expect(factory.file_set_presenters.map(&:id)).to eq file_sets.map(&:id)
         end
+
+        it 'queries solr once when listing both member types' do
+          expect(Hyrax::SolrService).to receive(:post).once.and_call_original
+
+          factory.file_set_presenters
+          factory.work_presenters
+        end
       end
     end
 

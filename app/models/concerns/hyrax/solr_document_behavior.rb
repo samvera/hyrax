@@ -83,8 +83,13 @@ module Hyrax
     end
 
     # Method to return the model
+    #
+    # When Wings is disabled or a Valkyrie transition is underway, the
+    # application's Valkyrie resource class resolver gets the first say, so a
+    # legacy name in has_model_ssim (e.g. "FileSet") maps to the Valkyrie model
+    # (e.g. Hyrax::FileSet) rather than a same-named ActiveFedora class.
     def hydra_model(classifier: nil)
-      valkyrie_model = Valkyrie.config.resource_class_resolver.call(hydra_model_name) if Hyrax.config.valkyrie_transition?
+      valkyrie_model = resolve_valkyrie_model if Hyrax.config.valkyrie_transition? || Hyrax.config.disable_wings
 
       valkyrie_model ||
         hydra_model_name&.safe_constantize ||
@@ -171,6 +176,17 @@ module Hyrax
     end
 
     private
+
+    def resolve_valkyrie_model
+      return if hydra_model_name.blank?
+
+      Valkyrie.config.resource_class_resolver.call(hydra_model_name)
+    rescue NoMethodError
+      raise
+    rescue NameError => e
+      Hyrax.logger.debug { "Valkyrie resolver could not resolve #{hydra_model_name.inspect}: #{e.message}" }
+      nil
+    end
 
     def model_classifier(classifier)
       classifier || ActiveFedora.model_mapper

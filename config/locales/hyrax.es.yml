@@ -766,6 +766,10 @@ es:
       delete_selected:
         button_label: Eliminar Seleccionados
         deleting_file_from: Eliminar un archivo de %{application_name} es permanente. Haga clic en Aceptar para eliminar este archivo de %{application_name}, o en Cancelar para cancelar esta operación
+      destroy_collection:
+        failed:
+          one: No se pudo eliminar 1 elemento.
+          other: No se pudieron eliminar %{count} elementos.
       edit:
         apply_changes_to: "Los cambios se aplicarán a: (%{x_number_of} funciona)"
         batch_edit_descriptions: Descripciones de edición por lotes & nbsp; & nbsp; & nbsp; <small> Haga clic en las etiquetas a continuación para editar las descripciones de trabajo. </small>
@@ -906,6 +910,10 @@ es:
         create_again_hint: "Pulse Crear de nuevo para añadirlo como un registro nuevo."
         similar_heading: "Ya existen registros similares:"
         use_existing: "Usar este"
+      work_or_url:
+        hint: "Busque una obra arriba o introduzca aquí una URL externa."
+        url_placeholder: "https://example.org/…"
+        search_label: "Buscar una obra"
     controls:
       about: Acerca de
       contact: Contacto
@@ -1454,6 +1462,7 @@ es:
           keyword_label: Palabras clave
           keyword_missing: no palabras clave especificadas
           title_label: Título
+        confirm_unfeature: ¿Eliminar de los trabajos destacados?
         drag: Arrastrar
         no_works: No hay trabajos destacados
         tab_label: Trabajos destacados

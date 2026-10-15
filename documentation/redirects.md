@@ -84,7 +84,7 @@ properties:
       display: false
     indexing:
       - editor_only
-    predicate: http://samvera.org/ns/hyku/redirects
+    property_uri: http://samvera.org/ns/hyku/redirects
     range: http://www.w3.org/2001/XMLSchema#string
     view:
       render_term: redirects_path
@@ -94,11 +94,11 @@ properties:
 
 The `form:` block is required in m3. Without it, the m3 form-definition loader skips the property (its filter drops attributes with empty `form_options`), and the Aliases tab errors when the partial reads `f.object.redirects`. The Aliases UI is rendered by `_form_redirects.html.erb`, not by the auto-generated form, so `display: false` is the right value here.
 
-The `display_label` and `range` entries are required for profile validation. `display_label.default` controls the label that appears next to the redirects field on show pages.
+The `display_label` and `range` entries are required for profile validation. For a `type: hash` property, the `range` describes the entries' values; the attribute still loads as a hash. `display_label.default` controls the label that appears next to the redirects field on show pages.
 
 The `indexing: [editor_only]` entry and the `view:` block together opt the redirects field into the show-page display described below in [Displaying redirect aliases on show pages](#displaying-redirect-aliases-on-show-pages). Both are required for that display to appear with editor-or-admin visibility. Note the placement: `editor_only` is an entry in the `indexing:` array (read by `Hyrax::SchemaLoader::AttributeDefinition#editor_only?`); `render_term`, `render_as`, and `html_dl` are inside the `view:` block. Non-flexible mode structures `editor_only` differently — see [Schema details](#schema-details-flexible-false-mode) below.
 
-Each redirect entry is a plain hash with `path` and `is_display_url` keys, persisted as JSONB on the parent resource. The `type: hash` token resolves to `Dry::Types['hash']`, which round-trips entries through Postgres without the sub-field stripping a nested `Valkyrie::Resource` would suffer. `available_on.class` must include at least one work or collection class declared in this profile's top-level `classes:` block; substitute the class names your profile declares (`Image`, `Etd`, `Oer`, etc.) as appropriate.
+Each redirect entry is a plain hash with `path` and `is_display_url` keys, stored on the parent resource (see [Schema details](#schema-details-flexible-false-mode) for how each metadata backend stores it). The `type: hash` token resolves to a `Dry::Types['hash']` type, which round-trips entries without the sub-field stripping a nested `Valkyrie::Resource` would suffer. `available_on.class` must include at least one work or collection class declared in this profile's top-level `classes:` block; substitute the class names your profile declares (`Image`, `Etd`, `Oer`, etc.) as appropriate.
 
 Validation matrix on profile save (with the config on):
 
@@ -142,7 +142,14 @@ When the config is on, this schema is loaded and `Hyrax::Work` / `Hyrax::PcdmCol
 attribute :redirects, Valkyrie::Types::Array.of(Dry::Types['hash'])
 ```
 
-Each entry is a plain hash with `path` and `is_display_url` keys. Entries persist as JSONB on the parent resource, so sub-fields round-trip cleanly without an intermediate nested-resource schema mangling them. `Hyrax::Redirect` is retained as a thin Ruby presenter the form view consumes; non-form code (validator, indexer, sync step) reads the persisted hash directly.
+Each entry is a plain hash with `path` and `is_display_url` keys, stored on the parent resource without an intermediate nested-resource schema mangling its sub-fields:
+
+- **Postgres** stores the entries as JSONB.
+- **Fedora** through the Valkyrie Fedora adapter stores each entry as a nested graph, with each key as its own triple. Hyrax carries overrides for this until Valkyrie releases the same support (samvera/valkyrie#1005).
+- **Fedora through Wings** stores each entry as one JSON string, since ActiveFedora cannot hold a hash; the `type: hash` attribute type parses it back into a hash on read.
+- **Order:** entries reload in the order they were saved. Fedora itself keeps a field's values in no particular order, so Hyrax marks `type: hash` attributes `ordered` (Valkyrie's `ordered: true`). The Valkyrie Fedora adapter then stores the entries as an ordered list. Wings, the bridge to ActiveFedora, does not support that setting, so Hyrax handles order itself there: it adds a position number to each entry when saving, then sorts the entries by that number and removes it when loading.
+
+`Hyrax::Redirect` is retained as a thin Ruby presenter the form view consumes; non-form code (validator, indexer, sync step) reads the persisted hash directly.
 
 When the config is off, the loader filters `redirects.yaml` out of the schema set entirely. The file is on disk but invisible to `permissive_schema_for_valkrie_adapter`, `Hyrax::Schema(:redirects)`, and any other consumer of the simple schema loader.
 
@@ -267,11 +274,11 @@ Visiting the bare UUID URL bypasses the catch-all (Rails routes natively to the 
 
 When a resource has a display URL, the sync step writes a row keyed on the UUID URL whose `to_path` is the display alias — that's the row this before_action finds, and the 301 sends the visitor to the display alias. The browser then makes a fresh request to the display alias; that request matches the catch-all (display aliases are not native Rails routes — they exist only in `hyrax_redirect_paths`), reaches `RedirectsController#show`, and dispatches in place.
 
-### Locale preservation
+### Query string and locale preservation
 
-`RedirectsController` inherits the host app's `ApplicationController`, which includes `Hyrax::Controller`. `Hyrax::Controller#set_locale` reads `params[:locale]` (or falls back to `I18n.default_locale`) on every request. When the resolver issues a 301 to a string path (the row's `to_path`), it appends `?locale=<value>` to that path whenever the incoming request carried a `locale` param, so the destination page renders in the visitor's chosen language. When the resolver dispatches in place at the display URL, it merges `locale: params[:locale]` into the inner request's `path_parameters` before calling `controller_class.dispatch`, so the inner controller's `set_locale` before_action picks up the same locale.
+`RedirectsController` inherits the host app's `ApplicationController`, which includes `Hyrax::Controller`. `Hyrax::Controller#set_locale` reads `params[:locale]` (or falls back to `I18n.default_locale`) on every request. When the resolver issues a 301 to a string path (the row's `to_path`), it appends the incoming request's query string to that path, with `locale` taken from `params[:locale]` so a path-prefix locale is carried too. Paging, per-page, sort and facet params therefore survive the 301, and the destination page renders in the visitor's chosen language. Values are URL-encoded with `Rack::Utils.build_nested_query`. When the resolver dispatches in place at the display URL, it merges `locale: params[:locale]` into the inner request's `path_parameters` before calling `controller_class.dispatch`, so the inner controller's `set_locale` before_action picks up the same locale.
 
-The same locale-preservation behavior is in `Hyrax::RedirectToDisplayUrl#redirect_to_display_url_if_needed` for the UUID-URL-to-display-alias 301.
+The same behavior is in `Hyrax::RedirectToDisplayUrl#redirect_to_display_url_if_needed` for the UUID-URL-to-display-alias 301. This matters for a collection or work shown at its display URL: its pagination and per-page links are built from the UUID path, so each click goes through this 301 and back to the display alias with its query intact.
 
 Aliases are stored without a locale prefix. A visitor whose browser arrives at `/<locale>/handle/12345/678` (which happens in host apps that mount routes inside `scope "(:locale)"`, such as Hyku) does **not** match a row stored as `/handle/12345/678` — that path is treated as not registered. Host apps that need locale-prefixed aliases to resolve must store each prefixed form as its own row or override `Hyrax::RedirectsLookup`.
 

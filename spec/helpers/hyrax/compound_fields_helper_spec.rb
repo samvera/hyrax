@@ -211,6 +211,52 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
     end
   end
 
+  describe '#compound_work_or_url_state' do
+    it 'marks a work selected when the id resolves to an indexed work' do
+      allow(Hyrax::CompoundWorkResolver).to receive(:title_and_path)
+        .with('work-1').and_return(['A Work', '/concern/works/work-1'])
+      state = helper.compound_work_or_url_state('work-1')
+
+      expect(state[:work_selected]).to be true
+      expect(state[:option]).to eq(['A Work', 'work-1'])
+    end
+
+    it 'does not mark a work selected for an external URL' do
+      expect(helper.compound_work_or_url_state('https://example.com/a')[:work_selected]).to be false
+    end
+
+    # The case that motivates resolving rather than pattern-matching on "looks
+    # like a URL": this is not a work, so the URL input must stay visible.
+    it 'does not mark a work selected for a scheme-less URL' do
+      allow(Hyrax::CompoundWorkResolver).to receive(:title_and_path)
+        .with('www.example.org/x').and_return(['www.example.org/x', nil])
+      expect(helper.compound_work_or_url_state('www.example.org/x')[:work_selected]).to be false
+    end
+
+    it 'does not mark a work selected for an id whose work is gone' do
+      allow(Hyrax::CompoundWorkResolver).to receive(:title_and_path)
+        .with('missing').and_return(['missing', nil])
+      expect(helper.compound_work_or_url_state('missing')[:work_selected]).to be false
+    end
+
+    it 'has no option and no selection for a blank value' do
+      state = helper.compound_work_or_url_state('')
+
+      expect(state[:option]).to be_nil
+      expect(state[:work_selected]).to be false
+    end
+
+    it 'carries the picker endpoint, excluding the work being edited' do
+      expect(helper.compound_work_or_url_state('', exclude_id: 'work-9')[:autocomplete_url])
+        .to include('exclude_id=work-9')
+    end
+
+    it 'omits the exclusion when the id is blank' do
+      expect(helper.compound_work_or_url_state('', exclude_id: '')[:autocomplete_url])
+        .not_to include('exclude_id')
+    end
+  end
+
   describe '#compound_linked_record_option' do
     before do
       Hyrax::CompoundLinkedRecordResolver.register(

@@ -102,6 +102,146 @@ admin_note:
 
 Use `admin_only` in place of `editor_only` to restrict visibility to admins only.
 
+## Controlled-vocabulary labels
+
+A controlled vocabulary term has two parts: an **id** — the value works store — and a **label**. Where the two differ, an id alone reads as opaque: a term whose id is `local_auth_123` and whose label is "Opaque Term" would otherwise display as `local_auth_123` on work pages, in search results, and in facets.
+
+A property is treated as controlled when its `controlled_values.sources` names an authority (anything other than the `"null"` free-text sentinel), the configured label service can resolve that authority, and its `indexing:` array names the Solr fields the labels ride beside.
+
+The `indexing:` array must name the Solr fields themselves. `stored_searchable` and `facetable` are directives that carry no field name, and a property declaring only those has no index keys for the indexer to write label companions beside — such a property is left exactly as it is today.
+
+```yaml
+resource_type:
+  controlled_values:
+    format: http://www.w3.org/2001/XMLSchema#string
+    sources:
+      - resource_types
+  indexing:
+    - resource_type_tesim   # required for labels in rows and on show pages
+    - resource_type_sim     # required for the label facet
+    - facetable
+```
+
+Given that, Hyrax:
+
+- **indexes** the labels beside the stored ids, as `<index_key>_label` — `resource_type_tesim` gains `resource_type_label_tesim`. The ids are left in place: they are the link target for a URI-valued authority and what OAI harvests. Labels are positionally parallel to the values, repeating the id where a term does not resolve.
+- **renders** the label on the show page, linking it to the id where the id is an `http`/`https` URI.
+- **facets and links** on `<property>_label_sim`, and shows the label in the search-result row, falling back to the id for works indexed before the label fields existed. The id facet stays configured alongside the label facet — hidden from the sidebar, so the ids are not listed beside the labels, but still resolving `f[<property>_sim][]` from saved searches and bookmarks.
+
+Reindex after registering a service. Until then the label fields are empty: search-result rows fall back to showing the id, while the row's facet link points at the label facet, so clicking a value returns nothing. Both agree once the corpus is reindexed.
+
+Because this is driven by the profile, a property or vocabulary added to an m3 profile is covered with no `CatalogController` change.
+
+### Registering a label service
+
+Hyrax has no vocabulary store of its own, so resolution is injectable. The default resolves nothing, which leaves indexing and rendering byte-identical to an installation without this feature.
+
+Hyrax ships a resolver backed by the local [Questioning Authority](https://github.com/samvera/questioning_authority) vocabularies in `config/authorities/`. It is **not** installed by default; register it to turn the feature on:
+
+```ruby
+# config/initializers/hyrax.rb
+Hyrax.config.controlled_vocabulary_label_service = Hyrax::QaControlledVocabularyLabelService.new
+```
+
+A property's `controlled_values.sources` entry is matched to a local subauthority of the same name, so a property citing `licenses` resolves against `config/authorities/licenses.yml`. Remote authorities (Geonames, LOC) are never resolved — doing so would mean a network request per value during indexing.
+
+**Reindex after registering.** The show page and catalog read the label fields the indexer writes, so an existing corpus keeps displaying ids until it has been reindexed.
+
+An application with its own vocabulary store registers its own resolver instead:
+
+```ruby
+Hyrax.config.controlled_vocabulary_label_service = MyLabelService.new
+```
+
+A service need only implement the two methods on `Hyrax::ControlledVocabularyLabelService`:
+
+| method | returns |
+| --- | --- |
+| `resolvable?(source)` | whether labels can be resolved for the named vocabulary |
+| `labels_for(source, values)` | one label per value, in order, the id where unresolved |
+
+`labels_for` must stay positional — the renderer pairs values to labels, so an unresolved value has to hold its place. `resolvable?` should answer `false` for remote authorities: resolving one means a network call per value, which has no place in an indexing run.
+
+## Linking values back into the catalog
+
+A property's values can be rendered as links that run a new catalog query. There are three places this can happen, and a different directive governs each:
+
+| where | what it is | governed by |
+| --- | --- | --- |
+| Sidebar | the facet list in "Limit your search" | `facetable` in `indexing:` |
+| Search-results rows | the property's values in a result row | `facetable`, or `view: { render_as: ... }` |
+| Show page | the property's values on the work page | `view: { render_as: ... }` |
+
+So `facetable` governs the sidebar and `render_as` governs where a value is rendered — the show page and the results row alike. A property declaring only `render_as: faceted` links its values in both places without appearing in the sidebar; one declaring only `facetable` gets the sidebar facet and results links, but plain text on the show page.
+
+A `facetable` property's sidebar facet lists `config.default_facet_limit` values (Blacklight's default is 10), then a "more" link that pages through the rest. A facet the application already declares in its `CatalogController` keeps the `limit:` declared there, and a controlled property's label facet takes the limit of its id facet.
+
+### What each link queries
+
+| `render_as` | link is | queries | requires in `indexing:` |
+| --- | --- | --- | --- |
+| `linked` | a search | `<name>_tesim` for the **displayed** value | `<name>_tesim` |
+| `faceted` | a facet filter | `<name>_sim` for the **stored** value | `<name>_sim` |
+
+A controlled property whose label facet is registered queries that instead: `<name>_label_sim` for the label, so the link lands on the same filter the sidebar offers rather than a second one the sidebar cannot match. Where no label facet exists, the link keeps using `<name>_sim` and the stored value.
+
+Neither raises when its field is missing. The link still renders and simply returns an empty result page, so the mistake surfaces only when someone clicks it.
+
+Both apply to the show page and the search-results row. A `faceted` property's facet is registered even when it is not `facetable`, so the link resolves into a filter; Blacklight discards an `f[...]` parameter naming a facet it has no configuration for, which would otherwise leave the link returning unfiltered results.
+
+### `linked` is for free-text properties
+
+`linked` places the displayed value into `q` as a quoted phrase:
+
+    /catalog?q="Ada Lovelace"&search_field=creator
+
+That works when the stored value and the displayed value are the same string — `creator`, `publisher`, `keyword`, `subject`, `date_created`. There is nothing to reconcile, so the search returns the records that share the value.
+
+### Use `faceted`, not `linked`, on a controlled property
+
+A controlled property stores a term **id** and displays that term's **label**. `linked` then searches for the label in the field holding the id, and finds nothing whenever the two differ:
+
+| stored in `resource_type_tesim` | displayed | link searches for | result |
+| --- | --- | --- | --- |
+| `oer` | `OER` | `"OER"` | no matches |
+
+It is not enough that a vocabulary's ids and labels match today. An authority edited later can introduce a mismatch, and links that relied on the coincidence break with no change to the profile.
+
+A facet link filters on the indexed value, so it is correct either way. It is also exact-match: a search for `Health Science - Nursing` can also match `Health Science - Radiology` on the shared words, while a facet filter cannot.
+
+A controlled property that should be filterable everywhere declares all three:
+
+```yaml
+education_level:
+  indexing:
+    - education_level_tesim
+    - education_level_sim
+    - facetable          # sidebar facet
+  view:
+    render_as: faceted   # values link to that facet, in results rows and on the show page
+    html_dl: true
+```
+
+Dropping `facetable` leaves both sets of links intact and removes only the sidebar facet — useful for a property with too many distinct values to browse. Dropping `render_as` instead leaves the sidebar facet and turns both sets of values into plain text.
+
+### Never declare `linked` with `facetable`
+
+Blacklight's rendering pipeline runs `HelperMethod` before `LinkToFacet`, and a helper short-circuits the remaining steps. `render_as: linked` installs such a helper, so on a `facetable` property the facet link for results values is computed and then thrown away in favor of the search link. The sidebar facet still works; the results values quietly stop filtering.
+
+### `external_link` and `rights_statement` are unaffected
+
+Both resolve the label from the authority and link to the stored id, so a label differing from its id is expected rather than a defect. Neither needs a facet.
+
+### Validation
+
+`Hyrax::FlexibleSchemaValidators::RenderAsValidator` warns on each of these cases when a profile is saved. They are warnings, not errors — the profile is structurally valid, and only a generated link is affected.
+
+### Changing an existing property
+
+Adding `<name>_sim` to `indexing:` creates a new Solr field. Existing records must be reindexed before the facet is populated; until then it is empty.
+
+Adding `render_as: faceted` to a property that already indexes `<name>_sim` needs no reindex — it links to a field that is already populated. A **controlled** property is the exception: its values link to `<name>_label_sim`, which the indexer writes only for records processed since its vocabulary became resolvable. A property whose links return nothing on every value is the sign that its corpus predates that.
+
 ## Rich-text fields
 
 A string property can be edited with a rich-text (WYSIWYG) editor and rendered as sanitized HTML. This works in both flexible and non-flexible mode and is driven by two independent directives:
@@ -169,6 +309,47 @@ It pairs naturally with `render_as: html` for a rich-text "narrative" field, but
 Host applications that override `hyrax/base/show.html.erb` (or ship custom show themes) are responsible for rendering `<%= render 'featured_attributes', presenter: @presenter %>` wherever they want featured fields to appear; an override that omits it will simply not show them.
 
 This is intentionally **not** covered by an m3 profile validator: the profile cannot know what an app's templates render.
+
+## Profile validation
+
+Saving a `Hyrax::FlexibleSchema` runs every validator in
+`Hyrax.config.flexible_schema_validators`, in order. Each one inspects the profile and reports
+what it finds as **errors**, which block the save, or **warnings**, which do not — a warning
+means the profile is structurally valid but something in it will not behave as written.
+
+A validator takes a validation context and records what it finds:
+
+```ruby
+module MyApp
+  class MyProfileValidator < Hyrax::FlexibleSchemaValidators::BaseValidator
+    def validate!
+      properties.each do |name, config|
+        add_warning(:my_message_key, property: name) if config['something_suspect']
+      end
+    end
+  end
+end
+```
+
+The context exposes `profile` (the raw hash), `properties` (its property definitions, with
+malformed non-hash entries already dropped), `class_names`, `required_classes`, and `schemer`.
+Pass `add_error`/`add_warning` a symbol to look the message up under
+`hyrax.flexible_schema_validators.<validator_name>.<errors|warnings>.<key>`, or a string to use
+it verbatim.
+
+Register it in `config/initializers/hyrax.rb`, appending so Hyrax's own validators are kept:
+
+```ruby
+config.flexible_schema_validators += ['MyApp::MyProfileValidator']
+```
+
+Entries may be classes or class-name strings; names are resolved when a profile is validated,
+so a validator does not need to be loaded at configuration time. Removing a validator is the
+same operation in reverse (`-=`).
+
+Validators are independent — none depends on another having run, and each reports every problem
+it finds rather than stopping at the first. The list order is the order messages are reported
+in, so an app may reorder it freely.
 
 ## Related features
 

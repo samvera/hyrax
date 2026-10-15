@@ -22,8 +22,9 @@ module Hyrax
         return
       end
 
-      options = options.merge(subproperties: compound_subproperties_for(field)) if options[:render_as].to_s == 'compound'
-      renderer = renderer_for(field, options).new(field, send(field), options)
+      values = send(field)
+      options = renderer_options_for(field, values, options)
+      renderer = renderer_for(field, options).new(field, values, options)
 
       if options[:value_only] && renderer.respond_to?(:render_value)
         renderer.render_value
@@ -52,7 +53,84 @@ module Hyrax
       " itemscope itemtype=\"#{value}\"".html_safe
     end
 
+    ##
+    # Exists alongside `attribute_to_html` because {Hyrax::PresenterRenderer}
+    # renders a presenter's values into a partial directly, never reaching the
+    # label resolution that one does on its way to a renderer.
+    #
+    # @param field [Symbol]
+    # @return [Array] one entry per stored value, in the order held, each the
+    #   term's indexed label where there is one and the stored value otherwise
+    def display_values_for(field)
+      return [] unless respond_to?(field)
+
+      values = Array(send(field))
+      labels = controlled_labels_for(field, values)
+      return values if labels.blank?
+
+      values.map { |value| labels[value.to_s].presence || value }
+    end
+
+    ##
+    # The indexed label for each of a field's stored values, keyed by value rather
+    # than position: AttributeRenderer sorts the values when `options[:sort]` is
+    # set, so index-based pairing attaches the wrong label.
+    #
+    # The counts must match exactly. A label service is contracted to return one
+    # entry per value, but nothing enforces it, and zipping a short list shifts
+    # every later label onto the wrong value. Showing one term's label under
+    # another term's id is worse than showing the id.
+    #
+    # @param field [Symbol]
+    # @param values [Array] the field's stored values
+    # @return [Hash{String => String}, nil] stored value => indexed label; nil
+    #   for an uncontrolled field, a work indexed before the label fields
+    #   existed, or when the label count doesn't match the values
+    def controlled_labels_for(field, values)
+      @controlled_labels ||= {}
+      return @controlled_labels[field] if @controlled_labels.key?(field)
+
+      @controlled_labels[field] = compute_controlled_labels(field, values)
+    end
+
     private
+
+    def renderer_options_for(field, values, options)
+      options = options.merge(subproperties: compound_subproperties_for(field)) if options[:render_as].to_s == 'compound'
+      labels = controlled_labels_for(field, values)
+      options = options.merge(labels: labels) if labels.present?
+      options
+    end
+
+    # Scans the document's keys, so it is memoized per field above: a show page
+    # renders many fields against one document.
+    def compute_controlled_labels(field, values)
+      return unless respond_to?(:solr_document)
+
+      document = solr_document
+      return unless document.respond_to?(:[])
+
+      values = Array(values).map(&:to_s)
+      labels = indexed_labels_for(document, field)
+      return if labels.blank? || labels.size != values.size
+
+      values.zip(labels).to_h
+    end
+
+    # Read from the document rather than probed against a fixed suffix list: a
+    # property can declare any index key (`creator_ssim`), and the indexer
+    # writes a label companion for each.
+    def indexed_labels_for(document, field)
+      prefix = Hyrax::ControlledVocabularyFieldValues.label_prefix(field)
+      pattern = /\A#{Regexp.escape(prefix)}_[^_]+\z/
+      keys = document.keys.select { |key| key.to_s.match?(pattern) }
+      # `_tesim` first, since `_sim` is indexed but not stored and usually reads
+      # back empty; an empty key must fall through rather than end the search.
+      keys.sort_by { |k| k.to_s.end_with?('_tesim') ? 0 : 1 }
+          .lazy
+          .filter_map { |key| Array(document[key]).presence }
+          .first
+    end
 
     # Normalized sub-property specs for a compound, so the renderer can translate
     # controlled ids to their terms; nil if the resource class can't be

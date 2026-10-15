@@ -1,25 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::FlexibleSchemaValidators::ExistingRecordsValidator do
-  subject(:validator) { described_class.new(profile, required_classes, errors) }
+  subject(:validator) { described_class.new(context) }
+  let(:context) { Hyrax::FlexibleSchemaValidators::ValidationContext.new(profile: profile, required_classes: required_classes) }
 
   let(:profile) { {} }
   let(:required_classes) { ['AdminSet', 'Collection', 'FileSet'] }
-  let(:errors) { [] }
+  let(:errors) { validator.violations.map(&:message) }
 
   before do
     stub_const('AdminSet', Class.new)
     stub_const('Collection', Class.new)
     stub_const('Hyrax::FileSet', Class.new)
     allow_any_instance_of(Hyrax::FlexibleSchemaValidatorService).to receive(:required_classes).and_return(['AdminSet', 'Collection', 'FileSet'])
-  end
-
-  describe '#initialize' do
-    it 'sets instance variables' do
-      expect(validator.instance_variable_get(:@profile)).to eq(profile)
-      expect(validator.instance_variable_get(:@required_classes)).to eq(required_classes)
-      expect(validator.instance_variable_get(:@errors)).to eq(errors)
-    end
   end
 
   describe '#validate!' do

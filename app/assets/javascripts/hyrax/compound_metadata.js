@@ -7,15 +7,17 @@
     if (document.hyraxCompoundsBound) return;
     document.hyraxCompoundsBound = true;
 
-    // Bind select2 to a `work_or_url` or `linked_record` sub-property. The v3
-    // API (Hyrax bundles select2-rails 3.x) binds to a hidden input. A
-    // work_or_url picker lets a typed external URL be selected as-is
-    // (createSearchChoice); a linked_record picker resolves only to a row id, so
-    // a typed value is not a valid selection — and an empty result set reveals
-    // its "Add new" affordance instead.
+    // Bind select2 to a `work_or_url` or `linked_record` sub-property. The v3 API
+    // (Hyrax bundles select2-rails 3.x) binds to a hidden input.
+    //
+    // A work_or_url picker only *searches*: its selection is copied into the
+    // sibling visible input that actually submits (see _work_or_url_field), so a
+    // typed URL never depends on select2 committing it. A linked_record picker
+    // resolves only to a row id, so a typed value is not a valid selection — and an
+    // empty result set reveals its "Add new" affordance instead.
     function bindWorkOrUrlInputs(root) {
         if (typeof jQuery === 'undefined' || !jQuery.fn.select2) return;
-        jQuery(root).find('[data-hyrax-compound-work-input]').each(function() {
+        jQuery(root).find('[data-hyrax-compound-work-input], [data-hyrax-compound-work-search]').each(function() {
             var $el = jQuery(this);
             if ($el.hasClass('select2-offscreen') || $el.data('select2')) return; // already bound
 
@@ -29,16 +31,17 @@
             var options = {
                 width: '100%',
                 allowClear: true,
-                // Per-field prompt via data-placeholder (work_or_url omits it and
-                // keeps the original text).
+                // Per-field prompt via data-placeholder, so a translated label wins.
                 placeholder: $el.data('placeholder') || 'Search for a work or enter a URL',
                 minimumInputLength: 2,
                 // Render the current value's label (work title / record label /
                 // URL) on load.
+                // Always invoke the callback, with null when there is no value:
+                // returning early leaves select2's internal `select2-data` unset,
+                // and clear()'s `if (data)` guard then swallows a clear.
                 initSelection: function(element, callback) {
                     var val = element.val();
-                    if (!val) return;
-                    callback({ id: val, text: element.data('label') || val });
+                    callback(val ? { id: val, text: element.data('label') || val } : null);
                 },
                 ajax: {
                     url: $el.data('autocomplete-url'),
@@ -62,10 +65,7 @@
                 }
             };
 
-            // Only work_or_url accepts a free-typed value as its selection.
-            if (!isLinkedRecord) {
-                options.createSearchChoice = function(term) { return { id: term, text: term }; };
-            } else {
+            if (isLinkedRecord) {
                 // A linked_record row may carry an optional `detail` we render as
                 // HTML (a muted second line); disable select2's own escaping and
                 // escape every value ourselves in formatLinkedRecordResult.
@@ -79,7 +79,38 @@
             }
 
             $el.select2(options);
+            bindPickerToTarget($el);
         });
+    }
+
+    // The picker carries no name and never submits; its selection is copied into the
+    // input named by data-target, which is what the form posts. Native events so
+    // validation and dirty-tracking see the change as if it were typed.
+    function bindPickerToTarget($el) {
+        var targetId = $el.data('target');
+        if (!targetId) return;
+
+        $el.on('change', function() {
+            var target = document.getElementById(targetId);
+            if (!target) return;
+
+            var picked = $el.val() || '';
+            target.value = picked;
+            toggleUrlField(target, picked, $el.select2('data'));
+            target.dispatchEvent(new Event('input', { bubbles: true }));
+            target.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+    }
+
+    // Hidden only for a chosen work, which the picker displays as a title; a cleared
+    // value or a URL belongs in the field. Keyed on the label differing from the id,
+    // as _work_or_url_field does for the initial render.
+    function toggleUrlField(target, picked, selection) {
+        var wrap = target.closest('[data-hyrax-compound-work-url-wrap]');
+        if (!wrap) return;
+
+        var labelled = !!selection && selection.text && selection.text !== picked;
+        wrap.hidden = picked !== '' && labelled;
     }
 
     // The full option list is already in the DOM, so select2 filters

@@ -87,7 +87,7 @@ export class FileManagerMember {
         form.off('ajax:success')
         form.off('ajax:error')
       })
-      form.submit()
+      Rails.fire(form[0], "submit")
       return deferred
     } else {
       return $.Deferred().resolve()

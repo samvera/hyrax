@@ -81,6 +81,26 @@ RSpec.describe Hyrax::SolrQueryService, :clean_repo do
     end
   end
 
+  describe '#with_join' do
+    subject(:solr_query_service) { described_class.new }
+
+    let!(:child_work) { FactoryBot.valkyrie_create(:monograph, title: ['Child']) }
+    let!(:work) { FactoryBot.valkyrie_create(:monograph, title: ['Parent'], members: [child_work]) }
+
+    it 'matches documents joined to from those matching the given query service' do
+      ids = solr_query_service.with_join(from: 'member_ids_ssim', to: 'id',
+                                         query: described_class.new.with_ids(ids: [work.id])).get_ids
+
+      expect(ids).to contain_exactly(child_work.id.to_s)
+    end
+
+    it 'accepts a raw query string' do
+      ids = solr_query_service.with_join(from: 'member_ids_ssim', to: 'id', query: "id:#{work.id}").get_ids
+
+      expect(ids).to contain_exactly(child_work.id.to_s)
+    end
+  end
+
   describe '#build' do
     context 'when no query clauses have been constructed' do
       subject(:solr_query_service) { described_class.new }
@@ -104,7 +124,7 @@ RSpec.describe Hyrax::SolrQueryService, :clean_repo do
       end
       it "returns the concatenated solr query clauses" do
         expect(solr_query_service.build).to eq '_query_:"{!field f=subject_ssim:Science" AND ' \
-                                               '{!terms f=id}id1,id2 AND ' \
+                                               '_query_:"{!terms f=id}id1,id2" AND ' \
                                                '_query_:"{!field f=has_model_ssim}Monograph"'
       end
     end
@@ -121,7 +141,20 @@ RSpec.describe Hyrax::SolrQueryService, :clean_repo do
   describe '#with_ids' do
     it "generates and appends a query clause" do
       expect(solr_query_service.with_ids(ids: ["an123id", "an456id", "an789id"]).query)
-        .to match_array [initial_query, '{!terms f=id}an123id,an456id,an789id']
+        .to match_array [initial_query, '_query_:"{!terms f=id}an123id,an456id,an789id"']
+    end
+
+    context 'when AND-combined with another clause', :clean_repo do
+      subject(:solr_query_service) { described_class.new }
+
+      let!(:work1) { FactoryBot.valkyrie_create(:monograph) }
+      let!(:work2) { FactoryBot.valkyrie_create(:monograph) }
+      let!(:work3) { FactoryBot.valkyrie_create(:monograph) }
+
+      it "matches every given id, including the last one in the list" do
+        ids = solr_query_service.with_ids(ids: [work1.id, work2.id, work3.id]).with_model(model: Monograph).get_ids
+        expect(ids).to contain_exactly(work1.id, work2.id, work3.id)
+      end
     end
   end
 

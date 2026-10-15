@@ -107,6 +107,19 @@ module Hyrax
     end
 
     ##
+    # The `work_or_url` picker's autocomplete endpoint, carrying the id of the work
+    # being edited so the picker can leave it out of its own results.
+    #
+    # @param exclude_id [String, nil] the current work's id, when known
+    # @return [String]
+    def compound_works_autocomplete_url(exclude_id = nil)
+      base = "#{Rails.application.routes.url_helpers.qa_path}/search/compound_works"
+      return base if exclude_id.blank?
+
+      "#{base}?#{{ exclude_id: exclude_id }.to_query}"
+    end
+
+    ##
     # The pre-selected `[label, value]` option for a `work_or_url` sub-property's
     # select2, or nil when empty. An internal work id resolves to its title; an
     # external URL is shown as-is.
@@ -118,6 +131,28 @@ module Hyrax
 
       title, = Hyrax::CompoundWorkResolver.title_and_path(value)
       [title, value.to_s]
+    end
+
+    ##
+    # What the `work_or_url` field partial renders from.
+    #
+    # `work_selected` is true only for a value that resolves to an indexed work,
+    # which {#compound_work_or_url_option} signals by labeling it with a title
+    # that differs from the value. Anything unresolved — a URL, a scheme-less
+    # "www.example.org/x", an id whose work is gone — labels as itself and leaves
+    # the URL input visible. Testing "not a URL" instead would treat a scheme-less
+    # URL as a work, which it is not.
+    #
+    # @param value [String, nil] the stored sub-property value
+    # @param exclude_id [String, nil] the work being edited, kept out of the
+    #   picker's own results
+    # @return [Hash{Symbol => Object}] `{ option:, work_selected:, autocomplete_url: }`
+    def compound_work_or_url_state(value, exclude_id: nil)
+      option = compound_work_or_url_option(value)
+
+      { option: option,
+        work_selected: option.present? && option.first != value.to_s,
+        autocomplete_url: compound_works_autocomplete_url(exclude_id.presence) }
     end
 
     # The pre-selected `[label, value]` option for a `linked_record`

@@ -88,3 +88,75 @@ RSpec.describe Hyrax::Forms::BatchUploadForm, :active_fedora do
     end
   end
 end
+
+RSpec.describe Hyrax::Forms::BatchUploadForm, '#required_fields for a flexible payload' do
+  let(:profile_fields) do
+    { 'title' => { required: true, primary: true, display: true },
+      'profile_only_field' => { required: true, primary: false, display: true } }
+  end
+
+  let(:schema_loader) do
+    loader = instance_double(Hyrax::M3SchemaLoader)
+    allow(loader).to receive(:current_version).and_return(1)
+    allow(loader).to receive(:index_rules_for).and_return({})
+    allow(loader).to receive(:form_definitions_for) { profile_fields }
+    allow(loader).to receive(:attributes_for) do
+      profile_fields.keys.each_with_object({}) do |name, attrs|
+        attrs[name.to_sym] = Valkyrie::Types::Array.of(Valkyrie::Types::String)
+      end
+    end
+    loader
+  end
+
+  let(:work_class) do
+    klass = Class.new(Hyrax::Work) do
+      def self.name
+        'TestBatchFlexibleWork'
+      end
+    end
+    klass.acts_as_flexible_resource
+    klass
+  end
+
+  let(:form) { described_class.allocate.tap { |f| f.payload_concern = 'TestBatchFlexibleWork' } }
+
+  before do
+    allow(Hyrax.config).to receive(:flexible?).and_return(true)
+    allow(Hyrax.config).to receive(:use_valkyrie?).and_return(true)
+    allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
+    allow(Hyrax::FlexibleSchema).to receive(:current_schema_id).and_return(1)
+    stub_const('TestBatchFlexibleWork', work_class)
+    stub_const('TestBatchFlexibleWorkForm', Class.new(Hyrax::Forms::ResourceForm(work_class)))
+    allow(Valkyrie.config).to receive(:resource_class_resolver).and_return(->(_name) { work_class })
+  end
+
+  after do
+    Hyrax.config.flexible_classes.delete('TestBatchFlexibleWork')
+  end
+
+  it "requires the fields the payload's profile requires" do
+    expect(form.required_fields).to include(:title, :profile_only_field)
+  end
+
+  context "when the batch's admin set has contexts" do
+    let(:context_field) { { 'context_only_field' => { required: true, primary: false, display: true } } }
+
+    before do
+      allow(schema_loader).to receive(:form_definitions_for) do |**kwargs|
+        Array(kwargs[:contexts]).include?('special') ? profile_fields.merge(context_field) : profile_fields
+      end
+      allow(schema_loader).to receive(:attributes_for) do
+        profile_fields.merge(context_field).keys.each_with_object({}) do |name, attrs|
+          attrs[name.to_sym] = Valkyrie::Types::Array.of(Valkyrie::Types::String)
+        end
+      end
+      allow(Hyrax.query_service).to receive(:find_by).and_call_original
+      allow(Hyrax.query_service).to receive(:find_by).with(id: 'special-admin-set').and_return(double(contexts: ['special']))
+      allow(form).to receive(:model).and_return(double(admin_set_id: 'special-admin-set'))
+    end
+
+    it "requires the fields the admin set's context requires" do
+      expect(form.required_fields).to include(:context_only_field)
+    end
+  end
+end

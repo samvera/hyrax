@@ -808,6 +808,10 @@ en:
       delete_selected:
         button_label: Delete Selected
         deleting_file_from: Deleting a file from %{application_name} is permanent. Click OK to delete this file from %{application_name}, or Cancel to cancel this operation
+      destroy_collection:
+        failed:
+          one: 1 item could not be deleted.
+          other: "%{count} items could not be deleted."
       edit:
         apply_changes_to: 'Changes will be applied to: (%{x_number_of} works)'
         batch_edit_descriptions: Batch Edit Descriptions &nbsp;&nbsp;&nbsp;<small>Click on labels below to edit work descriptions.</small>
@@ -942,6 +946,10 @@ en:
         create_again_hint: Press Create again to add as a new record.
         similar_heading: "Similar records already exist:"
         use_existing: Use this
+      work_or_url:
+        hint: Search for a work above, or enter an external URL here.
+        search_label: Search for a work
+        url_placeholder: https://example.org/…
       participants:
         label: Participants
         title: Title
@@ -1515,6 +1523,12 @@ en:
         warnings:
           config_disabled: "m3 profile declares a `redirects` property but Hyrax.config.redirects_enabled? is false; the property will be ignored"
           flipflop_disabled: "m3 profile declares a `redirects` property but the :redirects feature flag is off; the property will be ignored"
+      render_as_validator:
+        warnings:
+          requires_searchable: "m3 profile property `%{property}` declares `view: { render_as: linked }` but does not index a `_tesim` field; the generated link searches that field, so it has nothing to query. Add the property's `_tesim` field to `indexing:`, or drop `render_as: linked`."
+          requires_sim_field: "m3 profile property `%{property}` declares `view: { render_as: faceted }` but does not index a `_sim` field; the generated link filters on that facet, so it returns nothing. Add the property's `_sim` field to `indexing:`, or drop `render_as: faceted`."
+          searches_label_for_id: "m3 profile property `%{property}` declares `view: { render_as: linked }` on a controlled vocabulary; the link searches for the displayed label while the property indexes the term id, so it finds nothing whenever the two differ. Index the property's `_sim` field with `facetable` and omit `render_as` to link to the label facet instead."
+          discards_facet_link: "m3 profile property `%{property}` declares `view: { render_as: linked }` alongside `facetable`; the facet link is built and then replaced by a search for the displayed label, which finds nothing whenever a term's label differs from its id. Omit `render_as` to keep the facet link."
       rich_text_validator:
         warnings:
           controlled_sources: "m3 profile property `%{property}` declares `form: { input_type: rich_text }` but also a controlled vocabulary (`controlled_values.sources: %{sources}`); rich text stores free-form HTML and will bypass the controlled input. Use `rich_text` only on free-text properties."
@@ -1546,6 +1560,7 @@ en:
           keyword_label: Keywords
           keyword_missing: no keywords specified
           title_label: Title
+        confirm_unfeature: Remove from featured works?
         drag: Drag
         no_works: No works have been featured
         tab_label: Featured Works

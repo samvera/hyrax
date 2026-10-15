@@ -1,4 +1,7 @@
-<% Array(record[key]).each do |v| %>
+<%# Guarded because this is the catch-all partial: an application's own presenter
+    reaches it without necessarily including PresentsAttributes. %>
+<% values = record.respond_to?(:display_values_for) ? record.display_values_for(key) : Array(record[key]) %>
+<% values.each do |v| %>
   <span itemprop="<%= key %>" itemscope itemtype="http://schema.org/Thing">
     <%= v %>
   </span>

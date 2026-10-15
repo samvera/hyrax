@@ -29,6 +29,7 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_file_metadata_updated(event)
+        return unless Hyrax.config.index_file_metadata_as_document?
         return unless resource? event[:metadata]
         Hyrax.index_adapter.save(resource: event[:metadata])
       end
@@ -71,6 +72,8 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_object_deleted(event)
+        return Hyrax.logger.warn("Skipping index removal for object #{event.payload[:id]}; the event has no :object") if
+          event.payload[:object].nil?
         return unless resource?(event.payload[:object])
         Hyrax.index_adapter.delete(resource: event[:object])
       end
@@ -93,6 +96,7 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_file_metadata_deleted(event)
+        return unless Hyrax.config.index_file_metadata_as_document?
         return unless resource? event.payload[:metadata]
         Hyrax.index_adapter.delete(resource: event[:metadata])
       end

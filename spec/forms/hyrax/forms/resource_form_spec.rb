@@ -9,6 +9,34 @@ RSpec.describe Hyrax::Forms::ResourceForm do
   let(:default_admin_set) { instance_double(Hyrax::AdministrativeSet, title: "DEFAULT_ADMINSET", id: "DEFAULT_ADMINSET_ID") }
   before { allow(Hyrax::AdminSetCreateService).to receive(:find_or_create_default_admin_set).and_return(default_admin_set) }
 
+  describe 'thumbnail_id and representative_id' do
+    it 'coerces blank submissions to nil' do
+      form.validate(thumbnail_id: '', representative_id: '')
+
+      expect(form.thumbnail_id).to be_nil
+      expect(form.representative_id).to be_nil
+    end
+
+    it 'casts present values to ids' do
+      form.validate(thumbnail_id: 'fake_id', representative_id: 'fake_id')
+
+      expect(form.thumbnail_id.to_s).to eq 'fake_id'
+      expect(form.representative_id.to_s).to eq 'fake_id'
+    end
+  end
+
+  describe '.check_if_flexible' do
+    it 'treats a model that does not respond to flexible? as not flexible' do
+      model = Class.new do
+        def self.to_s
+          'ModelWithoutFlexibleSupport'
+        end
+      end
+
+      expect { Class.new(described_class) { check_if_flexible(model) } }.not_to raise_error
+    end
+  end
+
   # Redirects is a Work/Collection concern, never a FileSet one. The FileSet
   # form must not declare the property (its model has no `redirects` attribute) —
   # guarding the regression where declaring redirects on the shared base
@@ -58,9 +86,21 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  # Any example that stubs m3_schema_loader and then calls the real `.for` must use a
+  # throwaway work class. `.for` runs check_if_flexible, which `include`s form fields
+  # built from the stubbed loader — an include the mock reset cannot undo. Pointed at
+  # a shared class like Monograph it strips that form's real definitions for the rest
+  # of the process, so unrelated later specs fail with fields missing from the page.
   describe '.for' do
     context 'with admin_set_id for a flexible resource' do
-      let(:work) { build(:monograph) }
+      let(:work_class) do
+        Class.new(Hyrax::Work) do
+          def self.name
+            'AdminSetContextTestWork'
+          end
+        end
+      end
+      let(:work) { work_class.new }
       let(:admin_set) { double('AdminSet', contexts: ['special_context']) }
       let(:work_contexts) { [] }
       let(:schema_loader) { instance_double(Hyrax::M3SchemaLoader, form_definitions_for: { title: { required: true, primary: true } }, attributes_for: {}) }
@@ -103,6 +143,16 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
       it 'builds the form without raising' do
         expect { described_class.for(resource: work, admin_set_id: 'gone') }.not_to raise_error
+      end
+    end
+
+    # Fails if an example above starts building a real app form class under a stubbed
+    # loader again. Ordered after them deliberately: the leak is only observable once
+    # they have run, and it surfaces far away (a later spec finds fields missing from
+    # a rendered form) rather than here.
+    context 'when the examples above have run', unless: Hyrax.config.flexible? do
+      it 'leaves MonographForm definitions intact' do
+        expect(MonographForm.definitions.keys).to include('record_info')
       end
     end
   end
@@ -168,7 +218,14 @@ RSpec.describe Hyrax::Forms::ResourceForm do
   end
 
   describe 'flexible form with contexts' do
-    let(:work) { build(:monograph) }
+    let(:work_class) do
+      Class.new(Hyrax::Work) do
+        def self.name
+          'FlexibleContextTestWork'
+        end
+      end
+    end
+    let(:work) { work_class.new }
     let(:schema_loader) { instance_double(Hyrax::M3SchemaLoader, form_definitions_for: { title: { required: true, primary: true } }, attributes_for: {}) }
 
     before do
@@ -253,6 +310,151 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
       form = described_class.for(resource: work)
       expect(form.secondary_terms).not_to include(:video_embed)
+    end
+  end
+
+  describe 'flexible form definitions and the shared form class' do
+    let(:profile_fields) do
+      { 'title' => { required: true, primary: true, display: true } }
+    end
+
+    # `attributes_for` is driven from the same profile hash as the form fields:
+    # in a real install the model answers whatever the profile declares, and
+    # stubbing only the form side creates a divergence that cannot occur.
+    let(:schema_loader) do
+      loader = instance_double(Hyrax::M3SchemaLoader)
+      allow(loader).to receive(:current_version).and_return(1)
+      allow(loader).to receive(:index_rules_for).and_return({})
+      allow(loader).to receive(:form_definitions_for) { profile_fields }
+      allow(loader).to receive(:attributes_for) do
+        profile_fields.keys.each_with_object({}) do |name, attrs|
+          attrs[name.to_sym] = Valkyrie::Types::Array.of(Valkyrie::Types::String)
+        end
+      end
+      loader
+    end
+
+    let(:work_class) do
+      klass = Class.new(Hyrax::Work) do
+        def self.name
+          'TestSharedDefinitionsWork'
+        end
+      end
+      klass.acts_as_flexible_resource
+      klass
+    end
+
+    let(:form_class) { Class.new(Hyrax::Forms::ResourceForm(work_class)) }
+    let(:work) { work_class.new }
+
+    before do
+      allow(Hyrax.config).to receive(:flexible?).and_return(true)
+      allow(Hyrax::Schema).to receive(:m3_schema_loader).and_return(schema_loader)
+      allow(Hyrax::FlexibleSchema).to receive(:current_schema_id).and_return(1)
+    end
+
+    after do
+      Hyrax.config.flexible_classes.delete('TestSharedDefinitionsWork')
+    end
+
+    # `display: false` is load-bearing: the pre-existing prune drops only fields
+    # marked for display, so these examples pass without the fix if the field is
+    # visible. `redirects` is the shipped hidden field.
+    let(:hidden_field) { { required: false, primary: false, display: false } }
+
+    it "does not carry a previous profile's hidden field into the next form" do
+      profile_fields['extra_profile_field'] = hidden_field
+      form_class.new(resource: work)
+
+      profile_fields.delete('extra_profile_field')
+      form = form_class.new(resource: work)
+
+      expect(form.singleton_class.definitions.keys).not_to include('extra_profile_field')
+    end
+
+    it "leaves a profile's field off the form class" do
+      profile_fields['extra_profile_field'] = hidden_field
+      form_class.new(resource: work)
+
+      expect(form_class.definitions.keys).not_to include('extra_profile_field')
+    end
+
+    it "keeps a form's profile fields when another form is built while it is in flight" do
+      in_flight = form_class.new(resource: work)
+      form_class.new(resource: work).send(:reset_flexible_definitions!)
+
+      in_flight.validate(title: ['A title'])
+
+      expect(in_flight.title).to eq ['A title']
+    end
+
+    it "keeps a form's required fields when another form is built while it is in flight" do
+      # A field only the profile requires, checked by FlexibleFormBehavior;
+      # `title` would also be caught by core_metadata's static validator
+      # wherever flexible is off at boot, hiding the race.
+      profile_fields['profile_only_field'] = { required: true, primary: false, display: true }
+      flexible_form_class = Class.new(Hyrax::Forms::ResourceForm(work_class)) { include Hyrax::FlexibleFormBehavior }
+      in_flight = flexible_form_class.new(resource: work)
+      flexible_form_class.new(resource: work).send(:reset_flexible_definitions!)
+
+      in_flight.validate(profile_only_field: [])
+
+      expect(in_flight.errors[:profile_only_field]).to include "can't be blank"
+    end
+
+    it 'keeps profile-only validation after a second thread resets its form' do
+      profile_fields['profile_only_field'] = { required: true, primary: false, display: true }
+      flexible_form_class = Class.new(Hyrax::Forms::ResourceForm(work_class)) { include Hyrax::FlexibleFormBehavior }
+      in_flight = flexible_form_class.new(resource: work)
+      other_work = work_class.new
+
+      # Join establishes the failing interleaving without timing-dependent sleeps.
+      # Thread#value also propagates failures from the second worker.
+      Thread.new do
+        other = flexible_form_class.new(resource: other_work)
+        other.send(:reset_flexible_definitions!)
+      end.value
+      in_flight.validate(title: ['First row'], profile_only_field: [])
+
+      expect(in_flight.title).to eq ['First row']
+      expect(in_flight.errors[:profile_only_field]).to include "can't be blank"
+      expect(flexible_form_class.definitions.keys).not_to include('profile_only_field')
+    end
+
+    it 'does not replace the required fields of an in-flight form after a profile update' do
+      profile_fields['first_only_field'] = { required: true, primary: false, display: true }
+      flexible_form_class = Class.new(Hyrax::Forms::ResourceForm(work_class)) { include Hyrax::FlexibleFormBehavior }
+      first = flexible_form_class.new(resource: work)
+      first_definition = first.singleton_class.schema_definitions['first_only_field']
+
+      profile_fields['first_only_field'] = { required: false, primary: false, display: true }
+      second = flexible_form_class.new(resource: work_class.new)
+
+      first.validate(title: ['First row'], first_only_field: [])
+      second.validate(title: ['Second row'], first_only_field: [])
+
+      expect(first.errors[:first_only_field]).to include "can't be blank"
+      expect(second.errors[:first_only_field]).to be_empty
+      expect(first_definition[:required]).to be true
+      expect(second.singleton_class.schema_definitions['first_only_field'][:required]).to be false
+    end
+
+    it 'builds the form from a subclass that reads as the form class' do
+      stub_const('TestSharedDefinitionsForm', form_class)
+      form = form_class.new(resource: work)
+
+      expect(form).to be_a form_class
+      expect(form.class).not_to eq form_class
+      expect(form.class.name).to eq 'TestSharedDefinitionsForm'
+      expect(form.class.inspect).to eq 'TestSharedDefinitionsForm'
+      expect(form.class.to_s).to eq 'TestSharedDefinitionsForm'
+    end
+
+    it 'still exposes the profile fields on the instance' do
+      form = form_class.new(resource: work)
+
+      expect(form.singleton_class.definitions.keys).to include('title')
+      expect(form.title).to eq []
     end
   end
 

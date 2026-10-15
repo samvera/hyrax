@@ -44,15 +44,16 @@ module Hyrax
     private
 
     # These are the file sets that belong to this work, but not necessarily
-    # in order.
-    # Arbitrarily maxed at 10 thousand; had to specify rows due to solr's default of 10
+    # in order. Scoped to ordered_ids (already known)
     def file_set_ids
-      pairs = file_set_models.map { |model| ["has_model_ssim", model] }
-      query = Hyrax::SolrQueryBuilderService.construct_query(pairs, "OR")
+      return @file_set_ids ||= [] if ordered_ids.empty?
+      query = Hyrax::SolrQueryService.new
+                                     .with_ids(ids: ordered_ids)
+                                     .with_field_pairs(field_pairs: { "has_model_ssim" => file_set_models }, join_with: 'OR')
+                                     .build
       @file_set_ids ||= Hyrax::SolrService.query(query,
-                                                   rows: 10_000,
-                                                   fl: Hyrax.config.id_field,
-                                                   fq: "{!join from=ordered_targets_ssim to=id}id:\"#{id}/list_source\"")
+                                                   rows: ordered_ids.length,
+                                                   fl: Hyrax.config.id_field)
                                           .flat_map { |x| x.fetch(Hyrax.config.id_field, []) }
     end
 

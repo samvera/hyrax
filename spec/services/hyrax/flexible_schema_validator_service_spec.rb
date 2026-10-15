@@ -28,7 +28,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidatorService, :clean_repo do
         end
 
         it 'is invalid' do
-          expect(service.errors.first).to eq "Missing required classes: AdminSet, Collection, FileSet."
+          expect(service.errors).to include "Missing required classes: AdminSet, Collection, FileSet."
         end
       end
 
@@ -40,7 +40,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidatorService, :clean_repo do
         end
 
         it 'is invalid' do
-          expect(service.errors.first).to eq "Invalid classes: InvalidWorkType, AnotherInvalidWorkType."
+          expect(service.errors).to include "Invalid classes: InvalidWorkType, AnotherInvalidWorkType."
         end
       end
 
@@ -72,10 +72,11 @@ RSpec.describe Hyrax::FlexibleSchemaValidatorService, :clean_repo do
           service.validate!
         end
 
-        it 'is invalid' do
-          expect(service.errors.size).to eq 2
-          expect(service.errors.first).to eq 'Schema error at `/properties/title/range`: Invalid value `nil` for type `string`.'
-          expect(service.errors.last).to eq "Schema error at `/properties/creator`: Missing required properties: 'range'."
+        it 'reports both properties' do
+          expect(service.errors).to contain_exactly(
+            'Schema error at `/properties/title/range`: Invalid value `nil` for type `string`.',
+            "Schema error at `/properties/creator`: Missing required properties: 'range'."
+          )
         end
       end
 
@@ -87,7 +88,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidatorService, :clean_repo do
           end
 
           it 'is invalid' do
-            expect(service.errors.first).to eq 'A `label` property is required.'
+            expect(service.errors).to include 'A `label` property is required.'
           end
         end
 
@@ -98,7 +99,7 @@ RSpec.describe Hyrax::FlexibleSchemaValidatorService, :clean_repo do
           end
 
           it 'is invalid' do
-            expect(service.errors.first).to eq 'Label must be available on FileSet.'
+            expect(service.errors).to include 'Label must be available on FileSet.'
           end
         end
 
@@ -158,6 +159,86 @@ RSpec.describe Hyrax::FlexibleSchemaValidatorService, :clean_repo do
           'Classes with existing records cannot be removed from the profile: GenericWork.'
         )
       end
+    end
+  end
+
+  describe 'the configured validator list' do
+    let(:run_order) { [] }
+
+    # Each validator appends its own name, so the assertions read on the order
+    # the service ran them in.
+    def recording_validator(name)
+      log = run_order
+      Class.new(Hyrax::FlexibleSchemaValidators::BaseValidator) do
+        define_method(:validate!) { log << name }
+      end
+    end
+
+    it 'runs each configured validator in the order it is listed' do
+      allow(Hyrax.config).to receive(:flexible_schema_validators)
+        .and_return([recording_validator(:first), recording_validator(:second)])
+
+      service.validate!
+
+      expect(run_order).to eq [:first, :second]
+    end
+
+    it 'resolves a validator registered by name' do
+      stub_const('NamedValidator', recording_validator(:named))
+      allow(Hyrax.config).to receive(:flexible_schema_validators).and_return(['NamedValidator'])
+
+      service.validate!
+
+      expect(run_order).to eq [:named]
+    end
+
+    it 'reports what an app-registered validator finds' do
+      app_validator = Class.new(Hyrax::FlexibleSchemaValidators::BaseValidator) do
+        def validate!
+          add_error 'the app said no'
+          add_warning 'the app is unsure'
+        end
+      end
+      allow(Hyrax.config).to receive(:flexible_schema_validators).and_return([app_validator])
+
+      service.validate!
+
+      expect(service.errors).to contain_exactly('the app said no')
+      expect(service.warnings).to contain_exactly('the app is unsure')
+    end
+  end
+
+  describe 'validator independence' do
+    # No validator may depend on another having run, so that an app can reorder
+    # or drop entries in Hyrax.config.flexible_schema_validators. A validator
+    # that consults another's findings fails here rather than in the app that
+    # reorders the list. The profile needs one error and one warning for the
+    # two runs to have something to disagree about.
+    let(:broken_profile) do
+      profile['properties'].delete('label')
+      profile['properties']['subject_faceted'] = {
+        'available_on' => { 'class' => ['GenericWork'] },
+        'indexing' => ['subject_faceted_tesim'],
+        'view' => { 'render_as' => 'faceted' }
+      }
+      profile
+    end
+
+    def messages_running(validators)
+      allow(Hyrax.config).to receive(:flexible_schema_validators).and_return(validators)
+      service = described_class.new(profile: Marshal.load(Marshal.dump(broken_profile)))
+      service.validate!
+      [service.errors, service.warnings]
+    end
+
+    it 'finds the same problems whatever order the validators run in' do
+      forward_errors, forward_warnings = messages_running(Hyrax.config.flexible_schema_validators)
+      reversed_errors, reversed_warnings = messages_running(Hyrax.config.flexible_schema_validators.reverse)
+
+      expect(forward_errors).not_to be_empty
+      expect(forward_warnings).not_to be_empty
+      expect(reversed_errors).to match_array(forward_errors)
+      expect(reversed_warnings).to match_array(forward_warnings)
     end
   end
 end

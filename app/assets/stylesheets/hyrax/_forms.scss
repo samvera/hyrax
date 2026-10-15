@@ -184,13 +184,119 @@ form.button-to {
 }
 
 .required-tag {
-  vertical-align: super;
+  vertical-align: middle;
+  margin-left: 0.25rem;
 }
 
+// ============================================================
+// Edit work form – spacing & alignment fixes
+// CSS only: no markup changes, no field moves, no form changes.
+// ============================================================
+
+// Consistent padding across all tab panes
+.tabs .tab-content > .tab-pane > .form-tab-content {
+  padding: 1.5rem;
+}
+
+// Consistent vertical rhythm between form groups on the Descriptions tab
+.form-tab-content > .base-terms,
+.form-tab-content > #extended-terms {
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+}
+
+// Sharing tab – Add group / Add user row layout
 .permission-add-user,
 .permission-add-group {
   margin-bottom: 1em;
   margin-left: 0;
+
+  legend {
+    font-size: 0.95rem;
+    padding-top: 0;
+  }
+
+  // Flex layout for the controls row. Bootstrap .form-inline sets
+  // `display: inline-block; width: auto` on .form-control children,
+  // so we need enough specificity to override.
+  .col-sm-9.form-inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+
+    // Hide <br> tags that break the flex layout
+    br {
+      display: none;
+    }
+
+    // Result spans sit on their own line below the controls
+    > span:last-child {
+      flex-basis: 100%;
+    }
+
+    // Use gap instead of margin for button spacing
+    .btn.ml-2 {
+      margin-left: 0;
+    }
+
+    // First control (group select or user Select2 container) fills space
+    > select.form-control:first-of-type {
+      flex: 1 1 0 !important;
+      width: 0 !important;
+      min-width: 10rem;
+    }
+
+    > .select2-container {
+      flex: 1 1 0 !important;
+      min-width: 10rem;
+    }
+
+    // Hidden Select2 offscreen input – don't affect layout
+    > input.select2-offscreen,
+    > input[type="text"] {
+      position: absolute;
+      width: 0;
+      flex: 0 0 0;
+    }
+
+    // "Choose Access" select – consistent width so both rows align
+    > select.form-control:last-of-type {
+      flex: 0 0 auto !important;
+      width: auto !important;
+      min-width: 10rem;
+    }
+
+    // Add button – fixed width so both rows align
+    > .btn {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+  }
+}
+
+// Style the bare text input in the user row to match Bootstrap .form-control
+.permission-add-user .form-inline input[type="text"] {
+  display: block;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  &:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
 }
 
 .permissions-add-user-label,
@@ -200,6 +306,27 @@ form.button-to {
   font-weight: bold;
   margin-bottom: 0;
   padding: 7px 15px;
+}
+
+// Currently Shared With table – consistent spacing
+#share .table {
+  margin-top: 1rem;
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+// Relationships tab – match spacing to other tabs
+#relationships {
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
 }
 
 .search-form {

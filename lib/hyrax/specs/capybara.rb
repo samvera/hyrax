@@ -85,6 +85,27 @@ def save_timestamped_page_and_screenshot(page, meta)
   puts "  HTML: #{page_path}"
 end
 
+# chromedriver sometimes raises this as an UnknownError instead of a retryable
+# StaleElementReferenceError, so Capybara's synchronize never catches it.
+module Hyrax
+  module Specs
+    module RetriesDetachedNodeErrors
+      DETACHED_NODE_ERROR = /node with given id does not belong to the document/i.freeze
+
+      protected
+
+      def catch_error?(error, errors = nil)
+        return true if error.is_a?(Selenium::WebDriver::Error::WebDriverError) &&
+                       error.message.to_s.match?(DETACHED_NODE_ERROR)
+
+        super
+      end
+    end
+  end
+end
+
+Capybara::Node::Base.prepend(Hyrax::Specs::RetriesDetachedNodeErrors)
+
 RSpec.configure do |config|
   config.after(:each, :js) do |example|
     save_timestamped_page_and_screenshot(Capybara.page, example.metadata) if example.exception
