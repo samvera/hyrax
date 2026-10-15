@@ -71,10 +71,12 @@ RSpec.describe HyraxHelper, type: :helper do
   describe '#available_admin_sets_for_creating_works' do
     let(:ability) { instance_double(Ability) }
     let(:query_service) { instance_double('query_service') }
+    let(:metadata_adapter) { instance_double('metadata_adapter') }
 
     before do
       allow(Flipflop).to receive(:assign_admin_set?).and_return(true)
       allow(Hyrax).to receive(:query_service).and_return(query_service)
+      allow(Hyrax).to receive(:metadata_adapter).and_return(metadata_adapter)
     end
 
     context 'when depositable admin sets are available' do
@@ -188,6 +190,42 @@ RSpec.describe HyraxHelper, type: :helper do
           [
             ['Default Admin Set', Hyrax::AdminSetCreateService::DEFAULT_ID],
             ['Set B', 'missing-admin-set']
+          ]
+        )
+      end
+    end
+
+    context 'with a Postgres metadata adapter' do
+      let(:metadata_adapter) { Valkyrie::MetadataAdapter.find(:postgres_adapter) }
+      let(:source_ids) { ['z-admin-set', Hyrax::AdminSetCreateService::DEFAULT_ID, 'a-admin-set'] }
+      let(:admin_sets) do
+        [
+          instance_double('resource', title: ['Zeta Admin Set'], id: 'z-admin-set'),
+          instance_double('resource', title: ['Default Admin Set'], id: Hyrax::AdminSetCreateService::DEFAULT_ID),
+          instance_double('resource', title: ['Alpha Admin Set'], id: 'a-admin-set')
+        ]
+      end
+
+      before do
+        allow(Hyrax::Collections::PermissionsService)
+          .to receive(:source_ids_for_deposit)
+          .with(ability:, source_type: 'admin_set')
+          .and_return(source_ids)
+        allow(Hyrax::AdminSetCreateService)
+          .to receive(:default_admin_set?) do |id:|
+            id == Hyrax::AdminSetCreateService::DEFAULT_ID
+          end
+        allow(query_service).to receive(:find_many_by_ids).with(ids: source_ids).and_return(admin_sets)
+      end
+
+      it 'builds admin set options from Postgres without querying Solr' do
+        expect(Hyrax::SolrQueryService).not_to receive(:new)
+
+        expect(helper.available_admin_sets_for_creating_works(ability:)).to eq(
+          [
+            ['Default Admin Set', Hyrax::AdminSetCreateService::DEFAULT_ID],
+            ['Alpha Admin Set', 'a-admin-set'],
+            ['Zeta Admin Set', 'z-admin-set']
           ]
         )
       end

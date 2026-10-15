@@ -34,8 +34,33 @@ module Hyrax
       source_ids = Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability:, source_type: 'admin_set')
       return [] if source_ids.blank?
 
-      # This helper only needs indexed display data. Use Solr first to avoid per-id repository fetches,
-      # but fall back for admin sets that have not been indexed yet.
+      admin_sets_list = if Hyrax.metadata_adapter.is_a?(Valkyrie::Persistence::Postgres::MetadataAdapter)
+                          admin_sets_from_query_service(source_ids)
+                        else
+                          admin_sets_from_solr(source_ids)
+                        end
+
+      # Sorts the default admin set to be first, then the rest by title.
+      admin_sets_list.sort do |a, b|
+        if Hyrax::AdminSetCreateService.default_admin_set?(id: a[1])
+          -1
+        elsif Hyrax::AdminSetCreateService.default_admin_set?(id: b[1])
+          1
+        else
+          a[0] <=> b[0]
+        end
+      end
+    end
+
+    def admin_sets_from_query_service(source_ids)
+      Hyrax.query_service.find_many_by_ids(ids: source_ids).map do |source|
+        [source.title.first, source.id]
+      end
+    end
+
+    # This helper only needs indexed display data. Use Solr first to avoid per-id repository fetches,
+    # but fall back for admin sets that have not been indexed yet.
+    def admin_sets_from_solr(source_ids)
       admin_sets_list = Hyrax::SolrQueryService.new
                               .with_ids(ids: source_ids)
                               .with_field_pairs(
@@ -61,17 +86,10 @@ module Hyrax
         )
       end
 
-      # Sorts the default admin set to be first, then the rest by title.
-      admin_sets_list.sort do |a, b|
-        if Hyrax::AdminSetCreateService.default_admin_set?(id: a[1])
-          -1
-        elsif Hyrax::AdminSetCreateService.default_admin_set?(id: b[1])
-          1
-        else
-          a[0] <=> b[0]
-        end
-      end
+      admin_sets_list
     end
+
+    private :admin_sets_from_query_service, :admin_sets_from_solr
 
     ##
     # @return [Array<String>] the list of all user groups
