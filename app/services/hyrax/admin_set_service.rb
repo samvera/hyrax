@@ -53,9 +53,15 @@ module Hyrax
       file_counts = Hash.new(0)
       file_set_models = Hyrax::ModelRegistry.file_set_rdf_representations
       admin_sets.each do |admin_set|
-        query = "{!join from=member_ids_ssim to=id}isPartOf_ssim:#{admin_set.id}"
-        file_results = Hyrax::SolrService.get(fq: [query, "{!terms f=has_model_ssim}#{file_set_models.join(',')}"], rows: 0)
-        file_counts[admin_set.id] = file_results['response']['numFound']
+        member_ids = Hyrax::SolrQueryService.new
+                                             .with_field_pairs(field_pairs: { 'isPartOf_ssim' => admin_set.id })
+                                             .pluck('member_ids_ssim')
+        next if member_ids.empty?
+
+        file_counts[admin_set.id] = Hyrax::SolrQueryService.new
+                                                             .with_ids(ids: member_ids)
+                                                             .with_field_pairs(field_pairs: { 'has_model_ssim' => file_set_models }, join_with: 'OR')
+                                                             .count
       end
       file_counts
     end

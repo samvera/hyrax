@@ -2,7 +2,8 @@
 module Hyrax
   ##
   # Answers whether any direct member of a work has a representative the
-  # user can see in a IIIF viewer, with a single Solr query.
+  # user can see in a IIIF viewer, with two bounded Solr queries (never
+  # proportional to the number of works being rendered).
   class ViewableChildWorksService
     ##
     # @param solr_document [::SolrDocument] the work's solr document
@@ -23,17 +24,25 @@ module Hyrax
 
     # @return [Boolean]
     def viewable?
-      return false if viewable_mime_filter.empty? || member_ids.empty?
+      return false if viewable_mime_filter.empty? || representative_ids.empty?
 
       Hyrax::SolrQueryService.new(query: ["(#{viewable_mime_filter})"], solr_service: solr_service)
-                             .with_join(from: 'hasRelatedMediaFragment_ssim', to: 'id',
-                                        query: Hyrax::SolrQueryService.new.with_ids(ids: member_ids))
+                             .with_ids(ids: representative_ids)
                              .accessible_by(ability: ability)
                              .count
                              .positive?
     end
 
     private
+
+    # each direct member's representative FileSet id
+    def representative_ids
+      return @representative_ids ||= [] if member_ids.empty?
+      @representative_ids ||= Hyrax::SolrQueryService.new(solr_service: solr_service)
+                                                       .with_ids(ids: member_ids)
+                                                       .pluck('hasRelatedMediaFragment_ssim', rows: member_ids.length)
+                                                       .reject(&:blank?)
+    end
 
     def member_ids
       @member_ids ||= Array(solr_document.member_ids)
