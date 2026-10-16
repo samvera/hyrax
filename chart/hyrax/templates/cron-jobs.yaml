@@ -1,0 +1,116 @@
+{{- range $name, $job := .Values.cronJobs }}
+{{- if $job.enabled }}
+{{- $image := $job.image | default dict }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "hyrax.fullname" $ }}-{{ $name }}
+  labels:
+    {{- include "hyrax.labels" $ | nindent 4 }}
+spec:
+  schedule: {{ required (printf "cronJobs.%s.schedule is required" $name) $job.schedule | quote }}
+  concurrencyPolicy: {{ $job.concurrencyPolicy | default "Forbid" }}
+  successfulJobsHistoryLimit: {{ $job.successfulJobsHistoryLimit | default 1 }}
+  failedJobsHistoryLimit: {{ $job.failedJobsHistoryLimit | default 3 }}
+  jobTemplate:
+    spec:
+      backoffLimit: {{ $job.backoffLimit | default 2 }}
+      ttlSecondsAfterFinished: {{ $job.ttlSecondsAfterFinished | default 86400 }}
+      template:
+        metadata:
+        {{- with $.Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
+        spec:
+          restartPolicy: {{ $job.restartPolicy | default "OnFailure" }}
+          {{- with $.Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "hyrax.serviceAccountName" $ }}
+          containers:
+            - name: {{ $name }}
+              image: "{{ $image.repository | default $.Values.image.repository }}:{{ $image.tag | default $.Values.image.tag | default $.Chart.AppVersion }}"
+              imagePullPolicy: {{ $image.pullPolicy | default $.Values.image.pullPolicy }}
+              command:
+                - /bin/sh
+                - -c
+                - {{ required (printf "cronJobs.%s.command is required" $name) $job.command | quote }}
+              envFrom:
+                - configMapRef:
+                    name: {{ include "hyrax.fullname" $ }}-env
+                - secretRef:
+                    name: {{ include "hyrax.fullname" $ }}
+                {{- if $.Values.solrExistingSecret }}
+                - secretRef:
+                    name: {{ $.Values.solrExistingSecret }}
+                {{- end }}
+                {{- with $.Values.extraEnvFrom }}
+                {{- toYaml . | nindent 16 }}
+                {{- end }}
+              env:
+                {{- if $.Values.extraEnvVars }}
+                {{- include "hyrax.tplvalues.render" (dict "value" $.Values.extraEnvVars "context" $) | nindent 16 }}
+                {{- end }}
+                {{- with $job.env }}
+                {{- toYaml . | nindent 16 }}
+                {{- end }}
+              volumeMounts:
+                - name: derivatives
+                  mountPath: /app/samvera/derivatives
+                - name: uploads
+                  subPath: file_cache
+                  mountPath: /app/samvera/file_cache
+                - name: uploads
+                  subPath: uploads
+                  mountPath: /app/samvera/uploads
+                {{- if $.Values.applicationExistingClaim }}
+                - name: application
+                  mountPath: /app/samvera/hyrax-webapp
+                {{- end }}
+                {{- with $job.extraVolumeMounts }}
+                {{- toYaml . | nindent 16 }}
+                {{- end }}
+              resources:
+                {{- toYaml ($job.resources | default dict) | nindent 16 }}
+          volumes:
+            - name: derivatives
+              {{- if and $.Values.derivativesVolume.enabled $.Values.derivativesVolume.existingClaim }}
+              persistentVolumeClaim:
+                claimName: {{ $.Values.derivativesVolume.existingClaim }}
+              {{- else if $.Values.derivativesVolume.enabled }}
+              persistentVolumeClaim:
+                claimName: {{ include "hyrax.fullname" $ }}-derivatives
+              {{- else }}
+              emptyDir: {}
+              {{- end }}
+            - name: uploads
+              {{- if and $.Values.uploadsVolume.enabled $.Values.uploadsVolume.existingClaim }}
+              persistentVolumeClaim:
+                claimName: {{ $.Values.uploadsVolume.existingClaim }}
+              {{- else if $.Values.uploadsVolume.enabled }}
+              persistentVolumeClaim:
+                claimName: {{ include "hyrax.fullname" $ }}-uploads
+              {{- else }}
+              emptyDir: {}
+              {{- end }}
+            {{- if $.Values.applicationExistingClaim }}
+            - name: application
+              persistentVolumeClaim:
+                claimName: {{ $.Values.applicationExistingClaim }}
+            {{- end }}
+            {{- with $job.extraVolumes }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with $job.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $job.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}
+{{- end }}
