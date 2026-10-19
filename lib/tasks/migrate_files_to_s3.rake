@@ -13,10 +13,12 @@ namespace :hyrax do
       abort 'Set up the :repository_s3 Valkyrie storage adapter first (see documentation/migrating-files-to-s3.md).' unless Valkyrie::StorageAdapter.storage_adapters.key?(:repository_s3)
     end
 
-    def s3_migration_each_original(limit: ENV['LIMIT']&.to_i)
+    def s3_migration_each_original(limit: ENV['LIMIT']&.to_i, progress: nil)
       done = 0
       Hyrax::S3Migration.each_file_set do |file_set|
         break if limit && done >= limit
+
+        progress&.tick
 
         original = Hyrax.custom_queries.find_original_file(file_set:)
         next unless original
@@ -27,7 +29,8 @@ namespace :hyrax do
 
     def s3_migration_inline(dry_run:)
       counts = Hash.new(0)
-      s3_migration_each_original do |file_set, original|
+      progress = Hyrax::S3Migration::Progress.new(detail: -> { counts.map { |status, count| "#{status}: #{count}" }.join('  ') })
+      s3_migration_each_original(progress:) do |file_set, original|
         result = Hyrax::S3Migration::FileMigrator.new(file_set:, original:, dry_run:).call
         counts[result.status] += 1
         next false if result.status == :already_migrated
@@ -69,7 +72,8 @@ namespace :hyrax do
     DESC
     task verify_s3_files: :environment do
       counts = Hash.new(0)
-      s3_migration_each_original do |file_set, original|
+      progress = Hyrax::S3Migration::Progress.new(detail: -> { counts.map { |status, count| "#{status}: #{count}" }.join('  ') })
+      s3_migration_each_original(progress:) do |file_set, original|
         result = Hyrax::S3Migration::Auditor.new(original:).call
         counts[result.status] += 1
         next false if result.status == :not_in_s3
@@ -87,14 +91,16 @@ namespace :hyrax do
     desc 'Read-only report of file storage by file use and scheme (disk, shrine, ...).'
     task report_file_storage: :environment do
       puts "use | scheme | files | GB"
-      Hyrax::S3Migration::StorageReport.call.sort.each do |(use, scheme), (count, bytes)|
+      Hyrax::S3Migration::StorageReport.call(progress: Hyrax::S3Migration::Progress.new).sort.each do |(use, scheme), (count, bytes)|
         puts "#{use} | #{scheme} | #{count} | #{(bytes / 1e9).round(2)}"
       end
     end
 
     def s3_migration_run_quarantine(label, action)
       counts = Hash.new(0)
+      progress = Hyrax::S3Migration::Progress.new(detail: -> { counts.map { |status, count| "#{status}: #{count}" }.join('  ') })
       Hyrax::S3Migration::Manifest.new.each_entry do |entry|
+        progress.tick
         quarantine = Hyrax::S3Migration::Quarantine.new(entry, apply: s3_migration_flag('APPLY'),
                                                                verify_sha: s3_migration_flag('VERIFY_SHA', default: 'true'))
         status = quarantine.public_send(action)

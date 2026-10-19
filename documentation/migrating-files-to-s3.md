@@ -37,6 +37,7 @@ Things to know when running at scale:
 
 - Set `S3_MIGRATION_QUEUE` to run the jobs on a dedicated queue (your workers must be listening to it) so ingest and derivative jobs are not starved.
 - Per-file results are logged as `[S3Migration] <file set id> <status>`.
+- Long inline runs, reports and audits print a progress line every 500 items with the elapsed time and rate. Change the interval with `PROGRESS_EVERY=<n>`, or set it to `0` to turn it off.
 - Every migrated file also gets a manifest object in the bucket (see step 5).
 - The live site reads from the same storage while this runs, so start with few workers and watch the storage's throughput and latency.
 

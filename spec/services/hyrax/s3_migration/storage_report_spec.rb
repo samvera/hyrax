@@ -22,4 +22,15 @@ RSpec.describe Hyrax::S3Migration::StorageReport do
       %w[ThumbnailImage disk] => [1, 5]
     )
   end
+
+  it 'ticks the progress reporter once per file set' do
+    file_sets = [double('fs1'), double('fs2'), double('fs3')]
+    allow(Hyrax::S3Migration).to receive(:each_file_set) { |&block| file_sets.each(&block) }
+    allow(Hyrax.custom_queries).to receive(:find_files).and_return([])
+    progress = instance_double(Hyrax::S3Migration::Progress, tick: nil)
+
+    described_class.call(progress:)
+
+    expect(progress).to have_received(:tick).exactly(3).times
+  end
 end
