@@ -8,6 +8,8 @@ module Hyrax
     class FileMigrator
       Result = Struct.new(:status, :message, :entry, keyword_init: true)
 
+      CHUNK_SIZE = 1_048_576
+
       # @param file_set [Valkyrie::Resource] a file set
       # @param original [Hyrax::FileMetadata] the file set's original file
       def initialize(file_set:, original:, dry_run: false, s3_storage: nil, manifest: nil)
@@ -57,15 +59,37 @@ module Hyrax
         result(:suspect, "disk file does not match stored checksum #{suspect}") if suspect
       end
 
+      def stored_checksum
+        return @stored_checksum if defined?(@stored_checksum)
+
+        @stored_checksum = StoredChecksum.for(original)
+      end
+
       def stored_checksum_mismatch
-        stored = StoredChecksum.for(original)
-        stored.to_s if stored && stored.digest_class.file(disk_path).hexdigest != stored.digest
+        stored = stored_checksum
+        stored.to_s if stored && disk_digests[:stored] != stored.digest
+      end
+
+      # One pass over the disk file gives the SHA-256 and, when a checksum was recorded, that algorithm's
+      # digest, so a large file is read once for hashing and once for the upload.
+      def disk_digests
+        @disk_digests ||= begin
+          sha256 = Digest::SHA256.new
+          stored = stored_checksum&.digest_class&.new
+          File.open(disk_path, 'rb') do |io|
+            while (chunk = io.read(CHUNK_SIZE))
+              sha256 << chunk
+              stored << chunk if stored
+            end
+          end
+          { sha256: sha256.hexdigest, stored: stored&.hexdigest }
+        end
       end
 
       def migrate
         uploaded = nil
         persisted = false
-        disk_sha256 = Digest::SHA256.file(disk_path).hexdigest
+        disk_sha256 = disk_digests[:sha256]
         uploaded = File.open(disk_path, 'rb') { |io| s3_storage.upload(file: io, original_filename: filename, resource: file_set) }
         return result(:mismatch, 'S3 copy does not match disk (size/SHA-256)') unless copy_matches?(uploaded, disk_sha256)
 

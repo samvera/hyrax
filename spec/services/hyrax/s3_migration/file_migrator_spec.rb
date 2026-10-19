@@ -55,6 +55,53 @@ RSpec.describe Hyrax::S3Migration::FileMigrator do
     end
   end
 
+  describe 'reading the disk file' do
+    before { allow(File).to receive(:open).and_call_original }
+
+    it 'reads it once to hash and once to upload' do
+      expect(result.status).to eq :migrated
+      expect(File).to have_received(:open).with(disk_file, 'rb').twice
+    end
+
+    context 'with a stored checksum' do
+      let(:checksum) { [Digest::MD5.hexdigest(content)] }
+
+      it 'still hashes in a single pass' do
+        expect(result.status).to eq :migrated
+        expect(File).to have_received(:open).with(disk_file, 'rb').twice
+      end
+    end
+
+    context 'when this is a dry run with a stored checksum' do
+      let(:dry_run) { true }
+      let(:checksum) { [Digest::MD5.hexdigest(content)] }
+
+      it 'reads it once' do
+        expect(result.status).to eq :would_migrate
+        expect(File).to have_received(:open).with(disk_file, 'rb').once
+      end
+    end
+
+    context 'when this is a dry run with nothing to compare against' do
+      let(:dry_run) { true }
+
+      it 'does not read it at all' do
+        expect(result.status).to eq :would_migrate
+        expect(File).not_to have_received(:open).with(disk_file, 'rb')
+      end
+    end
+
+    context 'when it hashes a file larger than one chunk' do
+      let(:content) { 'x' * (described_class::CHUNK_SIZE + 10) }
+      let(:checksum) { [Digest::MD5.hexdigest(content)] }
+
+      it 'matches the digests of the whole file' do
+        expect(result.status).to eq :migrated
+        expect(manifest).to have_received(:write).with(hash_including(sha256: Digest::SHA256.hexdigest(content)))
+      end
+    end
+  end
+
   context 'when this is a dry run' do
     let(:dry_run) { true }
 
