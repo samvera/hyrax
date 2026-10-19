@@ -7,7 +7,7 @@ module Hyrax
       # @return [Hash{Array<String>=>Array<Integer>}] { [use, scheme] => [file count, bytes] }
       def self.call
         totals = Hash.new { |hash, key| hash[key] = [0, 0] }
-        Hyrax.query_service.find_all_of_model(model: Hyrax::S3Migration.file_set_class).each do |file_set|
+        Hyrax::S3Migration.each_file_set do |file_set|
           Hyrax.custom_queries.find_files(file_set:).each do |file|
             key = [use_for(file), file.file_identifier.to_s[/\A[a-z]+(?=:)/].to_s]
             totals[key][0] += 1

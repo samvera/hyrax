@@ -10,7 +10,7 @@ RSpec.describe Hyrax::S3Migration::StorageReport do
 
   it 'tallies files and bytes by use and storage scheme' do
     file_sets = [double('fs1'), double('fs2')]
-    allow(Hyrax.query_service).to receive(:find_all_of_model).with(model: Hyrax::S3Migration.file_set_class).and_return(file_sets)
+    allow(Hyrax::S3Migration).to receive(:each_file_set) { |&block| file_sets.each(&block) }
     allow(Hyrax.custom_queries).to receive(:find_files).with(file_set: file_sets[0])
                                                        .and_return([file(original_use, 'disk:///a', 100), file(thumbnail_use, 'disk:///t', 5)])
     allow(Hyrax.custom_queries).to receive(:find_files).with(file_set: file_sets[1])

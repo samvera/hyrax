@@ -8,7 +8,7 @@ module Hyrax
     class FileMigrator
       Result = Struct.new(:status, :message, :entry, keyword_init: true)
 
-      # @param file_set [Valkyrie::Resource] a file set (Hyrax::S3Migration.file_set_class)
+      # @param file_set [Valkyrie::Resource] a file set
       # @param original [Hyrax::FileMetadata] the file set's original file
       def initialize(file_set:, original:, dry_run: false, s3_storage: nil, manifest: nil)
         @file_set = file_set

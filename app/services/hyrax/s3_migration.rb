@@ -18,9 +18,25 @@ module Hyrax
         scope_provider.call.presence
       end
 
-      # The Valkyrie file set class this app is configured with (Hyrax.config.file_set_model).
-      def file_set_class
-        Hyrax.config.valkyrie_file_set_class
+      # Yields every file set stored in the repository, once. Lists each non-Wings query service directly,
+      # once per name Hyrax registers for file sets (Hyrax::ModelRegistry.file_set_classes, which includes
+      # Hyrax.config.file_set_model). The composite query service converts the model it is given, so apps
+      # that store file sets under the legacy "FileSet" name get nothing back when asked through it.
+      def each_file_set
+        return enum_for(:each_file_set) unless block_given?
+
+        seen = Set.new
+        query_services.each do |service|
+          Hyrax::ModelRegistry.file_set_classes.each do |model|
+            service.find_all_of_model(model:).each { |file_set| yield file_set if seen.add?(file_set.id.to_s) }
+          end
+        end
+      end
+
+      def query_services
+        service = Hyrax.query_service
+        services = service.respond_to?(:services) ? service.services : [service]
+        services.reject { |inner| defined?(Wings::Valkyrie::QueryService) && inner.is_a?(Wings::Valkyrie::QueryService) }
       end
     end
   end

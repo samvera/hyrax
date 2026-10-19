@@ -13,7 +13,7 @@ RSpec.describe MigrateFilesToS3Job do
   end
 
   before do
-    allow(Hyrax.query_service).to receive(:find_all_of_model).with(model: Hyrax::S3Migration.file_set_class).and_return(file_sets)
+    allow(Hyrax::S3Migration).to receive(:each_file_set) { |&block| file_sets.each(&block) }
     allow(Hyrax.custom_queries).to receive(:find_original_file) { |file_set:| originals[file_set.id.to_s] }
     allow(MigrateFileSetToS3Job).to receive(:perform_later)
   end
@@ -29,14 +29,6 @@ RSpec.describe MigrateFilesToS3Job do
     expect(described_class.perform_now(limit: 2)).to eq 2
 
     expect(MigrateFileSetToS3Job).to have_received(:perform_later).twice
-  end
-
-  it 'enumerates the configured file set class' do
-    custom = Class.new(Hyrax::FileSet)
-    allow(Hyrax.config).to receive(:valkyrie_file_set_class).and_return(custom)
-    allow(Hyrax.query_service).to receive(:find_all_of_model).with(model: custom).and_return([])
-
-    expect(described_class.perform_now).to eq 0
   end
 
   it 'skips file sets that disappear while enumerating' do

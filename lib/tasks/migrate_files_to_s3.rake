@@ -15,7 +15,7 @@ namespace :hyrax do
 
     def s3_migration_each_original(limit: ENV['LIMIT']&.to_i)
       done = 0
-      Hyrax.query_service.find_all_of_model(model: Hyrax::S3Migration.file_set_class).each do |file_set|
+      Hyrax::S3Migration.each_file_set do |file_set|
         break if limit && done >= limit
 
         original = Hyrax.custom_queries.find_original_file(file_set:)
@@ -39,7 +39,8 @@ namespace :hyrax do
         puts "  ERROR #{file_set.id} - #{e.class}: #{e.message}"
         true
       end
-      puts "\n#{counts.map { |status, count| "#{status}: #{count}" }.join('  ')}"
+      puts "\nExamined #{counts.values.sum} file sets. #{counts.map { |status, count| "#{status}: #{count}" }.join('  ')}".strip
+      puts 'No file sets were found; check the model names and query services.' if counts.empty?
     end
 
     desc <<~DESC
@@ -103,7 +104,8 @@ namespace :hyrax do
         counts[:error] += 1
         puts "  ERROR #{entry[:file_set_id]} - #{e.class}: #{e.message}"
       end
-      puts "\n#{counts.map { |status, count| "#{status}: #{count}" }.join('  ')}"
+      puts "\n#{counts.map { |status, count| "#{status}: #{count}" }.join('  ')}".strip
+      puts 'No manifest entries found.' if counts.empty?
     end
 
     desc <<~DESC
