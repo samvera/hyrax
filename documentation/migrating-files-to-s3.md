@@ -37,6 +37,8 @@ Things to know when running at scale:
 
 - Set `S3_MIGRATION_QUEUE` to run the jobs on a dedicated queue (your workers must be listening to it) so ingest and derivative jobs are not starved.
 - Per-file results are logged as `[S3Migration] <file set id> <status>`.
+- File sets are not re-indexed: the migration changes only where the bytes are stored, so the search index (including extracted full text) is left exactly as it was. Re-indexing would also re-read every file from S3 and re-run text extraction.
+- File sets with no original file (for example empty file sets left by an import) are reported as `NO_ORIGINAL` and skipped; nothing is moved or deleted for them.
 - Long inline runs, reports and audits print a progress line every 500 items with the elapsed time and rate. Change the interval with `PROGRESS_EVERY=<n>`, or set it to `0` to turn it off.
 - Every migrated file also gets a manifest object in the bucket (see step 5).
 - The live site reads from the same storage while this runs, so start with few workers and watch the storage's throughput and latency.

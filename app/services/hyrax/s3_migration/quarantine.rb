@@ -92,7 +92,6 @@ module Hyrax
         move(destination, path) unless File.exist?(path)
         current.file_identifier = Valkyrie::ID.new(entry[:old_id])
         Hyrax.persister.save(resource: current)
-        Hyrax.index_adapter.save(resource: Hyrax.query_service.find_by(id: entry[:file_set_id]))
       end
     end
   end

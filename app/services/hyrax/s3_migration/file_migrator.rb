@@ -113,7 +113,6 @@ module Hyrax
       def persist(current, uploaded)
         current.file_identifier = uploaded.id
         Hyrax.persister.save(resource: current)
-        Hyrax.index_adapter.save(resource: file_set)
       end
 
       def build_entry(uploaded, disk_sha256)

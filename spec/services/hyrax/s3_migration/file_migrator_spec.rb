@@ -40,7 +40,7 @@ RSpec.describe Hyrax::S3Migration::FileMigrator do
       expect(result.status).to eq :migrated
       expect(current.file_identifier).to eq uploaded.id
       expect(Hyrax.persister).to have_received(:save).with(resource: current)
-      expect(Hyrax.index_adapter).to have_received(:save).with(resource: file_set)
+      expect(Hyrax.index_adapter).not_to have_received(:save)
       expect(manifest).to have_received(:write).with(hash_including(
                                                        file_set_id: 'fs1', file_metadata_id: 'fm1',
                                                        old_id: identifier, new_id: 'shrine://fs1/uuid',

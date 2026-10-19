@@ -17,7 +17,13 @@ namespace :hyrax do
       progress = Hyrax::S3Migration::Progress.new(detail: -> { counts.map { |status, count| "#{status}: #{count}" }.join('  ') })
       on_error = lambda do |file_set, error|
         counts[:no_original] += 1
-        detail = error.is_a?(Valkyrie::Persistence::ObjectNotFoundError) ? 'original file record not found' : "#{error.class}: #{error.message}"
+        detail = if file_set.try(:file_ids).blank?
+                   'file set has no files'
+                 elsif error.is_a?(Valkyrie::Persistence::ObjectNotFoundError)
+                   'original file record not found'
+                 else
+                   "#{error.class}: #{error.message}"
+                 end
         puts "  NO_ORIGINAL #{file_set.id} - #{detail}"
       end
       Hyrax::S3Migration.each_original(limit: ENV['LIMIT']&.to_i, progress:, on_error:, &)

@@ -22,7 +22,6 @@ RSpec.describe Hyrax::S3Migration::Quarantine do
     File.write(disk_path, content)
     allow(s3_file).to receive(:checksum) { |digests:| digests.map { |digest| digest.update(s3_content).to_s } }
     allow(Hyrax.query_service).to receive(:find_by).with(id: 'fm1').and_return(current)
-    allow(Hyrax.query_service).to receive(:find_by).with(id: 'fs1').and_return(double('file_set'))
     allow(Hyrax.persister).to receive(:save)
     allow(Hyrax.index_adapter).to receive(:save)
   end
@@ -112,6 +111,7 @@ RSpec.describe Hyrax::S3Migration::Quarantine do
       expect(File.read(disk_path)).to eq content
       expect(current.file_identifier).to eq Valkyrie::ID.new("disk://#{disk_path}")
       expect(Hyrax.persister).to have_received(:save).with(resource: current)
+      expect(Hyrax.index_adapter).not_to have_received(:save)
     end
 
     context 'when this is a dry run' do
