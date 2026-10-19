@@ -20,8 +20,7 @@ class MigrateFilesToS3Job < Hyrax::ApplicationJob
   private
 
   def on_disk?(file_set)
-    Hyrax.custom_queries.find_original_file(file_set:)&.file_identifier.to_s.start_with?('disk://')
-  rescue Valkyrie::Persistence::ObjectNotFoundError
-    false
+    on_error = ->(fs, error) { Rails.logger.warn("[S3Migration] #{fs.id} has no readable original: #{error.class}") }
+    Hyrax::S3Migration.original_for(file_set, on_error:)&.file_identifier.to_s.start_with?('disk://')
   end
 end

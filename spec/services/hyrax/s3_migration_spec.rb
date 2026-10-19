@@ -60,6 +60,65 @@ RSpec.describe Hyrax::S3Migration do
     end
   end
 
+  describe '.each_original' do
+    let(:file_sets) { %w[a b c d].map { |id| double("fs #{id}", id: Valkyrie::ID.new(id)) } }
+    let(:originals) { { 'a' => double('orig a'), 'b' => nil, 'c' => double('orig c'), 'd' => double('orig d') } }
+
+    before do
+      allow(described_class).to receive(:each_file_set) { |&block| file_sets.each(&block) }
+      allow(Hyrax.custom_queries).to receive(:find_original_file) { |file_set:| originals[file_set.id.to_s] }
+    end
+
+    it 'yields each file set that has an original, and skips the rest' do
+      seen = []
+      described_class.each_original { |file_set, _original| seen << file_set.id.to_s }
+
+      expect(seen).to eq %w[a c d]
+    end
+
+    it 'reports a file set whose original cannot be loaded, and carries on' do
+      allow(Hyrax.custom_queries).to receive(:find_original_file).with(file_set: file_sets[0]).and_raise(Valkyrie::Persistence::ObjectNotFoundError)
+      errors = []
+      seen = []
+
+      described_class.each_original(on_error: ->(file_set, error) { errors << [file_set.id.to_s, error.class] }) { |file_set, _| seen << file_set.id.to_s }
+
+      expect(errors).to eq [['a', Valkyrie::Persistence::ObjectNotFoundError]]
+      expect(seen).to eq %w[c d]
+    end
+
+    it 'skips quietly when no error handler is given' do
+      allow(Hyrax.custom_queries).to receive(:find_original_file).and_raise(StandardError, 'boom')
+
+      expect { described_class.each_original { |_fs, _o| nil } }.not_to raise_error
+    end
+
+    it 'stops after the limit' do
+      seen = []
+      described_class.each_original(limit: 2) { |file_set, _| seen << file_set.id.to_s }
+
+      expect(seen).to eq %w[a c]
+    end
+
+    it 'does not count a yielded file set toward the limit when the block returns false' do
+      seen = []
+      described_class.each_original(limit: 1) do |file_set, _|
+        seen << file_set.id.to_s
+        false
+      end
+
+      expect(seen).to eq %w[a c d]
+    end
+
+    it 'ticks the progress reporter for every file set, including ones without an original' do
+      progress = instance_double(Hyrax::S3Migration::Progress, tick: nil)
+
+      described_class.each_original(progress:) { |_fs, _o| true }
+
+      expect(progress).to have_received(:tick).exactly(4).times
+    end
+  end
+
   describe '.scope' do
     around do |example|
       original = described_class.scope_provider

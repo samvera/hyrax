@@ -13,24 +13,19 @@ namespace :hyrax do
       abort 'Set up the :repository_s3 Valkyrie storage adapter first (see documentation/migrating-files-to-s3.md).' unless Valkyrie::StorageAdapter.storage_adapters.key?(:repository_s3)
     end
 
-    def s3_migration_each_original(limit: ENV['LIMIT']&.to_i, progress: nil)
-      done = 0
-      Hyrax::S3Migration.each_file_set do |file_set|
-        break if limit && done >= limit
-
-        progress&.tick
-
-        original = Hyrax.custom_queries.find_original_file(file_set:)
-        next unless original
-
-        done += 1 if yield(file_set, original)
+    def s3_migration_each_original(counts, &)
+      progress = Hyrax::S3Migration::Progress.new(detail: -> { counts.map { |status, count| "#{status}: #{count}" }.join('  ') })
+      on_error = lambda do |file_set, error|
+        counts[:no_original] += 1
+        detail = error.is_a?(Valkyrie::Persistence::ObjectNotFoundError) ? 'original file record not found' : "#{error.class}: #{error.message}"
+        puts "  NO_ORIGINAL #{file_set.id} - #{detail}"
       end
+      Hyrax::S3Migration.each_original(limit: ENV['LIMIT']&.to_i, progress:, on_error:, &)
     end
 
     def s3_migration_inline(dry_run:)
       counts = Hash.new(0)
-      progress = Hyrax::S3Migration::Progress.new(detail: -> { counts.map { |status, count| "#{status}: #{count}" }.join('  ') })
-      s3_migration_each_original(progress:) do |file_set, original|
+      s3_migration_each_original(counts) do |file_set, original|
         result = Hyrax::S3Migration::FileMigrator.new(file_set:, original:, dry_run:).call
         counts[result.status] += 1
         next false if result.status == :already_migrated
@@ -72,8 +67,7 @@ namespace :hyrax do
     DESC
     task verify_s3_files: :environment do
       counts = Hash.new(0)
-      progress = Hyrax::S3Migration::Progress.new(detail: -> { counts.map { |status, count| "#{status}: #{count}" }.join('  ') })
-      s3_migration_each_original(progress:) do |file_set, original|
+      s3_migration_each_original(counts) do |file_set, original|
         result = Hyrax::S3Migration::Auditor.new(original:).call
         counts[result.status] += 1
         next false if result.status == :not_in_s3
@@ -85,7 +79,7 @@ namespace :hyrax do
         puts "  PROBLEM #{file_set.id} - #{e.class}: #{e.message}"
         true
       end
-      puts "\nOK: #{counts[:ok]}  Problems: #{counts[:problem]}  Not yet in S3: #{counts[:not_in_s3]}"
+      puts "\nOK: #{counts[:ok]}  Problems: #{counts[:problem]}  Not yet in S3: #{counts[:not_in_s3]}  No original: #{counts[:no_original]}"
     end
 
     desc 'Read-only report of file storage by file use and scheme (disk, shrine, ...).'

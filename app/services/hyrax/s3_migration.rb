@@ -33,6 +33,31 @@ module Hyrax
         end
       end
 
+      # Yields [file_set, original file] for each file set that has an original. A file set whose original
+      # cannot be loaded (for example a dangling file record) goes to on_error and is skipped, so one bad
+      # record does not stop the run.
+      def each_original(limit: nil, progress: nil, on_error: nil)
+        return enum_for(:each_original, limit:, progress:, on_error:) unless block_given?
+
+        done = 0
+        each_file_set do |file_set|
+          break if limit && done >= limit
+
+          progress&.tick
+          original = original_for(file_set, on_error:)
+          next unless original
+
+          done += 1 if yield(file_set, original)
+        end
+      end
+
+      def original_for(file_set, on_error: nil)
+        Hyrax.custom_queries.find_original_file(file_set:)
+      rescue StandardError => e
+        on_error&.call(file_set, e)
+        nil
+      end
+
       def query_services
         service = Hyrax.query_service
         services = service.respond_to?(:services) ? service.services : [service]
