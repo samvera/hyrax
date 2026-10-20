@@ -1421,7 +1421,8 @@ pt-BR:
           controlled_without_source: "a subpropriedade composta `%{property}` do perfil m3 é `type: controlled` mas não declara `authority` nem `values`"
           top_level_indexing: "a propriedade composta `%{property}` do perfil m3 não deve declarar `indexing` de nível superior; declare `indexing` (ou `index_keys`) em cada subpropriedade"
           duplicate_subproperty_name: "o composto `%{parent}` do perfil m3 tem várias subpropriedades que resolvem para o mesmo nome interno `%{name}` (%{properties}); cada subpropriedade de um composto deve resolver para um nome único (defina um `name:` distinto)"
-          invalid_subproperty_name: "a subpropriedade `%{property}` do composto `%{parent}` do perfil m3 resolve para o nome interno `%{name}`, que é reservado ou não é formado apenas por letras ASCII, dígitos, sublinhados e hifens; defina um `name:` diferente"
+          reserved_subproperty_name: "a subpropriedade `%{property}` do composto `%{parent}` do perfil m3 resolve para o nome interno `%{name}`, que é reservado; defina um `name:` diferente"
+          malformed_subproperty_name: "a subpropriedade `%{property}` do composto `%{parent}` do perfil m3 resolve para o nome interno `%{name}`, que não é formado apenas por letras, dígitos e sublinhados; defina um `name:` diferente"
       redirects_validator:
         errors:
           invalid_available_on: "a propriedade `redirects` do perfil m3 deve estar disponível em pelo menos uma classe de obra ou coleção declarada neste perfil"

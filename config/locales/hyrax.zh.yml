@@ -1426,7 +1426,8 @@ zh:
           controlled_without_source: "m3 配置文件中的复合子属性 `%{property}` 为 `type: controlled`，但既未声明 `authority` 也未声明 `values`"
           top_level_indexing: "m3 配置文件中的复合属性 `%{property}` 不得在顶层声明 `indexing`；请在每个子属性上声明 `indexing`（或 `index_keys`）"
           duplicate_subproperty_name: "m3 配置文件中的复合属性 `%{parent}` 有多个子属性解析为相同的内部名称 `%{name}`（%{properties}）；同一复合属性中的每个子属性必须解析为唯一名称（请设置不同的 `name:`）"
-          invalid_subproperty_name: "m3 配置文件中复合属性 `%{parent}` 的子属性 `%{property}` 解析为内部名称 `%{name}`，该名称为保留名称，或包含 ASCII 字母、数字、下划线和连字符以外的字符（请设置不同的 `name:`）"
+          reserved_subproperty_name: "m3 配置文件中复合属性 `%{parent}` 的子属性 `%{property}` 解析为内部名称 `%{name}`，该名称为保留名称（请设置不同的 `name:`）"
+          malformed_subproperty_name: "m3 配置文件中复合属性 `%{parent}` 的子属性 `%{property}` 解析为内部名称 `%{name}`，该名称包含字母、数字和下划线以外的字符（请设置不同的 `name:`）"
       redirects_validator:
         errors:
           invalid_available_on: "m3 配置文件的 `redirects` 属性必须在此配置文件中声明的至少一个作品或收藏类上可用"
