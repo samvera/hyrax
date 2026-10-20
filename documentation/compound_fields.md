@@ -495,8 +495,8 @@ work.contributors
 ```
 
 This shape round-trips in both flex modes on every metadata backend. Postgres
-stores the rows as JSONB; the Valkyrie Fedora adapter stores each row as a nested
-graph (through Hyrax overrides until samvera/valkyrie#1005 is released); Wings
+stores the rows as JSONB; the Valkyrie Fedora adapter stores each row as one JSON
+literal (through Hyrax overrides until samvera/valkyrie#1005 is released); Wings
 stores each row as one JSON string, which the `type: hash` attribute type parses
 back into a hash on read.
 

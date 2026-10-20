@@ -9,6 +9,12 @@ RSpec.describe 'Persisting a hash-typed schema attribute through the configured 
   end
   after { Object.send(:remove_const, :HashAttributeResource) }
 
+  def stores_hashes_as_json?
+    adapter = Hyrax.metadata_adapter
+    adapter.is_a?(Valkyrie::Persistence::Fedora::MetadataAdapter) ||
+      (defined?(Wings::Valkyrie::MetadataAdapter) && adapter.is_a?(Wings::Valkyrie::MetadataAdapter))
+  end
+
   def round_trip(entries)
     saved = Hyrax.persister.save(resource: HashAttributeResource.new(aliases: entries))
     Hyrax.query_service.find_by(id: saved.id).aliases.map { |entry| entry.transform_keys(&:to_s) }
@@ -50,7 +56,7 @@ RSpec.describe 'Persisting a hash-typed schema attribute through the configured 
   end
 
   it 'still rebuilds typed values in a hash stored in an untyped attribute' do
-    skip 'Wings stores a hash as a JSON string that only a hash type parses' if defined?(Wings::Valkyrie::MetadataAdapter) && Hyrax.metadata_adapter.is_a?(Wings::Valkyrie::MetadataAdapter)
+    skip 'Wings and Fedora store a hash as JSON, which cannot hold a typed value' if stores_hashes_as_json?
     entry = { ref: Valkyrie::ID.new('abc'), name: 'Ada' }
     saved = Hyrax.persister.save(resource: HashAttributeResource.new(untyped: [entry]))
 

@@ -2,7 +2,7 @@
 
 # OVERRIDE Valkyrie v3.6.1 to read a stored plain Hash back as written on Postgres, mirroring samvera/valkyrie#1005
 #
-# Delete this file once Hyrax requires a Valkyrie release that includes #1005 (tracked in samvera/hyrax#7703).
+# Delete this file once Hyrax requires a Valkyrie release that includes samvera/valkyrie#1005 (tracked in samvera/hyrax#7703).
 module Hyrax
   module ValkyriePersistence
     module Shared
