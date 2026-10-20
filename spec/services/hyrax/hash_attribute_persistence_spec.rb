@@ -5,8 +5,15 @@ RSpec.describe 'Persisting a hash-typed schema attribute through the configured 
     class HashAttributeResource < Hyrax::Resource; end
     config = { 'type' => 'hash', 'multiple' => true }
     HashAttributeResource.attribute :aliases, Hyrax::SchemaLoader::AttributeDefinition.new('aliases', config).type.meta(config)
+    HashAttributeResource.attribute :untyped
   end
   after { Object.send(:remove_const, :HashAttributeResource) }
+
+  def stores_hashes_as_json?
+    adapter = Hyrax.metadata_adapter
+    adapter.is_a?(Valkyrie::Persistence::Fedora::MetadataAdapter) ||
+      (defined?(Wings::Valkyrie::MetadataAdapter) && adapter.is_a?(Wings::Valkyrie::MetadataAdapter))
+  end
 
   def round_trip(entries)
     saved = Hyrax.persister.save(resource: HashAttributeResource.new(aliases: entries))
@@ -34,5 +41,25 @@ RSpec.describe 'Persisting a hash-typed schema attribute through the configured 
 
   it 'reloads an empty list as empty' do
     expect(round_trip([])).to eq []
+  end
+
+  it 'reloads arrays inside an entry in order, keeping one-element and empty arrays' do
+    entries = [{ 'name' => 'Ada', 'tags' => %w[b a c], 'roles' => ['Author'], 'notes' => [] }]
+
+    expect(round_trip(entries)).to eq entries
+  end
+
+  it 'drops nil values from an entry' do
+    skip 'Wings stores a hash as a JSON string, which keeps nil values' if defined?(Wings::Valkyrie::MetadataAdapter) && Hyrax.metadata_adapter.is_a?(Wings::Valkyrie::MetadataAdapter)
+
+    expect(round_trip([{ 'name' => 'Ada', 'note' => nil }])).to eq [{ 'name' => 'Ada' }]
+  end
+
+  it 'still rebuilds typed values in a hash stored in an untyped attribute' do
+    skip 'Wings and Fedora store a hash as JSON, which cannot hold a typed value' if stores_hashes_as_json?
+    entry = { ref: Valkyrie::ID.new('abc'), name: 'Ada' }
+    saved = Hyrax.persister.save(resource: HashAttributeResource.new(untyped: [entry]))
+
+    expect(Hyrax.query_service.find_by(id: saved.id).untyped).to eq [entry]
   end
 end

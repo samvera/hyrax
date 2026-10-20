@@ -27,10 +27,14 @@ module Hyrax
     require 'hydra/derivatives'
     require 'hyrax/active_fedora_dummy_model'
     require 'hyrax/controller_resource'
-    # Keep one-key Hash values whole on Postgres until Valkyrie releases samvera/valkyrie#1005.
-    require 'hyrax/valkyrie_persistence/shared/nested_record_hash_support'
+    # Return plain Hash values as written on Postgres until Valkyrie releases samvera/valkyrie#1005.
+    require 'hyrax/valkyrie_persistence/shared/plain_hash_support'
     # Store plain Hash values on Fedora until Valkyrie releases samvera/valkyrie#1005.
     require 'hyrax/valkyrie_persistence/fedora/hash_support'
+    # Read plain Hash values stored on Fedora in an earlier, unreleased format.
+    require 'hyrax/valkyrie_persistence/fedora/legacy_hash_graph_support'
+    # Define Valkyrie's Hash key rules until Valkyrie releases samvera/valkyrie#1005.
+    require 'hyrax/valkyrie_persistence/hash_key_rules'
     require 'hyrax/form_fields'
     require 'hyrax/indexer'
     require 'hyrax/model_decorator'
