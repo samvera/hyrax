@@ -242,6 +242,22 @@ module Hyrax
         wrapped.reject { |v| v.equal?(Dry::Types::Undefined) }.select(&:present?)
       end
 
+      # Rejects an entry holding anything JSON cannot represent (an ID, a date,
+      # a symbol, NaN), which the backends would store differently.
+      JsonValues = lambda do |value|
+        check = lambda do |val|
+          case val
+          when ::Hash then val.each_value(&check)
+          when ::Array then val.each(&check)
+          when ::String, ::Integer, true, false, nil then nil
+          when ::Float then raise ArgumentError, "#{val.inspect} is not a JSON value" unless val.finite?
+          else raise ArgumentError, "#{val.inspect} in a hash entry is not a JSON value"
+          end
+        end
+        check.call(value) if value.is_a?(::Hash)
+        value
+      end
+
       # Wings stores each hash entry as a JSON string, since ActiveFedora
       # cannot hold a Hash; parse it back here.
       JsonHash = lambda do |value|
@@ -307,7 +323,7 @@ module Hyrax
         when 'date_time'
           Valkyrie::Types::DateTime
         when 'hash'
-          Dry::Types['hash'].constructor(&JsonHash)
+          Dry::Types['hash'].constructor { |value| JsonValues.call(JsonHash.call(value)) }
         when 'linked_record'
           Valkyrie::Types::String
         else

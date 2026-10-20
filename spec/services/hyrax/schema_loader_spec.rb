@@ -284,6 +284,21 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
       end
     end
 
+    context 'when type is hash and an entry holds a value that is not JSON' do
+      let(:config) { { 'type' => 'hash', 'multiple' => true } }
+
+      it 'rejects the entry' do
+        [Valkyrie::ID.new('abc'), Date.new(2026, 1, 1), :symbol, Float::NAN].each do |value|
+          expect { attribute_definition.type.call([{ 'ref' => value }]) }.to raise_error(/not a JSON value/)
+        end
+      end
+
+      it 'accepts strings, numbers, booleans, nil, and nested hashes and arrays of them' do
+        entry = { 'name' => 'Ada', 'count' => 2, 'weight' => 1.5, 'primary' => true, 'role' => nil, 'tags' => ['a', { 'x' => [1] }] }
+        expect(attribute_definition.type.call([entry])).to eq [entry]
+      end
+    end
+
     context 'when type is not recognized' do
       let(:config) { { 'type' => 'custom' } }
 
