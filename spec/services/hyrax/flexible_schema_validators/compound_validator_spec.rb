@@ -237,11 +237,11 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
 
       it 'records a reserved-name error' do
         validator.validate!
-        expect(errors).to include(t('invalid_subproperty_name', parent: 'participants', name: 'id', property: 'participant_id'))
+        expect(errors).to include(t('reserved_subproperty_name', parent: 'participants', name: 'id', property: 'participant_id'))
       end
     end
 
-    context 'with a sub-property name that is not ASCII letters, digits, underscores, or hyphens' do
+    context 'with a sub-property name that is not letters, digits, and underscores' do
       let(:profile) do
         {
           'properties' => {
@@ -251,9 +251,9 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
         }
       end
 
-      it 'records an invalid-name error' do
+      it 'records a malformed-name error' do
         validator.validate!
-        expect(errors).to include(t('invalid_subproperty_name', parent: 'participants', name: 'first name', property: 'participant_first_name'))
+        expect(errors).to include(t('malformed_subproperty_name', parent: 'participants', name: 'first name', property: 'participant_first_name'))
       end
     end
 

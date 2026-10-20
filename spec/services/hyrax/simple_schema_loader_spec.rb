@@ -37,10 +37,10 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
       )
 
       expect { schema_loader.attributes_for(schema: :bad_compound) }
-        .to raise_error(ArgumentError, /bad_compound.*reserved or invalid subproperty name "id"/)
+        .to raise_error(ArgumentError, /bad_compound.*reserved subproperty name "id"/)
     end
 
-    it 'raises an error for a compound subproperty name that is not ASCII letters, digits, underscores, or hyphens' do
+    it 'raises an error for a compound subproperty name that is not letters, digits, and underscores' do
       allow(schema_loader).to receive(:schema_config).with(:bad_compound).and_return(
         'attributes' => {
           'people' => { 'type' => 'hash' },
@@ -49,7 +49,7 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
       )
 
       expect { schema_loader.attributes_for(schema: :bad_compound) }
-        .to raise_error(ArgumentError, /reserved or invalid subproperty name "first name"/)
+        .to raise_error(ArgumentError, /bad_compound.*subproperty name "first name" that is not letters, digits, and underscores/)
     end
 
     it 'raises an error for an undefined schema' do

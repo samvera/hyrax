@@ -18,6 +18,7 @@ module Hyrax
         subproperties.each { |name, config| validate_subproperty(name, config) }
         compound_parents.each { |name, config| validate_no_top_level_indexing(name, config) }
         validate_unique_subproperty_names
+        validate_subproperty_names_not_reserved
         validate_subproperty_name_format
       end
 
@@ -77,15 +78,26 @@ module Hyrax
       end
 
       # A sub-property's in-compound name becomes a key in each stored entry, so
-      # it must be a key Valkyrie allows in a Hash (see
-      # Hyrax::SchemaLoader.invalid_hash_keys); otherwise the value is lost on
-      # save, or the save fails on Fedora.
+      # it must not be a key Valkyrie reserves in a Hash (see
+      # Hyrax::SchemaLoader.reserved_hash_keys); otherwise the value is lost on save.
+      def validate_subproperty_names_not_reserved
+        subproperties.each do |key, config|
+          in_compound_name = (config['name'] || key).to_s
+          next if Hyrax::SchemaLoader.reserved_hash_keys([in_compound_name]).empty?
+          subproperty_parents(config).each do |parent|
+            add_error(:reserved_subproperty_name, parent: parent, name: in_compound_name, property: key.to_s)
+          end
+        end
+      end
+
+      # A sub-property's in-compound name becomes part of its Solr field names and
+      # form field ids (see Hyrax::SchemaLoader::SUBPROPERTY_NAME_FORMAT).
       def validate_subproperty_name_format
         subproperties.each do |key, config|
           in_compound_name = (config['name'] || key).to_s
-          next if Hyrax::SchemaLoader.invalid_hash_keys([in_compound_name]).empty?
+          next if Hyrax::SchemaLoader.malformed_subproperty_names([in_compound_name]).empty?
           subproperty_parents(config).each do |parent|
-            add_error(:invalid_subproperty_name, parent: parent, name: in_compound_name, property: key.to_s)
+            add_error(:malformed_subproperty_name, parent: parent, name: in_compound_name, property: key.to_s)
           end
         end
       end

@@ -10,15 +10,24 @@ module Hyrax
   class SchemaLoader
     class UndefinedSchemaError < ArgumentError; end
 
-    # The keys Valkyrie does not allow in a Hash value. A compound subproperty
-    # name among them would lose its value on save, or fail to save on Fedora,
-    # so the schema loaders and profile validator reject it.
+    # A compound subproperty's name becomes part of its Solr field names and
+    # form field ids, so it is limited to letters, digits, and underscores.
+    SUBPROPERTY_NAME_FORMAT = /\A[A-Za-z0-9_]+\z/.freeze
+
+    # @param [Enumerable<#to_s>] names
+    # @return [Array<String>] the subproperty names that break {SUBPROPERTY_NAME_FORMAT}
+    def self.malformed_subproperty_names(names)
+      names.map(&:to_s).reject { |name| name.match?(SUBPROPERTY_NAME_FORMAT) }
+    end
+
+    # The keys Valkyrie reserves in a Hash value. A compound subproperty named
+    # after one would lose its value on save, so the schema loaders and profile
+    # validator reject it.
     #
     # @param [Enumerable<#to_s>] keys
     # @return [Array<String>] the keys a hash entry may not use
-    def self.invalid_hash_keys(keys)
-      rules = Valkyrie::Types::HashValue
-      keys.map(&:to_s).select { |key| rules::RESERVED_KEYS.include?(key.to_sym) || !key.match?(rules::KEY_FORMAT) }
+    def self.reserved_hash_keys(keys)
+      keys.map(&:to_s).select { |key| Valkyrie::Types::HashValue::RESERVED_KEYS.include?(key.to_sym) }
     end
 
     ##

@@ -71,10 +71,17 @@ RSpec.describe Hyrax::SchemaLoader do
   end
 end
 
-RSpec.describe Hyrax::SchemaLoader, '.invalid_hash_keys' do
-  it 'returns the keys Valkyrie reserves and keys that are not ASCII letters, digits, underscores, or hyphens' do
-    expect(described_class.invalid_hash_keys(['path', 'is_display_url', '_position', 'given-name', 'id', :created_at, 'first name', 'née']))
-      .to eq ['id', 'created_at', 'first name', 'née']
+RSpec.describe Hyrax::SchemaLoader, '.malformed_subproperty_names' do
+  it 'returns names that are not letters, digits, and underscores' do
+    expect(described_class.malformed_subproperty_names(['given_name', 'Role2', 'first name', 'dc:title', 'née', 'given-name']))
+      .to eq ['first name', 'dc:title', 'née', 'given-name']
+  end
+end
+
+RSpec.describe Hyrax::SchemaLoader, '.reserved_hash_keys' do
+  it 'returns only the keys Valkyrie reserves in a Hash' do
+    expect(described_class.reserved_hash_keys(['path', 'is_display_url', '_position', 'first name', 'id', '@id', :@value, 'internal_resource']))
+      .to eq ['id', '@id', '@value', 'internal_resource']
   end
 end
 

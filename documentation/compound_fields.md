@@ -43,10 +43,11 @@ they belong to via `available_on: { properties: [<parent>] }` — the same
 with a `properties:` list (the parent compounds) instead of `class:`. Every
 property key is globally unique, so subproperty keys are conventionally prefixed;
 the field's key *inside* the compound is its `name:` (falling back to the key).
-That in-compound name may contain only ASCII letters, digits, underscores, and hyphens,
-and cannot be one of the keys Valkyrie reserves in a hash (`id`,
-`internal_resource`, `new_record`, `member_ids`, `created_at`, `updated_at`). The
-m3 profile validator and the metadata YAML loader both reject such a name:
+That in-compound name may contain only letters, digits, and underscores, since it
+becomes part of the subproperty's Solr field names and form field ids, and it
+cannot be one of the keys Valkyrie reserves in a hash (`id`, `@id`, `@value`,
+`internal_resource`). The m3 profile validator and the metadata YAML loader both
+reject such a name:
 
 ```yaml
 contributors:
