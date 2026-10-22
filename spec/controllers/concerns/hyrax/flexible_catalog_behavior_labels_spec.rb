@@ -337,7 +337,7 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
       facet.if = :an_application_predicate
       facet.hidden_for_link = false
 
-      klass.send(:register_hidden_facet_field, 'plain_topic_sim', 'Plain Topic')
+      Hyrax::FlexibleCatalogConfigBuilder.new(klass.blacklight_config).send(:register_hidden_facet_field, 'plain_topic_sim', 'Plain Topic')
 
       expect(facet.if).to eq(:an_application_predicate)
     end
@@ -543,7 +543,7 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
       # A substring check reports `type_tesim` as present once
       # `resource_type_tesim` is in the list, so it would never be appended.
       qf # resolve the config before appending
-      controller.class.send(:append_query_fields!, ['type_tesim'])
+      Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:append_query_fields!, ['type_tesim'])
 
       current = controller.class.blacklight_config.search_fields['all_fields'].solr_parameters[:qf]
       expect(current.split).to include('type_tesim', 'resource_type_tesim')
@@ -588,10 +588,10 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
     # Substring removal would take `resource_type_tesim` down to `resource_`
     # when asked to remove the shorter `type_tesim`.
     it 'leaves a longer field whose name contains the removed one intact' do
-      controller.class.send(:append_query_fields!, ['type_tesim'])
+      Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:append_query_fields!, ['type_tesim'])
       expect(qf.split).to include('type_tesim', 'resource_type_tesim')
 
-      controller.class.send(:remove_from_blacklight_config!, 'type', ['type_tesim'])
+      Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:remove_from_blacklight_config!, 'type', ['type_tesim'])
 
       expect(qf.split).not_to include('type_tesim')
       expect(qf.split).to include('resource_type_tesim')
@@ -638,8 +638,8 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
 
     before do
       expect(config.facet_fields).to have_key('resource_type_label_sim')
-      controller.class.send(:remove_from_blacklight_config!, 'resource_type',
-                            ['stored_searchable', 'facetable'])
+      Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:remove_from_blacklight_config!, 'resource_type',
+                                                                                                                        ['stored_searchable', 'facetable'])
     end
 
     it 'removes its label facet along with its id facet' do
