@@ -2,6 +2,7 @@
 module Hyrax
   class CollectionsController < ApplicationController
     include CollectionsControllerBehavior
+    include FlexibleCatalogConfigCopy
     include BreadcrumbsForCollections
     with_themed_layout :decide_layout
     load_and_authorize_resource except: [:index],

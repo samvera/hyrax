@@ -2,6 +2,7 @@
 module Hyrax
   class SingleUseLinksViewerController < DownloadsController
     include Blacklight::Configurable
+    include Hyrax::FlexibleCatalogConfigCopy
     include Blacklight::SearchContext
     include Blacklight::AccessControls::Catalog
     include ActionDispatch::Routing::PolymorphicRoutes

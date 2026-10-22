@@ -4,6 +4,7 @@ module Hyrax
     rescue_from WorkflowAuthorizationException, with: :render_unavailable
 
     include Blacklight::Configurable
+    include Hyrax::FlexibleCatalogConfigCopy
     include Blacklight::SearchContext
     include Blacklight::AccessControls::Catalog
     include Hyrax::Breadcrumbs

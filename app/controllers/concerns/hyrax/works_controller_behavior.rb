@@ -5,6 +5,7 @@ module Hyrax
   module WorksControllerBehavior
     extend ActiveSupport::Concern
     include Blacklight::Configurable
+    include Hyrax::FlexibleCatalogConfigCopy
     include Blacklight::SearchContext
     include Blacklight::AccessControls::Catalog
     include Hyrax::FlexibleSchemaBehavior if Hyrax.config.flexible?
