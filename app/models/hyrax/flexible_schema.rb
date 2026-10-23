@@ -26,6 +26,29 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     Hyrax::Current.flexible_schema ||= order("created_at asc").last
   end
 
+  PROPERTY_HISTORIES = Concurrent::Map.new
+
+  ##
+  # Every property any revision has declared, with the `indexing` each declared for it and the `names`
+  # it stood in for, if any. Read again only when a revision is added or changed, or when the connection
+  # reads a different database schema.
+  #
+  # @return [Hash{String => Hash}]
+  def self.property_history
+    revisions, latest = pick(Arel.sql('COUNT(*)'), Arel.sql('MAX(updated_at)'))
+    PROPERTY_HISTORIES.compute_if_absent([connection.try(:schema_search_path), revisions, latest]) do
+      pluck(:profile).each_with_object({}) do |profile, history|
+        Hash(profile&.dig('properties')).each do |key, property|
+          entry = history[key] ||= { 'indexing' => [] }
+          next unless property.is_a?(Hash)
+
+          entry['indexing'] |= Array(property['indexing'])
+          entry['names'] = Array(entry['names']) | [property['name']] if property['name'].present?
+        end
+      end
+    end
+  end
+
   def self.create_default_schema
     m3_profile_path = Hyrax::Schema.m3_schema_loader.config_paths&.first
     raise ArgumentError, "No M3 profile found, check the Hyrax.config.schema_loader_config_search_paths" unless m3_profile_path

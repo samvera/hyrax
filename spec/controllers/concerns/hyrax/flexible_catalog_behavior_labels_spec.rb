@@ -149,6 +149,7 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
     original = klass.blacklight_config.deep_copy
     example.run
     klass.blacklight_config = original
+    klass.reset_flexible_baseline!
   end
 
   before do
@@ -344,11 +345,14 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
   end
 
   describe 'the facet limit' do
-    let(:config) { controller.class.blacklight_config }
+    def config
+      controller.class.blacklight_config
+    end
 
     def redeclare_facet(name, **options)
-      config.facet_fields.delete(name)
-      config.add_facet_field(name, **options)
+      baseline = controller.class.flexible_baseline_config
+      baseline.facet_fields.delete(name)
+      baseline.add_facet_field(name, **options)
       controller.class.load_flexible_schema
     end
 
@@ -357,7 +361,7 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
     end
 
     it 'carries the limit an application declared on the id facet to the label facet' do
-      config.facet_fields.delete('resource_type_label_sim')
+      controller.class.flexible_baseline_config.facet_fields.delete('resource_type_label_sim')
       redeclare_facet('resource_type_sim', label: 'Resource Type', limit: 3)
 
       expect(config.facet_fields['resource_type_label_sim'].limit).to eq 3
@@ -491,7 +495,9 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
   end
 
   describe 'a property that stops being controlled' do
-    let(:config) { controller.class.blacklight_config }
+    def config
+      controller.class.blacklight_config
+    end
 
     it 'restores the id facet to the sidebar' do
       expect(config.facet_fields['resource_type_sim'].if).to be false
@@ -521,7 +527,9 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
   end
 
   describe 'a property that stops being controlled' do
-    let(:config) { controller.class.blacklight_config }
+    def config
+      controller.class.blacklight_config
+    end
 
     before do
       expect(config.index_fields['resource_type_tesim'].values).to be_present
@@ -582,7 +590,9 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
   end
 
   describe 'removing a property from the query fields' do
-    let(:config) { controller.class.blacklight_config }
+    def config
+      controller.class.blacklight_config
+    end
     let(:qf) { config.search_fields['all_fields'].solr_parameters[:qf] }
 
     # Substring removal would take `resource_type_tesim` down to `resource_`
@@ -634,7 +644,9 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
   end
 
   describe 'a controlled property that leaves the profile' do
-    let(:config) { controller.class.blacklight_config }
+    def config
+      controller.class.blacklight_config
+    end
 
     before do
       expect(config.facet_fields).to have_key('resource_type_label_sim')
@@ -654,7 +666,9 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
   end
 
   describe 'a property that becomes a surrogate mid-process' do
-    let(:config) { controller.class.blacklight_config }
+    def config
+      controller.class.blacklight_config
+    end
 
     it 'leaves no label facet behind under the surrogate key' do
       config.add_facet_field('monograph_resource_type_label_sim', label: 'Stale')
@@ -741,7 +755,7 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
 
   describe 'a facet the application already conditioned' do
     before do
-      controller.class.blacklight_config.add_facet_field('conditioned_sim', label: 'Conditioned', if: :render_optionally?)
+      controller.class.flexible_baseline_config.add_facet_field('conditioned_sim', label: 'Conditioned', if: :render_optionally?)
     end
 
     def load_conditioned(controlled:)

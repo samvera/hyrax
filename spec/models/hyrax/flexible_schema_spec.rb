@@ -290,4 +290,63 @@ RSpec.describe Hyrax::FlexibleSchema, :clean_repo, type: :model do
       end
     end
   end
+
+  describe '.property_history' do
+    def save_revision(properties)
+      described_class.new(profile: { 'properties' => properties }).save(validate: false)
+    end
+
+    before { described_class::PROPERTY_HISTORIES.clear }
+
+    it 'combines the indexing each revision declared for a property' do
+      save_revision('shelf_mark' => { 'indexing' => ['shelf_mark_sim'] })
+      save_revision('shelf_mark' => { 'indexing' => ['shelf_mark_tesim'] })
+
+      expect(described_class.property_history['shelf_mark']['indexing']).to contain_exactly('shelf_mark_sim', 'shelf_mark_tesim')
+    end
+
+    it 'keeps a property that only an earlier revision declared' do
+      save_revision('shelf_mark' => { 'indexing' => ['shelf_mark_tesim'] })
+      save_revision('subject' => { 'indexing' => ['subject_sim'] })
+
+      expect(described_class.property_history).to include('shelf_mark' => { 'indexing' => ['shelf_mark_tesim'] })
+    end
+
+    it 'keeps every name a property stood in for' do
+      save_revision('monograph_shelf_mark' => { 'name' => 'shelf_mark', 'indexing' => ['facetable'] })
+      save_revision('monograph_shelf_mark' => { 'name' => 'call_number', 'indexing' => ['facetable'] })
+
+      expect(described_class.property_history['monograph_shelf_mark']).to include('names' => %w[shelf_mark call_number])
+    end
+
+    it 'reads the revisions again once another is saved' do
+      save_revision('subject' => { 'indexing' => ['subject_sim'] })
+      described_class.property_history
+      save_revision('shelf_mark' => { 'indexing' => ['shelf_mark_tesim'] })
+
+      expect(described_class.property_history).to include('shelf_mark')
+    end
+
+    it 'reads the revisions again for another database schema with the same revision count and time' do
+      save_revision('subject' => { 'indexing' => ['subject_sim'] })
+      allow(described_class.connection).to receive(:schema_search_path).and_return('first')
+      described_class.property_history
+      allow(described_class.connection).to receive(:schema_search_path).and_return('second')
+      allow(described_class).to receive(:pluck).with(:profile).and_return([{ 'properties' => { 'shelf_mark' => { 'indexing' => ['shelf_mark_tesim'] } } }])
+
+      expect(described_class.property_history).to include('shelf_mark')
+    end
+
+    it 'reads the revisions again once one is changed' do
+      revision = described_class.new(profile: { 'properties' => { 'subject' => { 'indexing' => ['subject_sim'] } } })
+      revision.save(validate: false)
+      described_class.property_history
+      travel 1.minute do
+        revision.profile = { 'properties' => { 'shelf_mark' => { 'indexing' => ['shelf_mark_tesim'] } } }
+        revision.save(validate: false)
+      end
+
+      expect(described_class.property_history).to include('shelf_mark')
+    end
+  end
 end

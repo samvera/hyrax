@@ -9,10 +9,13 @@ module Hyrax
   # the configured `controlled_vocabulary_label_service` resolves facets on its label field and shows
   # its labels in search results.
   #
-  # It edits the config it is given, in place.
+  # It edits the config it is given, in place. `Hyrax::FlexibleCatalogBehavior.load_flexible_schema`
+  # gives it a copy of the controller's configuration as it stood before any profile was loaded, then
+  # swaps the result in, so each load reflects only its own profile and a config another request is
+  # already reading is never edited.
   #
   # @example
-  #   config = Hyrax::FlexibleCatalogConfigBuilder.new(CatalogController.blacklight_config.deep_copy)
+  #   config = Hyrax::FlexibleCatalogConfigBuilder.new(CatalogController.flexible_baseline_config.deep_copy)
   #                                               .apply(previous_profile, current_profile)
   class FlexibleCatalogConfigBuilder
     attr_reader :blacklight_config
@@ -24,15 +27,21 @@ module Hyrax
     end
 
     ##
-    # Applies `current_profile`, first removing the fields of any property `previous_profile` had that
-    # `current_profile` no longer has.
+    # Applies `current_profile`, first removing the fields of any property an earlier revision or
+    # `previous_profile` declared that `current_profile` no longer has, and of any property a surrogate
+    # stood in for but no longer does.
     #
     # @param previous_profile [Hash] the profile loaded before the current one
     # @param current_profile [Hash, nil] the profile to apply; `nil` applies `previous_profile`
+    # @param earlier_properties [Hash{String => Hash}] properties earlier revisions declared, each with
+    #   the `indexing` they declared for it and the `names` it stood in for
     # @return [Blacklight::Configuration] the config it built onto
-    def apply(previous_profile, current_profile)
+    def apply(previous_profile, current_profile, earlier_properties: {})
       current_profile = previous_profile if current_profile.nil?
-      remove_old_properties!(previous_profile['properties'], current_profile['properties'].keys) if current_profile != previous_profile
+      removable = earlier_properties.merge(previous_profile['properties']) do |_name, earlier, previous|
+        earlier.merge(previous).merge('indexing' => Array(earlier['indexing']) | Array(previous['indexing']))
+      end
+      remove_old_properties!(removable, current_profile['properties'])
       properties_hash = current_profile['properties']
       resolvable = {}
       properties_hash.each do |itemprop, prop|
@@ -429,12 +438,24 @@ module Hyrax
       view_options['render_as'].to_s == 'faceted'
     end
 
-    def remove_old_properties!(previous_profile_properties, current_property_keys)
-      props = previous_profile_properties.keys - current_property_keys
-      props.each do |prop|
-        indexing = previous_profile_properties.dig(prop, 'indexing')
-        remove_from_blacklight_config!(prop, indexing)
+    def remove_old_properties!(previous_profile_properties, current_properties)
+      in_use = current_properties.flat_map do |prop, config|
+        solr_field_names_for(indexed_name_for(prop, config), config.is_a?(Hash) ? config['indexing'] : nil)
       end
+      previous_profile_properties.each do |prop, config|
+        indexing = config.is_a?(Hash) ? config['indexing'] : nil
+        current = current_properties.key?(prop)
+        remove_from_blacklight_config!(prop, indexing, keep: in_use) unless current
+        former_targets = stood_in_for(prop, config) - [prop]
+        former_targets -= [indexed_name_for(prop, current_properties[prop])] if current
+        former_targets.each { |target| remove_from_blacklight_config!(target, indexing, keep: in_use) }
+      end
+    end
+
+    def stood_in_for(prop, config)
+      return [] unless config.is_a?(Hash)
+
+      ([indexed_name_for(prop, config)] + Array(config['names'])).uniq
     end
 
     # Evict every Blacklight registration for `itemprop`. Collects the set of
@@ -451,8 +472,8 @@ module Hyrax
     # e.g. `title` would otherwise match `title_alternative_*`.
     INDEXING_DIRECTIVES = %w[stored_searchable facetable admin_only editor_only].freeze
 
-    def remove_from_blacklight_config!(itemprop, indexing = nil)
-      names = solr_field_names_for(itemprop, indexing)
+    def remove_from_blacklight_config!(itemprop, indexing = nil, keep: [])
+      names = solr_field_names_for(itemprop, indexing) - keep
       names.each do |name|
         blacklight_config.facet_fields.delete(name)
         blacklight_config.index_fields.delete(name)
@@ -476,9 +497,8 @@ module Hyrax
       default_fields = ["#{itemprop}_tesim", "#{itemprop}_sim"]
       declared_fields = (indexing || []) - INDEXING_DIRECTIVES
       fields = (default_fields + declared_fields).uniq
-      # blacklight_config is class-level and persists between requests, so a
-      # property that leaves the profile or becomes restricted would otherwise
-      # keep a live label facet pointing at a field nothing writes to.
+      # Each field's label companion too, so a retired or restricted property
+      # leaves no label facet pointing at a field nothing writes to.
       (fields + fields.map { |field| Hyrax::ControlledVocabularyFieldValues.label_key(field) }).uniq
     end
   end
