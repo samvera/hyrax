@@ -54,3 +54,15 @@ The tasks work on the repository the app is currently pointed at, so run them on
 - Old and new works still display their files (viewer/IIIF, downloads) after clearing caches.
 - Thumbnails are unaffected (they are derivatives).
 - A re-run of the migration reports nothing left to migrate.
+
+## 5. Reclaim the disk space
+
+Every migrated file is recorded in a manifest object in the bucket (`_migration-manifests/<file set id>.json`: file set and file IDs, old disk id, new S3 id, size, SHA-256). Deletion is manifest-driven, never `rm -rf storage/files`.
+
+1. Take a snapshot or backup of the storage volume, and keep bucket versioning on.
+2. `bundle exec rake hyrax:migrate:report_file_storage` lists what is still on disk by file use and storage scheme. The migration only moves originals; extracted text, other file versions and similar may still be `disk://` and are not covered by the manifest.
+3. Dry-run, then apply: `bundle exec rake hyrax:migrate:quarantine_disk_files` (add `APPLY=true`). For each file it re-checks that the database still points at the S3 id and that the S3 object matches the manifest size and SHA-256, then moves the disk copy to `<storage>/.quarantine` (a rename within the same volume).
+4. Soak (at least a week or two, through a backup cycle), re-checking the site. To undo, `bundle exec rake hyrax:migrate:rollback_s3_migration` (dry-run by default, `APPLY=true`) restores the disk copy and the original identifier from the manifest.
+5. Permanently delete: `bundle exec rake hyrax:migrate:purge_quarantine` (dry-run by default; `APPLY=true`, `MIN_AGE_DAYS=14`).
+
+Do a non-production environment first and production after, checking again between each. Storage is usually billed or provisioned by stored bytes, so the saving only appears after step 5 (and, on volumes you size by hand, after you shrink them). Derivatives often remain on the volume; size them separately. If your storage offers cheaper tiers for rarely read files, enabling them is a lower-risk way to cut cost while you work through the steps above.

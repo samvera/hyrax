@@ -95,6 +95,49 @@ namespace :hyrax do
         puts "#{use} | #{scheme} | #{count} | #{(bytes / 1e9).round(2)}"
       end
     end
+
+    def s3_migration_run_quarantine(label, action)
+      counts = Hash.new(0)
+      progress = Hyrax::S3Migration::Progress.new(detail: -> { counts.map { |status, count| "#{status}: #{count}" }.join('  ') })
+      Hyrax::S3Migration::Manifest.new.each_entry do |entry|
+        progress.tick
+        quarantine = Hyrax::S3Migration::Quarantine.new(entry, apply: s3_migration_flag('APPLY'),
+                                                               verify_sha: s3_migration_flag('VERIFY_SHA', default: 'true'))
+        status = quarantine.public_send(action)
+        counts[status] += 1
+        puts "  #{label} #{entry[:file_set_id]}" if %i[quarantined rolled_back].include?(status)
+      rescue StandardError => e
+        counts[:error] += 1
+        puts "  ERROR #{entry[:file_set_id]} - #{e.class}: #{e.message}"
+      end
+      puts "\n#{counts.map { |status, count| "#{status}: #{count}" }.join('  ')}".strip
+      puts 'No manifest entries found.' if counts.empty?
+    end
+
+    desc <<~DESC
+      Move the disk copies of manifested files to <storage>/.quarantine after re-checking the database
+      and the S3 object against the manifest. Dry run unless APPLY=true. VERIFY_SHA=false skips the hash.
+    DESC
+    task quarantine_disk_files: :environment do
+      s3_migration_require_s3!
+      puts "[DRY RUN] Nothing will be moved. Set APPLY=true to move.\n\n" unless s3_migration_flag('APPLY')
+      s3_migration_run_quarantine('Quarantine', :quarantine)
+    end
+
+    desc 'Undo a migration from the manifest (restores the disk copy and id). Dry run unless APPLY=true.'
+    task rollback_s3_migration: :environment do
+      s3_migration_require_s3!
+      puts "[DRY RUN] Nothing will change. Set APPLY=true to roll back.\n\n" unless s3_migration_flag('APPLY')
+      s3_migration_run_quarantine('Rolling back', :rollback)
+    end
+
+    desc 'Permanently delete quarantined files older than MIN_AGE_DAYS (default 14). Dry run unless APPLY=true.'
+    task purge_quarantine: :environment do
+      apply = s3_migration_flag('APPLY')
+      puts "[DRY RUN] Nothing will be deleted. Set APPLY=true to delete.\n\n" unless apply
+      purged, kept = Hyrax::S3Migration::Quarantine.purge(apply:, min_age: ENV.fetch('MIN_AGE_DAYS', '14').to_f.days)
+      puts "#{apply ? 'Deleted' : 'Would delete'}: #{purged}  Too recent: #{kept}"
+    end
   end
 end
 # rubocop:enable Metrics/BlockLength, Metrics/MethodLength, Metrics/AbcSize
