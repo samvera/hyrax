@@ -168,6 +168,22 @@ RSpec.describe Hyrax::AdminSetService do
       it "returns rows with document in the first column, count of works in second column and count of files in the third column" do
         expect(subject).to eq [struct.new(admin_sets[0], 11, 11), struct.new(admin_sets[1], 0, 0), struct.new(admin_sets[2], 0, 0)]
       end
+
+      context "and the admin set's work count exceeds Hyrax.config.solr_max_results" do
+        before do
+          allow(Hyrax.config).to receive(:solr_max_results).and_return(5)
+          allow(Hyrax.logger).to receive(:warn)
+        end
+
+        it "caps the file count instead of undercounting to a stale default" do
+          expect(subject.first.file_count).to eq 5
+        end
+
+        it "warns instead of truncating silently" do
+          subject
+          expect(Hyrax.logger).to have_received(:warn).with(a_string_including('truncated'))
+        end
+      end
     end
   end
 end
