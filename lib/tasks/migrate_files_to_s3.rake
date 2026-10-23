@@ -5,6 +5,89 @@
 # rubocop:disable Metrics/BlockLength, Metrics/MethodLength, Metrics/AbcSize
 namespace :hyrax do
   namespace :migrate do
+    def s3_migration_flag(name, default: 'false')
+      ActiveModel::Type::Boolean.new.cast(ENV.fetch(name, default))
+    end
+
+    def s3_migration_require_s3!
+      abort 'Set up the :repository_s3 Valkyrie storage adapter first (see documentation/migrating-files-to-s3.md).' unless Valkyrie::StorageAdapter.storage_adapters.key?(:repository_s3)
+    end
+
+    def s3_migration_each_original(counts, &)
+      progress = Hyrax::S3Migration::Progress.new(detail: -> { counts.map { |status, count| "#{status}: #{count}" }.join('  ') })
+      on_error = lambda do |file_set, error|
+        counts[:no_original] += 1
+        detail = if file_set.try(:file_ids).blank?
+                   'file set has no files'
+                 elsif error.is_a?(Valkyrie::Persistence::ObjectNotFoundError)
+                   'original file record not found'
+                 else
+                   "#{error.class}: #{error.message}"
+                 end
+        puts "  NO_ORIGINAL #{file_set.id} - #{detail}"
+      end
+      Hyrax::S3Migration.each_original(limit: ENV['LIMIT']&.to_i, progress:, on_error:, &)
+    end
+
+    def s3_migration_inline(dry_run:)
+      counts = Hash.new(0)
+      s3_migration_each_original(counts) do |file_set, original|
+        result = Hyrax::S3Migration::FileMigrator.new(file_set:, original:, dry_run:).call
+        counts[result.status] += 1
+        next false if result.status == :already_migrated
+
+        puts "  #{result.status.to_s.upcase} #{file_set.id} #{result.message}".rstrip
+        true
+      rescue StandardError => e
+        counts[:error] += 1
+        puts "  ERROR #{file_set.id} - #{e.class}: #{e.message}"
+        true
+      end
+      puts "\nExamined #{counts.values.sum} file sets. #{counts.map { |status, count| "#{status}: #{count}" }.join('  ')}".strip
+      puts 'No file sets were found; check the model names and query services.' if counts.empty?
+    end
+
+    desc <<~DESC
+      Move disk-stored original files (disk:// ids) to the :repository_s3 storage adapter. By default this
+      enqueues jobs (one per file set; set S3_MIGRATION_QUEUE to use a dedicated queue). Each upload is
+      verified by SHA-256 read-back, and against the stored characterization checksum, before the identifier
+      is switched; the disk copy is never touched.
+      Env: DRY_RUN=true runs inline and only reports; INLINE=true runs inline for real; LIMIT=<n> files.
+    DESC
+    task files_to_s3: :environment do
+      s3_migration_require_s3!
+      dry_run = s3_migration_flag('DRY_RUN')
+
+      if dry_run || s3_migration_flag('INLINE')
+        puts "[DRY RUN] No changes will be made.\n\n" if dry_run
+        s3_migration_inline(dry_run:)
+      else
+        MigrateFilesToS3Job.perform_later(limit: ENV['LIMIT']&.to_i)
+        puts 'Enqueued MigrateFilesToS3Job'
+      end
+    end
+
+    desc <<~DESC
+      Read-only audit of originals already in S3: object readable, recorded size and stored checksum match.
+      Get zero problems before deleting anything from disk. Env: LIMIT=<n> files.
+    DESC
+    task verify_s3_files: :environment do
+      counts = Hash.new(0)
+      s3_migration_each_original(counts) do |file_set, original|
+        result = Hyrax::S3Migration::Auditor.new(original:).call
+        counts[result.status] += 1
+        next false if result.status == :not_in_s3
+
+        puts "  PROBLEM #{file_set.id} - #{result.problems.join('; ')}" if result.status == :problem
+        true
+      rescue StandardError => e
+        counts[:problem] += 1
+        puts "  PROBLEM #{file_set.id} - #{e.class}: #{e.message}"
+        true
+      end
+      puts "\nOK: #{counts[:ok]}  Problems: #{counts[:problem]}  Not yet in S3: #{counts[:not_in_s3]}  No original: #{counts[:no_original]}"
+    end
+
     desc 'Read-only report of file storage by file use and scheme (disk, shrine, ...).'
     task report_file_storage: :environment do
       puts "use | scheme | files | GB"
