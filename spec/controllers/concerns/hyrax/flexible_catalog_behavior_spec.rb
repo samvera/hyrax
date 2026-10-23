@@ -286,27 +286,27 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
 
   describe '.display_label_for' do
     it 'returns a callable that resolves the default label' do
-      label = controller.class.send(:display_label_for, 'test_field',
-                                     { 'display_label' => { 'default' => 'Test Label' } })
+      label = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:display_label_for, 'test_field',
+                                                                                                                   { 'display_label' => { 'default' => 'Test Label' } })
       expect(label.call).to eq('Test Label')
     end
 
     it 'returns a callable that resolves to humanized field name when display_label is blank' do
-      label = controller.class.send(:display_label_for, 'test_field', {})
+      label = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:display_label_for, 'test_field', {})
       expect(label.call).to eq('Test field')
     end
 
     it 'resolves locale-specific label at call time when locale is :es' do
-      label = controller.class.send(:display_label_for, 'test_field',
-                                     { 'display_label' => { 'default' => 'Test Label', 'es' => 'Etiqueta de prueba' } })
+      label = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:display_label_for, 'test_field',
+                                                                                                                   { 'display_label' => { 'default' => 'Test Label', 'es' => 'Etiqueta de prueba' } })
       I18n.with_locale(:es) do
         expect(label.call).to eq('Etiqueta de prueba')
       end
     end
 
     it 'falls back to default when locale-specific label is not available' do
-      label = controller.class.send(:display_label_for, 'test_field',
-                                     { 'display_label' => { 'default' => 'Test Label', 'es' => 'Etiqueta de prueba' } })
+      label = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:display_label_for, 'test_field',
+                                                                                                                   { 'display_label' => { 'default' => 'Test Label', 'es' => 'Etiqueta de prueba' } })
       I18n.with_locale(:fr) do
         expect(label.call).to eq('Test Label')
       end
@@ -315,120 +315,120 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
 
   describe '.stored_searchable?' do
     it 'returns true when indexing includes stored_searchable' do
-      result = controller.class.send(:stored_searchable?, ['stored_searchable'], 'test_field')
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:stored_searchable?, ['stored_searchable'], 'test_field')
       expect(result).to be true
     end
 
     it 'returns true when indexing includes field_tesim' do
-      result = controller.class.send(:stored_searchable?, ['test_field_tesim'], 'test_field')
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:stored_searchable?, ['test_field_tesim'], 'test_field')
       expect(result).to be true
     end
 
     it 'returns false when neither condition is met' do
-      result = controller.class.send(:stored_searchable?, ['facetable'], 'test_field')
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:stored_searchable?, ['facetable'], 'test_field')
       expect(result).to be false
     end
   end
 
   describe '.catalog_indexable?' do
     it 'returns false when view.search_results is false' do
-      result = controller.class.send(:catalog_indexable?, { 'search_results' => false })
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:catalog_indexable?, { 'search_results' => false })
       expect(result).to be false
     end
 
     it 'returns true when view.search_results is true' do
-      result = controller.class.send(:catalog_indexable?, { 'search_results' => true })
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:catalog_indexable?, { 'search_results' => true })
       expect(result).to be true
     end
 
     it 'returns true when view options do not include search_results' do
-      result = controller.class.send(:catalog_indexable?, { 'html_dl' => true })
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:catalog_indexable?, { 'html_dl' => true })
       expect(result).to be true
     end
 
     it 'returns true when view options are nil' do
-      result = controller.class.send(:catalog_indexable?, nil)
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:catalog_indexable?, nil)
       expect(result).to be true
     end
   end
 
   describe '.facetable?' do
     it 'returns true when indexing includes facetable' do
-      result = controller.class.send(:facetable?, ['facetable'])
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:facetable?, ['facetable'])
       expect(result).to be true
     end
 
     it 'returns false when indexing does not include facetable' do
-      result = controller.class.send(:facetable?, ['stored_searchable'])
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:facetable?, ['stored_searchable'])
       expect(result).to be false
     end
   end
 
   describe '.require_view_helper_method?' do
     it 'returns true for external_link render_as' do
-      result = controller.class.send(:require_view_helper_method?, { 'render_as' => 'external_link' })
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:require_view_helper_method?, { 'render_as' => 'external_link' })
       expect(result).to be true
     end
 
     it 'returns true for linked render_as' do
-      result = controller.class.send(:require_view_helper_method?, { 'render_as' => 'linked' })
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:require_view_helper_method?, { 'render_as' => 'linked' })
       expect(result).to be true
     end
 
     it 'returns true for rights_statement render_as' do
-      result = controller.class.send(:require_view_helper_method?, { 'render_as' => 'rights_statement' })
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:require_view_helper_method?, { 'render_as' => 'rights_statement' })
       expect(result).to be true
     end
 
     it 'returns true for html render_as' do
-      result = controller.class.send(:require_view_helper_method?, { 'render_as' => 'html' })
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:require_view_helper_method?, { 'render_as' => 'html' })
       expect(result).to be true
     end
 
     it 'returns false for other render_as values' do
-      result = controller.class.send(:require_view_helper_method?, { 'render_as' => 'faceted' })
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:require_view_helper_method?, { 'render_as' => 'faceted' })
       expect(result).to be false
     end
 
     it 'returns false when view_options is nil' do
-      result = controller.class.send(:require_view_helper_method?, nil)
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:require_view_helper_method?, nil)
       expect(result).to be false
     end
   end
 
   describe '.view_option_for_helper_method' do
     it 'returns :iconify_auto_link for external_link' do
-      result = controller.class.send(:view_option_for_helper_method, { 'render_as' => 'external_link' })
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:view_option_for_helper_method, { 'render_as' => 'external_link' })
       expect(result).to eq(:iconify_auto_link)
     end
 
     it 'returns :index_field_link for linked' do
-      result = controller.class.send(:view_option_for_helper_method, { 'render_as' => 'linked' })
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:view_option_for_helper_method, { 'render_as' => 'linked' })
       expect(result).to eq(:index_field_link)
     end
 
     it 'returns :rights_statement_links for rights_statement' do
-      result = controller.class.send(:view_option_for_helper_method, { 'render_as' => 'rights_statement' })
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:view_option_for_helper_method, { 'render_as' => 'rights_statement' })
       expect(result).to eq(:rights_statement_links)
     end
 
     it 'returns :render_html_index_value for html' do
-      result = controller.class.send(:view_option_for_helper_method, { 'render_as' => 'html' })
+      result = Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:view_option_for_helper_method, { 'render_as' => 'html' })
       expect(result).to eq(:render_html_index_value)
     end
   end
 
   describe '.restricted_field?' do
     it 'is true when admin_only is in the indexing array' do
-      expect(controller.class.send(:restricted_field?, ['title_tesim', 'stored_searchable', 'admin_only'])).to be true
+      expect(Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:restricted_field?, ['title_tesim', 'stored_searchable', 'admin_only'])).to be true
     end
 
     it 'is true when editor_only is in the indexing array' do
-      expect(controller.class.send(:restricted_field?, ['title_tesim', 'stored_searchable', 'editor_only'])).to be true
+      expect(Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:restricted_field?, ['title_tesim', 'stored_searchable', 'editor_only'])).to be true
     end
 
     it 'is false when neither flag is present' do
-      expect(controller.class.send(:restricted_field?, ['title_tesim', 'stored_searchable'])).to be false
+      expect(Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:restricted_field?, ['title_tesim', 'stored_searchable'])).to be false
     end
   end
 
@@ -508,7 +508,7 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
         let(:qf_initial) { String.new('title_tesim creator_tesim subject_tesim') }
 
         it 'removes the field and its preceding space' do
-          controller.class.send(:remove_from_blacklight_config!, 'creator')
+          Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:remove_from_blacklight_config!, 'creator')
           expect(qf).to eq('title_tesim subject_tesim')
         end
       end
@@ -517,7 +517,7 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
         let(:qf_initial) { String.new('creator_tesim title_tesim') }
 
         it 'removes the field even though there is no leading space to match' do
-          controller.class.send(:remove_from_blacklight_config!, 'creator')
+          Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:remove_from_blacklight_config!, 'creator')
           expect(qf).not_to include('creator_tesim')
           expect(qf).to include('title_tesim')
         end
@@ -527,7 +527,7 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
         let(:qf_initial) { String.new('creator_tesim') }
 
         it 'removes the field, leaving an empty qf' do
-          controller.class.send(:remove_from_blacklight_config!, 'creator')
+          Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:remove_from_blacklight_config!, 'creator')
           expect(qf).to eq('')
         end
       end
@@ -558,7 +558,7 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
       end
 
       it 'removes the canonical pair and all variants declared in indexing:' do
-        controller.class.send(:remove_from_blacklight_config!, 'memo', indexing)
+        Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:remove_from_blacklight_config!, 'memo', indexing)
 
         expect(blacklight_config.index_fields).not_to have_key('memo_tesim')
         expect(blacklight_config.index_fields).not_to have_key('memo_label_tesim')
@@ -588,7 +588,7 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
       end
 
       it 'does not remove a different property whose name starts with the same prefix' do
-        controller.class.send(:remove_from_blacklight_config!, 'notes')
+        Hyrax::FlexibleCatalogConfigBuilder.new(controller.class.blacklight_config).send(:remove_from_blacklight_config!, 'notes')
 
         expect(blacklight_config.index_fields).not_to have_key('notes_tesim')
         expect(blacklight_config.index_fields).to have_key('notes_internal_tesim')
