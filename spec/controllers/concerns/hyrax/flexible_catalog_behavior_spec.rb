@@ -255,18 +255,14 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, type: :controller do
         end
       end
 
-      context 'when a property changes from facetable to non-facetable' do
+      context 'when the application declares a facet for a property the profile does not facet' do
+        after { controller.class.flexible_baseline_config.facet_fields.delete('medium_sim') }
+
         it 'removes the facet field from blacklight config' do
-          # manually add a facet field (simulating it existing in CatalogController)
-          controller.class.blacklight_config.add_facet_field('medium_sim', label: 'Medium')
+          controller.class.flexible_baseline_config.add_facet_field('medium_sim', label: 'Medium')
 
-          # verify it exists
-          expect(controller.class.blacklight_config.facet_fields).to have_key('medium_sim')
-
-          # reload the schema (medium is not facetable in custom_properties)
           controller.class.load_flexible_schema
 
-          # should not exist since medium doesn't have 'facetable' in indexing
           expect(controller.class.blacklight_config.facet_fields).not_to have_key('medium_sim')
         end
       end

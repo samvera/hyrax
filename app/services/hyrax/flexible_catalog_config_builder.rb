@@ -9,10 +9,13 @@ module Hyrax
   # the configured `controlled_vocabulary_label_service` resolves facets on its label field and shows
   # its labels in search results.
   #
-  # It edits the config it is given, in place.
+  # It edits the config it is given, in place. `Hyrax::FlexibleCatalogBehavior.load_flexible_schema`
+  # gives it a copy of the controller's configuration as it stood before any profile was loaded, then
+  # swaps the result in, so each load reflects only its own profile and a config another request is
+  # already reading is never edited.
   #
   # @example
-  #   config = Hyrax::FlexibleCatalogConfigBuilder.new(CatalogController.blacklight_config.deep_copy)
+  #   config = Hyrax::FlexibleCatalogConfigBuilder.new(CatalogController.flexible_baseline_config.deep_copy)
   #                                               .apply(previous_profile, current_profile)
   class FlexibleCatalogConfigBuilder
     attr_reader :blacklight_config
@@ -24,15 +27,16 @@ module Hyrax
     end
 
     ##
-    # Applies `current_profile`, first removing the fields of any property `previous_profile` had that
-    # `current_profile` no longer has.
+    # Applies `current_profile`, first removing the fields of any property `previous_profile` declared
+    # that `current_profile` no longer has, and of any property a surrogate in `previous_profile` stood
+    # in for but no longer does.
     #
     # @param previous_profile [Hash] the profile loaded before the current one
     # @param current_profile [Hash, nil] the profile to apply; `nil` applies `previous_profile`
     # @return [Blacklight::Configuration] the config it built onto
     def apply(previous_profile, current_profile)
       current_profile = previous_profile if current_profile.nil?
-      remove_old_properties!(previous_profile['properties'], current_profile['properties'].keys) if current_profile != previous_profile
+      remove_old_properties!(previous_profile['properties'], current_profile['properties'])
       properties_hash = current_profile['properties']
       resolvable = {}
       properties_hash.each do |itemprop, prop|
@@ -105,10 +109,9 @@ module Hyrax
               blacklight_config.index_fields[name].field_name = itemprop
               blacklight_config.index_fields[name].profile_helper = true
             elsif blacklight_config.index_fields[name].profile_helper
-              # A helper an earlier profile set, for a property that has since
-              # stopped asking for one. It would otherwise short-circuit
-              # Blacklight's pipeline ahead of `link_to_facet` for the life of
-              # the process, since this config is class-level.
+              # A helper an earlier entry for the same field set, when this
+              # entry asks for none. It would otherwise short-circuit
+              # Blacklight's pipeline ahead of `link_to_facet`.
               blacklight_config.index_fields[name].helper_method = nil
               blacklight_config.index_fields[name].field_name = nil
               blacklight_config.index_fields[name].profile_helper = false
@@ -123,7 +126,7 @@ module Hyrax
             end
             # if a property in the metadata profile doesn't exist in the CatalogController, add it
             blacklight_config.add_index_field(name, index_args)
-            # Marks the helper as ours wherever it was set, so a later profile
+            # Marks the helper as ours wherever it was set, so a later entry
             # can clear it by the same rule that governs preconfigured fields.
             blacklight_config.index_fields[name].profile_helper = index_args.key?(:helper_method)
 
@@ -189,22 +192,22 @@ module Hyrax
     # A controlled property facets on its labels, because Blacklight queries a
     # facet with whatever the row displayed — so row and facet move together.
     #
-    # Runs once per request against a class-level config that persists, so
-    # both the swap and the add have to be safe to repeat; Blacklight raises
-    # when a facet is added twice.
+    # Several profile entries can name the same field, so both the swap and the
+    # add have to be safe to repeat; Blacklight raises when a facet is added
+    # twice.
     def register_facet_field(itemprop, label, controlled_source, indexing)
       id_name = "#{itemprop}_sim"
       id_facet = blacklight_config.facet_fields[id_name]
       id_facet = blacklight_config.add_facet_field(id_name, label: label, limit: true) if id_facet.blank?
 
-      # A property can gain `facetable` while keeping the `render_as: faceted`
-      # that hid its facet to resolve a link. `facetable` asks for the sidebar
+      # An earlier entry for the same field can have hidden this facet to
+      # resolve a `render_as: faceted` link. `facetable` asks for the sidebar
       # listing, so that hiding has to be lifted before anything below decides
       # which facet to hide for labels.
       reveal_link_facet(facet_name_for(itemprop, controlled_source))
 
-      # Restore a facet an earlier pass hid, for a property that has since
-      # stopped being controlled. Only one we hid ourselves: an `if` an
+      # Restore a facet an earlier entry for the same field hid, when this
+      # entry is not controlled. Only one we hid ourselves: an `if` an
       # application set in its own CatalogController has to stand, so the
       # predicate we displaced is put back rather than cleared to nil.
       unless swap_facet_to_labels?(itemprop, controlled_source, indexing)
@@ -239,16 +242,15 @@ module Hyrax
     # Register a facet purely so a `render_as: faceted` link resolves, without
     # listing it in the sidebar.
     #
-    # Runs per request against a class-level config that persists, so this has
-    # to be safe to repeat; Blacklight raises when a facet is added twice.
-    # Only ever hides a facet this method created: an application that
-    # declared the facet in its own CatalogController asked for the sidebar
-    # listing, and `render_as` does not override that.
+    # Several profile entries can name the same field, so this has to be safe
+    # to repeat; Blacklight raises when a facet is added twice. Only ever hides
+    # a facet this method created: an application that declared the facet in
+    # its own CatalogController asked for the sidebar listing, and `render_as`
+    # does not override that.
     def register_hidden_facet_field(name, label)
-      # Whether a controlled property resolves its authority decides which of
-      # the two names it links to, and that can change between loads. Dropping
-      # the other one keeps a facet nothing links to any more from outliving
-      # the profile that asked for it.
+      # Whether an entry is controlled decides which of the two names it links
+      # to, and entries for the same field can differ. Dropping the other one
+      # leaves no facet that nothing links to.
       drop_unlinked_counterpart(name)
 
       facet = blacklight_config.facet_fields[name]
@@ -429,11 +431,18 @@ module Hyrax
       view_options['render_as'].to_s == 'faceted'
     end
 
-    def remove_old_properties!(previous_profile_properties, current_property_keys)
-      props = previous_profile_properties.keys - current_property_keys
-      props.each do |prop|
-        indexing = previous_profile_properties.dig(prop, 'indexing')
-        remove_from_blacklight_config!(prop, indexing)
+    def remove_old_properties!(previous_profile_properties, current_properties)
+      in_use = current_properties.flat_map do |prop, config|
+        solr_field_names_for(indexed_name_for(prop, config), config.is_a?(Hash) ? config['indexing'] : nil)
+      end
+      previous_profile_properties.each do |prop, config|
+        indexing = config.is_a?(Hash) ? config['indexing'] : nil
+        current = current_properties.key?(prop)
+        remove_from_blacklight_config!(prop, indexing, keep: in_use) unless current
+        former_target = indexed_name_for(prop, config)
+        next if former_target == prop || (current && former_target == indexed_name_for(prop, current_properties[prop]))
+
+        remove_from_blacklight_config!(former_target, indexing, keep: in_use)
       end
     end
 
@@ -451,8 +460,8 @@ module Hyrax
     # e.g. `title` would otherwise match `title_alternative_*`.
     INDEXING_DIRECTIVES = %w[stored_searchable facetable admin_only editor_only].freeze
 
-    def remove_from_blacklight_config!(itemprop, indexing = nil)
-      names = solr_field_names_for(itemprop, indexing)
+    def remove_from_blacklight_config!(itemprop, indexing = nil, keep: [])
+      names = solr_field_names_for(itemprop, indexing) - keep
       names.each do |name|
         blacklight_config.facet_fields.delete(name)
         blacklight_config.index_fields.delete(name)
@@ -476,9 +485,8 @@ module Hyrax
       default_fields = ["#{itemprop}_tesim", "#{itemprop}_sim"]
       declared_fields = (indexing || []) - INDEXING_DIRECTIVES
       fields = (default_fields + declared_fields).uniq
-      # blacklight_config is class-level and persists between requests, so a
-      # property that leaves the profile or becomes restricted would otherwise
-      # keep a live label facet pointing at a field nothing writes to.
+      # Each field's label companion too, so a retired or restricted property
+      # leaves no label facet pointing at a field nothing writes to.
       (fields + fields.map { |field| Hyrax::ControlledVocabularyFieldValues.label_key(field) }).uniq
     end
   end
