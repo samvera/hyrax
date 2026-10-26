@@ -28,7 +28,7 @@ module Hyrax
       Rails.logger.error "Analytics error: #{exception.message}"
       @analytics_error = analytics_error_details(exception)
       if action_name == 'file'
-        @stats = Hyrax::FileUsage.new(params[:id]).tap(&:without_analytics)
+        (@stats ||= Hyrax::FileUsage.new(params[:id])).without_analytics
       else
         @document ||= ::SolrDocument.find(params[:id])
         @pageviews = @downloads = Hyrax::Analytics::Results.new([])
