@@ -28,7 +28,7 @@ module Hyrax
     def analytics_unavailable(exception)
       Rails.logger.error "Analytics error: #{exception.message}"
       # Anyone who can read a work can open its stats; only admins get the setup steps.
-      if current_ability.admin?
+      if can?(:read, :admin_dashboard)
         @analytics_error = analytics_error_details(exception)
       else
         @analytics_unavailable = true
