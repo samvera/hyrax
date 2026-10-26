@@ -2,74 +2,66 @@
 require 'valkyrie/persistence/fedora'
 
 # OVERRIDE Valkyrie v3.6.1 to store plain Hash attribute values on Fedora, mirroring samvera/valkyrie#1005
-#   - NestedProperty stores a plain Hash as a nested graph, built from a copy of the Hash
-#   - OrmConverter reads a stored Hash back as just its own keys
+#   - PermissiveSchema.valkyrie_json is the datatype for a Hash stored as JSON
+#   - ModelConverter writes a plain Hash as one RDF literal holding its JSON, without nil Hash values
+#   - OrmConverter reads that literal back as a Hash with symbol keys
 #   - Applicator#cast_array uses Array.wrap, so merging a second value doesn't split a Hash
 #
-# Delete this file once Hyrax requires a Valkyrie release that includes #1005.
+# Delete this file once Hyrax requires a Valkyrie release that includes samvera/valkyrie#1005 (tracked in samvera/hyrax#7703).
 module Hyrax
   module ValkyriePersistence
     module Fedora
-      class HashDummy
-        INTERNAL_RESOURCE = "Valkyrie::InternalHash"
+      ModelConverter = ::Valkyrie::Persistence::Fedora::Persister::ModelConverter
+      GraphToAttributes = ::Valkyrie::Persistence::Fedora::Persister::OrmConverter::GraphToAttributes
 
-        # The converter asks every resource which attributes are ordered; a
-        # hash has none.
-        def self.attribute_names
-          []
-        end
-        attr_reader :hsh
-        delegate :[], to: :hsh
-        def initialize(hsh)
-          @hsh = hsh
-        end
-
-        def attributes
-          hsh
-        end
-
-        # A hash has no Fedora identity of its own; it lives under a hash URI
-        # in its parent's graph.
-        def id; end
-      end
-
-      module NestedPropertyClassOverride
-        # OVERRIDE: handle any Hash, not only one naming an internal_resource
-        def handles?(value)
-          value.is_a?(::Valkyrie::Persistence::Fedora::Persister::ModelConverter::Property) &&
-            (value.value.is_a?(Hash) || value.value.is_a?(::Valkyrie::Resource))
+      module PermissiveSchemaOverride
+        # OVERRIDE (new): the datatype for a Hash stored as JSON
+        # @return [RDF::URI]
+        def valkyrie_json
+          uri_for(:valkyrie_json)
         end
       end
 
-      module NestedPropertyOverride
-        def nested_graph
-          # OVERRIDE: build the nested graph from #nested_resource
-          @nested_graph ||= ::Valkyrie::Persistence::Fedora::Persister::ModelConverter
-                            .new(resource: nested_resource, adapter: value.adapter, subject_uri: subject_uri).convert.graph
+      # OVERRIDE (new): writes a plain Hash (one that is not a nested resource)
+      # as a typed RDF literal holding the Hash as JSON
+      class ModelJSONValue < ModelConverter::MappedFedoraValue
+        def self.handles?(value)
+          value.is_a?(ModelConverter::Property) && value.value.is_a?(Hash) && !value.value[:internal_resource]
         end
 
-        # OVERRIDE (new): a plain Hash (one without an internal_resource) is
-        # stored as a nested graph marked with {HashDummy::INTERNAL_RESOURCE},
-        # built from a copy so the caller's Hash is left untouched.
-        def nested_resource
-          return ::Valkyrie::Types::Anything[value.value] if value.value.is_a?(::Valkyrie::Resource) || value.value[:internal_resource]
-          HashDummy.new(value.value.merge(internal_resource: HashDummy::INTERNAL_RESOURCE))
+        def result
+          map_value(converted_value: RDF::Literal.new(
+            without_nil_values(value.value).to_json,
+            datatype: ::Valkyrie::Persistence::Fedora::PermissiveSchema.valkyrie_json
+          ))
+        end
+
+        private
+
+        # Drops nil Hash values at every level, as the Postgres and Solr adapters do when reading
+        def without_nil_values(val)
+          case val
+          when Hash
+            val.each_with_object({}) { |(key, element), result| result[key] = without_nil_values(element) unless element.nil? }
+          when Array
+            val.map { |element| without_nil_values(element) }
+          else
+            val
+          end
         end
       end
 
-      module OrmConverterOverride
-        def convert
-          attrs = attributes
-          # OVERRIDE: a stored plain Hash reads back as just its own keys
-          return attrs.except(:id, :new_record, :internal_resource) if stored_hash?(attrs)
-          populate_native_lock(::Valkyrie::Types::Anything[attrs])
+      # OVERRIDE (new): reads an RDF literal typed as JSON back as a Hash with
+      # symbol keys
+      class GraphJSONValue < ::Valkyrie::ValueMapper
+        def self.handles?(value)
+          value.statement.object.is_a?(RDF::Literal) &&
+            value.statement.object.datatype == ::Valkyrie::Persistence::Fedora::PermissiveSchema.valkyrie_json
         end
 
-        # OVERRIDE (new)
-        # @param [Hash] attrs
-        # @return [Boolean]
-        def stored_hash?(attrs)
-          attrs[:internal_resource] == HashDummy::INTERNAL_RESOURCE
+        def result
+          value.statement.object = JSON.parse(value.statement.object.value, symbolize_names: true)
+          GraphToAttributes::Applicator.new(value)
         end
       end
 
@@ -79,16 +71,24 @@ module Hyrax
           Array.wrap(values)
         end
       end
+
+      # Registers a mapper ahead of an existing one, the position it has in Valkyrie.
+      def self.register_before(registry, mapper, existing)
+        casters = registry.value_casters
+        registry.value_casters = casters.dup.insert(casters.index(existing), mapper)
+      end
     end
   end
 end
 
-nested_property = Valkyrie::Persistence::Fedora::Persister::ModelConverter::NestedProperty
-unless nested_property.const_defined?(:HashDummy, false)
-  nested_property.const_set(:HashDummy, Hyrax::ValkyriePersistence::Fedora::HashDummy)
-  nested_property.singleton_class.prepend(Hyrax::ValkyriePersistence::Fedora::NestedPropertyClassOverride)
-  nested_property.prepend(Hyrax::ValkyriePersistence::Fedora::NestedPropertyOverride)
-  Valkyrie::Persistence::Fedora::Persister::OrmConverter.prepend(Hyrax::ValkyriePersistence::Fedora::OrmConverterOverride)
-  Valkyrie::Persistence::Fedora::Persister::OrmConverter::GraphToAttributes::Applicator
-    .prepend(Hyrax::ValkyriePersistence::Fedora::ApplicatorOverride)
+model_converter = Valkyrie::Persistence::Fedora::Persister::ModelConverter
+unless model_converter.const_defined?(:JSONValue, false)
+  hash_support = Hyrax::ValkyriePersistence::Fedora
+  graph_to_attributes = hash_support::GraphToAttributes
+
+  model_converter.const_set(:JSONValue, hash_support::ModelJSONValue)
+  Valkyrie::Persistence::Fedora::PermissiveSchema.singleton_class.prepend(hash_support::PermissiveSchemaOverride)
+  hash_support.register_before(model_converter::FedoraValue, hash_support::ModelJSONValue, model_converter::EnumerableValue)
+  hash_support.register_before(graph_to_attributes::FedoraValue, hash_support::GraphJSONValue, graph_to_attributes::BooleanValue)
+  graph_to_attributes::Applicator.prepend(hash_support::ApplicatorOverride)
 end
