@@ -89,11 +89,16 @@ RSpec.describe Hyrax::StatsController do
 
   context 'when Google Analytics raises an error' do
     google_message = 'Property 123456 is not shared with service-account@example.iam.gserviceaccount.com'
+    # description => [error, admin notice type, hint key]
     errors = {
-      'a permission error' => [Google::Cloud::PermissionDeniedError.new(google_message), 'permission'],
-      'another Google error' => [Google::Cloud::InvalidArgumentError.new(google_message), 'general'],
-      'malformed account JSON' => [JSON::ParserError.new(google_message), 'general'],
-      'a missing account JSON file' => [Errno::ENOENT.new(google_message), 'general']
+      'a permission error' => [Google::Cloud::PermissionDeniedError.new(google_message), 'permission', 'permission'],
+      'an authentication error' => [Google::Cloud::UnauthenticatedError.new(google_message), 'authentication', 'authentication'],
+      'an invalid argument error' => [Google::Cloud::InvalidArgumentError.new(google_message), 'invalid_property', 'invalid_property'],
+      'a not found error' => [Google::Cloud::NotFoundError.new(google_message), 'invalid_property', 'invalid_property'],
+      'a quota error' => [Google::Cloud::ResourceExhaustedError.new(google_message), 'quota_exceeded', 'quota_exceeded'],
+      'another Google error' => [Google::Cloud::InternalError.new(google_message), 'general', 'general'],
+      'malformed account JSON' => [JSON::ParserError.new(google_message), 'general', 'invalid_credentials'],
+      'a missing account JSON file' => [Errno::ENOENT.new(google_message), 'general', 'missing_credentials_file']
     }
 
     let(:denied) { Google::Cloud::PermissionDeniedError.new(google_message) }
@@ -109,7 +114,7 @@ RSpec.describe Hyrax::StatsController do
     end
 
     shared_examples 'a stats page with a plain analytics notice' do
-      errors.each do |description, (error, _type)|
+      errors.each do |description, (error, *)|
         context "with #{description}" do
           let(:denied) { error }
 
@@ -128,19 +133,21 @@ RSpec.describe Hyrax::StatsController do
     end
 
     shared_examples 'a stats page with the setup notice' do
-      errors.each do |description, (error, type)|
+      errors.each do |description, (error, type, hint)|
         context "with #{description}" do
           let(:denied) { error }
 
-          it 'renders the stats view with the matching setup notice and hides the Google message' do
+          it 'renders the stats view with the setup notice, a hint for the error class, and no Google message' do
             get action, params: { id: resource }
             expect(response).to be_successful
             expect(response).to render_template("stats/#{action}")
             expect(assigns(:analytics_error)).to be_present
             expect(response.body).to include(CGI.escapeHTML(I18n.t("hyrax.admin.analytics.errors.#{type}.message")))
             expect(response.body).not_to include(unavailable)
+            expect(response.body).to include(CGI.escapeHTML(I18n.t("hyrax.stats.analytics_hints.#{hint}")))
+            expect(response.body).to include('Technical Details')
+            expect(response.body).to include(error.class.name)
             expect(response.body).not_to include('service-account@example')
-            expect(response.body).not_to include('Technical Details')
           end
         end
       end

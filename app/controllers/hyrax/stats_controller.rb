@@ -6,7 +6,19 @@ module Hyrax
     include Hyrax::SingularSubresourceController
     include Hyrax::Breadcrumbs
 
-    # Besides Google's own errors, a malformed GOOGLE_ACCOUNT_JSON or a missing account_json_path file fails while building the client.
+    # Error class => key under hyrax.stats.analytics_hints. Keys in SHARED_ERROR_TYPES reuse the matching hyrax.admin.analytics.errors title and steps.
+    # JSON::ParserError and Errno::ENOENT come from a malformed GOOGLE_ACCOUNT_JSON or a missing account_json_path file while building the client.
+    ANALYTICS_ERROR_HINTS = {
+      Google::Cloud::PermissionDeniedError => 'permission',
+      Google::Cloud::UnauthenticatedError => 'authentication',
+      Google::Cloud::InvalidArgumentError => 'invalid_property',
+      Google::Cloud::NotFoundError => 'invalid_property',
+      Google::Cloud::ResourceExhaustedError => 'quota_exceeded',
+      JSON::ParserError => 'invalid_credentials',
+      Errno::ENOENT => 'missing_credentials_file'
+    }.freeze
+    SHARED_ERROR_TYPES = %w[permission authentication invalid_property quota_exceeded].freeze
+
     rescue_from Google::Cloud::Error, JSON::ParserError, Errno::ENOENT, with: :analytics_unavailable
 
     before_action :build_breadcrumbs, only: [:work, :file]
@@ -43,12 +55,17 @@ module Hyrax
     end
 
     def analytics_error_details(exception)
-      type = exception.is_a?(Google::Cloud::PermissionDeniedError) ? 'permission' : 'general'
-      scope = "hyrax.admin.analytics.errors.#{type}"
+      hint = analytics_hint_key(exception)
+      scope = "hyrax.admin.analytics.errors.#{SHARED_ERROR_TYPES.include?(hint) ? hint : 'general'}"
       { title: I18n.t('title', scope: scope),
         message: I18n.t('message', scope: scope),
-        troubleshooting_steps: Array.wrap(I18n.t('troubleshooting_steps', scope: scope)),
-        documentation_url: I18n.t('documentation_url', scope: scope) }
+        troubleshooting_steps: Array.wrap(I18n.t('troubleshooting_steps', scope: scope)) + [I18n.t(hint, scope: 'hyrax.stats.analytics_hints')],
+        documentation_url: I18n.t('documentation_url', scope: scope),
+        details: exception.class.name }
+    end
+
+    def analytics_hint_key(exception)
+      ANALYTICS_ERROR_HINTS.find { |error_class, _hint| exception.is_a?(error_class) }&.last || 'general'
     end
 
     def add_breadcrumb_for_controller
