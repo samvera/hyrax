@@ -109,6 +109,22 @@ RSpec.describe Hyrax::StatsController do
         expect(assigns(:stats).total_pageviews).to eq 0
         expect(assigns(:stats).total_downloads).to eq 0
       end
+
+      {
+        'malformed account JSON' => JSON::ParserError.new('unexpected token at \'{oops\''),
+        'missing account JSON file' => Errno::ENOENT.new('/missing/google.json')
+      }.each do |description, error|
+        context "with #{description}" do
+          let(:denied) { error }
+
+          it 'renders the stats view with the general notice' do
+            get :file, params: { id: file_set }
+            expect(response).to be_successful
+            expect(response.body).to include(CGI.escapeHTML(I18n.t('hyrax.admin.analytics.errors.general.message')))
+            expect(response.body).not_to include(denied.message)
+          end
+        end
+      end
     end
 
     describe '#work' do
@@ -135,6 +151,22 @@ RSpec.describe Hyrax::StatsController do
           expect(response).to be_successful
           expect(response.body).to include(CGI.escapeHTML(I18n.t('hyrax.admin.analytics.errors.general.message')))
           expect(response.body).not_to include(denied.message)
+        end
+      end
+
+      {
+        'malformed account JSON' => JSON::ParserError.new('unexpected token at \'{oops\''),
+        'missing account JSON file' => Errno::ENOENT.new('/missing/google.json')
+      }.each do |description, error|
+        context "with #{description}" do
+          let(:denied) { error }
+
+          it 'renders the stats view with the general notice' do
+            get :work, params: { id: work }
+            expect(response).to be_successful
+            expect(response.body).to include(CGI.escapeHTML(I18n.t('hyrax.admin.analytics.errors.general.message')))
+            expect(response.body).not_to include(denied.message)
+          end
         end
       end
     end

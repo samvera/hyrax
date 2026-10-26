@@ -6,7 +6,8 @@ module Hyrax
     include Hyrax::SingularSubresourceController
     include Hyrax::Breadcrumbs
 
-    rescue_from Google::Cloud::Error, with: :analytics_unavailable
+    # Besides Google's own errors, a malformed GOOGLE_ACCOUNT_JSON or a missing account_json_path file fails while building the client.
+    rescue_from Google::Cloud::Error, JSON::ParserError, Errno::ENOENT, with: :analytics_unavailable
 
     before_action :build_breadcrumbs, only: [:work, :file]
 
