@@ -1687,6 +1687,7 @@ fr:
         export_to_zotero: Exporter vers Zotero
         export_to_zotero_details: L'exportation vers Zotero est prise en charge via des métadonnées intégrées. Si Zotero ne récupère pas automatiquement les métadonnées des fichiers déposés, veuillez signaler le problème via le
     stats:
+      analytics_unavailable: Analytics data is not currently available.
       downloads:
         downloads: Téléchargements
       pageviews:

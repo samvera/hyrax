@@ -27,7 +27,12 @@ module Hyrax
     # Show zeroed stats and a notice instead of a 500 when Google rejects the request.
     def analytics_unavailable(exception)
       Rails.logger.error "Analytics error: #{exception.message}"
-      @analytics_error = analytics_error_details(exception)
+      # Anyone who can read a work can open its stats; only admins get the setup steps.
+      if current_ability.admin?
+        @analytics_error = analytics_error_details(exception)
+      else
+        @analytics_unavailable = true
+      end
       if action_name == 'file'
         (@stats ||= Hyrax::FileUsage.new(params[:id])).without_analytics
       else

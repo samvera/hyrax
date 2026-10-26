@@ -88,86 +88,113 @@ RSpec.describe Hyrax::StatsController do
   end
 
   context 'when Google Analytics raises an error' do
-    let(:denied) { Google::Cloud::PermissionDeniedError.new('User does not have sufficient permissions for this property.') }
+    google_message = 'Property 123456 is not shared with service-account@example.iam.gserviceaccount.com'
+    errors = {
+      'a permission error' => [Google::Cloud::PermissionDeniedError.new(google_message), 'permission'],
+      'another Google error' => [Google::Cloud::InvalidArgumentError.new(google_message), 'general'],
+      'malformed account JSON' => [JSON::ParserError.new(google_message), 'general'],
+      'a missing account JSON file' => [Errno::ENOENT.new(google_message), 'general']
+    }
+
+    let(:denied) { Google::Cloud::PermissionDeniedError.new(google_message) }
+    let(:viewer) { user }
+    let(:unavailable) { I18n.t('hyrax.stats.analytics_unavailable') }
+    let(:setup_messages) { %w[permission general].map { |type| CGI.escapeHTML(I18n.t("hyrax.admin.analytics.errors.#{type}.message")) } }
 
     render_views
 
-    include_context 'with user signed in and http referer set'
+    before do
+      sign_in viewer if viewer
+      request.env['HTTP_REFERER'] = 'http://test.host/foo'
+    end
 
-    describe '#file' do
-      let(:file_set) { valkyrie_create(:hyrax_file_set, depositor: user.user_key, edit_users: [user.user_key], date_uploaded: 3.days.ago) }
-
-      before { allow(Hyrax::Analytics).to receive(:page_statistics).and_raise(denied) }
-
-      it 'renders the stats view with zeroed data and an analytics notice' do
-        get :file, params: { id: file_set }
-        expect(response).to be_successful
-        expect(response).to render_template('stats/file')
-        expect(assigns(:analytics_error)).to be_present
-        expect(response.body).to include(I18n.t('hyrax.admin.analytics.errors.permission.message'))
-        expect(response.body).not_to include(denied.message)
-        expect(assigns(:stats).total_pageviews).to eq 0
-        expect(assigns(:stats).total_downloads).to eq 0
-      end
-
-      {
-        'malformed account JSON' => JSON::ParserError.new('unexpected token at \'{oops\''),
-        'missing account JSON file' => Errno::ENOENT.new('/missing/google.json')
-      }.each do |description, error|
+    shared_examples 'a stats page with a plain analytics notice' do
+      errors.each do |description, (error, _type)|
         context "with #{description}" do
           let(:denied) { error }
 
-          it 'renders the stats view with the general notice' do
-            get :file, params: { id: file_set }
+          it 'renders the stats view with only a one-line notice' do
+            get action, params: { id: resource }
             expect(response).to be_successful
-            expect(response.body).to include(CGI.escapeHTML(I18n.t('hyrax.admin.analytics.errors.general.message')))
-            expect(response.body).not_to include(denied.message)
+            expect(response).to render_template("stats/#{action}")
+            expect(assigns(:analytics_error)).to be_nil
+            expect(response.body).to include(unavailable)
+            setup_messages.each { |message| expect(response.body).not_to include(message) }
+            expect(response.body).not_to include('service-account@example')
+            expect(response.body).not_to include('Technical Details')
           end
         end
       end
     end
 
-    describe '#work' do
-      let(:work) { valkyrie_create(:monograph, depositor: user.user_key, edit_users: [user.user_key]) }
-
-      before { allow(Hyrax::Analytics).to receive(:daily_events_for_id).and_raise(denied) }
-
-      it 'renders the stats view with zeroed data and an analytics notice' do
-        get :work, params: { id: work }
-        expect(response).to be_successful
-        expect(response).to render_template('stats/work')
-        expect(assigns(:analytics_error)).to be_present
-        expect(response.body).to include(I18n.t('hyrax.admin.analytics.errors.permission.message'))
-        expect(response.body).not_to include(denied.message)
-        expect(assigns(:pageviews).all).to eq 0
-        expect(assigns(:downloads).all).to eq 0
-      end
-
-      context 'with a non-permission Google error' do
-        let(:denied) { Google::Cloud::InvalidArgumentError.new('Invalid property') }
-
-        it 'renders the stats view with the general notice' do
-          get :work, params: { id: work }
-          expect(response).to be_successful
-          expect(response.body).to include(CGI.escapeHTML(I18n.t('hyrax.admin.analytics.errors.general.message')))
-          expect(response.body).not_to include(denied.message)
-        end
-      end
-
-      {
-        'malformed account JSON' => JSON::ParserError.new('unexpected token at \'{oops\''),
-        'missing account JSON file' => Errno::ENOENT.new('/missing/google.json')
-      }.each do |description, error|
+    shared_examples 'a stats page with the setup notice' do
+      errors.each do |description, (error, type)|
         context "with #{description}" do
           let(:denied) { error }
 
-          it 'renders the stats view with the general notice' do
-            get :work, params: { id: work }
+          it 'renders the stats view with the matching setup notice and hides the Google message' do
+            get action, params: { id: resource }
             expect(response).to be_successful
-            expect(response.body).to include(CGI.escapeHTML(I18n.t('hyrax.admin.analytics.errors.general.message')))
-            expect(response.body).not_to include(denied.message)
+            expect(response).to render_template("stats/#{action}")
+            expect(assigns(:analytics_error)).to be_present
+            expect(response.body).to include(CGI.escapeHTML(I18n.t("hyrax.admin.analytics.errors.#{type}.message")))
+            expect(response.body).not_to include(unavailable)
+            expect(response.body).not_to include('service-account@example')
+            expect(response.body).not_to include('Technical Details')
           end
         end
+      end
+    end
+
+    shared_examples 'a stats page that survives Google errors' do
+      context 'as a regular user' do
+        it_behaves_like 'a stats page with a plain analytics notice'
+      end
+
+      context 'as an anonymous visitor' do
+        let(:viewer) { nil }
+
+        it_behaves_like 'a stats page with a plain analytics notice'
+      end
+
+      context 'as an admin' do
+        let(:viewer) { create(:admin) }
+
+        before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
+
+        it_behaves_like 'a stats page with the setup notice'
+      end
+    end
+
+    describe '#file' do
+      let(:action) { :file }
+      let(:file_set) { valkyrie_create(:hyrax_file_set, depositor: user.user_key, edit_users: [user.user_key], read_groups: ['public'], date_uploaded: 3.days.ago) }
+      let(:resource) { file_set }
+
+      before { allow(Hyrax::Analytics).to receive(:page_statistics).and_raise(denied) }
+
+      it_behaves_like 'a stats page that survives Google errors'
+
+      it 'shows zeroed totals' do
+        get :file, params: { id: file_set }
+        expect(assigns(:stats).total_pageviews).to eq 0
+        expect(assigns(:stats).total_downloads).to eq 0
+      end
+    end
+
+    describe '#work' do
+      let(:action) { :work }
+      let(:work) { valkyrie_create(:monograph, depositor: user.user_key, edit_users: [user.user_key], read_groups: ['public']) }
+      let(:resource) { work }
+
+      before { allow(Hyrax::Analytics).to receive(:daily_events_for_id).and_raise(denied) }
+
+      it_behaves_like 'a stats page that survives Google errors'
+
+      it 'shows zeroed totals' do
+        get :work, params: { id: work }
+        expect(assigns(:pageviews).all).to eq 0
+        expect(assigns(:downloads).all).to eq 0
       end
     end
   end

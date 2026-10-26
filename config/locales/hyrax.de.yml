@@ -1680,6 +1680,7 @@ de:
         export_to_zotero: Export nach Zotero
         export_to_zotero_details: Der Export nach Zotero wird über eingebettete Metadaten unterstützt. Wenn Zotero Metadaten für hinterlegte Dateien nicht automatisch abruft, melden Sie das Problem über die
     stats:
+      analytics_unavailable: Analytics data is not currently available.
       downloads:
         downloads: Downloads
       pageviews:

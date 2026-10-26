@@ -1689,6 +1689,7 @@ es:
         export_to_zotero: Exportar a Zotero
         export_to_zotero_details: La exportación a Zotero se admite mediante metadatos incrustados. Si Zotero no recoge automáticamente los metadatos de los archivos depositados, informe el problema a través del
     stats:
+      analytics_unavailable: Analytics data is not currently available.
       downloads:
         downloads: Descargas
       pageviews:

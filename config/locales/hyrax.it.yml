@@ -1686,6 +1686,7 @@ it:
         export_to_zotero: Esporta in Zotero
         export_to_zotero_details: L'esportazione in Zotero è supportata tramite metadati incorporati. Se Zotero non raccoglie automaticamente i metadati per i file depositati, segnala il problema tramite il
     stats:
+      analytics_unavailable: Analytics data is not currently available.
       downloads:
         downloads: Download
       pageviews:

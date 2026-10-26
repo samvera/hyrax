@@ -1816,6 +1816,7 @@ en:
         export_to_zotero: Export to Zotero
         export_to_zotero_details: 'Exporting to Zotero is supported via embedded metadata.  If Zotero does not automatically pick up metadata for deposited files, please report the issue via the '
     stats:
+      analytics_unavailable: Analytics data is not currently available.
       downloads:
         downloads: Downloads
       pageviews:
