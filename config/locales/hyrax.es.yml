@@ -1692,9 +1692,7 @@ es:
       analytics_hints:
         authentication: Check GOOGLE_ACCOUNT_JSON or GOOGLE_ACCOUNT_JSON_PATH. The service account key may be expired, revoked, or from the wrong Google Cloud project.
         general: Check the application log for the full error message.
-        invalid_credentials: GOOGLE_ACCOUNT_JSON is not valid JSON (or base64-encoded JSON). Copy the service account key file again.
         invalid_property: Check the analytics property_id setting (GOOGLE_ANALYTICS_PROPERTY_ID by default). It must be the numeric GA4 property ID, not a G- measurement ID.
-        missing_credentials_file: GOOGLE_ACCOUNT_JSON_PATH points to a file that does not exist on the server. Check the path.
         permission: Check that the service account in GOOGLE_ACCOUNT_JSON has been added to the property named by the analytics property_id setting (GOOGLE_ANALYTICS_PROPERTY_ID by default).
         quota_exceeded: The Google request quota was exceeded. Try again later.
       analytics_unavailable: Analytics data is not currently available.

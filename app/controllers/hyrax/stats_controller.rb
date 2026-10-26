@@ -7,19 +7,16 @@ module Hyrax
     include Hyrax::Breadcrumbs
 
     # Error class => key under hyrax.stats.analytics_hints. Keys in SHARED_ERROR_TYPES reuse the matching hyrax.admin.analytics.errors title and steps.
-    # JSON::ParserError and Errno::ENOENT come from a malformed GOOGLE_ACCOUNT_JSON or a missing account_json_path file while building the client.
     ANALYTICS_ERROR_HINTS = {
       Google::Cloud::PermissionDeniedError => 'permission',
       Google::Cloud::UnauthenticatedError => 'authentication',
       Google::Cloud::InvalidArgumentError => 'invalid_property',
       Google::Cloud::NotFoundError => 'invalid_property',
-      Google::Cloud::ResourceExhaustedError => 'quota_exceeded',
-      JSON::ParserError => 'invalid_credentials',
-      Errno::ENOENT => 'missing_credentials_file'
+      Google::Cloud::ResourceExhaustedError => 'quota_exceeded'
     }.freeze
     SHARED_ERROR_TYPES = %w[permission authentication invalid_property quota_exceeded].freeze
 
-    rescue_from Google::Cloud::Error, JSON::ParserError, Errno::ENOENT, with: :analytics_unavailable
+    rescue_from Google::Cloud::Error, with: :analytics_unavailable
 
     before_action :build_breadcrumbs, only: [:work, :file]
 
