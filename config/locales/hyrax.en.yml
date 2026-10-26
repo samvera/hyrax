@@ -566,6 +566,7 @@ en:
           new_role: Assign Role
           no_roles: No roles
       workflows:
+        show_number_per_page_html: Show %{number} per page
         index:
           header: Review Submissions
           heading:

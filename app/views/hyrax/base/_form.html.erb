@@ -1,7 +1,8 @@
 <%= simple_form_for [main_app, @form],
                     html: {
                       data: { behavior: 'work-form',
-                              'param-key' => @form.model_name.param_key },
+                              'param-key' => @form.model_name.param_key,
+                              'remove-text' => t('helpers.action.remove') },
                       multipart: true
                     } do |f| %>
   <% if Flipflop.batch_upload? && !f.object.persisted? %>

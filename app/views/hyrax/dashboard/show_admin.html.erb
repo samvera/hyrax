@@ -1,5 +1,5 @@
 <% provide :page_header do %>
-  <h1><%= t("hyrax.dashboard.title") %></h1>
+  <h1><span class="fa fa-tachometer" aria-hidden="true"></span> <%= t("hyrax.dashboard.title") %></h1>
 <% end %>
 
 <div class="spaced-rows">
@@ -35,13 +35,13 @@
   </div>
 
   <div class="row">
-    <div class="col">
+    <div class="col-md-4">
       <%= render 'visibility_graph' %>
     </div>
-    <div class="col">
+    <div class="col-md-4">
       <%= render 'work_type_graph' %>
     </div>
-    <div class="col">
+    <div class="col-md-4">
       <%= render "resource_type_graph" %>
     </div>
   </div>

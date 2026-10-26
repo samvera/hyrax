@@ -44,8 +44,47 @@ body.dashboard {
 }
 
 .dashboard {
+  // Dashboard type scale — coherent heading hierarchy across all admin pages
+  .main-header h1 {
+    font-size: 1.75rem; // 28px — page titles
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  h2,
+  .card-title {
+    font-size: 1.25rem; // 20px — section headings
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: 1.125rem; // 18px — form section headings
+    font-weight: 600;
+  }
+
+  h4 {
+    font-size: 1rem; // 16px — sub-section headings
+    font-weight: 600;
+  }
+
   .count-display {
     font-size: 1.1em;
+  }
+
+  // Donut charts — reduce visual weight
+  #dashboard-repository-objects,
+  #dashboard-work-types,
+  #dashboard-resource-types {
+    height: 160px !important;
+
+    svg path {
+      stroke-width: 1;
+      stroke: #fff;
+    }
+
+    .morris-donut-label {
+      font-size: 12px;
+    }
   }
 
   /* This is needed in Chrome for the admin/admin_sets edit view AND the collection
@@ -66,7 +105,6 @@ body.dashboard {
     margin-top: 0;
 
     h1 {
-      font-size: $h2-font-size;
       margin-left: $table-cell-padding-sm;
       margin-top: $input-btn-padding-y;
       flex: 1 1 auto;
@@ -128,6 +166,10 @@ body.dashboard {
     background-color: $card-cap-bg;
     margin-bottom: 20px;
     padding: $card-spacer-y $card-spacer-x;
+
+    .btn-group .btn.dropdown-toggle {
+      border-radius: 4.5px;
+    }
 
     .dropdown-item {
       display: flex;
@@ -193,6 +235,241 @@ body.dashboard {
   margin-right: 0.5rem;
 }
 
-div.main-content.maximized.admin-stats {
+div.main-content.admin-stats {
   background-color: white;
+
+  .admin-stats-content {
+    max-width: 960px;
+  }
+
+  // Top-level section cards (Stats By Date, Top Data)
+  .stats-card {
+    border: none;
+    box-shadow: none;
+    margin-bottom: 1rem;
+
+    > .card-body {
+      padding: 0.5rem 0;
+    }
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  // Description text below h2 headings
+  .stats-card > .card-body > p {
+    color: #595f64;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #495057;
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h4 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #595f64;
+    margin-bottom: 0.5rem;
+  }
+
+  // Date filter form
+  form {
+    background: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    label {
+      font-weight: 500;
+      font-size: 0.875rem;
+      margin-bottom: 0;
+      white-space: nowrap;
+    }
+
+    input[type="date"] {
+      border: 1px solid #ced4da;
+      border-radius: 4.5px;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    input[type="submit"] {
+      background-color: #5b7a91;
+      color: white;
+      border: none;
+      border-radius: 4.5px;
+      padding: 0.4rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #4a6577;
+      }
+    }
+  }
+
+  // Section card grid
+  .stats-section-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .stats-section-grid-2col {
+    grid-template-columns: 1fr 1fr;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .stats-section-card {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+
+    > .card-body {
+      padding: 1.25rem;
+    }
+
+    h3 {
+      margin-top: 0;
+    }
+
+    h3:first-child {
+      margin-top: 0;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: 0.5rem 0.5rem;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 0.875rem;
+
+      &:first-child {
+        border-top: 1px solid #f0f0f0;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      a {
+        font-weight: 500;
+      }
+    }
+  }
+
+  .count {
+    color: #595f64;
+  }
+
+  .date {
+    color: #595f64;
+    font-size: 0.8rem;
+  }
+
+  // Responsive adjustments
+  @media (max-width: 576px) {
+    .admin-stats-content {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+
+    form {
+      flex-direction: column;
+      align-items: stretch;
+
+      input[type="date"] {
+        width: 100%;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+      }
+    }
+
+    .stats-section-card > .card-body {
+      padding: 1rem;
+    }
+  }
+}
+
+// Schema version badges on flexible-schema edit forms
+.tab-pane.active {
+  position: relative;
+}
+
+.schema-version-group {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin: 0;
+  z-index: 1;
+
+  @media (max-width: 768px) {
+    position: static;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+  }
+}
+
+.schema-version {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px 10px;
+  min-width: 140px;
+  flex: 1 1 0;
+  background: #fff;
+  border: 1px solid $admin-panel-border-color;
+  border-radius: 4px;
+  line-height: 1.3;
+
+  .schema-version-label {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $title-text-color;
+  }
+
+  .schema-version-number {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  &.updating {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+  }
 }

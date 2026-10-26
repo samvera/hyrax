@@ -399,12 +399,87 @@ button.branding-banner-remove:hover {
 
 // Edit Collections - Sharing Tab
 .edit-sharing-tab {
+  max-width: 80%;
 
   .section-add-sharing {
     padding-bottom: 40px;
 
     .sharing-row-form {
       margin-bottom: $input-btn-padding-y-lg;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+
+      .form-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0;
+
+        &:first-child {
+          flex: 2 1 0;
+
+          .form-control,
+          .select2-container {
+            flex: 1 1 0;
+            min-width: 0;
+          }
+        }
+
+        &:nth-child(2) {
+          flex: 1 1 0;
+
+          .form-control {
+            flex: 1 1 0;
+            min-width: 0;
+          }
+        }
+      }
+
+      .form-control {
+        border-radius: 4.5px;
+      }
+
+      // Select2 (Search for a user): match Bootstrap input appearance
+      .select2-container {
+        height: calc(1.5em + 0.75rem + 2px);
+
+        .select2-choice {
+          height: 100%;
+          border: 1px solid #ced4da;
+          border-radius: 4.5px;
+          padding: 0.375rem 0.75rem;
+          display: flex;
+          align-items: center;
+          background: #fff;
+          background-image: none;
+
+          .select2-arrow {
+            background: none !important;
+            border: none !important;
+            display: flex !important;
+            align-items: center !important;
+            height: 100% !important;
+            top: 0 !important;
+
+            b {
+              background: none !important;
+              width: 0 !important;
+              height: 0 !important;
+              border-left: 5px solid transparent !important;
+              border-right: 5px solid transparent !important;
+              border-top: 5px solid #888 !important;
+            }
+          }
+        }
+      }
+
+      .edit-collection-add-sharing-button {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        margin-right: 80px;
+      }
     }
   }
 
@@ -709,6 +784,38 @@ button.branding-banner-remove:hover {
 
   margin-left: 0.5em;
 
+}
+
+// Edit Collection – Branding tab: hide the native file input behind the styled button
+#collection-edit-controls .fileinput-button input[type="file"] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  font-size: 200px;
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+}
+
+// Edit Collection form – border-radius fixes
+#collection-edit-controls {
+  // Restore border-radius on multi-value inputs (Bootstrap input-group zeroes the right side)
+  .input-group .form-control {
+    border-radius: 4.5px !important;
+  }
+
+  .input-group .input-group-btn {
+    border: none;
+    background: none;
+  }
+
+  // Consistent border-radius on all form inputs and selects
+  .form-control,
+  select.form-control {
+    border-radius: 4.5px;
+  }
 }
 
 .more-parent-collections-block {

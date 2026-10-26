@@ -18,10 +18,12 @@
                               index: 0 do |builder| %>
 
               <div class="form-group mr-2">
-                <label class="mr-2"><%= t('.add_group') %>:</label>
+                <label for="group_agent_id" class="mr-2"><%= t('.add_group') %>:</label>
                 <%= builder.hidden_field :agent_type %>
                 <%= builder.text_field :agent_id,
+                                        id: 'group_agent_id',
                                         placeholder: t('.search_for_a_group'),
+                                        'aria-label': t('.add_group'),
                                         class: 'form-control search-input' %>
               </div>
               <div class="form-group">
@@ -51,10 +53,12 @@
                               index: 0 do |builder| %>
 
               <div class="form-group">
-                <label class="mr-2"><%= t('.add_user') %>:</label>
+                <label for="user_agent_id" class="mr-2"><%= t('.add_user') %>:</label>
                 <%= builder.hidden_field :agent_type %>
                 <%= builder.text_field :agent_id,
-                                        placeholder: t('.search_for_a_user') %>
+                                        id: 'user_agent_id',
+                                        placeholder: t('.search_for_a_user'),
+                                        'aria-label': t('.add_user') %>
               </div>
               <div class="form-group">
                 <label id="add_user_as" class="mx-2">as</label>
