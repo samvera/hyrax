@@ -145,7 +145,7 @@ attribute :redirects, Valkyrie::Types::Array.of(Dry::Types['hash'])
 Each entry is a plain hash with `path` and `is_display_url` keys, stored on the parent resource without an intermediate nested-resource schema mangling its sub-fields:
 
 - **Postgres** stores the entries as JSONB.
-- **Fedora** through the Valkyrie Fedora adapter stores each entry as a nested graph, with each key as its own triple. Hyrax carries overrides for this until Valkyrie releases the same support (samvera/valkyrie#1005).
+- **Fedora** through the Valkyrie Fedora adapter stores each entry as one JSON literal. Hyrax carries overrides for this until Valkyrie releases the same support (samvera/valkyrie#1005).
 - **Fedora through Wings** stores each entry as one JSON string, since ActiveFedora cannot hold a hash; the `type: hash` attribute type parses it back into a hash on read.
 - **Order:** entries reload in the order they were saved. Fedora itself keeps a field's values in no particular order, so Hyrax marks `type: hash` attributes `ordered` (Valkyrie's `ordered: true`). The Valkyrie Fedora adapter then stores the entries as an ordered list. Wings, the bridge to ActiveFedora, does not support that setting, so Hyrax handles order itself there: it adds a position number to each entry when saving, then sorts the entries by that number and removes it when loading.
 
@@ -274,11 +274,11 @@ Visiting the bare UUID URL bypasses the catch-all (Rails routes natively to the 
 
 When a resource has a display URL, the sync step writes a row keyed on the UUID URL whose `to_path` is the display alias — that's the row this before_action finds, and the 301 sends the visitor to the display alias. The browser then makes a fresh request to the display alias; that request matches the catch-all (display aliases are not native Rails routes — they exist only in `hyrax_redirect_paths`), reaches `RedirectsController#show`, and dispatches in place.
 
-### Locale preservation
+### Query string and locale preservation
 
-`RedirectsController` inherits the host app's `ApplicationController`, which includes `Hyrax::Controller`. `Hyrax::Controller#set_locale` reads `params[:locale]` (or falls back to `I18n.default_locale`) on every request. When the resolver issues a 301 to a string path (the row's `to_path`), it appends `?locale=<value>` to that path whenever the incoming request carried a `locale` param, so the destination page renders in the visitor's chosen language. When the resolver dispatches in place at the display URL, it merges `locale: params[:locale]` into the inner request's `path_parameters` before calling `controller_class.dispatch`, so the inner controller's `set_locale` before_action picks up the same locale.
+`RedirectsController` inherits the host app's `ApplicationController`, which includes `Hyrax::Controller`. `Hyrax::Controller#set_locale` reads `params[:locale]` (or falls back to `I18n.default_locale`) on every request. When the resolver issues a 301 to a string path (the row's `to_path`), it appends the incoming request's query string to that path, with `locale` taken from `params[:locale]` so a path-prefix locale is carried too. Paging, per-page, sort and facet params therefore survive the 301, and the destination page renders in the visitor's chosen language. Values are URL-encoded with `Rack::Utils.build_nested_query`. When the resolver dispatches in place at the display URL, it merges `locale: params[:locale]` into the inner request's `path_parameters` before calling `controller_class.dispatch`, so the inner controller's `set_locale` before_action picks up the same locale.
 
-The same locale-preservation behavior is in `Hyrax::RedirectToDisplayUrl#redirect_to_display_url_if_needed` for the UUID-URL-to-display-alias 301.
+The same behavior is in `Hyrax::RedirectToDisplayUrl#redirect_to_display_url_if_needed` for the UUID-URL-to-display-alias 301. This matters for a collection or work shown at its display URL: its pagination and per-page links are built from the UUID path, so each click goes through this 301 and back to the display alias with its query intact.
 
 Aliases are stored without a locale prefix. A visitor whose browser arrives at `/<locale>/handle/12345/678` (which happens in host apps that mount routes inside `scope "(:locale)"`, such as Hyku) does **not** match a row stored as `/handle/12345/678` — that path is treated as not registered. Host apps that need locale-prefixed aliases to resolve must store each prefixed form as its own row or override `Hyrax::RedirectsLookup`.
 

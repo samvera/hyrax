@@ -26,7 +26,11 @@ module Hyrax
 
       def required_fields
         return super unless Hyrax.config.use_valkyrie?
-        form_class.required_fields
+        payload = payload_class.new
+        return form_class.required_fields unless payload.try(:flexible?)
+        # A flexible form declares its profile's fields when it is built, so
+        # only a built form knows which of them are required.
+        Hyrax::Forms::ResourceForm.for(resource: payload, admin_set_id: model.try(:admin_set_id)).singleton_class.required_fields
       end
 
       def payload_class
