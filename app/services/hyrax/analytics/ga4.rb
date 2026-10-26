@@ -13,6 +13,15 @@ module Hyrax
     # rubocop:disable Metrics/ModuleLength
     module Ga4
       extend ActiveSupport::Concern
+
+      # Raised when the GA4 service account JSON can't be loaded, so callers can tell a
+      # configuration problem from an error returned by Google.
+      class ConfigurationError < StandardError; end
+      # account_json is set but is not valid JSON.
+      class InvalidAccountJson < ConfigurationError; end
+      # account_json_path names a file that is missing or not readable.
+      class AccountJsonFileError < ConfigurationError; end
+
       # rubocop:disable Metrics/BlockLength
       class_methods do
         # Loads configuration options from config/analytics.yml. You only need PRIVATE_KEY_PATH or
@@ -71,16 +80,28 @@ module Hyrax
             @account_json_string = if @config['account_json']
                                      base64?(@config['account_json']) ? Base64.decode64(@config['account_json']) : @config['account_json']
                                    else
-                                     File.read(@config['account_json_path'])
+                                     read_account_json_file
                                    end
+          end
+
+          def read_account_json_file
+            File.read(@config['account_json_path'])
+          rescue Errno::ENOENT, Errno::EACCES
+            raise AccountJsonFileError, 'The file named by account_json_path is missing or not readable'
           end
 
           def account_info
             @account_info ||= if account_json_string.is_a? Hash
                                 account_json_string
                               else
-                                JSON.parse(account_json_string)
+                                parse_account_json
                               end
+          end
+
+          def parse_account_json
+            JSON.parse(account_json_string)
+          rescue JSON::ParserError
+            raise InvalidAccountJson, 'account_json is not valid JSON'
           end
 
           KEYS.each do |key|

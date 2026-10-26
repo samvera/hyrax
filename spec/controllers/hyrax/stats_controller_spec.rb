@@ -96,7 +96,9 @@ RSpec.describe Hyrax::StatsController do
       'an invalid argument error' => [Google::Cloud::InvalidArgumentError.new(google_message), 'invalid_property', 'invalid_property'],
       'a not found error' => [Google::Cloud::NotFoundError.new(google_message), 'invalid_property', 'invalid_property'],
       'a quota error' => [Google::Cloud::ResourceExhaustedError.new(google_message), 'quota_exceeded', 'quota_exceeded'],
-      'another Google error' => [Google::Cloud::InternalError.new(google_message), 'general', 'general']
+      'another Google error' => [Google::Cloud::InternalError.new(google_message), 'general', 'general'],
+      'malformed account JSON' => [Hyrax::Analytics::Ga4::InvalidAccountJson.new(google_message), 'general', 'invalid_credentials'],
+      'an unreadable account JSON file' => [Hyrax::Analytics::Ga4::AccountJsonFileError.new(google_message), 'general', 'missing_credentials_file']
     }
 
     let(:denied) { Google::Cloud::PermissionDeniedError.new(google_message) }
