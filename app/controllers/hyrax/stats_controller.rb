@@ -42,8 +42,7 @@ module Hyrax
       { title: I18n.t('title', scope: scope),
         message: I18n.t('message', scope: scope),
         troubleshooting_steps: Array.wrap(I18n.t('troubleshooting_steps', scope: scope)),
-        documentation_url: I18n.t('documentation_url', scope: scope),
-        details: exception.message }
+        documentation_url: I18n.t('documentation_url', scope: scope) }
     end
 
     def add_breadcrumb_for_controller

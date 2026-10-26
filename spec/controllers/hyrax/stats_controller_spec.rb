@@ -105,6 +105,7 @@ RSpec.describe Hyrax::StatsController do
         expect(response).to render_template('stats/file')
         expect(assigns(:analytics_error)).to be_present
         expect(response.body).to include(I18n.t('hyrax.admin.analytics.errors.permission.message'))
+        expect(response.body).not_to include(denied.message)
         expect(assigns(:stats).total_pageviews).to eq 0
         expect(assigns(:stats).total_downloads).to eq 0
       end
@@ -121,6 +122,7 @@ RSpec.describe Hyrax::StatsController do
         expect(response).to render_template('stats/work')
         expect(assigns(:analytics_error)).to be_present
         expect(response.body).to include(I18n.t('hyrax.admin.analytics.errors.permission.message'))
+        expect(response.body).not_to include(denied.message)
         expect(assigns(:pageviews).all).to eq 0
         expect(assigns(:downloads).all).to eq 0
       end
@@ -132,6 +134,7 @@ RSpec.describe Hyrax::StatsController do
           get :work, params: { id: work }
           expect(response).to be_successful
           expect(response.body).to include(CGI.escapeHTML(I18n.t('hyrax.admin.analytics.errors.general.message')))
+          expect(response.body).not_to include(denied.message)
         end
       end
     end

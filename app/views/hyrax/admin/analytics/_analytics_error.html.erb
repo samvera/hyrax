@@ -26,16 +26,20 @@
               Setup Guide
             </a>
           <% end %>
-          <button class="btn btn-outline-secondary btn-sm" type="button" data-toggle="collapse" data-target="#technicalDetails" aria-expanded="false" aria-controls="technicalDetails">
-            Technical Details
-          </button>
+          <% if @analytics_error[:details].present? %>
+            <button class="btn btn-outline-secondary btn-sm" type="button" data-toggle="collapse" data-target="#technicalDetails" aria-expanded="false" aria-controls="technicalDetails">
+              Technical Details
+            </button>
+          <% end %>
         </div>
 
-        <div class="collapse mt-3" id="technicalDetails">
-          <div class="alert alert-light">
-            <small><%= @analytics_error[:details] %></small>
+        <% if @analytics_error[:details].present? %>
+          <div class="collapse mt-3" id="technicalDetails">
+            <div class="alert alert-light">
+              <small><%= @analytics_error[:details] %></small>
+            </div>
           </div>
-        </div>
+        <% end %>
       </div>
     </div>
   </div>
