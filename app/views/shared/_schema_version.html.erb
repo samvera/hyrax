@@ -2,9 +2,9 @@
 <% schema_version = Hyrax::FlexibleSchema.current_schema_id if action_name == 'new' %>
 <% updating = (schema_version.to_f < @latest_schema_version.to_f) ? 'updating' : '' %>
 
-<div class='schema-version-group d-flex flex-wrap justify-content-end float-md-right ml-md-3 mb-3'>
+<div class='schema-version-group d-flex flex-column flex-md-row float-md-right ml-md-3 mb-3'>
   <% if schema_version.present? %>
-    <div class='d-flex flex-column align-items-center bg-white border rounded px-2 py-1 mr-2'>
+    <div class='d-flex flex-column align-items-center bg-white border rounded px-2 py-1 mb-2 mb-md-0 mr-md-2'>
       <span class='small text-uppercase font-weight-bold'><%= I18n.t("shared.schema_version.created_on_version", :default => "Created On Version") %></span>
       <span class='font-weight-bold'><%= schema_version.to_f %></span>
     </div>
