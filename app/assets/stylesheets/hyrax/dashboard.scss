@@ -196,14 +196,3 @@ body.dashboard {
 div.main-content.maximized.admin-stats {
   background-color: white;
 }
-
-// Schema version badges on flexible-schema edit forms (shared/_schema_version)
-.schema-version {
-  min-width: 140px;
-  line-height: 1.3;
-}
-
-.schema-version-label {
-  font-size: 0.5625rem; // 9px
-  letter-spacing: 0.04em;
-}

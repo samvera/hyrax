@@ -4,14 +4,14 @@
 
 <div class='schema-version-group d-flex flex-wrap justify-content-end float-md-right ml-md-3 mb-3'>
   <% if schema_version.present? %>
-    <div class='schema-version d-flex flex-column align-items-center bg-white border rounded px-2 py-1 mr-2'>
-      <span class='schema-version-label text-uppercase font-weight-bold'><%= I18n.t("shared.schema_version.created_on_version", :default => "Created On Version") %></span>
+    <div class='d-flex flex-column align-items-center bg-white border rounded px-2 py-1 mr-2'>
+      <span class='small text-uppercase font-weight-bold'><%= I18n.t("shared.schema_version.created_on_version", :default => "Created On Version") %></span>
       <span class='font-weight-bold'><%= schema_version.to_f %></span>
     </div>
   <% end %>
   <%# Green (alert-success colors only) when saving moves the record to a newer schema version %>
-  <div class='schema-version d-flex flex-column align-items-center border rounded px-2 py-1 <%= updating.present? ? 'updating alert-success' : 'bg-white' %>'>
-    <span class='schema-version-label text-uppercase font-weight-bold'><%= I18n.t("shared.schema_version.version_after_save", :default => "Version After Save") %></span>
+  <div class='d-flex flex-column align-items-center border rounded px-2 py-1 <%= updating.present? ? 'updating alert-success' : 'bg-white' %>'>
+    <span class='small text-uppercase font-weight-bold'><%= I18n.t("shared.schema_version.version_after_save", :default => "Version After Save") %></span>
     <span class='font-weight-bold'><%= @latest_schema_version %></span>
   </div>
 </div>
