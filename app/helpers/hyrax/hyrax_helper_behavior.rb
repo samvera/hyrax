@@ -121,7 +121,7 @@ module Hyrax
     # @param field [String]
     # @return [ActiveSupport::SafeBuffer] the html_safe link
     def link_to_facet(item, field)
-      path = main_app.search_catalog_path(search_state.add_facet_params_and_redirect(field, item))
+      path = main_app.search_catalog_path(search_state.add_facet_params_and_redirect(catalog_facet_for(field), item))
       link_to(item, path)
     end
 
@@ -446,6 +446,13 @@ module Hyrax
       end
     end
     # rubocop:enable Metrics/MethodLength
+
+    def catalog_facet_for(field)
+      label_facet = Hyrax::ControlledVocabularyFieldValues.label_key(field)
+      return field if label_facet == field.to_s || !respond_to?(:blacklight_config)
+
+      blacklight_config.facet_fields.key?(label_facet) ? label_facet : field
+    end
 
     # @param [ActionController::Parameters] params first argument for Blacklight::SearchState.new
     # @param [Hash] facet(s)

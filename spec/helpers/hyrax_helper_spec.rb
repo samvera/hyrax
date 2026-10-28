@@ -76,6 +76,34 @@ RSpec.describe HyraxHelper, type: :helper do
       allow(helper).to receive(:search_state).and_return(new_state)
     end
 
+    describe "#link_to_facet" do
+      let(:config) do
+        CatalogController.blacklight_config.deep_copy.tap do |blacklight|
+          blacklight.add_facet_field('resource_type_label_sim') unless blacklight.facet_fields.key?('resource_type_label_sim')
+        end
+      end
+      let(:href) { CGI.unescape(Nokogiri::HTML.fragment(link).at_css('a')['href']) }
+
+      before { allow(helper).to receive(:blacklight_config).and_return(config) }
+
+      context "when the catalog facets the field on its labels" do
+        let(:link) { helper.link_to_facet('Pink Pajamas', 'resource_type_sim') }
+
+        it "links the label through the label facet" do
+          expect(href).to include('f[resource_type_label_sim][]=Pink Pajamas')
+          expect(href).not_to include('f[resource_type_sim]')
+        end
+      end
+
+      context "when the catalog has no label facet for the field" do
+        let(:link) { helper.link_to_facet('car', 'vehicle_type_sim') }
+
+        it "links through the facet it is given" do
+          expect(href).to include('f[vehicle_type_sim][]=car')
+        end
+      end
+    end
+
     describe "#link_to_facet_list" do
       context "with values" do
         subject { helper.link_to_facet_list(['car', 'truck'], 'vehicle_type') }
