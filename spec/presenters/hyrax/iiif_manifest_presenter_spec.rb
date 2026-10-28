@@ -222,7 +222,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
             expect(content.url).to include("samvera.org/downloads/#{file_set.id}")
             expect(Rack::Utils.parse_query(URI(content.url).query)).to include('file' => 'mp3', 'mime_type' => 'audio/mpeg')
             expect(content.thumbnail).to contain_exactly(
-              hash_including(type: 'Image', format: 'image/png')
+              hash_including(id: %r{\Ahttp://samvera.org/assets/audio-\h+\.png\z}, type: 'Image', format: 'image/png')
             )
           end
         end
@@ -238,7 +238,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
             expect(content.url).to include("downloads/#{file_set.id}")
             expect(Rack::Utils.parse_query(URI(content.url).query)).to include('file' => 'mp3', 'mime_type' => 'audio/mpeg')
             expect(content.thumbnail).to contain_exactly(
-              hash_including(type: 'Image', format: 'image/png')
+              hash_including(id: %r{\Ahttp://samvera.org/assets/audio-\h+\.png\z}, type: 'Image', format: 'image/png')
             )
           end
         end
