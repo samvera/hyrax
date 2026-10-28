@@ -121,8 +121,20 @@ module Hyrax
     # @param field [String]
     # @return [ActiveSupport::SafeBuffer] the html_safe link
     def link_to_facet(item, field)
-      path = main_app.search_catalog_path(search_state.add_facet_params_and_redirect(catalog_facet_for(field), item))
+      path = main_app.search_catalog_path(search_state.add_facet_params_and_redirect(field, item))
       link_to(item, path)
+    end
+
+    # @param value [Object] the stored value
+    # @param label [String, nil] its indexed label
+    # @param field [String] the stored value's facet
+    # @return [ActiveSupport::SafeBuffer] a link showing the label, filtering on
+    #   the label facet when the catalog registers one, and on the stored value otherwise
+    def link_to_value_facet(value, label, field)
+      label_facet = registered_label_facet(field) if label.present?
+      facet, queried = label_facet ? [label_facet, label] : [field, value]
+      path = main_app.search_catalog_path(search_state.add_facet_params_and_redirect(facet, queried))
+      link_to(label.presence || value, path)
     end
 
     # @param values [Array{String}] strings to display
@@ -447,11 +459,11 @@ module Hyrax
     end
     # rubocop:enable Metrics/MethodLength
 
-    def catalog_facet_for(field)
+    def registered_label_facet(field)
       label_facet = Hyrax::ControlledVocabularyFieldValues.label_key(field)
-      return field if label_facet == field.to_s || !respond_to?(:blacklight_config)
+      return if label_facet == field.to_s || !respond_to?(:blacklight_config)
 
-      blacklight_config.facet_fields.key?(label_facet) ? label_facet : field
+      label_facet if blacklight_config.facet_fields.key?(label_facet)
     end
 
     # @param [ActionController::Parameters] params first argument for Blacklight::SearchState.new

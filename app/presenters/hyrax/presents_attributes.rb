@@ -62,13 +62,18 @@ module Hyrax
     # @return [Array] one entry per stored value, in the order held, each the
     #   term's indexed label where there is one and the stored value otherwise
     def display_values_for(field)
-      return [] unless respond_to?(field)
+      value_label_pairs(field).map { |value, label| label || value }
+    end
 
-      values = Array(send(field))
-      labels = controlled_labels_for(field, values)
-      return values if labels.blank?
-
-      values.map { |value| labels[value.to_s].presence || value }
+    ##
+    # @param field [Symbol]
+    #
+    # @return [Array<Array(Object, String)>] each stored value with its indexed
+    #   label, or nil when the document holds no label for it
+    def value_label_pairs(field)
+      values = respond_to?(field) ? Array(send(field)) : []
+      labels = controlled_labels_for(field, values) || {}
+      values.map { |value| [value, labels[value.to_s].presence] }
     end
 
     ##
