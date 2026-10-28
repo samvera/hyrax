@@ -165,7 +165,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
         let(:original_file_metadata) do
           valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
                           file_set: file_set,
-                          mime_type: 'video/mp4',
+                          mime_type: 'video/quicktime',
                           width: 1920,
                           height: 1080,
                           duration: ['120'])
@@ -174,20 +174,21 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
         let(:solr_doc) do
           original_file_metadata
           solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
-          solr_hash['mime_type_ssi'] = 'video/mp4'
+          solr_hash['mime_type_ssi'] = 'video/quicktime'
           solr_hash['width_is'] = 1920
           solr_hash['height_is'] = 1080
           solr_hash['duration_tesim'] = ['120']
           SolrDocument.new(solr_hash)
         end
 
-        it 'returns video display content' do
+        it 'returns the mp4 derivative as video display content' do
           content = presenter.display_content
 
           expect(content).to be_a(IIIFManifest::V3::DisplayContent)
           expect(content.type).to eq('Video')
           expect(content.format).to eq('video/mp4')
           expect(content.url).to include("samvera.org/downloads/#{file_set.id}")
+          expect(Rack::Utils.parse_query(URI(content.url).query)).to include('file' => 'mp4', 'mime_type' => 'video/mp4')
           expect(content.thumbnail).to contain_exactly(
             hash_including(type: 'Image', format: 'image/jpeg')
           )
@@ -198,14 +199,14 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
         let(:original_file_metadata) do
           valkyrie_create(:hyrax_file_metadata, :original_file, :with_file,
                           file_set: file_set,
-                          mime_type: 'audio/mpeg',
+                          mime_type: 'audio/wav',
                           duration: ['180'])
         end
 
         let(:solr_doc) do
           original_file_metadata
           solr_hash = Hyrax::Indexers::ResourceIndexer.for(resource: file_set).to_solr
-          solr_hash['mime_type_ssi'] = 'audio/mpeg'
+          solr_hash['mime_type_ssi'] = 'audio/wav'
           solr_hash['duration_tesim'] = ['180']
           SolrDocument.new(solr_hash)
         end
@@ -219,6 +220,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
             expect(content.type).to eq('Sound')
             expect(content.format).to eq('audio/mp3')
             expect(content.url).to include("samvera.org/downloads/#{file_set.id}")
+            expect(Rack::Utils.parse_query(URI(content.url).query)).to include('file' => 'mp3', 'mime_type' => 'audio/mpeg')
             expect(content.thumbnail).to contain_exactly(
               hash_including(type: 'Image', format: 'image/png')
             )
@@ -234,6 +236,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
             expect(content.type).to eq('Sound')
             expect(content.format).to eq('audio/mpeg')
             expect(content.url).to include("downloads/#{file_set.id}")
+            expect(Rack::Utils.parse_query(URI(content.url).query)).to include('file' => 'mp3', 'mime_type' => 'audio/mpeg')
             expect(content.thumbnail).to contain_exactly(
               hash_including(type: 'Image', format: 'image/png')
             )
@@ -294,6 +297,7 @@ RSpec.describe Hyrax::IiifManifestPresenter, :clean_repo do
             expect(content.type).to eq('Text')
             expect(content.format).to eq('application/pdf')
             expect(content.url).to include("downloads/#{file_set.id}")
+            expect(URI(content.url).query).to eq('file=pdf')
             expect(content.thumbnail).to contain_exactly(
               hash_including(type: 'Image', format: 'image/jpeg')
             )
