@@ -38,4 +38,20 @@ RSpec.describe 'Importing a metadata profile', type: :request do
       expect(response.body).to match(/and \d+ more warnings/)
     end
   end
+
+  context 'when a successful import has warnings that grow when escaped for the session cookie' do
+    let(:messages) { Array.new(6) { |i| "Source #{i}: https://example.org/authority?#{'&a' * 90}" } }
+
+    before do
+      messages.each { |message| schema.warnings.add(:profile, "Warning: #{message}") }
+      allow(schema).to receive(:persisted?).and_return(true)
+    end
+
+    it 'shows the first warnings and a count of the rest' do
+      post hyrax.import_admin_metadata_profiles_path, params: { file: uploaded_file }
+      follow_redirect!
+
+      expect(response.body).to match(/and \d+ more warnings/)
+    end
+  end
 end

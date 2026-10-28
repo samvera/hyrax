@@ -69,7 +69,7 @@ module Hyrax
       def warnings_that_fit_in_the_cookie
         shown = []
         import_warnings.each do |warning|
-          break if shown.sum(&:bytesize) + warning.bytesize > WARNINGS_FLASH_BYTES
+          break if ActiveSupport::JSON.encode(shown + [warning]).bytesize > WARNINGS_FLASH_BYTES
           shown << warning
         end
         hidden_count = import_warnings.size - shown.size
