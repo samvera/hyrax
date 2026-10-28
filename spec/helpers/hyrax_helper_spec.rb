@@ -76,30 +76,57 @@ RSpec.describe HyraxHelper, type: :helper do
       allow(helper).to receive(:search_state).and_return(new_state)
     end
 
-    describe "#link_to_facet" do
+    describe "#link_to_value_facet" do
       let(:config) do
         CatalogController.blacklight_config.deep_copy.tap do |blacklight|
           blacklight.add_facet_field('resource_type_label_sim') unless blacklight.facet_fields.key?('resource_type_label_sim')
         end
       end
-      let(:href) { CGI.unescape(Nokogiri::HTML.fragment(link).at_css('a')['href']) }
+      let(:anchor) { Nokogiri::HTML.fragment(link).at_css('a') }
+      let(:href) { CGI.unescape(anchor['href']) }
 
-      before { allow(helper).to receive(:blacklight_config).and_return(config) }
+      before do
+        allow(helper).to receive(:blacklight_config).and_return(Blacklight::Configuration.new)
+        allow(CatalogController).to receive(:new).and_return(instance_double(CatalogController, blacklight_config: config))
+      end
 
-      context "when the catalog facets the field on its labels" do
-        let(:link) { helper.link_to_facet('Pink Pajamas', 'resource_type_sim') }
+      context "with an indexed label the catalog facets on" do
+        let(:link) { helper.link_to_value_facet('summertime', 'Pink Pajamas', 'resource_type_sim') }
 
         it "links the label through the label facet" do
+          expect(anchor.text).to eq 'Pink Pajamas'
           expect(href).to include('f[resource_type_label_sim][]=Pink Pajamas')
           expect(href).not_to include('f[resource_type_sim]')
         end
       end
 
-      context "when the catalog has no label facet for the field" do
-        let(:link) { helper.link_to_facet('car', 'vehicle_type_sim') }
+      context "with no indexed label, as on a document indexed before labels" do
+        let(:link) { helper.link_to_value_facet('summertime', nil, 'resource_type_sim') }
 
-        it "links through the facet it is given" do
-          expect(href).to include('f[vehicle_type_sim][]=car')
+        it "links the stored value through its own facet" do
+          expect(anchor.text).to eq 'summertime'
+          expect(href).to include('f[resource_type_sim][]=summertime')
+        end
+      end
+
+      context "when the catalog has no label facet for the field" do
+        let(:link) { helper.link_to_value_facet('car-1', 'Car', 'vehicle_type_sim') }
+
+        before { config.add_facet_field('vehicle_type_sim') }
+
+        it "shows the label and links the stored value through its own facet" do
+          expect(anchor.text).to eq 'Car'
+          expect(href).to include('f[vehicle_type_sim][]=car-1')
+        end
+      end
+
+      context "when the catalog facets on neither the label nor the stored value" do
+        let(:link) { helper.link_to_value_facet('car-1', 'Car', 'vehicle_type_sim') }
+
+        it "shows the label and searches the field for the stored value, since an unregistered facet would be dropped" do
+          expect(anchor.text).to eq 'Car'
+          expect(href).to include('search_field=vehicle_type', 'q="car-1"')
+          expect(href).not_to include('f[')
         end
       end
     end

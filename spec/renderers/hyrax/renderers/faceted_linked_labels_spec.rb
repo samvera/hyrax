@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe 'controlled vocabulary labels in linking renderers' do
   let(:values)  { ['local_auth_123'] }
-  let(:options) { { labels: { 'local_auth_123' => 'Opaque Term' } } }
+  let(:options) { { labels: { 'local_auth_123' => 'Opaque Term' }, label_facet_registered: true } }
 
   describe Hyrax::Renderers::FacetedAttributeRenderer do
     subject(:renderer) { described_class.new(:resource_type, values, options) }
