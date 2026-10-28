@@ -44,6 +44,17 @@ RSpec.describe Hyrax::Renderers::FacetedAttributeRenderer do
     end
   end
 
+  describe "a controlled value whose label is its id" do
+    let(:field) { :resource_type }
+    let(:renderer) { described_class.new(field, ['Article'], labels: { 'Article' => 'Article' }) }
+    let(:query) { URI.parse(Nokogiri::HTML(renderer.render).at_css("a")['href']).query }
+
+    it "links to the same facet the catalog sidebar uses" do
+      expect(query).to include CGI.escape('f[resource_type_label_sim][]')
+      expect(query).not_to include CGI.escape('f[resource_type_sim][]')
+    end
+  end
+
   describe "a controlled value whose label facet is not registered" do
     let(:field) { :subject }
     let(:uri) { 'http://id.loc.gov/authorities/subjects/sh85077784' }
