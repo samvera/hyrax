@@ -25,7 +25,7 @@ RSpec.describe Hyrax::Renderers::FacetedAttributeRenderer do
   describe "a controlled value with an indexed label" do
     let(:field) { :subject }
     let(:uri) { 'http://id.loc.gov/authorities/subjects/sh85077784' }
-    let(:renderer) { described_class.new(field, [uri], labels: { uri => 'Livestock' }) }
+    let(:renderer) { described_class.new(field, [uri], labels: { uri => 'Livestock' }, label_facet_registered: true) }
     let(:rendered_link) { Nokogiri::HTML(renderer.render).at_css("a") }
     let(:query) { URI.parse(rendered_link['href']).query }
 
@@ -46,12 +46,21 @@ RSpec.describe Hyrax::Renderers::FacetedAttributeRenderer do
 
   describe "a controlled value whose label is its id" do
     let(:field) { :resource_type }
-    let(:renderer) { described_class.new(field, ['Article'], labels: { 'Article' => 'Article' }) }
+    let(:renderer) { described_class.new(field, ['Article'], labels: { 'Article' => 'Article' }, label_facet_registered: true) }
     let(:query) { URI.parse(Nokogiri::HTML(renderer.render).at_css("a")['href']).query }
 
     it "links to the same facet the catalog sidebar uses" do
       expect(query).to include CGI.escape('f[resource_type_label_sim][]')
       expect(query).not_to include CGI.escape('f[resource_type_sim][]')
+    end
+  end
+
+  describe "a controlled value rendered without knowing whether its label facet is registered" do
+    let(:renderer) { described_class.new(:resource_type, ['Article'], labels: { 'Article' => 'Article' }) }
+    let(:query) { URI.parse(Nokogiri::HTML(renderer.render).at_css("a")['href']).query }
+
+    it "links to the id facet, which the catalog always configures" do
+      expect(query).to include CGI.escape('f[resource_type_sim][]')
     end
   end
 

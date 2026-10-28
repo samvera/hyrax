@@ -121,8 +121,23 @@ module Hyrax
     # @param field [String]
     # @return [ActiveSupport::SafeBuffer] the html_safe link
     def link_to_facet(item, field)
-      path = main_app.search_catalog_path(search_state.add_facet_params_and_redirect(catalog_facet_for(field), item))
+      path = main_app.search_catalog_path(search_state.add_facet_params_and_redirect(field, item))
       link_to(item, path)
+    end
+
+    # @param value [Object] the stored value
+    # @param label [String, nil] its indexed label
+    # @param field [String] the stored value's facet
+    # @return [ActiveSupport::SafeBuffer] a link showing the label, filtering on
+    #   the label facet when the catalog registers one, or on the stored value
+    #   when the catalog registers its facet; otherwise the label, unlinked
+    def link_to_value_facet(value, label, field)
+      label_facet = registered_label_facet(field) if label.present?
+      return ERB::Util.html_escape(label.presence || value) unless label_facet || registered_facet?(field)
+
+      facet, queried = label_facet ? [label_facet, label] : [field, value]
+      path = main_app.search_catalog_path(search_state.add_facet_params_and_redirect(facet, queried))
+      link_to(label.presence || value, path)
     end
 
     # @param values [Array{String}] strings to display
@@ -447,11 +462,19 @@ module Hyrax
     end
     # rubocop:enable Metrics/MethodLength
 
-    def catalog_facet_for(field)
-      label_facet = Hyrax::ControlledVocabularyFieldValues.label_key(field)
-      return field if label_facet == field.to_s || !respond_to?(:blacklight_config)
+    def registered_facet?(field)
+      catalog_blacklight_config.facet_fields.key?(field.to_s)
+    end
 
-      blacklight_config.facet_fields.key?(label_facet) ? label_facet : field
+    def registered_label_facet(field)
+      label_facet = Hyrax::ControlledVocabularyFieldValues.label_key(field)
+      return if label_facet == field.to_s
+
+      label_facet if catalog_blacklight_config.facet_fields.key?(label_facet)
+    end
+
+    def catalog_blacklight_config
+      @catalog_blacklight_config ||= CatalogController.new.blacklight_config
     end
 
     # @param [ActionController::Parameters] params first argument for Blacklight::SearchState.new
