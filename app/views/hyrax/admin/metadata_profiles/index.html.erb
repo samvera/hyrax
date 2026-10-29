@@ -40,7 +40,7 @@
         </table>
 
         <%= page_entries_info @metadata_profiles %><br />
-        <%= paginate(@metadata_profiles, param_name: :metadata_profile_entries_page) %>
+        <%= paginate(@metadata_profiles, param_name: :metadata_profile_entries_page, params: { action: :index, file: nil }) %>
 
       </div>
       <% else %>
