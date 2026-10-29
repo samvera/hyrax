@@ -4,27 +4,19 @@ module Hyrax
     extend ActiveSupport::Concern
 
     # Names, not constants: the Google gems may not be loaded when this concern is.
+    ERROR_TYPES_BY_CLASS = {
+      'Google::Cloud::PermissionDeniedError' => 'permission',
+      'Google::Cloud::UnauthenticatedError' => 'authentication',
+      'Google::Cloud::InvalidArgumentError' => 'invalid_property',
+      'Google::Cloud::NotFoundError' => 'invalid_property',
+      'Google::Cloud::ResourceExhaustedError' => 'quota_exceeded'
+    }.freeze
+
     included do
-      rescue_from 'Google::Cloud::PermissionDeniedError', with: :handle_analytics_permission_error
-      rescue_from 'Google::Cloud::Error', with: :handle_analytics_general_error
       rescue_from StandardError, with: :handle_analytics_general_error
     end
 
     private
-
-    def handle_analytics_permission_error(exception)
-      Rails.logger.error "Analytics permission error: #{exception.message}"
-      @analytics_error = {
-        type: 'permission',
-        title: I18n.t('hyrax.admin.analytics.errors.permission.title'),
-        message: I18n.t('hyrax.admin.analytics.errors.permission.message'),
-        details: exception.message,
-        troubleshooting_steps: Array.wrap(I18n.t('hyrax.admin.analytics.errors.permission.troubleshooting_steps')),
-        documentation_url: I18n.t('hyrax.admin.analytics.errors.permission.documentation_url')
-      }
-      set_empty_analytics_data
-      render_analytics_with_error
-    end
 
     def handle_analytics_general_error(exception)
       raise exception unless analytics_related_error?(exception)
@@ -46,6 +38,8 @@ module Hyrax
     end
 
     def determine_error_type(exception)
+      exception.class.ancestors.each { |klass| return ERROR_TYPES_BY_CLASS[klass.name] if ERROR_TYPES_BY_CLASS.key?(klass.name) }
+
       case exception.message
       when /property.*not found/i, /invalid property/i
         'invalid_property'
