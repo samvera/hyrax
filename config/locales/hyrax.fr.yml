@@ -1688,14 +1688,14 @@ fr:
         export_to_zotero_details: L'exportation vers Zotero est prise en charge via des métadonnées intégrées. Si Zotero ne récupère pas automatiquement les métadonnées des fichiers déposés, veuillez signaler le problème via le
     stats:
       analytics_hints:
-        authentication: Check GOOGLE_ACCOUNT_JSON or GOOGLE_ACCOUNT_JSON_PATH. The service account key may be expired, revoked, or from the wrong Google Cloud project.
-        general: Check the application log for the full error message.
-        invalid_credentials: GOOGLE_ACCOUNT_JSON is not valid JSON (or base64-encoded JSON). Copy the service account key file again.
-        invalid_property: Check the analytics property_id setting (GOOGLE_ANALYTICS_PROPERTY_ID by default). It must be the numeric GA4 property ID, not a G- measurement ID.
-        missing_credentials_file: GOOGLE_ACCOUNT_JSON_PATH points to a file that is missing or not readable on the server. Check the path and permissions.
-        permission: Check that the service account in GOOGLE_ACCOUNT_JSON has been added to the property named by the analytics property_id setting (GOOGLE_ANALYTICS_PROPERTY_ID by default).
-        quota_exceeded: The Google request quota was exceeded. Try again later.
-      analytics_unavailable: Analytics data is not currently available.
+        authentication: Vérifiez GOOGLE_ACCOUNT_JSON ou GOOGLE_ACCOUNT_JSON_PATH. La clé du compte de service est peut-être expirée, révoquée ou issue d'un autre projet Google Cloud.
+        general: Consultez le journal de l'application pour obtenir le message d'erreur complet.
+        invalid_credentials: GOOGLE_ACCOUNT_JSON n'est pas un JSON valide (ni un JSON encodé en base64). Copiez à nouveau le fichier de clé du compte de service.
+        invalid_property: Vérifiez le paramètre property_id d'Analytics (GOOGLE_ANALYTICS_PROPERTY_ID par défaut). Il doit s'agir de l'ID numérique de la propriété GA4, et non d'un ID de mesure commençant par G-.
+        missing_credentials_file: GOOGLE_ACCOUNT_JSON_PATH pointe vers un fichier absent ou illisible sur le serveur. Vérifiez le chemin et les autorisations.
+        permission: Vérifiez que le compte de service de GOOGLE_ACCOUNT_JSON a été ajouté à la propriété indiquée par le paramètre property_id d'Analytics (GOOGLE_ANALYTICS_PROPERTY_ID par défaut).
+        quota_exceeded: Le quota de requêtes Google a été dépassé. Réessayez plus tard.
+      analytics_unavailable: Les données Analytics ne sont pas disponibles pour le moment.
       downloads:
         downloads: Téléchargements
       pageviews:

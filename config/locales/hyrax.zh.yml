@@ -1685,14 +1685,14 @@ zh:
         export_to_zotero_details: 通过嵌入式元数据支持导出到Zotero。如果Zotero没有自动获取存放文件的元数据，请通过以下方式报告问题
     stats:
       analytics_hints:
-        authentication: Check GOOGLE_ACCOUNT_JSON or GOOGLE_ACCOUNT_JSON_PATH. The service account key may be expired, revoked, or from the wrong Google Cloud project.
-        general: Check the application log for the full error message.
-        invalid_credentials: GOOGLE_ACCOUNT_JSON is not valid JSON (or base64-encoded JSON). Copy the service account key file again.
-        invalid_property: Check the analytics property_id setting (GOOGLE_ANALYTICS_PROPERTY_ID by default). It must be the numeric GA4 property ID, not a G- measurement ID.
-        missing_credentials_file: GOOGLE_ACCOUNT_JSON_PATH points to a file that is missing or not readable on the server. Check the path and permissions.
-        permission: Check that the service account in GOOGLE_ACCOUNT_JSON has been added to the property named by the analytics property_id setting (GOOGLE_ANALYTICS_PROPERTY_ID by default).
-        quota_exceeded: The Google request quota was exceeded. Try again later.
-      analytics_unavailable: Analytics data is not currently available.
+        authentication: 请检查 GOOGLE_ACCOUNT_JSON 或 GOOGLE_ACCOUNT_JSON_PATH。服务帐号密钥可能已过期、已被撤销，或属于其他 Google Cloud 项目。
+        general: 请查看应用程序日志以获取完整的错误信息。
+        invalid_credentials: GOOGLE_ACCOUNT_JSON 不是有效的 JSON（也不是 base64 编码的 JSON）。请重新复制服务帐号密钥文件。
+        invalid_property: 请检查 Analytics 的 property_id 设置（默认为 GOOGLE_ANALYTICS_PROPERTY_ID）。它必须是 GA4 的数字媒体资源 ID，而不是以 G- 开头的衡量 ID。
+        missing_credentials_file: GOOGLE_ACCOUNT_JSON_PATH 指向的文件在服务器上不存在或无法读取。请检查路径和权限。
+        permission: 请检查 GOOGLE_ACCOUNT_JSON 中的服务帐号是否已添加到 Analytics property_id 设置（默认为 GOOGLE_ANALYTICS_PROPERTY_ID）所指定的媒体资源。
+        quota_exceeded: 已超出 Google 请求配额。请稍后重试。
+      analytics_unavailable: Analytics 数据目前不可用。
       downloads:
         downloads: 下载
       pageviews:
