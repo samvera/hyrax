@@ -14,7 +14,7 @@
   <div class="card-body">
     <% if @metadata_profiles.present? %>
       <div class="table-responsive">
-        <table class="table table-striped datatable">
+        <table class="table table-striped">
           <thead>
             <tr>
               <th scope="col">Schema Version</th>
@@ -40,7 +40,7 @@
         </table>
 
         <%= page_entries_info @metadata_profiles %><br />
-        <%= paginate(@metadata_profiles, param_name: :metadata_profile_entries_page, params: { action: :index, file: nil }) %>
+        <%= paginate(@metadata_profiles, param_name: :metadata_profile_entries_page, params: { action: :index, file: nil }, theme: 'blacklight') %>
 
       </div>
       <% else %>
