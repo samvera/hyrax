@@ -454,6 +454,11 @@ fr:
           description: Description
           feature: Caractéristique
           header: Caractéristiques
+      metadata_profiles:
+        import:
+          more_warnings:
+            one: et 1 autre avertissement
+            other: et %{count} autres avertissements
       sidebar:
         activity: Activité
         analytics: Analytique
