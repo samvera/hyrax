@@ -1551,8 +1551,6 @@ de:
           works_listing: Auflistung der Arbeiten
           you_manage: "<strong> %{total_count} Arbeiten </strong>, das Sie im Repository verwalten können"
           you_own: "<strong> %{total_count} Arbeiten </strong>, das Sie im Repository besitzen"
-      sort_and_per_page:
-        number_of_results_to_display_per_page: Anzahl der anzuzeigenden Ergebnisse pro Seite
     nav_safety:
       change_tab_message: Möchten Sie diesen Tab wirklich verlassen? Nicht gespeicherte Daten gehen verloren.
     notifications:
