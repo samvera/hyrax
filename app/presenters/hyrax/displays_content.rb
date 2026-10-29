@@ -65,8 +65,9 @@ module Hyrax
     end
 
     def audio_content
+      url = download_path('mp3', 'audio/mpeg')
       IIIFManifest::V3::DisplayContent.new(
-        download_path('mp3', 'audio/mpeg'),
+        url,
         label: 'mp3',
         duration: conformed_duration,
         type: 'Sound',
@@ -74,7 +75,8 @@ module Hyrax
         # won't load 'audio/mpeg'; use 'audio/mp3' for UV.
         format: Hyrax.config.iiif_av_viewer == :universal_viewer ? 'audio/mp3' : 'audio/mpeg',
         thumbnail: [{
-          id: "#{hostname}/assets/audio.png",
+          # Join onto the media URL; hostname may be a bare host with no scheme.
+          id: URI.join(url, ActionController::Base.helpers.image_path('audio.png')).to_s,
           type: 'Image',
           format: 'image/png'
         }]
