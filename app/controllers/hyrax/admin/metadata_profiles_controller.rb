@@ -15,7 +15,7 @@ module Hyrax
       # GET /allinson_flex_profiles
       def index
         add_breadcrumbs
-        @metadata_profiles = Hyrax::FlexibleSchema.page(params[:profile_entries_page])
+        @metadata_profiles = Hyrax::FlexibleSchema.page(params[:metadata_profile_entries_page])
       end
 
       def import

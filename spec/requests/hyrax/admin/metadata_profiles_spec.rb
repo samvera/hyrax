@@ -24,6 +24,22 @@ RSpec.describe 'Importing a metadata profile', type: :request do
     end
   end
 
+  context 'when a failed import lists more profiles than fit on one page' do
+    let(:profile) { YAML.safe_load_file(Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'm3_profile.yaml')) }
+
+    before do
+      2.times { Hyrax::FlexibleSchema.new(profile: profile).save!(validate: false) }
+      allow(Hyrax::FlexibleSchema).to receive(:default_per_page).and_return(1)
+      schema.errors.add(:profile, 'Something is wrong')
+    end
+
+    it 'links the next page to the profile list' do
+      post hyrax.import_admin_metadata_profiles_path, params: { file: uploaded_file }
+
+      expect(response.body).to include(%(href="#{ERB::Util.html_escape(hyrax.admin_metadata_profiles_path(metadata_profile_entries_page: 2))}"))
+    end
+  end
+
   context 'when a successful import has more warnings than the session cookie can hold' do
     before do
       messages.each { |message| schema.warnings.add(:profile, "Warning: #{message}") }
