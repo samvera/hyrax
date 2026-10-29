@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'google/cloud/errors'
+
 RSpec.describe Hyrax::StatsController do
   let(:user) { create(:user) }
   let(:usage) { double(to_flot: []) }

@@ -14,13 +14,10 @@ module Hyrax
     module Ga4
       extend ActiveSupport::Concern
 
-      # Raised when the GA4 service account JSON can't be loaded, so callers can tell a
-      # configuration problem from an error returned by Google.
-      class ConfigurationError < StandardError; end
       # account_json is set but is not valid JSON.
-      class InvalidAccountJson < ConfigurationError; end
+      class InvalidAccountJson < StandardError; end
       # account_json_path names a file that is missing or not readable.
-      class AccountJsonFileError < ConfigurationError; end
+      class AccountJsonFileError < StandardError; end
 
       # rubocop:disable Metrics/BlockLength
       class_methods do

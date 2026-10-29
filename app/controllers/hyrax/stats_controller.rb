@@ -1,24 +1,26 @@
 # frozen_string_literal: true
-require 'google/cloud/errors'
-
 module Hyrax
   class StatsController < ApplicationController
     include Hyrax::SingularSubresourceController
     include Hyrax::Breadcrumbs
 
-    # Error class => key under hyrax.stats.analytics_hints. Keys in SHARED_ERROR_TYPES reuse the matching hyrax.admin.analytics.errors title and steps.
+    # Error class name => key under hyrax.stats.analytics_hints. Keys in SHARED_ERROR_TYPES reuse the matching hyrax.admin.analytics.errors title and steps.
     ANALYTICS_ERROR_HINTS = {
-      Google::Cloud::PermissionDeniedError => 'permission',
-      Google::Cloud::UnauthenticatedError => 'authentication',
-      Google::Cloud::InvalidArgumentError => 'invalid_property',
-      Google::Cloud::NotFoundError => 'invalid_property',
-      Google::Cloud::ResourceExhaustedError => 'quota_exceeded',
-      Hyrax::Analytics::Ga4::InvalidAccountJson => 'invalid_credentials',
-      Hyrax::Analytics::Ga4::AccountJsonFileError => 'missing_credentials_file'
+      'Google::Cloud::PermissionDeniedError' => 'permission',
+      'Google::Cloud::UnauthenticatedError' => 'authentication',
+      'Google::Cloud::InvalidArgumentError' => 'invalid_property',
+      'Google::Cloud::NotFoundError' => 'invalid_property',
+      'Google::Cloud::ResourceExhaustedError' => 'quota_exceeded',
+      'Hyrax::Analytics::Ga4::InvalidAccountJson' => 'invalid_credentials',
+      'Hyrax::Analytics::Ga4::AccountJsonFileError' => 'missing_credentials_file'
     }.freeze
     SHARED_ERROR_TYPES = %w[permission authentication invalid_property quota_exceeded].freeze
 
-    rescue_from Google::Cloud::Error, Hyrax::Analytics::Ga4::ConfigurationError, with: :analytics_unavailable
+    # Names, not constants: the Google gems may not be loaded when this class is.
+    rescue_from 'Google::Cloud::Error',
+                'Hyrax::Analytics::Ga4::InvalidAccountJson',
+                'Hyrax::Analytics::Ga4::AccountJsonFileError',
+                with: :analytics_unavailable
 
     before_action :build_breadcrumbs, only: [:work, :file]
 
@@ -64,7 +66,8 @@ module Hyrax
     end
 
     def analytics_hint_key(exception)
-      ANALYTICS_ERROR_HINTS.find { |error_class, _hint| exception.is_a?(error_class) }&.last || 'general'
+      exception.class.ancestors.each { |klass| return ANALYTICS_ERROR_HINTS[klass.name] if ANALYTICS_ERROR_HINTS.key?(klass.name) }
+      'general'
     end
 
     def add_breadcrumb_for_controller

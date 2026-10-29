@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Analytics::Ga4 do
-  describe Hyrax::Analytics::Ga4::ConfigurationError do
-    it 'is the parent of the account JSON errors' do
-      expect(Hyrax::Analytics::Ga4::InvalidAccountJson.ancestors).to include(described_class)
-      expect(Hyrax::Analytics::Ga4::AccountJsonFileError.ancestors).to include(described_class)
-    end
-  end
-
   describe 'Config#account_info' do
     subject(:config) { described_class::Config.new(settings) }
 
