@@ -1,13 +1,12 @@
 # frozen_string_literal: true
-require 'google/cloud/errors'
-
 module Hyrax
   module AnalyticsErrorHandling
     extend ActiveSupport::Concern
 
+    # Names, not constants: the Google gems may not be loaded when this concern is.
     included do
-      rescue_from Google::Cloud::PermissionDeniedError, with: :handle_analytics_permission_error
-      rescue_from Google::Cloud::Error, with: :handle_analytics_general_error
+      rescue_from 'Google::Cloud::PermissionDeniedError', with: :handle_analytics_permission_error
+      rescue_from 'Google::Cloud::Error', with: :handle_analytics_general_error
       rescue_from StandardError, with: :handle_analytics_general_error
     end
 
@@ -60,11 +59,15 @@ module Hyrax
     end
 
     def analytics_related_error?(exception)
-      return true if exception.is_a?(Google::Cloud::Error)
+      return true if google_cloud_error?(exception)
       exception.message.include?('analytics') ||
         exception.message.include?('Google') ||
         exception.message.include?('property') ||
         exception.backtrace&.any? { |line| line.include?('analytics') || line.include?('google') }
+    end
+
+    def google_cloud_error?(exception)
+      exception.class.ancestors.any? { |klass| klass.name == 'Google::Cloud::Error' }
     end
 
     def set_empty_analytics_data
@@ -86,11 +89,8 @@ module Hyrax
 
     def safe_analytics_call(method_name, *args)
       Hyrax::Analytics.send(method_name, *args)
-    rescue Google::Cloud::PermissionDeniedError, Google::Cloud::Error => e
-      Rails.logger.warn "Analytics call failed: #{method_name} - #{e.message}"
-      []
     rescue StandardError => e
-      Rails.logger.warn "Unexpected analytics error: #{method_name} - #{e.message}"
+      Rails.logger.warn "#{google_cloud_error?(e) ? 'Analytics call failed' : 'Unexpected analytics error'}: #{method_name} - #{e.message}"
       []
     end
   end
