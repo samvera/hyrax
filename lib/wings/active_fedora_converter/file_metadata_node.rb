@@ -42,6 +42,7 @@ module Wings
     def to_solr
       super.tap do |doc|
         doc[:file_identifier_ssim] = file_identifier
+        doc[:file_set_id_ssim] = file_set_id
       end
     end
   end
