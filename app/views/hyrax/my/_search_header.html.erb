@@ -1,7 +1,12 @@
 <%= render 'catalog/did_you_mean' %>
 
-<%= render 'facets' %>
-<%= render 'constraints' %>
+<% filters = capture do %>
+  <%= render 'facets' %>
+  <%= render 'constraints' %>
+<% end %>
+<% if filters.present? %>
+  <div class="list-filters"><%= filters %></div>
+<% end %>
 
 <div class="row">
   <div class="col-sm-5">
