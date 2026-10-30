@@ -58,6 +58,14 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     []
   end
 
+  # @return [String] the reader name for a profile property: its `name`, or the
+  #   key of a compound subproperty, since subproperties share generic names
+  def self.reader_name(key, config)
+    return key.to_s if Array(config.dig('available_on', 'properties')).present?
+
+    config.fetch('name', key).to_s
+  end
+
   # @return [Boolean] whether a profile property holds many values: its
   #   `data_type`, else its legacy `multi_value`, else its `cardinality`
   def self.multiple_values?(config)

@@ -35,11 +35,12 @@ module Hyrax
       # work show page builds one presenter per member row) multiplies into
       # thousands of identical queries and minutes of render time on
       # member-heavy works.
-      Hyrax::FlexibleSchema.current_version["properties"].each do |method_name, property_details|
+      Hyrax::FlexibleSchema.current_version["properties"].each do |key, property_details|
+        method_name = Hyrax::FlexibleSchema.reader_name(key, property_details)
         index_keys = property_details["indexing"]
         next unless index_keys
 
-        multi_value = property_details['multiple'] || (property_details['data_type'] == 'array')
+        multi_value = property_details['multiple'] || Hyrax::FlexibleSchema.multiple_values?(property_details)
 
         next if self.class.method_defined?(method_name) && solr_document.respond_to?(method_name)
         # Define the method on the SolrDocument class
