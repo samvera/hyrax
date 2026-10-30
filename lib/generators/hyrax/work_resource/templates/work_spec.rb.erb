@@ -9,4 +9,7 @@ RSpec.describe <%= class_name %> do
   subject(:work) { described_class.new }
 
   it_behaves_like 'a Hyrax::Work'
+
+  # Uncomment the following line if this model implements OrderAlready behavior, and replace :creator, :contributor with the properties for which which this model implements the behavior
+  #it { is_expected.to have_already_ordered_attributes(:creator, :contributor) }
 end
