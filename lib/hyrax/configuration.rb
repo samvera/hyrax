@@ -1453,6 +1453,11 @@ module Hyrax
       @range_for_number_of_results_to_display_per_page ||= [10, 20, 50, 100]
     end
 
+    # @!attribute [rw] collection_terms
+    #   @return [Array<Symbol>, nil] the fields a collection page lists, in order;
+    #     nil lists the collection presenter's terms
+    attr_accessor :collection_terms
+
     attr_writer :visibility_map
     # A mapping from visibility string values to permissions; the default and
     # reference implementation is provided by {Hyrax::VisibilityMap}.

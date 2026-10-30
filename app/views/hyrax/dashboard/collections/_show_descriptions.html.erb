@@ -1,6 +1,6 @@
 <h2 class="sr-only"><%= t('.descriptions') %></h2>
 <dl class="metadata-collections">
-  <% @presenter.terms_with_values.each do |field_name| %>
+  <% collection_terms_with_values(@presenter).each do |field_name| %>
     <div class="row">
       <dt class="col-5 text-right"><%= collection_metadata_label(@presenter, field_name) %></dt>
       <dd class="col-7"><%= collection_metadata_value(@presenter, field_name) %></dd>

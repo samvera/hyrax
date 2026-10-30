@@ -26,6 +26,7 @@ en:
         show:
           admin_set: 'In Administrative Set:'
           based_near_label: Location
+          based_near_label_tesim: Location
           contributor: Contributors
           keyword: Keyword
       filters:

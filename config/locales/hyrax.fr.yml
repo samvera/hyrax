@@ -26,6 +26,7 @@ fr:
         show:
           admin_set: "Dans l'ensemble administratif:"
           based_near_label: Emplacement
+          based_near_label_tesim: Emplacement
           contributor: Contributeurs
           keyword: Mot-clé
       filters:

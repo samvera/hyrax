@@ -27,9 +27,46 @@ module Hyrax
     end
 
     ##
+    # The fields a collection page may list, in order, before checking values.
+    # The list is Hyrax.config.collection_terms if set; otherwise the flexible
+    # profile's properties if dynamic is true; otherwise the presenter's terms.
+    # For a flexible collection, fields the profile hides from collection pages
+    # or from this viewer are removed.
+    #
+    # @param presenter [Hyrax::CollectionPresenter]
+    # @param dynamic [Boolean] list the profile's properties when no app list is set
+    # @return [Array<Symbol>]
+    def collection_terms_for(presenter, dynamic: false)
+      listed = presenter.try(:listed_terms)
+      return presenter.terms unless flexible_collection?(presenter)
+
+      options = collection_view_options(presenter)
+      return presenter.terms.reject { |term| hidden_by_default?(presenter, term, options[term]) } unless listed || dynamic
+
+      (listed || options.keys).select { |term| collection_term_shown?(presenter, term, options[term]) }
+    end
+
+    ##
+    # The fields a collection page shows: #collection_terms_for less fields with
+    # no value. Collection pages call this. Without an app list or dynamic, it
+    # starts from the presenter's terms_with_values.
+    #
+    # @param presenter [Hyrax::CollectionPresenter]
+    # @param dynamic [Boolean] list the profile's properties when no app list is set
+    # @return [Array<Symbol>]
+    def collection_terms_with_values(presenter, dynamic: false)
+      return default_terms_with_values(presenter) unless presenter.try(:listed_terms) || dynamic
+
+      collection_terms_for(presenter, dynamic:).select { |term| presenter.readable_term?(term) && presenter[term].present? }
+    end
+
+    ##
     # @since 3.0.0
     # @return [#to_s]
     def collection_metadata_label(collection, field)
+      options = listed_profile_options(collection, field)
+      return options[:label] if options
+
       if collection.respond_to?(:compound_term?) && collection.compound_term?(field)
         definition = compound_schema_for(collection).definition_for(field)
         return compound_field_label(field, display_label: definition&.fetch(:display_label, nil))
@@ -42,6 +79,9 @@ module Hyrax
     # @since 3.0.0
     # @return [#to_s]
     def collection_metadata_value(collection, field)
+      options = listed_profile_options(collection, field)
+      return listed_profile_value(collection, field, options) if options && collection.respond_to?(conform_field(field, options))
+
       # Compounds render through the shared CompoundAttributeRenderer, resolving
       # the definition from the presenter's document (correct in flexible mode).
       # Collection scalar values render as bare spans (no `ul.tabular`), so the
@@ -196,6 +236,63 @@ module Hyrax
     end
 
     private
+
+    def flexible_collection?(presenter)
+      presenter.solr_document.try(:flexible?)
+    end
+
+    def collection_view_options(presenter)
+      @collection_view_options ||= {}
+      @collection_view_options[presenter.id] ||= profile_view_definitions(presenter)
+    end
+
+    def profile_view_definitions(presenter)
+      presenter.profile_properties.each_with_object({}) do |(name, details), definitions|
+        options = Hyrax::M3SchemaLoader::M3AttributeDefinition.new(name, details).view_options
+        definitions[name.to_sym] = options unless options.without(:display_label, :admin_only, :editor_only).empty?
+      end
+    end
+
+    def collection_term_shown?(presenter, term, options)
+      return false unless options
+
+      view_options = options.with_indifferent_access
+      return false if view_options[:collection_page] == false || view_options[:show_page] == false
+
+      !compound_card_field?(presenter, term) && !restricted_from_viewer?(presenter, term, view_options)
+    end
+
+    def default_terms_with_values(presenter)
+      return presenter.terms_with_values unless flexible_collection?(presenter)
+
+      options = collection_view_options(presenter)
+      presenter.terms_with_values.reject { |term| hidden_by_default?(presenter, term, options[term]) }
+    end
+
+    def hidden_by_default?(presenter, term, options)
+      options&.with_indifferent_access&.dig(:collection_page) == false || restricted_from_viewer?(presenter, term, options)
+    end
+
+    def restricted_from_viewer?(presenter, term, options)
+      flags = Array(presenter.try(:profile_property, term)&.dig('indexing'))
+      flags += %w[admin_only editor_only].select { |flag| options&.with_indifferent_access&.dig(flag) }
+      (flags.include?('admin_only') && !current_user&.admin?) || (flags.include?('editor_only') && !presenter.try(:editor?))
+    end
+
+    def listed_profile_options(collection, field)
+      return unless collection.try(:listed_terms) && flexible_collection?(collection)
+      return if collection.compound_term?(field)
+
+      options = collection_view_options(collection)[field.to_sym]
+      return unless options
+
+      conform_options(field, options.deep_dup.with_indifferent_access)
+    end
+
+    def listed_profile_value(collection, field, options)
+      row = collection.attribute_to_html(conform_field(field, options), options.merge(html_dl: true))
+      Nokogiri::HTML::DocumentFragment.parse(row.to_s).at_css('dd')&.inner_html&.html_safe # rubocop:disable Rails/OutputSafety
+    end
 
     # add hidden fields to a form for performing an action on a single document on a collection
     def single_item_action_form_fields(form, document, action)

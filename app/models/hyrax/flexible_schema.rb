@@ -26,6 +26,15 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     Hyrax::Current.flexible_schema ||= order("created_at asc").last
   end
 
+  # @return [Hash, nil] the profile saved as the given version, falling back to
+  #   the current profile; memoized per request in Hyrax::Current
+  def self.profile_for(version)
+    return current_version if version.blank? || version.to_s == current_schema_id.to_s
+
+    Hyrax::Current.flexible_schema_profiles ||= {}
+    Hyrax::Current.flexible_schema_profiles[version.to_s] ||= find_by(id: version)&.profile || current_version
+  end
+
   def self.create_default_schema
     m3_profile_path = Hyrax::Schema.m3_schema_loader.config_paths&.first
     raise ArgumentError, "No M3 profile found, check the Hyrax.config.schema_loader_config_search_paths" unless m3_profile_path
@@ -47,6 +56,20 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     current_version['properties'].symbolize_keys!.keys
   rescue StandardError
     []
+  end
+
+  # @return [Boolean] whether a profile property holds many values: its
+  #   `data_type`, else its legacy `multi_value`, else its `cardinality`
+  def self.multiple_values?(config)
+    return config['data_type'] == 'array' if config.key?('data_type')
+    return config['multi_value'] if config.key?('multi_value')
+
+    if (card = config['cardinality'])
+      max = card['maximum']
+      return max.nil? || max.to_i > 1
+    end
+
+    false
   end
 
   # Retrieve the required data to use for mappings
@@ -216,23 +239,11 @@ class Hyrax::FlexibleSchema < ApplicationRecord
     values['predicate'] = values['property_uri']
     values['index_keys'] = values['indexing']
     values['context'] = values.dig('available_on', 'context')
-    values['multiple'] = determine_multiplicity(values)
+    values['multiple'] = self.class.multiple_values?(values)
 
     normalize_form_attributes(values)
 
     values
-  end
-
-  def determine_multiplicity(values)
-    return values['data_type'] == 'array' if values.key?('data_type')
-    return values['multi_value'] if values.key?('multi_value')
-
-    if (card = values['cardinality'])
-      max = card['maximum']
-      return max.nil? || max.to_i > 1
-    end
-
-    false
   end
 
   def normalize_form_attributes(values)
