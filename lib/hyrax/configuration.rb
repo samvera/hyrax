@@ -413,6 +413,8 @@ module Hyrax
         Hyrax::FlexibleSchemaValidators::RichTextValidator
         Hyrax::FlexibleSchemaValidators::SearchResultsTruncateValidator
         Hyrax::FlexibleSchemaValidators::RenderAsValidator
+        Hyrax::FlexibleSchemaValidators::PropertyAliasValidator
+        Hyrax::FlexibleSchemaValidators::ContextClassValidator
       ]
     end
 
