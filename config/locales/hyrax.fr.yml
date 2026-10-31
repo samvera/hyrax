@@ -1690,6 +1690,15 @@ fr:
         export_to_zotero: Exporter vers Zotero
         export_to_zotero_details: L'exportation vers Zotero est prise en charge via des métadonnées intégrées. Si Zotero ne récupère pas automatiquement les métadonnées des fichiers déposés, veuillez signaler le problème via le
     stats:
+      analytics_hints:
+        authentication: Vérifiez GOOGLE_ACCOUNT_JSON ou GOOGLE_ACCOUNT_JSON_PATH. La clé du compte de service est peut-être expirée, révoquée ou issue d'un autre projet Google Cloud.
+        general: Consultez le journal de l'application pour obtenir le message d'erreur complet.
+        invalid_credentials: GOOGLE_ACCOUNT_JSON n'est pas un JSON valide (ni un JSON encodé en base64). Copiez à nouveau le fichier de clé du compte de service.
+        invalid_property: Vérifiez le paramètre property_id d'Analytics (GOOGLE_ANALYTICS_PROPERTY_ID par défaut). Il doit s'agir de l'ID numérique de la propriété GA4, et non d'un ID de mesure commençant par G-.
+        missing_credentials_file: GOOGLE_ACCOUNT_JSON_PATH pointe vers un fichier absent ou illisible sur le serveur. Vérifiez le chemin et les autorisations.
+        permission: Vérifiez que le compte de service de GOOGLE_ACCOUNT_JSON a été ajouté à la propriété indiquée par le paramètre property_id d'Analytics (GOOGLE_ANALYTICS_PROPERTY_ID par défaut).
+        quota_exceeded: Le quota de requêtes Google a été dépassé. Réessayez plus tard.
+      analytics_unavailable: Les données Analytics ne sont pas disponibles pour le moment.
       downloads:
         downloads: Téléchargements
       pageviews:
