@@ -111,6 +111,10 @@ Hyrax.config do |config|
   # The default is 10
   # config.show_work_item_rows = 10
 
+  # Which fields should a collection page list, and in what order?
+  # The default is nil, which lists Hyrax::CollectionPresenter.terms.
+  # config.collection_terms = [:abstract, :creator, :subject]
+
   # Enable IIIF image service. This is required to use the
   # IIIF viewer enabled show page
   #
