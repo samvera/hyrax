@@ -545,6 +545,7 @@ fr:
           works_listing: Liste des travaux
           works_published: "<strong>%{total_count} œuvres</strong> publiées"
           works_under_review: "<strong>%{total_count} travaux</strong> en cours d'examen"
+        show_number_per_page_html: Afficher %{number} par page
     api:
       accepted:
         default: Votre demande a été acceptée pour traitement, mais le traitement n'est pas complet. Consultez le travail pour plus d'informations.
