@@ -1,5 +1,5 @@
 <dl class="hyc-collection-metadata">
-  <% @presenter.terms_with_values.each do |field_name| %>
+  <% collection_terms_with_values(@presenter).each do |field_name| %>
     <div id=<%= "hyc-collection-metadata-#{field_name}" %>>
       <dt><%= collection_metadata_label(@presenter, field_name) %></dt>
       <dd><%= collection_metadata_value(@presenter, field_name) %></dd>
