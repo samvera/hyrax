@@ -33,7 +33,8 @@ module Hyrax
       end
 
       def label_facet?(value)
-        controlled_label_for(value).present? && options.fetch(:label_facet_registered, true)
+        labels = options[:labels]
+        labels.is_a?(Hash) && labels[value.to_s].present? && options.fetch(:label_facet_registered, false)
       end
     end
   end

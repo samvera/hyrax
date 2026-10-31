@@ -125,6 +125,21 @@ module Hyrax
       link_to(item, path)
     end
 
+    # @param value [Object] the stored value
+    # @param label [String, nil] its indexed label
+    # @param field [String] the stored value's facet
+    # @return [ActiveSupport::SafeBuffer] a link showing the label, filtering on
+    #   the label facet when the catalog registers one, on the stored value when
+    #   the catalog registers its facet, and searching the field otherwise
+    def link_to_value_facet(value, label, field)
+      label_facet = registered_label_facet(field) if label.present?
+      return link_to_field(field.to_s.delete_suffix('_sim'), value, label.presence) unless label_facet || registered_facet?(field)
+
+      facet, queried = label_facet ? [label_facet, label] : [field, value]
+      path = main_app.search_catalog_path(search_state.add_facet_params_and_redirect(facet, queried))
+      link_to(label.presence || value, path)
+    end
+
     # @param values [Array{String}] strings to display
     # @param solr_field [String] name of the solr field to link to, without its suffix (:facetable)
     # @param empty_message [String] message to display if no values are passed in
@@ -446,6 +461,21 @@ module Hyrax
       end
     end
     # rubocop:enable Metrics/MethodLength
+
+    def registered_facet?(field)
+      catalog_facet_fields.key?(field.to_s)
+    end
+
+    def registered_label_facet(field)
+      label_facet = Hyrax::ControlledVocabularyFieldValues.label_key(field)
+      return if label_facet == field.to_s
+
+      label_facet if catalog_facet_fields.key?(label_facet)
+    end
+
+    def catalog_facet_fields
+      @catalog_facet_fields ||= CatalogController.new.blacklight_config.facet_fields
+    end
 
     # @param [ActionController::Parameters] params first argument for Blacklight::SearchState.new
     # @param [Hash] facet(s)
