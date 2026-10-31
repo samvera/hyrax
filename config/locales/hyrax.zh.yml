@@ -545,6 +545,7 @@ zh:
           works_listing: 作品列表
           works_published: 已发布<strong>%{total_count} 部作品</strong>
           works_under_review: "<strong>%{total_count} 作品</strong>正在审核中"
+        show_number_per_page_html: "每页显示 %{number}"
     api:
       accepted:
         default: 您的请求已被接受，还在处理中，详细信息请见后台作业。
