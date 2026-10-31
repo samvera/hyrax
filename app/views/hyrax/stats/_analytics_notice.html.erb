@@ -1,0 +1,5 @@
+<% if @analytics_error %>
+  <%= render "hyrax/admin/analytics/analytics_error" %>
+<% elsif @analytics_unavailable %>
+  <div class="alert alert-info" role="alert"><%= t('hyrax.stats.analytics_unavailable') %></div>
+<% end %>
