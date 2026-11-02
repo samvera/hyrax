@@ -32,14 +32,14 @@
       <%= label_text %><% if field[:required] %><abbr title="required" class="required text-danger">*</abbr><% end %>
   <% end %>
   <% if field[:as] == 'select' %>
-    <select <%= id_html %> class="form-control form-control-sm" data-<%= data_attr %>="<%= field[:name] %>">
+    <select <%= id_html %> class="form-control" data-<%= data_attr %>="<%= field[:name] %>">
       <option value=""><%= placeholder ? label_text : '' %></option>
       <% Array(field[:values]).each do |v| %>
         <option value="<%= v %>"><%= v.to_s.humanize %></option>
       <% end %>
     </select>
   <% else %>
-    <input type="text" <%= id_html %> <%= placeholder_html %> class="form-control form-control-sm" data-<%= data_attr %>="<%= field[:name] %>">
+    <input type="text" <%= id_html %> <%= placeholder_html %> class="form-control" data-<%= data_attr %>="<%= field[:name] %>">
   <% end %>
   <% if !hide_label && input_id.blank? %></label><% end %>
 </div>

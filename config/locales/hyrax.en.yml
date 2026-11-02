@@ -476,6 +476,11 @@ en:
           feature: Feature
           header: Features
           status: Status
+      metadata_profiles:
+        import:
+          more_warnings:
+            one: and 1 more warning
+            other: and %{count} more warnings
       sidebar:
         activity: Activity
         analytics: Analytics
@@ -1515,6 +1520,8 @@ en:
           linked_record_without_source: "m3 profile compound subproperty `%{property}` is `type: linked_record` but declares no `authority` naming a registered linked-record source"
           top_level_indexing: "m3 profile compound property `%{property}` must not declare top-level `indexing`; declare `indexing` (or `index_keys`) on each subproperty instead"
           duplicate_subproperty_name: "m3 profile compound `%{parent}` has multiple sub-properties resolving to the in-compound name `%{name}` (%{properties}); each sub-property in a compound must resolve to a unique name (set a distinct `name:`)"
+          reserved_subproperty_name: "m3 profile compound `%{parent}` sub-property `%{property}` resolves to the in-compound name `%{name}`, which is reserved; set a different `name:`"
+          malformed_subproperty_name: "m3 profile compound `%{parent}` sub-property `%{property}` resolves to the in-compound name `%{name}`, which is not made of letters, digits, and underscores; set a different `name:`"
       redirects_validator:
         errors:
           invalid_available_on: "m3 profile `redirects` property must be available on at least one work or collection class declared in this profile"
@@ -1651,8 +1658,6 @@ en:
           works_listing: Works listing
           you_manage: "<strong>%{total_count} works</strong> you can manage in the repository"
           you_own: "<strong>%{total_count} works</strong> you own in the repository"
-      sort_and_per_page:
-        number_of_results_to_display_per_page: Number of results to display per page
     nav_safety:
       change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     notifications:

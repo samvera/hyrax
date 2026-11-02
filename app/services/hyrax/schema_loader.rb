@@ -10,6 +10,26 @@ module Hyrax
   class SchemaLoader
     class UndefinedSchemaError < ArgumentError; end
 
+    # A compound subproperty's name becomes part of its Solr field names and
+    # form field ids, so it is limited to letters, digits, and underscores.
+    SUBPROPERTY_NAME_FORMAT = /\A[A-Za-z0-9_]+\z/.freeze
+
+    # @param [Enumerable<#to_s>] names
+    # @return [Array<String>] the subproperty names that break {SUBPROPERTY_NAME_FORMAT}
+    def self.malformed_subproperty_names(names)
+      names.map(&:to_s).reject { |name| name.match?(SUBPROPERTY_NAME_FORMAT) }
+    end
+
+    # The keys Valkyrie reserves in a Hash value. A compound subproperty named
+    # after one would lose its value on save, so the schema loaders and profile
+    # validator reject it.
+    #
+    # @param [Enumerable<#to_s>] keys
+    # @return [Array<String>] the keys a hash entry may not use
+    def self.reserved_hash_keys(keys)
+      keys.map(&:to_s).select { |key| Valkyrie::Types::HashValue::RESERVED_KEYS.include?(key.to_sym) }
+    end
+
     ##
     # @param [Symbol] schema
     #
@@ -222,6 +242,22 @@ module Hyrax
         wrapped.reject { |v| v.equal?(Dry::Types::Undefined) }.select(&:present?)
       end
 
+      # Rejects an entry holding anything JSON cannot represent (an ID, a date,
+      # a symbol, NaN), which the backends would store differently.
+      JsonValues = lambda do |value|
+        check = lambda do |val|
+          case val
+          when ::Hash then val.each_value(&check)
+          when ::Array then val.each(&check)
+          when ::String, ::Integer, true, false, nil then nil
+          when ::Float then raise ArgumentError, "#{val.inspect} is not a JSON value" unless val.finite?
+          else raise ArgumentError, "#{val.inspect} in a hash entry is not a JSON value"
+          end
+        end
+        check.call(value) if value.is_a?(::Hash)
+        value
+      end
+
       # Wings stores each hash entry as a JSON string, since ActiveFedora
       # cannot hold a Hash; parse it back here.
       JsonHash = lambda do |value|
@@ -287,7 +323,7 @@ module Hyrax
         when 'date_time'
           Valkyrie::Types::DateTime
         when 'hash'
-          Dry::Types['hash'].constructor(&JsonHash)
+          Dry::Types['hash'].constructor { |value| JsonValues.call(JsonHash.call(value)) }
         when 'linked_record'
           Valkyrie::Types::String
         else

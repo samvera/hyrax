@@ -3,7 +3,7 @@
   <%= render Blacklight::FacetComponent.with_collection(blacklight_config.facet_fields_in_group(nil), response: @response, component: Hyrax::DropdownFacetFieldComponent)%>
 <% end %>
 
-<div class="list-filters" role="group">
-  <span class="list-filters-label"><%= t("hyrax.dashboard.my.facet_label.collections") %></span>
-  <%= facets %>
+<div class="dashboard-filter-group" role="group" aria-labelledby="filter-collections-label">
+  <span class="list-filters-label" id="filter-collections-label"><%= t("hyrax.dashboard.my.facet_label.collections") %></span>
+  <div class="dashboard-filter-group-items"><%= facets %></div>
 </div>

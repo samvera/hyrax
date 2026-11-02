@@ -26,8 +26,8 @@ Rails.application.reloader.to_prepare do
 
   Riiif::Image.authorization_service = Hyrax::IiifAuthorizationService
 
-  Riiif.not_found_image = Rails.root.join('app', 'assets', 'images', 'us_404.svg')
-  Riiif.unauthorized_image = Rails.root.join('app', 'assets', 'images', 'us_404.svg')
+  Riiif.not_found_image = Rails.root.join('app', 'assets', 'images', 'us_404.png')
+  Riiif.unauthorized_image = Rails.root.join('app', 'assets', 'images', 'us_404.png')
 
   Riiif::Engine.config.cache_duration = 1.day
   # Defaults to using Imagemagick - Set use_vips to true in order to use vips. lib-vips is already installed as part of hyrax-base

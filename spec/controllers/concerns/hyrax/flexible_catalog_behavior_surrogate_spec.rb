@@ -63,6 +63,7 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'name: surrogate properties', typ
     original = klass.blacklight_config.deep_copy
     example.run
     klass.blacklight_config = original
+    klass.reset_flexible_baseline!
   end
 
   before do

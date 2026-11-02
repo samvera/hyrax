@@ -24,6 +24,8 @@ module Hyrax
 
     copy_blacklight_config_from(CatalogController)
     configure_facets
+    blacklight_config.default_per_page = blacklight_config.default_per_page
+    blacklight_config.per_page = Hyrax.config.range_for_number_of_results_to_display_per_page.dup
 
     before_action :authenticate_user!
     load_and_authorize_resource only: :show,

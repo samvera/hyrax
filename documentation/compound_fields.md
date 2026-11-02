@@ -42,7 +42,12 @@ they belong to via `available_on: { properties: [<parent>] }` — the same
 `available_on` block a standalone property uses to declare its class scope, but
 with a `properties:` list (the parent compounds) instead of `class:`. Every
 property key is globally unique, so subproperty keys are conventionally prefixed;
-the field's key *inside* the compound is its `name:` (falling back to the key):
+the field's key *inside* the compound is its `name:` (falling back to the key).
+That in-compound name may contain only letters, digits, and underscores, since it
+becomes part of the subproperty's Solr field names and form field ids, and it
+cannot be one of the keys Valkyrie reserves in a hash (`id`, `@id`, `@value`,
+`internal_resource`). The m3 profile validator and the metadata YAML loader both
+reject such a name:
 
 ```yaml
 contributors:
@@ -491,8 +496,8 @@ work.contributors
 ```
 
 This shape round-trips in both flex modes on every metadata backend. Postgres
-stores the rows as JSONB; the Valkyrie Fedora adapter stores each row as a nested
-graph (through Hyrax overrides until samvera/valkyrie#1005 is released); Wings
+stores the rows as JSONB; the Valkyrie Fedora adapter stores each row as one JSON
+literal (through Hyrax overrides until samvera/valkyrie#1005 is released); Wings
 stores each row as one JSON string, which the `type: hash` attribute type parses
 back into a hash on read.
 

@@ -1,0 +1,493 @@
+# frozen_string_literal: true
+
+module Hyrax
+  ##
+  # Builds the flexible metadata profile's catalog fields onto a Blacklight config: an index field for
+  # each property the profile shows in search results, which keyword search also covers; a sidebar
+  # facet for each facetable property; and a hidden facet for each `render_as: faceted` property, so
+  # its links filter. Restricted properties get none of these. A property whose controlled vocabulary
+  # the configured `controlled_vocabulary_label_service` resolves facets on its label field and shows
+  # its labels in search results.
+  #
+  # It edits the config it is given, in place. `Hyrax::FlexibleCatalogBehavior.load_flexible_schema`
+  # gives it a copy of the controller's configuration as it stood before any profile was loaded, then
+  # swaps the result in, so each load reflects only its own profile and a config another request is
+  # already reading is never edited.
+  #
+  # @example
+  #   config = Hyrax::FlexibleCatalogConfigBuilder.new(CatalogController.flexible_baseline_config.deep_copy)
+  #                                               .apply(previous_profile, current_profile)
+  class FlexibleCatalogConfigBuilder
+    attr_reader :blacklight_config
+
+    ##
+    # @param blacklight_config [Blacklight::Configuration] the config to build onto
+    def initialize(blacklight_config)
+      @blacklight_config = blacklight_config
+    end
+
+    ##
+    # Applies `current_profile`, first removing the fields of any property `previous_profile` declared
+    # that `current_profile` no longer has, and of any property a surrogate in `previous_profile` stood
+    # in for but no longer does.
+    #
+    # @param previous_profile [Hash] the profile loaded before the current one
+    # @param current_profile [Hash, nil] the profile to apply; `nil` applies `previous_profile`
+    # @return [Blacklight::Configuration] the config it built onto
+    def apply(previous_profile, current_profile)
+      current_profile = previous_profile if current_profile.nil?
+      remove_old_properties!(previous_profile['properties'], current_profile['properties'])
+      properties_hash = current_profile['properties']
+      resolvable = {}
+      properties_hash.each do |itemprop, prop|
+        label = display_label_for(itemprop, prop)
+
+        view_options = prop['view']
+        indexing = prop['indexing']
+        next if indexing.nil?
+
+        # A property may declare `name:` to stand in for another on a
+        # particular class. The named attribute is what gets indexed, so it is
+        # the name every solr field derives from — registering under the
+        # surrogate's own key produces a facet nothing is indexed into.
+        indexed_name = indexed_name_for(itemprop, prop)
+        if indexed_name != itemprop
+          # Only the surrogate's own keys. Passing its `indexing:` array would
+          # fold in any field names it declares — which for a surrogate are
+          # the target attribute's — and delete the target's registration.
+          solr_field_names_for(itemprop, nil).each do |name|
+            blacklight_config.facet_fields.delete(name)
+            blacklight_config.index_fields.delete(name)
+          end
+          itemprop = indexed_name
+        end
+
+        # Only when the indexer will actually write label fields. `facetable`
+        # and `stored_searchable` are directives that AttributeDefinition
+        # strips, so a property declaring only those has no index keys and no
+        # label companions — treating it as controlled would hide a working id
+        # facet behind an empty label one.
+        controlled_source = (controlled_source_for(prop, resolvable) if indexed?(indexing))
+
+        # prevents all restricted fields from being added to blacklight config
+        # to prevent them from being exposed in catalog search results.
+        # They remain available on show pages, based on visibility.
+        if restricted_field?(indexing)
+          remove_from_blacklight_config!(itemprop, indexing)
+          next
+        end
+
+        # `view.search_results: false` in the m3 profile hides this property from catalog
+        # search-result columns. Only gates the dynamic add_index_field path below;
+        # properties already declared in CatalogController are left untouched, and
+        # the `qf` (query-field relevance) list is unaffected. Facet registration below
+        # is intentionally not gated — a hidden property can still be facetable.
+        if catalog_indexable?(view_options) && stored_searchable?(indexing, itemprop)
+          index_args = { itemprop:, label: }
+
+          if links_to_facet?(indexing, view_options)
+            index_args[:link_to_facet] = facet_name_for(itemprop, controlled_source)
+          end
+
+          name = blacklight_config.index_fields.keys.detect { |key| key.start_with?(itemprop) }
+          name ||= "#{itemprop}_tesim"
+
+          # for properties that DO exist in the CatalogController
+          if blacklight_config.index_fields[name].present?
+            if label
+              blacklight_config.index_fields[name].label = label
+              blacklight_config.index_fields[name].custom_label = true
+            end
+            blacklight_config.index_fields[name].itemprop = itemprop
+
+            blacklight_config.index_fields[name].link_to_facet = index_args[:link_to_facet]
+
+            if require_view_helper_method?(view_options) && !application_helper?(blacklight_config.index_fields[name])
+              # add the helper method so linked fields will render correctly in the index view
+              blacklight_config.index_fields[name].helper_method = view_option_for_helper_method(view_options)
+              # the helper method for index_field_link needs the field name
+              blacklight_config.index_fields[name].field_name = itemprop
+              blacklight_config.index_fields[name].profile_helper = true
+            elsif blacklight_config.index_fields[name].profile_helper
+              # A helper an earlier entry for the same field set, when this
+              # entry asks for none. It would otherwise short-circuit
+              # Blacklight's pipeline ahead of `link_to_facet`.
+              blacklight_config.index_fields[name].helper_method = nil
+              blacklight_config.index_fields[name].field_name = nil
+              blacklight_config.index_fields[name].profile_helper = false
+            end
+          else
+            # for properties that DO NOT exist in the catalog controller
+            if require_view_helper_method?(view_options)
+              # add the view helper method to the arguments hash when creating a property
+              index_args[:helper_method] = view_option_for_helper_method(view_options)
+              # the helper method for index_field_link needs the field name
+              index_args[:field_name] = itemprop
+            end
+            # if a property in the metadata profile doesn't exist in the CatalogController, add it
+            blacklight_config.add_index_field(name, index_args)
+            # Marks the helper as ours wherever it was set, so a later entry
+            # can clear it by the same rule that governs preconfigured fields.
+            blacklight_config.index_fields[name].profile_helper = index_args.key?(:helper_method)
+
+            # all index fields get this property so an admin can hide a property from the catalog search results
+            # by adding the name of the property via admin dashboard > Settings > Accounts > Hidden index fields
+            # NOTE: it is likely this will be handled by the metadata profile in the future
+            blacklight_config.index_fields[name].if = :render_optionally?
+          end
+
+          # Carry an author-declared catalog truncation length onto the field
+          # config (`view: { search_results_truncate: N }`, or `false` to opt out)
+          # so render_html_index_value can honor it for render_as: html fields.
+          if view_options.is_a?(Hash) && view_options.key?('search_results_truncate')
+            blacklight_config.index_fields[name].search_results_truncate = view_options['search_results_truncate']
+          end
+
+          field = blacklight_config.index_fields[name]
+          # An application's own helper renders the field from the stored id,
+          # resolving any label itself, so substituting the label here would
+          # leave it nothing to resolve or link.
+          if controlled_source && !application_helper?(field)
+            field.values = Hyrax::ControlledVocabularyFieldValues.to_proc
+            field.reads_labels = true
+          elsif field.reads_labels
+            # Only one we set: an application's own `values:` has to stand.
+            field.values = nil
+            field.reads_labels = false
+          end
+
+          # The label field too, so a free-text search for a term's label
+          # finds the work. Without it only the opaque id matches.
+          names = [name]
+          names << Hyrax::ControlledVocabularyFieldValues.label_key(name) if controlled_source
+          append_query_fields!(names)
+        end
+
+        if facetable?(indexing)
+          register_facet_field(itemprop, label, controlled_source, indexing)
+        elsif render_as_faceted?(view_options)
+          # `render_as: faceted` links a value to a facet query without asking
+          # for the sidebar listing that `facetable` declares. The facet still
+          # has to be registered: Blacklight discards an `f[...]` parameter
+          # naming a facet it has no configuration for, so the link would
+          # navigate and silently return unfiltered results.
+          register_hidden_facet_field(facet_name_for(itemprop, controlled_source), label)
+        else
+          # if the property does not have facetable in the indexing section of the metadata profile, remove the facet field from the blacklight config
+          blacklight_config.facet_fields.delete("#{itemprop}_sim")
+          blacklight_config.facet_fields.delete("#{itemprop}_label_sim")
+        end
+      end
+      blacklight_config
+    end
+
+    private
+
+    # True for a helper the application set in its own CatalogController, as
+    # opposed to one this concern derived from `render_as`.
+    def application_helper?(field)
+      field.helper_method.present? && !field.profile_helper
+    end
+
+    # A controlled property facets on its labels, because Blacklight queries a
+    # facet with whatever the row displayed — so row and facet move together.
+    #
+    # Several profile entries can name the same field, so both the swap and the
+    # add have to be safe to repeat; Blacklight raises when a facet is added
+    # twice.
+    def register_facet_field(itemprop, label, controlled_source, indexing)
+      id_name = "#{itemprop}_sim"
+      id_facet = blacklight_config.facet_fields[id_name]
+      id_facet = blacklight_config.add_facet_field(id_name, label: label, limit: true) if id_facet.blank?
+
+      # An earlier entry for the same field can have hidden this facet to
+      # resolve a `render_as: faceted` link. `facetable` asks for the sidebar
+      # listing, so that hiding has to be lifted before anything below decides
+      # which facet to hide for labels.
+      reveal_link_facet(facet_name_for(itemprop, controlled_source))
+
+      # Restore a facet an earlier entry for the same field hid, when this
+      # entry is not controlled. Only one we hid ourselves: an `if` an
+      # application set in its own CatalogController has to stand, so the
+      # predicate we displaced is put back rather than cleared to nil.
+      unless swap_facet_to_labels?(itemprop, controlled_source, indexing)
+        if id_facet.hidden_for_labels
+          id_facet.if = id_facet.if_before_labels
+          id_facet.if_before_labels = nil
+        end
+        id_facet.hidden_for_labels = false
+        return
+      end
+
+      name = facet_name_for(itemprop, controlled_source)
+      unless blacklight_config.facet_fields[name].present?
+        # Resolved rather than copied: a facet declared in a CatalogController
+        # without a label stores the titleized solr key ("Keyword Sim"), which
+        # normally stays hidden only because display_label finds the
+        # `…fields.facet.<key>` translation first — and the renamed key has no
+        # such translation.
+        blacklight_config.add_facet_field(name, label: id_facet.display_label('facet'), limit: id_facet.limit)
+      end
+
+      # The id facet stays configured but drops out of the sidebar: listing
+      # both would show the same label twice, one over the opaque ids this
+      # feature exists to hide. Keeping it configured is what lets
+      # `f[<prop>_sim][]` from a saved search or bookmark still resolve, and
+      # keeps its constraint chip rendering.
+      id_facet.if_before_labels = id_facet.if unless id_facet.hidden_for_labels
+      id_facet.if = false
+      id_facet.hidden_for_labels = true
+    end
+
+    # Register a facet purely so a `render_as: faceted` link resolves, without
+    # listing it in the sidebar.
+    #
+    # Several profile entries can name the same field, so this has to be safe
+    # to repeat; Blacklight raises when a facet is added twice. Only ever hides
+    # a facet this method created: an application that declared the facet in
+    # its own CatalogController asked for the sidebar listing, and `render_as`
+    # does not override that.
+    def register_hidden_facet_field(name, label)
+      # Whether an entry is controlled decides which of the two names it links
+      # to, and entries for the same field can differ. Dropping the other one
+      # leaves no facet that nothing links to.
+      drop_unlinked_counterpart(name)
+
+      facet = blacklight_config.facet_fields[name]
+      return if facet.present? && !facet.hidden_for_link
+
+      facet ||= blacklight_config.add_facet_field(name, label: label)
+      facet.if = false
+      facet.hidden_for_link = true
+    end
+
+    # Undo `register_hidden_facet_field`. Only a facet it hid: an `if` an
+    # application set in its own CatalogController has to stand.
+    def reveal_link_facet(name)
+      facet = blacklight_config.facet_fields[name]
+      return if facet.blank? || !facet.hidden_for_link
+
+      facet.if = nil
+      facet.hidden_for_link = false
+    end
+
+    # The id facet for a label name and vice versa. Only removes one this
+    # concern hid: an application's own facet has to stand however the
+    # property's authority resolves.
+    def drop_unlinked_counterpart(name)
+      counterpart = if name.end_with?('_label_sim')
+                      name.sub(/_label_sim\z/, '_sim')
+                    else
+                      Hyrax::ControlledVocabularyFieldValues.label_key(name)
+                    end
+      return if counterpart.blank? || counterpart == name
+
+      facet = blacklight_config.facet_fields[counterpart]
+      blacklight_config.facet_fields.delete(counterpart) if facet&.hidden_for_link
+    end
+
+    # The facet swap needs `<itemprop>_sim` specifically, not merely some
+    # literal key: that is the field the indexer writes label companions for.
+    # A property declaring only `<itemprop>_tesim` gets label values in rows
+    # but none in a facet, so swapping would hide a working id facet behind an
+    # empty label one.
+    def swap_facet_to_labels?(itemprop, controlled_source, indexing)
+      controlled_source.present? && Array(indexing).include?("#{itemprop}_sim")
+    end
+
+    def facet_name_for(itemprop, controlled_source)
+      controlled_source ? "#{itemprop}_label_sim" : "#{itemprop}_sim"
+    end
+
+    # An installation with no label service registered gets nil for every
+    # property, and so keeps the catalog it has today.
+    def controlled_source_for(config, resolvable = {})
+      return unless config.is_a?(Hash)
+
+      # Not `config.dig`: a profile is editable data, and a scalar here would
+      # raise TypeError while building the catalog config.
+      controlled = config['controlled_values']
+      return unless controlled.is_a?(Hash)
+
+      # The *first real* source, then a resolvability check — not the first
+      # resolvable one. AttributeDefinition#authority_source picks the first
+      # real source and the indexer writes labels only if that one resolves,
+      # so choosing differently here would swap a facet to a label field
+      # nothing writes into.
+      source = Array(controlled['sources'])
+               .map { |candidate| candidate.to_s.strip }
+               .find { |candidate| candidate.present? && !candidate.casecmp('null').zero? }
+
+      source if source && resolvable?(source, resolvable)
+    rescue StandardError => e
+      Hyrax.logger.debug("controlled_source_for: #{e.message}")
+      nil
+    end
+
+    # Memoized for the duration of one load: this runs per property, and a
+    # service backed by a vocabulary table would otherwise query once per
+    # property per request.
+    def resolvable?(source, memo)
+      memo.fetch(source) do
+        memo[source] = Hyrax.config.controlled_vocabulary_label_service.resolvable?(source)
+      end
+    end
+
+    # Split on whitespace rather than substring-matching:
+    # `qf.include?("type_tesim")` is true once `resource_type_tesim` is
+    # listed, so a substring check would silently drop the shorter field.
+    def append_query_fields!(names)
+      qf = blacklight_config.search_fields['all_fields']&.solr_parameters&.dig(:qf)
+      return if qf.nil?
+
+      listed = qf.split
+      names.each do |field|
+        next if listed.include?(field)
+
+        qf << " #{field}"
+        listed << field
+      end
+    end
+
+    # Whether `indexing:` names any literal solr field, as opposed to only the
+    # directives (`stored_searchable`, `facetable`, the role flags) that carry
+    # no field name of their own.
+    def indexed?(indexing)
+      (Array(indexing) - INDEXING_DIRECTIVES).any?
+    end
+
+    def indexed_name_for(itemprop, config)
+      return itemprop unless config.is_a?(Hash)
+
+      config['name'].presence || itemprop
+    end
+
+    # Returns true if the view options require a helper method to render the linked field correctly in the index view
+    # @param view_options [Hash] the view options ex: {"render_as"=>"linked", "html_dl"=>true}
+    # @return [Boolean] to determine if the view_option_for_helper_method should be called
+    def require_view_helper_method?(view_options)
+      view_options.present? && %w[external_link linked rights_statement html].include?(view_options.dig('render_as'))
+    end
+
+    # Returns the helper method that will render the linked field correctly in the index view
+    # @param view_options [Hash] the view options ex: {"render_as"=>"linked", "html_dl"=>true}
+    # @return [Symbol] helper method from Hyrax::HyraxHelperBehavior
+    def view_option_for_helper_method(view_options)
+      render_as = view_options.dig('render_as')
+      return :iconify_auto_link if render_as == 'external_link'
+      return :index_field_link if render_as == 'linked'
+      return :rights_statement_links if render_as == 'rights_statement'
+      return :render_html_index_value if render_as == 'html'
+    end
+
+    def display_label_for(field_name, config)
+      display_label = config.fetch('display_label', {})&.with_indifferent_access || {}
+      display_label = { default: display_label } if display_label.is_a?(String)
+      display_label[:default] = field_name.to_s.humanize if display_label[:default].blank?
+      # Return a lambda so locale and translation are resolved at render time,
+      # not at initialize time (before before_action :set_locale runs).
+      lambda { |*|
+        label = display_label[I18n.locale] || display_label[:default]
+        I18n.t(label, default: label)
+      }
+    end
+
+    def stored_searchable?(indexing, itemprop)
+      indexing.include?('stored_searchable') || indexing.include?("#{itemprop}_tesim")
+    end
+
+    # True when the property declares `admin_only` or `editor_only` in its
+    # indexing array. Restricted fields are never exposed through the
+    # Blacklight catalog (no index column, no facet, no free-text match);
+    # visibility is enforced on show pages by the `field_visible?` view
+    # helper.
+    def restricted_field?(indexing)
+      indexing.include?("admin_only") || indexing.include?("editor_only")
+    end
+
+    # Returns false only when the m3 profile sets `view.search_results: false`
+    # for the property; absent or `true` keeps existing catalog-display behavior.
+    def catalog_indexable?(view_options)
+      return true unless view_options.is_a?(Hash)
+      view_options['search_results'] != false
+    end
+
+    def facetable?(indexing)
+      indexing.include?('facetable')
+    end
+
+    # Whether a search-results value links to a facet query. `facetable`
+    # declares the sidebar listing and `render_as: faceted` declares that the
+    # values link, so either one is enough on its own — a property can link
+    # its values without offering a sidebar facet, which is what `faceted`
+    # already means on the show page.
+    def links_to_facet?(indexing, view_options)
+      facetable?(indexing) || render_as_faceted?(view_options)
+    end
+
+    def render_as_faceted?(view_options)
+      return false unless view_options.is_a?(Hash)
+
+      view_options['render_as'].to_s == 'faceted'
+    end
+
+    def remove_old_properties!(previous_profile_properties, current_properties)
+      in_use = current_properties.flat_map do |prop, config|
+        solr_field_names_for(indexed_name_for(prop, config), config.is_a?(Hash) ? config['indexing'] : nil)
+      end
+      previous_profile_properties.each do |prop, config|
+        indexing = config.is_a?(Hash) ? config['indexing'] : nil
+        current = current_properties.key?(prop)
+        remove_from_blacklight_config!(prop, indexing, keep: in_use) unless current
+        former_target = indexed_name_for(prop, config)
+        next if former_target == prop || (current && former_target == indexed_name_for(prop, current_properties[prop]))
+
+        remove_from_blacklight_config!(former_target, indexing, keep: in_use)
+      end
+    end
+
+    # Evict every Blacklight registration for `itemprop`. Collects the set of
+    # Solr field names to remove from three sources:
+    # - "<itemprop>_tesim" — the default Solr field name used as the
+    #   index field for this property,
+    # - "<itemprop>_sim"   — the default Solr field name used as the
+    #   facet field for this property,
+    # - any additional Solr-field names explicitly declared in `indexing:`
+    #   (filtering out the directive flags `stored_searchable`, `facetable`,
+    #   `admin_only`, and `editor_only`).
+    # Then removes those exact names from `facet_fields`, `index_fields`, and
+    # the all_fields qf. Exact-name matching avoids prefix collisions where
+    # e.g. `title` would otherwise match `title_alternative_*`.
+    INDEXING_DIRECTIVES = %w[stored_searchable facetable admin_only editor_only].freeze
+
+    def remove_from_blacklight_config!(itemprop, indexing = nil, keep: [])
+      names = solr_field_names_for(itemprop, indexing) - keep
+      names.each do |name|
+        blacklight_config.facet_fields.delete(name)
+        blacklight_config.index_fields.delete(name)
+      end
+
+      remove_query_fields!(names)
+    end
+
+    # Rebuilt from whole tokens rather than sliced out as substrings:
+    # `qf.slice!("type_tesim")` would cut that run of characters out of
+    # `resource_type_tesim`, leaving `resource_` and silently dropping the
+    # longer field from free-text search.
+    def remove_query_fields!(names)
+      qf = blacklight_config.search_fields['all_fields']&.solr_parameters&.dig(:qf)
+      return if qf.nil?
+
+      qf.replace((qf.split - names).join(' '))
+    end
+
+    def solr_field_names_for(itemprop, indexing)
+      default_fields = ["#{itemprop}_tesim", "#{itemprop}_sim"]
+      declared_fields = (indexing || []) - INDEXING_DIRECTIVES
+      fields = (default_fields + declared_fields).uniq
+      # Each field's label companion too, so a retired or restricted property
+      # leaves no label facet pointing at a field nothing writes to.
+      (fields + fields.map { |field| Hyrax::ControlledVocabularyFieldValues.label_key(field) }).uniq
+    end
+  end
+end

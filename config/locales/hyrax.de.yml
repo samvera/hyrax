@@ -454,6 +454,11 @@ de:
           description: Beschreibung
           feature: Funktion
           header: Funktionen
+      metadata_profiles:
+        import:
+          more_warnings:
+            one: und 1 weitere Warnung
+            other: und %{count} weitere Warnungen
       sidebar:
         activity: Aktivität
         analytics: Analytik
@@ -1422,6 +1427,8 @@ de:
           controlled_without_source: "Die Verbund-Unterelement-Eigenschaft `%{property}` im m3-Profil ist `type: controlled`, deklariert aber weder `authority` noch `values`"
           top_level_indexing: "Die Verbundeigenschaft `%{property}` im m3-Profil darf kein `indexing` auf oberster Ebene deklarieren; deklarieren Sie `indexing` (oder `index_keys`) stattdessen an jedem Unterelement"
           duplicate_subproperty_name: "Der Verbund `%{parent}` im m3-Profil hat mehrere Unterelemente, die zum selben internen Namen `%{name}` führen (%{properties}); jedes Unterelement eines Verbunds muss einen eindeutigen Namen ergeben (setzen Sie ein eindeutiges `name:`)"
+          reserved_subproperty_name: "Das Unterelement `%{property}` des Verbunds `%{parent}` im m3-Profil führt zum internen Namen `%{name}`, der reserviert ist; setzen Sie ein anderes `name:`"
+          malformed_subproperty_name: "Das Unterelement `%{property}` des Verbunds `%{parent}` im m3-Profil führt zum internen Namen `%{name}`, der nicht nur aus Buchstaben, Ziffern und Unterstrichen besteht; setzen Sie ein anderes `name:`"
       redirects_validator:
         errors:
           invalid_available_on: "die Eigenschaft `redirects` des m3-Profils muss in mindestens einer im Profil deklarierten Werk- oder Sammlungsklasse verfügbar sein"
@@ -1544,8 +1551,6 @@ de:
           works_listing: Auflistung der Arbeiten
           you_manage: "<strong> %{total_count} Arbeiten </strong>, das Sie im Repository verwalten können"
           you_own: "<strong> %{total_count} Arbeiten </strong>, das Sie im Repository besitzen"
-      sort_and_per_page:
-        number_of_results_to_display_per_page: Anzahl der anzuzeigenden Ergebnisse pro Seite
     nav_safety:
       change_tab_message: Möchten Sie diesen Tab wirklich verlassen? Nicht gespeicherte Daten gehen verloren.
     notifications:

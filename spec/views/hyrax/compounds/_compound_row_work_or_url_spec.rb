@@ -109,6 +109,18 @@ RSpec.describe 'hyrax/compounds/_compound_row', type: :view do
     end
   end
 
+  it 'resolves the stored value once for both the picker and the URL input' do
+    expect(view).to have_received(:compound_work_or_url_option).once
+  end
+
+  it 'gives the URL input its own full-width column, outside the picker column' do
+    picker_column = Capybara.string(rendered).find('[data-hyrax-compound-work-search]', visible: :all)
+                            .find(:xpath, 'ancestor::div[contains(@class, "form-group")][1]', visible: :all)
+
+    expect(url_wrap[:class]).to include('col-12')
+    expect(picker_column).not_to have_css('[data-hyrax-compound-work-url-wrap]', visible: :all)
+  end
+
   it 'leaves the URL field visible when the value is a URL' do
     expect(url_wrap).to be_visible
   end

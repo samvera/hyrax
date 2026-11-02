@@ -106,14 +106,64 @@ body.dashboard {
   .list-filters-label,
   span.constraints-label {
     font-weight: bold;
-    margin-right: 2em;
   }
 
-  .constraints-container {
-    padding: $card-spacer-y $card-spacer-x;
+  // Facet and constraint labels share one width, so both rows' controls
+  // start at the same offset and wrap under each other, not under the label.
+  .dashboard-filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
 
-    .start-over {
-      padding: 4px 6px;
+    .list-filters-label,
+    .constraints-label {
+      flex: 0 0 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    @include media-breakpoint-up(lg) {
+      flex-wrap: nowrap;
+
+      .list-filters-label,
+      .constraints-label {
+        flex-basis: 11rem;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .dashboard-filter-group-items {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  // Each chip already carries Blacklight's .mx-1, so the row drops its column
+  // gap and shifts left by that margin to line up with the facet buttons.
+  #appliedParams .dashboard-filter-group-items {
+    column-gap: 0;
+    margin-left: -0.25rem;
+
+    .applied-filter {
+      max-width: calc(100% - 0.5rem);
+    }
+  }
+
+  .dashboard-search {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+
+    .input-group {
+      flex: 1 1 15rem;
+      width: auto;
+    }
+
+    .form-control {
+      border-color: $secondary;
     }
   }
 
@@ -126,6 +176,9 @@ body.dashboard {
 
   .list-filters {
     background-color: $card-cap-bg;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
     margin-bottom: 20px;
     padding: $card-spacer-y $card-spacer-x;
 

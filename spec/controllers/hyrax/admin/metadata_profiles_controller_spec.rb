@@ -21,7 +21,8 @@ RSpec.describe Hyrax::Admin::MetadataProfilesController, type: :controller do
 
     context 'when the profile is valid with no warnings' do
       before do
-        schema = instance_double(Hyrax::FlexibleSchema, persisted?: true, warnings: double(any?: false, full_messages: []))
+        schema = Hyrax::FlexibleSchema.new
+        allow(schema).to receive(:persisted?).and_return(true)
         allow(Hyrax::FlexibleSchema).to receive(:create).and_return(schema)
       end
 
@@ -35,29 +36,50 @@ RSpec.describe Hyrax::Admin::MetadataProfilesController, type: :controller do
 
     context 'when the profile is valid but has warnings' do
       before do
-        warning_messages = double(any?: true, full_messages: ['Warning: Profile profile sort property foo is not indexed'])
-        schema = instance_double(Hyrax::FlexibleSchema, persisted?: true, warnings: warning_messages)
+        schema = Hyrax::FlexibleSchema.new
+        schema.warnings.add(:profile, 'Warning: sort property foo is not indexed')
+        schema.warnings.add(:profile, 'Warning: bar, baz are unused')
+        allow(schema).to receive(:persisted?).and_return(true)
         allow(Hyrax::FlexibleSchema).to receive(:create).and_return(schema)
       end
 
-      it 'redirects with both a notice and an alert' do
+      it 'redirects with a notice and one alert entry per warning' do
         post :import, params: { file: uploaded_file }
         expect(response).to redirect_to(admin_metadata_profiles_path)
         expect(flash[:notice]).to eq('Flexible Metadata Profile was successfully created.')
-        expect(flash[:alert]).to include('sort property foo is not indexed')
+        expect(flash[:alert]).to eq(['Warning: sort property foo is not indexed', 'Warning: bar, baz are unused'])
       end
     end
 
     context 'when the profile is invalid' do
       before do
-        schema = instance_double(Hyrax::FlexibleSchema, persisted?: false, errors: double(messages: { profile: ['is invalid'] }))
+        schema = Hyrax::FlexibleSchema.new
+        schema.errors.add(:profile, 'is invalid')
+        schema.errors.add(:profile, 'name, label conflict')
         allow(Hyrax::FlexibleSchema).to receive(:create).and_return(schema)
       end
 
-      it 'redirects with an error' do
+      it 'renders the profile list with one error entry per error' do
         post :import, params: { file: uploaded_file }
-        expect(response).to redirect_to(admin_metadata_profiles_path)
-        expect(flash[:error]).to include('is invalid')
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to render_template(:index)
+        expect(flash[:error]).to eq(['is invalid', 'name, label conflict'])
+      end
+    end
+
+    context 'when the profile is invalid and has warnings' do
+      before do
+        schema = Hyrax::FlexibleSchema.new
+        schema.errors.add(:profile, 'is invalid')
+        schema.warnings.add(:profile, 'Warning: sort property foo is not indexed')
+        allow(Hyrax::FlexibleSchema).to receive(:create).and_return(schema)
+      end
+
+      it 'renders the profile list with both the errors and the warnings' do
+        post :import, params: { file: uploaded_file }
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(flash[:error]).to eq(['is invalid'])
+        expect(flash[:alert]).to eq(['Warning: sort property foo is not indexed'])
       end
     end
   end

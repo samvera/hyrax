@@ -145,7 +145,7 @@ attribute :redirects, Valkyrie::Types::Array.of(Dry::Types['hash'])
 Each entry is a plain hash with `path` and `is_display_url` keys, stored on the parent resource without an intermediate nested-resource schema mangling its sub-fields:
 
 - **Postgres** stores the entries as JSONB.
-- **Fedora** through the Valkyrie Fedora adapter stores each entry as a nested graph, with each key as its own triple. Hyrax carries overrides for this until Valkyrie releases the same support (samvera/valkyrie#1005).
+- **Fedora** through the Valkyrie Fedora adapter stores each entry as one JSON literal. Hyrax carries overrides for this until Valkyrie releases the same support (samvera/valkyrie#1005).
 - **Fedora through Wings** stores each entry as one JSON string, since ActiveFedora cannot hold a hash; the `type: hash` attribute type parses it back into a hash on read.
 - **Order:** entries reload in the order they were saved. Fedora itself keeps a field's values in no particular order, so Hyrax marks `type: hash` attributes `ordered` (Valkyrie's `ordered: true`). The Valkyrie Fedora adapter then stores the entries as an ordered list. Wings, the bridge to ActiveFedora, does not support that setting, so Hyrax handles order itself there: it adds a position number to each entry when saving, then sorts the entries by that number and removes it when loading.
 

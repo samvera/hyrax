@@ -52,6 +52,6 @@ class Hyrax::RiiifGenerator < Rails::Generators::Base
   end
 
   def copy_unauthorized_image
-    copy_file 'app/assets/images/us_404.svg'
+    copy_file 'app/assets/images/us_404.png'
   end
 end

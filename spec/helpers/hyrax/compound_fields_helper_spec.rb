@@ -64,6 +64,31 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
     end
   end
 
+  describe '#compound_field_lines' do
+    def classes_for(fields, subproperties)
+      helper.compound_field_lines(fields, subproperties).map { |line| line.map { |field| field[:col_class] } }
+    end
+
+    it 'lets the first field fill a line that falls short of 12 columns' do
+      subproperties = { 'name' => { cols: 4 }, 'role' => { cols: 4 } }
+      expect(classes_for(%w[name role], subproperties)).to eq([%w[col-md col-md-4]])
+    end
+
+    it 'keeps declared widths on a line that is already full' do
+      subproperties = { 'item' => { cols: 8 }, 'type' => { cols: 4 } }
+      expect(classes_for(%w[item type], subproperties)).to eq([%w[col-md-8 col-md-4]])
+    end
+
+    it 'wraps onto a new line once the next field would pass 12 columns' do
+      subproperties = { 'item' => { cols: 6 }, 'type' => { cols: 6 }, 'title' => { cols: 12 } }
+      expect(classes_for(%w[item type title], subproperties)).to eq([%w[col-md-6 col-md-6], %w[col-md-12]])
+    end
+
+    it 'leaves a lone field at its declared width, defaulting to 6' do
+      expect(classes_for(%w[note], {})).to eq([%w[col-md-6]])
+    end
+  end
+
   describe '#compound_controlled_select' do
     let(:value) { nil }
     let(:spec) { { type: 'controlled', authority: nil, values: [%w[Author Author], %w[Editor ed]] } }

@@ -4,7 +4,7 @@ RSpec.describe 'Storing plain Hash values through the Valkyrie Fedora adapter', 
   before do
     skip 'requires the Valkyrie Fedora metadata adapter' unless Hyrax.metadata_adapter.is_a?(Valkyrie::Persistence::Fedora::MetadataAdapter)
     class FedoraHashResource < Hyrax::Resource
-      attribute :aliases, Valkyrie::Types::Array.of(Valkyrie::Types::Hash)
+      attribute :aliases, Valkyrie::Types::Array.of(Dry::Types['hash'])
     end
   end
   after { Object.send(:remove_const, :FedoraHashResource) if defined?(FedoraHashResource) }

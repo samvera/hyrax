@@ -576,7 +576,7 @@ RSpec.describe Hyrax::FileSetsController do
         let(:parent) { work }
         before do
           binary = Valkyrie::StorageAdapter::StreamFile.new(id: "bla", io: StringIO.new("hey"))
-          Hyrax.storage_adapter.upload_version(id: file_metadata.id, file: binary)
+          Hyrax.storage_adapter.upload_version(id: file_metadata.file_identifier, file: binary)
           request.env['HTTP_REFERER'] = 'http://test.host/foo'
         end
 

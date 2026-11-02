@@ -53,28 +53,30 @@ module Hyrax
     def video_content
       # @see https://github.com/samvera-labs/iiif_manifest
       IIIFManifest::V3::DisplayContent.new(
-        download_path('mp4'),
+        download_path('mp4', 'video/mp4'),
         label: 'mp4',
         width: Array(width).first.try(:to_i),
         height: Array(height).first.try(:to_i),
         duration: conformed_duration,
         type: 'Video',
-        format: mime_type,
+        format: 'video/mp4',
         thumbnail: thumbnail
       )
     end
 
     def audio_content
+      url = download_path('mp3', 'audio/mpeg')
       IIIFManifest::V3::DisplayContent.new(
-        download_path('mp3'),
+        url,
         label: 'mp3',
         duration: conformed_duration,
         type: 'Sound',
-        # I think UV has a bug where if it's 'audio/mpeg' then it would load, so adding this
-        # workaround to use 'audio/mp3' (which isn't even an official MIME type).
-        format: Hyrax.config.iiif_av_viewer == :universal_viewer ? 'audio/mp3' : mime_type,
+        # UV only maps 'audio/mp3' (not the official 'audio/mpeg') to its AV player, so it
+        # won't load 'audio/mpeg'; use 'audio/mp3' for UV.
+        format: Hyrax.config.iiif_av_viewer == :universal_viewer ? 'audio/mp3' : 'audio/mpeg',
         thumbnail: [{
-          id: "#{hostname}/assets/audio.png",
+          # Join onto the media URL; hostname may be a bare host with no scheme.
+          id: URI.join(url, ActionController::Base.helpers.image_path('audio.png')).to_s,
           type: 'Image',
           format: 'image/png'
         }]
@@ -91,8 +93,9 @@ module Hyrax
       )
     end
 
-    def download_path(extension)
-      Hyrax::Engine.routes.url_helpers.download_url(object, file: extension, host: hostname)
+    # mime_type selects the derivative on Valkyrie, where `file` alone falls back to the original
+    def download_path(extension, mime_type = nil)
+      Hyrax::Engine.routes.url_helpers.download_url(object, file: extension, mime_type: mime_type, host: hostname)
     end
 
     def thumbnail
