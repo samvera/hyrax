@@ -1,5 +1,5 @@
 <div id="descriptions_display" class="tab-pane active">
-  <%= simple_form_for [hyrax, @form], html: { multipart: true } do |f| %>
+  <%= simple_form_for [hyrax, @form], html: { multipart: true, data: { 'remove-text' => t('helpers.action.remove') } } do |f| %>
     <%= hidden_field_tag('redirect_tab', 'descriptions') %>
     <h1><%= t('.title') %></h1>
       <% f.object.terms.each do |term| %>

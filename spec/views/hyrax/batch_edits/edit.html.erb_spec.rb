@@ -15,7 +15,7 @@ RSpec.describe 'hyrax/batch_edits/edit.html.erb', :clean_repo, type: :view do
   end
 
   it "draws the page" do
-    expect(rendered).to have_selector 'form[data-model="monograph"]'
+    expect(rendered).to have_selector 'form[data-model="monograph"][data-remove-text="Remove"]'
     # Help for the description
     expect(rendered).to have_selector ".monograph_description p.help-block"
 

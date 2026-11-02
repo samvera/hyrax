@@ -32,6 +32,7 @@ RSpec.describe 'hyrax/batch_uploads/_form.html.erb', :active_fedora, type: :view
     expect(page).to have_selector("form[action='/batch_uploads']")
     expect(page).to have_selector("form[action='/batch_uploads'][data-behavior='work-form']")
     expect(page).to have_selector("form[action='/batch_uploads'][data-param-key='batch_upload_item']")
+    expect(page).to have_selector("form[action='/batch_uploads'][data-remove-text='Remove']")
     # No title, because it's captured per file (e.g. Display label)
     expect(page).not_to have_selector("input#generic_work_title")
     expect(view.content_for(:files_tab)).to have_link("New Work", href: "/concern/generic_works/new")
