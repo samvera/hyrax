@@ -345,6 +345,12 @@ form .controlled_vocabulary {
   .listing {
     max-width: none;
 
+    // FieldManager makes each row an .input-group, which squares the input's right
+    // corners; the Remove control sits apart from the input, so keep them rounded
+    .input-group > .form-control {
+      @include border-radius($input-border-radius, 0);
+    }
+
     li:first-of-type {
       width: 100%;
     }
