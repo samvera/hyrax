@@ -52,5 +52,13 @@ RSpec.describe 'hyrax/base/_currently_shared.html.erb', type: :view do
 
       expect(rendered).to include "group/public"
     end
+
+    it "gives every row a cell under each column header" do
+      render partial: "hyrax/base/currently_shared", locals: { f: file_set_form }
+      page = Capybara::Node::Simple.new(rendered)
+
+      expect(page).to have_selector('thead th[scope="col"]', count: 3)
+      page.all('tbody tr').each { |row| expect(row).to have_selector('td', count: 3) }
+    end
   end
 end

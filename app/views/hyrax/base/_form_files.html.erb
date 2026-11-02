@@ -17,15 +17,15 @@
   <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
   <div class="fileupload-buttonbar">
     <div class="row">
-      <div class="col-12">
-          <div class="fileinput-button" id="add-files">
+      <div class="col-12 d-flex flex-wrap">
+          <div class="fileinput-button mb-2" id="add-files">
             <input id="addfiles" type="file" style="display:none;"  name="files[]" multiple />
             <button type="button" class="btn btn-success" onclick="document.getElementById('addfiles').click();">
               <span class="fa fa-plus"></span>
               <span><%=  t(".add_files") %></span>
             </button>
           </div>
-          <div class="fileinput-button">
+          <div class="fileinput-button mb-2">
             <input id="addfolder" type="file" style="display:none;"  name="files[]" multiple directory webkitdirectory />
             <button type="button" class="btn btn-success" onclick="document.getElementById('addfolder').click();">
               <span class="fa fa-plus"></span>
@@ -33,14 +33,14 @@
             </button>
           </div>
           <% if Hyrax.config.browse_everything? %>
-            <%= button_tag(type: 'button', class: 'btn btn-success', id: "browse-btn",
+            <%= button_tag(type: 'button', class: 'btn btn-success mr-2 mb-2', id: "browse-btn",
               'data-toggle' => 'browse-everything', 'data-route' => browse_everything_engine.root_path,
               'data-target' => "#{f.object.persisted? ? "#edit_#{f.object.model.model_name.param_key}_#{f.object.model.id}" : "#new_#{f.object.model.model_name.param_key}"}" ) do %>
               <span class="fa fa-plus"></span>
               <%= t('hyrax.upload.browse_everything.browse_files_button') %>
             <% end %>
           <% end %>
-          <button type="reset" id="file-upload-cancel-btn" class="btn btn-warning cancel">
+          <button type="reset" id="file-upload-cancel-btn" class="btn btn-warning cancel mb-2">
               <span class="fa fa-ban"></span>
               <span><%= t('.cancel_upload') %></span>
           </button>
