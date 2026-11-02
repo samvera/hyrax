@@ -16,7 +16,8 @@ RSpec.describe 'hyrax/base/_currently_shared.html.erb', type: :view do
     let(:file_set) do
       stub_model(FileSet, id: '123',
                           depositor: 'bob',
-                          resource_type: ['Dataset'], in_works: [work])
+                          resource_type: ['Dataset'], in_works: [work],
+                          edit_users: ['carol@example.com'])
     end
 
     let(:file_set_form) do
@@ -32,6 +33,14 @@ RSpec.describe 'hyrax/base/_currently_shared.html.erb', type: :view do
       # the EditPermissionsService (is it?!)
       expect(rendered).to have_content("Depositor")
     end
+
+    it "sends each editable grant's agent" do
+      render partial: 'hyrax/base/currently_shared', locals: { f: file_set_form }
+      page = Capybara::Node::Simple.new(rendered)
+
+      expect(page).to have_field(type: 'hidden', with: 'person', name: /\[permissions_attributes\]\[\d+\]\[type\]/)
+      expect(page).to have_field(type: 'hidden', with: 'carol@example.com', name: /\[permissions_attributes\]\[\d+\]\[name\]/)
+    end
   end
 
   context "with ResourceForm", valkyrie_adapter: :test_adapter do
@@ -41,16 +50,53 @@ RSpec.describe 'hyrax/base/_currently_shared.html.erb', type: :view do
       f.prepopulate!
       f
     end
-    let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :public) }
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :public, read_groups: ['archivists']) }
 
     let(:file_set_form) do
       view.simple_form_for(form, url: '/update') { |form| return form }
     end
 
-    it "includes permissions" do
+    it "lists shared groups and leaves the public group to the visibility setting" do
       render partial: "hyrax/base/currently_shared", locals: { f: file_set_form }
 
-      expect(rendered).to include "group/public"
+      expect(rendered).to include "archivists"
+      expect(rendered).not_to include "public"
+    end
+
+    it "sends each editable grant's agent, so it can be removed" do
+      render partial: "hyrax/base/currently_shared", locals: { f: file_set_form }
+      page = Capybara::Node::Simple.new(rendered)
+
+      expect(page).to have_field(type: 'hidden', with: 'group', name: /\[permissions_attributes\]\[\d+\]\[type\]/)
+      expect(page).to have_field(type: 'hidden', with: 'archivists', name: /\[permissions_attributes\]\[\d+\]\[name\]/)
+    end
+
+    context "with a grant the access select can't show" do
+      before do
+        acl = Hyrax::AccessControlList.new(resource: work)
+        acl.grant(:discover).to(Hyrax::Group.new('browsers'))
+        acl.save
+      end
+
+      it "lists it without a control that would change it" do
+        render partial: "hyrax/base/currently_shared", locals: { f: file_set_form }
+        page = Capybara::Node::Simple.new(rendered)
+        row = page.find('tbody tr', text: 'browsers')
+
+        expect(row).not_to have_selector('select, input, button')
+      end
+    end
+
+    it "hands new grants an index no existing grant uses, hidden ones included" do
+      render partial: "hyrax/base/currently_shared", locals: { f: file_set_form }
+      page = Capybara::Node::Simple.new(rendered)
+
+      indexes = page.all('[name*="[permissions_attributes]"]', visible: false)
+                    .map { |field| field[:name][/\[permissions_attributes\]\[(\d+)\]/, 1].to_i }
+
+      # public (hidden) and archivists
+      expect(page.find('#file_permissions')['data-next-index']).to eq '2'
+      expect(indexes).to all(be < 2)
     end
 
     it "gives every row a cell under each column header" do

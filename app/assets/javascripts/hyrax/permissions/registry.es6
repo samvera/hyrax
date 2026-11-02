@@ -42,8 +42,14 @@ export class Registry {
     this.items.push(new RegistryEntry(grant, this, $('#file_permissions'), this.template_id))
   }
 
+  // Hidden grants (public, the depositor) still hold indexes, so the table's rows can't be counted
   nextIndex() {
-      return $('#file_permissions').closest('table').find('tr').length - 1;
+    if (this.freeIndex === undefined) {
+      const row = $('#file_permissions')
+      const saved = row.data('next-index')
+      this.freeIndex = saved === undefined ? row.closest('table').find('tr').length - 1 : saved
+    }
+    return this.freeIndex++
   }
 
   showPermissionNote() {
