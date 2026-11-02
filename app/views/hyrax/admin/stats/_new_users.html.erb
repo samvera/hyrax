@@ -1,20 +1,24 @@
-<h3><%= I18n.t('hyrax.admin.stats.new_users.newest_users', users: @presenter.date_filter_string, :default => "Newest Users (%{users})"); %></h3>
-<h4>
-<%- if !@presenter.start_date.blank? %>
-  <%= I18n.t("hyrax.admin.stats.new_users.total", :default => "Total: ") %><%= @presenter.recent_users.count %>
-<%- else %>
-    <%= @presenter.recent_users.count %> most recent users:
-<%- end %>
-</h4>
-<ul>
+<div class="card-body flex-grow-0 pb-2">
+  <h3 class="h5 mb-2"><%= I18n.t('hyrax.admin.stats.new_users.newest_users', users: @presenter.date_filter_string, :default => "Newest Users (%{users})"); %></h3>
+  <h4 class="h6 text-muted mb-0">
+  <%- if !@presenter.start_date.blank? %>
+    <%= I18n.t("hyrax.admin.stats.new_users.total", :default => "Total: ") %><%= @presenter.recent_users.count %>
+  <%- else %>
+      <%= @presenter.recent_users.count %> most recent users:
+  <%- end %>
+  </h4>
+</div>
+<ul class="list-group list-group-flush">
   <% @presenter.recent_users.each do |usr| %>
-    <li>
-      <%= link_to usr.name, hyrax.user_path(usr), title: "View user's profile" %>
-      <%- if usr.department %>
-        <%= I18n.t("hyrax.admin.stats.new_users.of", :default => "of ") %><%= usr.department %>
-      <%- end %>
-      <%= I18n.t("hyrax.admin.stats.new_users.registered", :default => "registered") %>
-      <span class="date">
+    <li class="list-group-item d-flex flex-wrap justify-content-between">
+      <span>
+        <%= link_to usr.name, hyrax.user_path(usr), title: "View user's profile" %>
+        <%- if usr.department %>
+          <%= I18n.t("hyrax.admin.stats.new_users.of", :default => "of ") %><%= usr.department %>
+        <%- end %>
+        <%= I18n.t("hyrax.admin.stats.new_users.registered", :default => "registered") %>
+      </span>
+      <span class="text-muted">
         <%= usr.created_at.to_time.strftime("%m/%d/%Y") %>
       </span>
     </li>

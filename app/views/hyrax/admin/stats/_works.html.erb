@@ -1,8 +1,10 @@
-<h3><%= t('hyrax.admin.stats.works.headers.main') %> (<%= @presenter.date_filter_string %>)</h3>
-<h4><%= t('hyrax.admin.stats.works.headers.total') %> <%= @presenter.works_count[:total] %> </h4>
-<h4><%= t('hyrax.admin.stats.works.headers.visibility') %></h4>
-<ul>
-  <li><%= t('hyrax.visibility.open.text') %> <span class="count">(<%= @presenter.works_count[:public] %>)</span></li>
-  <li><%= t('hyrax.visibility.authenticated.text', institution: institution_name) %> <span class="count">(<%= @presenter.works_count[:registered] %>)</span></li>
-  <li><%= t('hyrax.visibility.restricted.text') %> <span class="count">(<%= @presenter.works_count[:private] %>)</span></li>
+<div class="card-body flex-grow-0 pb-2">
+  <h3 class="h5 mb-2"><%= t('hyrax.admin.stats.works.headers.main') %> (<%= @presenter.date_filter_string %>)</h3>
+  <h4 class="h6 text-muted mb-1"><%= t('hyrax.admin.stats.works.headers.total') %> <%= @presenter.works_count[:total] %></h4>
+  <h4 class="h6 text-muted mb-0"><%= t('hyrax.admin.stats.works.headers.visibility') %></h4>
+</div>
+<ul class="list-group list-group-flush">
+  <li class="list-group-item d-flex justify-content-between"><span><%= t('hyrax.visibility.open.text') %></span> <span class="text-muted">(<%= @presenter.works_count[:public] %>)</span></li>
+  <li class="list-group-item d-flex justify-content-between"><span><%= t('hyrax.visibility.authenticated.text', institution: institution_name) %></span> <span class="text-muted">(<%= @presenter.works_count[:registered] %>)</span></li>
+  <li class="list-group-item d-flex justify-content-between"><span><%= t('hyrax.visibility.restricted.text') %></span> <span class="text-muted">(<%= @presenter.works_count[:private] %>)</span></li>
 </ul>
