@@ -22,4 +22,15 @@ RSpec.describe 'hyrax/dashboard/collections/_form_share.html.erb', type: :view d
   it "has the required selectors" do
     expect(rendered).to have_selector('#participants #user-participants-form input[type=text]')
   end
+
+  it "labels each add sharing control" do
+    expect(rendered).to have_field('Add group:', type: 'text')
+    expect(rendered).to have_field('Add user:', type: 'text', class: 'form-control')
+    expect(rendered).to have_select('as', count: 2)
+  end
+
+  it "gives the group and user rows distinct ids" do
+    ids = Capybara.string(rendered).all('#participants [id]').map { |el| el[:id] }
+    expect(ids).to eq ids.uniq
+  end
 end

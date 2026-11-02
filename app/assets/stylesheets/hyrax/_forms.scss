@@ -405,7 +405,8 @@ form .controlled_vocabulary {
 // draws its own bordered box inside it. Keep the form-control frame, flatten the
 // inner box, and swap select2's sprite arrow for a caret like a native select.
 .controlled_vocabulary .select2-container.form-control,
-.hyrax-compound-row .select2-container.form-control {
+.hyrax-compound-row .select2-container.form-control,
+.edit-sharing-tab .select2-container.form-control {
   height: auto;
   min-height: $input-height;
   padding: 0;

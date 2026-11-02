@@ -21,4 +21,12 @@ RSpec.describe 'hyrax/dashboard/collections/_form_branding.html.erb', type: :vie
     expect(rendered).to include('Logo alt text')
     expect(rendered).to include('http://abc.com')
   end
+
+  it "names each file input after its visible button text and section label" do
+    page = Capybara.string(rendered)
+    { '#fileupload' => 'Banner', '#fileuploadlogo' => 'Logo' }.each do |wrapper, label|
+      names = page.find("#{wrapper} input[type=file]", visible: :all)['aria-labelledby'].split.map { |id| page.find("##{id}").text }
+      expect(names).to eq ['Choose File', label]
+    end
+  end
 end
