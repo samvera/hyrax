@@ -83,7 +83,21 @@ RSpec.describe 'hyrax/base/_currently_shared.html.erb', type: :view do
         page = Capybara::Node::Simple.new(rendered)
         row = page.find('tbody tr', text: 'browsers')
 
+        expect(row).to have_content('Discover')
         expect(row).not_to have_selector('select, input, button')
+      end
+    end
+
+    context "with a grant the user can't change" do
+      before { allow_any_instance_of(Hyrax::EditPermissionsService).to receive(:cannot_edit_permissions?).and_return(true) }
+
+      it "sends it unchanged, so saving the agent's other rows keeps it" do
+        render partial: "hyrax/base/currently_shared", locals: { f: file_set_form }
+        row = Capybara::Node::Simple.new(rendered).find('tbody tr', text: 'archivists')
+
+        expect(row).not_to have_selector('select, button')
+        expect(row).to have_field(type: 'hidden', with: 'read', name: /\[access\]/)
+        expect(row).to have_field(type: 'hidden', with: 'archivists', name: /\[name\]/)
       end
     end
 
