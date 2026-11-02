@@ -13,7 +13,7 @@
     </tr>
   </thead>
   <tbody>
-  <tr id="file_permissions">
+  <tr id="file_permissions" data-next-index="<%= f.object.permissions.size %>">
     <td>
       <%= label_tag :owner_access, class: "col-form-label" do %>
         Depositor (<span id="file_owner" data-depositor="<%= permission_service.depositor %>"><%= link_to_profile permission_service.depositor %></span>)
