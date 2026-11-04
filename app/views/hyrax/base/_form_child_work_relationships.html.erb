@@ -14,13 +14,14 @@ HTML Properties:
       <%= f.label :find_child_work %>
       <%= f.input_field :find_child_work,
                         prompt: :translate,
+                        class: 'form-control flex-grow-1 ml-sm-2',
                         autocomplete: 'off',
                         data: {
                           autocomplete: 'work',
                           'autocomplete-url' => Rails.application.routes.url_helpers.qa_path + '/search/find_works',
                           'exclude-work': f.object.model.id.to_s # exclude this item from the result set.
                         } %>
-      <a href="#" onclick="return false;" class="btn btn-secondary ml-2" data-behavior="add-relationship"><%= t('.add') %></a>
+      <a href="#" onclick="return false;" class="btn btn-secondary ml-sm-2 mt-2 mt-sm-0" data-behavior="add-relationship"><%= t('.add') %></a>
   </div>
   <div class="message has-warning"></div>
   <div class="my-4">
@@ -30,8 +31,8 @@ HTML Properties:
     <caption><%= t('.caption') %></caption>
     <thead>
     <tr>
-      <th><%= t('.header.title') %></th>
-      <th><%= t('.header.actions') %></th>
+      <th scope="col"><%= t('.header.title') %></th>
+      <th scope="col"><%= t('.header.actions') %></th>
     </tr>
     </thead>
     <tbody>
@@ -41,7 +42,7 @@ HTML Properties:
 
 <script type="text/x-tmpl" id="tmpl-child-work">
 <tr>
-  <td>{%= o.title %}</td>
-  <td><button class="btn btn-danger" data-behavior="remove-relationship" data-confirm-text="<%= t('.confirm.text') %>" data-confirm-cancel="<%= t('.confirm.cancel') %>" data-confirm-remove="<%= t('.confirm.remove') %>"><%= t('.actions.remove') %></button></td>
+  <td class="align-middle">{%= o.title %}</td>
+  <td class="align-middle"><button class="btn btn-danger" data-behavior="remove-relationship" data-confirm-text="<%= t('.confirm.text') %>" data-confirm-cancel="<%= t('.confirm.cancel') %>" data-confirm-remove="<%= t('.confirm.remove') %>"><%= t('.actions.remove') %></button></td>
 </tr>
 </script>

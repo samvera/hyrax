@@ -35,12 +35,71 @@ RSpec.describe Hyrax::Transactions::Steps::SaveAccessControl, valkyrie_adapter: 
     context 'when permissions params are passed' do
       let(:params) { [{ "access" => "read", "type" => "group", "name" => "admin" }, { "access" => "edit", "type" => "person", "name" => user.user_key }] }
 
-      it 'transforms and persists the params' do
+      it 'transforms and persists the params, replacing the level a user had' do
         expect { step.call(work, permissions_params: params) }
           .to change { Hyrax::AccessControlList.new(resource: work).permissions }
-          .to contain_exactly(have_attributes(mode: :read, agent: user.user_key),
-                                    have_attributes(mode: :edit, agent: user.user_key),
-                                    have_attributes(mode: :read, agent: 'group/admin'))
+          .to contain_exactly(have_attributes(mode: :edit, agent: user.user_key),
+                              have_attributes(mode: :read, agent: 'group/admin'))
+      end
+
+      context 'when a param marks a grant for removal' do
+        let(:other_user) { FactoryBot.create(:user) }
+        let(:params) { [{ "access" => "read", "type" => "person", "name" => user.user_key, "_destroy" => "true" }] }
+
+        before do
+          work.permission_manager.acl.grant(:edit).to(other_user)
+          work.permission_manager.acl.save
+        end
+
+        it 'revokes that grant and keeps the rest' do
+          step.call(work, permissions_params: params)
+          expect(Hyrax::AccessControlList.new(resource: work).permissions)
+            .to contain_exactly(have_attributes(mode: :edit, agent: other_user.user_key))
+        end
+      end
+
+      context 'when an earlier step changed a grant the form sends back unchanged' do
+        let(:group) { Hyrax::Group.new('archivists') }
+        let(:params) { [{ "access" => "read", "type" => "group", "name" => "archivists" }] }
+
+        before do
+          work.permission_manager.acl.grant(:read).to(group)
+          work.permission_manager.acl.save
+          work.permission_manager.acl.revoke(:read).from(group)
+        end
+
+        it 'keeps the earlier step\'s change' do
+          step.call(work, permissions_params: params)
+          expect(Hyrax::AccessControlList.new(resource: work).permissions)
+            .not_to include(have_attributes(agent: 'group/archivists'))
+        end
+      end
+
+      context 'when the form changes a saved grant\'s level' do
+        let(:params) { [{ "access" => "edit", "type" => "person", "name" => user.user_key }] }
+
+        before { work.permission_manager.acl.save }
+
+        it 'replaces the saved level' do
+          step.call(work, permissions_params: params)
+          expect(Hyrax::AccessControlList.new(resource: work).permissions)
+            .to contain_exactly(have_attributes(mode: :edit, agent: user.user_key))
+        end
+      end
+
+      context 'when an agent has two saved levels and the form keeps one' do
+        let(:params) { [{ "access" => "read", "type" => "person", "name" => user.user_key }, { "access" => "read", "type" => "person", "name" => user.user_key }] }
+
+        before do
+          work.permission_manager.acl.grant(:edit).to(user)
+          work.permission_manager.acl.save
+        end
+
+        it 'leaves only the level the form sent' do
+          step.call(work, permissions_params: params)
+          expect(Hyrax::AccessControlList.new(resource: work).permissions)
+            .to contain_exactly(have_attributes(mode: :read, agent: user.user_key))
+        end
       end
 
       context 'with invalid params' do
