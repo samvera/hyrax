@@ -488,8 +488,10 @@ de:
         works_listing: Auflistung der Arbeiten
         works_report: Werksbericht
       stats:
+        date_form:
+          load_stats: Statistik laden
         deposited_form:
-          end_label: Ende [Voreinstellung]
+          end_label: "Ende [Standard: jetzt]"
           heading: "Angezeigte Dateien:"
           start_label: Beginn
         repository_objects:
@@ -497,6 +499,15 @@ de:
             published: Veröffentlicht
             unknown: Unbekannt
             unpublished: Unveröffentlicht
+        stats_by_date:
+          explanation: Die Statistiken in diesem Abschnitt werden nach den im Formular unten eingegebenen Daten gefiltert. Solange das Formular nicht ausgefüllt ist, sind die Daten ungefiltert. Das Startdatum ist erforderlich, das Enddatum ist standardmäßig jetzt.
+          statistics_by_date: Statistiken nach Datum
+        top_data:
+          explanation_with_limit: Dieser Abschnitt zeigt die %{limit} häufigsten Einträge jeder Kategorie
+          most_actie_users: Aktivste Benutzer (Top %{count})
+          top_file_format: Häufigste Dateiformate (Top %{count})
+          top_file_formats_and_users: Häufigste Dateiformate und aktivste Benutzer
+          view_top: Top %{number} anzeigen
         user_deposits:
           end_label: Ende [Voreinstellung]
           headers:
