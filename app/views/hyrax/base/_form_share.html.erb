@@ -5,44 +5,44 @@
 
 <div class="alert alert-info" id="save_perm_note"><%= t('.permissions_save_note_html') %></div>
 
-<div class="alert alert-warning" role="alert" id="permissions_error">
+<div class="alert alert-warning" role="alert" id="permissions_error" hidden>
   <span id="permissions_error_text"></span>
 </div>
 
 <p class="sr-only"><%= t('.use_add_button', account_label:  t('hyrax.account_label')) %>
 </p>
 
-<fieldset class="form-group row permission-add-group">
-  <legend class="col-sm-3 permissions-add-group-label">
+<fieldset class="form-group permission-add-group">
+  <legend class="h6 font-weight-bold">
     <%= t('hyrax.admin.admin_sets.form_participants.add_group') %>
   </legend>
-  <div class="col-sm-9 form-inline">
+  <div class="form-inline">
     <label for="new_group_name_skel" class="sr-only"><%= t(".group") %></label>
-    <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + available_user_groups(ability: current_ability)), class: 'form-control' %>
+    <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + available_user_groups(ability: current_ability)), class: 'form-control flex-grow-1 mr-2 mb-2' %>
     <label for="new_group_permission_skel" class="sr-only"><%= t(".access_type_to_grant") %></label>
-    <%= select_tag 'new_group_permission_skel', options_for_select(configured_permission_options), class: 'form-control' %>
+    <%= select_tag 'new_group_permission_skel', options_for_select(configured_permission_options), class: 'form-control mr-2 mb-2' %>
 
-    <button class="btn btn-secondary ml-2" id="add_new_group_skel">
+    <button class="btn btn-secondary mb-2" id="add_new_group_skel">
       <span><%= t(".add_this_group_html") %></span>
     </button>
-    <br /><span id="directory_group_result"></span>
   </div>
+  <span id="directory_group_result"></span>
 </fieldset>
 
-<fieldset class="form-group row permission-add-user">
-  <legend class="col-sm-3 permissions-add-user-label">
+<fieldset class="form-group permission-add-user">
+  <legend class="h6 font-weight-bold">
     <%= t('hyrax.admin.admin_sets.form_participants.add_user') %>
   </legend>
-  <div class="col-sm-9 form-inline">
+  <div class="form-inline">
     <label for="new_user_name_skel" class="sr-only"><%= t('.account_label_without_suffix', account_label: t('hyrax.account_label'), suffix: t('hyrax.directory.suffix')) %> </label>
-    <%= text_field_tag 'new_user_name_skel', nil %>
+    <%= text_field_tag 'new_user_name_skel', nil, class: 'form-control flex-grow-1 mr-2 mb-2' %>
     <label for="new_user_permission_skel" class="sr-only"><%= t('.access_type_to_grant') %></label>
-    <%= select_tag 'new_user_permission_skel', options_for_select(configured_permission_options), class: 'form-control' %>
-    <button class="btn btn-secondary ml-2" id="add_new_user_skel">
+    <%= select_tag 'new_user_permission_skel', options_for_select(configured_permission_options), class: 'form-control mr-2 mb-2' %>
+    <button class="btn btn-secondary mb-2" id="add_new_user_skel">
       <span>Add<span class="sr-only"> this <%= t('hyrax.account_label') %></span></span>
     </button>
-    <br /> <span id="directory_user_result"></span>
   </div>
+  <span id="directory_user_result"></span>
 </fieldset>
 
 <%= render 'currently_shared', f: f %>
@@ -51,7 +51,7 @@
   <tr>
     <td class="user-group"><label class="col-form-label">{%= o.name %}</label></td>
     <td>{%= o.accessLabel %}</td>
-    <td class="action">
+    <td class="action text-center">
       <button class="btn btn-danger remove" aria-label="<%= t('helpers.action.remove') %>">
         <%= t('helpers.action.remove') %>
       </button>

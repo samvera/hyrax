@@ -52,5 +52,23 @@ RSpec.describe 'hyrax/base/_currently_shared.html.erb', type: :view do
 
       expect(rendered).to include "group/public"
     end
+
+    it "hands new grants an index no existing grant uses, hidden ones included" do
+      render partial: "hyrax/base/currently_shared", locals: { f: file_set_form }
+      page = Capybara::Node::Simple.new(rendered)
+      indexes = page.all('[name*="[permissions_attributes]"]', visible: false)
+                    .map { |field| field[:name][/\[permissions_attributes\]\[(\d+)\]/, 1].to_i }
+
+      expect(page.find('#file_permissions')['data-next-index']).to eq form.permissions.size.to_s
+      expect(indexes).to all(be < form.permissions.size)
+    end
+
+    it "gives every row a cell under each column header" do
+      render partial: "hyrax/base/currently_shared", locals: { f: file_set_form }
+      page = Capybara::Node::Simple.new(rendered)
+
+      expect(page).to have_selector('thead th[scope="col"]', count: 3)
+      page.all('tbody tr').each { |row| expect(row).to have_selector('td', count: 3) }
+    end
   end
 end

@@ -32,6 +32,9 @@ RSpec.describe 'hyrax/base/_form_share.html.erb', type: :view do
     expect(page).to have_selector('div#save_perm_note', visible: false)
     expect(rendered_save).to include I18n.t("hyrax.base.form_share.permissions_save_note_html")
   end
+  it "hides the permissions error until there is one" do
+    expect(page).to have_selector('#permissions_error[hidden]', visible: false)
+  end
   it "renders the add this group" do
     expect(rendered_save).to include I18n.t("hyrax.base.form_share.add_this_group_html")
   end
