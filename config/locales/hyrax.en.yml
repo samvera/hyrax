@@ -542,8 +542,6 @@ en:
           end_label: Ending [defaults to now]
           heading: Display files deposited by users
           start_label: Starting
-        workflows:
-          show_number_per_page: Show %{number}) per page
         works:
           headers:
             main: Work Statistics
@@ -584,6 +582,7 @@ en:
           works_listing: Works listing
           works_published: "<strong>%{total_count} works</strong> published"
           works_under_review: "<strong>%{total_count} works</strong> under review"
+        show_number_per_page_html: Show %{number} per page
     api:
       accepted:
         default: Your request has been accepted for processing, but processing is not complete. See job for more info.

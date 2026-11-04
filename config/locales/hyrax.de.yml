@@ -545,6 +545,7 @@ de:
           works_listing: Werkverzeichnis
           works_published: "<strong>%{total_count} Werke</strong> veröffentlicht"
           works_under_review: "<strong>%{total_count} Werke</strong> werden überprüft"
+        show_number_per_page_html: "%{number} pro Seite anzeigen"
     api:
       accepted:
         default: Ihre Anfrage wurde zur Bearbeitung angenommen, aber die Verarbeitung ist nicht abgeschlossen. Siehe Job für mehr Info.

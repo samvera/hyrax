@@ -545,6 +545,7 @@ es:
           works_listing: Listado de obras
           works_published: "<strong>%{total_count} obras</strong> publicadas"
           works_under_review: "<strong>%{total_count} funciona</strong> en revisión"
+        show_number_per_page_html: Mostrar %{number} por página
     api:
       accepted:
         default: Su solicitud se ha aceptado para su procesamiento, pero el procesamiento no está completo. Ver tarea para más información.
