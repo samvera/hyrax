@@ -23,7 +23,10 @@
     <td></td>
   </tr>
   <%= f.fields_for :permissions do |permission_fields| %>
-    <% permission_service.with_applicable_permission(permission_hash: permission_fields.object.to_hash) do |permission| %>
+    <% permission_hash = permission_fields.object.to_hash %>
+    <% permission_service.with_applicable_permission(permission_hash: permission_hash) do |permission| %>
+    <% level = Hyrax.config.permission_levels.value?(permission.access) %>
+    <% editable = level && permission.can_edit? %>
     <tr>
       <td>
         <%= permission_fields.label :agent_name, class: "col-form-label" do %>
@@ -32,14 +35,20 @@
         <% end %>
       </td>
       <td>
-        <% if permission.can_edit? %>
+        <% if editable %>
           <%= permission_fields.select :access, Hyrax.config.permission_levels, {}, class: 'form-control w-auto select_perm', 'aria-label': t('.table_title_access') %>
         <% else %>
-          <%= Hyrax.config.permission_levels.key(permission.access) %>
+          <%= Hyrax.config.permission_levels.key(permission.access) || permission.access.humanize %>
+          <%# Locked grants are sent unchanged, so saving the agent's other rows keeps them %>
+          <%= permission_fields.hidden_field :access, value: permission_hash[:access] if level %>
+        <% end %>
+        <% if level %>
+          <%= permission_fields.hidden_field :type, value: permission_hash[:type] %>
+          <%= permission_fields.hidden_field :name, value: permission_hash[:name] %>
         <% end %>
       </td>
       <td class="text-center">
-        <% if permission.can_edit? %>
+        <% if editable %>
           <button class="btn close float-none remove_perm" data-index="<%= permission_fields.index %>" aria-label="<%= t('helpers.action.remove') %>">&times;</button>
         <% end %>
       </td>
