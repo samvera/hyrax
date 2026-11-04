@@ -23,14 +23,19 @@ RSpec.describe Hyrax::FileSetPresenter do
     # were removed.
     let(:attributes) do
       { "id" => '999', "has_model_ssim" => ["FileSet"],
-        "schema_version_ssi" => '1', "practice_note_tesim" => ['a cat'] }
+        "schema_version_ssi" => '1', "practice_note_tesim" => ['a cat'], "shelf_mark_tesim" => ['MS.0951'],
+        "shelf_number_ssi" => 'A12' }
     end
     let(:profile) do
       { 'properties' => {
         'practice_note' => { 'indexing' => ['practice_note_tesim'], 'multiple' => false },
         # A native SolrDocument attribute: the reader must NOT be redefined here,
         # or it would shadow the delegation MissingMethodBehavior provides.
-        'contributor' => { 'indexing' => ['contributor_tesim'], 'multiple' => true }
+        'contributor' => { 'indexing' => ['contributor_tesim'], 'multiple' => true },
+        'creator_name' => { 'name' => 'name', 'available_on' => { 'properties' => ['creators'] }, 'indexing' => ['creators_name_tesim'], 'multiple' => true },
+        'contributor_name' => { 'name' => 'name', 'available_on' => { 'properties' => ['contributors'] }, 'indexing' => ['contributors_name_tesim'], 'multiple' => true },
+        'shelf_mark_optional' => { 'name' => 'shelf_mark', 'indexing' => ['shelf_mark_tesim'], 'multiple' => true },
+        'shelf_number' => { 'indexing' => ['shelf_number_ssi'], 'multi_value' => true }
       } }
     end
     # The readers don't use the ability; stub it so this stays a DB-free unit test.
@@ -44,6 +49,19 @@ RSpec.describe Hyrax::FileSetPresenter do
 
     it 'reads the indexed value off the Solr document' do
       expect(presenter.practice_note).to eq(['a cat'])
+    end
+
+    it "names a reader after the property's name, not its profile key" do
+      expect(presenter.shelf_mark).to eq ['MS.0951']
+    end
+
+    it 'reads a property the profile declares multi_value as a list' do
+      expect(presenter.shelf_number).to eq ['A12']
+    end
+
+    it 'names a compound subproperty reader after its key, since subproperties share generic names' do
+      expect(presenter).to respond_to(:creator_name).and respond_to(:contributor_name)
+      expect(presenter).not_to respond_to(:name)
     end
 
     it 'does not shadow properties the SolrDocument already delegates' do
