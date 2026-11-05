@@ -488,6 +488,8 @@ zh:
         works_listing: 作品清单
         works_report: 作品报告
       stats:
+        date_form:
+          load_stats: 加载统计
         deposited_form:
           end_label: 结束 [默认到此刻]
           heading: "展示存储的文件:"
@@ -497,6 +499,15 @@ zh:
             published: 出版品
             unknown: 状况不明
             unpublished: 非出版品
+        stats_by_date:
+          explanation: 本部分的统计数据按下方表单中输入的日期进行筛选。未填写日期表单时，数据不经筛选。开始日期为必填项，结束日期默认为当前时间。
+          statistics_by_date: 按日期统计
+        top_data:
+          explanation_with_limit: 本部分显示每个类别的前 %{limit} 项
+          most_actie_users: 最活跃用户（前 %{count} 名）
+          top_file_format: 主要文件格式（前 %{count} 种）
+          top_file_formats_and_users: 主要文件格式和用户
+          view_top: 查看前 %{number} 项
         user_deposits:
           end_label: 结束 [默认到此刻]
           headers:

@@ -488,15 +488,26 @@ pt-BR:
         works_listing: Lista de obras
         works_report: Relatório de Obras
       stats:
+        date_form:
+          load_stats: Carregar estatísticas
         deposited_form:
-          end_label: "Encerrar [valor padrão: agora]"
+          end_label: "Fim [padrão: agora]"
           heading: "Mostrar arquivos depositados:"
-          start_label: Iniciar
+          start_label: Início
         repository_objects:
           series:
             published: Publicados
             unknown: Desconhecidos
             unpublished: Inéditos
+        stats_by_date:
+          explanation: As estatísticas desta seção são filtradas pelas datas informadas no formulário abaixo. Os dados não são filtrados a menos que o formulário seja preenchido. A data de início é obrigatória e a data final padrão é agora.
+          statistics_by_date: Estatísticas por data
+        top_data:
+          explanation_with_limit: Esta seção mostra os %{limit} principais itens de cada categoria
+          most_actie_users: Usuários mais ativos (top %{count})
+          top_file_format: Principais formatos de arquivo (top %{count})
+          top_file_formats_and_users: Principais formatos de arquivo e usuários
+          view_top: Ver os %{number} principais
         user_deposits:
           end_label: "Encerrando [valor padrão: agora]"
           headers:

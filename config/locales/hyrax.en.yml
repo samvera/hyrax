@@ -513,7 +513,7 @@ en:
         date_form:
           load_stats: Load Stats
         deposited_form:
-          end_label: end [defaults to now]
+          end_label: End [defaults to now]
           heading: 'Display Files Deposited:'
           start_label: Start
         deposits:
