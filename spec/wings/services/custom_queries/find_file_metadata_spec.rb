@@ -214,5 +214,13 @@ RSpec.describe Wings::CustomQueries::FindFileMetadata, :active_fedora, :clean_re
         expect(result).to be_empty
       end
     end
+
+    context 'when the file set has not been saved' do
+      let(:unsaved_file_set) { Hyrax::FileSet.new }
+      it 'result is empty' do
+        result = query_handler.find_many_file_metadata_by_use(resource: unsaved_file_set, use: extracted_text_use)
+        expect(result).to be_empty
+      end
+    end
   end
 end
