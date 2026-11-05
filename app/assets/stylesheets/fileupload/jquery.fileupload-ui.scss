@@ -20,6 +20,24 @@
   margin-right: 0.5em;
   overflow: hidden;
   position: relative;
+
+  // Upstream blueimp rule: lays the native input invisibly over the button that wraps it
+  input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    margin: 0;
+    font-size: 200px;
+    direction: ltr;
+    cursor: pointer;
+    opacity: 0;
+  }
+
+  // The focused input is invisible, so ring the button around it
+  &:has(> input:focus-visible) {
+    box-shadow: $btn-focus-box-shadow;
+  }
 }
 
 // Global progress bar

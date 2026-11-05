@@ -1094,6 +1094,7 @@ en:
           add_group: Add group
           add_sharing: Add Sharing
           add_user: Add user
+          as: as
           current_shared: Currently Shared With
           depositor: Depositor
           manager: Manager

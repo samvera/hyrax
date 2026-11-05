@@ -311,7 +311,8 @@ form .controlled_vocabulary {
 .controlled_vocabulary .select2-container.form-control,
 .hyrax-compound-row .select2-container.form-control,
 .permission-add-user .select2-container.form-control,
-#relationships .select2-container.form-control {
+#relationships .select2-container.form-control,
+.edit-sharing-tab .select2-container.form-control {
   height: auto;
   min-height: $input-height;
   padding: 0;
