@@ -73,6 +73,8 @@ RSpec.describe 'hyrax/base/_currently_shared.html.erb', type: :view do
 
     context "with a grant the access select can't show" do
       before do
+        # Saving the grant reindexes the work, and Solr rejects the stubbed depositor.
+        allow(Hyrax.index_adapter).to receive(:save)
         acl = Hyrax::AccessControlList.new(resource: work)
         acl.grant(:discover).to(Hyrax::Group.new('browsers'))
         acl.save
