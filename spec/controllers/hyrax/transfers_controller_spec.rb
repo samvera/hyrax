@@ -64,7 +64,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
             }
           }
         end.to change(ProxyDepositRequest, :count).by(1)
-        expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
+        expect(response).to redirect_to routes.url_helpers.transfers_path
         expect(flash[:notice]).to eq('Transfer request created')
         proxy_request = another_user.proxy_deposit_requests.first
         expect(proxy_request.work_id).to eq(work.id)
@@ -130,7 +130,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
     end
 
     def common_response_tests
-      expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
+      expect(response).to redirect_to routes.url_helpers.transfers_path
       expect(flash[:notice]).to eq("Transfer complete")
       expect(assigns[:proxy_deposit_request].status).to eq('accepted')
     end
@@ -233,7 +233,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
     end
 
     def common_rejection_tests
-      expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
+      expect(response).to redirect_to routes.url_helpers.transfers_path
       expect(flash[:notice]).to eq("Transfer rejected")
       expect(assigns[:proxy_deposit_request].status).to eq('rejected')
     end
@@ -281,7 +281,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
     end
 
     def common_cancellation_tests
-      expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
+      expect(response).to redirect_to routes.url_helpers.transfers_path
       expect(flash[:notice]).to eq("Transfer canceled")
     end
 

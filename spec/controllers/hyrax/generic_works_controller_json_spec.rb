@@ -47,7 +47,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
         expect(assigns[:curation_concern]).to be_instance_of GenericWork
         expect(controller).to render_template('hyrax/base/show')
         expect(response.code).to eq "201"
-        expect(response.location).to eq main_app.hyrax_generic_work_path(model, locale: 'en')
+        expect(response.location).to eq main_app.hyrax_generic_work_path(model)
       end
     end
 
@@ -82,7 +82,7 @@ RSpec.describe Hyrax::GenericWorksController, :active_fedora do
         expect(controller).to render_template('hyrax/base/show')
         expect(response.code).to eq "200"
         created_resource = assigns[:curation_concern]
-        expect(response.location).to eq main_app.hyrax_generic_work_path(created_resource, locale: 'en')
+        expect(response.location).to eq main_app.hyrax_generic_work_path(created_resource)
       end
     end
 

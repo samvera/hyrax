@@ -69,7 +69,6 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
 
             expect(response)
               .to redirect_to(hyrax.edit_admin_admin_set_path(source_id,
-                                                              locale: 'en',
                                                               anchor: 'participants'))
           end
 
@@ -107,7 +106,6 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
 
             expect(response)
               .to redirect_to(hyrax.edit_admin_admin_set_path(source_id,
-                                                                   locale: 'en',
                                                                    anchor: 'participants'))
           end
 
@@ -150,7 +148,6 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
 
             expect(response)
               .to redirect_to(hyrax.edit_dashboard_collection_path(source_id,
-                                                                   locale: 'en',
                                                                    anchor: 'sharing'))
           end
 
@@ -182,7 +179,6 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
 
             expect(response)
               .to redirect_to(hyrax.edit_dashboard_collection_path(source_id,
-                                                                   locale: 'en',
                                                                    anchor: 'sharing'))
           end
 

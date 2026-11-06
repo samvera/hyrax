@@ -7,9 +7,9 @@ RSpec.describe Hyrax::My::CollectionsController, :clean_repo, type: :controller 
 
     describe "#index" do
       it "sets breadcrumbs" do
-        expect(controller).to receive(:add_breadcrumb).with('Home', root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Collections', my_collections_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path)
+        expect(controller).to receive(:add_breadcrumb).with('Collections', my_collections_path)
         get :index, params: { per_page: 1 }
       end
 
@@ -44,7 +44,7 @@ RSpec.describe Hyrax::My::CollectionsController, :clean_repo, type: :controller 
   describe "#search_facet_path" do
     it do
       expect(controller.send(:search_facet_path, id: 'keyword_sim'))
-        .to eq "/dashboard/my/collections/facet/keyword_sim?locale=en"
+        .to eq "/dashboard/my/collections/facet/keyword_sim"
     end
   end
 
