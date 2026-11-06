@@ -26,6 +26,13 @@ module Hyrax
       ]
     end
 
+    # Zero-filled charts for when the analytics provider can't be reached.
+    def without_analytics
+      @downloads = zero_fill([])
+      @pageviews = zero_fill([])
+      self
+    end
+
     private
 
     def downloads
