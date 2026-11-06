@@ -28,6 +28,18 @@ RSpec.describe Hyrax::Controller, type: :controller do
         I18n.locale = non_default
         expect(controller.default_url_options[:locale]).to eq(non_default)
       end
+
+      it 'does not leak the locale into later default-locale requests' do
+        non_default = (I18n.available_locales - [I18n.default_locale]).first
+        skip 'no non-default locale available' if non_default.nil?
+
+        I18n.locale = non_default
+        controller.default_url_options
+        I18n.locale = I18n.default_locale
+
+        expect(controller.class.default_url_options).not_to have_key(:locale)
+        expect(controller.default_url_options).not_to have_key(:locale)
+      end
     end
   end
 end

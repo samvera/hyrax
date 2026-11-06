@@ -33,9 +33,9 @@ module Hyrax::Controller
   # links, which causes search engines to index and rank duplicate
   # locale-parameterized URLs as canonical.
   def default_url_options
-    opts = super
-    opts[:locale] = I18n.locale unless I18n.locale == I18n.default_locale
-    opts
+    return super if I18n.locale == I18n.default_locale
+
+    super.merge(locale: I18n.locale)
   end
 
   # @note for Blacklight 6/7 compatibility
