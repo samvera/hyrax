@@ -15,7 +15,7 @@ module Hyrax
         queried = label_facet?(value) ? search_term(value) : value
 
         Rails.application.routes.url_helpers.search_catalog_path(
-          "f[#{search_field(value)}][]": queried, locale: I18n.locale
+          "f[#{search_field(value)}][]": queried, locale: (I18n.locale unless I18n.locale == I18n.default_locale)
         )
       end
 

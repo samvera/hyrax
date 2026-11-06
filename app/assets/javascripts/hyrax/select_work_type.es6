@@ -42,9 +42,12 @@ export default class SelectWorkType {
       let url = this.form.find('input[type="radio"]:checked').data(this.type)
       const select = this.form.find('select')
 
-      // Only append admin_set_id if the select exists and has a value
+      // Only append admin_set_id if the select exists and has a value.
+      // Pick the right separator: URLs lose their locale query string when
+      // I18n.locale == I18n.default_locale, so we cannot assume `?` is present.
       if (select.length && select.val()) {
-          url = url + "&admin_set_id=" + select.val()
+          const separator = url.indexOf('?') === -1 ? '?' : '&'
+          url = url + separator + "admin_set_id=" + select.val()
       }
       return url
   }

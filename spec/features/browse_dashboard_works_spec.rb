@@ -58,7 +58,7 @@ RSpec.describe "Browse Dashboard", :clean_repo, type: :feature do
     click_link "Published"
     within("#document_#{mp3_work.id}") do
       expect(page).to have_link("Display all details of Test Document MP3",
-                                href: hyrax_monograph_path(mp3_work, locale: 'en'))
+                                href: hyrax_monograph_path(mp3_work))
     end
     click_link("Remove constraint Status: Published")
 
