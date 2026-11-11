@@ -16,7 +16,7 @@ module Hyrax
         solr_doc['file_format_tesim'] = file_format
         solr_doc['file_format_sim']   = file_format
         solr_doc['file_size_lts'] = object.file_size[0]
-        solr_doc['all_text_timv'] = object.extracted_text.content if object.extracted_text.present?
+        solr_doc['all_text_timv'] = extracted_text_content
         solr_doc['height_is'] = Integer(object.height.first) if object.height.present?
         solr_doc['width_is']  = Integer(object.width.first) if object.width.present?
         solr_doc['visibility_ssi'] = object.visibility
@@ -51,6 +51,17 @@ module Hyrax
     def extracted_text_id
       return unless object.extracted_text
       Hyrax::VersioningService.versioned_file_id object.extracted_text
+    end
+
+    def extracted_text_content
+      return object.extracted_text.content if object.extracted_text.present?
+
+      file_metadata = Hyrax.custom_queries.find_many_file_metadata_by_use(
+        resource: object.valkyrie_resource, use: Hyrax::FileMetadata::Use::EXTRACTED_TEXT
+      ).first
+      file_metadata&.file&.read&.force_encoding('UTF-8')
+    rescue Valkyrie::StorageAdapter::FileNotFound
+      nil
     end
 
     def file_format

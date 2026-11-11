@@ -123,6 +123,23 @@ RSpec.describe Hyrax::FileSetIndexer, :active_fedora do
         expect(subject['original_file_id_ssi']).to eq file_set.original_file.id
       end
     end
+
+    context "when the extracted text is stored outside of Fedora" do
+      let(:text_file) { double('file', read: +'text from a derivative') }
+      let(:text_metadata) { instance_double(Hyrax::FileMetadata, file: text_file) }
+
+      before do
+        allow(file_set).to receive(:extracted_text).and_return(nil)
+        allow(file_set).to receive(:valkyrie_resource).and_return(double('resource'))
+        allow(Hyrax.custom_queries)
+          .to receive(:find_many_file_metadata_by_use)
+          .and_return([text_metadata])
+      end
+
+      it "indexes the text from the derivative file" do
+        expect(subject['all_text_timv']).to eq 'text from a derivative'
+      end
+    end
   end
 
   describe '#file_format' do
