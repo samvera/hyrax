@@ -1,0 +1,25 @@
+suite: web deployment replicas
+templates:
+  - templates/deployment.yaml
+tests:
+  - it: sets replicas from replicaCount by default
+    set:
+      replicaCount: 4
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 4
+
+  - it: omits replicas when the web HPA is on
+    set:
+      autoscaling.enabled: true
+    asserts:
+      - notExists:
+          path: spec.replicas
+
+  - it: omits replicas when an external autoscaler owns scaling
+    set:
+      externallyScaled: true
+    asserts:
+      - notExists:
+          path: spec.replicas

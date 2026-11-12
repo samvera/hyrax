@@ -3,6 +3,9 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
+# Set when an external autoscaler (e.g. KEDA) owns the web replica count: omits `replicas` so
+# upgrades don't reset it. The first upgrade after enabling drops the Deployment to 1 replica.
+externallyScaled: false
 
 image:
   repository: ghcr.io/samvera/hyrax/dassie
@@ -231,6 +234,10 @@ worker:
     # timeoutSeconds: 1
     # failureThreshold: 10
     # successThreshold: 2
+
+  # Set when an external autoscaler (e.g. KEDA) owns the replica count: omits `replicas` so
+  # upgrades don't reset it. The first upgrade after enabling drops the Deployment to 1 replica.
+  externallyScaled: false
 
   # Scaled independently from the top-level autoscaling block, which covers web only.
   autoscaling:
