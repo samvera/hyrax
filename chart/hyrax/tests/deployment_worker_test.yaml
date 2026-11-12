@@ -1,0 +1,16 @@
+suite: worker deployment termination grace period
+templates:
+  - templates/deployment-worker.yaml
+tests:
+  - it: leaves terminationGracePeriodSeconds unset by default
+    asserts:
+      - notExists:
+          path: spec.template.spec.terminationGracePeriodSeconds
+
+  - it: sets terminationGracePeriodSeconds when configured
+    set:
+      worker.terminationGracePeriodSeconds: 10800
+    asserts:
+      - equal:
+          path: spec.template.spec.terminationGracePeriodSeconds
+          value: 10800
