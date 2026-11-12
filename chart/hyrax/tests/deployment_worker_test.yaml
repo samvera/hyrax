@@ -14,3 +14,18 @@ tests:
       - equal:
           path: spec.template.spec.terminationGracePeriodSeconds
           value: 10800
+
+  - it: sets replicas from worker.replicaCount when autoscaling is off
+    set:
+      worker.replicaCount: 4
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 4
+
+  - it: omits replicas when worker autoscaling is on, so deploys don't reset the HPA's scale
+    set:
+      worker.autoscaling.enabled: true
+    asserts:
+      - notExists:
+          path: spec.replicas
