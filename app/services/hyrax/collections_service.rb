@@ -6,9 +6,12 @@ module Hyrax
     class_attribute :list_search_builder_class
     self.list_search_builder_class = Hyrax::CollectionSearchBuilder
 
+    # The context's request params belong to whatever page is listing collections
+    # (often a works search), so its facets and query must not filter them.
+    #
     # @param [#repository,#blacklight_config,#current_ability] context
     def initialize(context)
-      super(config: context.blacklight_config, user_params: context.params, search_builder_class: self.class.list_search_builder_class, scope: context)
+      super(config: context.blacklight_config, user_params: {}, search_builder_class: self.class.list_search_builder_class, scope: context)
       @current_ability = context.current_ability
     end
 
