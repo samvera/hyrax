@@ -29,3 +29,10 @@ tests:
     asserts:
       - notExists:
           path: spec.replicas
+
+  - it: omits replicas when an external autoscaler owns scaling
+    set:
+      worker.externallyScaled: true
+    asserts:
+      - notExists:
+          path: spec.replicas
