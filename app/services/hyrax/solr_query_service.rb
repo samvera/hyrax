@@ -53,6 +53,22 @@ module Hyrax
     end
 
     ##
+    # @return [Array] the values of +field+ across documents matching the current query
+    # @param rows [Integer, nil] omit to page through everything, capped at Hyrax.config.solr_max_results
+    def pluck(field, rows: nil)
+      return query_page(field, rows: rows, start: 0) if rows
+
+      total = count
+      max = Hyrax.config.solr_max_results
+      Hyrax.logger.warn("Hyrax::SolrQueryService#pluck('#{field}') truncated: numFound=#{total} exceeds Hyrax.config.solr_max_results=#{max}") if total > max
+      total = [total, max].min
+
+      (0...total).step(Hyrax.config.solr_rows_per_request).flat_map do |start|
+        query_page(field, rows: [Hyrax.config.solr_rows_per_request, total - start].min, start: start)
+      end
+    end
+
+    ##
     # @return [Array<Valkyrie::Resource|ActiveFedora::Base>] objects matching the current query
     def get_objects(use_valkyrie: Hyrax.config.use_valkyrie?)
       ids = get_ids
@@ -148,6 +164,10 @@ module Hyrax
     end
 
     private
+
+    def query_page(field, rows:, start:)
+      query_result(fl: field, rows: rows, start: start)['response']['docs'].flat_map { |doc| Array(doc[field]) }
+    end
 
     # Construct a solr query for a list of ids
     # @param [Array] ids to be included in the query
