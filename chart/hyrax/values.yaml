@@ -128,6 +128,18 @@ leaseRelease:
   enabled: true
   schedule: "0 0 * * *"
 
+# Additional CronJobs, keyed by name; each runs `command` via /bin/sh in the app image with
+# the same env and upload/derivative volumes as the worker. Per-job optional keys: image,
+# env, resources, extraVolumes, extraVolumeMounts, nodeSelector, tolerations, concurrencyPolicy
+# (default Forbid), backoffLimit, ttlSecondsAfterFinished, restartPolicy.
+#
+#  cronJobs:
+#    cleanup-uploads:
+#      enabled: true
+#      schedule: "0 3 * * 0"
+#      command: bundle exec rake hyku:cleanup_uploads
+cronJobs: {}
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
