@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "hyrax.labels" . | nindent 4 }}
 spec:
-{{- if not .Values.autoscaling.enabled }}
+{{- if not (or .Values.autoscaling.enabled .Values.externallyScaled) }}
   replicas: {{ .Values.replicaCount }}
 {{- end }}
   selector:
