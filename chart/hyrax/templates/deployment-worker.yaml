@@ -19,6 +19,9 @@ spec:
       labels:
         {{- include "hyrax.workerSelectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.worker.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
       initContainers:
         - name: service-wait
           image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
