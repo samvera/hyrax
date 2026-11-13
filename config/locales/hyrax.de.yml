@@ -26,6 +26,7 @@ de:
         show:
           admin_set: "Im Admin-Set:"
           based_near_label: Ort
+          based_near_label_tesim: Ort
           contributor: Mitwirkende
           keyword: Stichwort
       filters:

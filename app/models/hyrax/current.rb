@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 # Per-request/per-thread scoped state, reset automatically by Rails' executor between requests and jobs.
 class Hyrax::Current < ActiveSupport::CurrentAttributes
-  attribute :flexible_schema
+  attribute :flexible_schema, :flexible_schema_profiles
 end

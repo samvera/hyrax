@@ -26,6 +26,7 @@ es:
         show:
           admin_set: "En Conjunto Administrativo:"
           based_near_label: Ubicación
+          based_near_label_tesim: Ubicación
           contributor: Colaboradores
           keyword: Palabra Clave
       filters:

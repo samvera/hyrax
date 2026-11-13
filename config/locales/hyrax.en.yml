@@ -26,6 +26,7 @@ en:
         show:
           admin_set: 'In Administrative Set:'
           based_near_label: Location
+          based_near_label_tesim: Location
           contributor: Contributors
           keyword: Keyword
       filters:
@@ -1541,6 +1542,14 @@ en:
           controlled_sources: "m3 profile property `%{property}` declares `form: { input_type: rich_text }` but also a controlled vocabulary (`controlled_values.sources: %{sources}`); rich text stores free-form HTML and will bypass the controlled input. Use `rich_text` only on free-text properties."
           built_in: "m3 profile property `%{property}` declares `form: { input_type: rich_text }`, but `%{property}` is rendered with a controlled vocabulary input; rich text stores free-form HTML and will bypass it. Use `rich_text` only on free-text properties."
           controlled_type: "m3 profile compound subproperty `%{property}` is `type: controlled` but declares `form: { input_type: rich_text }`; rich text stores free-form HTML and conflicts with a controlled value."
+      context_class_validator:
+        warnings:
+          never_in_context: "m3 profile property `%{property}` is limited to a context but is available on %{classes}; a context is set on an admin set for its works, so collection and admin set pages ignore this property, and file sets never receive a context."
+      property_alias_validator:
+        warnings:
+          different_index_keys: "m3 profile property `%{property}` is named `%{name}` but indexes into %{keys}, not the Solr keys of `%{name}`; show pages read `%{name}` from that property's keys, so values stored here may not show."
+          different_multiplicity: "m3 profile property `%{property}` is named `%{name}` but differs from `%{name}` in whether it holds multiple values; show pages read `%{name}` one way for both."
+          missing_primary: "m3 profile property `%{property}` is named `%{name}`, but the profile has no property keyed `%{name}` for it to override."
       search_results_truncate_validator:
         warnings:
           requires_html: "m3 profile property `%{property}` declares `view: { search_results_truncate }` without `render_as: html`; the truncation length is only applied to `render_as: html` catalog fields, so it has no effect here."
