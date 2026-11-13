@@ -16,6 +16,7 @@ RSpec.describe Hyrax::API::ZoteroController, type: :controller do
 
     context 'with an unregistered user' do
       before do
+        allow_any_instance_of(Ability).to receive(:can?).and_call_original
         allow_any_instance_of(Ability).to receive(:can?).with(:create, Hyrax.primary_work_type).and_return(false)
         sign_in user
         get :initiate
@@ -92,6 +93,7 @@ RSpec.describe Hyrax::API::ZoteroController, type: :controller do
 
     context 'with a user who is not permitted to make works' do
       before do
+        allow_any_instance_of(Ability).to receive(:can?).and_call_original
         allow_any_instance_of(Ability).to receive(:can?).with(:create, Hyrax.primary_work_type).and_return(false)
         sign_in user
         get :callback
