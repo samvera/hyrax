@@ -35,7 +35,7 @@ RSpec.describe Hyrax::Admin::StrategiesController do
         patch :update, params: { feature_id: feature.id, id: strategy }
 
         expect(response.location)
-          .to include Hyrax::Engine.routes.url_helpers.admin_features_path(locale: 'en')
+          .to include Hyrax::Engine.routes.url_helpers.admin_features_path
       end
     end
   end
