@@ -53,7 +53,7 @@ class Hyrax::CatalogSearchBuilder < Hyrax::SearchBuilder
   def filter_collection_facet_for_access(solr_parameters)
     return if current_ability.admin?
 
-    collection_ids = Hyrax::Collections::PermissionsService.collection_ids_for_view(ability: current_ability).map { |id| "^#{id}$" }
+    collection_ids = collection_ids_for_facet.map { |id| "^#{id}$" }
     solr_parameters['f.member_of_collection_ids_ssim.facet.matches'] = if collection_ids.present?
                                                                          collection_ids.join('|')
                                                                        else
@@ -62,6 +62,24 @@ class Hyrax::CatalogSearchBuilder < Hyrax::SearchBuilder
   end
 
   private
+
+  def collection_ids_for_facet
+    query = visible_collections_query
+            .with_field_pairs(field_pairs: { has_model_ssim: Hyrax::ModelRegistry.collection_rdf_representations.join(',') },
+                              type: 'terms')
+            .accessible_by(ability: current_ability)
+            .build
+    id_field = Hyrax.config.id_field
+    ids = []
+    Hyrax::SolrService.query_in_batches(query, fl: id_field, sort: "#{id_field} asc") { |hit| ids << hit.id }
+    ids
+  end
+
+  # Override to narrow which visible collections reach the facet.
+  # @return [Hyrax::SolrQueryService]
+  def visible_collections_query
+    Hyrax::SolrQueryService.new
+  end
 
   # the {!lucene} gives us the OR syntax
   def new_query
