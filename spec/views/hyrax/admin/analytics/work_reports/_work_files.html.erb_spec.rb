@@ -9,7 +9,7 @@ RSpec.describe 'hyrax/admin/analytics/work_reports/_work_files.html.erb', type: 
     assign(:downloads, Hyrax::Analytics::Results.new([[Time.zone.today, 7]]))
     allow(SolrDocument).to receive(:find).with('file-1').and_return(file_document)
     allow(Hyrax::Analytics).to receive(:daily_events_for_id)
-      .and_raise(Google::Cloud::PermissionDeniedError.new('analytics must not be called while rendering'))
+      .and_raise('analytics must not be called while rendering')
   end
 
   it 'shows the download total the controller already loaded, without calling analytics' do
