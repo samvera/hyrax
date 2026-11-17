@@ -70,7 +70,7 @@ RSpec.describe Hyrax::AdminSetPresenter, :clean_repo do
 
     subject { presenter.show_path }
 
-    it { is_expected.to eq "/admin/admin_sets/#{admin_set.id}?locale=en" }
+    it { is_expected.to eq "/admin/admin_sets/#{admin_set.id}" }
   end
 
   describe '#managed_access' do

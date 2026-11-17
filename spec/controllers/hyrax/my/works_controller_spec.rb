@@ -17,9 +17,9 @@ RSpec.describe Hyrax::My::WorksController, type: :controller do
 
     it "shows search results and breadcrumbs" do
       expect_any_instance_of(Hyrax::SearchService).to receive(:search_results).and_return([response, doc_list])
-      expect(controller).to receive(:add_breadcrumb).with('Home', root_path(locale: 'en'))
-      expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path(locale: 'en'))
-      expect(controller).to receive(:add_breadcrumb).with('Works', my_works_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
+      expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path)
+      expect(controller).to receive(:add_breadcrumb).with('Works', my_works_path)
       expect(collection_service).to receive(:all_search_results).with(:deposit).and_return([my_collection])
       get :index, params: { per_page: 2 }
       expect(assigns[:document_list].length).to eq 2
@@ -50,6 +50,6 @@ RSpec.describe Hyrax::My::WorksController, type: :controller do
   describe "#search_facet_path" do
     subject { controller.send(:search_facet_path, id: 'keyword_sim') }
 
-    it { is_expected.to eq "/dashboard/my/works/facet/keyword_sim?locale=en" }
+    it { is_expected.to eq "/dashboard/my/works/facet/keyword_sim" }
   end
 end
