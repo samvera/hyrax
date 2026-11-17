@@ -23,17 +23,21 @@ module Hyrax
   # `work`, and appends that FileSet to `member_ids`. The `FileSet` will be
   # added in the order that the `UploadedFiles` are passed in. If the work has a
   # `nil` `representative_id` and/or `thumbnail_id`, the first `FileSet` will be
-  # set to that value. An `IngestJob` will be equeued, for each `FileSet`. When
-  # all of the `files` have been processed, the work will be saved with the
-  # added members. While this is happening, we take a lock on the work via
-  # `Lockable` (Redis/Redlock).
+  # set to that value. When all of the `files` have been processed, the work is
+  # reloaded under a lock via `Lockable` (Redis/Redlock), the new members are
+  # appended to it and it is saved, so members another handler added since `work`
+  # was read are kept. A `ValkyrieIngestJob` is then enqueued for each `FileSet`.
+  #
+  # An upload whose `FileSet` was created by an earlier attempt, but not
+  # attached to any work, attaches that `FileSet` instead of creating another.
+  # An upload whose `FileSet` is gone or already in a work is skipped. Attaching
+  # the same upload to two works at once is not supported: if one handler
+  # creates the `FileSet` while another reuses it, both works may take it.
+  #
+  # The work is reloaded before it is saved, so after `#attach` read `#work`
+  # for the saved work rather than the object passed in.
   #
   # This also publishes events as required by `Hyrax.publisher`.
-  #
-  # @todo make this genuinely retry-able. if we fail after creating some of
-  #   the file_sets, but not attaching them to works, we should resolve that
-  #   incomplete work on subsequent runs.
-  #
   #
   # @example
   #   Hyrax::WorkUploadsHandler.new(work: my_work)
@@ -63,10 +67,8 @@ module Hyrax
     ##
     # @api public
     #
-    # @note we immediately and silently discard uploads with an existing
-    #   file_set_uri, in a half-considered attempt at supporting idempotency
-    #   (for job retries). this is for legacy/AttachFilesToWorkJob
-    #   compatibility, but could stand for a robust reimplementation.
+    # @note we discard uploads whose file set is already a member of the work,
+    #   so a retried job does not attach it again.
     #
     # @param [Enumerable<Hyrax::UploadedFile>] files  files to add
     #
@@ -77,7 +79,7 @@ module Hyrax
     #   `UploadedFile`
     def add(files:, file_set_params: [])
       validate_files(files) &&
-        @files = Array.wrap(files).reject { |f| f.file_set_uri.present? }
+        @files = Array.wrap(files).reject { |f| work.member_ids.include?(f.file_set_uri) }
       @file_set_params = file_set_params || []
       self
     end
@@ -92,16 +94,12 @@ module Hyrax
     def attach
       return true if Array.wrap(files).empty? # short circuit to avoid aquiring a lock we won't use
 
-      acquire_lock_for(work.id) do
-        event_payloads = files.each_with_object([]).with_index do |(file, arry), index|
-          arry << make_file_set_and_ingest(file, @file_set_params[index] || {})
-        end
-        @persister.save(resource: work)
-        Hyrax.publisher.publish('object.metadata.updated', object: work, user: files.first.user)
-        event_payloads.each do |payload|
-          payload.delete(:job).enqueue
-          Hyrax.publisher.publish('file.set.attached', payload)
-        end
+      # Holding a lock on each reused file set until the work is saved keeps two
+      # works from both finding it unattached; sorted keys avoid deadlock.
+      event_payloads, added_ids = acquire_locks_for(files.filter_map(&:file_set_uri).uniq.sort) { attach_file_sets }
+      event_payloads.select { |payload| added_ids.include?(payload[:file_set].id) }.each do |payload|
+        payload.delete(:job).enqueue
+        Hyrax.publisher.publish('file.set.attached', payload)
       end
     end
 
@@ -109,10 +107,30 @@ module Hyrax
 
     ##
     # @api private
+    def acquire_locks_for(keys, &block)
+      return yield if keys.empty?
+
+      acquire_lock_for(keys.first) { acquire_locks_for(keys.drop(1), &block) }
+    end
+
+    ##
+    # @api private
+    #
+    # @return [Array(Array<Hash>, Array<Valkyrie::ID>)] the event payloads and
+    #   the ids of the file sets added to the work
+    def attach_file_sets
+      event_payloads = files.each_with_object([]).with_index do |(file, arry), index|
+        payload = make_file_set_and_ingest(file, @file_set_params[index] || {})
+        arry << payload if payload
+      end
+      [event_payloads, append_to_work(event_payloads.map { |payload| payload[:file_set] }, user: files.first.user)]
+    end
+
+    ##
+    # @api private
     def make_file_set_and_ingest(file, file_set_params = {})
-      file_set = @persister.save(resource: Hyrax.config.valkyrie_file_set_class.new(file_set_args(file, file_set_params)))
-      Hyrax.publisher.publish('object.deposited', object: file_set, user: file.user)
-      file.add_file_set!(file_set)
+      file_set = find_or_create_file_set(file, file_set_params)
+      return unless file_set
 
       # copy ACLs; should we also be propogating embargo/lease?
       Hyrax::AccessControlList.copy_permissions(source: target_permissions, target: file_set)
@@ -120,7 +138,6 @@ module Hyrax
       # set visibility from params and save
       file_set.visibility = file_set_extra_params(file)[:visibility] if file_set_extra_params(file)[:visibility].present?
       file_set.permission_manager.acl.save if file_set.permission_manager.acl.pending_changes?
-      append_to_work(file_set)
 
       { file_set: file_set, user: file.user, job: ValkyrieIngestJob.new(file) }
     end
@@ -128,11 +145,63 @@ module Hyrax
     ##
     # @api private
     #
+    # @return [Hyrax::FileSet, nil] nil when the upload's file set is gone or
+    #   already in a work, which this upload must not take over
+    def find_or_create_file_set(file, file_set_params)
+      return unattached_file_set(file.file_set_uri) if file.file_set_uri.present?
+
+      file_set = @persister.save(resource: Hyrax.config.valkyrie_file_set_class.new(file_set_args(file, file_set_params)))
+      Hyrax.publisher.publish('object.deposited', object: file_set, user: file.user)
+      file.add_file_set!(file_set)
+      file_set
+    end
+
+    ##
+    # @api private
+    def unattached_file_set(id)
+      return if active_fedora_uri?(id)
+
+      file_set = Hyrax.query_service.find_by(id: id)
+      file_set unless Hyrax.custom_queries.find_parent_work(resource: file_set)
+    rescue Valkyrie::Persistence::ObjectNotFoundError
+      nil
+    end
+
+    ##
+    # @api private
+    #
+    # `UploadedFile#add_file_set!` stores an ActiveFedora file set's URI rather
+    # than its id, which Valkyrie cannot look up.
+    def active_fedora_uri?(file_set_uri)
+      file_set_uri.include?('://')
+    end
+
+    ##
+    # @api private
+    #
     # @todo figure out how to know less about Work's ideas about FileSet use here. Maybe post-Wings, work.
-    def append_to_work(file_set)
-      work.member_ids += [file_set.id]
-      work.representative_id = file_set.id if work.respond_to?(:representative_id) && work.representative_id.blank?
-      work.thumbnail_id = file_set.id if work.respond_to?(:thumbnail_id) && work.thumbnail_id.blank?
+    #
+    # @return [Array<Valkyrie::ID>] the ids of the file sets added; those
+    #   already members of the reloaded work are skipped
+    def append_to_work(file_sets, user:)
+      acquire_lock_for(work.id) do
+        @work = Hyrax.query_service.find_by(id: work.id)
+        added_ids = file_sets.map(&:id) - work.member_ids
+        next added_ids if added_ids.empty?
+
+        work.member_ids += added_ids
+        default_representative_and_thumbnail_to(added_ids.first)
+        @work = @persister.save(resource: work)
+        Hyrax.publisher.publish('object.metadata.updated', object: work, user: user)
+        added_ids
+      end
+    end
+
+    ##
+    # @api private
+    def default_representative_and_thumbnail_to(file_set_id)
+      work.representative_id = file_set_id if work.respond_to?(:representative_id) && work.representative_id.blank?
+      work.thumbnail_id = file_set_id if work.respond_to?(:thumbnail_id) && work.thumbnail_id.blank?
     end
 
     ##
