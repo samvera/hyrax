@@ -120,7 +120,7 @@ RSpec.describe 'Editing a work with a work_or_url compound', :clean_repo, type: 
     check('agreement')
     click_on('Save changes')
 
-    expect(page).to have_current_path(hyrax_monograph_path(work, locale: 'en'))
+    expect(page).to have_current_path(hyrax_monograph_path(work))
     expect(page).to have_content('https://example.com/new')
     expect(page).not_to have_content('https://example.com/old')
   end
