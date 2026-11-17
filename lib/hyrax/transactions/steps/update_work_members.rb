@@ -17,7 +17,18 @@ module Hyrax
         def call(obj, work_members_attributes: nil, user: nil)
           return Success(obj) if work_members_attributes.blank?
 
-          attributes = extract_attributes(work_members_attributes)
+          read_member_ids = obj.member_ids
+          apply_member_changes(obj, extract_attributes(work_members_attributes))
+
+          saved = save_resource(obj, read_member_ids, user)
+          Hyrax.publisher.publish('object.membership.updated', object: saved, user: user)
+
+          Success(saved)
+        end
+
+        private
+
+        def apply_member_changes(obj, attributes)
           current_member_ids = obj.member_ids.map(&:id)
           destroys = attributes.select do |v|
             ActiveModel::Type::Boolean.new.cast(v['_destroy'])
@@ -27,14 +38,7 @@ module Hyrax
           destroys = destroys.map { |h| h['id'] }.compact & current_member_ids
           obj.member_ids += inserts.map  { |id| Valkyrie::ID.new(id) }
           obj.member_ids -= destroys.map { |id| Valkyrie::ID.new(id) }
-
-          save_resource(obj, user)
-          Hyrax.publisher.publish('object.membership.updated', object: obj, user: user)
-
-          Success(obj)
         end
-
-        private
 
         def extract_attributes(attribute_hash)
           attribute_hash
@@ -42,10 +46,11 @@ module Hyrax
             .map { |_, attributes| attributes }
         end
 
-        def save_resource(obj, user)
-          saved = Hyrax.persister.save(resource: obj)
+        def save_resource(obj, read_member_ids, user)
+          saved = Hyrax::LockedWorkSaver.save(work: obj, read_member_ids: read_member_ids)
           user ||= ::User.find_by_user_key(obj.depositor)
           Hyrax.publisher.publish('object.metadata.updated', object: saved, user: user)
+          saved
         end
       end
     end
