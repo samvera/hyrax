@@ -159,6 +159,12 @@ RSpec.describe Hyrax::PermissionManager do
         .to change { manager.edit_users }
         .to contain_exactly(added_user)
     end
+
+    it 'skips users with no matching User' do
+      expect { manager.edit_users = [added_user, 'deleted@example.com'] }
+        .to change { manager.edit_users }
+        .to contain_exactly(added_user)
+    end
   end
 
   describe '#read_groups' do
