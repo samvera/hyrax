@@ -15,4 +15,8 @@ class <%= class_name %> < ActiveFedora::Base
     include ::Hyrax::BasicMetadata
    end
 
+   # Uncomment the line of code below to enable persistent ordering on string-valued (non-compound) fields, if not using flexible metadata: https://github.com/samvera-labs/order_already/tree/main
+   # Include the symbols for any properties to which you wish to apply ordering as arguments to the for() method
+   # prepend OrderAlready.for(:creator, :contributor)
+
 end
