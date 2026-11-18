@@ -18,4 +18,19 @@ RSpec.describe Hyrax::PersistDirectlyContainedOutputFileService, :active_fedora 
     expect(resource.content).to eq("fake file content")
     expect(resource.content.encoding).to eq(Encoding::UTF_8)
   end
+
+  context "when the url is a file:// url" do
+    subject(:call) do
+      described_class.call(content,
+                           format: 'txt',
+                           url: "file://#{Hyrax::DerivativePath.derivative_path_for_reference(file_set, 'extracted_text')}",
+                           container: 'extracted_text')
+    end
+
+    it "persists the file to the specified destination on the given object" do
+      expect(call).to be true
+      expect(resource.content).to eq("fake file content")
+      expect(resource.content.encoding).to eq(Encoding::UTF_8)
+    end
+  end
 end
