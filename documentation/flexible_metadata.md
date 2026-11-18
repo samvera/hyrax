@@ -65,6 +65,7 @@ Visibility for restricted fields is enforced on show pages by the `field_visible
 Beyond the role flags, a property's `view:` block controls show-page and catalog visibility independently:
 
 - **Show page is opt-in via `view:`.** A property renders on the show page only when it declares a meaningful `view:` block (e.g. `html_dl: true`); a property with no `view:` block is not enrolled in show-page rendering at all (the `display_label` / `admin_only` / `editor_only` keys alone don't count). Within a rendered field, `view: { show_page: false }` hides it from the show page for everyone (the value is still stored and indexed).
+- **`view: { collection_page: false }`** keeps the property off collection pages, while leaving it on work and file set show pages. See [Collection page fields](#collection-page-fields).
 - **`view: { search_results: false }`** drops the property's column from catalog search results, while leaving it on the show page. It suppresses only the search-results column — the property can still be **facetable** (declare `facetable` in `indexing:`).
 
 These combine with the role flags: `admin_only` / `editor_only` remove a property from the catalog entirely (column *and* facet) at registration time, whereas `search_results: false` removes only the column.
@@ -161,6 +162,36 @@ A service need only implement the two methods on `Hyrax::ControlledVocabularyLab
 | `labels_for(source, values)` | one label per value, in order, the id where unresolved |
 
 `labels_for` must stay positional — the renderer pairs values to labels, so an unresolved value has to hold its place. `resolvable?` should answer `false` for remote authorities: resolving one means a network call per value, which has no place in an indexing run.
+
+## Collection page fields
+
+Collection pages, public and dashboard, list `Hyrax::CollectionPresenter.terms` followed by the collection's inline compound fields, as they always have: the presenter's `terms_with_values`, in that order, with Hyrax's labels and rendering. An app can still change the list by overriding `CollectionPresenter.terms`. Both pages list `collection_terms_with_values(presenter)` from `Hyrax::CollectionsHelper`, which skips fields with no value; `collection_terms_for(presenter)` returns the same list before that step.
+
+The description is not in `CollectionPresenter.terms`: collection and admin set pages show it in its own block above the rows (`hyrax/collections/_collection_description`), so listing `:description` in `collection_terms`, or giving it a `view:` block when asking for the profile's properties (`dynamic: true`), shows it twice.
+
+For a collection saved under the m3 profile, this list leaves out:
+
+- properties marked `view: { collection_page: false }`, so a compound field, which is appended to the list, can be kept off collection pages (admin set pages included);
+- properties the profile restricts with `admin_only` or `editor_only` in `indexing:`, from viewers who are not admins or editors of the collection.
+
+A term on this list shows whether or not its property has a `view:` block.
+
+Card compounds (`view: { display: card }`) render as their own cards below the rows on every collection page; `collection_page: false` and the `admin_only` and `editor_only` flags do not apply to them.
+
+### An app's own list
+
+`config.collection_terms = %i[abstract creator subject]` in a `Hyrax.config` block replaces the list on every collection page with those fields, in that order. Admin set pages keep their own terms. A listed field shows only if the collection presenter reads it from the collection's Solr document, its profile or its compound fields (`total_items` and `size` always can). So a presenter-only method such as `total_viewable_items` is skipped, and so is a Solr field the presenter has no reader for, such as `abstract` on a collection saved without the profile. For a collection saved under the m3 profile, a listed field:
+
+- shows only if its property has a `view:` block;
+- is left out if it is a card compound, or is marked `collection_page: false` or `show_page: false`;
+- is left out for viewers its `admin_only` or `editor_only` indexing flag excludes;
+- takes its label and rendering (`render_as`) from the profile.
+
+### The profile's properties (`dynamic: true`)
+
+An app can ask for the profile's own list by calling `collection_terms_with_values(presenter, dynamic: true)`, or `collection_terms_for(presenter, dynamic: true)` for the list before empty fields are skipped: every property the profile gives a `view:` block for the collection's class, in profile order, under the same rules as an app's list, but with Hyrax's labels and rendering. Hyrax's own templates do not use this option; an app's list, when set, takes precedence over it.
+
+`collection_terms_with_values` skips fields with no value in every case. A flexible collection's presenter reads each profile property by its `name`, as work and file set presenters do, so a property declared under another key, such as `rights_statement_optional` with `name: rights_statement`, is listed as `rights_statement`. A property declared under another key overrides the property keyed by its `name`, so it must store its values where that property does, with the same `indexing:` keys (other than `facetable`, `stored_searchable`, `admin_only` and `editor_only`) and the same multiplicity. Saving a profile warns when an alias has no such property or differs from it (`PropertyAliasValidator`). Collection and admin set pages read the profile version the collection was saved with, and only its entries available on the collection's class. A context is set on an admin set for its works, so collection and admin set pages ignore a property limited to a context, and saving a profile warns when such a property lists a collection, admin set or file set class (`ContextClassValidator`).
 
 ## Linking values back into the catalog
 

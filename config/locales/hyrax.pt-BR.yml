@@ -26,6 +26,7 @@ pt-BR:
         show:
           admin_set: "No conjunto administrativo:"
           based_near_label: Localização
+          based_near_label_tesim: Localização
           contributor: Colaboradores
           keyword: Palavra-chave
       filters:

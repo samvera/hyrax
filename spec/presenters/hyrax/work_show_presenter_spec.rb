@@ -27,11 +27,17 @@ RSpec.describe Hyrax::WorkShowPresenter do
       { "id" => '888888',
         "title_tesim" => ['foo'],
         "has_model_ssim" => ["GenericWork"],
-        "schema_version_ssi" => '1' }
+        "schema_version_ssi" => '1',
+        "shelf_mark_tesim" => ['MS.0951'],
+        "shelf_number_ssi" => 'A12' }
     end
     let(:profile) do
       { 'properties' => {
-        'abstract' => { 'indexing' => ['abstract_tesim'], 'multiple' => true }
+        'abstract' => { 'indexing' => ['abstract_tesim'], 'multiple' => true },
+        'creator_name' => { 'name' => 'name', 'available_on' => { 'properties' => ['creators'] }, 'indexing' => ['creators_name_tesim'], 'multiple' => true },
+        'contributor_name' => { 'name' => 'name', 'available_on' => { 'properties' => ['contributors'] }, 'indexing' => ['contributors_name_tesim'], 'multiple' => true },
+        'shelf_mark_optional' => { 'name' => 'shelf_mark', 'indexing' => ['shelf_mark_tesim'], 'multiple' => true },
+        'shelf_number' => { 'indexing' => ['shelf_number_ssi'], 'multi_value' => true }
       } }
     end
 
@@ -44,6 +50,19 @@ RSpec.describe Hyrax::WorkShowPresenter do
     it 'reads the flexible schema once, not once per property' do
       presenter
       expect(Hyrax::FlexibleSchema).to have_received(:current_version).once
+    end
+
+    it "names a reader after the property's name, not its profile key" do
+      expect(presenter.shelf_mark).to eq ['MS.0951']
+    end
+
+    it 'reads a property the profile declares multi_value as a list' do
+      expect(presenter.shelf_number).to eq ['A12']
+    end
+
+    it 'names a compound subproperty reader after its key, since subproperties share generic names' do
+      expect(presenter).to respond_to(:creator_name).and respond_to(:contributor_name)
+      expect(presenter).not_to respond_to(:name)
     end
   end
 

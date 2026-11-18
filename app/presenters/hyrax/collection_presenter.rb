@@ -21,6 +21,11 @@ module Hyrax
       @current_ability = current_ability
       @request = request
       @subcollection_count = 0
+      define_dynamic_methods if solr_document.try(:flexible?)
+    end
+
+    def self.profile_readers
+      @profile_readers ||= Set.new
     end
 
     # CurationConcern methods
@@ -56,15 +61,46 @@ module Hyrax
       DEFAULT_TERMS.dup
     end
 
-    # This collection's displayed terms: the class-level standard terms (honoring
-    # any downstream override) plus its inline compound terms, which are resolved
-    # from the backing document so they are correct in flexible mode.
+    # This collection's displayed terms: the app's Hyrax.config.collection_terms
+    # when set (not for admin sets), otherwise the class-level standard terms (honoring any downstream
+    # override) plus its inline compound terms, which are resolved from the
+    # backing document so they are correct in flexible mode.
     def terms
-      self.class.terms + compound_terms
+      listed_terms&.dup || self.class.terms + compound_terms
+    end
+
+    def listed_terms
+      Hyrax.config.collection_terms unless is_a?(Hyrax::AdminSetPresenter)
+    end
+
+    def profile_property(name)
+      profile_properties[name.to_s]
+    end
+
+    # @return [Hash{String => Hash}] the profile entries for this collection's
+    #   class under the profile it was saved with, by property name, leaving out
+    #   entries limited to a context, which an admin set sets for its works
+    def profile_properties
+      @profile_properties ||= Hyrax::FlexibleSchema.profile_for(solr_document.schema_version).to_h.fetch('properties', {}).each_with_object({}) do |(key, details), by_name|
+        next unless available_on_this_class?(details) && Array(details.dig('available_on', 'context')).empty?
+
+        by_name[details['name'] || key] = details
+      end
+    end
+
+    def profile_reader?(name)
+      Hyrax::CollectionPresenter.profile_readers.include?(name.to_s) && respond_to?(name) && solr_document.try(:flexible?) == true
     end
 
     def terms_with_values
-      terms.select { |t| self[t].present? }
+      terms.select { |t| (listed_terms.nil? || readable_term?(t)) && self[t].present? }
+    end
+
+    def readable_term?(term)
+      return false unless respond_to?(term)
+      return profile_reader?(term) if Hyrax::CollectionPresenter.profile_readers.include?(term.to_s)
+
+      %i[size total_items].include?(term.to_sym) || solr_document.respond_to?(term) || compound_term?(term)
     end
 
     # Inline compound terms for this collection (card compounds render
@@ -117,6 +153,7 @@ module Hyrax
       when :total_items
         total_items
       else
+        return public_send(key) if profile_reader?(key)
         # A declared compound with no indexed `<name>_json_ss` blob has no reader
         # defined on the document; treat it as empty rather than raising.
         return compound_value(key) if compound_term?(key) && !solr_document.respond_to?(key)
@@ -264,6 +301,36 @@ module Hyrax
     def allow_batch?
       return true if current_ability.can?(:edit, solr_document)
       false
+    end
+
+    private
+
+    def define_dynamic_methods
+      profile_properties.each do |name, details|
+        next if self.class.method_defined?(name) || Object.private_method_defined?(name) || nested_or_compound?(details)
+
+        Hyrax::CollectionPresenter.profile_readers << name
+        self.class.send(:define_method, name) do |*|
+          document_value = solr_document.public_send(name) if solr_document.respond_to?(name)
+          document_value.presence || profile_value(name)
+        end
+      end
+    end
+
+    def nested_or_compound?(details)
+      details['type'] == 'hash' || details.dig('available_on', 'properties').present?
+    end
+
+    def available_on_this_class?(details)
+      Array(details.dig('available_on', 'class')).map { |name| name.to_s.delete_prefix('::') }.include?(solr_document.hydra_model.to_s)
+    end
+
+    def profile_value(name)
+      details = profile_property(name).to_h
+      value = Array(details['indexing']).lazy.map { |index_key| solr_document[index_key] }.find(&:present?)
+      return Array.wrap(value) if Hyrax::FlexibleSchema.multiple_values?(details)
+
+      value || ''
     end
   end
 end

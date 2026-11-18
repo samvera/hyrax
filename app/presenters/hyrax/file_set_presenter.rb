@@ -132,7 +132,7 @@ module Hyrax
     # OrderedMembers-decorated. current_version is read once here (not per
     # property), matching the work presenter.
     def define_dynamic_methods # rubocop:disable Metrics/MethodLength
-      Hyrax::FlexibleSchema.current_version["properties"].each do |method_name, property_details|
+      Hyrax::FlexibleSchema.current_version["properties"].each do |key, property_details|
         index_keys = property_details["indexing"]
         next unless index_keys
         # Skip properties the presenter already defines, or that the SolrDocument
@@ -142,10 +142,10 @@ module Hyrax
         # document has no method for. WorkShowPresenter guards the same way but can
         # use `&&` because its generated method delegates to the document; this one
         # reads the index directly, so either match must skip.
-        next if self.class.method_defined?(method_name) || solr_document.respond_to?(method_name)
+        next if self.class.method_defined?(Hyrax::FlexibleSchema.reader_name(key, property_details)) || solr_document.respond_to?(Hyrax::FlexibleSchema.reader_name(key, property_details))
 
-        multi_value = property_details["multiple"] || (property_details["data_type"] == "array")
-        self.class.send(:define_method, method_name) do |*_args|
+        multi_value = property_details["multiple"] || Hyrax::FlexibleSchema.multiple_values?(property_details)
+        self.class.send(:define_method, Hyrax::FlexibleSchema.reader_name(key, property_details)) do |*_args|
           index_keys.each do |index_key|
             value = solr_document[index_key]
             return(multi_value ? Array.wrap(value) : value) if value.present?
