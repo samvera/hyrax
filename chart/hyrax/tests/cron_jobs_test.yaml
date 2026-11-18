@@ -1,0 +1,104 @@
+suite: generic cron jobs
+templates:
+  - templates/cron-jobs.yaml
+tests:
+  - it: renders nothing by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: skips disabled jobs
+    set:
+      cronJobs.nope:
+        enabled: false
+        schedule: "0 0 * * *"
+        command: "true"
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders a CronJob with safe defaults
+    release:
+      name: rel
+    set:
+      cronJobs.cleanup-uploads:
+        enabled: true
+        schedule: "0 3 * * 0"
+        command: bundle exec rake hyku:cleanup_uploads
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: CronJob
+      - equal:
+          path: metadata.name
+          value: rel-hyrax-cleanup-uploads
+      - equal:
+          path: spec.schedule
+          value: "0 3 * * 0"
+      - equal:
+          path: spec.concurrencyPolicy
+          value: Forbid
+      - equal:
+          path: spec.jobTemplate.spec.ttlSecondsAfterFinished
+          value: 86400
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].command
+          value:
+            - /bin/sh
+            - -c
+            - bundle exec rake hyku:cleanup_uploads
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts
+          content:
+            name: uploads
+            subPath: uploads
+            mountPath: /app/samvera/uploads
+
+  - it: renders one CronJob per enabled entry
+    set:
+      cronJobs:
+        a: {enabled: true, schedule: "0 1 * * *", command: "echo a"}
+        b: {enabled: true, schedule: "0 2 * * *", command: "echo b"}
+        c: {enabled: false, schedule: "0 3 * * *", command: "echo c"}
+    asserts:
+      - hasDocuments:
+          count: 2
+
+  - it: honors per-job overrides
+    set:
+      cronJobs.heavy:
+        enabled: true
+        schedule: "0 4 * * *"
+        command: "echo hi"
+        image: {repository: example.com/other, tag: v2}
+        concurrencyPolicy: Replace
+        env:
+          - name: DELETE_ALL_AFTER_DAYS
+            value: "60"
+        resources:
+          limits: {memory: 1Gi}
+    asserts:
+      - equal:
+          path: spec.concurrencyPolicy
+          value: Replace
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].image
+          value: example.com/other:v2
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: DELETE_ALL_AFTER_DAYS
+            value: "60"
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].resources.limits.memory
+          value: 1Gi
+
+  - it: fails without a command
+    set:
+      cronJobs.broken:
+        enabled: true
+        schedule: "0 0 * * *"
+    asserts:
+      - failedTemplate:
+          errorPattern: "cronJobs.broken.command is required"
