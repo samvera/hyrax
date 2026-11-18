@@ -171,7 +171,9 @@ module Hyrax
           # has to be registered: Blacklight discards an `f[...]` parameter
           # naming a facet it has no configuration for, so the link would
           # navigate and silently return unfiltered results.
-          register_hidden_facet_field(facet_name_for(itemprop, controlled_source), label)
+          [facet_name_for(itemprop, controlled_source), "#{itemprop}_sim"].uniq.each do |name|
+            register_hidden_facet_field(name, label, drop_counterpart: controlled_source.blank?)
+          end
         else
           # if the property does not have facetable in the indexing section of the metadata profile, remove the facet field from the blacklight config
           blacklight_config.facet_fields.delete("#{itemprop}_sim")
@@ -200,11 +202,13 @@ module Hyrax
       id_facet = blacklight_config.facet_fields[id_name]
       id_facet = blacklight_config.add_facet_field(id_name, label: label, limit: true) if id_facet.blank?
 
-      # An earlier entry for the same field can have hidden this facet to
+      # An earlier entry for the same field can have hidden these facets to
       # resolve a `render_as: faceted` link. `facetable` asks for the sidebar
       # listing, so that hiding has to be lifted before anything below decides
       # which facet to hide for labels.
-      reveal_link_facet(facet_name_for(itemprop, controlled_source))
+      revealed = [id_name]
+      revealed << facet_name_for(itemprop, controlled_source) if swap_facet_to_labels?(itemprop, controlled_source, indexing)
+      revealed.uniq.each { |name| reveal_link_facet(name) }
 
       # Restore a facet an earlier entry for the same field hid, when this
       # entry is not controlled. Only one we hid ourselves: an `if` an
@@ -247,11 +251,11 @@ module Hyrax
     # a facet this method created: an application that declared the facet in
     # its own CatalogController asked for the sidebar listing, and `render_as`
     # does not override that.
-    def register_hidden_facet_field(name, label)
+    def register_hidden_facet_field(name, label, drop_counterpart: true)
       # Whether an entry is controlled decides which of the two names it links
       # to, and entries for the same field can differ. Dropping the other one
       # leaves no facet that nothing links to.
-      drop_unlinked_counterpart(name)
+      drop_unlinked_counterpart(name) if drop_counterpart
 
       facet = blacklight_config.facet_fields[name]
       return if facet.present? && !facet.hidden_for_link

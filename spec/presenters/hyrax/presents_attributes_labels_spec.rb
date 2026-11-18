@@ -210,4 +210,33 @@ RSpec.describe Hyrax::PresentsAttributes, 'controlled vocabulary labels' do
       end
     end
   end
+
+  describe '#value_label_pairs' do
+    context 'when the document carries indexed labels' do
+      let(:fields) do
+        { 'resource_type_tesim' => ['local_auth_123', 'Article'],
+          'resource_type_label_tesim' => ['Opaque Term', 'Article'] }
+      end
+
+      it 'pairs each stored value with its label, including a label that is its id' do
+        expect(presenter.value_label_pairs(:resource_type)).to eq [['local_auth_123', 'Opaque Term'], ['Article', 'Article']]
+      end
+    end
+
+    context 'when the document carries no labels' do
+      let(:fields) { { 'resource_type_tesim' => ['local_auth_123'] } }
+
+      it 'pairs each stored value with nil' do
+        expect(presenter.value_label_pairs(:resource_type)).to eq [['local_auth_123', nil]]
+      end
+    end
+
+    context 'when the presenter does not respond to the field' do
+      let(:fields) { {} }
+
+      it 'returns an empty array rather than raising' do
+        expect(presenter.value_label_pairs(:nonexistent_field)).to eq []
+      end
+    end
+  end
 end
