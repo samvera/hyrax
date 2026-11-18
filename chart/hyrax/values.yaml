@@ -216,6 +216,9 @@ worker:
   tolerations: []
   affinity: {}
   resources: {}
+  # Seconds Kubernetes waits after SIGTERM before SIGKILL; unset keeps the cluster default (30).
+  # Set above your longest job so scale-downs and rollouts let it finish.
+  # terminationGracePeriodSeconds: 3600
 
   # see: https://github.com/mperham/sidekiq/wiki/Kubernetes#health-checks
   readinessProbe:
