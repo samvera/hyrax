@@ -68,7 +68,7 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   end
 
   def title
-    "#{profile['profile']['responsibility_statement']} - version #{id}"
+    "#{profile['profile']['responsibility_statement']} - v#{profile_version}"
   end
 
   def attributes_for(class_name)
@@ -88,7 +88,14 @@ class Hyrax::FlexibleSchema < ApplicationRecord
   end
 
   def version
-    id
+    profile_version
+  end
+
+  # The semantic version from profile['profile']['version'] in the YAML/JSON data.
+  # This is distinct from schema_version (m3_version) which is the M3 spec version,
+  # and current_schema_id which is the database primary key.
+  def profile_version
+    profile.dig('profile', 'version')
   end
 
   def profile_created_at
