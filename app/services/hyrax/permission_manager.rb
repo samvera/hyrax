@@ -169,9 +169,10 @@ module Hyrax
     def update_users_for(mode:, users:)
       users = users.map(&:to_s)
 
-      user_objects = users.map do |user|
-        ::User.find_by_user_key(user) ||
-          raise(ArgumentError, "No user exists for user key: #{user}")
+      user_objects = users.filter_map do |user|
+        ::User.find_by_user_key(user).tap do |found|
+          Hyrax.logger.warn("Skipping #{mode} permission for missing user: #{user}") unless found
+        end
       end
 
       acl.permissions.each do |permission|
