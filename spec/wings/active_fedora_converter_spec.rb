@@ -324,6 +324,28 @@ RSpec.describe Wings::ActiveFedoraConverter, :active_fedora, :clean_repo do
         expect(converter.convert).to be_a FileSet
       end
 
+      context 'with an extracted text file' do
+        let(:file_set) { create(:file_set) }
+        let(:resource) { file_set.valkyrie_resource }
+        let(:original_file) { File.open(File.join(fixture_path, 'world.png')) }
+        let(:extracted_text_file) { File.open(File.join(fixture_path, 'updated-file.txt')) }
+        let(:extracted_text_content) { File.read(File.join(fixture_path, 'updated-file.txt')) }
+
+        before do
+          Hydra::Works::AddFileToFileSet.call(file_set, original_file, :original_file)
+          Hydra::Works::AddFileToFileSet.call(file_set, extracted_text_file, :extracted_text)
+        end
+
+        it 'retains extracted text when saving a converted resource' do
+          extracted_text_id = file_set.extracted_text.id
+
+          converter.convert.save!
+
+          expect(Hydra::PCDM::File.find(extracted_text_id).content).to eq extracted_text_content
+          expect(FileSet.find(file_set.id).extracted_text.id).to eq extracted_text_id
+        end
+      end
+
       context 'with file metadata' do
         let(:resource) { FactoryBot.build(:hyrax_file_set, :with_files) }
 
