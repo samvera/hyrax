@@ -66,22 +66,45 @@ RSpec.describe Hyrax::CatalogSearchBuilder do
       end
     end
 
-    context 'when the user has view access to collections' do
-      let(:collection_ids) { ['abcd12345', 'efgh67890'] }
-
-      before do
-        allow(Hyrax::Collections::PermissionsService).to receive(:collection_ids_for_view).with(ability: ability).and_return(collection_ids)
+    context 'when the user is a viewer on a private collection', :clean_repo do
+      let(:user) { create(:user) }
+      let(:viewer_grant) do
+        { agent_type: Hyrax::PermissionTemplateAccess::USER, agent_id: user.user_key,
+          access: Hyrax::PermissionTemplateAccess::VIEW }
       end
+      let!(:shared_collection) { FactoryBot.valkyrie_create(:hyrax_collection, access_grants: [viewer_grant]) }
+      let!(:other_collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
 
-      it "includes a regex of the ids of collections" do
+      it "includes the shared collection and not the other private one" do
         subject
-        expect(solr_params['f.member_of_collection_ids_ssim.facet.matches']).to eq '^abcd12345$|^efgh67890$'
+        expect(solr_params['f.member_of_collection_ids_ssim.facet.matches']).to eq "^#{shared_collection.id}$"
       end
     end
 
-    it "includes an empty regex when user doesn't have access to view any collections" do
+    it "includes an empty regex when user doesn't have access to view any collections", :clean_repo do
       subject
       expect(solr_params['f.member_of_collection_ids_ssim.facet.matches']).to eq '^$'
+    end
+
+    context 'when an anonymous visitor can see a collection by its visibility', :clean_repo do
+      let(:ability) { Ability.new(nil) }
+      let!(:public_collection) { FactoryBot.valkyrie_create(:hyrax_collection, :public) }
+      let!(:private_collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
+
+      it "includes the public collection and not the private one" do
+        subject
+        facet_matches = solr_params['f.member_of_collection_ids_ssim.facet.matches']
+        expect(facet_matches).to include "^#{public_collection.id}$"
+        expect(facet_matches).not_to include private_collection.id.to_s
+      end
+
+      it "leaves out collections an application narrows out of visible_collections_query" do
+        allow(builder).to receive(:visible_collections_query)
+          .and_return(Hyrax::SolrQueryService.new(query: ["-#{Hyrax.config.id_field}:#{public_collection.id}"]))
+
+        subject
+        expect(solr_params['f.member_of_collection_ids_ssim.facet.matches']).to eq '^$'
+      end
     end
   end
 end
