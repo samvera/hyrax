@@ -40,7 +40,7 @@ module Hyrax
         event = event.to_h
         return Hyrax.logger.warn("Skipping workflow cleanup for object #{event[:id]}; the event has no :object") unless
           event[:object]
-        gid = Hyrax::ValkyrieGlobalIdProxy.new(resource: event[:object]).to_global_id
+        gid = Hyrax::GlobalID(event[:object])
         return if gid.blank?
         Sipity::Entity.where(proxy_for_global_id: gid.to_s).destroy_all
       end
