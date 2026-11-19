@@ -54,4 +54,13 @@ RSpec.describe FileSetAttachedEventJob do
       expect(file_set.events).to contain_exactly(event)
     end
   end
+
+  context 'with a Hyrax::FileSet that is not in a work' do
+    let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, title: 'An Unattached FileSet') }
+
+    it 'raises an error naming the file set' do
+      expect { described_class.perform_now(file_set, user) }
+        .to raise_error(/FileSet #{file_set.id} is not attached to a work/)
+    end
+  end
 end
