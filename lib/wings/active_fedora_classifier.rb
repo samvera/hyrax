@@ -7,7 +7,11 @@ module Wings
     def classify(model_value)
       if (match = model_value.match(/Wings\((.*)\)/))
         valkyrie_class = match[1].constantize
-        Wings::ActiveFedoraConverter::DefaultWork(valkyrie_class)
+        if valkyrie_class <= Hyrax::FileMetadata
+          Wings::ActiveFedoraConverter::FileMetadataNode(valkyrie_class)
+        else
+          Wings::ActiveFedoraConverter::DefaultWork(valkyrie_class)
+        end
       else
         super
       end
