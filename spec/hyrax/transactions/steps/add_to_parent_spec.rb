@@ -43,4 +43,29 @@ RSpec.describe Hyrax::Transactions::Steps::AddToParent, valkyrie_adapter: :test_
         .to match(object: parent, user: nil)
     end
   end
+
+  context 'when another process added a member to the parent after this step read it' do
+    let(:parent) { FactoryBot.valkyrie_create(:hyrax_work) }
+    let(:other_member) { FactoryBot.valkyrie_create(:hyrax_work) }
+
+    before do
+      parent
+      other_member
+      saved_elsewhere = false
+      allow(Hyrax.query_service).to receive(:find_by).and_wrap_original do |original, id:|
+        found = original.call(id: id)
+        if !saved_elsewhere && id.to_s == parent.id.to_s
+          saved_elsewhere = true
+          save_work_elsewhere(parent.id) { |stored| stored.member_ids += [other_member.id] }
+        end
+        found
+      end
+    end
+
+    it 'keeps that member' do
+      step.call(work, parent_id: parent.id)
+
+      expect(Hyrax.query_service.find_by(id: parent.id).member_ids).to contain_exactly(other_member.id, work.id)
+    end
+  end
 end

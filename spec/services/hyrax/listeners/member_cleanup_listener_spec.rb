@@ -28,6 +28,25 @@ RSpec.describe Hyrax::Listeners::MemberCleanupListener do
       listener.on_object_deleted(event)
       expect(Hyrax.query_service.find_by(id: parent_work.id).member_ids).to be_empty
     end
+
+    context 'when another process added a member to the parent after the listener read it' do
+      let(:other_member) { FactoryBot.valkyrie_create(:hyrax_work) }
+
+      before do
+        other_member
+        allow(Hyrax.query_service).to receive(:find_parents).and_wrap_original do |original, resource:|
+          parents = original.call(resource: resource).to_a
+          save_work_elsewhere(parent_work.id) { |stored| stored.member_ids += [other_member.id] }
+          parents
+        end
+      end
+
+      it 'keeps that member' do
+        listener.on_object_deleted(event)
+
+        expect(Hyrax.query_service.find_by(id: parent_work.id).member_ids).to eq [other_member.id]
+      end
+    end
   end
 
   describe '#on_collection_deleted' do

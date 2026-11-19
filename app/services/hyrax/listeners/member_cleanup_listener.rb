@@ -17,8 +17,9 @@ module Hyrax
         return unless object.is_a?(Hyrax::Work)
 
         Hyrax.query_service.find_parents(resource: object).each do |parent|
+          read_member_ids = parent.member_ids
           parent.member_ids -= [object.id]
-          Hyrax.persister.save(resource: parent)
+          parent = Hyrax::LockedWorkSaver.save(work: parent, read_member_ids: read_member_ids)
           Hyrax.index_adapter.save(resource: parent)
           Hyrax.publisher.publish('object.membership.updated', object: parent, user: user)
         end
