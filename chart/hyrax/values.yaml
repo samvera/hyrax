@@ -306,9 +306,12 @@ postgresql:
 nginx:
   enabled: false
   image:
-    repository: nginxinc/nginx-unprivileged
+    # nginxinc/nginx-unprivileged is stale (no 1.31.x tags); nginx/nginx-unprivileged
+    # is NGINX Inc's current namespace for the same image.
+    repository: nginx/nginx-unprivileged
     pullPolicy: IfNotPresent
-    tag: 1.29-alpine
+    # See notch8/notch8-ops#812.
+    tag: 1.31.9-alpine
   # must stay set even when disabled - templates/ingress.yaml evaluates .Values.nginx.service.port unconditionally.
   service:
     type: ClusterIP
