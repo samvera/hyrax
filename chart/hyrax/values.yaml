@@ -308,7 +308,6 @@ nginx:
   image:
     repository: nginx/nginx-unprivileged
     pullPolicy: IfNotPresent
-    # See notch8/notch8-ops#812.
     tag: 1.31.9-alpine
   # must stay set even when disabled - templates/ingress.yaml evaluates .Values.nginx.service.port unconditionally.
   service:
