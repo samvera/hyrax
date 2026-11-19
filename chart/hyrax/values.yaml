@@ -306,8 +306,6 @@ postgresql:
 nginx:
   enabled: false
   image:
-    # nginxinc/nginx-unprivileged is stale (no 1.31.x tags); nginx/nginx-unprivileged
-    # is NGINX Inc's current namespace for the same image.
     repository: nginx/nginx-unprivileged
     pullPolicy: IfNotPresent
     # See notch8/notch8-ops#812.
