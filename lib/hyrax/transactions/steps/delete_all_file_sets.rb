@@ -28,17 +28,26 @@ module Hyrax
         def call(resource, user: nil)
           return Failure(:resource_not_persisted) unless resource.persisted?
 
+          destroy = file_set_destroy(user: user)
           @query_service.custom_queries.find_child_file_sets(resource: resource).each do |file_set|
-            return Failure[:failed_to_delete_file_set, file_set] unless
-              Hyrax::Transactions::Container['file_set.destroy']
-              .with_step_args('file_set.remove_from_work' => { user: user },
-                              'file_set.delete' => { user: user })
-              .call(file_set).success?
+            return Failure[:failed_to_delete_file_set, file_set] unless user && destroy.call(file_set).success?
           rescue ::Ldp::Gone
             nil
           end
 
           Success(resource)
+        end
+
+        private
+
+        ##
+        # The parent is about to be deleted, so removing each file set from it
+        # would only re-save and re-index the parent and queue update events
+        # for an object that will no longer exist when they run.
+        def file_set_destroy(user:)
+          transaction = Hyrax::Transactions::Container['file_set.destroy'].dup
+          transaction.steps -= ['file_set.remove_from_work']
+          transaction.with_step_args('file_set.delete' => { user: user })
         end
       end
     end

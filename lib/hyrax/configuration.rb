@@ -284,6 +284,43 @@ module Hyrax
           video: lookup_mimes(:video_mime_types) }
     end
 
+    attr_writer :derivative_options
+
+    ##
+    # The +outputs:+ specs passed to +Hydra::Derivatives+ per derivative type.
+    # +:url+ is a destination name resolved to a real URL at create time; a
+    # callable value is invoked with the file set. An +extracted_text+ container
+    # routes to full text extraction (gated also by {#extract_full_text?}) — its
+    # presence is the per-type toggle. Tune these instead of decorating
+    # +Hyrax::FileSetDerivativesService+:
+    #
+    #   Hyrax.config do |config|
+    #     config.derivative_options[:pdf].first[:size] = '676x986'                            # bigger thumbnail
+    #     config.derivative_options[:pdf].reject! { |o| o[:container] == 'extracted_text' }   # no PDF text
+    #
+    #     # transcode video to its source dimensions (falls back to 320x240)
+    #     sizer = ->(fs) { (w = Array(fs.width).first) && (h = Array(fs.height).first) ? "#{w}x#{h}" : '320x240' }
+    #     config.derivative_options[:video].each { |o| o[:size] = sizer }
+    #   end
+    #
+    # @return [Hash{Symbol => Array<Hash>}]
+    # @see Hyrax::FileSetDerivativesService
+    def derivative_options
+      @derivative_options ||= {
+        pdf: [{ label: :thumbnail, format: 'jpg', size: '338x493', url: 'thumbnail', layer: 0 },
+              { url: 'extracted_text', container: 'extracted_text' }],
+        office: [{ label: :thumbnail, format: 'jpg', size: '200x150>', url: 'thumbnail', layer: 0 },
+                 { url: 'extracted_text', container: 'extracted_text' }],
+        audio: [{ label: 'mp3', format: 'mp3', url: 'mp3', mime_type: 'audio/mpeg', container: 'service_file' },
+                { label: 'ogg', format: 'ogg', url: 'ogg', mime_type: 'audio/ogg', container: 'service_file' }],
+        video: [{ label: :thumbnail, format: 'jpg', url: 'thumbnail', mime_type: 'image/jpeg' },
+                { label: 'webm', format: 'webm', url: 'webm', mime_type: 'video/webm', container: 'service_file' },
+                { label: 'mp4', format: 'mp4', url: 'mp4', mime_type: 'video/mp4', container: 'service_file' }],
+        # image uses layer: 0 because otherwise pyramidal tiffs flatten all the layers together into the thumbnail
+        image: [{ label: :thumbnail, format: 'jpg', size: '200x150>', url: 'thumbnail', layer: 0 }]
+      }
+    end
+
     attr_writer :derivative_services
     # The registered candidate derivative services.  In the array, the first `valid?` candidate will
     # handle the derivative generation.
@@ -341,6 +378,43 @@ module Hyrax
         ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_FLEXIBLE', false))
     end
     alias flexible? flexible
+
+    attr_writer :flexible_schema_validators
+    ##
+    # The ordered list of validators {Hyrax::FlexibleSchemaValidatorService} runs
+    # against an m3 profile when one is saved.
+    #
+    # Entries may be classes or class-name strings; names are resolved when the
+    # profile is validated, so an app may register a validator that is not yet
+    # loaded at configuration time. Each must respond to `.new(context)`, and the
+    # instance to `#validate!` and `#violations`.
+    #
+    # @example Adding one without dropping Hyrax's own
+    #   Hyrax.config.flexible_schema_validators += ['MyApp::MyProfileValidator']
+    #
+    # They run in the order listed, which is the order their messages are
+    # reported in: structural problems before per-property ones. No validator
+    # depends on another having run, so an app may reorder this list freely.
+    #
+    # @return [Array<String, Class>]
+    # @see Hyrax::FlexibleSchemaValidators::BaseValidator
+    def flexible_schema_validators # rubocop:disable Metrics/MethodLength
+      @flexible_schema_validators ||= %w[
+        Hyrax::FlexibleSchemaValidators::RequiredClassesValidator
+        Hyrax::FlexibleSchemaValidators::ClassAvailabilityValidator
+        Hyrax::FlexibleSchemaValidators::ClassReferenceValidator
+        Hyrax::FlexibleSchemaValidators::ExistingRecordsValidator
+        Hyrax::FlexibleSchemaValidators::SchemaValidator
+        Hyrax::FlexibleSchemaValidators::LabelPropertyValidator
+        Hyrax::FlexibleSchemaValidators::CoreMetadataValidator
+        Hyrax::FlexibleSchemaValidators::SortPropertiesValidator
+        Hyrax::FlexibleSchemaValidators::RedirectsValidator
+        Hyrax::FlexibleSchemaValidators::CompoundValidator
+        Hyrax::FlexibleSchemaValidators::RichTextValidator
+        Hyrax::FlexibleSchemaValidators::SearchResultsTruncateValidator
+        Hyrax::FlexibleSchemaValidators::RenderAsValidator
+      ]
+    end
 
     # See documentation/redirects.md for the redirects feature.
     attr_writer :redirects_enabled
@@ -1012,6 +1086,20 @@ module Hyrax
     end
     attr_writer :location_service
 
+    # A configuration point for resolving controlled vocabulary term ids to
+    # their labels, used when indexing and rendering controlled properties.
+    #
+    # Defaults to a no-op that returns values unchanged, because Hyrax has no
+    # vocabulary store of its own. Register an application's own resolver to
+    # have labels indexed and displayed.
+    #
+    # @!attribute [w] controlled_vocabulary_label_service
+    #   @see Hyrax::ControlledVocabularyLabelService for the expected interface
+    def controlled_vocabulary_label_service
+      @controlled_vocabulary_label_service ||= Hyrax::ControlledVocabularyLabelService.new
+    end
+    attr_writer :controlled_vocabulary_label_service
+
     attr_writer :active_deposit_agreement_acceptance
     def active_deposit_agreement_acceptance?
       return true if @active_deposit_agreement_acceptance.nil?
@@ -1237,6 +1325,14 @@ module Hyrax
     # @return [Class]
     def file_set_indexer
       @file_set_indexer ||= Hyrax::Indexers::FileSetIndexer
+    end
+
+    attr_writer :index_file_metadata_as_document
+    ##
+    # @return [Boolean] whether FileMetadata resources are indexed as their own Solr document
+    def index_file_metadata_as_document?
+      return @index_file_metadata_as_document unless @index_file_metadata_as_document.nil?
+      ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_INDEX_FILE_METADATA_AS_DOCUMENT', true))
     end
 
     attr_writer :pcdm_collection_indexer

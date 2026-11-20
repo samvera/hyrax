@@ -42,7 +42,7 @@ RSpec.describe 'hyrax/file_sets/_valkyrie_form.html.erb', type: :view do
   end
 
   it 'renders the form with file-set-form behavior and param-key data attributes' do
-    expect(rendered).to have_selector('form[data-behavior="file-set-form"][data-param-key="file_set"]')
+    expect(rendered).to have_selector('form[data-behavior="file-set-form"][data-param-key="file_set"][data-remove-text="Remove"]')
   end
 
   it 'renders based_near with autocomplete url' do

@@ -5,9 +5,10 @@ RSpec.describe Hyrax::CollectionsService, :clean_repo do
   let(:context) do
     double(current_ability: Ability.new(user1),
            repository: controller.blacklight_config.repository,
-           params: {},
+           params: params,
            blacklight_config: controller.blacklight_config)
   end
+  let(:params) { {} }
 
   let(:service) { described_class.new(context) }
   let(:user1) { create(:user) }
@@ -105,6 +106,15 @@ RSpec.describe Hyrax::CollectionsService, :clean_repo do
       let(:access) { :deposit }
 
       it "returns all collections the user can deposit into" do
+        expect(subject.map(&:id)).to match_array [collection1.id, collection2.id, collection3.id]
+      end
+    end
+
+    context "when the request is filtered by work facets and a query" do
+      let(:access) { :deposit }
+      let(:params) { { q: 'no such title', f: { resource_type_sim: ['Article'] }, page: 2 } }
+
+      it "ignores them" do
         expect(subject.map(&:id)).to match_array [collection1.id, collection2.id, collection3.id]
       end
     end

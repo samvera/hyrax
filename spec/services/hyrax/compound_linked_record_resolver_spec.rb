@@ -38,6 +38,17 @@ RSpec.describe Hyrax::CompoundLinkedRecordResolver do
         next nil if name.empty?
 
         ([record] + store.values).find { |r| r.name.to_s.casecmp?(name) }
+      },
+      # Fuzzy, multi-row "did you mean" lookup on a typed name, for the create
+      # form's duplicate check. Same row shape as `search`. Here a naive stub:
+      # match on a shared first token (so "Ada Byron" surfaces "Ada Lovelace").
+      similar: lambda { |q|
+        token = q.to_s.downcase.split.first.to_s
+        next [] if token.empty?
+
+        ([record] + store.values)
+          .select { |r| r.name.to_s.downcase.include?(token) }
+          .map { |r| { id: r.id.to_s, label: r.name, value: r.id.to_s } }
       }
     )
     example.run
@@ -130,6 +141,16 @@ RSpec.describe Hyrax::CompoundLinkedRecordResolver do
     it 'returns [] for an unregistered source' do
       expect(described_class.search(:nope, 'x')).to eq([])
     end
+
+    it 'passes optional row keys (e.g. detail) through unchanged' do
+      # The picker renders an optional `detail` line from whatever the source
+      # supplies; the resolver treats rows as opaque, so any extra key survives.
+      described_class.register(:detailed, finder: ->(_id) {}, label: ->(_r) {}, path: ->(_r) {},
+                                          search: ->(_q) { [{ id: '1', label: 'A', value: '1', detail: 'x · y' }] })
+      expect(described_class.search(:detailed, 'a')).to contain_exactly(a_hash_including(detail: 'x · y'))
+    ensure
+      described_class.registry.delete(:detailed)
+    end
   end
 
   describe '.searchable? and .creatable?' do
@@ -170,6 +191,46 @@ RSpec.describe Hyrax::CompoundLinkedRecordResolver do
       described_class.register(:boom, finder: ->(_id) {}, label: ->(_r) {}, path: ->(_r) {},
                                       match: ->(_attrs) { raise 'kaboom' })
       expect(described_class.match(:boom, display_name: 'Ada Lovelace')).to be_nil
+    ensure
+      described_class.registry.delete(:boom)
+    end
+  end
+
+  describe '.similar?' do
+    it 'reports whether a source declares a similar proc' do
+      expect(described_class.similar?(:stub_people)).to be(true)
+      expect(described_class.similar?(:nope)).to be(false)
+    end
+
+    it 'is false for a source registered without a similar proc' do
+      described_class.register(:similarless, finder: ->(_id) {}, label: ->(_r) {}, path: ->(_r) {})
+      expect(described_class.similar?(:similarless)).to be(false)
+    ensure
+      described_class.registry.delete(:similarless)
+    end
+  end
+
+  describe '.similar' do
+    it 'returns fuzzy "did you mean" rows from the source similar proc' do
+      results = described_class.similar(:stub_people, 'Ada Byron')
+      expect(results).to contain_exactly(a_hash_including(id: '7', label: 'Ada Lovelace'))
+    end
+
+    it 'returns [] for a source registered without a similar proc' do
+      described_class.register(:similarless, finder: ->(_id) {}, label: ->(_r) {}, path: ->(_r) {})
+      expect(described_class.similar(:similarless, 'x')).to eq([])
+    ensure
+      described_class.registry.delete(:similarless)
+    end
+
+    it 'returns [] for an unregistered source' do
+      expect(described_class.similar(:nope, 'x')).to eq([])
+    end
+
+    it 'returns [] when the similar proc raises' do
+      described_class.register(:boom, finder: ->(_id) {}, label: ->(_r) {}, path: ->(_r) {},
+                                      similar: ->(_q) { raise 'kaboom' })
+      expect(described_class.similar(:boom, 'x')).to eq([])
     ensure
       described_class.registry.delete(:boom)
     end

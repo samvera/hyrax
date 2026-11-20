@@ -42,7 +42,12 @@ they belong to via `available_on: { properties: [<parent>] }` — the same
 `available_on` block a standalone property uses to declare its class scope, but
 with a `properties:` list (the parent compounds) instead of `class:`. Every
 property key is globally unique, so subproperty keys are conventionally prefixed;
-the field's key *inside* the compound is its `name:` (falling back to the key):
+the field's key *inside* the compound is its `name:` (falling back to the key).
+That in-compound name may contain only letters, digits, and underscores, since it
+becomes part of the subproperty's Solr field names and form field ids, and it
+cannot be one of the keys Valkyrie reserves in a hash (`id`, `@id`, `@value`,
+`internal_resource`). The m3 profile validator and the metadata YAML loader both
+reject such a name:
 
 ```yaml
 contributors:
@@ -137,9 +142,9 @@ textarea). Supported `type:` values:
 | `string`     | text input          | The default when `type:` is omitted. |
 | `datepicker` | native date picker (`<input type="date">`) | HTML5 date input. **Displays** in the user's locale (dd/mm/yyyy, mm/dd/yyyy) but always **stores** ISO-8601 `YYYY-MM-DD`, so the value is locale-independent. Stored as a plain string, **not** a `date`/`_dtsi` Solr field. |
 | `url`        | url input → auto-linked on show | The stored value is rendered as a clickable `<a href>` on show pages (matching the scalar `render_as: external_link` behavior). |
-| `work_or_url` | select2 typeahead → linked on show | Searches internal works (via the `compound_works` QA authority, backed by `Hyrax::CompoundWorkPickerBuilder`) **or** accepts a typed external URL. The stored value is a work id or a URL; on show, a work id links to the work's show page with its title (resolved by `Hyrax::CompoundWorkResolver`), a URL is auto-linked. |
+| `work_or_url` | text input + select2 search → linked on show | A visible field the user types a URL into directly, beside a select2 picker that searches internal works (via the `compound_works` QA authority, backed by `Hyrax::CompoundWorkPickerBuilder`) and writes the chosen id into that field. The stored value is a work id or a URL; on show, a work id links to the work's show page with its title (resolved by `Hyrax::CompoundWorkResolver`), a URL is auto-linked. |
 | `linked_record` | select2 typeahead → linked on show | A reference to a row in a database table (a person, organization, funder, place, …). The stored value is the row id; the picker searches that table and, optionally, lets a cataloger add a new record inline. On show, the id links to the record using the resolved label. The table and its procs are registered by the host application — see [`linked_record` sub-properties](#linked_record-sub-properties) below. |
-| `controlled` | `<select>` dropdown | Options come from either an inline `values:` list or a QA local authority named by `authority:` (see below). The row's stored value is preserved even if it is no longer offered, matching the `include_current_value` convention of the ordinary controlled-field partials. |
+| `controlled` | `<select>` dropdown (optionally a select2 typeahead / multi-select) | Options come from either an inline `values:` list or a QA local authority named by `authority:` (see below). The row's stored value is preserved even if it is no longer offered, matching the `include_current_value` convention of the ordinary controlled-field partials. Two per-member `form:` opt-ins refine the input — see [Typeahead and multi-select](#typeahead-and-multi-select-for-controlled-members) below. |
 
 A `controlled` sub-property sources its options one of two ways:
 
@@ -170,13 +175,52 @@ both are given, `values:` wins. Authority options are read through
 `Hyrax::TolerantSelectService`, so an authority file that omits the `active:`
 key behaves the same as it does for ordinary fields (terms default to active).
 
+#### Typeahead and multi-select for `controlled` members
+
+A `controlled` member is a single-select plain `<select>` by default. Two
+`form:` opt-ins, each defaulting off, refine it:
+
+```yaml
+participant_role:
+  type: controlled
+  available_on: { properties: [participants] }
+  authority: participant_role
+  form:
+    autocomplete: true   # bind a select2 typeahead over the options
+    multiple: true        # allow several values in one row
+```
+
+- **`autocomplete: true`** binds a select2 typeahead to the select so the
+  cataloger can filter the options by typing. The full option list is rendered
+  into the DOM, so filtering is client-side — no extra request. It works on both
+  single- and multi-select members.
+- **`multiple: true`** renders a multi-select (the values submit as an array).
+  At submit time each selected value **fans out into its own compound entry**,
+  sharing the row's other members — so a participant picked with three roles is
+  stored as three entries of one role each, not one entry holding an array. This
+  keeps the stored shape uniform (every member value is a scalar) and lets each
+  term index and facet independently. A row whose only multi-select member is
+  left empty is still stored once (with that member nil).
+
+Both are independent: a member may be a typeahead single-select, a plain
+multi-select, both, or neither.
+
 A `work_or_url` sub-property's work search is broader than the stock "my works"
 picker: `Hyrax::CompoundWorkPickerBuilder` matches a typed term against any
 indexed query field **or** a partial/prefix title (so "jour" matches "Journal
 of …"), restricted to works. It subclasses `Hyrax::SearchBuilder`, so the
 catalog's read-permission filtering is retained — a user only sees works they
 can read. The picker is mounted as the `compound_works` QA authority at
-`/authorities/search/compound_works`.
+`/authorities/search/compound_works`. It also matches an id exactly, so a pasted
+work id resolves to that work and shows its title; and it leaves out the work being
+edited, since relating a work to itself is meaningless.
+
+The picker carries no `name` and never submits; selecting a work copies its id
+into the visible field, which is the control the form posts. So a typed URL needs
+no dropdown interaction at all, and the field stays editable and submittable
+without JavaScript — with select2 absent it degrades to a plain text input. This
+replaced an earlier hidden input that only select2 could write, where a typed URL
+was silently discarded on blur (samvera/hyrax#7572).
 
 `geocode` (a Geonames/coordinate lookup) is a planned additional sub-property
 type; the form's row partial has an explicit extension point for it. `geocode`
@@ -207,24 +251,34 @@ Rails.application.config.to_prepare do
     finder: ->(id)    { Person.find_by(id:) },
     label:  ->(person) { person.display_name },
     path:   ->(person) { Rails.application.routes.url_helpers.person_path(person) },
-    # optional — enables the picker autocomplete:
+    # optional — enables the picker autocomplete. Each row may carry an optional
+    # `detail:` string, rendered as a muted second line under the label so
+    # same-named records are distinguishable:
     search: ->(q) { Person.where('display_name ILIKE ?', "%#{q}%").limit(20)
-                          .map { |p| { id: p.id.to_s, label: p.display_name, value: p.id.to_s } } },
+                          .map { |p| { id: p.id.to_s, label: p.display_name, value: p.id.to_s,
+                                       detail: p.orcid } } },
     # optional — enables inline "add new" (lookup-or-create):
-    create: ->(attrs) { Person.create(attrs.slice(:display_name, :orcid)) }
+    create: ->(attrs) { Person.create(attrs.slice(:display_name, :orcid)) },
+    # optional — enables the create form's fuzzy "did you mean" duplicate check.
+    # Same row shape as `search` (fuzzy, multi-row); the cataloger picks a match
+    # or creates anyway. Omit for a source with no duplicate check:
+    similar: ->(q) { Person.fuzzy_by_name(q).limit(10)
+                           .map { |p| { id: p.id.to_s, label: p.display_name, value: p.id.to_s,
+                                        detail: p.orcid } } }
   )
 end
 ```
 
-**What the table needs.** The source can wrap any object the four procs can
-operate on — typically an `ActiveRecord` model, but nothing about the type is
-prescribed. The only contract is what the procs imply:
+**What the table needs.** The source can wrap any object its procs can operate on
+— typically an `ActiveRecord` model, but nothing about the type is prescribed.
+The only contract is what the procs imply:
 
 - a stable identifier the `finder` can look up by and that is safe to persist as
   a string (an integer or UUID primary key is fine — it is stored as its string
   form);
 - a human-readable label (whatever `label:` / `view: { label_field: }` returns);
-- any other fields the `path:`, `search:`, or `create:` procs reference.
+- any other fields the `path:`, `search:`, `create:`, `similar:`, or `match:`
+  procs reference.
 
 There is **no base class to inherit, no required column names, no migration or
 schema Hyrax imposes, and no per-source authority or controller class to write** —
@@ -269,12 +323,20 @@ How the pieces fit together:
   `view: { label_field: }` when present, otherwise the source's `label:` proc.
   An id that no longer resolves renders as bare text, never a broken link.
 - **Inline lookup-or-create.** When the sub-property declares `creatable: true`
-  and the source registers a `create:` proc, a search that returns no matches
-  offers an "Add new" form built from `create_fields`. Submitting it POSTs to
+  and the source registers a `create:` proc, an "Add new" form built from
+  `create_fields` is available beside the picker (visible whether or not a search
+  matched, so results and create coexist). Submitting it POSTs to
   `/linked_records/:source`, which calls the source's `create:` proc and selects
   the new record in the picker. Each `create_fields` entry declares its own
   input: `as: string` (text input) or `as: select` (a dropdown of `values:`),
   and `required:`.
+- **Duplicate check ("did you mean").** When the source registers a `similar:`
+  proc, clicking Create first runs a fuzzy lookup on the typed name (via the
+  generic `linked_record_similar` QA authority) and, if near-matches exist, shows
+  them with a "Use this" action so the cataloger can reuse an existing record
+  instead of creating a duplicate. The primary Create button is the override:
+  press it again to create the new record anyway; editing the name re-checks. A
+  source without `similar:` skips the check and creates directly.
 - **Repeatable create-fields** (see `affiliations` and `identifiers` above). Mark
   any create-field `repeatable: true` and the "Add new" form renders add/remove
   rows for it. A repeatable **scalar** (`as: string`/`select`, no `fields:`)
@@ -433,10 +495,22 @@ work.contributors
 #     { "given_name" => "Alan", "family_name" => "Turing",  "role_label" => "author" }]
 ```
 
-This shape round-trips cleanly through Postgres JSONB in both flex modes. (Use
-this plain-hash shape rather than nesting a `Valkyrie::Resource`; nested
-resources round-trip poorly and lack form-layer support — see
-[`field_behaviors.md`](field_behaviors.md).)
+This shape round-trips in both flex modes on every metadata backend. Postgres
+stores the rows as JSONB; the Valkyrie Fedora adapter stores each row as one JSON
+literal (through Hyrax overrides until samvera/valkyrie#1005 is released); Wings
+stores each row as one JSON string, which the `type: hash` attribute type parses
+back into a hash on read.
+
+Rows reload in the order they were saved. Fedora itself keeps a field's values in
+no particular order, so Hyrax marks `type: hash` attributes `ordered` (Valkyrie's
+`ordered: true`). The Valkyrie Fedora adapter then stores the rows as an ordered
+list. Wings, the bridge to ActiveFedora, does not support that setting, so Hyrax
+handles order itself there: it adds a position number to each row when saving,
+then sorts the rows by that number and removes it when loading.
+
+Use this plain-hash shape rather than nesting a `Valkyrie::Resource`: nested
+resources round-trip poorly and lack form-layer support (see
+[`field_behaviors.md`](field_behaviors.md)).
 
 ## What the foundation provides
 
@@ -495,9 +569,8 @@ demonstrating the supported sub-property types:
   `identifier_type` (inline `values:`).
 - **`compound_rights`** — controlled `rights_statement` and `license` backed by
   *existing* QA local authorities (`authority:`), plus an open `rights_notes`.
-- **`relationships`** — a `work_or_url` `related_item` (search an internal work
-  or enter an external URL; linked on show) plus a controlled
-  `relationship_type`.
+- **`relationships`** — a `work_or_url` `item` (search an internal work or type an
+  external URL; linked on show) plus a controlled `relationship_type`.
 
 They are declared in `config/metadata/compound_metadata.yaml` (non-flexible
 mode) and in the default m3 profile (`config/metadata_profiles/m3_profile.yaml`,
@@ -723,7 +796,7 @@ optional procs on the source alongside `finder`/`label`/`path`:
 ```ruby
 Hyrax::CompoundLinkedRecordResolver.register(
   :people,
-  # …finder/label/path/search/create as above…
+  # …finder/label/path and the picker procs (search/create/similar) as above…
   # exact, single-row lookup on a natural key, for import resolution:
   match: ->(attrs) { Person.where('LOWER(display_name) = LOWER(?)', attrs[:display_name].to_s.strip).order(:id).first }
 )

@@ -4,12 +4,14 @@
   <p><%= t(".#{access}.help") %></p>
   <p><%= t(".#{access}.help_with_works", type_title: collection_type.title) if collection_type.share_applies_to_new_works? && access != 'depositors' %></p>
   <% if collection_permission_template_form_for(form: @form).access_grants.select(&filter).any? %>
+    <div class="overflow-auto">
     <table class="table table-striped share-status">
+      <caption class="sr-only"><%= t(".#{access}.title") %></caption>
       <thead>
         <tr>
-          <th><%= t(".#{access}.agent_name") %></th>
-          <th><%= t(".#{access}.type") %></th>
-          <th><%= t(".#{access}.action") %></th>
+          <th scope="col"><%= t(".#{access}.agent_name") %></th>
+          <th scope="col"><%= t(".#{access}.type") %></th>
+          <th scope="col"><%= t(".#{access}.action") %></th>
         </tr>
       </thead>
       <tbody>
@@ -28,6 +30,7 @@
       <% end %>
       </tbody>
     </table>
+    </div>
   <% else %>
     <p><em><%= t(".#{access}.empty") %></em></p>
   <% end %>

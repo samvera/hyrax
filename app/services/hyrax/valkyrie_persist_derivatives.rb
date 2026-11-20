@@ -28,7 +28,11 @@ module Hyrax
       stream.rewind
       output = tmpfile.write(stream.read)
       tmpfile.flush
-      raise 'blank file detected' if output.zero?
+      if output.zero?
+        return if directives[:container] == 'extracted_text'
+
+        raise 'blank file detected'
+      end
 
       filename = filename(directives)
       Hyrax.logger.debug "Uploading derivative for FileSet #{file_set.id} as #{filename}"

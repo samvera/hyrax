@@ -1,25 +1,37 @@
-<h2><%= I18n.t("hyrax.admin.stats.top_data.top_file_formats_and_users", :default => "Top File Formats and Users") %></h2>
-<h3><%= I18n.t('hyrax.admin.stats.top_data.explanation_with_limit', limit: @presenter.limit, :default => "Statistics in this section shows the top %{limit} items for each category"); %></h3>
-
-<% if @presenter.limit == 5 %>
-  <p><%= link_to I18n.t('hyrax.admin.stats.top_data.view_top', number: 20, :default => "View top %{number}"), hyrax.admin_stats_path(limit: '20') %> </p>
-<% else %>
-  <p><%= link_to I18n.t('hyrax.admin.stats.top_data.view_top', number: 5, :default => "View top %{number}"), hyrax.admin_stats_path %> </p>
-<% end %>
-
-<h3><%= I18n.t('hyrax.admin.stats.top_data.top_file_format', count: @presenter.top_formats.count, :default => "Top File Formats (top %{count})"); %></h3>
-<ul>
-  <% @presenter.top_formats.each do |fmt| %>
-    <li><%= fmt.label %> <span class="count">(<%= fmt.value %>)</span></li>
+<h2 class="h4 mt-4 pb-2 border-bottom"><%= t("hyrax.admin.stats.top_data.top_file_formats_and_users") %></h2>
+<p class="text-muted small"><%= t('hyrax.admin.stats.top_data.explanation_with_limit', limit: @presenter.limit) %></p>
+<p>
+  <% if @presenter.limit == 5 %>
+    <%= link_to t('hyrax.admin.stats.top_data.view_top', number: 20), hyrax.admin_stats_path(limit: '20') %>
+  <% else %>
+    <%= link_to t('hyrax.admin.stats.top_data.view_top', number: 5), hyrax.admin_stats_path %>
   <% end %>
-</ul>
-
-<br />
-<h3><%= I18n.t('hyrax.admin.stats.top_data.most_actie_users', count: @presenter.active_users.count, :default => "Most Active Users (top %{count})"); %></h3>
-<ul>
-  <% @presenter.active_users.each do |user| %>
-    <li>
-      <%= link_to_profile(user.label) %> <span class="count">(<%= user.value %>)</span>
-    </li>
-  <% end %>
-</ul>
+</p>
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <div class="card h-100 mb-0">
+      <div class="card-body flex-grow-0 pb-2">
+        <h3 class="h5 mb-0"><%= t('hyrax.admin.stats.top_data.top_file_format', count: @presenter.top_formats.count) %></h3>
+      </div>
+      <ul class="list-group list-group-flush">
+        <% @presenter.top_formats.each do |fmt| %>
+          <li class="list-group-item d-flex justify-content-between"><span><%= fmt.label %></span> <span class="text-muted">(<%= fmt.value %>)</span></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6 mb-3">
+    <div class="card h-100 mb-0">
+      <div class="card-body flex-grow-0 pb-2">
+        <h3 class="h5 mb-0"><%= t('hyrax.admin.stats.top_data.most_actie_users', count: @presenter.active_users.count) %></h3>
+      </div>
+      <ul class="list-group list-group-flush">
+        <% @presenter.active_users.each do |user| %>
+          <li class="list-group-item d-flex justify-content-between">
+            <span><%= link_to_profile(user.label) %></span> <span class="text-muted">(<%= user.value %>)</span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

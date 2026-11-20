@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="stylesheet" type="text/css" href="clover.css">
+    </head>
+    <body>
+    <script type="text/javascript" src="clover.js"></script>
+    <clover-viewer />
+    <script>
+        manifestUrl = new URLSearchParams(window.location.search).get('manifest');
+        viewer = document.querySelector('clover-viewer')
+        viewer.setAttribute('id', manifestUrl)
+    </script>
+    </body>
+</html>

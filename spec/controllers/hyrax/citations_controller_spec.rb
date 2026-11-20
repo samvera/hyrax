@@ -12,8 +12,8 @@ RSpec.describe Hyrax::CitationsController do
       end
 
       it "is successful" do
-        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path)
         get :work, params: { id: work }
         expect(response).to be_successful
         expect(response).to render_template('layouts/hyrax/1_column')
@@ -30,7 +30,7 @@ RSpec.describe Hyrax::CitationsController do
 
       it "redirects to the home page" do
         get :work, params: { id: work }
-        expect(response).to redirect_to main_app.root_path(locale: 'en')
+        expect(response).to redirect_to main_app.root_path
         expect(flash[:alert]).to eq "You are not authorized to access this page."
       end
     end
@@ -38,7 +38,7 @@ RSpec.describe Hyrax::CitationsController do
     context "when a user is not logged in" do
       it "redirects to the user login page" do
         get :work, params: { id: work }
-        expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
+        expect(response).to redirect_to main_app.new_user_session_path
         expect(flash[:alert]).to eq "You are not authorized to access this page."
         expect(session['user_return_to']).to eq request.url
       end
@@ -51,8 +51,8 @@ RSpec.describe Hyrax::CitationsController do
       end
 
       it "is successful" do
-        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path)
         get :work, params: { id: work }
         expect(response).to be_successful
         expect(response).to render_template('layouts/hyrax/1_column')
@@ -71,8 +71,8 @@ RSpec.describe Hyrax::CitationsController do
       end
 
       it "is successful" do
-        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path)
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path)
         get :file, params: { id: file_set }
         expect(response).to be_successful
         expect(response).to render_template('layouts/hyrax/1_column')
@@ -83,7 +83,7 @@ RSpec.describe Hyrax::CitationsController do
     context "with an unauthenticated user" do
       it "is not successful" do
         get :file, params: { id: file_set }
-        expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
+        expect(response).to redirect_to main_app.new_user_session_path
         expect(flash[:alert]).to eq "You are not authorized to access this page."
         expect(session['user_return_to']).to eq request.url
       end

@@ -33,6 +33,16 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
           .not_to change { fake_adapter.deleted_resources }
       end
     end
+
+    context 'when the payload has only an id' do
+      let(:event) { Dry::Events::Event.new(event_type, id: 'deleted-id') }
+
+      it 'warns that the index entry was not removed' do
+        expect(Hyrax.logger).to receive(:warn).with(/deleted-id/)
+        expect { listener.on_object_deleted(event) }
+          .not_to change { fake_adapter.deleted_resources }
+      end
+    end
   end
 
   describe '#on_object_membership_updated' do
@@ -125,6 +135,48 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
             .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
           expect { listener.on_object_metadata_updated(event) }.not_to raise_error
         end
+      end
+    end
+  end
+
+  describe '#on_file_metadata_updated' do
+    let(:event_type) { :on_file_metadata_updated }
+    let(:resource)   { FactoryBot.build(:hyrax_file_metadata) }
+    let(:data)       { { metadata: resource } }
+
+    it 'reindexes the file metadata on the configured adapter' do
+      expect { listener.on_file_metadata_updated(event) }
+        .to change { fake_adapter.saved_resources }
+        .to contain_exactly(resource)
+    end
+
+    context 'when index_file_metadata_as_document? is false' do
+      before { allow(Hyrax.config).to receive(:index_file_metadata_as_document?).and_return(false) }
+
+      it 'does not index the file metadata' do
+        expect { listener.on_file_metadata_updated(event) }
+          .not_to change { fake_adapter.saved_resources }
+      end
+    end
+  end
+
+  describe '#on_file_metadata_deleted' do
+    let(:event_type) { :on_file_metadata_deleted }
+    let(:resource)   { FactoryBot.build(:hyrax_file_metadata) }
+    let(:data)       { { metadata: resource } }
+
+    it 'removes the file metadata from the configured adapter' do
+      expect { listener.on_file_metadata_deleted(event) }
+        .to change { fake_adapter.deleted_resources }
+        .to contain_exactly(resource)
+    end
+
+    context 'when index_file_metadata_as_document? is false' do
+      before { allow(Hyrax.config).to receive(:index_file_metadata_as_document?).and_return(false) }
+
+      it 'does not attempt to remove the file metadata' do
+        expect { listener.on_file_metadata_deleted(event) }
+          .not_to change { fake_adapter.deleted_resources }
       end
     end
   end

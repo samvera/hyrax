@@ -142,6 +142,7 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
       accept_confirm { click_button 'Delete Selected' }
       expect(page).to have_content('Batch delete complete')
       expect(count_of_work_objects).to be_zero
+      expect { query_service.find_by(id: file_set.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
     end
   end
 end

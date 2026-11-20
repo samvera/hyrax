@@ -105,8 +105,9 @@ class AddParticipantsInputValidator {
   handleWrapperContentsChange(event) {
     const { buttonSelector, inputsWrapper } = event.data;
     const $inputsWrapper = $(event.target).parents(inputsWrapper);
-    // Get regular inputs for the row
-    const $inputs = $inputsWrapper.find('.form-control');
+    // Get regular inputs for the row. select2 copies .form-control onto its container,
+    // which has no value; checkSelect2Pass covers it.
+    const $inputs = $inputsWrapper.find('.form-control').not('.select2-container');
     const $addButton = $inputsWrapper.find(buttonSelector);
     const inputsPass = this.checkInputsPass($inputs);
     const select2Pass = this.checkSelect2Pass($inputsWrapper);

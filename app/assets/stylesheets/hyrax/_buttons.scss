@@ -64,3 +64,14 @@ span.appliedFilter .remove {
 td.toggle input[type="submit"]:not(.active) {
   @extend .btn-default;
 }
+
+// The analytics report buttons are .btn inside .nav-pills, whose .nav-link rule strips their background.
+.nav-pills .btn.nav-link {
+  &.btn-primary {
+    @include button-variant($primary, $primary);
+  }
+
+  &.btn-secondary {
+    @include button-variant($secondary, $secondary);
+  }
+}

@@ -20,6 +20,13 @@ RSpec.describe "hyrax/dashboard/show_user.html.erb", type: :view do
                     render_received_transfers: 'received transfers')
   end
 
+  it "shows the dashboard icon in the page header" do
+    allow(view).to receive(:provide).and_yield
+    render
+    expect(rendered).to have_css('h1 > span.fa-home[aria-hidden="true"]')
+    expect(rendered).to have_selector('h1', text: 'Dashboard')
+  end
+
   it "includes recent activities and notifications" do
     render
     expect(rendered).to have_content "User Activity"

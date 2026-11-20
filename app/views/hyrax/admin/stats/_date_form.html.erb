@@ -1,8 +1,8 @@
-<%= form_for "stats_filters", url: hyrax.admin_stats_path, method: "GET" do |f| %>
-  <input type='hidden' name='locale' value="<%= params[:locale] %>" />
-  <%= f.label "Start *" %>
-  <input type="date" name="stats_filters[start_date]" value="<%= @presenter.stats_filters[:start_date] %>" placeholder="yyyy-mm-dd"></input>
-  <%= f.label "end [defaults to now]" %>
-  <input type="date" name="stats_filters[end_date]" value="<%= @presenter.stats_filters[:end_date] %>" placeholder="yyyy-mm-dd"></input>
-  <%= f.submit I18n.t("hyrax.admin.stats.date_form.load_stats", :default => "Load Stats") %>
+<%= form_for "stats_filters", url: hyrax.admin_stats_path, method: "GET", html: { class: "form-inline bg-light border rounded p-3 mb-4" } do |f| %>
+  <%= hidden_field_tag :locale, I18n.locale, id: nil %>
+  <%= f.label :start_date, t("hyrax.admin.stats.deposited_form.start_label"), class: "mr-2" %>
+  <%= f.date_field :start_date, value: @presenter.stats_filters[:start_date], class: "form-control mr-sm-3 mb-2 mb-sm-0" %>
+  <%= f.label :end_date, t("hyrax.admin.stats.deposited_form.end_label"), class: "mr-2" %>
+  <%= f.date_field :end_date, value: @presenter.stats_filters[:end_date], class: "form-control mr-sm-3 mb-2 mb-sm-0" %>
+  <%= f.submit t("hyrax.admin.stats.date_form.load_stats"), class: "btn btn-primary" %>
 <%- end %>

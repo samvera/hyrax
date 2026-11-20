@@ -84,7 +84,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
           post :update_members, params: parameters
 
           expect(response)
-            .to redirect_to routes.url_helpers.dashboard_collection_path(collection, locale: 'en')
+            .to redirect_to routes.url_helpers.dashboard_collection_path(collection)
         end
       end
 
@@ -153,7 +153,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
           post(:update_members, params: parameters)
 
           expect(response)
-            .to redirect_to routes.url_helpers.dashboard_collection_path(collection, locale: 'en')
+            .to redirect_to routes.url_helpers.dashboard_collection_path(collection)
         end
       end
 
@@ -199,7 +199,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
           post(:update_members, params: parameters)
 
           expect(flash[:alert]).to eq 'You do not have sufficient privileges to any of the selected members'
-          expect(response).to redirect_to routes.url_helpers.dashboard_collections_path(locale: 'en')
+          expect(response).to redirect_to routes.url_helpers.dashboard_collections_path
         end
       end
     end
@@ -234,7 +234,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
           post :update_members, params: parameters
 
           expect(response)
-            .to redirect_to routes.url_helpers.dashboard_collection_path(collection, locale: 'en')
+            .to redirect_to routes.url_helpers.dashboard_collection_path(collection)
         end
       end
 
@@ -303,7 +303,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
           post(:update_members, params: parameters)
 
           expect(response)
-            .to redirect_to routes.url_helpers.dashboard_collection_path(collection, locale: 'en')
+            .to redirect_to routes.url_helpers.dashboard_collection_path(collection)
         end
       end
 
@@ -349,7 +349,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
           post(:update_members, params: parameters)
 
           expect(flash[:alert]).to eq 'You do not have sufficient privileges to any of the selected members'
-          expect(response).to redirect_to routes.url_helpers.dashboard_collections_path(locale: 'en')
+          expect(response).to redirect_to routes.url_helpers.dashboard_collections_path
         end
       end
     end
@@ -463,7 +463,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
             expect(flash[:alert])
               .to eq 'You do not have sufficient privileges to any of the selected members'
             expect(response)
-              .to redirect_to routes.url_helpers.dashboard_collections_path(locale: 'en')
+              .to redirect_to routes.url_helpers.dashboard_collections_path
           end
         end
       end
@@ -485,7 +485,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
         expect(flash[:alert])
           .to eq 'You do not have sufficient privileges to add members to the collection'
         expect(response)
-          .to redirect_to routes.url_helpers.dashboard_collections_path(locale: 'en')
+          .to redirect_to routes.url_helpers.dashboard_collections_path
       end
     end
 
@@ -541,7 +541,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
                        #{other_collection_of_type.title.first.gsub(' ', '\s')})}x
 
         expect(response)
-          .to redirect_to routes.url_helpers.dashboard_collection_path(collection, locale: 'en')
+          .to redirect_to routes.url_helpers.dashboard_collection_path(collection)
       end
     end
   end

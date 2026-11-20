@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
-  subject(:validator) { described_class.new(profile: profile, errors: errors) }
-  let(:errors) { [] }
+  subject(:validator) { described_class.new(context) }
+  let(:context) { Hyrax::FlexibleSchemaValidators::ValidationContext.new(profile: profile) }
+  let(:errors) { validator.violations.map(&:message) }
 
   def t(key, **opts)
     I18n.t("hyrax.flexible_schema_validators.compound_validator.errors.#{key}", **opts)
@@ -221,6 +222,38 @@ RSpec.describe Hyrax::FlexibleSchemaValidators::CompoundValidator do
           t('duplicate_subproperty_name', parent: 'relationships', name: 'title',
                                           properties: a_string_including('shared_title'))
         )
+      end
+    end
+
+    context 'with a sub-property resolving to a key Valkyrie reserves' do
+      let(:profile) do
+        {
+          'properties' => {
+            'participants' => { 'type' => 'hash' },
+            'participant_id' => { 'type' => 'string', 'name' => 'id', **member_of('participants') }
+          }
+        }
+      end
+
+      it 'records a reserved-name error' do
+        validator.validate!
+        expect(errors).to include(t('reserved_subproperty_name', parent: 'participants', name: 'id', property: 'participant_id'))
+      end
+    end
+
+    context 'with a sub-property name that is not letters, digits, and underscores' do
+      let(:profile) do
+        {
+          'properties' => {
+            'participants' => { 'type' => 'hash' },
+            'participant_first_name' => { 'type' => 'string', 'name' => 'first name', **member_of('participants') }
+          }
+        }
+      end
+
+      it 'records a malformed-name error' do
+        validator.validate!
+        expect(errors).to include(t('malformed_subproperty_name', parent: 'participants', name: 'first name', property: 'participant_first_name'))
       end
     end
 

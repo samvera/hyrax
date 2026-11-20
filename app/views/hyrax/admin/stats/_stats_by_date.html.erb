@@ -1,10 +1,14 @@
-<h2><%= I18n.t("hyrax.admin.stats.stats_by_date.statistics_by_date", :default => "Statistics By Date") %></h2>
-<p>Statistics in this section are filtered by the dates entered in the form below.
-  <%= I18n.t("hyrax.admin.stats.stats_by_date.explanation", :default => "Statistics in this section are filtered by the dates entered in the form below.
-  The data is unfiltered unless the date form has been filled in. Start date is required and the default end is now.") %>
-</p>
+<h2 class="h4 mt-4 pb-2 border-bottom"><%= t("hyrax.admin.stats.stats_by_date.statistics_by_date") %></h2>
+<p class="text-muted small"><%= t("hyrax.admin.stats.stats_by_date.explanation") %></p>
 <%= render "date_form" %>
-<%= render "works" %>
-<%= render "new_users" %>
-<%= render "deposits" %>
-
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <div class="card h-100 mb-0"><%= render "works" %></div>
+  </div>
+  <div class="col-md-6 mb-3">
+    <div class="card h-100 mb-0"><%= render "new_users" %></div>
+  </div>
+  <div class="col-md-6 mb-3">
+    <div class="card h-100 mb-0"><%= render "deposits" %></div>
+  </div>
+</div>

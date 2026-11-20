@@ -80,6 +80,15 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
       markup = described_class.new(:agent, values, label: 'Agent', html_dl: true).render_dl_row
       expect(markup).to include('ed')
     end
+
+    context 'when a controlled value is an array (a multiple: true member)' do
+      let(:values) { [{ 'role' => %w[author ed], 'name' => 'Ada' }] }
+
+      it 'renders every term, comma-separated, translated to its label' do
+        markup = renderer.render_dl_row
+        expect(markup).to include('Author, Editor')
+      end
+    end
   end
 
   describe 'controlled sub-property with a linkable URI value' do
@@ -109,8 +118,8 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
     end
     let(:renderer) { described_class.new(:relationships, values, label: 'Relationships', html_dl: true, subproperties: subproperties) }
 
-    it 'renders a url sub-property as an anchor' do
-      expect(renderer.render_dl_row).to include('<a href="https://example.org/item/42"')
+    it 'renders a url sub-property as an anchor that opens in a new tab' do
+      expect(renderer.render_dl_row).to include('<a target="_blank" rel="noopener noreferrer" href="https://example.org/item/42"')
     end
 
     it 'leaves non-url sub-properties as plain escaped text' do
@@ -127,8 +136,8 @@ RSpec.describe Hyrax::Renderers::CompoundAttributeRenderer do
       let(:values) { [{ 'related_item' => 'https://example.org/x' }] }
       let(:renderer) { described_class.new(:relationships, values, label: 'Relationships', html_dl: true, subproperties: subproperties) }
 
-      it 'auto-links the URL' do
-        expect(renderer.render_dl_row).to include('<a href="https://example.org/x"')
+      it 'auto-links the URL in a new tab' do
+        expect(renderer.render_dl_row).to include('<a target="_blank" rel="noopener noreferrer" href="https://example.org/x"')
       end
     end
 

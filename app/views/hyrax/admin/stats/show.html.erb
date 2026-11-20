@@ -1,5 +1,11 @@
+<% provide :page_header do %>
+  <h1><span class="fa fa-bar-chart" aria-hidden="true"></span> <%= t('hyrax.admin.sidebar.statistics') %></h1>
+<% end %>
 <div class="col-sm-12">
-  <%= render "stats_by_date" %>
-  <hr />
-  <%= render "top_data" %>
+  <section class="mb-4">
+    <%= render "stats_by_date" %>
+  </section>
+  <section class="mb-4">
+    <%= render "top_data" %>
+  </section>
 </div>

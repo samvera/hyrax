@@ -41,6 +41,11 @@ RSpec.describe 'hyrax/dashboard/collections/_form_share_table.html.erb', type: :
         expect(rendered).to have_selector("h3", text: "Managers")
         expect(rendered).to have_selector("table tbody", text: user.user_key)
       end
+
+      it "captions the table and scopes its headers" do
+        expect(rendered).to have_selector(".overflow-auto > table > caption.sr-only", text: "Managers")
+        expect(rendered).to have_selector("thead th[scope=col]", count: 3)
+      end
     end
     context "no managers exist" do
       let(:access_grant) { stub_model(Hyrax::PermissionTemplateAccess) }

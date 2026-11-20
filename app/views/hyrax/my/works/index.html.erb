@@ -23,7 +23,7 @@
                 t(:'helpers.action.batch.new'),
                 '#',
                 data: { behavior: "select-work", toggle: 'modal', target: "#worktypes-to-create", 'create-type' => 'batch' },
-                class: 'btn btn-primary'
+                class: 'btn btn-outline-primary'
               ) %>
         <% end %>
         <%= link_to(
@@ -38,7 +38,7 @@
           <%= link_to(
               t(:'helpers.action.batch.new'),
               hyrax.new_batch_upload_path(payload_concern: @create_work_presenter.first_model),
-              class: 'btn btn-primary'
+              class: 'btn btn-outline-primary'
               ) %>
         <% end %>
         <%= link_to(

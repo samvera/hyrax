@@ -2,6 +2,7 @@
 <% if @featured_work_list.empty? %>
   <p><%= t('hyrax.homepage.featured_works.no_works') %></p>
 <% elsif can? :update, FeaturedWork %>
+  <p class="collapse" data-behavior="no-featured-works"><%= t('hyrax.homepage.featured_works.no_works') %></p>
   <%= form_for [hyrax, @featured_work_list] do |f| %>
     <div class="panel-group dd" id="dd">
       <ol id="featured_works">

@@ -8,6 +8,19 @@ module Hyrax
   #
   # @see config/metadata/basic_metadata.yaml for an example configuration
   class SimpleSchemaLoader < Hyrax::SchemaLoader
+    # @raise [ArgumentError] if a compound subproperty is named after a key that
+    #   Valkyrie reserves in a Hash, or its name is not letters, digits, and
+    #   underscores. The m3 profile gets the same checks from
+    #   {Hyrax::FlexibleSchemaValidators::CompoundValidator} when it is saved.
+    def attributes_for(schema:, version: 1, contexts: nil)
+      names = subproperties_by_parent(schema, version, contexts).values.flat_map(&:keys)
+      reserved = Hyrax::SchemaLoader.reserved_hash_keys(names)
+      raise ArgumentError, "#{schema} has a reserved subproperty name #{reserved.first.inspect}" if reserved.any?
+      malformed = Hyrax::SchemaLoader.malformed_subproperty_names(names)
+      raise ArgumentError, "#{schema} has a subproperty name #{malformed.first.inspect} that is not letters, digits, and underscores" if malformed.any?
+      super
+    end
+
     def view_definitions_for(schema:, version: 1, contexts: nil) # rubocop:disable Lint/UnusedMethodArgument
       schema.each_with_object({}) do |property, metadata|
         config = property.meta || {}

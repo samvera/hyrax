@@ -5,6 +5,7 @@ export class FieldManager {
         this.options = options;
 
         this.options.label = this.getFieldLabel(this.element, options)
+        this.options.removeText = this.getRemoveText(this.element, options)
 
         this.addSelector = '.add'
         this.removeSelector = '.remove'
@@ -164,6 +165,11 @@ export class FieldManager {
         return label;
     }
 
+    // Hyrax forms carry the translated label in data-remove-text; hydra-editor's default is English
+    getRemoveText($element, options) {
+        return $element.data('removeText') || $element.closest('form').data('removeText') || options.removeText;
+    }
+
     createAddHtml(options) {
         var $addHtml  = $(options.addHtml);
         $addHtml.find('.controls-add-text').html(options.addText + options.label);
@@ -172,7 +178,7 @@ export class FieldManager {
 
     createRemoveHtml(options) {
         var $removeHtml = $(options.removeHtml);
-        $removeHtml.find('.controls-remove-text').html(options.removeText);
+        $removeHtml.find('.controls-remove-text').text(options.removeText);
         $removeHtml.find('.controls-field-name-text').html(options.label);
         return $removeHtml;
     }

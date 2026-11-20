@@ -7,8 +7,8 @@ RSpec.describe Hyrax::BlacklightOverride, type: :helper do
 
   let(:document) { instance_double(SolrDocument, to_h: {}) }
 
-  def index_fields(_document)
-    { 'subject_tesim' => field_config }
+  def blacklight_config
+    double('BlacklightConfig', index_fields: { 'subject_tesim' => field_config })
   end
 
   describe '#index_field_label' do

@@ -10,6 +10,26 @@ module Hyrax
   class SchemaLoader
     class UndefinedSchemaError < ArgumentError; end
 
+    # A compound subproperty's name becomes part of its Solr field names and
+    # form field ids, so it is limited to letters, digits, and underscores.
+    SUBPROPERTY_NAME_FORMAT = /\A[A-Za-z0-9_]+\z/.freeze
+
+    # @param [Enumerable<#to_s>] names
+    # @return [Array<String>] the subproperty names that break {SUBPROPERTY_NAME_FORMAT}
+    def self.malformed_subproperty_names(names)
+      names.map(&:to_s).reject { |name| name.match?(SUBPROPERTY_NAME_FORMAT) }
+    end
+
+    # The keys Valkyrie reserves in a Hash value. A compound subproperty named
+    # after one would lose its value on save, so the schema loaders and profile
+    # validator reject it.
+    #
+    # @param [Enumerable<#to_s>] keys
+    # @return [Array<String>] the keys a hash entry may not use
+    def self.reserved_hash_keys(keys)
+      keys.map(&:to_s).select { |key| Valkyrie::Types::HashValue::RESERVED_KEYS.include?(key.to_sym) }
+    end
+
     ##
     # @param [Symbol] schema
     #
@@ -50,6 +70,25 @@ module Hyrax
         definition.index_keys.each do |key|
           hash[key] = definition.name
         end
+      end
+    end
+
+    ##
+    # @param [Symbol] schema
+    #
+    # @return [{Symbol => String}] a map from attribute names to the name of the
+    #   controlled vocabulary backing them. Only attributes declaring a real
+    #   `controlled_values.sources` entry appear; the `"null"` sentinel the
+    #   profile uses to mean "free text" is not an authority.
+    #
+    # Read through the definitions, not the profile hash: only they apply
+    # `available_on` and collapse a `name:` surrogate, so a property standing in
+    # for another on a particular class resolves to the authority its own entry
+    # declares rather than the one the shared name declares.
+    def authority_rules_for(schema:, version: 1, contexts: nil)
+      definitions(schema, version, contexts).each_with_object({}) do |definition, hash|
+        source = definition.authority_source
+        hash[definition.name] = source if source
       end
     end
 
@@ -138,6 +177,20 @@ module Hyrax
       end
 
       ##
+      # The first real source wins, matching how the deposit form picks which
+      # authority to offer when a property lists several.
+      #
+      # @return [String, nil] nil when the attribute is free text.
+      def authority_source
+        sources = config.fetch('controlled_values', nil)
+        return unless sources.is_a?(Hash)
+
+        Array(sources['sources'])
+          .map { |source| source.to_s.strip }
+          .find { |source| source.present? && !source.casecmp('null').zero? }
+      end
+
+      ##
       # @return [Hash{Symbol => Object}]
       def view_options
         # prefer display_label over view:label for labels, make available in the view
@@ -169,8 +222,12 @@ module Hyrax
       # @return [Dry::Types::Type]
       def type
         member_type = type_for(config['type'])
-        wrapper_type = multiple? ? Valkyrie::Types::Array.constructor(&Coerce) : Identity
-        wrapper_type.of(member_type)
+        return Identity.of(member_type) unless multiple?
+
+        array_type = Valkyrie::Types::Array.constructor(&Coerce).of(member_type)
+        # Fedora keeps a property's values unordered; Valkyrie's `ordered` meta
+        # tells its adapters to keep the entries in the order they were saved.
+        config['type'] == 'hash' ? array_type.meta(ordered: true) : array_type
       end
 
       # Cleans up the input before the type system sees it: drops the
@@ -183,6 +240,32 @@ module Hyrax
         return [] if value.equal?(Dry::Types::Undefined)
         wrapped = value.is_a?(::Hash) ? [value] : Array(value)
         wrapped.reject { |v| v.equal?(Dry::Types::Undefined) }.select(&:present?)
+      end
+
+      # Rejects an entry holding anything JSON cannot represent (an ID, a date,
+      # a symbol, NaN), which the backends would store differently.
+      JsonValues = lambda do |value|
+        check = lambda do |val|
+          case val
+          when ::Hash then val.each_value(&check)
+          when ::Array then val.each(&check)
+          when ::String, ::Integer, true, false, nil then nil
+          when ::Float then raise ArgumentError, "#{val.inspect} is not a JSON value" unless val.finite?
+          else raise ArgumentError, "#{val.inspect} in a hash entry is not a JSON value"
+          end
+        end
+        check.call(value) if value.is_a?(::Hash)
+        value
+      end
+
+      # Wings stores each hash entry as a JSON string, since ActiveFedora
+      # cannot hold a Hash; parse it back here.
+      JsonHash = lambda do |value|
+        next value unless value.is_a?(String) && value.start_with?('{')
+        JSON.parse(value)
+      rescue JSON::ParserError => e
+        Hyrax.logger.warn { "JsonHash parsing error: #{e.message}" }
+        value
       end
 
       # Determine whether this attribute allows multiple values.
@@ -240,7 +323,7 @@ module Hyrax
         when 'date_time'
           Valkyrie::Types::DateTime
         when 'hash'
-          Dry::Types['hash']
+          Dry::Types['hash'].constructor { |value| JsonValues.call(JsonHash.call(value)) }
         when 'linked_record'
           Valkyrie::Types::String
         else

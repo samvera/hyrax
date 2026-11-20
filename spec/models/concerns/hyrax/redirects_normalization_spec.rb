@@ -3,7 +3,7 @@
 RSpec.describe Hyrax::RedirectsNormalization do
   let(:resource_class) do
     Class.new(Valkyrie::Resource) do
-      attribute :redirects, Valkyrie::Types::Array.of(Valkyrie::Types::Hash)
+      attribute :redirects, Valkyrie::Types::Array.of(Dry::Types['hash'])
       include Hyrax::RedirectsNormalization
     end
   end
@@ -53,7 +53,7 @@ RSpec.describe Hyrax::RedirectsNormalization do
     it 'leaves non-redirects attributes untouched' do
       other_class = Class.new(Valkyrie::Resource) do
         attribute :title, Valkyrie::Types::String
-        attribute :redirects, Valkyrie::Types::Array.of(Valkyrie::Types::Hash)
+        attribute :redirects, Valkyrie::Types::Array.of(Dry::Types['hash'])
         include Hyrax::RedirectsNormalization
       end
       r = other_class.new(title: 'A title that ends with /')
@@ -65,7 +65,7 @@ RSpec.describe Hyrax::RedirectsNormalization do
     let(:flex_class) do
       Class.new(Valkyrie::Resource) do
         include Hyrax::Flexibility
-        attribute :redirects, Valkyrie::Types::Array.of(Valkyrie::Types::Hash)
+        attribute :redirects, Valkyrie::Types::Array.of(Dry::Types['hash'])
         include Hyrax::RedirectsNormalization
       end
     end
@@ -75,7 +75,7 @@ RSpec.describe Hyrax::RedirectsNormalization do
       # singleton class before set_value is called.
       resource = flex_class.allocate
       resource.send(:initialize, {})
-      resource.singleton_class.attributes(redirects: Valkyrie::Types::Array.of(Valkyrie::Types::Hash))
+      resource.singleton_class.attributes(redirects: Valkyrie::Types::Array.of(Dry::Types['hash']))
 
       resource.set_value(:redirects, [{ 'path' => '/foo/' }])
 

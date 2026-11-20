@@ -93,6 +93,29 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
     end
   end
 
+  describe "additional actions contributed by an engine" do
+    before do
+      allow(presenter).to receive(:show_deposit_for?).with(anything).and_return(false)
+      allow(presenter).to receive(:editor?).and_return(false)
+    end
+
+    it "renders nothing extra by default" do
+      render 'hyrax/base/show_actions', presenter: presenter
+
+      expect(rendered).not_to have_button 'Mint DOI'
+    end
+
+    it "renders a contributed action's partial, passing the presenter" do
+      stub_template 'hyrax/base/_show_action_mint_doi.html.erb' =>
+        '<button><%= presenter.id %></button>'
+      allow(view).to receive(:show_actions_for).with(presenter: presenter).and_return(['mint_doi'])
+
+      render 'hyrax/base/show_actions', presenter: presenter
+
+      expect(rendered).to have_button presenter.id
+    end
+  end
+
   context "when user CAN deposit to at least one collection" do
     before do
       allow(presenter).to receive(:show_deposit_for?).with(anything).and_return(true)

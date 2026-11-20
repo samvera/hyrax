@@ -106,4 +106,25 @@ RSpec.describe Hyrax::Listeners::WorkflowListener do
       it_behaves_like 'logs a sipity error'
     end
   end
+
+  describe '#on_object_deleted' do
+    let(:event_type) { :on_object_deleted }
+
+    before do
+      FactoryBot.create(:sipity_entity, proxy_for_global_id: Hyrax::ValkyrieGlobalIdProxy.new(resource: resource).to_global_id.to_s)
+    end
+
+    it 'removes the workflow entity for the object' do
+      expect { listener.on_object_deleted(event) }.to change { Sipity::Entity.count }.by(-1)
+    end
+
+    context 'when the payload has only an id' do
+      let(:data) { { id: resource.id.to_s, user: user } }
+
+      it 'warns that the workflow entity was not removed' do
+        expect(Hyrax.logger).to receive(:warn).with(/#{resource.id}/)
+        expect { listener.on_object_deleted(event) }.not_to change { Sipity::Entity.count }
+      end
+    end
+  end
 end

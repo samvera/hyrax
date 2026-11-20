@@ -1,14 +1,12 @@
 <div class="col-md-9 col-lg-6">
   <div class="metadata">
     <dl>
-    <% doc_presenter = index_presenter(document) %>
-    <% index_fields(document).each do |field_name, field| -%>
-      <% if should_render_index_field? document, field %>
-        <div class="row">
-          <dt class="col-5 text-right" data-solr-field-name="<%= field_name %>"><%= render_index_field_label document, field: field_name %></dt>
-          <dd class="col-7"><%= doc_presenter.field_value field %></dd>
-        </div>
-      <% end %>
+    <% doc_presenter = document_presenter(document) %>
+    <% doc_presenter.fields_to_render.each do |field_name, _field_config, field_presenter| -%>
+      <div class="row">
+        <dt class="col-5 text-right" data-solr-field-name="<%= field_name %>"><%= t('blacklight.search.index.label', label: index_field_label(document, field_name)) %></dt>
+        <dd class="col-7"><%= field_presenter.render %></dd>
+      </div>
     <% end %>
     </dl>
   </div>

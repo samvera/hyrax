@@ -34,8 +34,8 @@ module Hyrax
       property :member_of_collections_attributes, virtual: true, populator: :in_collections_populator
       validates_with CollectionMembershipValidator
 
-      property :representative_id, type: Valkyrie::Types::String
-      property :thumbnail_id, type: Valkyrie::Types::String
+      property :representative_id, type: Valkyrie::Types::Params::ID
+      property :thumbnail_id, type: Valkyrie::Types::Params::ID
       property :rendering_ids, default: [], type: Valkyrie::Types::Array
 
       # backs the child work search element;

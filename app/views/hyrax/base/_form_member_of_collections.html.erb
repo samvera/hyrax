@@ -15,21 +15,21 @@ HTML Properties:
 
   <div class="form-inline mb-3">
       <%= f.label :member_of_collection_ids %>
-      <select name="member_of_collection_ids" class="ml-2 form-control collection-select2" style="width: 12rem;" data-placeholder="<%= t('hyrax.dashboard.my.action.select') %>">
+      <select name="member_of_collection_ids" id="<%= f.object.model_name.param_key %>_member_of_collection_ids" class="form-control flex-grow-1 ml-sm-2 collection-select2" data-placeholder="<%= t('hyrax.dashboard.my.action.select') %>">
         <option value=""></option>
         <% available_collections(work: @curation_concern).each do |coll| %>
           <option value="<%= coll.id %>"><%= coll.title.first %></option>
         <% end %>
       </select>
-      <a href="#" onclick="return false;" class="btn btn-secondary ml-2" data-behavior="add-relationship"><%= t('.add') %></a>
+      <a href="#" onclick="return false;" class="btn btn-secondary ml-sm-2 mt-2 mt-sm-0" data-behavior="add-relationship"><%= t('.add') %></a>
   </div>
 
   <table class="table table-striped">
     <caption><%= t('.caption') %></caption>
     <thead>
     <tr>
-      <th><%= t('.header.title') %></th>
-      <th><%= t('.header.actions') %></th>
+      <th scope="col"><%= t('.header.title') %></th>
+      <th scope="col"><%= t('.header.actions') %></th>
     </tr>
     </thead>
     <tbody>
@@ -43,7 +43,7 @@ HTML Properties:
 
 <script type="text/x-tmpl" id="tmpl-collection">
 <tr>
-  <td>{%= o.title %}</td>
-  <td><button class="btn btn-danger" data-behavior="remove-relationship" data-confirm-text="<%= t('.confirm.text') %>" data-confirm-cancel="<%= t('.confirm.cancel') %>" data-confirm-remove="<%= t('.confirm.remove') %>"><%= t('.actions.remove') %></button></td>
+  <td class="align-middle">{%= o.title %}</td>
+  <td class="align-middle"><button class="btn btn-danger" data-behavior="remove-relationship" data-confirm-text="<%= t('.confirm.text') %>" data-confirm-cancel="<%= t('.confirm.cancel') %>" data-confirm-remove="<%= t('.confirm.remove') %>"><%= t('.actions.remove') %></button></td>
 </tr>
 </script>

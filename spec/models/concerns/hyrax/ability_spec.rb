@@ -127,4 +127,42 @@ RSpec.describe Hyrax::Ability do
     end
     # rubocop:enable RSpec/SubjectStub
   end
+
+  # An entry whose #inspect raises -- proves the log line is never evaluated
+  # rather than just asserting on a double, since Array#inspect would call it.
+  let(:unspeakable_entry) do
+    Object.new.tap do |o|
+      def o.inspect
+        raise 'inspect should not be called'
+      end
+    end
+  end
+
+  around do |example|
+    original_level = Hyrax.logger.level
+    Hyrax.logger.level = Logger::INFO
+    example.run
+    Hyrax.logger.level = original_level
+  end
+
+  # ability_class's fixture doesn't include Hydra::Ability (the usual source of these field-name methods), so stub them directly.
+  describe '#download_groups' do
+    it "doesn't build debug strings when the logger's level is above debug" do
+      allow(ability_class).to receive_messages(read_group_field: 'read_access_group_ssim', edit_group_field: 'edit_access_group_ssim')
+      doc = { 'read_access_group_ssim' => [unspeakable_entry], 'edit_access_group_ssim' => [] }
+      allow(ability).to receive(:permissions_doc).and_return(doc)
+
+      expect { ability.download_groups('my_solr_doc_id') }.not_to raise_error
+    end
+  end
+
+  describe '#download_users' do
+    it "doesn't build debug strings when the logger's level is above debug" do
+      allow(ability_class).to receive_messages(read_user_field: 'read_access_person_ssim', edit_user_field: 'edit_access_person_ssim')
+      doc = { 'read_access_person_ssim' => [unspeakable_entry], 'edit_access_person_ssim' => [] }
+      allow(ability).to receive(:permissions_doc).and_return(doc)
+
+      expect { ability.download_users('my_solr_doc_id') }.not_to raise_error
+    end
+  end
 end

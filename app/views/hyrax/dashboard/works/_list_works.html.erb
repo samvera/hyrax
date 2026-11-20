@@ -5,7 +5,7 @@
   </td>
   <td>
     <div class='media'>
-      <%= link_to [main_app, document], class: 'media-left' do %>
+      <%= link_to [main_app, document], class: 'media-left mr-2' do %>
         <%= document_presenter(document)&.thumbnail&.thumbnail_tag(
           { class: 'd-none d-md-block file_listing_thumbnail', alt: thumbnail_alt_text_for(document) },
           { suppress_link: true }

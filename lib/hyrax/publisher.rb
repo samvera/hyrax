@@ -228,5 +228,17 @@ module Hyrax
          Hyrax::Listeners::TrophyCleanupListener.new,
          Hyrax::Listeners::WorkflowListener.new].freeze
     end
+
+    ##
+    # Subscribes each default listener, replacing any existing subscription.
+    # Safe to call from a `to_prepare` block, which runs again on every code
+    # reload; `Dry::Events` would otherwise subscribe the same listener again
+    # and deliver each event to it once per subscription.
+    def subscribe_default_listeners
+      default_listeners.each do |listener|
+        unsubscribe(listener)
+        subscribe(listener)
+      end
+    end
   end
 end

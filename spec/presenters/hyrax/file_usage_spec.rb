@@ -144,4 +144,19 @@ RSpec.describe Hyrax::FileUsage, type: :model do
       expect(usage.created).to eq(date_uploaded)
     end
   end
+
+  describe "when multiple cached rows share the same date" do
+    let(:sample_download_statistics) do
+      [
+        SpecStatistic.new(date: date_strs[4], totalEvents: "1"),
+        SpecStatistic.new(date: date_strs[4], totalEvents: "1"),
+        SpecStatistic.new(date: date_strs[4], totalEvents: "1")
+      ]
+    end
+    let(:sample_pageview_statistics) { [] }
+
+    it "sums same-date rows instead of dropping all but one" do
+      expect(usage.total_downloads).to eq(3)
+    end
+  end
 end

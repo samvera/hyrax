@@ -45,6 +45,14 @@ RSpec.describe Hyrax::FlexibleSchema, :clean_repo, type: :model do
         expect(attributes['abstract']['type']).to eq('uri')
       end
     end
+
+    context 'when a property declares type: hash alongside an xsd:string range' do
+      it "keeps the type as 'hash'" do
+        profile_data['properties']['abstract'].merge!('type' => 'hash', 'range' => 'http://www.w3.org/2001/XMLSchema#string')
+        attributes = subject.attributes_for('GenericWork')
+        expect(attributes['abstract']['type']).to eq('hash')
+      end
+    end
   end
 
   describe '#mappings_data_for' do
@@ -99,6 +107,26 @@ RSpec.describe Hyrax::FlexibleSchema, :clean_repo, type: :model do
         expect(schema.warnings.any?).to be true
         expect(schema.warnings.full_messages).to include(/date_created must be defined on GenericWork/)
       end
+    end
+  end
+
+  describe '.current_version' do
+    # save(validate: false), not `subject` -- the m3 fixture doesn't validate
+    # against every work-type registry in Hyrax's own CI dummy apps, and
+    # what's under test here is the memoization, not profile validity.
+    before { described_class.new(profile: profile_data).save(validate: false) }
+
+    it 'memoizes the latest record per-request instead of re-querying every call' do
+      expect(described_class).to receive(:order).once.and_call_original
+      2.times { described_class.current_version }
+      described_class.current_schema_id
+    end
+
+    it 'does not leak across requests' do
+      described_class.current_version
+      Hyrax::Current.reset
+      expect(described_class).to receive(:order).once.and_call_original
+      described_class.current_version
     end
   end
 

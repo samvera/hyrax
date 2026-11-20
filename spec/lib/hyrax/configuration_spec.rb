@@ -47,6 +47,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:default_admin_set_id) }
   it { is_expected.to respond_to(:derivative_services) }
   it { is_expected.to respond_to(:derivative_services=) }
+  it { is_expected.to respond_to(:derivative_options) }
+  it { is_expected.to respond_to(:derivative_options=) }
   it { is_expected.to respond_to(:display_media_download_link=) }
   it { is_expected.to respond_to(:display_media_download_link?) }
   it { is_expected.to respond_to(:display_microdata?) }
@@ -61,6 +63,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:file_set_file_service=) }
   it { is_expected.to respond_to(:file_set_indexer) }
   it { is_expected.to respond_to(:file_set_indexer=) }
+  it { is_expected.to respond_to(:flexible_schema_validators) }
+  it { is_expected.to respond_to(:flexible_schema_validators=) }
   it { is_expected.to respond_to(:identifier_registrars) }
   it { is_expected.to respond_to(:iiif_av_viewer) }
   it { is_expected.to respond_to(:iiif_av_viewer=) }
@@ -83,6 +87,14 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:libreoffice_path) }
   it { is_expected.to respond_to(:license_service_class) }
   it { is_expected.to respond_to(:license_service_class=) }
+  it { is_expected.to respond_to(:controlled_vocabulary_label_service) }
+  it { is_expected.to respond_to(:controlled_vocabulary_label_service=) }
+
+  describe '#controlled_vocabulary_label_service' do
+    it 'defaults to the no-op resolver' do
+      expect(subject.controlled_vocabulary_label_service).to be_a(Hyrax::ControlledVocabularyLabelService)
+    end
+  end
   it { is_expected.to respond_to(:logger) }
   it { is_expected.to respond_to(:logger=) }
   it { is_expected.to respond_to(:max_days_between_fixity_checks) }
@@ -100,6 +112,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:permission_levels) }
   it { is_expected.to respond_to(:permission_options) }
   it { is_expected.to respond_to(:persistent_hostpath) }
+  it { is_expected.to respond_to(:index_file_metadata_as_document?) }
+  it { is_expected.to respond_to(:index_file_metadata_as_document=) }
   it { is_expected.to respond_to(:realtime_notifications?) }
   it { is_expected.to respond_to(:realtime_notifications=) }
   it { is_expected.to respond_to(:redirects_enabled) }
@@ -132,6 +146,57 @@ RSpec.describe Hyrax::Configuration do
     end
   end
 
+  describe "#flexible_schema_validators" do
+    it "defaults to Hyrax's own validators, required classes first" do
+      expect(configuration.flexible_schema_validators.first)
+        .to eq 'Hyrax::FlexibleSchemaValidators::RequiredClassesValidator'
+    end
+
+    it "can be appended to without dropping Hyrax's own" do
+      configuration.flexible_schema_validators += ['MyApp::MyValidator']
+
+      expect(configuration.flexible_schema_validators)
+        .to include('Hyrax::FlexibleSchemaValidators::RenderAsValidator', 'MyApp::MyValidator')
+    end
+
+    it "can be replaced outright" do
+      configuration.flexible_schema_validators = ['MyApp::MyValidator']
+
+      expect(configuration.flexible_schema_validators).to eq ['MyApp::MyValidator']
+    end
+
+    it "does not let an append mutate the default for the next configuration" do
+      configuration.flexible_schema_validators << 'MyApp::MyValidator'
+
+      expect(described_class.new.flexible_schema_validators).not_to include('MyApp::MyValidator')
+    end
+  end
+
+  describe "#derivative_options" do
+    it "defaults to output specs for each derivative type" do
+      expect(described_class.new.derivative_options.keys)
+        .to contain_exactly(:pdf, :office, :audio, :video, :image)
+    end
+
+    it "resolves url to a destination name rather than a full url" do
+      expect(described_class.new.derivative_options[:image])
+        .to contain_exactly(hash_including(label: :thumbnail, url: 'thumbnail', layer: 0))
+    end
+
+    it "is overridable" do
+      config = described_class.new
+      config.derivative_options = { image: [{ label: :big, format: 'jpg', size: '999x999', url: 'big' }] }
+      expect(config.derivative_options[:image].first).to include(size: '999x999')
+    end
+
+    it "extracts text for pdf and office by default" do
+      %i[pdf office].each do |type|
+        expect(described_class.new.derivative_options[type])
+          .to include(hash_including(container: 'extracted_text'))
+      end
+    end
+  end
+
   describe "#use_valkyrie?" do
     before { stub_const("ENV", "HYRAX_SKIP_WINGS" => "true") }
     it "returns true if wings is disabled" do
@@ -152,6 +217,27 @@ RSpec.describe Hyrax::Configuration do
       it "is true" do
         expect(described_class.new.redirects_enabled?).to be true
       end
+    end
+  end
+
+  describe "#index_file_metadata_as_document?" do
+    context "with the env var unset" do
+      before { stub_const("ENV", {}) }
+      it "defaults to true" do
+        expect(described_class.new.index_file_metadata_as_document?).to be true
+      end
+    end
+
+    context "with HYRAX_INDEX_FILE_METADATA_AS_DOCUMENT=false" do
+      before { stub_const("ENV", "HYRAX_INDEX_FILE_METADATA_AS_DOCUMENT" => "false") }
+      it "is false" do
+        expect(described_class.new.index_file_metadata_as_document?).to be false
+      end
+    end
+
+    it "is overridable directly, regardless of the env var" do
+      configuration.index_file_metadata_as_document = false
+      expect(configuration.index_file_metadata_as_document?).to be false
     end
   end
 

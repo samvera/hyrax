@@ -60,6 +60,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Nginx Selector labels
+*/}}
+{{- define "hyrax.nginxSelectorLabels" -}}
+app.kubernetes.io/name: nginx
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "hyrax.serviceAccountName" -}}
@@ -156,7 +164,12 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{- define "hyrax.postgresql.url" -}}
-{{- printf "postgresql://%s:%s@%s/%s?pool=5" ( include "hyrax.postgresql.username" . ) ( include "hyrax.postgresql.password" . ) ( include "hyrax.postgresql.host" . ) ( include "hyrax.postgresql.database" . ) -}}
+{{- $base := printf "postgresql://%s:%s@%s/%s" ( include "hyrax.postgresql.username" . ) ( include "hyrax.postgresql.password" . ) ( include "hyrax.postgresql.host" . ) ( include "hyrax.postgresql.database" . ) -}}
+{{- if regexMatch "^[0-9]+$" ( .Values.postgresql.pool | toString ) -}}
+{{- printf "%s?pool=%d" $base ( .Values.postgresql.pool | int ) -}}
+{{- else -}}
+{{- $base -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "hyrax.redis.fullname" -}}

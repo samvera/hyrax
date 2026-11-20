@@ -454,6 +454,11 @@ es:
           description: Descripción
           feature: Característica
           header: Caracteristicas
+      metadata_profiles:
+        import:
+          more_warnings:
+            one: y 1 advertencia más
+            other: y %{count} advertencias más
       sidebar:
         activity: Actividad
         analytics: Analítica
@@ -483,15 +488,26 @@ es:
         works_listing: Listado de obras
         works_report: Informe de obras
       stats:
+        date_form:
+          load_stats: Cargar estadísticas
         deposited_form:
-          end_label: Finalizando [el momento actual es el valor predeterminado]
+          end_label: "Fin [por defecto, ahora]"
           heading: "Ver Archivos Depositados:"
-          start_label: Comenzando
+          start_label: Inicio
         repository_objects:
           series:
             published: Publicado
             unknown: Desconocido
             unpublished: Sin publicar
+        stats_by_date:
+          explanation: Las estadísticas de esta sección se filtran según las fechas introducidas en el formulario siguiente. Los datos no se filtran a menos que se haya completado el formulario. La fecha de inicio es obligatoria y la fecha de fin predeterminada es ahora.
+          statistics_by_date: Estadísticas por fecha
+        top_data:
+          explanation_with_limit: Esta sección muestra los %{limit} primeros elementos de cada categoría
+          most_actie_users: Usuarios más activos (top %{count})
+          top_file_format: Formatos de archivo principales (top %{count})
+          top_file_formats_and_users: Formatos de archivo y usuarios principales
+          view_top: Ver los %{number} primeros
         user_deposits:
           end_label: Finalizando [el momento actual es el valor predeterminado]
           headers:
@@ -540,6 +556,7 @@ es:
           works_listing: Listado de obras
           works_published: "<strong>%{total_count} obras</strong> publicadas"
           works_under_review: "<strong>%{total_count} funciona</strong> en revisión"
+        show_number_per_page_html: Mostrar %{number} por página
     api:
       accepted:
         default: Su solicitud se ha aceptado para su procesamiento, pero el procesamiento no está completo. Ver tarea para más información.
@@ -766,6 +783,10 @@ es:
       delete_selected:
         button_label: Eliminar Seleccionados
         deleting_file_from: Eliminar un archivo de %{application_name} es permanente. Haga clic en Aceptar para eliminar este archivo de %{application_name}, o en Cancelar para cancelar esta operación
+      destroy_collection:
+        failed:
+          one: No se pudo eliminar 1 elemento.
+          other: No se pudieron eliminar %{count} elementos.
       edit:
         apply_changes_to: "Los cambios se aplicarán a: (%{x_number_of} funciona)"
         batch_edit_descriptions: Descripciones de edición por lotes & nbsp; & nbsp; & nbsp; <small> Haga clic en las etiquetas a continuación para editar las descripciones de trabajo. </small>
@@ -899,6 +920,17 @@ es:
         featured_researcher: Investigador Destacado
         marketing_text: Texto de Marketing
       updated: Bloques de contenido actualizados.
+    compound_fields:
+      linked_record:
+        add_new: "Añadir %{item}"
+        add_row: "Añadir otro %{item}"
+        create_again_hint: "Pulse Crear de nuevo para añadirlo como un registro nuevo."
+        similar_heading: "Ya existen registros similares:"
+        use_existing: "Usar este"
+      work_or_url:
+        hint: "Busque una obra arriba o introduzca aquí una URL externa."
+        url_placeholder: "https://example.org/…"
+        search_label: "Buscar una obra"
     controls:
       about: Acerca de
       contact: Contacto
@@ -992,6 +1024,7 @@ es:
           add_group: Añadir grupo
           add_sharing: Agregar Compartir
           add_user: Agregar usuario
+          as: como
           current_shared: Actualmente compartido con
           depositor: Depositante
           manager: El administrador de
@@ -1416,6 +1449,8 @@ es:
           controlled_without_source: "la subpropiedad compuesta `%{property}` del perfil m3 es `type: controlled` pero no declara ni `authority` ni `values`"
           top_level_indexing: "la propiedad compuesta `%{property}` del perfil m3 no debe declarar `indexing` de nivel superior; declare `indexing` (o `index_keys`) en cada subpropiedad"
           duplicate_subproperty_name: "el compuesto `%{parent}` del perfil m3 tiene varias subpropiedades que se resuelven al mismo nombre interno `%{name}` (%{properties}); cada subpropiedad de un compuesto debe resolverse a un nombre único (defina un `name:` distinto)"
+          reserved_subproperty_name: "la subpropiedad `%{property}` del compuesto `%{parent}` del perfil m3 se resuelve al nombre interno `%{name}`, que está reservado; defina un `name:` distinto"
+          malformed_subproperty_name: "la subpropiedad `%{property}` del compuesto `%{parent}` del perfil m3 se resuelve al nombre interno `%{name}`, que no consta solo de letras, dígitos y guiones bajos; defina un `name:` distinto"
       redirects_validator:
         errors:
           invalid_available_on: "la propiedad `redirects` del perfil m3 debe estar disponible en al menos una clase de obra o colección declarada en este perfil"
@@ -1447,6 +1482,7 @@ es:
           keyword_label: Palabras clave
           keyword_missing: no palabras clave especificadas
           title_label: Título
+        confirm_unfeature: ¿Eliminar de los trabajos destacados?
         drag: Arrastrar
         no_works: No hay trabajos destacados
         tab_label: Trabajos destacados
@@ -1537,8 +1573,6 @@ es:
           works_listing: Listado de obras
           you_manage: "<strong> %{total_count} funciona </strong> puedes administrar en el repositorio"
           you_own: "<strong> %{total_count} funciona </strong> en el repositorio"
-      sort_and_per_page:
-        number_of_results_to_display_per_page: Número de resultados a mostrar por página
     nav_safety:
       change_tab_message: "¿Seguro que quieres salir de esta pestaña? Cualquier información no guardada se perderá."
     notifications:
@@ -1671,6 +1705,15 @@ es:
         export_to_zotero: Exportar a Zotero
         export_to_zotero_details: La exportación a Zotero se admite mediante metadatos incrustados. Si Zotero no recoge automáticamente los metadatos de los archivos depositados, informe el problema a través del
     stats:
+      analytics_hints:
+        authentication: Revise GOOGLE_ACCOUNT_JSON o GOOGLE_ACCOUNT_JSON_PATH. Es posible que la clave de la cuenta de servicio haya caducado, haya sido revocada o pertenezca a otro proyecto de Google Cloud.
+        general: Revise el registro de la aplicación para ver el mensaje de error completo.
+        invalid_credentials: GOOGLE_ACCOUNT_JSON no es un JSON válido (ni un JSON codificado en base64). Vuelva a copiar el archivo de clave de la cuenta de servicio.
+        invalid_property: Revise la configuración property_id de Analytics (GOOGLE_ANALYTICS_PROPERTY_ID de forma predeterminada). Debe ser el ID numérico de la propiedad de GA4, no un ID de medición que empiece por G-.
+        missing_credentials_file: GOOGLE_ACCOUNT_JSON_PATH apunta a un archivo que no existe o no se puede leer en el servidor. Revise la ruta y los permisos.
+        permission: Compruebe que la cuenta de servicio de GOOGLE_ACCOUNT_JSON se haya agregado a la propiedad indicada en la configuración property_id de Analytics (GOOGLE_ANALYTICS_PROPERTY_ID de forma predeterminada).
+        quota_exceeded: Se superó la cuota de solicitudes de Google. Inténtelo de nuevo más tarde.
+      analytics_unavailable: Los datos de Analytics no están disponibles en este momento.
       downloads:
         downloads: Descargas
       pageviews:

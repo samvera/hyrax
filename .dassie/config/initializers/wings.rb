@@ -57,12 +57,6 @@ if Hyrax.config.valkyrie_transition?
       Hyrax.query_service.services[0].custom_queries.register_query_handler(handler)
     end
 
-    # [
-    #   Wings::CustomQueries::FindBySourceIdentifier
-    # ].each do |handler|
-    #   Hyrax.query_service.services[1].custom_queries.register_query_handler(handler)
-    # end
-
     # Register each work resource pair
     # Wings::ModelRegistry.register(GenericWorkResource, GenericWork)
   end

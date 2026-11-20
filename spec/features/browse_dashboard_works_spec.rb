@@ -46,9 +46,9 @@ RSpec.describe "Browse Dashboard", :clean_repo, type: :feature do
     fill_in "q", with: "PDF"
     click_button "search-submit-header"
     expect(page).to have_content("Fake PDF Title")
-    within(".constraints-container") do
+    within("#appliedParams") do
       expect(page).to have_content("Filtering by:")
-      expect(page).to have_css("span.fa-times")
+      expect(page).to have_link("Start Over")
       find(".remove").click
     end
     expect(page).to have_content("Fake Wav File")
@@ -58,7 +58,7 @@ RSpec.describe "Browse Dashboard", :clean_repo, type: :feature do
     click_link "Published"
     within("#document_#{mp3_work.id}") do
       expect(page).to have_link("Display all details of Test Document MP3",
-                                href: hyrax_monograph_path(mp3_work, locale: 'en'))
+                                href: hyrax_monograph_path(mp3_work))
     end
     click_link("Remove constraint Status: Published")
 

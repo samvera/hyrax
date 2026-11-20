@@ -13,3 +13,21 @@
   outline: 5px auto -webkit-focus-ring-color; // Chrome, Safari
   outline: -2px;
 }
+
+// On mobile, drop the collapse menu below the fixed nav rather than inside it.
+// This prevents the brand/toggler from jumping when the menu opens (the flex
+// layout stays single-row) and ensures the menu has the nav's background even
+// if the nav has a constrained height (e.g. a tall tenant logo).
+#masthead.fixed-top {
+  @media (max-width: 991.98px) {
+    .navbar-collapse {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: inherit;
+      padding-left: $navbar-padding-x;
+      padding-right: $navbar-padding-x;
+    }
+  }
+}

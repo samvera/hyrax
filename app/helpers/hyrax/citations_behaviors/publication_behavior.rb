@@ -23,18 +23,12 @@ module Hyrax
       end
 
       def setup_pub_info(work, include_date = false)
-        pub_info = ""
-        if (place = setup_pub_place(work))
-          pub_info += CGI.escapeHTML(place)
-        end
-        if (publisher = setup_pub_publisher(work))
-          pub_info += ": #{CGI.escapeHTML(publisher)}"
-        end
+        pub_info = [setup_pub_place(work), setup_pub_publisher(work)]
+                   .filter_map { |pub| CGI.escapeHTML(pub) if pub.present? }
+                   .join(': ')
 
         pub_date = include_date ? setup_pub_date(work) : nil
-        pub_info += ", #{pub_date}" unless pub_date.nil?
-
-        pub_info.strip.presence
+        [pub_info, pub_date].filter_map(&:presence).join(', ').strip.presence
       end
     end
   end

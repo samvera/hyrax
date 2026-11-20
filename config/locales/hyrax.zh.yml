@@ -454,6 +454,11 @@ zh:
           description: 描述
           feature: 特征
           header: 特征
+      metadata_profiles:
+        import:
+          more_warnings:
+            one: 及另外 1 条警告
+            other: 及另外 %{count} 条警告
       sidebar:
         activity: 活动
         analytics: 分析
@@ -483,6 +488,8 @@ zh:
         works_listing: 作品清单
         works_report: 作品报告
       stats:
+        date_form:
+          load_stats: 加载统计
         deposited_form:
           end_label: 结束 [默认到此刻]
           heading: "展示存储的文件:"
@@ -492,6 +499,15 @@ zh:
             published: 出版品
             unknown: 状况不明
             unpublished: 非出版品
+        stats_by_date:
+          explanation: 本部分的统计数据按下方表单中输入的日期进行筛选。未填写日期表单时，数据不经筛选。开始日期为必填项，结束日期默认为当前时间。
+          statistics_by_date: 按日期统计
+        top_data:
+          explanation_with_limit: 本部分显示每个类别的前 %{limit} 项
+          most_actie_users: 最活跃用户（前 %{count} 名）
+          top_file_format: 主要文件格式（前 %{count} 种）
+          top_file_formats_and_users: 主要文件格式和用户
+          view_top: 查看前 %{number} 项
         user_deposits:
           end_label: 结束 [默认到此刻]
           headers:
@@ -540,6 +556,7 @@ zh:
           works_listing: 作品列表
           works_published: 已发布<strong>%{total_count} 部作品</strong>
           works_under_review: "<strong>%{total_count} 作品</strong>正在审核中"
+        show_number_per_page_html: "每页显示 %{number}"
     api:
       accepted:
         default: 您的请求已被接受，还在处理中，详细信息请见后台作业。
@@ -764,6 +781,10 @@ zh:
       delete_selected:
         button_label: 删除选择
         deleting_file_from: 从%{application_name}删除文件是永久性的。单击“确定”从%{application_name}中删除此文件，或单击“取消”以取消此操作
+      destroy_collection:
+        failed:
+          one: 1 个项目无法删除。
+          other: "%{count} 个项目无法删除。"
       edit:
         apply_changes_to: 更改将应用于：（%{x_number_of}有效）
         batch_edit_descriptions: 批量修改说明＆nbsp;＆nbsp;＆nbsp; <small>点击下面的标签编辑工作说明。</ small>
@@ -897,6 +918,17 @@ zh:
         featured_researcher: 特色研究员
         marketing_text: 营销文字
       updated: 内容块已更新。
+    compound_fields:
+      linked_record:
+        add_new: "添加%{item}"
+        add_row: "再添加一个%{item}"
+        create_again_hint: "再次点击“创建”以添加为新记录。"
+        similar_heading: "已存在相似的记录："
+        use_existing: "使用此项"
+      work_or_url:
+        hint: "在上方搜索作品，或在此输入外部网址。"
+        url_placeholder: "https://example.org/…"
+        search_label: "搜索作品"
     controls:
       about: 关于
       contact: 联系
@@ -990,6 +1022,7 @@ zh:
           add_group: 添加组
           add_sharing: 添加共享
           add_user: 添加用户
+          as: 作为
           current_shared: 目前与...共享
           depositor: 存款
           manager: 经理
@@ -1411,6 +1444,8 @@ zh:
           controlled_without_source: "m3 配置文件中的复合子属性 `%{property}` 为 `type: controlled`，但既未声明 `authority` 也未声明 `values`"
           top_level_indexing: "m3 配置文件中的复合属性 `%{property}` 不得在顶层声明 `indexing`；请在每个子属性上声明 `indexing`（或 `index_keys`）"
           duplicate_subproperty_name: "m3 配置文件中的复合属性 `%{parent}` 有多个子属性解析为相同的内部名称 `%{name}`（%{properties}）；同一复合属性中的每个子属性必须解析为唯一名称（请设置不同的 `name:`）"
+          reserved_subproperty_name: "m3 配置文件中复合属性 `%{parent}` 的子属性 `%{property}` 解析为内部名称 `%{name}`，该名称为保留名称（请设置不同的 `name:`）"
+          malformed_subproperty_name: "m3 配置文件中复合属性 `%{parent}` 的子属性 `%{property}` 解析为内部名称 `%{name}`，该名称包含字母、数字和下划线以外的字符（请设置不同的 `name:`）"
       redirects_validator:
         errors:
           invalid_available_on: "m3 配置文件的 `redirects` 属性必须在此配置文件中声明的至少一个作品或收藏类上可用"
@@ -1442,6 +1477,7 @@ zh:
           keyword_label: 关键词
           keyword_missing: 没有指定关键字
           title_label: 标题
+        confirm_unfeature: 从特色作品中移除？
         drag: 拖
         no_works: 没有特色作品
         tab_label: 特色作品
@@ -1532,8 +1568,6 @@ zh:
           works_listing: 作品清单
           you_manage: 您可以在存储库中管理<strong> %{total_count}作品</strong>
           you_own: 您在存储库中拥有<strong> %{total_count}作品</strong>
-      sort_and_per_page:
-        number_of_results_to_display_per_page: 每页显示的结果数
     nav_safety:
       change_tab_message: 你确定要离开这个标签吗？任何未保存的数据都将丢失。
     notifications:
@@ -1666,6 +1700,15 @@ zh:
         export_to_zotero: 导出到Zotero
         export_to_zotero_details: 通过嵌入式元数据支持导出到Zotero。如果Zotero没有自动获取存放文件的元数据，请通过以下方式报告问题
     stats:
+      analytics_hints:
+        authentication: 请检查 GOOGLE_ACCOUNT_JSON 或 GOOGLE_ACCOUNT_JSON_PATH。服务帐号密钥可能已过期、已被撤销，或属于其他 Google Cloud 项目。
+        general: 请查看应用程序日志以获取完整的错误信息。
+        invalid_credentials: GOOGLE_ACCOUNT_JSON 不是有效的 JSON（也不是 base64 编码的 JSON）。请重新复制服务帐号密钥文件。
+        invalid_property: 请检查 Analytics 的 property_id 设置（默认为 GOOGLE_ANALYTICS_PROPERTY_ID）。它必须是 GA4 的数字媒体资源 ID，而不是以 G- 开头的衡量 ID。
+        missing_credentials_file: GOOGLE_ACCOUNT_JSON_PATH 指向的文件在服务器上不存在或无法读取。请检查路径和权限。
+        permission: 请检查 GOOGLE_ACCOUNT_JSON 中的服务帐号是否已添加到 Analytics property_id 设置（默认为 GOOGLE_ANALYTICS_PROPERTY_ID）所指定的媒体资源。
+        quota_exceeded: 已超出 Google 请求配额。请稍后重试。
+      analytics_unavailable: Analytics 数据目前不可用。
       downloads:
         downloads: 下载
       pageviews:

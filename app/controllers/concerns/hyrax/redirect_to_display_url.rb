@@ -36,19 +36,22 @@ module Hyrax
       row = Hyrax::RedirectsLookup.find_row(request.path)
       return if row.blank?
       return if row.to_path == request.path
-      redirect_to with_locale(row.to_path), status: :moved_permanently
+      redirect_to with_query_params(row.to_path), status: :moved_permanently
     end
 
-    # Carry the visitor's requested locale (set by Hyrax::Controller#set_locale
-    # from `params[:locale]`) across the 301 so the destination page renders in
-    # the same language. Appended as `?locale=<value>` so this works whether the
-    # host app uses path-prefix or query-string locales. The locale value is
-    # URL-encoded via Rack::Utils.build_query so attacker-controlled chars in
-    # params[:locale] can't inject extra query params into the Location header.
-    def with_locale(path)
-      return path if params[:locale].blank?
+    # Carry the visitor's query params (paging, sorting, facets) and requested
+    # locale (set by Hyrax::Controller#set_locale from `params[:locale]`) across
+    # the 301 so the destination page shows the same results in the same
+    # language. The locale is merged in from `params` so this works whether the
+    # host app uses path-prefix or query-string locales. Values are URL-encoded
+    # via Rack::Utils.build_nested_query so attacker-controlled chars can't
+    # inject extra query params into the Location header.
+    def with_query_params(path)
+      query = request.query_parameters
+      query = query.merge('locale' => params[:locale]) if params[:locale].present?
+      return path if query.blank?
       separator = path.include?('?') ? '&' : '?'
-      "#{path}#{separator}#{Rack::Utils.build_query(locale: params[:locale])}"
+      "#{path}#{separator}#{Rack::Utils.build_nested_query(query)}"
     end
   end
 end

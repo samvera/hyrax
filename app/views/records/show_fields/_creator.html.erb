@@ -1,4 +1,4 @@
-<% record.creator.each do |creator| %>
+<% record.display_values_for(:creator).each do |creator| %>
 <span itemprop="creator" itemscope itemtype="http://schema.org/Person">
   <span itemprop="name"><%= link_to_facet(creator, "creator_sim") %></span>
 </span>

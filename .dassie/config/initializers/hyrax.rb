@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 Hyrax.config do |config|
+
+  # Injected via `rails generate hyrax:iiif_viewer clover`
+  config.iiif_av_viewer = :clover
+
   # Hyrax can integrate with Zotero's Arkivo service for automatic deposit
   # of Zotero-managed research items.
   # Defaults to false.  See README for more info

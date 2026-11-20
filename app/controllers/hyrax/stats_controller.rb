@@ -4,6 +4,24 @@ module Hyrax
     include Hyrax::SingularSubresourceController
     include Hyrax::Breadcrumbs
 
+    # Error class name => key under hyrax.stats.analytics_hints. Keys in SHARED_ERROR_TYPES reuse the matching hyrax.admin.analytics.errors title and steps.
+    ANALYTICS_ERROR_HINTS = {
+      'Google::Cloud::PermissionDeniedError' => 'permission',
+      'Google::Cloud::UnauthenticatedError' => 'authentication',
+      'Google::Cloud::InvalidArgumentError' => 'invalid_property',
+      'Google::Cloud::NotFoundError' => 'invalid_property',
+      'Google::Cloud::ResourceExhaustedError' => 'quota_exceeded',
+      'Hyrax::Analytics::Ga4::InvalidAccountJson' => 'invalid_credentials',
+      'Hyrax::Analytics::Ga4::AccountJsonFileError' => 'missing_credentials_file'
+    }.freeze
+    SHARED_ERROR_TYPES = %w[permission authentication invalid_property quota_exceeded].freeze
+
+    # Names, not constants: the Google gems may not be loaded when this class is.
+    rescue_from 'Google::Cloud::Error',
+                'Hyrax::Analytics::Ga4::InvalidAccountJson',
+                'Hyrax::Analytics::Ga4::AccountJsonFileError',
+                with: :analytics_unavailable
+
     before_action :build_breadcrumbs, only: [:work, :file]
 
     def work
@@ -14,9 +32,43 @@ module Hyrax
 
     def file
       @stats = Hyrax::FileUsage.new(params[:id])
+      @stats.to_flot # load now so a Google failure is rescued here, not mid-render
     end
 
     private
+
+    # Show zeroed stats and a notice instead of a 500 when Google rejects the request.
+    def analytics_unavailable(exception)
+      Rails.logger.error "Analytics error: #{exception.message}"
+      # Anyone who can read a work can open its stats; only admins get the setup steps.
+      if can?(:read, :admin_dashboard)
+        @analytics_error = analytics_error_details(exception)
+      else
+        @analytics_unavailable = true
+      end
+      if action_name == 'file'
+        (@stats ||= Hyrax::FileUsage.new(params[:id])).without_analytics
+      else
+        @document ||= ::SolrDocument.find(params[:id])
+        @pageviews = @downloads = Hyrax::Analytics::Results.new([])
+      end
+      render action_name
+    end
+
+    def analytics_error_details(exception)
+      hint = analytics_hint_key(exception)
+      scope = "hyrax.admin.analytics.errors.#{SHARED_ERROR_TYPES.include?(hint) ? hint : 'general'}"
+      { title: I18n.t('title', scope: scope),
+        message: I18n.t('message', scope: scope),
+        troubleshooting_steps: Array.wrap(I18n.t('troubleshooting_steps', scope: scope)) + [I18n.t(hint, scope: 'hyrax.stats.analytics_hints')],
+        documentation_url: I18n.t('documentation_url', scope: scope),
+        details: exception.class.name }
+    end
+
+    def analytics_hint_key(exception)
+      exception.class.ancestors.each { |klass| return ANALYTICS_ERROR_HINTS[klass.name] if ANALYTICS_ERROR_HINTS.key?(klass.name) }
+      'general'
+    end
 
     def add_breadcrumb_for_controller
       add_breadcrumb I18n.t('hyrax.dashboard.my.works'), hyrax.my_works_path

@@ -7,6 +7,6 @@ end
 # In order to test app generation with local code, un-comment the line below and comment out the other gem definition
 # Then run hyrax generation with the flag `-m /path/to/my/local/code/template.rb`
 # gem 'hyrax', path: __dir__
-gem 'hyrax', '5.2.0'
+gem 'hyrax', '5.3.0'
 run 'bundle install'
 generate 'hyrax:install', '-f'

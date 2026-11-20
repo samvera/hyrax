@@ -26,14 +26,21 @@ module Hyrax
       ]
     end
 
+    # Zero-filled charts for when the analytics provider can't be reached.
+    def without_analytics
+      @downloads = zero_fill([])
+      @pageviews = zero_fill([])
+      self
+    end
+
     private
 
     def downloads
-      @downloads ||= to_flots(FileDownloadStat.statistics(model, created, user_id))
+      @downloads ||= zero_fill(FileDownloadStat.statistics(model, created, user_id))
     end
 
     def pageviews
-      @pageviews ||= to_flots(FileViewStat.statistics(model, created, user_id))
+      @pageviews ||= zero_fill(FileViewStat.statistics(model, created, user_id))
     end
   end
 end

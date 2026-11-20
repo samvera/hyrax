@@ -36,6 +36,11 @@ RSpec.describe 'hyrax/base/_form_relationships.html.erb', type: :view do
       expect(page).to have_content('Administrative Set')
       expect(page).to have_selector('select#monograph_admin_set_id')
     end
+
+    it "labels the collection select" do
+      expect(page).to have_selector('label[for="monograph_member_of_collection_ids"]')
+      expect(page).to have_selector('select#monograph_member_of_collection_ids')
+    end
   end
 
   context 'with assign_admin_set disabled' do

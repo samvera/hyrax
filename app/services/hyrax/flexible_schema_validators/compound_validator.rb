@@ -12,27 +12,17 @@ module Hyrax
     # `available_on: { properties: [<parent>] }` (see {Hyrax::CompoundSchema}); a
     # subproperty may name more than one parent. See
     # documentation/compound_fields.md for the rules.
-    class CompoundValidator
-      ##
-      # @param profile [Hash] the flexible metadata profile
-      # @param errors [Array<String>] an array to append errors to
-      def initialize(profile:, errors:)
-        @profile = profile
-        @errors = errors
-      end
-
+    class CompoundValidator < BaseValidator
       # @return [void]
       def validate!
         subproperties.each { |name, config| validate_subproperty(name, config) }
         compound_parents.each { |name, config| validate_no_top_level_indexing(name, config) }
         validate_unique_subproperty_names
+        validate_subproperty_names_not_reserved
+        validate_subproperty_name_format
       end
 
       private
-
-      def properties
-        @properties ||= (@profile&.dig('properties') || {})
-      end
 
       # Entries that name parent compound(s) via `available_on: { properties:
       # [...] }` — the compound members.
@@ -57,7 +47,7 @@ module Hyrax
           parent = properties[parent_name]
           next if parent.is_a?(Hash) && parent['type'].to_s == 'hash'
 
-          @errors << t('unknown_parent', property: name, parent: parent_name)
+          add_error(:unknown_parent, property: name, parent: parent_name)
         end
 
         validate_option_source(name, config)
@@ -71,11 +61,11 @@ module Hyrax
         when 'controlled'
           return if config['authority'].present? || config['values'].present?
 
-          @errors << t('controlled_without_source', property: name)
+          add_error(:controlled_without_source, property: name)
         when 'linked_record'
           return if config['authority'].present?
 
-          @errors << t('linked_record_without_source', property: name)
+          add_error(:linked_record_without_source, property: name)
         end
       end
 
@@ -84,7 +74,32 @@ module Hyrax
       # per subproperty.
       def validate_no_top_level_indexing(name, config)
         return if config['indexing'].blank?
-        @errors << t('top_level_indexing', property: name)
+        add_error(:top_level_indexing, property: name)
+      end
+
+      # A sub-property's in-compound name becomes a key in each stored entry, so
+      # it must not be a key Valkyrie reserves in a Hash (see
+      # Hyrax::SchemaLoader.reserved_hash_keys); otherwise the value is lost on save.
+      def validate_subproperty_names_not_reserved
+        subproperties.each do |key, config|
+          in_compound_name = (config['name'] || key).to_s
+          next if Hyrax::SchemaLoader.reserved_hash_keys([in_compound_name]).empty?
+          subproperty_parents(config).each do |parent|
+            add_error(:reserved_subproperty_name, parent: parent, name: in_compound_name, property: key.to_s)
+          end
+        end
+      end
+
+      # A sub-property's in-compound name becomes part of its Solr field names and
+      # form field ids (see Hyrax::SchemaLoader::SUBPROPERTY_NAME_FORMAT).
+      def validate_subproperty_name_format
+        subproperties.each do |key, config|
+          in_compound_name = (config['name'] || key).to_s
+          next if Hyrax::SchemaLoader.malformed_subproperty_names([in_compound_name]).empty?
+          subproperty_parents(config).each do |parent|
+            add_error(:malformed_subproperty_name, parent: parent, name: in_compound_name, property: key.to_s)
+          end
+        end
       end
 
       # Within one compound, two sub-properties cannot resolve to the same
@@ -102,13 +117,9 @@ module Hyrax
         names_by_parent.each do |parent, by_name|
           by_name.each do |in_compound_name, keys|
             next if keys.size < 2
-            @errors << t('duplicate_subproperty_name', parent: parent, name: in_compound_name, properties: keys.sort.join(', '))
+            add_error(:duplicate_subproperty_name, parent: parent, name: in_compound_name, properties: keys.sort.join(', '))
           end
         end
-      end
-
-      def t(key, **opts)
-        I18n.t("hyrax.flexible_schema_validators.compound_validator.errors.#{key}", **opts)
       end
     end
   end

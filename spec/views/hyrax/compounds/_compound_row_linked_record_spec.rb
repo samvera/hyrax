@@ -83,8 +83,8 @@ RSpec.describe 'hyrax/compounds/_compound_row', type: :view do
       expect(rendered).to match(%r{data-create-url="[^"]*/linked_records/people"})
     end
 
-    it 'renders the (hidden) Add new trigger naming the source item' do
-      expect(rendered).to have_css('button[data-hyrax-linked-record-add]', text: 'Add a person', visible: false)
+    it 'renders the Add new trigger (always visible) naming the source item' do
+      expect(rendered).to have_css('button[data-hyrax-linked-record-add]', text: 'Add a person', visible: :visible)
     end
 
     it 'renders the create form fields from create_fields (string inputs + a select)' do
@@ -123,6 +123,28 @@ RSpec.describe 'hyrax/compounds/_compound_row', type: :view do
         expect(rendered).to have_css('[data-create-group="affiliations"][data-create-scalar="true"]', visible: false)
         expect(rendered).to have_css('[data-create-group="affiliations"] button[data-create-group-add]', visible: false)
         expect(rendered).to have_css('[data-create-group="affiliations"] [data-create-group-rows] input[data-create-subfield="affiliations"]', visible: false)
+      end
+    end
+
+    describe 'the "did you mean" duplicate check' do
+      it 'omits data-similar-url and the warning panel when the source has no similar proc' do
+        # The default people_source registers no `similar:`.
+        expect(rendered).to have_no_css('[data-hyrax-linked-record][data-similar-url]')
+        expect(rendered).to have_no_css('[data-hyrax-linked-record-similar]')
+      end
+
+      context 'when the source declares a similar proc' do
+        let(:people_source) do
+          super().merge(similar: ->(_q) { [{ id: '7', label: 'Ada Lovelace', value: '7' }] })
+        end
+
+        it 'renders data-similar-url pointing at the linked_record_similar authority' do
+          expect(rendered).to match(%r{data-similar-url="[^"]*/authorities/search/linked_record_similar/people"})
+        end
+
+        it 'renders the (hidden) warning panel with a similar-list and a use-label' do
+          expect(rendered).to have_css('[data-hyrax-linked-record-similar] [data-hyrax-linked-record-similar-list][data-use-label="Use this"]', visible: false)
+        end
       end
     end
   end

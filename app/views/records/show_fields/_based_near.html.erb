@@ -1,4 +1,4 @@
-<% record.based_near.each do |bn| %>
+<% record.display_values_for(:based_near).each do |bn| %>
   <span itemprop="contentLocation" itemscope itemtype="http://schema.org/Place">
     <span itemprop="name"><%= link_to_facet(bn, "based_near_sim") %></span>
   </span>

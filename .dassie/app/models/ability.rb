@@ -2,7 +2,9 @@ class Ability
   include Hydra::Ability
   
   include Hyrax::Ability
+  include Bulkrax::AbilityBehavior
   self.ability_logic += [:everyone_can_create_curation_concerns]
+  self.ability_logic += [:bulkrax_default_abilities]
 
   # Define any customized permissions here.
   def custom_permissions
@@ -29,5 +31,13 @@ class Ability
 
   def can_export_works?
     can_create_any_work?
+  end
+
+  def can_admin_importers?
+    current_user.admin?
+  end
+
+  def can_admin_exporters?
+    current_user.admin?
   end
 end

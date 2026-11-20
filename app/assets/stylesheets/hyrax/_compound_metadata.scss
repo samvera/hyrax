@@ -88,3 +88,15 @@
     margin-top: 0.25rem;
   }
 }
+
+.hyrax-compound-row .select2-container-multi.form-control {
+  .select2-choices {
+    padding: 0 0.5rem;
+  }
+
+  .select2-search-field .select2-input {
+    height: $input-height-inner;
+    line-height: 1.5;
+    margin: 0;
+  }
+}

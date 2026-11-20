@@ -71,7 +71,7 @@ module Hyrax
 
         case subproperty_spec(sub_property)&.dig(:type).to_s
         when 'url'
-          auto_link(ERB::Util.h(value.to_s))
+          auto_link(ERB::Util.h(value.to_s), html: { target: "_blank", rel: "noopener noreferrer" })
         when 'work_or_url'
           work_or_url_markup(value)
         when 'linked_record'
@@ -106,7 +106,10 @@ module Hyrax
       # stored value is itself a linkable URI (e.g. a rights-statement or license
       # URI), link the term to that URI — mirroring the ordinary rights/license
       # renderer. Non-URI controlled values (e.g. inline option ids) stay plain.
+      # An array can arrive when a `multiple` member is echoed back before fan-out.
       def controlled_markup(sub_property, value)
+        return safe_join_terms(Array(value).map { |v| controlled_markup(sub_property, v) }) if value.is_a?(::Array)
+
         label = display_value(sub_property, value)
         if Hyrax::AuthorityRenderingHelper.linkable_uri?(value)
           %(<a href="#{ERB::Util.h(value)}" target="_blank" rel="noopener noreferrer">#{ERB::Util.h(label)}</a>).html_safe
@@ -115,10 +118,15 @@ module Hyrax
         end
       end
 
+      # Fragments are already escaped, so joining and marking html_safe is safe.
+      def safe_join_terms(fragments)
+        fragments.map(&:to_s).join(', ').html_safe
+      end
+
       # Link a URL or a resolvable work; render anything else as plain text so
       # we never emit a broken link to a non-existent work.
       def work_or_url_markup(value)
-        return auto_link(ERB::Util.h(value.to_s)) if Hyrax::CompoundWorkResolver.url?(value)
+        return auto_link(ERB::Util.h(value.to_s), html: { target: "_blank", rel: "noopener noreferrer" }) if Hyrax::CompoundWorkResolver.url?(value)
 
         title, path = Hyrax::CompoundWorkResolver.resolve(value)
         return ERB::Util.h(value.to_s) if title.nil?

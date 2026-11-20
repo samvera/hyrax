@@ -476,6 +476,11 @@ en:
           feature: Feature
           header: Features
           status: Status
+      metadata_profiles:
+        import:
+          more_warnings:
+            one: and 1 more warning
+            other: and %{count} more warnings
       sidebar:
         activity: Activity
         analytics: Analytics
@@ -508,7 +513,7 @@ en:
         date_form:
           load_stats: Load Stats
         deposited_form:
-          end_label: end [defaults to now]
+          end_label: End [defaults to now]
           heading: 'Display Files Deposited:'
           start_label: Start
         deposits:
@@ -537,8 +542,6 @@ en:
           end_label: Ending [defaults to now]
           heading: Display files deposited by users
           start_label: Starting
-        workflows:
-          show_number_per_page: Show %{number}) per page
         works:
           headers:
             main: Work Statistics
@@ -579,6 +582,7 @@ en:
           works_listing: Works listing
           works_published: "<strong>%{total_count} works</strong> published"
           works_under_review: "<strong>%{total_count} works</strong> under review"
+        show_number_per_page_html: Show %{number} per page
     api:
       accepted:
         default: Your request has been accepted for processing, but processing is not complete. See job for more info.
@@ -808,6 +812,10 @@ en:
       delete_selected:
         button_label: Delete Selected
         deleting_file_from: Deleting a file from %{application_name} is permanent. Click OK to delete this file from %{application_name}, or Cancel to cancel this operation
+      destroy_collection:
+        failed:
+          one: 1 item could not be deleted.
+          other: "%{count} items could not be deleted."
       edit:
         apply_changes_to: 'Changes will be applied to: (%{x_number_of} works)'
         batch_edit_descriptions: Batch Edit Descriptions &nbsp;&nbsp;&nbsp;<small>Click on labels below to edit work descriptions.</small>
@@ -930,6 +938,7 @@ en:
         default_description: A User Collection can be created by any user to organize their works.
     compound_fields:
       add_row: Add %{label}
+      search: Search
       remove_row: Remove
       remove_row_with_label: Remove %{label}
       errors:
@@ -938,6 +947,13 @@ en:
       linked_record:
         add_new: Add a %{item}
         add_row: Add another %{item}
+        create_again_hint: Press Create again to add as a new record.
+        similar_heading: "Similar records already exist:"
+        use_existing: Use this
+      work_or_url:
+        hint: Search for a work above, or enter an external URL here.
+        search_label: Search for a work
+        url_placeholder: https://example.org/…
       participants:
         label: Participants
         title: Title
@@ -1078,6 +1094,7 @@ en:
           add_group: Add group
           add_sharing: Add Sharing
           add_user: Add user
+          as: as
           current_shared: Currently Shared With
           depositor: Depositor
           manager: Manager
@@ -1503,6 +1520,8 @@ en:
           linked_record_without_source: "m3 profile compound subproperty `%{property}` is `type: linked_record` but declares no `authority` naming a registered linked-record source"
           top_level_indexing: "m3 profile compound property `%{property}` must not declare top-level `indexing`; declare `indexing` (or `index_keys`) on each subproperty instead"
           duplicate_subproperty_name: "m3 profile compound `%{parent}` has multiple sub-properties resolving to the in-compound name `%{name}` (%{properties}); each sub-property in a compound must resolve to a unique name (set a distinct `name:`)"
+          reserved_subproperty_name: "m3 profile compound `%{parent}` sub-property `%{property}` resolves to the in-compound name `%{name}`, which is reserved; set a different `name:`"
+          malformed_subproperty_name: "m3 profile compound `%{parent}` sub-property `%{property}` resolves to the in-compound name `%{name}`, which is not made of letters, digits, and underscores; set a different `name:`"
       redirects_validator:
         errors:
           invalid_available_on: "m3 profile `redirects` property must be available on at least one work or collection class declared in this profile"
@@ -1511,6 +1530,12 @@ en:
         warnings:
           config_disabled: "m3 profile declares a `redirects` property but Hyrax.config.redirects_enabled? is false; the property will be ignored"
           flipflop_disabled: "m3 profile declares a `redirects` property but the :redirects feature flag is off; the property will be ignored"
+      render_as_validator:
+        warnings:
+          requires_searchable: "m3 profile property `%{property}` declares `view: { render_as: linked }` but does not index a `_tesim` field; the generated link searches that field, so it has nothing to query. Add the property's `_tesim` field to `indexing:`, or drop `render_as: linked`."
+          requires_sim_field: "m3 profile property `%{property}` declares `view: { render_as: faceted }` but does not index a `_sim` field; the generated link filters on that facet, so it returns nothing. Add the property's `_sim` field to `indexing:`, or drop `render_as: faceted`."
+          searches_label_for_id: "m3 profile property `%{property}` declares `view: { render_as: linked }` on a controlled vocabulary; the link searches for the displayed label while the property indexes the term id, so it finds nothing whenever the two differ. Index the property's `_sim` field with `facetable` and omit `render_as` to link to the label facet instead."
+          discards_facet_link: "m3 profile property `%{property}` declares `view: { render_as: linked }` alongside `facetable`; the facet link is built and then replaced by a search for the displayed label, which finds nothing whenever a term's label differs from its id. Omit `render_as` to keep the facet link."
       rich_text_validator:
         warnings:
           controlled_sources: "m3 profile property `%{property}` declares `form: { input_type: rich_text }` but also a controlled vocabulary (`controlled_values.sources: %{sources}`); rich text stores free-form HTML and will bypass the controlled input. Use `rich_text` only on free-text properties."
@@ -1542,6 +1567,7 @@ en:
           keyword_label: Keywords
           keyword_missing: no keywords specified
           title_label: Title
+        confirm_unfeature: Remove from featured works?
         drag: Drag
         no_works: No works have been featured
         tab_label: Featured Works
@@ -1632,8 +1658,6 @@ en:
           works_listing: Works listing
           you_manage: "<strong>%{total_count} works</strong> you can manage in the repository"
           you_own: "<strong>%{total_count} works</strong> you own in the repository"
-      sort_and_per_page:
-        number_of_results_to_display_per_page: Number of results to display per page
     nav_safety:
       change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     notifications:
@@ -1795,6 +1819,15 @@ en:
         export_to_zotero: Export to Zotero
         export_to_zotero_details: 'Exporting to Zotero is supported via embedded metadata.  If Zotero does not automatically pick up metadata for deposited files, please report the issue via the '
     stats:
+      analytics_hints:
+        authentication: Check GOOGLE_ACCOUNT_JSON or GOOGLE_ACCOUNT_JSON_PATH. The service account key may be expired, revoked, or from the wrong Google Cloud project.
+        general: Check the application log for the full error message.
+        invalid_credentials: GOOGLE_ACCOUNT_JSON is not valid JSON (or base64-encoded JSON). Copy the service account key file again.
+        invalid_property: Check the analytics property_id setting (GOOGLE_ANALYTICS_PROPERTY_ID by default). It must be the numeric GA4 property ID, not a G- measurement ID.
+        missing_credentials_file: GOOGLE_ACCOUNT_JSON_PATH points to a file that is missing or not readable on the server. Check the path and permissions.
+        permission: Check that the service account in GOOGLE_ACCOUNT_JSON has been added to the property named by the analytics property_id setting (GOOGLE_ANALYTICS_PROPERTY_ID by default).
+        quota_exceeded: The Google request quota was exceeded. Try again later.
+      analytics_unavailable: Analytics data is not currently available.
       downloads:
         downloads: Downloads
       pageviews:

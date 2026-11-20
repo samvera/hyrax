@@ -275,7 +275,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       it "has properly formed collection type buttons" do
         expect(page).not_to have_selector("input[data-path$='collections/new&collection_type_id=#{collection_type.id}']")
-        expect(page).to have_selector("input[data-path$='collections/new?locale=en&collection_type_id=#{collection_type.id}']")
+        expect(page).to have_selector("input[data-path$='collections/new?collection_type_id=#{collection_type.id}']")
       end
     end
 
@@ -371,15 +371,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     def check_tr_data_attributes(id, type)
       url_fragment = get_url_fragment(type)
       expect(page).to have_selector("tr[data-id='#{id}'][data-colls-hash]")
-      expect(page).to have_selector("tr[data-post-url='/dashboard/collections/#{id}/within?locale=en']")
-      expect(page).to have_selector("tr[data-post-delete-url='/#{url_fragment}/#{id}?locale=en']")
+      expect(page).to have_selector("tr[data-post-url='/dashboard/collections/#{id}/within']")
+      expect(page).to have_selector("tr[data-post-delete-url='/#{url_fragment}/#{id}']")
     end
 
     # Check data attributes have been transferred from table row to the modal
     def check_modal_data_attributes(id, type)
       url_fragment = get_url_fragment(type)
       expect(page).to have_selector("div[data-id='#{id}']")
-      expect(page).to have_selector("div[data-post-delete-url='/#{url_fragment}/#{id}?locale=en']")
+      expect(page).to have_selector("div[data-post-delete-url='/#{url_fragment}/#{id}']")
     end
 
     def get_url_fragment(type)
@@ -726,6 +726,10 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         check('agreement')
 
         click_on('Save')
+
+        # Wait for the deposit to land on the work show page before re-querying the
+        # collection; otherwise the listing races the still-in-flight save/index.
+        expect(page).to have_content("New Work for Collection")
 
         # verify new work was added to collection1
         visit "/dashboard/collections/#{collection1.id}"

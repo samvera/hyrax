@@ -15,6 +15,7 @@ module Hyrax
     #
     # @return [String] the term to display
     def self.label_for(spec, value)
+      return Array(value).map { |v| label_for(spec, v) }.join(', ') if value.is_a?(::Array)
       return value.to_s if spec.nil? || spec[:type].to_s != 'controlled' || value.blank?
 
       if spec[:values].present?

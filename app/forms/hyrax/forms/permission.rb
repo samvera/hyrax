@@ -14,9 +14,15 @@ module Hyrax
 
       ##
       # @note support a {#to_hash} method for compatibility with
-      #   {Hydra::AccessControl::Permissions}
+      #   {Hydra::AccessControl::Permissions}, whose names carry no group prefix
       def to_hash
-        { name: agent_name, access: access }
+        { name: agent_name.to_s.delete_prefix(Hyrax::Group.name_prefix), type: type, access: access.to_s }
+      end
+
+      private
+
+      def type
+        agent_name.to_s.start_with?(Hyrax::Group.name_prefix) ? 'group' : 'person'
       end
     end
   end

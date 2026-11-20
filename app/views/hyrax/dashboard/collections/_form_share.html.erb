@@ -10,6 +10,7 @@
       <div class="form-add-sharing-wrapper" data-id="<%= @form.id %>">
         <%= simple_form_for collection_permission_template_form_for(form: @form),
                             url: [hyrax, :dashboard, @form, :permission_template],
+                            namespace: 'group',
                             html: { id: 'group-participants-form' } do |f| %>
 
           <div class="form-inline add-sharing-form sharing-row-form">
@@ -17,23 +18,22 @@
                               f.object.access_grants.build(agent_type: 'group'),
                               index: 0 do |builder| %>
 
-              <div class="form-group mr-2">
-                <label class="mr-2"><%= t('.add_group') %>:</label>
+              <div class="form-group d-flex align-items-center flex-grow-1 mr-sm-2 mb-2">
+                <%= builder.label :agent_id, "#{t('.add_group')}:", class: 'mr-2 mb-0 text-nowrap' %>
                 <%= builder.hidden_field :agent_type %>
                 <%= builder.text_field :agent_id,
                                         placeholder: t('.search_for_a_group'),
-                                        class: 'form-control search-input' %>
+                                        class: 'form-control search-input flex-grow-1' %>
               </div>
-              <div class="form-group">
-                <label id="add_group_as" class="mr-2">as</label>
+              <div class="form-group d-flex align-items-center mb-2">
+                <%= builder.label :access, t('.as'), class: 'mr-2 mb-0' %>
                 <%= builder.select :access,
                                       access_options,
                                       { prompt: t('.select_a_role') },
-                                     'aria-labelledby': "add_group_as",
                                       class: 'form-control' %>
               </div>
             <% end %>
-            <%= f.submit t('helpers.submit.hyrax_permission_template_access.create'), class: 'btn btn-info edit-collection-add-sharing-button ml-2', :disabled => true %>
+            <%= f.submit t('helpers.submit.hyrax_permission_template_access.create'), class: 'btn btn-info edit-collection-add-sharing-button text-nowrap ml-2 mb-2', :disabled => true %>
 
           </div><!-- /.form-inline -->
         <% end %>
@@ -43,6 +43,7 @@
       <div class="form-add-sharing-wrapper" data-id="<%= @form.id %>">
         <%= simple_form_for collection_permission_template_form_for(form: @form),
                             url: [hyrax, :dashboard, @form, :permission_template],
+                            namespace: 'user',
                             html: { id: 'user-participants-form' } do |f| %>
 
           <div class="form-inline sharing-row-form add-users">
@@ -50,23 +51,23 @@
                               f.object.access_grants.build(agent_type: 'user'),
                               index: 0 do |builder| %>
 
-              <div class="form-group">
-                <label class="mr-2"><%= t('.add_user') %>:</label>
+              <div class="form-group d-flex align-items-center flex-grow-1 mr-sm-2 mb-2">
+                <%= builder.label :agent_id, "#{t('.add_user')}:", class: 'mr-2 mb-0 text-nowrap' %>
                 <%= builder.hidden_field :agent_type %>
                 <%= builder.text_field :agent_id,
-                                        placeholder: t('.search_for_a_user') %>
+                                        placeholder: t('.search_for_a_user'),
+                                        class: 'form-control flex-grow-1' %>
               </div>
-              <div class="form-group">
-                <label id="add_user_as" class="mx-2">as</label>
+              <div class="form-group d-flex align-items-center mb-2">
+                <%= builder.label :access, t('.as'), class: 'mr-2 mb-0' %>
                 <%= builder.select :access,
                                     access_options,
                                     { prompt: t('.select_a_role') },
-                                    'aria-labelledby': "add_user_as",
                                     class: 'form-control' %>
               </div>
             <% end %>
 
-            <%= f.submit t('helpers.submit.hyrax_permission_template_access.create'), class: 'btn btn-info edit-collection-add-sharing-button ml-2', :disabled => true %>
+            <%= f.submit t('helpers.submit.hyrax_permission_template_access.create'), class: 'btn btn-info edit-collection-add-sharing-button text-nowrap ml-2 mb-2', :disabled => true %>
 
           </div> <!-- /.form-inline -->
         <% end %>

@@ -80,6 +80,10 @@ db/schema.rb
 .byebug_history
 .tool-versions
 
+# Files uploaded through the app while developing against the test stacks
+/.koppie/uploads/
+/.dassie/uploads/
+
 ## Carried over from hyrax-models (RIP)
 *.gem
 *.rbc

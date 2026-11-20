@@ -1,7 +1,9 @@
-<h3><%= I18n.t("hyrax.admin.stats.deposits.deposits_by_users", :default => "Deposits By Users ") %>(<%= @presenter.date_filter_string %>)</h3>
-<ul>
+<div class="card-body flex-grow-0 pb-2">
+  <h3 class="h5 mb-0"><%= I18n.t("hyrax.admin.stats.deposits.deposits_by_users", :default => "Deposits By Users ") %>(<%= @presenter.date_filter_string %>)</h3>
+</div>
+<ul class="list-group list-group-flush">
   <% @presenter.depositors.each do |usr| %>
-    <li>
+    <li class="list-group-item">
       <%= link_to usr[:user].name, hyrax.user_path(usr[:user]), title: "View user's profile" %>
       <%= I18n.t("hyrax.admin.stats.deposits.deposited", :default => "deposited ") %><%= pluralize(usr[:deposits], "file") %>
     </li>

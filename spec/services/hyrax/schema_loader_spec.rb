@@ -71,6 +71,20 @@ RSpec.describe Hyrax::SchemaLoader do
   end
 end
 
+RSpec.describe Hyrax::SchemaLoader, '.malformed_subproperty_names' do
+  it 'returns names that are not letters, digits, and underscores' do
+    expect(described_class.malformed_subproperty_names(['given_name', 'Role2', 'first name', 'dc:title', 'née', 'given-name']))
+      .to eq ['first name', 'dc:title', 'née', 'given-name']
+  end
+end
+
+RSpec.describe Hyrax::SchemaLoader, '.reserved_hash_keys' do
+  it 'returns only the keys Valkyrie reserves in a Hash' do
+    expect(described_class.reserved_hash_keys(['path', 'is_display_url', '_position', 'first name', 'id', '@id', :@value, 'internal_resource']))
+      .to eq ['id', '@id', '@value', 'internal_resource']
+  end
+end
+
 RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
   subject(:attribute_definition) { described_class.new(name, config) }
 
@@ -228,9 +242,9 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
     context 'when type is hash' do
       # The `hash` shortcut lets a YAML schema declare a nested-attribute
       # property whose entries are plain hashes (e.g. `redirects` with
-      # `path`, `canonical`, `sequence` sub-fields). Persisted as JSONB
-      # without a nested Valkyrie::Resource schema in between, so round-trips
-      # don't strip sub-fields. See documentation/redirects.md.
+      # `path`, `canonical`, `sequence` sub-fields). Stored without a nested
+      # Valkyrie::Resource schema in between, so round-trips don't strip
+      # sub-fields. See documentation/redirects.md.
       let(:config) { { 'type' => 'hash', 'multiple' => true } }
 
       it 'returns an array-of-hash typed constructor that round-trips hash entries' do
@@ -245,11 +259,43 @@ RSpec.describe Hyrax::SchemaLoader::AttributeDefinition do
     context 'when type is hash with multiple: false' do
       let(:config) { { 'type' => 'hash', 'multiple' => false } }
 
-      it 'returns a constructor wrapping Dry::Types["hash"] that passes hashes through' do
+      it 'returns a constructor that passes hashes through' do
         expect(attribute_definition.type).to be_a(Dry::Types::Constructor)
-        expect(attribute_definition.type.type).to eq(Dry::Types['hash'])
         input = { 'path' => '/foo', 'canonical' => true }
         expect(attribute_definition.type.call(input)).to eq(input)
+      end
+    end
+
+    context 'when type is hash and a value arrives as a JSON object string' do
+      let(:config) { { 'type' => 'hash', 'multiple' => true } }
+
+      it 'parses each JSON object string into a hash' do
+        input = ['{"path":"/foo","is_display_url":true}', { 'path' => '/bar' }]
+        expect(attribute_definition.type.call(input))
+          .to eq([{ 'path' => '/foo', 'is_display_url' => true }, { 'path' => '/bar' }])
+      end
+
+      it 'rejects a string that is not a JSON object' do
+        expect { attribute_definition.type.call(['["path", "/foo"]']) }.to raise_error(Dry::Types::ConstraintError)
+      end
+
+      it 'marks the attribute ordered for Valkyrie' do
+        expect(attribute_definition.type.meta[:ordered]).to be true
+      end
+    end
+
+    context 'when type is hash and an entry holds a value that is not JSON' do
+      let(:config) { { 'type' => 'hash', 'multiple' => true } }
+
+      it 'rejects the entry' do
+        [Valkyrie::ID.new('abc'), Date.new(2026, 1, 1), :symbol, Float::NAN].each do |value|
+          expect { attribute_definition.type.call([{ 'ref' => value }]) }.to raise_error(/not a JSON value/)
+        end
+      end
+
+      it 'accepts strings, numbers, booleans, nil, and nested hashes and arrays of them' do
+        entry = { 'name' => 'Ada', 'count' => 2, 'weight' => 1.5, 'primary' => true, 'role' => nil, 'tags' => ['a', { 'x' => [1] }] }
+        expect(attribute_definition.type.call([entry])).to eq [entry]
       end
     end
 

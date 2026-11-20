@@ -72,6 +72,41 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
       end
     end
 
+    context 'with Wings disabled' do
+      let(:resolver) { ->(name) { name == 'GenericWork' ? Monograph : name.constantize } }
+
+      before do
+        allow(Hyrax.config).to receive(:valkyrie_transition?).and_return(false)
+        allow(Hyrax.config).to receive(:disable_wings).and_return(true)
+        allow(Valkyrie.config).to receive(:resource_class_resolver).and_return(resolver)
+      end
+
+      context 'with a legacy model name the resolver maps to a Valkyrie model' do
+        let(:solr_hash) { { 'has_model_ssim' => 'GenericWork' } }
+
+        it 'gives the Valkyrie model rather than the same-named ActiveFedora class' do
+          expect(solr_document.hydra_model).to eq Monograph
+        end
+      end
+
+      context 'with a model name the resolver cannot resolve' do
+        let(:solr_hash) { { 'has_model_ssim' => 'NoSuchModel' } }
+
+        it 'falls back to the model classifier' do
+          expect(solr_document.hydra_model).to eq ActiveFedora::Base
+        end
+      end
+
+      context 'when the resolver itself is broken' do
+        let(:resolver) { ->(_name) { nil.reverse_lookup } }
+        let(:solr_hash) { { 'has_model_ssim' => 'GenericWork' } }
+
+        it 'raises rather than silently falling back' do
+          expect { solr_document.hydra_model }.to raise_error(NoMethodError)
+        end
+      end
+    end
+
     context 'with a Wings model name', :active_fedora do
       let(:solr_hash) { { 'has_model_ssim' => 'Wings(Monograph)' } }
 

@@ -46,6 +46,12 @@ RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
         expect(rendered).to have_css('#add-new-work-button')
       end
 
+      it 'keeps Add New Work as the only primary button' do
+        expect(rendered).to have_link('Create batch of works', class: 'btn-outline-primary')
+        expect(rendered).to have_css('#add-new-work-button.btn-primary')
+        expect(rendered).to have_css('.btn-primary', count: 1)
+      end
+
       context 'with batch_upload off' do
         let(:batch_enabled) { false }
 
@@ -68,6 +74,12 @@ RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
         expect(rendered).to have_selector('h1', text: 'Works')
         expect(rendered).to have_link('Create batch of works')
         expect(rendered).to have_css('#add-new-work-button')
+      end
+
+      it 'keeps Add New Work as the only primary button' do
+        expect(rendered).to have_link('Create batch of works', class: 'btn-outline-primary')
+        expect(rendered).to have_css('#add-new-work-button.btn-primary')
+        expect(rendered).to have_css('.btn-primary', count: 1)
       end
 
       context 'with batch_upload off' do

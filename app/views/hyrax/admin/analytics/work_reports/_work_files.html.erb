@@ -21,7 +21,7 @@
           <tr>
             <td><%= f %></td>
             <td><%= f.id %></td>
-            <td><%= Hyrax::Analytics.daily_events_for_id(@document.id, 'file_set_in_work_download').all %></td>
+            <td><%= @downloads.all %></td>
           </tr>
         <% end %>
       <% end %>

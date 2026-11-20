@@ -66,7 +66,8 @@ module Hyrax
 
     # The show path for an indexed record. Classification uses the document's
     # own Wings-aware predicates (`collection?`/`work?`, which resolve through
-    # `hydra_model` and so honor the `valkyrie_transition` mapping):
+    # `hydra_model` and so honor the app's Valkyrie resource class mapping when
+    # Wings is disabled or a Valkyrie transition is underway):
     #   * a collection -> the engine collection show route (`/collections/:id`);
     #   * a work -> its work show route, named by the routed model's
     #     `singular_route_key` (e.g. `hyrax_generic_work_path` ->

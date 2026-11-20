@@ -27,7 +27,7 @@ module Hyrax
   # The M3 profile names the source via the sub-property's `authority:` key; see
   # documentation/compound_fields.md.
   class CompoundLinkedRecordResolver
-    Source = Struct.new(:finder, :label, :path, :search, :create, :match, keyword_init: true)
+    Source = Struct.new(:finder, :label, :path, :search, :create, :match, :similar, keyword_init: true)
 
     class << self
       # @return [Hash{Symbol => Source}] the registered sources, by name
@@ -54,8 +54,13 @@ module Hyrax
       #   find-or-create import flow. Distinct from `search`, which is fuzzy and
       #   multi-row for the picker — a fuzzy hit is the wrong record to reuse when
       #   resolving an imported reference with no human to disambiguate.
-      def register(source, finder:, label:, path:, search: nil, create: nil, match: nil)
-        registry[source.to_sym] = Source.new(finder:, label:, path:, search:, create:, match:)
+      # @param similar [#call, nil] `(query) -> Array<{id:, label:, value:}>` a
+      #   fuzzy, multi-row "did you mean" lookup on a typed name, for the create
+      #   form's duplicate check. Unlike `match` (exact, single-row, for headless
+      #   import) it is human-facing: the curator picks from the results. Same row
+      #   shape as `search`; omit it for a source with no duplicate check.
+      def register(source, finder:, label:, path:, search: nil, create: nil, match: nil, similar: nil)
+        registry[source.to_sym] = Source.new(finder:, label:, path:, search:, create:, match:, similar:)
       end
 
       # @param source [Symbol, String]
@@ -77,6 +82,13 @@ module Hyrax
       end
 
       # @param source [Symbol, String]
+      # @return [Boolean] whether the source is registered with a `similar` proc
+      #   (i.e. offers a fuzzy "did you mean" duplicate check before create)
+      def similar?(source)
+        spec_for(source)&.similar.present?
+      end
+
+      # @param source [Symbol, String]
       # @param query [String] the typed search term
       # @return [Array<Hash{Symbol => String}>] picker results
       #   (`{ id:, label:, value: }`); `[]` when the source is unregistered or
@@ -88,6 +100,24 @@ module Hyrax
         Array(spec.search.call(query))
       rescue StandardError => e
         Hyrax.logger.debug("CompoundLinkedRecordResolver.search(#{source}, #{query}): #{e.message}")
+        []
+      end
+
+      # Fuzzy "did you mean" lookup for the picker's create-form duplicate check.
+      # Same contract as {.search} (multi-row, `{id:, label:, value:}`), but
+      # semantically the human-facing near-match check rather than the typeahead.
+      #
+      # @param source [Symbol, String]
+      # @param query [String] the typed name
+      # @return [Array<Hash{Symbol => String}>] candidate rows; `[]` when the
+      #   source is unregistered or declares no `similar` proc
+      def similar(source, query)
+        spec = spec_for(source)
+        return [] if spec.nil? || spec.similar.nil?
+
+        Array(spec.similar.call(query))
+      rescue StandardError => e
+        Hyrax.logger.debug("CompoundLinkedRecordResolver.similar(#{source}, #{query}): #{e.message}")
         []
       end
 

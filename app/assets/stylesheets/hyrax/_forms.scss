@@ -184,22 +184,172 @@ form.button-to {
 }
 
 .required-tag {
-  vertical-align: super;
+  vertical-align: middle;
+  margin-left: 0.25rem;
 }
 
-.permission-add-user,
-.permission-add-group {
-  margin-bottom: 1em;
-  margin-left: 0;
+// ============================================================
+// Edit work form – spacing & alignment fixes
+// CSS only: no markup changes, no field moves, no form changes.
+// ============================================================
+
+// Consistent padding across all tab panes
+.tabs .tab-content > .tab-pane > .form-tab-content {
+  padding: 0.5rem 1.5rem 1.5rem;
 }
 
-.permissions-add-user-label,
-.permissions-add-group-label {
-  border: 0;
-  font-size: 14px;
-  font-weight: bold;
+// Visibility side panel: the public warning comes from a translation that wraps
+// its text in <p>, so the trailing margin can't be removed with a class
+#collapsePublic > p {
   margin-bottom: 0;
-  padding: 7px 15px;
+}
+
+// Consistent vertical rhythm between form groups on the Descriptions tab
+.form-tab-content > .base-terms,
+.form-tab-content > #extended-terms {
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+}
+
+// Currently Shared With table – consistent spacing
+#share .table {
+  margin-top: 1rem;
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+// Relationships tab – match spacing to other tabs
+#relationships {
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+// Multi-value and controlled-vocabulary fields
+// hydra-editor renders this markup (ul.listing > li.field-wrapper), so it can't take
+// utility classes. These rules override the gem's defaults: a 40em cap on the
+// listing, an 83% first row, and a text "Remove" link beside each extra row.
+// The `form` prefix outranks the gem's stylesheet, which loads after this one.
+form .multi_value,
+form .controlled_vocabulary {
+  .listing {
+    max-width: none;
+
+    // FieldManager makes each row an .input-group, which squares the input's right
+    // corners; the Remove control sits apart from the input, so keep them rounded
+    .input-group > .form-control {
+      @include border-radius($input-border-radius, 0);
+    }
+
+    li:first-of-type {
+      width: 100%;
+    }
+
+    // The first row has no Remove control, unless the linked-data JS has revealed
+    // it (d-block) for a saved or newly selected value
+    li:first-of-type .field-controls:not(:has(.remove.d-block)) {
+      display: none;
+    }
+
+    // Other rows: the input stretches and the Remove control sits at the right edge
+    li:not(:first-of-type),
+    li:has(.remove.d-block) {
+      display: flex;
+      align-items: center;
+
+      .form-control,
+      .select2-container {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+
+      .field-controls {
+        flex: 0 0 auto;
+        margin-left: 0;
+      }
+
+      // Show a red × in place of the "Remove" text; font-size: 0 hides the text
+      // visually but keeps it as the button's accessible name
+      .remove {
+        display: inline-block;
+        padding: 0 0 0 0.5rem;
+        font-size: 0;
+        text-decoration: none;
+
+        &::before {
+          font-family: "FontAwesome";
+          content: "\f00d"; // fa-times
+          font-size: 1rem;
+          color: $danger;
+        }
+
+        &:hover::before {
+          color: darken($danger, 10%);
+        }
+      }
+    }
+  }
+
+  // Match the multi-value "Add another" text link
+  .add .fa-plus,
+  .remove .fa-minus {
+    display: none;
+  }
+}
+
+// select2 v3 copies the control's .form-control class onto its container and then
+// draws its own bordered box inside it. Keep the form-control frame, flatten the
+// inner box, and swap select2's sprite arrow for a caret like a native select.
+.controlled_vocabulary .select2-container.form-control,
+.hyrax-compound-row .select2-container.form-control,
+.permission-add-user .select2-container.form-control,
+#relationships .select2-container.form-control,
+.edit-sharing-tab .select2-container.form-control {
+  height: auto;
+  min-height: $input-height;
+  padding: 0;
+
+  .select2-choice {
+    display: flex;
+    align-items: center;
+    height: $input-height-inner;
+    padding-left: $input-padding-x;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .select2-choices {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    min-height: 0;
+  }
+
+  .select2-arrow {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    background: transparent;
+    border-left: 0;
+
+    b {
+      width: 0;
+      height: 0;
+      background: none;
+      border-top: 5px solid $gray-600;
+      border-right: 5px solid transparent;
+      border-left: 5px solid transparent;
+    }
+  }
 }
 
 .search-form {

@@ -1,7 +1,7 @@
 <div class="set-access-controls">
   <h3><%= t('.branding.label') %></h3>
   <p><%= t('.branding.description') %></p>
-  <label><strong><%= t('.banner.label') %></strong></label>
+  <label id="branding_banner_label"><strong><%= t('.banner.label') %></strong></label>
   <p><%= t('.banner.description') %>.</p>
 
   <div id="fileupload">
@@ -11,24 +11,24 @@
 
     <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
     <div class="row fileupload-buttonbar">
-      <div class="col-4">
+      <div class="col-sm-4">
         <!-- The fileinput-button span is used to style the file input field as button -->
         <span class="btn btn-success fileinput-button">
           <span class="fa fa-plus"></span>
-          <span><%= t('.choose_file') %></span>
-          <input type="file" name="files[]" single />
+          <span id="branding_banner_choose"><%= t('.choose_file') %></span>
+          <input type="file" name="files[]" single aria-labelledby="branding_banner_choose branding_banner_label" />
         </span>
-      </div> <!-- end col-4 -->
+      </div> <!-- end col-sm-4 -->
 
       <!-- The global progress state -->
-      <div class="col-8 fileupload-progress branding-banner-progress fade">
+      <div class="col-sm-8 fileupload-progress branding-banner-progress fade">
         <!-- The global progress bar -->
         <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
           <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%;"></div>
         </div>
         <!-- The extended global progress state -->
         <div class="progress-extended">&nbsp;</div>
-      </div> <!-- end col-8 fileupload-progress fade -->
+      </div> <!-- end col-sm-8 fileupload-progress fade -->
     </div> <!-- end row fileupload-buttonbar -->
 
     <div class="row branding-banner-list">
@@ -61,6 +61,7 @@
             <div class="banner-image">
               <i><%= image_tag(f.object.banner_info[:relative_path],
                                size: "800x100",
+                               class: "img-fluid",
                                alt: f.object.banner_info[:alttext].presence || f.object.banner_info[:file]) %></i>
             </div>
             <% end %>
@@ -79,7 +80,7 @@
 
   <%= render 'hyrax/uploads/js_templates_branding' %>
 
-  <label><strong><%= t('.logo.label') %></strong></label>
+  <label id="branding_logo_label"><strong><%= t('.logo.label') %></strong></label>
   <p><%= t('.logo.description') %></p>
 
   <div id="fileuploadlogo">
@@ -89,24 +90,24 @@
 
     <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
     <div class="row fileupload-buttonbar">
-      <div class="col-4">
+      <div class="col-sm-4">
         <!-- The fileinput-button span is used to style the file input field as button -->
         <span class="btn btn-success fileinput-button">
           <span class="fa fa-plus"></span>
-          <span><%= t('.choose_file') %></span>
-          <input type="file" name="files[]" single />
+          <span id="branding_logo_choose"><%= t('.choose_file') %></span>
+          <input type="file" name="files[]" single aria-labelledby="branding_logo_choose branding_logo_label" />
         </span>
-      </div> <!-- end col-4 -->
+      </div> <!-- end col-sm-4 -->
 
       <!-- The global progress state -->
-      <div class="col-8 fileupload-progress branding-logo-progress fade">
+      <div class="col-sm-8 fileupload-progress branding-logo-progress fade">
         <!-- The global progress bar -->
         <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
           <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%;"></div>
         </div>
         <!-- The extended global progress state -->
         <div class="progress-extended">&nbsp;</div>
-      </div> <!-- end col-8 fileupload-progress branding-logo-progress fade -->
+      </div> <!-- end col-sm-8 fileupload-progress branding-logo-progress fade -->
     </div> <!-- end row fileupload-buttonbar -->
 
     <div class="row branding-logo-list">

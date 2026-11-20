@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::FlexibleSchemaValidators::RichTextValidator do
-  subject(:validator) { described_class.new(profile, warnings) }
-  let(:warnings) { [] }
+  subject(:validator) { described_class.new(context) }
+  let(:context) { Hyrax::FlexibleSchemaValidators::ValidationContext.new(profile: profile) }
+  let(:warnings) { validator.violations.map(&:message) }
 
   def rich_text_form
     { 'form' => { 'input_type' => 'rich_text' } }

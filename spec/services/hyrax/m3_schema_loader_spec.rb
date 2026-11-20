@@ -80,6 +80,91 @@ RSpec.describe Hyrax::M3SchemaLoader do
     end
   end
 
+  describe '#authority_rules_for' do
+    let(:controlled_properties) do
+      YAML.safe_load(<<-YAML)
+        properties:
+          resource_type:
+            available_on:
+              class:
+                - GenericWork
+                - Monograph
+            controlled_values:
+              format: http://www.w3.org/2001/XMLSchema#string
+              sources:
+                - resource_types
+            display_label:
+              default: Resource Type
+            indexing:
+              - resource_type_sim
+              - resource_type_tesim
+            property_uri: http://purl.org/dc/terms/type
+            range: http://www.w3.org/2001/XMLSchema#string
+          monograph_resource_type:
+            name: resource_type
+            available_on:
+              class:
+                - Monograph
+            controlled_values:
+              format: http://www.w3.org/2001/XMLSchema#string
+              sources:
+                - monograph_types
+            display_label:
+              default: Resource Type
+            indexing:
+              - resource_type_sim
+              - resource_type_tesim
+            property_uri: http://purl.org/dc/terms/type
+            range: http://www.w3.org/2001/XMLSchema#string
+          free_text_note:
+            available_on:
+              class:
+                - GenericWork
+                - Monograph
+            controlled_values:
+              format: http://www.w3.org/2001/XMLSchema#string
+              sources:
+                - "null"
+            display_label:
+              default: Free Text Note
+            indexing:
+              - free_text_note_tesim
+            property_uri: http://example.org/free_text_note
+            range: http://www.w3.org/2001/XMLSchema#string
+      YAML
+    end
+
+    let(:profile) do
+      base = YAML.safe_load_file(Hyrax::Engine.root.join('spec', 'fixtures', 'files', 'm3_profile.yaml'))
+      base['properties'] = base['properties'].merge(controlled_properties['properties'])
+      base
+    end
+
+    it 'maps a controlled attribute to its authority name' do
+      expect(schema_loader.authority_rules_for(schema: 'GenericWork'))
+        .to include(resource_type: 'resource_types')
+    end
+
+    it 'omits free-text properties whose only source is the null sentinel' do
+      expect(schema_loader.authority_rules_for(schema: 'GenericWork'))
+        .not_to have_key(:free_text_note)
+    end
+
+    it 'answers the authority the class-specific entry declares, not the shared one' do
+      expect(schema_loader.authority_rules_for(schema: Monograph.to_s))
+        .to include(resource_type: 'monograph_types')
+      expect(schema_loader.authority_rules_for(schema: 'GenericWork'))
+        .to include(resource_type: 'resource_types')
+    end
+
+    it 'keys a name: surrogate under the attribute it stands in for' do
+      rules = schema_loader.authority_rules_for(schema: Monograph.to_s)
+
+      expect(rules).to have_key(:resource_type)
+      expect(rules).not_to have_key(:monograph_resource_type)
+    end
+  end
+
   describe '#form_definitions_for' do
     it 'provides form configuration' do
       expect(schema_loader.form_definitions_for(schema: Monograph.to_s))

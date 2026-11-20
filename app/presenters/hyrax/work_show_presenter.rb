@@ -86,9 +86,8 @@ module Hyrax
 
     # @return [Boolean] render a IIIF viewer
     def iiif_viewer?
-      representative_id.present? &&
-        representative_presenter.present? &&
-        (av_viewable? || image_viewable? || pdf_viewable?)
+      return @iiif_viewer if defined?(@iiif_viewer)
+      @iiif_viewer = representative_viewable? || child_works_viewable?
     end
 
     alias universal_viewer? iiif_viewer?
@@ -201,7 +200,7 @@ module Hyrax
     end
 
     def stats_path
-      Hyrax::Engine.routes.url_helpers.stats_work_path(self, locale: I18n.locale)
+      Hyrax::Engine.routes.url_helpers.stats_work_path(self, locale: (I18n.locale unless I18n.locale == I18n.default_locale))
     end
 
     def model
@@ -363,6 +362,16 @@ module Hyrax
     def pdf_viewable?
       return false unless Flipflop.iiif_pdf?
       representative_presenter.pdf?
+    end
+
+    def representative_viewable?
+      representative_id.present? &&
+        representative_presenter.present? &&
+        (av_viewable? || image_viewable? || pdf_viewable?)
+    end
+
+    def child_works_viewable?
+      Hyrax::ViewableChildWorksService.viewable?(solr_document: solr_document, ability: current_ability)
     end
   end
 end

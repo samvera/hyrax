@@ -48,13 +48,26 @@ Blacklight.onLoad(function() {
   $('a[data-behavior="unfeature"]').on('click', function(evt) {
     evt.preventDefault();
     anchor = $(this);
+    var confirmText = anchor.data('confirmText');
+    if (confirmText && !confirm(confirmText)) { return; }
+
     $.ajax({
        url: anchor.attr('href'),
        type: "post",
        data: {"_method":"delete"},
        success: function(data) {
-         anchor.addClass('collapse');
-         $('a[data-behavior="feature"]').removeClass('collapse')
+         var item = anchor.closest('li.featured-item');
+         if (item.length) {
+           var list = item.closest('ol');
+           item.remove();
+           if (list.children('li').length === 0) {
+             list.closest('form').addClass('collapse');
+             $('p[data-behavior="no-featured-works"]').removeClass('collapse');
+           }
+         } else {
+           anchor.addClass('collapse');
+           $('a[data-behavior="feature"]').removeClass('collapse')
+         }
        }
     });
   });

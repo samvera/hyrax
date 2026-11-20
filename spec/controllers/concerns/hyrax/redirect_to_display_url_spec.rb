@@ -94,6 +94,21 @@ RSpec.describe Hyrax::RedirectToDisplayUrl, type: :controller do
         # isn't in the before_action chain — the URL-encoding here is exercised directly.
         expect(response.headers['Location']).to end_with("#{display_alias}?locale=fr%26evil%3Dyes")
       end
+
+      it 'carries paging, sorting and facet params to the 301 target' do
+        get :show, params: { id: resource_id, locale: 'fr', page: '2', per_page: '50', sort: 'title_ssi asc',
+                             f: { subject_sim: ['Tennessee'] } }
+        location = URI(response.headers['Location'])
+        expect(location.path).to eq(display_alias)
+        expect(Rack::Utils.parse_nested_query(location.query))
+          .to eq('locale' => 'fr', 'page' => '2', 'per_page' => '50', 'sort' => 'title_ssi asc',
+                 'f' => { 'subject_sim' => ['Tennessee'] })
+      end
+
+      it 'URL-encodes carried params so attacker-controlled chars cannot inject extra query params' do
+        get :show, params: { id: resource_id, page: '2&evil=yes' }
+        expect(Rack::Utils.parse_nested_query(URI(response.headers['Location']).query)).to eq('page' => '2&evil=yes')
+      end
     end
   end
 end

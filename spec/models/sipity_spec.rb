@@ -100,6 +100,14 @@ RSpec.describe Sipity do
       expect { described_class.Entity(nil) }
         .to raise_error Sipity::ConversionError
     end
+
+    it "doesn't build debug strings when the logger's level is above debug" do
+      object = Sipity::Entity.new
+      quiet_logger = Logger.new(StringIO.new).tap { |l| l.level = Logger::INFO }
+      allow(Hyrax).to receive(:logger).and_return(quiet_logger)
+      expect(object).not_to receive(:inspect)
+      described_class.Entity(object)
+    end
   end
 
   describe '.Role' do

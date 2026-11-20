@@ -27,6 +27,7 @@ RSpec.describe 'hyrax/dashboard/collections/_form.html.erb', type: :view do
       expect(rendered).to have_selector("span.required-tag", text: "required")
       expect(rendered).not_to have_selector("div#additional_title.multi_value")
       expect(rendered).to have_selector("input#collection_creator.multi_value")
+      expect(rendered).to have_selector("form[data-remove-text='Remove']")
       expect(rendered).to have_selector("textarea#collection_description")
       expect(rendered).to have_selector("input#collection_contributor")
       expect(rendered).to have_selector("input#collection_keyword")

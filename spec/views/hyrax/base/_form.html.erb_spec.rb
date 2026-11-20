@@ -32,6 +32,12 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
         expect(rendered).to have_selector("form[action='/concern/monographs']")
       end
 
+      it 'gives the multi-value Remove control a translated label' do
+        render
+
+        expect(rendered).to have_selector("form[data-remove-text='Remove']")
+      end
+
       context 'with batch_upload off' do
         before do
           allow(Flipflop).to receive(:batch_upload?).and_return(false)

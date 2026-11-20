@@ -20,6 +20,18 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
     it 'returns an empty list for a controlled sub-property with neither values nor authority' do
       expect(helper.compound_subproperty_options({ type: 'controlled', authority: nil, values: nil })).to eq([])
     end
+
+    context 'with an array current value (a multiple: true member)' do
+      it 'appends every stored value not among the offered options' do
+        expect(helper.compound_subproperty_options(spec, %w[ed Legacy Extra]))
+          .to eq([%w[Author Author], %w[Editor ed], %w[Legacy Legacy], %w[Extra Extra]])
+      end
+
+      it 'leaves the list unchanged when every stored value is already offered' do
+        expect(helper.compound_subproperty_options(spec, %w[Author ed]))
+          .to eq([%w[Author Author], %w[Editor ed]])
+      end
+    end
   end
 
   describe '#compound_subproperty_forced?' do
@@ -35,6 +47,83 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
 
     it 'is true when the value is not among the offered options' do
       expect(helper.compound_subproperty_forced?(spec, 'Legacy')).to be true
+    end
+
+    context 'with an array value (a multiple: true member)' do
+      it 'is false when every selected value is offered' do
+        expect(helper.compound_subproperty_forced?(spec, ['Author'])).to be false
+      end
+
+      it 'is true when any selected value is off-list' do
+        expect(helper.compound_subproperty_forced?(spec, %w[Author Legacy])).to be true
+      end
+
+      it 'is false when the array is empty or all blank' do
+        expect(helper.compound_subproperty_forced?(spec, ['', nil])).to be false
+      end
+    end
+  end
+
+  describe '#compound_field_lines' do
+    def classes_for(fields, subproperties)
+      helper.compound_field_lines(fields, subproperties).map { |line| line.map { |field| field[:col_class] } }
+    end
+
+    it 'lets the first field fill a line that falls short of 12 columns' do
+      subproperties = { 'name' => { cols: 4 }, 'role' => { cols: 4 } }
+      expect(classes_for(%w[name role], subproperties)).to eq([%w[col-md col-md-4]])
+    end
+
+    it 'keeps declared widths on a line that is already full' do
+      subproperties = { 'item' => { cols: 8 }, 'type' => { cols: 4 } }
+      expect(classes_for(%w[item type], subproperties)).to eq([%w[col-md-8 col-md-4]])
+    end
+
+    it 'wraps onto a new line once the next field would pass 12 columns' do
+      subproperties = { 'item' => { cols: 6 }, 'type' => { cols: 6 }, 'title' => { cols: 12 } }
+      expect(classes_for(%w[item type title], subproperties)).to eq([%w[col-md-6 col-md-6], %w[col-md-12]])
+    end
+
+    it 'leaves a lone field at its declared width, defaulting to 6' do
+      expect(classes_for(%w[note], {})).to eq([%w[col-md-6]])
+    end
+  end
+
+  describe '#compound_controlled_select' do
+    let(:value) { nil }
+    let(:spec) { { type: 'controlled', authority: nil, values: [%w[Author Author], %w[Editor ed]] } }
+    subject(:node) { Capybara.string(helper.compound_controlled_select(spec, value, 'work[roles]', 'work_roles')) }
+
+    it 'renders a single-select with a blank option and no typeahead tag by default' do
+      expect(node).to have_selector("select[name='work[roles]'][id='work_roles']")
+      expect(node).not_to have_selector('select[multiple]')
+      expect(node).to have_selector("select option[value='']", visible: :all)
+      expect(node).not_to have_selector('select[data-hyrax-compound-controlled]')
+    end
+
+    context 'when multiple' do
+      let(:spec) { { type: 'controlled', authority: nil, values: [%w[Author Author]], multiple: true } }
+
+      it 'uses an array name, is multiple, and drops the blank option' do
+        expect(node).to have_selector("select[name='work[roles][]'][multiple]")
+        expect(node).not_to have_selector("select option[value='']", visible: :all)
+      end
+    end
+
+    context 'when autocomplete' do
+      let(:spec) { { type: 'controlled', authority: nil, values: [%w[Author Author]], autocomplete: true } }
+
+      it 'tags the select for the select2 typeahead with a placeholder' do
+        expect(node).to have_selector('select[data-hyrax-compound-controlled][data-placeholder]')
+      end
+    end
+
+    context 'with an off-list stored value' do
+      let(:value) { 'Legacy' }
+
+      it 'adds the force-select class' do
+        expect(node).to have_selector('select.force-select')
+      end
     end
   end
 
@@ -144,6 +233,52 @@ RSpec.describe Hyrax::CompoundFieldsHelper, type: :helper do
       allow(Hyrax::CompoundWorkResolver).to receive(:title_and_path)
         .with('work-1').and_return(['A Work', '/concern/works/work-1'])
       expect(helper.compound_work_or_url_option('work-1')).to eq(['A Work', 'work-1'])
+    end
+  end
+
+  describe '#compound_work_or_url_state' do
+    it 'marks a work selected when the id resolves to an indexed work' do
+      allow(Hyrax::CompoundWorkResolver).to receive(:title_and_path)
+        .with('work-1').and_return(['A Work', '/concern/works/work-1'])
+      state = helper.compound_work_or_url_state('work-1')
+
+      expect(state[:work_selected]).to be true
+      expect(state[:option]).to eq(['A Work', 'work-1'])
+    end
+
+    it 'does not mark a work selected for an external URL' do
+      expect(helper.compound_work_or_url_state('https://example.com/a')[:work_selected]).to be false
+    end
+
+    # The case that motivates resolving rather than pattern-matching on "looks
+    # like a URL": this is not a work, so the URL input must stay visible.
+    it 'does not mark a work selected for a scheme-less URL' do
+      allow(Hyrax::CompoundWorkResolver).to receive(:title_and_path)
+        .with('www.example.org/x').and_return(['www.example.org/x', nil])
+      expect(helper.compound_work_or_url_state('www.example.org/x')[:work_selected]).to be false
+    end
+
+    it 'does not mark a work selected for an id whose work is gone' do
+      allow(Hyrax::CompoundWorkResolver).to receive(:title_and_path)
+        .with('missing').and_return(['missing', nil])
+      expect(helper.compound_work_or_url_state('missing')[:work_selected]).to be false
+    end
+
+    it 'has no option and no selection for a blank value' do
+      state = helper.compound_work_or_url_state('')
+
+      expect(state[:option]).to be_nil
+      expect(state[:work_selected]).to be false
+    end
+
+    it 'carries the picker endpoint, excluding the work being edited' do
+      expect(helper.compound_work_or_url_state('', exclude_id: 'work-9')[:autocomplete_url])
+        .to include('exclude_id=work-9')
+    end
+
+    it 'omits the exclusion when the id is blank' do
+      expect(helper.compound_work_or_url_state('', exclude_id: '')[:autocomplete_url])
+        .not_to include('exclude_id')
     end
   end
 

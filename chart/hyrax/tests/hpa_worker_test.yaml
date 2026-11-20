@@ -1,0 +1,66 @@
+suite: worker hpa scales independently from the web hpa
+templates:
+  - templates/hpa-worker.yaml
+tests:
+  - it: renders nothing when disabled
+    set:
+      worker.autoscaling.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders nothing when worker itself is disabled, even if its autoscaling is enabled
+    set:
+      worker.enabled: false
+      worker.autoscaling.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: targets the worker Deployment on autoscaling/v2
+    set:
+      worker.autoscaling.enabled: true
+    asserts:
+      - equal:
+          path: apiVersion
+          value: autoscaling/v2
+      - equal:
+          path: spec.scaleTargetRef
+          value:
+            apiVersion: apps/v1
+            kind: Deployment
+            name: RELEASE-NAME-hyrax-worker
+
+  - it: sets a CPU utilization target using the v2 nested target schema
+    set:
+      worker.autoscaling.enabled: true
+      worker.autoscaling.targetCPUUtilizationPercentage: 70
+    asserts:
+      - contains:
+          path: spec.metrics
+          content:
+            type: Resource
+            resource:
+              name: cpu
+              target:
+                type: Utilization
+                averageUtilization: 70
+
+  - it: also sets a memory utilization target when configured
+    set:
+      worker.autoscaling.enabled: true
+      worker.autoscaling.targetCPUUtilizationPercentage: 70
+      worker.autoscaling.targetMemoryUtilizationPercentage: 80
+    asserts:
+      - contains:
+          path: spec.metrics
+          content:
+            type: Resource
+            resource:
+              name: memory
+              target:
+                type: Utilization
+                averageUtilization: 80
+      - lengthEqual:
+          path: spec.metrics
+          count: 2

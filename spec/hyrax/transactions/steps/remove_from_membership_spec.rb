@@ -32,6 +32,32 @@ RSpec.describe Hyrax::Transactions::Steps::RemoveFromMembership, valkyrie_adapte
         .to(0)
     end
 
+    context 'when the member is indexed', index_adapter: :solr_index do
+      before { Hyrax.index_adapter.save(resource: work) }
+
+      it 're-indexes the member without the collection' do
+        indexed_collection_ids = lambda do
+          Hyrax::SolrService.query("id:#{work.id}", fl: 'member_of_collection_ids_ssim', rows: 1).first['member_of_collection_ids_ssim']
+        end
+
+        expect { step.call(collection, user: user) }
+          .to change(&indexed_collection_ids).from([collection.id.to_s]).to(nil)
+      end
+    end
+
+    context 'when re-indexing a member fails' do
+      before do
+        allow(Hyrax.publisher).to receive(:publish).and_call_original
+        allow(Hyrax.publisher).to receive(:publish).with('object.membership.updated', any_args).and_raise(StandardError, 'Solr unavailable')
+        allow(Hyrax.logger).to receive(:error)
+      end
+
+      it 'logs the member and still succeeds' do
+        expect(step.call(collection, user: user)).to be_success
+        expect(Hyrax.logger).to have_received(:error).with(/#{work.id}/)
+      end
+    end
+
     it 'publishes events' do
       expect { step.call(collection, user: user) }
         .to change { spy_listener.collection_membership_updated&.payload }
