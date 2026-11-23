@@ -15,6 +15,7 @@ module Hyrax
       validates_with HasOneTitleValidator
       after_destroy :destroy_permission_template
 
+      class_attribute :indexer, instance_accessor: false
       self.indexer = Hyrax::CollectionIndexer
 
       ##
