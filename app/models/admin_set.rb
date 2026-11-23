@@ -49,6 +49,7 @@ class AdminSet < ActiveFedora::Base
     internal_resource
   end
 
+  class_attribute :indexer, instance_accessor: false
   self.indexer = Hyrax::AdminSetIndexer
 
   property :title,             predicate: ::RDF::Vocab::DC.title
