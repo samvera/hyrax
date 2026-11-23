@@ -24,7 +24,8 @@ module Hyrax
     included do
       property :owner, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/owner'), multiple: false
       class_attribute :human_readable_short_description, :default_system_virus_scanner
-      # TODO: do we need this line?
+      # Redeclared on the including class so Rails 8's shared reader doesn't lose to Hydra::PCDM's `indexer` class method.
+      class_attribute :indexer, instance_accessor: false
       self.indexer = WorkIndexer
       # Default VirusScanner, configurable for Hyrax work types
       self.default_system_virus_scanner = Hyrax::VirusScanner
