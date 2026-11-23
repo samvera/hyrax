@@ -4,7 +4,7 @@
 <%= render Blacklight::System::ModalComponent.new do |component| %>
   <%# Removed component prefix that duplicates the facet pagination view %>
 
-  <% component.title { facet_field_label(@facet.key) } %>
+  <% component.with_title { facet_field_label(@facet.key) } %>
 
   <%= render partial: 'facet_index_navigation' if @facet.index_range && @display_facet.index? %>
 
