@@ -12,6 +12,9 @@ module Dassie
     config.load_defaults 6.1
     config.add_autoload_paths_to_load_path = true
 
+    # Hyrax doesn't use Active Storage variants; Rails 8.1 rejects the 6.1-default mini_magick processor.
+    config.active_storage.variant_processor = :disabled
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
