@@ -12,7 +12,7 @@ RSpec.describe 'hyrax/base/_form_rendering.html.erb', type: :view do
   end
 
   before do
-    allow(form).to receive(:select_files).and_return([{ '123' => 'File one' }])
+    allow(form).to receive(:select_files).and_return({ 'File one' => '123' })
   end
 
   it 'has a rendering_ids field' do
