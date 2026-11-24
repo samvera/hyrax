@@ -94,6 +94,7 @@ SUMMARY
   spec.add_dependency 'sass-rails', '~> 6.0'
   spec.add_dependency 'select2-rails', '~> 3.5'
   spec.add_dependency 'language_list'
+  spec.add_dependency 'order_already', '~> 0.3.2'
 
   spec.add_development_dependency "capybara", '~> 3.29'
   spec.add_development_dependency 'capybara-screenshot', '~> 1.0'

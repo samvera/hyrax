@@ -23,6 +23,7 @@ module Hyrax
     require 'cancancan'
     require 'blacklight'
     require 'json_schemer'
+    require 'order_already'
 
     require 'hydra/derivatives'
     require 'hyrax/active_fedora_dummy_model'
