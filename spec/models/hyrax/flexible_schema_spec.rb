@@ -10,7 +10,13 @@ RSpec.describe Hyrax::FlexibleSchema, :clean_repo, type: :model do
   describe '#title' do
     it 'returns the correct title' do
       responsibility_statement = profile_data['profile']['responsibility_statement']
-      expect(subject.title).to eq("#{responsibility_statement} - version #{subject.id}")
+      expect(subject.title).to eq("#{responsibility_statement} - v#{subject.profile_version}")
+    end
+  end
+
+  describe '#profile_version' do
+    it 'returns the semantic version from the profile data' do
+      expect(subject.profile_version).to eq(1)
     end
   end
 
