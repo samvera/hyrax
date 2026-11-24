@@ -92,6 +92,19 @@ RSpec.describe Hyrax::ChangeDepositorService do
       end
     end
 
+    context "when another process added a member after the work was read" do
+      let(:other_member) { FactoryBot.valkyrie_create(:hyrax_work) }
+
+      it "keeps that member" do
+        read_copy = base_work.dup
+        save_work_elsewhere(base_work.id) { |stored| stored.member_ids += [other_member.id] }
+
+        described_class.call(read_copy, receiver, false)
+
+        expect(Hyrax.query_service.find_by(id: base_work.id).member_ids).to contain_exactly(other_member.id)
+      end
+    end
+
     context "when no user is provided" do
       it "does not update the work" do
         expect(ChangeDepositorEventJob).not_to receive(:perform_later)

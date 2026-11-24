@@ -20,8 +20,9 @@ module Hyrax
           return Success(obj) if parent_id.blank?
 
           parent = Hyrax.query_service.find_by(id: parent_id)
+          read_member_ids = parent.member_ids
           parent.member_ids += [obj.id]
-          Hyrax.persister.save(resource: parent)
+          parent = Hyrax::LockedWorkSaver.save(work: parent, read_member_ids: read_member_ids)
 
           user ||= ::User.find_by_user_key(obj.depositor)
           Hyrax.publisher.publish('object.metadata.updated', object: parent, user: user)

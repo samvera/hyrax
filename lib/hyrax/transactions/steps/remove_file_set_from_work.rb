@@ -33,9 +33,10 @@ module Hyrax
         def call(file_set, user: nil)
           return Failure('No user provided.') if user.nil?
           find_parents(resource: file_set).each do |parent|
-            parent.member_ids -= [file_set.id]
-            unlink_file_set(parent: parent, file_set: file_set)
-            saved = @persister.save(resource: parent)
+            saved = Hyrax::LockedWorkSaver.update(id: parent.id, persister: @persister, query_service: @query_service) do |stored|
+              stored.member_ids -= [file_set.id]
+              unlink_file_set(parent: stored, file_set: file_set)
+            end
             Hyrax.publisher.publish('object.metadata.updated', object: saved, user: user)
           end
           Success(file_set)

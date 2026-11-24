@@ -54,7 +54,7 @@ module Hyrax
       work.proxy_depositor = work.depositor
       apply_depositor_metadata(work, user)
 
-      work = Hyrax.persister.save(resource: work)
+      work = Hyrax::LockedWorkSaver.save(work: work, read_member_ids: work.member_ids)
       Hyrax::PropagateChangeDepositorJob.perform_later(work.id.to_s, user, reset)
       work
     end

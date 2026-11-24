@@ -17,9 +17,12 @@ module Hyrax
 
         ##
         # @params [#save] persister
-        def initialize(persister: Hyrax.persister, publisher: Hyrax.publisher)
+        # @params [#find_by] query_service reads the stored work; use the same
+        #   adapter as `persister`
+        def initialize(persister: Hyrax.persister, publisher: Hyrax.publisher, query_service: Hyrax.query_service)
           @persister = persister
           @publisher = publisher
+          @query_service = query_service
         end
 
         ##
@@ -36,10 +39,11 @@ module Hyrax
             valid_future_date?(change_set.embargo, 'embargo_release_date') if change_set.respond_to?(:embargo) && change_set.embargo
             new_collections = changed_collection_membership(change_set)
             old_admin_set_id = changed_admin_set_id(change_set)
+            read_member_ids = change_set.model.try(:member_ids)
 
             unsaved = change_set.sync
             save_lease_or_embargo(unsaved)
-            saved = @persister.save(resource: unsaved)
+            saved = save_resource(unsaved, change_set, read_member_ids)
           rescue StandardError => err
             return Failure.new(["Failed save on #{change_set}\n\t#{err.message}", change_set.resource], err.backtrace.first)
           end
@@ -59,6 +63,14 @@ module Hyrax
         # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
         private
+
+        def save_resource(unsaved, change_set, read_member_ids)
+          return @persister.save(resource: unsaved) unless unsaved.try(:work?) && unsaved.persisted?
+
+          changed = Hyrax::LockedWorkSaver::MEMBER_DEFAULTS.select { |attribute| change_set.changed?(attribute) }
+          Hyrax::LockedWorkSaver.save(work: unsaved, read_member_ids: read_member_ids, changed: changed,
+                                      persister: @persister, query_service: @query_service)
+        end
 
         def valid_future_date?(item, attribute)
           return true if item.fields[attribute].blank?

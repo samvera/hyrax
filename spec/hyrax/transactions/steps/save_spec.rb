@@ -123,5 +123,66 @@ RSpec.describe Hyrax::Transactions::Steps::Save do
         expect(step.call(change_set).failure.last).to eq resource
       end
     end
+
+    context 'when another process changed the work after the change_set was built', valkyrie_adapter: :test_adapter do
+      let(:resource) { FactoryBot.valkyrie_create(:hyrax_work, :with_member_works) }
+      let!(:member_ids) { resource.member_ids.dup }
+      let!(:change_set) { change_set_class.new(resource.dup) }
+      let(:other_member) { FactoryBot.valkyrie_create(:hyrax_work) }
+
+      let(:change_set_class) do
+        Class.new(Hyrax::ChangeSet) { self.fields = [:title, :member_ids, :representative_id, :thumbnail_id] }
+      end
+
+      def stored_work
+        query_service.find_by(id: resource.id)
+      end
+
+      it 'keeps a member the other process added' do
+        save_work_elsewhere(resource.id) { |stored| stored.member_ids += [other_member.id] }
+
+        step.call(change_set)
+
+        expect(stored_work.member_ids).to eq(member_ids + [other_member.id])
+      end
+
+      it 'removes a member the change_set removed' do
+        change_set.member_ids = [member_ids.last]
+
+        step.call(change_set)
+
+        expect(stored_work.member_ids).to eq [member_ids.last]
+      end
+
+      it 'keeps a representative the other process set' do
+        save_work_elsewhere(resource.id) { |stored| stored.representative_id = member_ids.first }
+
+        step.call(change_set)
+
+        expect(stored_work.representative_id).to eq member_ids.first
+      end
+
+      it 'keeps a representative the change_set changed' do
+        change_set.representative_id = member_ids.last
+        save_work_elsewhere(resource.id) { |stored| stored.representative_id = member_ids.first }
+
+        step.call(change_set)
+
+        expect(stored_work.representative_id).to eq member_ids.last
+      end
+    end
+
+    context 'when the work is stored in an adapter other than the default' do
+      subject(:step) { described_class.new(persister: adapter.persister, query_service: adapter.query_service) }
+      let(:adapter) { Valkyrie::Persistence::Memory::MetadataAdapter.new }
+      let(:resource) { adapter.persister.save(resource: Hyrax::Test::SimpleWork.new(title: ['Old title'])) }
+
+      before { change_set.title = ['New title'] }
+
+      it 'saves the change to that adapter' do
+        expect(step.call(change_set)).to be_success
+        expect(adapter.query_service.find_by(id: resource.id).title).to eq ['New title']
+      end
+    end
   end
 end

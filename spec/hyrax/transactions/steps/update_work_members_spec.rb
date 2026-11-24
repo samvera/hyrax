@@ -49,4 +49,19 @@ RSpec.describe Hyrax::Transactions::Steps::UpdateWorkMembers, valkyrie_adapter: 
         .to contain_exactly(child2)
     end
   end
+
+  context 'when another process added a member after the work was read' do
+    let(:child) { FactoryBot.valkyrie_create(:hyrax_work) }
+    let(:other_member) { FactoryBot.valkyrie_create(:hyrax_work) }
+    let(:attributes) { HashWithIndifferentAccess.new({ '0' => { id: child.id } }) }
+
+    it 'keeps that member' do
+      read_copy = work.dup
+      save_work_elsewhere(work.id) { |stored| stored.member_ids += [other_member.id] }
+
+      step.call(read_copy, work_members_attributes: attributes)
+
+      expect(Hyrax.query_service.find_by(id: work.id).member_ids).to contain_exactly(child.id, other_member.id)
+    end
+  end
 end
