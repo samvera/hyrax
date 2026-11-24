@@ -118,14 +118,13 @@ class ProxyDepositRequest < ActiveRecord::Base
   CANCELED = 'canceled'
   REJECTED = 'rejected'
 
-  enum(
-    status: {
+  enum :status,
+    {
       ACCEPTED => ACCEPTED,
       CANCELED => CANCELED,
       PENDING => PENDING,
       REJECTED => REJECTED
     }
-  )
 
   # @param [TrueClass,FalseClass] reset (false)  if true, reset the access controls. This revokes edit access from the depositor
   def transfer!(reset = false)
