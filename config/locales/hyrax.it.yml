@@ -26,6 +26,7 @@ it:
         show:
           admin_set: "In Impostazione amministrativa:"
           based_near_label: luogo
+          based_near_label_tesim: luogo
           contributor: Contributori
           keyword: Parola chiave
       filters:
