@@ -68,6 +68,170 @@ RSpec.describe HyraxHelper, type: :helper do
     end
   end
 
+  describe '#available_admin_sets_for_creating_works' do
+    let(:ability) { instance_double(Ability) }
+    let(:query_service) { instance_double('query_service') }
+    let(:metadata_adapter) { instance_double('metadata_adapter') }
+
+    before do
+      allow(Flipflop).to receive(:assign_admin_set?).and_return(true)
+      allow(Hyrax).to receive(:query_service).and_return(query_service)
+      allow(Hyrax).to receive(:metadata_adapter).and_return(metadata_adapter)
+    end
+
+    context 'when depositable admin sets are available' do
+      let(:source_ids) { ['z-admin-set', Hyrax::AdminSetCreateService::DEFAULT_ID, 'a-admin-set'] }
+      let(:solr_query_service) { instance_double(Hyrax::SolrQueryService) }
+      let(:solr_documents) do
+        [
+          { 'id' => 'z-admin-set', 'title_tesim' => ['Zeta Admin Set'] },
+          { 'id' => Hyrax::AdminSetCreateService::DEFAULT_ID, 'title_tesim' => ['Default Admin Set'] },
+          { 'id' => 'a-admin-set', 'title_tesim' => ['Alpha Admin Set'] }
+        ]
+      end
+
+      before do
+        allow(Hyrax::Collections::PermissionsService)
+          .to receive(:source_ids_for_deposit)
+          .with(ability:, source_type: 'admin_set')
+          .and_return(source_ids)
+        allow(Hyrax::AdminSetCreateService)
+          .to receive(:default_admin_set?) do |id:|
+            id == Hyrax::AdminSetCreateService::DEFAULT_ID
+          end
+        allow(Hyrax::SolrQueryService).to receive(:new).and_return(solr_query_service)
+        allow(solr_query_service).to receive(:with_ids).with(ids: source_ids).and_return(solr_query_service)
+        allow(solr_query_service)
+          .to receive(:with_field_pairs)
+          .with(
+            field_pairs: {
+              has_model_ssim: Hyrax::ModelRegistry.admin_set_rdf_representations.join(',')
+            },
+            type: 'terms'
+          )
+          .and_return(solr_query_service)
+        allow(solr_query_service)
+          .to receive(:solr_documents)
+          .with(rows: source_ids.length, fl: 'id,title_tesim')
+          .and_return(solr_documents)
+      end
+
+      it 'builds admin set options from Solr without loading repository objects by id' do
+        expect(query_service).not_to receive(:find_many_by_ids)
+
+        expect(helper.available_admin_sets_for_creating_works(ability:)).to eq(
+          [
+            ['Default Admin Set', Hyrax::AdminSetCreateService::DEFAULT_ID],
+            ['Alpha Admin Set', 'a-admin-set'],
+            ['Zeta Admin Set', 'z-admin-set']
+          ]
+        )
+      end
+    end
+
+    context 'when there are no depositable admin sets' do
+      before do
+        allow(Hyrax::Collections::PermissionsService)
+          .to receive(:source_ids_for_deposit)
+          .with(ability:, source_type: 'admin_set')
+          .and_return([])
+      end
+
+      it 'returns an empty list without querying Solr' do
+        expect(Hyrax::SolrQueryService).not_to receive(:new)
+        expect(query_service).not_to receive(:find_many_by_ids)
+
+        expect(helper.available_admin_sets_for_creating_works(ability:)).to eq([])
+      end
+    end
+
+    context 'when some depositable admin sets are missing from Solr' do
+      let(:source_ids) { [Hyrax::AdminSetCreateService::DEFAULT_ID, 'missing-admin-set'] }
+      let(:solr_query_service) { instance_double(Hyrax::SolrQueryService) }
+      let(:missing_admin_set) { instance_double('resource', title: ['Set B'], id: 'missing-admin-set') }
+      let(:solr_documents) do
+        [
+          { 'id' => Hyrax::AdminSetCreateService::DEFAULT_ID, 'title_tesim' => ['Default Admin Set'] }
+        ]
+      end
+
+      before do
+        allow(Hyrax::Collections::PermissionsService)
+          .to receive(:source_ids_for_deposit)
+          .with(ability:, source_type: 'admin_set')
+          .and_return(source_ids)
+        allow(Hyrax::AdminSetCreateService)
+          .to receive(:default_admin_set?) do |id:|
+            id == Hyrax::AdminSetCreateService::DEFAULT_ID
+          end
+        allow(Hyrax::SolrQueryService).to receive(:new).and_return(solr_query_service)
+        allow(solr_query_service).to receive(:with_ids).with(ids: source_ids).and_return(solr_query_service)
+        allow(solr_query_service)
+          .to receive(:with_field_pairs)
+          .with(
+            field_pairs: {
+              has_model_ssim: Hyrax::ModelRegistry.admin_set_rdf_representations.join(',')
+            },
+            type: 'terms'
+          )
+          .and_return(solr_query_service)
+        allow(solr_query_service)
+          .to receive(:solr_documents)
+          .with(rows: source_ids.length, fl: 'id,title_tesim')
+          .and_return(solr_documents)
+        allow(query_service)
+          .to receive(:find_many_by_ids)
+          .with(ids: ['missing-admin-set'])
+          .and_return([missing_admin_set])
+      end
+
+      it 'falls back to repository objects for admin sets that are not indexed yet' do
+        expect(helper.available_admin_sets_for_creating_works(ability:)).to eq(
+          [
+            ['Default Admin Set', Hyrax::AdminSetCreateService::DEFAULT_ID],
+            ['Set B', 'missing-admin-set']
+          ]
+        )
+      end
+    end
+
+    context 'with a Postgres metadata adapter' do
+      let(:metadata_adapter) { Valkyrie::MetadataAdapter.find(:postgres_adapter) }
+      let(:source_ids) { ['z-admin-set', Hyrax::AdminSetCreateService::DEFAULT_ID, 'a-admin-set'] }
+      let(:admin_sets) do
+        [
+          instance_double('resource', title: ['Zeta Admin Set'], id: 'z-admin-set'),
+          instance_double('resource', title: ['Default Admin Set'], id: Hyrax::AdminSetCreateService::DEFAULT_ID),
+          instance_double('resource', title: ['Alpha Admin Set'], id: 'a-admin-set')
+        ]
+      end
+
+      before do
+        allow(Hyrax::Collections::PermissionsService)
+          .to receive(:source_ids_for_deposit)
+          .with(ability:, source_type: 'admin_set')
+          .and_return(source_ids)
+        allow(Hyrax::AdminSetCreateService)
+          .to receive(:default_admin_set?) do |id:|
+            id == Hyrax::AdminSetCreateService::DEFAULT_ID
+          end
+        allow(query_service).to receive(:find_many_by_ids).with(ids: source_ids).and_return(admin_sets)
+      end
+
+      it 'builds admin set options from Postgres without querying Solr' do
+        expect(Hyrax::SolrQueryService).not_to receive(:new)
+
+        expect(helper.available_admin_sets_for_creating_works(ability:)).to eq(
+          [
+            ['Default Admin Set', Hyrax::AdminSetCreateService::DEFAULT_ID],
+            ['Alpha Admin Set', 'a-admin-set'],
+            ['Zeta Admin Set', 'z-admin-set']
+          ]
+        )
+      end
+    end
+  end
+
   context 'link helpers' do
     before do
       allow(helper).to receive(:search_action_path) do |*args|
