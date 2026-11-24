@@ -26,11 +26,10 @@ module Hyrax
         def call(obj, uploaded_files: [], file_set_params: [])
           return Success(obj) if uploaded_files.empty? && file_set_params.blank? # Skip if no files to attach
           if @handler.new(work: obj).add(files: uploaded_files, file_set_params: file_set_params).attach
-            file_sets = obj.member_ids.map do |member|
-              Hyrax.query_service.find_by(id: member) if Hyrax.query_service.find_by(id: member).is_a? Hyrax::FileSet
-            end.compact
+            # The handler saves the work it reloads under its lock, so later steps must not save obj
+            obj = Hyrax.query_service.find_by(id: obj.id)
+            file_sets = Hyrax.custom_queries.find_child_file_sets(resource: obj)
 
-            # TODO: improve queries - Non performant to perform single queries. Perhapds queries ids then reject.
             Hyrax::LeaseManager.create_or_update_lease_on_members(file_sets, obj) if obj.lease
             Hyrax::EmbargoManager.create_or_update_embargo_on_members(file_sets, obj) if obj.embargo
             Success(obj)
