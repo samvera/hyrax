@@ -111,11 +111,23 @@ RSpec.describe Hyrax::Listeners::WorkflowListener do
     let(:event_type) { :on_object_deleted }
 
     before do
-      FactoryBot.create(:sipity_entity, proxy_for_global_id: Hyrax::ValkyrieGlobalIdProxy.new(resource: resource).to_global_id.to_s)
+      FactoryBot.create(:sipity_entity, proxy_for_global_id: Hyrax::GlobalID(resource).to_s)
     end
 
     it 'removes the workflow entity for the object' do
       expect { listener.on_object_deleted(event) }.to change { Sipity::Entity.count }.by(-1)
+    end
+
+    context 'when the object defines its own global id' do
+      let(:resource) do
+        FactoryBot.valkyrie_create(:hyrax_work).tap do |work|
+          work.define_singleton_method(:to_global_id) { URI::GID.build([GlobalID.app, 'GenericWork', id.to_s, {}]) }
+        end
+      end
+
+      it 'removes the workflow entity for the object' do
+        expect { listener.on_object_deleted(event) }.to change { Sipity::Entity.count }.by(-1)
+      end
     end
 
     context 'when the payload has only an id' do
