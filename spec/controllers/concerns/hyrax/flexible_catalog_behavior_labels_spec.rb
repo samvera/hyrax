@@ -224,6 +224,11 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
     it 'keeps the facet out of the sidebar' do
       expect(would_render?('education_level_label_sim')).to be false
     end
+
+    it 'also registers the id facet, hidden, so a value indexed without a label still links' do
+      expect(blacklight_config.facet_fields).to have_key('education_level_sim')
+      expect(would_render?('education_level_sim')).to be false
+    end
   end
 
   describe 'an uncontrolled property declaring render_as: faceted without facetable' do
@@ -337,6 +342,55 @@ RSpec.describe Hyrax::FlexibleCatalogBehavior, 'controlled vocabulary labels', t
 
     it 'leaves the id facet listed rather than hiding it behind an empty one' do
       expect(blacklight_config.facet_fields['shorthand_type_sim'].show).not_to be false
+    end
+  end
+
+  describe 'a controlled property linked by render_as: faceted on one class and facetable on another' do
+    let(:custom_properties) do
+      YAML.safe_load(<<-YAML)
+        properties:
+          shelf_genre:
+            available_on:
+              class:
+                - GenericWork
+            controlled_values:
+              format: http://www.w3.org/2001/XMLSchema#string
+              sources:
+                - resource_types
+            display_label:
+              default: Shelf Genre
+            indexing:
+              - shelf_genre_sim
+              - shelf_genre_tesim
+            property_uri: http://example.org/shelf_genre
+            range: http://www.w3.org/2001/XMLSchema#string
+            view:
+              render_as: faceted
+          shelf_genre_monograph:
+            name: shelf_genre
+            available_on:
+              class:
+                - Monograph
+            controlled_values:
+              format: http://www.w3.org/2001/XMLSchema#string
+              sources:
+                - resource_types
+            display_label:
+              default: Shelf Genre
+            indexing:
+              - shelf_genre_tesim
+              - facetable
+            property_uri: http://example.org/shelf_genre
+            range: http://www.w3.org/2001/XMLSchema#string
+      YAML
+    end
+
+    it 'lists the id facet the facetable entry asks for, though the faceted entry hid it first' do
+      expect(would_render?('shelf_genre_sim')).to be true
+    end
+
+    it 'keeps the label facet the faceted entry links to out of the sidebar' do
+      expect(would_render?('shelf_genre_label_sim')).to be false
     end
   end
 
