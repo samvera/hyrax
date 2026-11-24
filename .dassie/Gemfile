@@ -8,7 +8,7 @@ else
 end
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-gem 'blacklight', '< 7.43' # remove once dassie moves off Rails 6.1 - Blacklight 7.43.0's RuntimeRegistry.stats uses ActiveSupport::IsolatedExecutionState, added in Rails 7.0, so every controller action raises
+gem 'blacklight', '~> 7.43'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'bootstrap', '~> 4.0'
 gem 'bulkrax', github: 'samvera/bulkrax', ref: '4b96d5de20d208d9f252a0b7a6e3513f2745bc49'
@@ -22,13 +22,12 @@ gem 'devise-guests', '~> 0.8'
 # To install the package in Alpine: `apk add ruby-grpc`
 # The pinned versions should match the version provided by the Alpine packages.
 
-
-if RUBY_PLATFORM =~ /musl/
-# # Disabled due to dependency mismatches in Alpine packages (grpc 1.62.1 needs protobuf ~> 3.25)
-#   path '/usr/lib/ruby/gems/3.3.0' do
+if RUBY_PLATFORM.match?(/musl/)
+  # # Disabled due to dependency mismatches in Alpine packages (grpc 1.62.1 needs protobuf ~> 3.25)
+  #   path '/usr/lib/ruby/gems/3.3.0' do
   gem 'google-protobuf', force_ruby_platform: true
   gem 'grpc', '~> 1.74', force_ruby_platform: true
-#   end
+  #   end
 end
 
 gem 'hydra-role-management'
@@ -55,7 +54,6 @@ gem 'activerecord-nulldb-adapter', '~> 1.1'
 
 gem 'hydra-editor', github: 'samvera/hydra-editor', branch: 'rails-81'
 gem 'browse-everything', github: 'samvera/browse-everything', branch: '1.x-rails81'
-
 
 group :development do
   gem 'better_errors' # add command line in browser when errors
