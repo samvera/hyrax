@@ -1,0 +1,33 @@
+name: Mark stale issues
+
+on:
+  schedule:
+    - cron: '23 3 * * *'
+
+permissions:
+  issues: write
+  actions: write # Persist the action's progress between runs.
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11.0.0
+        with:
+          days-before-issue-stale: 90
+          # Closing is disabled initially. To enable it later, change -1 to 30:
+          # that closes issues 30 days after marking (about 120 days total).
+          days-before-issue-close: -1
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          remove-pr-stale-when-updated: false
+          stale-issue-label: stale
+          # Hyrax has no such labels yet; create these before using them.
+          # They retain the old Probot security/pinned names and add keep-open.
+          exempt-issue-labels: security,pinned,keep-open
+          exempt-all-issue-assignees: true
+          exempt-all-issue-milestones: true
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has
+            had no activity for 90 days. It will not be closed automatically.
+            Please comment if it is still relevant. Thank you for contributing!
