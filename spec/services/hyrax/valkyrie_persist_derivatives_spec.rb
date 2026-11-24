@@ -86,6 +86,24 @@ RSpec.describe Hyrax::ValkyriePersistDerivatives, valkyrie_adapter: :test_adapte
         expect(file.pcdm_use).to eq [Hyrax::FileMetadata::Use::SERVICE_FILE]
       end
     end
+
+    context "when persisting through Wings", valkyrie_adapter: :wings_adapter do
+      let(:directives) do
+        { url: "file:///app/samvera/hyrax-webapp/derivatives/#{id}-extracted_text.txt",
+          container: 'extracted_text' }
+      end
+      let(:stream) { StringIO.new('some extracted text') }
+
+      it "links the extracted text to the reloaded file set" do
+        described_class.call(stream, directives)
+        reloaded = Hyrax.query_service.find_by(id: file_set.id)
+
+        expect(Hyrax.custom_queries.find_many_file_metadata_by_use(
+                 resource: reloaded, use: Hyrax::FileMetadata::Use::EXTRACTED_TEXT
+               )).not_to be_empty
+        expect(reloaded.extracted_text).to be_present
+      end
+    end
   end
 
   describe '.fileset_for_directives' do
