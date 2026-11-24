@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Hyrax
   module TrophyHelper
+    # rubocop:disable Metrics/AbcSize
     def display_trophy_link(user, id, args = {}, &_block)
       return unless user
       trophy = user.trophies.where(work_id: id).exists?
@@ -15,10 +16,10 @@ module Hyrax
       args[:data]['remove-text'] = args[:remove_text]
 
       args[:data][:url] = hyrax.trophy_work_path(id)
-      link_to '#', id: 'action-highlight-work', role: args[:role], class: args[:class], data: args[:data] do
+      link_to '#', id: 'action-highlight-work', role: args[:role], tabindex: args[:tabindex], class: args[:class], data: args[:data] do
         yield(text)
       end
     end
-    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
   end
 end
